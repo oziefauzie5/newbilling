@@ -31,7 +31,7 @@ class UserController extends Controller
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->get();
         $data['role'] = Role::get();
-        return view('user/index', $data);
+        return view('User/index', $data);
     }
 
     public function store(Request $request)
