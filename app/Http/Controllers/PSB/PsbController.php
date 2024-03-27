@@ -33,7 +33,7 @@ class PsbController extends Controller
     public function list_input()
     {
         $data['data_user'] = User::all();
-        $data['input_data'] = InputData::where('input_status', '0')->get();
+        $data['input_data'] = InputData::get();
         return view('PSB/list_InputData', $data);
     }
 
