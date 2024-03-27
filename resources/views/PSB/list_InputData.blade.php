@@ -174,7 +174,6 @@ Keterangan :
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Tanggal</th>
                   <th>Nama</th>
                   <th>Whatsapp</th>
                   <th>Alamat Pasang</th>
@@ -185,7 +184,6 @@ Keterangan :
               <tfoot>
                 <tr>
                   <th>ID</th>
-                  <th>Tanggal</th>
                   <th>Nama</th>
                   <th>Whatsapp</th>
                   <th>Alamat Pasang</th>
@@ -197,7 +195,6 @@ Keterangan :
                 @foreach ($input_data as $d)
                 <tr>
                       <td>{{$d->id}}</td>
-                      <td>{{$d->input_tgl}}</td>
                       <td>{{$d->input_nama}}</td>
                       <td>{{$d->input_hp}}</td>
                       <td>{{$d->input_alamat_pasang}}</td>
