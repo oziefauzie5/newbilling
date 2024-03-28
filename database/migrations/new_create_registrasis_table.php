@@ -29,7 +29,6 @@ return new class extends Migration
             $table->string('reg_tgl_pasang')->nullable();
             $table->string('reg_tgl_tagih')->nullable();
             $table->string('reg_tgl_jatuh_tempo')->nullable();
-            $table->string('reg_tgl_isolir')->nullable();
             $table->string('reg_wilayah')->nullable();
             $table->string('reg_fat')->nullable();
             $table->string('reg_fat_opm')->nullable();

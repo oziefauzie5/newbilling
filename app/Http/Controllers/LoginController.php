@@ -31,14 +31,29 @@ class LoginController extends Controller
             $idi = Auth::guard('web')->user()->id;
             $app = SettingAplikasi::first();
 
-            $request->session()->put('app_brand', $app->app_brand);
-            $request->session()->put('app_nama', $app->app_nama);
-            $request->session()->put('app_logo', $app->app_logo);
-            $request->session()->put('app_favicon', $app->app_favicon);
-            $request->session()->put('app_npwp', $app->app_npwp);
-            $request->session()->put('app_alamat', $app->app_alamat);
-            $request->session()->put('app_link_admin', $app->app_link_admin);
-            $request->session()->put('app_link_pelanggan', $app->app_link_pelanggan);
+            if ($app) {
+                $request->session()->put('app_brand', $app->app_brand);
+                $request->session()->put('app_nama', $app->app_nama);
+                $request->session()->put('app_logo', $app->app_logo);
+                $request->session()->put('app_favicon', $app->app_favicon);
+                $request->session()->put('app_npwp', $app->app_npwp);
+                $request->session()->put('app_alamat', $app->app_alamat);
+                $request->session()->put('app_link_admin', $app->app_link_admin);
+                $request->session()->put('app_link_pelanggan', $app->app_link_pelanggan);
+            } else {
+                $request->session()->put('app_brand', 'APPBILL');
+                $request->session()->put('app_nama', 'APPBILL');
+                $request->session()->put('app_logo', 'APPBILL');
+                $request->session()->put('app_favicon', 'APPBILL');
+                $request->session()->put('app_npwp', 'APPBILL');
+                $request->session()->put('app_alamat', 'Jl. Raya Bogor');
+                $request->session()->put('app_link_admin', '-');
+                $request->session()->put('app_link_pelanggan', '-');
+            }
+
+
+
+
 
             $datas =  DB::table('users')
                 ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
