@@ -39,9 +39,7 @@ class PsbController extends Controller
     {
         $data['data_user'] = User::all();
         $data['input_data'] = InputData::get();
-        return view('PSB/list_inputData', $data);
-        // echo $data['input_data'];
-        // dd($data['input_data']);
+        return view('PSB/list_Inputdata', $data);
     }
     public function edit_inputdata($id)
     {
