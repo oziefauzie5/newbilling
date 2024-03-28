@@ -26,7 +26,7 @@
         
         {{-- MODAL CARI DATA  --}}
 <div class="modal fade" id="cari_data" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header bg-primary">
         <h5 class="modal-title" id="staticBackdropLabel">Cari Data</h5>
@@ -39,7 +39,6 @@
           <table id="input_data" class="display table table-striped table-hover text-nowrap" >
             <thead>
               <tr>
-                <td>Action</td>
                 <th>Tanggal Regist</th>
                 <th>Nama</th>
                 <th>Whatsapp</th>
@@ -48,14 +47,7 @@
             </thead>
             <tbody>
               @foreach($input_data as $d)
-              <tr>
-                <td >
-                  <div class="form-button-action">
-                    <button type="button" class="btn btn-sm btn-primary btn-lg pilih" id="{{$d->id}}" >
-                      <i class="fas fa-angle-double-right"></i>Pilih
-                    </button>
-                  </div>
-                </td>
+              <tr id="{{$d->id}}">
                 <td>{{$d->input_tgl}}</td>
                 <td>{{$d->input_nama}}</td>
                 <td>{{$d->input_hp}}</td>

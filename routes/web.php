@@ -75,8 +75,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/PSB/List-Input-Data', [PsbController::class, 'list_input'])->name('psb.list_input');
     Route::put('/PSB/Validasi/{ktp}', [PsbController::class, 'storeValidateKtp'])->name('psb.storeValidateKtp');
     Route::post('/PSB/Input-Data', [PsbController::class, 'store'])->name('psb.store');
+    Route::get('/PSB/{id}/ShowEdit-Input-Data', [PsbController::class, 'edit_inputdata'])->name('psb.edit_inputdata');
     Route::post('/PSB/Input-Import', [PsbController::class, 'input_data_import'])->name('psb.input_data_import');
-    Route::put('/PSB/Input-Data_update/{id}', [PsbController::class, 'input_data_update'])->name('psb.input_data_update');
+    Route::post('/PSB/Input-Data_update', [PsbController::class, 'input_data_update'])->name('psb.input_data_update');
     Route::delete('/PSB/Input-data-delete/{id}', [PsbController::class, 'input_data_delete'])->name('psb.input_data_delete');
     Route::get('/PSB/Registrasi', [RegistrasiController::class, 'index'])->name('reg.index');
     Route::get('/PSB/Registrasi-cari/{id}', [RegistrasiController::class, 'pilih_pelanggan_registrasi'])->name('reg.pilih_pelanggan_registrasi');

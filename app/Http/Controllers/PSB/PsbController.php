@@ -28,13 +28,25 @@ class PsbController extends Controller
     {
         $data['data_registrasi'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')->get();
+
+        $data['count_inputdata'] = InputData::count();
+        $data['count_registrasi'] = Registrasi::count();
+        $data['count_berlangganan'] = InputData::where('input_status', '1')->count();
+
         return view('PSB/index', $data);
     }
     public function list_input()
     {
         $data['data_user'] = User::all();
         $data['input_data'] = InputData::get();
-        return view('PSB/list_InputData', $data);
+        return view('PSB/list_inputData', $data);
+        // echo $data['input_data'];
+        // dd($data['input_data']);
+    }
+    public function edit_inputdata($id)
+    {
+        $data['input_data'] = InputData::whereId($id)->get();
+        return response()->json($data['input_data']);
     }
 
     public function storeValidateKtp(Request $request, $id): JsonResponse
@@ -90,22 +102,24 @@ class PsbController extends Controller
         return redirect()->route('admin.psb.list_input')->with($notifikasi);
     }
 
-    public function input_data_update(Request $request, $id)
+    public function input_data_update(Request $request)
     {
-        InputData::where('id', $id)->update([
-            'input_nama' => $request->input_nama,
-            'input_ktp' => $request->input_ktp,
-            'input_hp' => $request->input_hp,
-            'input_email' => $request->input_email,
-            'input_alamat_ktp' => $request->input_alamat_ktp,
-            'input_alamat_pasang' => $request->input_alamat_pasang,
-            'input_sales' => $request->input_sales,
-            'input_subseles' => $request->input_subseles,
-            'input_password' => $request->input_password,
-            'input_maps' => $request->input_maps,
-            'input_status' => '0',
-            'input_keterangan' => $request->input_keterangan,
-        ]);
+        // $request->edit_id;
+        // dd($request->edit_id);
+        $update['input_nama'] = $request->input_nama;
+        $update['input_ktp'] = $request->input_ktp;
+        $update['input_hp'] = $request->input_hp;
+        $update['input_email'] = $request->input_email;
+        $update['input_alamat_ktp'] = $request->input_alamat_ktp;
+        $update['input_alamat_pasang'] = $request->input_alamat_pasang;
+        $update['input_sales'] = $request->input_sales;
+        $update['input_subseles'] = $request->input_subseles;
+        $update['input_password'] = $request->input_password;
+        $update['input_maps'] = $request->input_maps;
+        $update['input_status'] = '0';
+        $update['input_keterangan'] = $request->input_keterangan;
+        InputData::where('id', $request->edit_id)->update($update);
+
         $notifikasi = [
             'pesan' => 'Berhasil Edit Data',
             'alert' => 'success',

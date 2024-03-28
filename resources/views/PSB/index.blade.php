@@ -11,7 +11,7 @@
               6%
               <i class="fa fa-chevron-up"></i>
             </div>
-            <div class="h1 m-0">43</div>
+            <div class="h1 m-0">{{$count_inputdata}}</div>
             <div class="text-muted mb-3">Input Data</div>
           </div>
         </div>
@@ -23,7 +23,7 @@
               -3%
               <i class="fa fa-chevron-down"></i>
             </div>
-            <div class="h1 m-0">17</div>
+            <div class="h1 m-0">{{$count_registrasi}}</div>
             <div class="text-muted mb-3">Registrasi</div>
           </div>
         </div>
@@ -35,8 +35,8 @@
               3%
               <i class="fa fa-chevron-up"></i>
             </div>
-            <div class="h1 m-0">27.3K</div>
-            <div class="text-muted mb-3">Teknisi</div>
+            <div class="h1 m-0">{{$count_berlangganan}}</div>
+            <div class="text-muted mb-3">Berlangganan</div>
           </div>
         </div>
       </div>

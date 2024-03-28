@@ -4,6 +4,7 @@ namespace App\Imports\Import;
 
 use App\Models\InputData;
 use App\Models\PSB\InputData as PSBInputData;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class InputDataImport implements ToModel
@@ -22,7 +23,9 @@ class InputDataImport implements ToModel
             'input_ktp' =>  $row[3],
             'input_hp' =>  $row[4],
             'input_alamat' =>  $row[5],
+            'input_password' => Hash::make('0' . $row[5]),
             'input_alamat_pasang' =>  $row[5],
+            'input_status' =>  $row[6],
         ]);
     }
 }

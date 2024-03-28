@@ -669,9 +669,54 @@
  <script >
 		$(document).ready(function() {
 			$('#input_data').DataTable({
-				"pageLength": 5,
+				"pageLength": 10,
 			});
+			$('#pilih_data').DataTable({
+				"pageLength": 10,
+			});
+
+			// #EDIT INPUT DATA
+			var table = $('#edit_inputdata').DataTable(); $('#edit_inputdata tbody').on( 'click', 'tr', function () 
+			{  
+			var idpel = table.row( this ).id();
+  var url = '{{ route("admin.psb.edit_inputdata", ":id") }}';
+url = url.replace(':id', idpel);
+
+  $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+						if (data) {
+							$('#modal_edit').modal('show')
+							console.log(data[0]['input_nama'])
+							$("#edit_id").val(data[0]['id']);
+							$("#edit_input_nama").val(data[0]['input_nama']);
+							$("#edit_input_hp").val(data[0]['input_hp']);
+							$("#edit_input_ktp").val(data[0]['input_ktp']);
+							$("#edit_input_email").val(data[0]['input_email']);
+							$("#edit_input_alamat_ktp").val(data[0]['input_alamat_ktp']);
+							$("#edit_input_alamat_pasang").val(data[0]['input_alamat_pasang']);
+							$("#edit_input_seles").val(data[0]['input_seles']);
+							$("#edit_input_subseles").val(data[0]['input_subseles']);
+							$("#edit_input_maps").val(data[0]['edit_input_maps']);
+							$("#edit_input_keterangan").val(data[0]['input_keterangan']);			 
+                        } else {
+							console.log(data);
+                        }
+                    }
+                });
+ });
+ 
 		});
+	</script>
+
+	<script>
+		$(document).ready(function() {
+} );
 	</script>
 	{{-- Start Router --}}
 	<script>
@@ -688,46 +733,46 @@ function myFunction() {
     }
 
 	$(function(){ //jQuery shortcut for .ready (ensures DOM ready)
- $('.navigateTest').click(function(){
-  var idRouter = this.id;
-  var url = '{{ route("admin.router.cekRouter", ":id") }}';
-url = url.replace(':id', idRouter);
-$("#myId").addClass('d-none');
-$("#loading").removeClass('d-none');
-  $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        '_token': '{{ csrf_token() }}'
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-						if (data) {
-							if (data.resource=='error') {
-								$("#loading").addClass('d-none');
-								$("#alert").removeClass('d-none');
-								document.getElementById("router_nama").innerHTML ='Router '+data.router_nama+' Disconnect';
-							}else{
-								$("#myId").removeClass('d-none');
-								document.getElementById("resource").innerHTML =data.resource+'%';
-								document.getElementById("architecture-name").innerHTML =data.architecture;
-								document.getElementById("cpu").innerHTML =data.cpu;
-								document.getElementById("version").innerHTML =data.version;
-								$("#loading").addClass('d-none');
-							}
-                        } else {
-							console.log(data);
+		$('.navigateTest').click(function(){
+			var idRouter = this.id;
+			var url = '{{ route("admin.router.cekRouter", ":id") }}';
+			url = url.replace(':id', idRouter);
+			$("#myId").addClass('d-none');
+			$("#loading").removeClass('d-none');
+			$.ajax({
+				url: url,
+				type: 'GET',
+				data: {
+					'_token': '{{ csrf_token() }}'
+				},
+				dataType: 'json',
+				success: function(data) {
+					if (data) {
+						if (data.resource=='error') {
 							$("#loading").addClass('d-none');
 							$("#alert").removeClass('d-none');
-							$("#myId").addClass('d-none');
-                        }
-                    }
-                });
- });
+							document.getElementById("router_nama").innerHTML ='Router '+data.router_nama+' Disconnect';
+						}else{
+							$("#myId").removeClass('d-none');
+							document.getElementById("resource").innerHTML =data.resource+'%';
+							document.getElementById("architecture-name").innerHTML =data.architecture;
+							document.getElementById("cpu").innerHTML =data.cpu;
+							document.getElementById("version").innerHTML =data.version;
+							$("#loading").addClass('d-none');
+						}
+					} else {
+						console.log(data);
+						$("#loading").addClass('d-none');
+						$("#alert").removeClass('d-none');
+						$("#myId").addClass('d-none');
+					}
+				}
+			});
+		});
 
-
-
-// START AMBIL HARGA PAKET #REGISTRASI
+		
+		
+		// START AMBIL HARGA PAKET #REGISTRASI
 
 
 $('#paket').on('change', function() {
@@ -789,34 +834,6 @@ $('#paket').on('change', function() {
       
 // END AMBIL HARGA PAKET #REGISTRASI
 
-// START CHECKBOX PPN #REGISTRASI
-// $('#paket').on('change', function() {
-//                 var kode_paket = $(this).val();
-//                 var url = '{{ route("admin.reg.getPaket", ":id") }}';
-//     url = url.replace(':id', kode_paket);
-//                 console.log(kode_paket);
-//                 if (kode_paket) {
-//                     $.ajax({
-//                         url: url,
-//                         type: 'GET',
-//                         data: {
-//                             '_token': '{{ csrf_token() }}'
-//                         },
-//                         dataType: 'json',
-//                         success: function(data) {
-//                             console.log(data);
-//                             if (data) {
-//                                 $('#harga').empty();
-//                                 $('#harga').val(data[0].paket_harga);
-//                             } else {
-//                                 $('#harga').empty();
-//                             }
-//                         }
-//                     });
-//                 } else {
-//                     $('#harga').empty();
-//                 }
-//         });
 var totalPrice = 0;
 $("#ppn").html(0);
 $('.checkboxClass').change(function () {
@@ -831,18 +848,16 @@ $('.checkboxClass').change(function () {
 });
 // END CHECKBOX PPN #REGISTRASI
 
-
-
-
-
-
 //  pilih registrasi
-
 $(function(){ //jQuery shortcut for .ready (ensures DOM ready)
- $('.pilih').click(function(){
-  var idpel = (this.id);
+//  $('.pilih').click(function(){
+//   var idpel = (this.id);
+  var table = $('#input_data').DataTable(); $('#input_data tbody').on( 'click', 'tr', function () 
+			{  
+			var idpel = table.row( this ).id();
   var url = '{{ route("admin.reg.pilih_pelanggan_registrasi", ":id") }}';
 url = url.replace(':id', idpel);
+console.log(idpel)
 // $("#myId").addClass('d-none');
 // $("#loading").removeClass('d-none');
   $.ajax({
