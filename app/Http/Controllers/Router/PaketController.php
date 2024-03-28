@@ -74,6 +74,7 @@ class PaketController extends Controller
                         'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
                         'queue-type' => 'default-small' == '' ? '' : 'default-small',
                         'dns-server' => $d->router_dns == '' ? '' : $d->router_dns,
+                        'disabled' => 'yes',
                         'only-one' => 'yes',
                     ]);
                 }
@@ -81,7 +82,7 @@ class PaketController extends Controller
         }
         $notifikasi = array(
             'pesan' => 'Berhasil menambahkan Pelanggan',
-            'alert' => 'error',
+            'alert' => 'success',
         );
         return redirect()->route('admin.router.paket.index')->with($notifikasi);
     }
@@ -157,6 +158,7 @@ class PaketController extends Controller
                         'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
                         'queue-type' => 'default-small' == '' ? '' : 'default-small',
                         'dns-server' => $d->router_dns == '' ? '' : $d->router_dns,
+                        'disabled' => 'yes',
                         'only-one' => 'yes',
                     ]);
                 }
