@@ -162,15 +162,12 @@
         <div id="alert" class="alert alert-danger d-none">									
           <span id="router_nama" class=" text-danger"></span>
         </div>        
-        <table class="table mt-3 " id="employees" >
+         <div class="table-responsive">
+            <table id="edit_inputdata" class="display table table-striped table-hover" >
           <thead>
             <tr>
               <th scope="col">Router</th>
-              <th scope="col">Host</th>
-              <th scope="col">DNS</th>
-              <th scope="col">Port API</th>
-              <th scope="col">Port Remote</th>
-              <th scope="col">Username</th>
+              <th scope="col">Host</th>SS
               <th scope="col">Status</th>
               <th style="width: 10%">Action</th>
             </tr>
@@ -180,10 +177,6 @@
             <tr>
              <td><a href="{{route('admin.router.getPppoe',['id'=>$d->id])}}" >{{$d->router_nama}}</a> </td> 
              <td class="navigateTest" id="{{$d->id}}">{{$d->router_ip}}</td> 
-             <td class="navigateTest" id="{{$d->id}}">{{$d->router_dns}}</td> 
-             <td class="navigateTest" id="{{$d->id}}">{{$d->router_port_api}}</td> 
-             <td class="navigateTest" id="{{$d->id}}">{{$d->router_port_remote}}</td> 
-             <td class="navigateTest" id="{{$d->id}}">{{$d->router_username}}</td> 
              <td class="navigateTest" id="{{$d->id}}">{{$d->router_status}}</td> 
              <td>
               <div class="form-button-action">
@@ -306,6 +299,7 @@
             @endforeach
           </tbody>
         </table>
+      </div>
       </div>
     </div>
 
