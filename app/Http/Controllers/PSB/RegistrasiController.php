@@ -245,10 +245,15 @@ class RegistrasiController extends Controller
             ->get();
 
         $swaktu = SettingWaktuTagihan::first();
+        if ($swaktu->wt_jeda_isolir_hari = '0') {
+            $jeda = '0';
+        } else {
+            $jeda = $swaktu->wt_jeda_isolir_hari;
+        }
         foreach ($q as $query) {
             // if (Carbon::now()->toDateString() > Carbon::create($query->tgl_jatuh_tempo)->toDateString()) {
             $periode1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->toDateString() . ' - ' . Carbon::create($query->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
-            $inv_tgl_isolir1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+            $inv_tgl_isolir1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($jeda)->toDateString();
             $invoice_id = rand(10000, 19999);
             Invoice::create([
                 'inv_id' => $invoice_id,
@@ -278,23 +283,14 @@ class RegistrasiController extends Controller
                 'subinvoice_deskripsi' => $query->paket_nama . ' ( ' . $periode1blan . ' )',
                 'subinvoice_status' => '0',
             ]);
-
-
-            // dd('invoice');
-            // } else {
-            //     $data['waktu_jttempo'] = "belum jatuh tempo";
-            //     dd($data);
-            // }
         }
-        // $update['reg_progres'] = '1';
-        // Registrasi::update($update);
 
 
-        // dd('tembus');
+
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        return redirect()->route('admin.psb.index')->with($notifikasi);
     }
 }
