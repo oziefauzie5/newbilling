@@ -266,7 +266,7 @@ Keterangan :
                         <div class="col-sm-12">
                           <div class="form-group">
                             <label>Sales </label>
-                            <input id="edit_input_sales" type="text" class="form-control" value="" name="input_sales" required>
+                            <input id="edit_input_sales" type="text" class="form-control" value="" name="input_sales" readonly>
                           </div>
                         </div>
                         <div class="col-sm-12">

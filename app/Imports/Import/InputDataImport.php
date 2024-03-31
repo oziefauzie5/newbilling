@@ -22,7 +22,6 @@ class InputDataImport implements ToModel
         // $tgl = date('Y-m-d', strtotime($date));
         // dd($tgl);
         return new PSBInputData([
-
             'id' => $row[0],
             'input_tgl' => $date,
             'input_nama' => $row[2],

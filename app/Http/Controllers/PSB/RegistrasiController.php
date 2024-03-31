@@ -4,17 +4,25 @@ namespace App\Http\Controllers\PSB;
 
 use App\Http\Controllers\Controller;
 use App\Imports\Import\RegistrasiImport;
+use App\Models\Applikasi\SettingAplikasi;
 use App\Models\Applikasi\SettingBiaya;
+use App\Models\Applikasi\SettingWaktuTagihan;
 use App\Models\Barang\SubBarang;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Paket;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
+use App\Models\Transaksi\Invoice;
+use App\Models\Transaksi\SubInvoice;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use Dompdf\Dompdf;
+use Illuminate\Support\Facades\App;
 
 class RegistrasiController extends Controller
 {
@@ -196,9 +204,95 @@ class RegistrasiController extends Controller
 
         return response()->json($kode_ont);
     }
+    public function berita_acara($id)
+    {
+        $data['profile_perusahaan'] = SettingAplikasi::first();
+        // dd($data['profile_perusahaan']->app_logo);
+        $data['nama_admin'] = Auth::user()->name;
+        $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            // ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->where('registrasis.reg_idpel', $id)
+            ->first();
+
+
+
+        $data['seles'] = User::whereId($data['berita_acara']->input_sales)->first();
+        $nama = InputData::where('id', $id)->first();
+        if ($nama) {
+            $sales = $nama->input_nama;
+        } else {
+            $sales = '-';
+        }
+        $pdf = App::make('dompdf.wrapper');
+        $html = view('PSB/berita_acara', $data)->render();
+        $pdf->loadHTML($html);
+        $pdf->setPaper('A4', 'potraid');
+        return $pdf->download('Berita_Acara_' . $sales . '.pdf');
+    }
     public function registrasi_import(Request $request)
     {
         Excel::import(new RegistrasiImport(), $request->file('file'));
+
+        // $data['tgl_sekarang'] = Carbon::now()->toDateString();
+        // $data['tgl_jatuh_tempo'] =  Carbon::create('2024-04-3')->toDateString();
+
+        $q = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('registrasis.reg_progres', 'MIGRASI')
+            ->get();
+
+        $swaktu = SettingWaktuTagihan::first();
+        foreach ($q as $query) {
+            // if (Carbon::now()->toDateString() > Carbon::create($query->tgl_jatuh_tempo)->toDateString()) {
+            $periode1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->toDateString() . ' - ' . Carbon::create($query->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+            $inv_tgl_isolir1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+
+            echo  $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn . '<br>';
+            $invoice_id = rand(10000, 19999);
+            // Invoice::create([
+            //     'inv_id' => $invoice_id,
+            //     'inv_status' => 'UNPAID',
+            //     'inv_idpel' => $query->reg_idpel,
+            //     'inv_nolayanan' => $query->reg_nolayanan,
+            //     'inv_nama' => $query->input_nama,
+            //     'inv_jenis_tagihan' => $query->reg_jenis_tagihan,
+            //     'inv_profile' => $query->paket_nama,
+            //     'inv_mitra' => 'SYSTEM',
+            //     'inv_kategori' => 'OTOMATIS',
+            //     'inv_diskon' => '0',
+            //     'inv_note' => $query->input_nama,
+            //     'inv_tgl_isolir' => $inv_tgl_isolir1blan,
+            //     'inv_total' =>   $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
+            //     'inv_tgl_tagih' => $query->reg_tgl_tagih,
+            //     'inv_tgl_jatuh_tempo' => $query->reg_tgl_jatuh_tempo,
+            //     'inv_periode' => $periode1blan,
+            // ]);
+
+            // SubInvoice::create([
+            //     'subinvoice_id' => $invoice_id,
+            //     'subinvoice_harga' => $query->reg_harga,
+            //     'subinvoice_ppn' => $query->reg_ppn,
+            //     'subinvoice_total' => $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
+            //     'subinvoice_qty' => '1',
+            //     'subinvoice_deskripsi' => $query->paket_nama . ' ( ' . $periode1blan . ' )',
+            //     'subinvoice_status' => '0',
+            // ]);
+
+
+            // dd('invoice');
+            // } else {
+            //     $data['waktu_jttempo'] = "belum jatuh tempo";
+            //     dd($data);
+            // }
+        }
+        // $update['reg_progres'] = '1';
+        // Registrasi::update($update);
+
+
+        dd('tembus');
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',

@@ -137,6 +137,7 @@
             <table id="input_data" class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
+                  <th>#</th>
                   <th>ID</th>
                   <th>INET</th>
                   <th>NOLAYANAN</th>
@@ -157,12 +158,22 @@
                   <th>TG REGISTRASI</th>
                   <th>KODE UNIK</th>
                   <th>NOTE</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($data_registrasi as $d)
                 <tr>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->reg_idpel}}" class="btn btn-link btn-danger">
+                        <i class="fa fa-times"></i>
+                      </button>
+                      <a href="{{route('admin.psb.berita_acara',['id'=>$d->reg_idpel])}}" target="_blank">
+                      <button type="button" class="btn btn-link btn-danger">
+                        <i class="fas fa-arrow-circle-down"></i>
+                      </button></a>
+                    </div>
+                  </td>
                       <td>{{$d->reg_idpel}}</td>
                       <td>{{$d->reg_idpel}}</td>
                       <td>{{$d->reg_nolayanan}}</td>
@@ -183,16 +194,6 @@
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_tgl}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_kode_unik}}</td>
                       <td>{{$d->reg_catatan}}</td>
-                      <td>
-                        <div class="form-button-action">
-                          <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
-                            <i class="fa fa-edit"></i>
-                          </button>
-                          <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->id}}" class="btn btn-link btn-danger">
-                            <i class="fa fa-times"></i>
-                          </button>
-                        </div>
-                      </td>
                     </tr>
                       <!-- Modal Edit -->
                       <div class="modal fade" id="modal_edit{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
