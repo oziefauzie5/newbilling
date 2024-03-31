@@ -15,9 +15,13 @@
           </div>
         </div>
         <div class="card-body">
+          <a href="{{route('admin.psb.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary ">
+            <i class="fas fa-angle-double-left "></i>
+            Kembali
+          </button></a>
           <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
             <i class="fa fa-plus"></i>
-            Tambah Paket Internet
+            Input Data
           </button>
           <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
             <i class="fa fa-file-import"></i> Import
@@ -170,11 +174,11 @@ Keterangan :
           </div> 
         @endif
           <div class="table-responsive">
-            <table id="edit_inputdata" class="display table table-striped table-hover" >
+            <table id="edit_inputdata" class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Tanggal</th>
+                  <th>Tanggal Regist</th>
                   <th>Nama</th>
                   <th>Whatsapp</th>
                   <th>Alamat Pasang</th>
@@ -185,7 +189,7 @@ Keterangan :
                 @foreach ($input_data as $d)
                 <tr id="{{$d->id}}">
                       <td>{{$d->id}}</td>
-                      <td>{{$d->input_tgl}}</td>
+                      <td>{{ date('d-m-Y', strtotime($d->input_tgl))}}</td>
                       <td>{{$d->input_nama}}</td>
                       <td>{{$d->input_hp}}</td>
                       <td>{{$d->input_alamat_pasang}}</td>

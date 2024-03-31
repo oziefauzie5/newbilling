@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PSB;
 
 use App\Http\Controllers\Controller;
+use App\Imports\Import\RegistrasiImport;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Barang\SubBarang;
 use App\Models\PSB\InputData;
@@ -13,6 +14,7 @@ use App\Models\Router\RouterosAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RegistrasiController extends Controller
 {
@@ -22,9 +24,6 @@ class RegistrasiController extends Controller
         $data['data_router'] = Router::all();
         $data['data_paket'] = Paket::all();
         $data['data_biaya'] = SettingBiaya::first();
-
-
-
         return view('Registrasi/registrasi', $data);
     }
     public function store(Request $request)
@@ -151,6 +150,7 @@ class RegistrasiController extends Controller
         SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
         return redirect()->route('admin.reg.registrasi_api', ['id' => $data['reg_idpel']]);
     }
+
     public function pilih_pelanggan_registrasi($id)
     {
         $data['tampil_data'] =  InputData::whereId($id)->first();
@@ -195,5 +195,14 @@ class RegistrasiController extends Controller
             ->where("subbarang_ktg", 'ONT')->first();
 
         return response()->json($kode_ont);
+    }
+    public function registrasi_import(Request $request)
+    {
+        Excel::import(new RegistrasiImport(), $request->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.psb.list_input')->with($notifikasi);
     }
 }

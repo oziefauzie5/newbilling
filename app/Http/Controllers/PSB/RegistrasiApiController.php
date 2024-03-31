@@ -14,6 +14,41 @@ use Illuminate\Http\Request;
 
 class RegistrasiApiController extends Controller
 {
+    public function registrasi_api_sementara(Request $request, $id)
+    {
+        $regist = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('input_data.id', $id)->first();
+        $router = Router::whereId($regist->reg_router)->first();
+        $tgl_aktif = date('d/m/Y', strtotime($regist->created_at));
+        $ip =   $router->router_ip . ':' . $router->router_port_api;
+        $user = $router->router_username;
+        $pass = $router->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
+
+        if ($API->connect($ip, $user, $pass)) {
+            $API->comm('/ppp/secret/add', [
+                'name' => $regist->reg_username == '' ? '' : $regist->reg_username,
+                'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
+                'service' => 'pppoe',
+                'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
+                'comment' => $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn == '' ? '' : $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn,
+            ]);
+
+            $notifikasi = array(
+                'pesan' => 'Berhasil menambahkan pelanggan',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.psb.index')->with($notifikasi);
+        } else {
+            $notifikasi = array(
+                'pesan' => 'Gagal menambahkan pelanggan',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.reg.index')->with($notifikasi);
+        }
+    }
     public function registrasi_api(Request $request, $id)
     {
         $regist = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')

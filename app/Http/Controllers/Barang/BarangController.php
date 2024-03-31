@@ -43,7 +43,6 @@ class BarangController extends Controller
         $data['tittle'] = 'Data Barang';
         $query = Barang::join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier');
         $data['barang'] = $query->get();
-
         return view('barang/barang', $data);
     }
     public function sub_barang($id)

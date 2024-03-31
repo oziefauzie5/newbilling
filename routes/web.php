@@ -11,6 +11,7 @@ use App\Http\Controllers\Pelanggan\PelangganController;
 use App\Http\Controllers\PSB\PsbController;
 use App\Http\Controllers\PSB\RegistrasiApiController;
 use App\Http\Controllers\PSB\RegistrasiController;
+use App\Http\Controllers\PSB\SementaraMigrasiController;
 use App\Http\Controllers\Router\PaketController;
 use App\Http\Controllers\Router\RouterController;
 use App\Http\Controllers\Teknisi\TeknisiController;
@@ -80,12 +81,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/PSB/Input-Data_update', [PsbController::class, 'input_data_update'])->name('psb.input_data_update');
     Route::delete('/PSB/Input-data-delete/{id}', [PsbController::class, 'input_data_delete'])->name('psb.input_data_delete');
     Route::get('/PSB/Registrasi', [RegistrasiController::class, 'index'])->name('reg.index');
+
+    Route::get('/PSB/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi');
+    Route::post('/PSB/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi');
+
     Route::get('/PSB/Registrasi-cari/{id}', [RegistrasiController::class, 'pilih_pelanggan_registrasi'])->name('reg.pilih_pelanggan_registrasi');
     Route::post('/PSB/Registrasi-Store', [RegistrasiController::class, 'store'])->name('reg.store');
     Route::get('/PSB/Validasi1/{id}', [RegistrasiController::class, 'validasi_pachcore'])->name('reg.validasi_pachcore');
     Route::get('/PSB/Validasi2/{id}', [RegistrasiController::class, 'validasi_adaptor'])->name('reg.validasi_adaptor');
     Route::get('/PSB/Validasi3/{id}', [RegistrasiController::class, 'validasi_ont'])->name('reg.validasi_ont');
     Route::get('/PSB/get-paket{id}', [RegistrasiController::class, 'getPaket'])->name('reg.getPaket');
+    Route::post('/PSB/Registrasi-Import', [RegistrasiController::class, 'registrasi_import'])->name('reg.registrasi_import');
     Route::get('/PSB/Redirect/{id}', [RegistrasiApiController::class, 'registrasi_api'])->name('reg.registrasi_api');
     // Route::get('/PSB/Redirect-Edit/{id}', [RegistrasiApiController::class, 'edit_registrasi_api'])->name('reg.edit_registrasi_api');
     Route::get('/PSB/Edit/{id}/Pelanggan', [PsbController::class, 'edit_pelanggan'])->name('psb.edit_pelanggan');

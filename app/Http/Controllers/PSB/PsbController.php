@@ -27,7 +27,8 @@ class PsbController extends Controller
     public function index()
     {
         $data['data_registrasi'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')->get();
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')->get();
 
         $data['count_inputdata'] = InputData::count();
         $data['count_registrasi'] = Registrasi::count();
@@ -38,7 +39,7 @@ class PsbController extends Controller
     public function list_input()
     {
         $data['data_user'] = User::all();
-        $data['input_data'] = InputData::get();
+        $data['input_data'] = InputData::orderBy('input_tgl', 'ASC')->get();
         return view('PSB/list_inputdata', $data);
     }
     public function edit_inputdata($id)

@@ -857,9 +857,6 @@ $(function(){ //jQuery shortcut for .ready (ensures DOM ready)
 			var idpel = table.row( this ).id();
   var url = '{{ route("admin.reg.pilih_pelanggan_registrasi", ":id") }}';
 url = url.replace(':id', idpel);
-console.log(idpel)
-// $("#myId").addClass('d-none');
-// $("#loading").removeClass('d-none');
   $.ajax({
                     url: url,
                     type: 'GET',
@@ -1496,6 +1493,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 		}
 	});
 	</script>
+	
 					<script>
 		Circles.create({
 			id:'circles-1',
