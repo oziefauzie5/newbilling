@@ -249,37 +249,35 @@ class RegistrasiController extends Controller
             // if (Carbon::now()->toDateString() > Carbon::create($query->tgl_jatuh_tempo)->toDateString()) {
             $periode1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->toDateString() . ' - ' . Carbon::create($query->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
             $inv_tgl_isolir1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
-
-            echo  $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn . '<br>';
             $invoice_id = rand(10000, 19999);
-            // Invoice::create([
-            //     'inv_id' => $invoice_id,
-            //     'inv_status' => 'UNPAID',
-            //     'inv_idpel' => $query->reg_idpel,
-            //     'inv_nolayanan' => $query->reg_nolayanan,
-            //     'inv_nama' => $query->input_nama,
-            //     'inv_jenis_tagihan' => $query->reg_jenis_tagihan,
-            //     'inv_profile' => $query->paket_nama,
-            //     'inv_mitra' => 'SYSTEM',
-            //     'inv_kategori' => 'OTOMATIS',
-            //     'inv_diskon' => '0',
-            //     'inv_note' => $query->input_nama,
-            //     'inv_tgl_isolir' => $inv_tgl_isolir1blan,
-            //     'inv_total' =>   $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
-            //     'inv_tgl_tagih' => $query->reg_tgl_tagih,
-            //     'inv_tgl_jatuh_tempo' => $query->reg_tgl_jatuh_tempo,
-            //     'inv_periode' => $periode1blan,
-            // ]);
+            Invoice::create([
+                'inv_id' => $invoice_id,
+                'inv_status' => 'UNPAID',
+                'inv_idpel' => $query->reg_idpel,
+                'inv_nolayanan' => $query->reg_nolayanan,
+                'inv_nama' => $query->input_nama,
+                'inv_jenis_tagihan' => $query->reg_jenis_tagihan,
+                'inv_profile' => $query->paket_nama,
+                'inv_mitra' => 'SYSTEM',
+                'inv_kategori' => 'OTOMATIS',
+                'inv_diskon' => '0',
+                'inv_note' => $query->input_nama,
+                'inv_tgl_isolir' => $inv_tgl_isolir1blan,
+                'inv_total' =>   $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
+                'inv_tgl_tagih' => $query->reg_tgl_tagih,
+                'inv_tgl_jatuh_tempo' => $query->reg_tgl_jatuh_tempo,
+                'inv_periode' => $periode1blan,
+            ]);
 
-            // SubInvoice::create([
-            //     'subinvoice_id' => $invoice_id,
-            //     'subinvoice_harga' => $query->reg_harga,
-            //     'subinvoice_ppn' => $query->reg_ppn,
-            //     'subinvoice_total' => $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
-            //     'subinvoice_qty' => '1',
-            //     'subinvoice_deskripsi' => $query->paket_nama . ' ( ' . $periode1blan . ' )',
-            //     'subinvoice_status' => '0',
-            // ]);
+            SubInvoice::create([
+                'subinvoice_id' => $invoice_id,
+                'subinvoice_harga' => $query->reg_harga,
+                'subinvoice_ppn' => $query->reg_ppn,
+                'subinvoice_total' => $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
+                'subinvoice_qty' => '1',
+                'subinvoice_deskripsi' => $query->paket_nama . ' ( ' . $periode1blan . ' )',
+                'subinvoice_status' => '0',
+            ]);
 
 
             // dd('invoice');
@@ -292,7 +290,7 @@ class RegistrasiController extends Controller
         // Registrasi::update($update);
 
 
-        dd('tembus');
+        // dd('tembus');
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
