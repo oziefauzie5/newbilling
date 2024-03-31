@@ -47,8 +47,8 @@
               -2%
               <i class="fa fa-chevron-down"></i>
             </div>
-            <div class="h1 m-0">$95</div>
-            <div class="text-muted mb-3">Aktivasi</div>
+            <div class="h1 m-0">1</div>
+            <div class="text-muted mb-3">Putus Berlanggan</div>
           </div>
         </div>
       </div>
@@ -59,8 +59,8 @@
               -1%
               <i class="fa fa-chevron-down"></i>
             </div>
-            <div class="h1 m-0">621</div>
-            <div class="text-muted mb-3">Pembayaran</div>
+            <div class="h1 m-0">2</div>
+            <div class="text-muted mb-3">Isolir</div>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
           </div> 
         @endif
         <a href="{{route('admin.reg.sementara_migrasi')}}">
-        <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
+        <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#addRowModal">
           <i class="fa fa-plus"></i>
           FITUR SEMENTARA MIGRASI
         </button>
