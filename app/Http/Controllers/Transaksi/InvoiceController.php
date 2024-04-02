@@ -33,7 +33,7 @@ class InvoiceController extends Controller
     {
         $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->where('inv_id', $id)->first();
-        $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')->get();
+        $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')->where('invoices.inv_id', $id)->get();
 
 
         $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga');
@@ -158,11 +158,13 @@ class InvoiceController extends Controller
         );
         return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
     }
-    public function addons(Request $request, $inv)
+    public function addons(Request $request, $id)
     {
-        $unp = Invoice::where('inv_id', $request->inv_id)->first();
+        $unp = Invoice::where('inv_id', $id)->first();
+        // dd($id);
         if ($unp) {
-            $data['subinvoice_id'] = $request->inv_id;
+
+            $data['subinvoice_id'] = $id;
             $data['subinvoice_deskripsi'] = $request->Deskripsi;
             $data['subinvoice_qty'] = $request->qty;
             $data['subinvoice_harga'] = $request->harga;
@@ -171,13 +173,18 @@ class InvoiceController extends Controller
             $data['subinvoice_status'] = '1';
             $upd['inv_total'] = $unp->upd_total + $request->total;
             SubInvoice::create($data);
-            Invoice::where('inv_id', $request->inv_id)->update($upd);
+            Invoice::where('inv_id', $id)->update($upd);
             $notifikasi = array(
                 'pesan' => 'Berhasil menambahkan addons',
                 'alert' => 'success',
             );
-            return redirect()->route('admin.inv.sub_invoice', ['id' => $request->inv_id])->with($notifikasi);
+            return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
         } else {
+            $notifikasi = array(
+                'pesan' => 'Gagal menambahkan addons',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
         }
     }
 

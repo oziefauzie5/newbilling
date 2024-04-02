@@ -82,6 +82,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::delete('/PSB/Input-data-delete/{id}', [PsbController::class, 'input_data_delete'])->name('psb.input_data_delete');
     Route::get('/PSB/Registrasi', [RegistrasiController::class, 'index'])->name('reg.index');
     Route::get('/PSB/{id}/berita_acara', [RegistrasiController::class, 'berita_acara'])->name('psb.berita_acara');
+    Route::get('/PSB/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar');
 
     Route::get('/PSB/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi');
     Route::post('/PSB/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi');

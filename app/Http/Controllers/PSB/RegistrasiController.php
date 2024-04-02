@@ -215,7 +215,33 @@ class RegistrasiController extends Controller
             // ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('registrasis.reg_idpel', $id)
             ->first();
+        $data['seles'] = User::whereId($data['berita_acara']->input_sales)->first();
+        $nama = InputData::where('id', $id)->first();
+        if ($nama) {
+            $sales = $nama->input_nama;
+        } else {
+            $sales = '-';
+        }
+        $pdf = App::make('dompdf.wrapper');
+        $html = view('PSB/berita_acara', $data)->render();
+        $pdf->loadHTML($html);
+        $pdf->setPaper('A4', 'potraid');
+        return $pdf->download('Berita_Acara_' . $sales . '.pdf');
+    }
+    public function bukti_kas_keluar($id)
+    {
+        $data['profile_perusahaan'] = SettingAplikasi::first();
+        // dd($data['profile_perusahaan']->app_logo);
+        $data['nama_admin'] = Auth::user()->name;
+        $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
+            ->where('registrasis.reg_idpel', $id)
+            // ->where('teknisis.teknisi_job', 'PSB')
+            ->first();
 
+        dd($data);
 
 
         $data['seles'] = User::whereId($data['berita_acara']->input_sales)->first();

@@ -172,6 +172,10 @@
                       <button type="button" class="btn btn-link btn-danger">
                         <i class="fas fa-arrow-circle-down"></i>
                       </button></a>
+                      <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$d->reg_idpel])}}" target="_blank">
+                      <button type="button" class="btn btn-link btn-danger">
+                        <i class="fas fa-arrow-circle-down"></i>KAS
+                      </button></a>
                     </div>
                   </td>
                       <td>{{$d->reg_idpel}}</td>

@@ -213,7 +213,7 @@
                       </div>
                       <div class="col">
                               <label for="exampleInputEmail1">Jumlah</label>
-                              <input type="text" class="form-control" name="ppn" id="ppn" required >
+                              <input type="text" class="form-control" name="ppn" id="ppn" required readonly>
                             </div>
                       <div class="col">
                   <label for="exampleInputEmail1">Total</label>

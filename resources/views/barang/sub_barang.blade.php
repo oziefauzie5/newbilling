@@ -141,6 +141,10 @@
                 </div>
                 <div class="form-row">
                   <div class="col-4">
+                    <label for="">Serial Number</label>
+                    <input type="text" class="form-control" name="sn" >
+                  </div>
+                  <div class="col-4">
                     <label for="">Mac Address</label>
                     <input type="text" class="form-control" name="mac" >
                   </div>
@@ -172,6 +176,7 @@
                           <td>{{$sub->subbarang_stok}}</td>
                           <td class="text-right">{{number_format($sub->subbarang_harga)}}</td>
                           <td>{{$sub->subbarang_mac}}</td>
+                          <td>{{$sub->subbarang_sn}}</td>
                           <td>{{$sub->subbarang_keterangan}}</td>
                         </tr>
                       @endforeach
