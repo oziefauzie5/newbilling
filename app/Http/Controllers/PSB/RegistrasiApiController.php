@@ -34,6 +34,7 @@ class RegistrasiApiController extends Controller
                 'service' => 'pppoe',
                 'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
                 'comment' => $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn == '' ? '' : $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn,
+                'disabled' => 'yes',
             ]);
 
             $notifikasi = array(
@@ -69,6 +70,7 @@ class RegistrasiApiController extends Controller
                 'service' => 'pppoe',
                 'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
                 'comment' => $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn == '' ? '' : $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn,
+                'disabled' => 'yes',
             ]);
 
             $notifikasi = array(
@@ -239,11 +241,6 @@ class RegistrasiApiController extends Controller
                     'alert' => 'success',
                 );
                 Registrasi::where('reg_idpel', $id)->update($data);
-
-                // $notifikasi = array(
-                //     'pesan' => 'Profile tidak ada pada Router ini',
-                //     'alert' => 'error',
-                // );
                 return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
             }
         } else {
@@ -326,6 +323,7 @@ class RegistrasiApiController extends Controller
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
                         'comment' => $query->input_nama . '|' . $query->reg_jenis_tagihan . '|' . $query->reg_tgl_pasang . '|' . $query->reg_mac == '' ? '' : $query->input_nama . '|' . $query->reg_jenis_tagihan . '|' . $query->reg_tgl_pasang . '|' . $query->reg_mac,
+                        'disabled' => 'yes',
                     ]);
 
                     $secret_after = $API->comm('/ppp/secret/print', [
@@ -378,6 +376,7 @@ class RegistrasiApiController extends Controller
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
                         'comment' => $query->input_nama . '|' . $query->reg_jenis_tagihan . '|' . $query->reg_tgl_pasang . '|' . $query->reg_mac == '' ? '' : $query->input_nama . '|' . $query->reg_jenis_tagihan . '|' . $query->reg_tgl_pasang . '|' . $query->reg_mac,
+                        'disabled' => 'yes',
                     ]);
 
                     $secret_after = $API->comm('/ppp/secret/print', [
