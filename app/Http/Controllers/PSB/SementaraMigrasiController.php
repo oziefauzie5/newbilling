@@ -65,6 +65,8 @@ class SementaraMigrasiController extends Controller
         Session::flash('reg_catatan', $request->reg_catatan);
         Session::flash('reg_profile', $request->reg_profile);
         Session::flash('paket_nama', $paket_nama->paket_nama);
+        Session::flash('tgl_aktif', $paket_nama->tgl_aktif);
+        Session::flash('tgl_jttempo', $paket_nama->tgl_jttempo);
 
         $request->validate([
             'reg_nama' => 'required',
@@ -84,7 +86,13 @@ class SementaraMigrasiController extends Controller
             'reg_harga' => 'required',
             'input_subseles' => 'required',
             'reg_profile' => 'required',
+            'tgl_jttempo' => 'required',
+            'tgl_aktif' => 'required',
+            'reg_tgl' => 'required',
         ], [
+            'tgl_jttempo.required' => 'Tanggal jatuh tempo tidak boleh kosong',
+            'tgl_aktif.required' => 'Tanggal aktif tidak boleh kosong',
+            'reg_tgl.required' => 'Tanggal registrasi tidak boleh kosong',
             'reg_nama.required' => 'Nama tidak boleh kosong',
             'reg_idpel.unique' => 'Id Pelanggan sudah ada, Hapus input data terlebih dahulu',
             'reg_nolayanan.unique' => 'No layanan sudah ada, Ulangi Kembali',
@@ -131,10 +139,10 @@ class SementaraMigrasiController extends Controller
         $data['tgl_aktif'] = $request->tgl_aktif;
         $data['reg_status'] = '0';
         $data['reg_progres'] = '2';
+        $update['input_tgl'] = $request->reg_tgl;
         $update['input_maps'] =  $request->maps;
         $update['input_status'] =  '2';
 
-        dd($data);
 
 
         Registrasi::create($data);
@@ -174,7 +182,7 @@ class SementaraMigrasiController extends Controller
         }
 
 
-        // return redirect()->route('admin.reg.registrasi_api_sementara', ['id' => $data['reg_idpel']]);
+        return redirect()->route('admin.reg.registrasi_api_sementara', ['id' => $data['reg_idpel']]);
     }
 
     public function proses_aktivasi_sementara(Request $request, $id)

@@ -33,6 +33,7 @@ class PsbController extends Controller
             ->orderBy('tgl', 'DESC')
             ->get();
 
+
         $data['count_inputdata'] = InputData::count();
         $data['count_registrasi'] = Registrasi::count();
         $data['count_berlangganan'] = InputData::where('input_status', '1')->count();

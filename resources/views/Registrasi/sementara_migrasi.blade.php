@@ -78,7 +78,7 @@
               </ul>
           </div> 
           @endif
-           <form class="form-horizontal"action="{{route('admin.reg.store')}}" method="POST">
+           <form class="form-horizontal"action="{{route('admin.reg.store_sementara_migrasi')}}" method="POST">
              @csrf
 
              <h3 class="mt-3 text-bolt">PELANGGAN</h3><hr>
@@ -220,17 +220,17 @@
               <div class="form-group row">
                 <label for="paket" class="col-sm-2 col-form-label" >Tanggal registrasi*</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control " name="reg_tgl" value="{{Session::get('reg_tgl')}}">
+                <input type="date" class="form-control " name="reg_tgl" value="{{Session::get('reg_tgl')}}">
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Tanggal Aktif</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="tgl_aktif" value="{{Session::get('tgl_aktif')}}" >
+                <input type="date" class="form-control" name="tgl_aktif" value="{{Session::get('tgl_aktif')}}" >
               </div>
               <label class="col-sm-2 col-form-label">Tanggal Jatuh Tempo</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="tgl_jttempo" value="{{Session::get('tgl_jttempo')}}" >
+                <input type="date" class="form-control" name="tgl_jttempo" value="{{Session::get('tgl_jttempo')}}" >
               </div>
             </div>
               <div class="form-group row">
@@ -286,9 +286,9 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Sub Sales</label>
+                <label class="col-sm-2 col-form-label">Penanggung Jawab</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="tampil_subsales" name="input_subseles" value="{{Session::get('input_subseles')}}" readonly>
+                  <input type="text" class="form-control" id="tampil_subsales" name="input_subseles" value="{{Session::get('input_subseles')}}">
                 </div>
               <label class="form-check col-sm-2 col-form-label">Dana Kerja Sama &nbsp;&nbsp;
                 <input class="form-check-input checkboxkerjasama" type="checkbox" id="kas" value="{{$data_biaya->dana_kas}}" @if( Session::get('reg_dana_kerjasama')) checked @endif>
@@ -313,13 +313,6 @@
               </div>
             </div>
             <h3 class="mt-3 text-bolt">CATATAN</h3><hr>
-            <div class="form-group row">
-              <label for="router" class="col-sm-2 col-form-label">Keterangan</label>
-              <div class="col-sm-10">
-              <textarea class="form-control is-invalid" id="validationTextarea" readonly >
-              </textarea>
-              </div>
-          </div>
             <div class="form-group row">
               <label for="router" class="col-sm-2 col-form-label">Catatan</label>
               <div class="col-sm-10">
