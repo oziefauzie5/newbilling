@@ -167,93 +167,34 @@
         </tr>
     </table>
     <br>
-    <hr>
-
-<table id="customers">
-    <tr>
-        <td colspan="2"></td>
-        <td>test</td>
-    </tr>
-</table>
 
     <table id="customers">
         <br>
         <tr>
-            <td width="15%">Kode Pactcore</td>
+            <td width="50%"></td>
+            <td id="invoice" width="15%">JUMLAH</td>
             <td>:</td>
-            <td id="box">{{$kas->reg_kode_pactcore}}</td>
-            <td></td>
-            <td width="15%">Kode Adaptor</td>
-            <td>:</td>
-            <td id="box">{{$kas->reg_kode_adaptor}}</td>
+            <td id="invoice">Rp. {{number_format($kas->teknisi_psb)}}</td>
         </tr>
         <tr>
-            <td width="15%">Kode ONT</td>
+            <td width="50%"></td>
+            <td id="invoice" width="15%">TOTAL</td>
             <td>:</td>
-            <td id="box">{{$kas->reg_kode_ont}}</td>
-            <td></td>
-            <td width="15%">Kode Kabel</td>
-            <td>:</td>
-            <td id="box"></td>
-        </tr>
-        <tr>
-            <td>Before</td>
-            <td>:</td>
-            <td id="box"></td>
-            <td></td>
-            <td>After</td>
-            <td>:</td>
-            <td id="box"></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Status Perangkat</td>
-            <td>:</td>
-            <td>Dipinjamkan</td>
-            <td></td>
-            <td>Mac Address</td>
-            <td>:</td>
-            <td id="box">{{$kas->reg_mac}}</td>
+            <td id="invoice">Rp. {{number_format($kas->teknisi_psb)}}</td>
         </tr>
     </table>
-    <br>
-    <hr>
-    <table id="customers">
-        <tr>
-            <td width="15%">Jeni Layanan</td>
-            <td>:</td>
-            <td width="85%">{{$kas->reg_layanan}}</td>
-        </tr>
-        <tr>
-            <td width="15%">Username</td>
-            <td>:</td>
-            <td width="85%">{{$kas->reg_username}}</td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td>:</td>
-            <td>{{$kas->reg_password}}</td>
-        </tr>
-    </table>
-    <br>
-    <hr><br>
-    <span>Syarat dan Ketentuan berlaku</span>
-    <ul id="sk">
-        <li>Berlangganan minimal 6 Bulan</li>
-        <li>Mengembalikan Perangkat ONT ( Modem ) saat berhenti berlangganan</li>
-    </ul>
     <table id="ttd">
         <tr>
             <th width="25%" higth="20px">Admin</th>
-            <th width="25%">Sales</th>
-            <th width="25%">Teknisi</th>
-            <th width="25%">Pelanggan</th>
+            <th width="25%">NOC</th>
+            <th width="25%">Keuangan</th>
+            <th width="25%">Penerima</th>
         </tr>
         <tr>
             <th width="25%" higth="20px">{{ $nama_admin }}</th>
-            <th width="25%">{{$kas->input_subseles}}</th>
             <th width="25%">...................................</th>
-            <th width="25%">{{$kas->input_nama}}</th>
+            <th width="25%">...................................</th>
+            <th width="25%">{{$kas->teknisi_team}}</th>
         </tr>
     </table>
 

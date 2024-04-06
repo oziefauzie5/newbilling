@@ -169,18 +169,29 @@
                         <i class="fa fa-times"></i>
                       </button>
                       <a href="{{route('admin.psb.berita_acara',['id'=>$d->reg_idpel])}}" target="_blank">
-                      <button type="button" class="btn btn-link btn-danger">
-                        <i class="fas fa-arrow-circle-down"></i>
+                      <button type="button" class="btn btn-link btn-dark">
+                        Berita acara
                       </button></a>
-                      @if($d->reg_progres != '2')
+                      @if($d->reg_progres == '1')
                       <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$d->reg_idpel])}}" target="_blank">
                       <button type="button" class="btn btn-link btn-dark">
-                        <i class="fas fa-arrow-circle-down"></i>KAS
+                        Kas
                       </button></a>
+                      @elseif($d->reg_progres == '2')
+                      <a>
+                        <button type="button" class="btn btn-link btn-success">
+                          Lunas
+                        </button></a>
+                      @else
+                      <a>
+                        <button type="button" class="btn btn-link btn-warning">
+                          Proses
+                        </button></a>
+                    
                       @endif
                     </div>
                   </td>
-                      <td>{{$d->reg_idpel}}</td>
+                      <td>{{$d->reg_progres}}</td>
                       <td>{{$d->reg_idpel}}</td>
                       <td>{{$d->reg_nolayanan}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_nama}}</td>

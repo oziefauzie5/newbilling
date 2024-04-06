@@ -21,6 +21,8 @@ class Teknisi extends Model
         'teknisi_nilai',
         'teknisi_nilai_instalasi',
         'teknisi_note',
+        'teknisi_pengecekan',
+        'teknisi_note',
         'teknisi_status',
     ];
 }

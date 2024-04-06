@@ -241,6 +241,10 @@ class RegistrasiController extends Controller
             ->where('teknisis.teknisi_job', 'PSB')
             ->where('teknisis.teknisi_psb', '>', '0')
             ->first();
+        $update['reg_progres'] = '2';
+        Registrasi::where('reg_idpel', $id)->update($update);
+
+
         $data['seles'] = User::whereId($data['kas']->input_sales)->first();
         return view('PSB/bukti_kas_keluar', $data);
         // dd($data);
