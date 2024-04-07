@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('registrasis', function (Blueprint $table) {
             $table->id();
             $table->string('reg_idpel')->nullable();
+            $table->string('reg_clientid')->nullable();
             $table->string('reg_nolayanan')->nullable();
             $table->string('reg_layanan')->nullable();
             $table->string('reg_profile')->nullable();

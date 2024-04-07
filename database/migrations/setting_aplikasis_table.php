@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('app_brand')->nullable();
             $table->text('app_alamat')->nullable();
             $table->string('app_npwp',)->nullable();
+            $table->string('app_clientid',)->nullable();
             $table->string('app_logo',)->nullable();
             $table->string('app_favicon',)->nullable();
             $table->string('app_link_admin',)->nullable();

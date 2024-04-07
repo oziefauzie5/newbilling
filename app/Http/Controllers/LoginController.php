@@ -37,6 +37,7 @@ class LoginController extends Controller
                 $request->session()->put('app_logo', $app->app_logo);
                 $request->session()->put('app_favicon', $app->app_favicon);
                 $request->session()->put('app_npwp', $app->app_npwp);
+                $request->session()->put('app_clientid', $app->app_clientid);
                 $request->session()->put('app_alamat', $app->app_alamat);
                 $request->session()->put('app_link_admin', $app->app_link_admin);
                 $request->session()->put('app_link_pelanggan', $app->app_link_pelanggan);
@@ -46,6 +47,7 @@ class LoginController extends Controller
                 $request->session()->put('app_logo', 'APPBILL');
                 $request->session()->put('app_favicon', 'APPBILL');
                 $request->session()->put('app_npwp', 'APPBILL');
+                $request->session()->put('app_clientid', 'APPBILL-');
                 $request->session()->put('app_alamat', 'Jl. Raya Bogor');
                 $request->session()->put('app_link_admin', '-');
                 $request->session()->put('app_link_pelanggan', '-');
@@ -83,6 +85,7 @@ class LoginController extends Controller
         session()->forget('app_brand');
         session()->forget('app_nama');
         session()->forget('app_alamat');
+        session()->forget('app_clientid');
         session()->forget('app_npwp');
         session()->forget('app_logo');
         session()->forget('app_favicon');

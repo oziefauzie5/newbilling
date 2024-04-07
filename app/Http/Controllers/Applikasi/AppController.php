@@ -39,6 +39,7 @@ class AppController extends Controller
             $data['app_brand'] = " ";
             $data['app_alamat'] = " ";
             $data['app_npwp'] = "";
+            $data['app_clientid'] = "";
             $data['app_logo'] = "";
             $data['app_favicon'] = "";
             $data['app_link_admin'] = "";
@@ -47,6 +48,7 @@ class AppController extends Controller
             $data['app_nama'] = $SettingAplikasi->app_nama;
             $data['app_brand'] = $SettingAplikasi->app_brand;
             $data['app_alamat'] = $SettingAplikasi->app_alamat;
+            $data['app_clientid'] = $SettingAplikasi->app_clientid;
             $data['app_npwp'] = $SettingAplikasi->app_npwp;
             $data['app_logo'] = $SettingAplikasi->app_logo;
             $data['app_favicon'] = $SettingAplikasi->app_favicon;
@@ -254,6 +256,7 @@ class AppController extends Controller
                     'app_brand' => $request->app_brand,
                     'app_alamat' => $request->app_alamat,
                     'app_npwp' => $request->app_npwp,
+                    'app_clientid' => $request->app_clientid,
                     'app_logo' => $filename1,
                     'app_favicon' => $filename2,
                     'app_link_admin' => $request->app_link_admin,
@@ -267,6 +270,7 @@ class AppController extends Controller
                     'app_brand' => $request->app_brand,
                     'app_alamat' => $request->app_alamat,
                     'app_npwp' => $request->app_npwp,
+                    'app_clientid' => $request->app_clientid,
                     'app_logo' => $filename1,
                     'app_favicon' => $filename2,
                     'app_link_admin' => $request->app_link_admin,

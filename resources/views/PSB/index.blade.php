@@ -172,12 +172,12 @@
                       <button type="button" class="btn btn-link btn-dark">
                         Berita acara
                       </button></a>
-                      @if($d->reg_progres == '1')
+                      @if($d->reg_progres == '2')
                       <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$d->reg_idpel])}}" target="_blank">
                       <button type="button" class="btn btn-link btn-dark">
                         Kas
                       </button></a>
-                      @elseif($d->reg_progres == '2')
+                      @elseif($d->reg_progres == '3')
                       <a>
                         <button type="button" class="btn btn-link btn-success">
                           Lunas

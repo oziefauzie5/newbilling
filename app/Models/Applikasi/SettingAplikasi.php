@@ -14,6 +14,7 @@ class SettingAplikasi extends Model
         'app_brand',
         'app_alamat',
         'app_npwp',
+        'app_clientid',
         'app_logo',
         'app_favicon',
         'app_link_apk',

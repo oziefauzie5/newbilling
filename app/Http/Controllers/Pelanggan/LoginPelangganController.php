@@ -7,8 +7,10 @@ use App\Models\Applikasi\SettingAplikasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Registrasi\Registrasi;
+use App\Models\PSB\InputData;
 use Illuminate\Support\Facades\Session;
+
+use App\Models\Registrasi\Registrasi;
 
 class LoginPelangganController extends Controller
 {
@@ -20,11 +22,9 @@ class LoginPelangganController extends Controller
 
     public function login_proses(Request $request)
     {
-
         $request->validate([
             'input_hp' => 'required',
         ]);
-
 
         $nomorhp = preg_replace("/[^0-9]/", "", $request->input_hp);
         if (!preg_match('/[^+0-9]/', trim($nomorhp))) {
@@ -37,10 +37,9 @@ class LoginPelangganController extends Controller
 
         $data = [
             'input_hp' => $nomorhp,
-            'password' => $nomorhp,
+            'password' => $request->input_hp,
         ];
-        // dd($nomorhp);
-        return redirect()->route('login_pelanggan')->with('failed', 'Nomor Whatsapp tidak terdaftar');
+
         if (Auth::guard('pelanggan')->attempt($data)) {
             $app = SettingAplikasi::first();
 
@@ -52,5 +51,15 @@ class LoginPelangganController extends Controller
         } else {
             return redirect()->route('login_pelanggan')->with('failed', 'Nomor Whatsapp tidak terdaftar');
         }
+    }
+
+    public function logout()
+    {
+        session()->forget('app_brand');
+        session()->forget('app_nama');
+        session()->forget('app_logo');
+        session()->forget('app_favicon');
+        Auth::guard('pelanggan')->logout();
+        return redirect()->route('login_pelanggan')->with('success', 'Kamu berhasil logout');
     }
 }

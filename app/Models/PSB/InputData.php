@@ -4,9 +4,12 @@ namespace App\Models\PSB;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 
-class InputData extends Model
+class InputData extends Model implements Authenticatable
 {
+    use AuthenticableTrait;
     use HasFactory;
     protected $fillable = [
         'id',
@@ -19,7 +22,7 @@ class InputData extends Model
         'input_alamat_pasang',
         'input_sales',
         'input_subseles',
-        'input_password',
+        'password',
         'input_maps',
         'input_kordinat',
         'input_status',

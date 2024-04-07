@@ -92,7 +92,7 @@ class PsbController extends Controller
             'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
             'input_sales' => ucwords($request->input_sales),
             'input_subseles' => ucwords($request->input_subseles),
-            'input_password' => Hash::make($request->input_hp),
+            'password' => Hash::make($request->input_hp),
             'input_maps' => $request->input_maps,
             'input_status' => '0',
             'input_keterangan' => $request->input_keterangan,
@@ -108,15 +108,16 @@ class PsbController extends Controller
     {
         // $request->edit_id;
         // dd($request->edit_id);
+        $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
         $update['input_nama'] = $request->input_nama;
         $update['input_ktp'] = $request->input_ktp;
-        $update['input_hp'] = $request->input_hp;
+        $update['input_hp'] = $nomorhp;
         $update['input_email'] = $request->input_email;
         $update['input_alamat_ktp'] = $request->input_alamat_ktp;
         $update['input_alamat_pasang'] = $request->input_alamat_pasang;
         $update['input_sales'] = $request->input_sales;
         $update['input_subseles'] = $request->input_subseles;
-        $update['input_password'] = $request->input_password;
+        $update['password'] = Hash::make('0' . $request->input_hp);
         $update['input_maps'] = $request->input_maps;
         $update['input_status'] = '0';
         $update['input_keterangan'] = $request->input_keterangan;

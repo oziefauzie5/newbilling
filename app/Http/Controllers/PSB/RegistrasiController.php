@@ -241,7 +241,7 @@ class RegistrasiController extends Controller
             ->where('teknisis.teknisi_job', 'PSB')
             ->where('teknisis.teknisi_psb', '>', '0')
             ->first();
-        $update['reg_progres'] = '2';
+        $update['reg_progres'] = '3';
         Registrasi::where('reg_idpel', $id)->update($update);
 
 

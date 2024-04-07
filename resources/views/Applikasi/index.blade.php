@@ -262,6 +262,10 @@
                   <input type="text" class="form-control"  name="app_npwp" id="" value="{{$app_npwp}}">
                 </div>
                 <div class="form-group">
+                  <label >Frefix Id Client</label>
+                  <input type="text" class="form-control"  name="app_clientid" id="" value="{{$app_clientid}}">
+                </div>
+                <div class="form-group">
                   <label >Link Admin</label>
                   <input type="text" class="form-control"  name="app_link_admin" id="" value="{{$app_link_admin}}">
                 </div>

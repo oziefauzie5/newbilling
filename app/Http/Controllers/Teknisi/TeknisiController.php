@@ -69,6 +69,7 @@ class TeknisiController extends Controller
         $data['teknisi_job'] = $request->job;
         $data['teknisi_idpel'] = $request->idpel;
         $data['teknisi_status'] = '1';
+        $data['teknisi_psb'] = '0';
         // $yesterday = date("d F Y, H:i:s", $id);
         Teknisi::create($data);
         $update['reg_progres'] = '1';
@@ -119,6 +120,14 @@ class TeknisiController extends Controller
         $swaktu = SettingWaktuTagihan::first();
         $sbiaya = SettingBiaya::first();
         $barang = SubBarang::where('id_subbarang', $request->kode)->first();
+        $countReg = Registrasi::count();
+        $frefixid = Session::get('app_clientid');
+
+        if ($countReg = 0) {
+            $idclient = $frefixid . '1';
+        } else {
+            $idclient = $frefixid . $countReg + 1;
+        }
         if ($barang->subbarang_stok > $request->after) {
 
 
@@ -252,6 +261,7 @@ class TeknisiController extends Controller
                     $pelanggan['reg_after'] = $request->after;
                     $pelanggan['reg_penggunaan_dropcore'] = $request->total;
                     $pelanggan['reg_tgl_pasang'] = $tanggal;
+                    $pelanggan['reg_clientid'] = $idclient;
 
                     $teknisi['teknisi_ket'] = $query->input_nama;
                     $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
@@ -279,12 +289,6 @@ class TeknisiController extends Controller
                     $akhir  = $teknisi['teknisi_job_selesai'];
 
                     $diff  = $akhir - $awal;
-                    // dd([
-                    //     'waktu_kerja' => $waktu_kerja,
-                    //     'awal' => $awal,
-                    //     'akhir' => $akhir,
-                    //     'total' => $diff,
-                    // ]);
                     if ($diff > 10800) {
                         $nilai = '25';
                         $kata = '
@@ -319,7 +323,6 @@ class TeknisiController extends Controller
                     $teknisi['teknisi_note'] = $kata;
 
                     $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
-                    // dd($cek_inv->inv_id);
                     if ($cek_inv) {
                         $inv['inv_id'] = $cek_inv->inv_id;
                         $sub_inv['subinvoice_id'] = $inv['inv_id'];

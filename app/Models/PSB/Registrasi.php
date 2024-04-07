@@ -10,6 +10,7 @@ class Registrasi extends Model
     use HasFactory;
     protected $fillable = [
         'reg_idpel',
+        'reg_clientid',
         'reg_nolayanan',
         'reg_layanan',
         'reg_profile',
