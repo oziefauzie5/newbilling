@@ -665,14 +665,18 @@
 	<script src="{{asset('atlantis/assets/js/setting-demo.js')}}"></script>
 	<script src="{{asset('atlantis/assets/js/demo.js')}}"></script>
 
+
   {{-- JAVASCRIPT INPUT DATA REGIST PELANGGAN --}}
  <script >
 		$(document).ready(function() {
+	
+			
 			$('#input_data').DataTable({
-				"pageLength": 10,
+				"pageLength": 5,
+				
 			});
 			$('#pilih_data').DataTable({
-				"pageLength": 10,
+				"pageLength": 5,
 			});
 
 			// #EDIT INPUT DATA

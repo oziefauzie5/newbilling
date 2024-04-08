@@ -42,7 +42,7 @@ class PsbController extends Controller
     public function list_input()
     {
         $data['data_user'] = User::all();
-        $data['input_data'] = InputData::orderBy('input_tgl', 'ASC')->get();
+        $data['input_data'] = InputData::orderBy('input_tgl', 'DESC')->get();
         return view('PSB/list_inputdata', $data);
     }
     public function edit_inputdata($id)
@@ -115,7 +115,6 @@ class PsbController extends Controller
         $update['input_email'] = $request->input_email;
         $update['input_alamat_ktp'] = $request->input_alamat_ktp;
         $update['input_alamat_pasang'] = $request->input_alamat_pasang;
-        $update['input_sales'] = $request->input_sales;
         $update['input_subseles'] = $request->input_subseles;
         $update['password'] = Hash::make('0' . $request->input_hp);
         $update['input_maps'] = $request->input_maps;

@@ -167,7 +167,7 @@ Keterangan :
           </div> 
         @endif
           <div class="table-responsive">
-            <table id="edit_inputdata" class="display table table-striped table-hover text-nowrap" >
+            <table id="edit_inputdata" class=" table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
                   <th>ID</th>
@@ -261,12 +261,6 @@ Keterangan :
                           <div class="form-group">
                             <label>Alamat Pasang</label>
                             <input id="edit_input_alamat_pasang" type="text" class="form-control" value="" name="input_alamat_pasang" >
-                          </div>
-                        </div>
-                        <div class="col-sm-12">
-                          <div class="form-group">
-                            <label>Sales </label>
-                            <input id="edit_input_sales" type="text" class="form-control" value="" name="input_sales" readonly>
                           </div>
                         </div>
                         <div class="col-sm-12">
