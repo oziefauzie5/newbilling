@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Atlantis Lite - Bootstrap 4 Admin Dashboard</title>
+	<title>{{Session::get('app_brand')}}</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
 	<link rel="icon" href="{{asset('atlantis/assets/img/icon.ico')}}" type="image/x-icon"/>
 
@@ -881,6 +881,7 @@ url = url.replace(':id', idpel);
 								document.getElementById("tampil_maps").value =data['tampil_data']['input_maps'];
 								document.getElementById("tampil_tgl").value =data['tampil_data']['input_tgl'];
 								document.getElementById("tampil_subsales").value =data['tampil_data']['input_subseles'];
+								document.getElementById("tampil_keterangan").value =data['tampil_data']['input_keterangan'];
 								
                         } else {
 							console.log(data);

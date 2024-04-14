@@ -50,42 +50,42 @@ class RegistrasiApiController extends Controller
             return redirect()->route('admin.reg.index')->with($notifikasi);
         }
     }
-    public function registrasi_api(Request $request, $id)
-    {
-        $regist = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->where('input_data.id', $id)->first();
-        $router = Router::whereId($regist->reg_router)->first();
-        $tgl_aktif = date('d/m/Y', strtotime($regist->created_at));
-        $ip =   $router->router_ip . ':' . $router->router_port_api;
-        $user = $router->router_username;
-        $pass = $router->router_password;
-        $API = new RouterosAPI();
-        $API->debug = false;
+    // public function registrasi_api(Request $request, $id)
+    // {
+    //     $regist = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+    //         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+    //         ->where('input_data.id', $id)->first();
+    //     $router = Router::whereId($regist->reg_router)->first();
+    //     $tgl_aktif = date('d/m/Y', strtotime($regist->created_at));
+    //     $ip =   $router->router_ip . ':' . $router->router_port_api;
+    //     $user = $router->router_username;
+    //     $pass = $router->router_password;
+    //     $API = new RouterosAPI();
+    //     $API->debug = false;
 
-        if ($API->connect($ip, $user, $pass)) {
-            $API->comm('/ppp/secret/add', [
-                'name' => $regist->reg_username == '' ? '' : $regist->reg_username,
-                'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
-                'service' => 'pppoe',
-                'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
-                'comment' => $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn == '' ? '' : $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn,
-                'disabled' => 'yes',
-            ]);
+    //     if ($API->connect($ip, $user, $pass)) {
+    //         $API->comm('/ppp/secret/add', [
+    //             'name' => $regist->reg_username == '' ? '' : $regist->reg_username,
+    //             'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
+    //             'service' => 'pppoe',
+    //             'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
+    //             'comment' => $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn == '' ? '' : $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn,
+    //             'disabled' => 'yes',
+    //         ]);
 
-            $notifikasi = array(
-                'pesan' => 'Berhasil menambahkan pelanggan',
-                'alert' => 'success',
-            );
-            return redirect()->route('admin.psb.index')->with($notifikasi);
-        } else {
-            $notifikasi = array(
-                'pesan' => 'Gagal menambahkan pelanggan',
-                'alert' => 'error',
-            );
-            return redirect()->route('admin.reg.index')->with($notifikasi);
-        }
-    }
+    //         $notifikasi = array(
+    //             'pesan' => 'Berhasil menambahkan pelanggan',
+    //             'alert' => 'success',
+    //         );
+    //         return redirect()->route('admin.psb.index')->with($notifikasi);
+    //     } else {
+    //         $notifikasi = array(
+    //             'pesan' => 'Gagal menambahkan pelanggan',
+    //             'alert' => 'error',
+    //         );
+    //         return redirect()->route('admin.reg.index')->with($notifikasi);
+    //     }
+    // }
 
     public function update_pelanggan(Request $request, $id)
     {
@@ -108,9 +108,7 @@ class RegistrasiApiController extends Controller
 
         ]);
 
-        $data['reg_mrek'] = $request->reg_mrek;
-        $data['reg_mac'] = $request->reg_mac;
-        $data['reg_sn'] = $request->reg_sn;
+
         $data['reg_slotonu'] = $request->reg_slotonu;
         $data['reg_fat'] = $request->reg_odp;
         $data['reg_kode_pactcore'] = $request->kode_pactcore;
@@ -119,37 +117,48 @@ class RegistrasiApiController extends Controller
 
         if ($request->alasan == 'Rusak') {
             $data['reg_kode_ont'] = $request->kode_ont;
+            $data['reg_mrek'] = $request->reg_mrek;
+            $data['reg_mac'] = $request->reg_mac;
+            $data['reg_sn'] = $request->reg_sn;
             $update_barang['subbarang_status'] = '1';
             $update_barang['subbarang_keluar'] = '1';
+            $update_barang['subbarang_stok'] = '0';
             $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . ' Karna Rusak. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
-            Registrasi::where('reg_idpel', $request->reg_idpel)->update($data);
+
+            Registrasi::where('reg_idpel', $id)->update($data);
             SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
             SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
         } else if ($request->alasan == 'Tukar') {
             $data['reg_kode_ont'] = $request->kode_ont;
+            $data['reg_mrek'] = $request->reg_mrek;
+            $data['reg_mac'] = $request->reg_mac;
+            $data['reg_sn'] = $request->reg_sn;
             $update_barang['subbarang_status'] = '1';
             $update_barang['subbarang_keluar'] = '1';
             $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
             $update_barang_lama['subbarang_keluar'] = '0';
             $update_barang_lama['subbarang_keterangan'] = '-';
-            Registrasi::where('reg_idpel', $request->reg_idpel)->update($data);
+            Registrasi::where('reg_idpel', $id)->update($data);
             SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
             SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
         } else if ($request->alasan == 'Upgrade') {
             $data['reg_kode_ont'] = $request->kode_ont;
+            $data['reg_mrek'] = $request->reg_mrek;
+            $data['reg_mac'] = $request->reg_mac;
+            $data['reg_sn'] = $request->reg_sn;
             $update_barang['subbarang_status'] = '1';
             $update_barang['subbarang_keluar'] = '1';
             $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
             $update_barang_lama['subbarang_keluar'] = '0';
             $update_barang_lama['subbarang_keterangan'] = '-';
-            Registrasi::where('reg_idpel', $request->reg_idpel)->update($data);
+            Registrasi::where('reg_idpel', $id)->update($data);
             SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
             SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
         }
-        Registrasi::where('reg_idpel', $request->reg_idpel)->update($data);
+        Registrasi::where('reg_idpel', $id)->update($data);
 
         return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id]);
     }

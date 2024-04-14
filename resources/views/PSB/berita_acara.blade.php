@@ -167,7 +167,11 @@
             <tr>
                 <td>Tanggal Pemasangan</td>
                 <td>:</td>
+                @if($berita_acara->reg_tgl_pasang)
                 <td>{{ date('d-m-Y', strtotime( $berita_acara->reg_tgl_pasang)) }}</td>
+                @else
+                <td></td>
+                @endif
             </tr>
     </table>
     <br>

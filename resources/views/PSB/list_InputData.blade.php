@@ -137,12 +137,9 @@
                         <div class="form-group">
                           <label>Keterangan</label>
                           <textarea name="input_keterangan" class="form-control" id="input_keterangan" cols="10">
-@if( Session::get('input_keterangan'))
-{{ Session::get('input_keterangan') }}
-@else 
 Paket :
 Keterangan :
-@endif</textarea>
+</textarea>
 <span class="text-bold text-danger" style="font-size:12px">Contoh = Keterangan : Pemasangan Perlu tiang</span>
                         </div>
                       </div>
