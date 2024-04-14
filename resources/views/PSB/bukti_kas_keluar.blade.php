@@ -59,7 +59,7 @@
         #ttd th {
             padding: 3px;
             font-size: 9pt;
-            height: 80px;
+            height: 90px;
 
         }
 
@@ -129,7 +129,7 @@
         <tr>
             <td>Tanggal</td>
             <td>:</td>
-            <td>................</td>
+            <td>{{ date('d-m-Y', strtotime( $kas->reg_tgl_pasang)) }}</td>
         </tr>
         <tr>
             <td>Dibayarkan kepada</td>
@@ -138,7 +138,6 @@
         </tr>
        
     </table>
-    <br>
     <table id="rincian">
         <tr>
             <th width="5%">NO</th>
@@ -147,7 +146,7 @@
         </tr>
         <tr>
             <td style="text-align: center;">1</td>
-            <td>PSB</td>
+            <td>PSB {{$kas->input_nama}}</td>
             <td id="nominal">Rp. {{number_format($kas->teknisi_psb)}}</td>
         </tr>
         <tr>
@@ -166,10 +165,7 @@
             <td></td>
         </tr>
     </table>
-    <br>
-
     <table id="customers">
-        <br>
         <tr>
             <td width="50%"></td>
             <td id="invoice" width="15%">JUMLAH</td>
@@ -197,6 +193,92 @@
             <th width="25%">{{$kas->teknisi_team}}</th>
         </tr>
     </table>
+    <table id="kop">
+        <tr>
+            <th width="60%" style=" text-align: left;"><img src="{{ asset('atlantis/assets/img/'.$profile_perusahaan->app_logo)}}" alt=""></th>
+            <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
+        </tr>
+    </table>
+    <br>
+    <hr>
+    <table id="customers">
+        <br>
+        <tr>
+            <th colspan="3" style="text-align: center; font-size: 12pt;">BUKTI PENGELUARAN KAS</th>
+        </tr>
+        <tr>
+            <td width="15%">No</td>
+            <td>:</td>
+            <td width="85%">................</td>
+        </tr>
+        <tr>
+            <td>Tanggal</td>
+            <td>:</td>
+            <td>{{ date('d-m-Y', strtotime( $kas->reg_tgl_pasang)) }}</td>
+        </tr>
+        <tr>
+            <td>Dibayarkan kepada</td>
+            <td>:</td>
+            <td>{{$seles->name}}</td>
+        </tr>
+       
+    </table>
+    <table id="rincian">
+        <tr>
+            <th width="5%">NO</th>
+            <th>KETERANGAN</th>
+            <th width="25%">NOMINAL</th>
+        </tr>
+        <tr>
+            <td style="text-align: center;">1</td>
+            <td>PSB {{$kas->input_nama}}</td>
+            <td id="nominal">Rp. {{number_format($biaya_sales->biaya_sales)}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">2</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">3</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">4</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <table id="customers">
+        <tr>
+            <td width="50%"></td>
+            <td id="invoice" width="15%">JUMLAH</td>
+            <td>:</td>
+            <td id="invoice">Rp. {{number_format($biaya_sales->biaya_sales)}}</td>
+        </tr>
+        <tr>
+            <td width="50%"></td>
+            <td id="invoice" width="15%">TOTAL</td>
+            <td>:</td>
+            <td id="invoice">Rp. {{number_format($biaya_sales->biaya_sales)}}</td>
+        </tr>
+    </table>
+    <table id="ttd">
+        <tr>
+            <th width="25%" higth="20px">Admin</th>
+            <th width="25%">NOC</th>
+            <th width="25%">Keuangan</th>
+            <th width="25%">Penerima</th>
+        </tr>
+        <tr>
+            <th width="25%" higth="20px">{{ $nama_admin }}</th>
+            <th width="25%">...................................</th>
+            <th width="25%">...................................</th>
+            <th width="25%">{{$seles->name}}</th>
+        </tr>
+    </table>
+ 
 
 </body>
 

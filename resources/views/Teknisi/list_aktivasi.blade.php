@@ -109,8 +109,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <a href="{{route('admin.teknisi.aktivasi',['id'=> $job->reg_idpel])}}" class="btn btn-secondary" >Lanjutkan{{$job->reg_idpel}}</a>
-                          <button type="submit" class="btn btn-primary">Save changes</button>
+                          <a href="{{route('admin.teknisi.aktivasi',['id'=> $job->reg_idpel])}}" class="btn btn-secondary" >Lanjutkan</a>
                         </div>
                       </div>
                     </div>

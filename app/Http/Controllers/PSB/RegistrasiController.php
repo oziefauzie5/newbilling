@@ -269,6 +269,7 @@ class RegistrasiController extends Controller
     public function bukti_kas_keluar($id)
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
+        $data['biaya_sales'] = SettingBiaya::first();
         // dd($data['profile_perusahaan']->app_logo);
         $data['nama_admin'] = Auth::user()->name;
         $data['kas'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')

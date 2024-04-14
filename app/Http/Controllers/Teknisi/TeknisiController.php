@@ -34,8 +34,8 @@ class TeknisiController extends Controller
         $data['q'] = $request->query('q');
         $query = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->where('registrasis.reg_progres', '=', '0');
-        // ->orderBy('reg_tgl_pasang', 'ASC')
+            ->where('registrasis.reg_progres', '=', '0')
+            ->orderBy('input_data.input_tgl', 'DESC');
         // ->where(function ($query) use ($data) {
         //     $query->where('input_nama', 'like', '%' . $data['q'] . '%');
         //     $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
@@ -45,8 +45,9 @@ class TeknisiController extends Controller
             ->join('model_has_roles', 'model_has_roles.role_id', '=', 'roles.id')
             ->join('users', 'users.id', '=', 'model_has_roles.model_id')
             ->where('roles.name', '=', 'teknisi')
-            // ->where('users.id', '=', $teknisi_id)
+            ->where('users.id', '=', $teknisi_id)
             ->get();
+
         // $data['komisi'] = $komisi;
         // $data['debet'] = $debet;
         return view('Teknisi/index', $data);
@@ -285,6 +286,8 @@ class TeknisiController extends Controller
 
                     #NILAI TEKNISI
                     $waktu_kerja = Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->first();
+                    // dd($id_teknisi);
+
                     $awal  = $waktu_kerja->teknisi_id;
                     $akhir  = $teknisi['teknisi_job_selesai'];
 
