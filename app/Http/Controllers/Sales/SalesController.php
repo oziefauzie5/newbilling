@@ -45,7 +45,7 @@ class SalesController extends Controller
         $data['registrasi'] = Registrasi::where('reg_progres', 0)->count();
         $data['data_user'] = User::all();
         // dd($data['data_pemasangan']);
-        return view('Sales/index', $data);
+        return view('sales/index', $data);
     }
 
     public function list_registrasi()
@@ -53,7 +53,7 @@ class SalesController extends Controller
         $data['input_data'] = InputData::where('input_status', 0)->count();
         $data['registrasi'] = Registrasi::where('reg_progres', 0)->count();
         $data['data_pemasangan'] = InputData::where('input_status', 0)->get();
-        return view('Sales/list_registrasi', $data);
+        return view('sales/list_registrasi', $data);
     }
 
     // public function data_registrasi()
