@@ -91,12 +91,12 @@
                                       </div>
                                 </th>
                                 <th>
-                                    <div class="card-body p-3 text-center">
-                                        <div class="text-right text-success">
-                                        </div>
-                                        <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/shutdown.png') }}" class=" bg-light"></div>
-                                        <div class="text-light mb-3">Logout</div>
-                                      </div>
+                                  <a href="{{ route('logout') }}" class="card-body p-3 text-center">
+                                    <div class="text-right text-success">
+                                    </div>
+                                    <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/shutdown.png') }}" class=" bg-light"></div>
+                                    <div class="text-light mb-3">Logout</div>
+                                  </a>
                                 </th>
                             </tr>
                         </table>

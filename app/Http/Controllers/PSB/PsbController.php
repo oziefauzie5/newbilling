@@ -90,7 +90,7 @@ class PsbController extends Controller
             'input_email' => $request->input_email,
             'input_alamat_ktp' => ucwords($request->input_alamat_ktp),
             'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
-            'input_sales' => ucwords($request->input_sales),
+            'input_sales' => $request->input_sales,
             'input_subseles' => ucwords($request->input_subseles),
             'password' => Hash::make($request->input_hp),
             'input_maps' => $request->input_maps,
@@ -101,7 +101,11 @@ class PsbController extends Controller
             'pesan' => 'Berhasil menambahkan Pelanggan',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        if ($request->input == 12) {
+            return redirect()->route('admin.sales.index')->with($notifikasi);
+        } else {
+            return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        }
     }
 
     public function input_data_update(Request $request)

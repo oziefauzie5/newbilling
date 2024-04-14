@@ -14,6 +14,7 @@ use App\Http\Controllers\PSB\RegistrasiController;
 use App\Http\Controllers\PSB\SementaraMigrasiController;
 use App\Http\Controllers\Router\PaketController;
 use App\Http\Controllers\Router\RouterController;
+use App\Http\Controllers\Sales\SalesController;
 use App\Http\Controllers\Teknisi\TeknisiController;
 use App\Http\Controllers\Transaksi\InvoiceController;
 use App\Http\Controllers\User\UserController;
@@ -138,4 +139,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::put('/Invoice/addons/{id}', [InvoiceController::class, 'addons'])->name('inv.addons');
     Route::put('/Invoice/diskon/{id}', [InvoiceController::class, 'addDiskon'])->name('inv.addDiskon');
     Route::delete('/Invoice/addons-hapus/{id}/{inv}/{tot}', [InvoiceController::class, 'addons_delete'])->name('inv.addons_delete');
+
+
+    Route::get('/Sales/index', [SalesController::class, 'index'])->name('sales.index');
+    Route::get('/Sales/list', [SalesController::class, 'list_registrasi'])->name('sales.list_registrasi');
 });
