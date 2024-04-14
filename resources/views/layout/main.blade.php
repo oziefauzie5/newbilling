@@ -706,7 +706,7 @@ url = url.replace(':id', idpel);
 							$("#edit_input_alamat_pasang").val(data[0]['input_alamat_pasang']);
 							$("#edit_input_seles").val(data[0]['input_seles']);
 							$("#edit_input_subseles").val(data[0]['input_subseles']);
-							$("#edit_input_maps").val(data[0]['edit_input_maps']);
+							$("#edit_input_maps").val(data[0]['input_maps']);
 							$("#edit_input_keterangan").val(data[0]['input_keterangan']);			 
                         } else {
 							console.log(data);

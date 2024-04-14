@@ -269,7 +269,7 @@ Keterangan :
                         <div class="col-sm-12">
                           <div class="form-group">
                             <label>Share Location</label>
-                            <input id="edit_input_maps" type="text" class="form-control" value="" name="input_maps" placeholder="Share Location" required>
+                            <input id="edit_input_maps" type="text" class="form-control" value="" name="input_maps" required>
                           </div>
                         </div>
                         <div class="col-sm-12">
