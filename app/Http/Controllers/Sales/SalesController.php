@@ -53,7 +53,8 @@ class SalesController extends Controller
         $data['input_data'] = InputData::where('input_status', 0)->count();
         $data['registrasi'] = Registrasi::where('reg_progres', 0)->count();
         $data['data_pemasangan'] = InputData::where('input_status', '0')
-            ->orderBy('input_tgl', 'DESC')->get();
+            ->orderBy('input_status', 'ASC')
+            ->orderBy('input_tgl', 'ASC')->get();
         return view('sales/list_registrasi', $data);
     }
 

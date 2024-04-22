@@ -85,9 +85,12 @@ class TeknisiController extends Controller
 
     public function list_aktivasi()
     {
+        $teknisi_id = Auth::user()->id;
         $query = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->where('registrasis.reg_progres', '=', '1');
+            ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'input_data.id')
+            ->where('registrasis.reg_progres', '=', '1')
+            ->where('teknisis.teknisi_userid', '=', $teknisi_id);
         $data['data_pelanggan'] = $query->get();
         return view('Teknisi/list_aktivasi', $data);
     }

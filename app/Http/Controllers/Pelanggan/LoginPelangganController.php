@@ -37,8 +37,9 @@ class LoginPelangganController extends Controller
 
         $data = [
             'input_hp' => $nomorhp,
-            'password' => $request->input_hp,
+            'password' => $nomorhp,
         ];
+
 
         if (Auth::guard('pelanggan')->attempt($data)) {
             $app = SettingAplikasi::first();

@@ -157,6 +157,14 @@
                   <th>ALAMAT PASANG</th>
                   <th>TG REGISTRASI</th>
                   <th>KODE UNIK</th>
+                  <th>KODE KABEL</th>
+                  <th>BEFORE</th>
+                  <th>AFTER</th>
+                  <th>PENGGUNAAN</th>
+                  <th>ODP OPM</th>
+                  <th>HOME OPM</th>
+                  <th>LOS OPM</th>
+                  <th>PENGGUNAAN</th>
                   <th>NOTE</th>
                 </tr>
               </thead>
@@ -210,6 +218,13 @@
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_alamat_pasang}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_tgl}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_kode_unik}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_kode_dropcore}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_before}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_after}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_penggunaan_dropcore}} Meter</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_fat_opm}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_home_opm}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_los_opm}}</td>
                       <td>{{$d->reg_catatan}}</td>
                     </tr>
                       <!-- Modal Edit -->
