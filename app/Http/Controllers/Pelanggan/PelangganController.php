@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Pelanggan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Transaksi\TripayController;
 use App\Models\PSB\InputData;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\SubInvoice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,6 +51,7 @@ class PelangganController extends Controller
     public function tagihan($inv_id)
     {
 
+        $data['channels'] = (new TripayController)->getPaymentChannels();
         $idpel = Auth::guard('pelanggan')->user()->id;
         // $data['nama'] = Auth::guard('pelanggan')->user()->nama;
         // $data['total']=SubInvoice::where('subinvoice_total', $id)->where('lh_status',0)->sum('lh_kredit');
@@ -64,8 +67,43 @@ class PelangganController extends Controller
         // $data['rincian'] = SubInvoice::where('subinvoice_id', $inv_id)->get();
         // $data['channels'] = (new TripayController)->getPaymentChannels();
 
-        // dd($data);
+        // dd($data['channels']);
 
         return view('client/tagihan', $data);
+    }
+
+    public function payment_tripay(Request $request)
+    {
+        $inv = $request->inv;
+        $method = $request->code;
+        $icon = $request->icon;
+        // $datapel = (new globalController)->data_transaksiPelanggan($inv);
+
+        $tripay = (new TripayController)->requestTransaksi($method, $inv, $icon);
+
+        $res = json_decode($tripay);
+        if ($res->success == false) {
+            $notifikasi = array(
+                'pesan' => $res->message,
+                'alert' => 'error',
+            );
+            return redirect()->route('client.index')->with($notifikasi);
+        } else {
+            $response = json_decode($tripay)->data;
+            // dd($response->reference);
+            return redirect()->route('client.show', ['refrensi' => $response->reference]);
+        }
+    }
+
+    public function show(Request $request, $refrensi)
+    {
+        // dd($res);
+
+        $tripay = (new TripayController)->detailsTransakasi($refrensi);
+        // dd($tripay);
+        $date = Carbon::parse($tripay->expired_time);
+        $today = Carbon::now()->isoFormat('D MMMM Y');
+        $expire = $date->isoFormat('D MMMM Y H:m:s');
+        return view('client/tagihanshow', compact('tripay', 'expire'));
     }
 }

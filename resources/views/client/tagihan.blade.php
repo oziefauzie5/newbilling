@@ -65,7 +65,65 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                        ...
+
+
+{{--                       
+                                  <form action="{{ route('client.payment_tripay',['inv'=>$layanan->inv_id])}}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="icon" value="{{$channel->icon_url}}">
+                                    <input type="hidden" name="inv" value="{{$layanan->inv_id}}">
+                              <input type="hidden" name="code" id="code" value="{{$channel->code}}">
+                              <button style="background:white;" type="submit" class="btn btn-block" >
+                              <div class="info-box shadow">
+                                <span class="info-box-icon"><img src="{{$channel->icon_url}}" width="30px" alt=""></i></span>
+                                <div class="info-box-content">
+                                  <span class="info-box-text">{{$channel->name}}</span>
+                                  <span class="info-box-number">ADMIN : {{$channel->fee_customer->flat}}</span>
+                                </div>
+                              </div>
+                            </button> --}}
+                        
+
+                            @if($channels!=null)
+                            @foreach($channels as $ch)
+                            @if($ch->active==true)
+                            <form action="{{ route('client.payment_tripay',['inv'=>$layanan->inv_id])}}" method="post">
+                              @csrf
+                        <div class="row">
+                          <div class="col">
+                            <button style="background:white;" type="submit" class="btn btn-block" >
+                            <div class="card card-stats card-round">
+                              <div class="card-body ">
+                                <div class="row align-items-center">
+                                  <input type="hidden" name="icon" value="{{$ch->icon_url}}">
+                                  <input type="hidden" name="inv" value="{{$layanan->inv_id}}">
+                                  <input type="hidden" name="code" id="code" value="{{$ch->code}}">
+                                  <div class="col-icon">
+                                    <div class="icon-big text-center bubble-shadow-small">
+                                      <img src="{{$ch->icon_url}}"  width="60px" alt="">
+                                      {{-- <i class="flaticon-users"></i> --}}
+                                    </div>
+                                  </div>
+                                  <div class="col col-stats ml-3 ml-sm-0">
+                                    <div class="numbers">
+                                      <p class="card-category">{{$ch->name}}</p>
+                                      @if($ch->group=='E-Wallet')
+                                      <h4 class="card-title">ADM {{number_format($ch->total_fee->flat) }} + {{$ch->total_fee->percent}}%</h4>
+                                      @else
+                                      <h4 class="card-title">ADM {{number_format($ch->total_fee->flat) }}</h4>
+                                      @endif
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            </button>
+                          </div>
+                          </div>
+                        </form>
+                          @endif
+                          @endforeach
+                          @endif
                       </div>
                     </div>
                   </div>

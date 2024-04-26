@@ -26,7 +26,7 @@
 	<link rel="stylesheet" href="{{asset('atlantis/assets/css/demo.css')}}">
 
 	<style>
-		img{
+		.img{
   width: 20px;
   border-style:solid;
 	border-width: 10px;
