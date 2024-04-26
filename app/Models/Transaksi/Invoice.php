@@ -21,6 +21,7 @@ class Invoice extends Model
         'inv_tgl_tagih',
         'inv_tgl_jatuh_tempo',
         'inv_tgl_isolir',
+        'inv_tgl_bayar',
         'inv_periode',
         'inv_diskon',
         'inv_total',

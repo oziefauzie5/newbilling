@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('inv_tgl_tagih')->nullable();
             $table->string('inv_tgl_jatuh_tempo')->nullable();
             $table->string('inv_tgl_isolir')->nullable();
+            $table->string('inv_tgl_bayar')->nullable();
             $table->string('inv_periode')->nullable();
             $table->string('inv_diskon')->nullable();
             $table->string('inv_total')->nullable();

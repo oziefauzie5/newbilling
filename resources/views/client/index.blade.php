@@ -57,26 +57,33 @@
           </div>
 
           <section class="content mt-3">
+            @foreach($tagihan as $tg)
             <div class="col">
                 <div class="card card_custom1">
                     <div class="card-body skew-shadow">
                         <div class="row">
                             <div class="col-8 pr-0">
-                              <h2 class="fw-bold mb-1">Rp. {{number_format($layanan->inv_total)}}</h2>
-                              <h4 class="fw-bold mb-1">Invoice {{$layanan->inv_id}}</h4>
-                                @if(strtotime($layanan->inv_tgl_jatuh_tempo)>strtotime(date('Y-m-d')))
-                                <div class="text-danger text-uppercase fw-bold op-8">Jatuh Tempo  {{ date('d-m-Y', strtotime($layanan->inv_tgl_jatuh_tempo)) }}</div>
-                               @endif
-                                <div class=" text-uppercase fw-bold op-8">Jatuh Tempo  {{ date('d-m-Y', strtotime($layanan->inv_tgl_jatuh_tempo)) }}</div>
+                              <h2 class="fw-bold mb-1">Rp. {{number_format($tg->inv_total)}}</h2>
+                              <h4 class="fw-bold mb-1">Invoice {{$tg->inv_id}}</h4>
+                              @if($tg->inv_status == 'UNPAID')
+                                <div class="text-danger text-uppercase fw-bold op-8">Jatuh Tempo  {{ date('d-m-Y', strtotime($tg->inv_tgl_jatuh_tempo)) }}</div>
+                                @else
+                                <div class="text-success text-uppercase fw-bold op-8">Tanggal Bayar  {{ date('d-m-Y', strtotime($tg->inv_tgl_bayar)) }}</div>
+                                @endif
                             </div>
                             <div class="col-4 pl-0 text-right">
-                                    <a href="{{route('client.tagihan',['inv'=>$layanan->inv_id])}}" class="fw-bold op-8"><button class="btn btn-primary">Bayar</button></a>
+                              @if($tg->inv_status == 'UNPAID')
+                              <a href="{{route('client.tagihan',['inv'=>$tg->inv_id])}}" class="fw-bold op-8"><button class="btn btn-primary">Bayar</button></a>
+                              @else
+                                    <a href="{{route('client.tagihan',['inv'=>$tg->inv_id])}}" class="fw-bold op-8"><button class="btn btn-success">Lunas</button></a>
+                                    @endif
                             </div>
+                          </div>
                         </div>
+                      </div>
                     </div>
-                </div>
-            </div>
-        </section>
+              @endforeach
+            </section>
 
 
 

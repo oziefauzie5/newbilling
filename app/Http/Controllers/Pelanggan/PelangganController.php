@@ -18,12 +18,8 @@ class PelangganController extends Controller
         // $data['hp'] = Auth::guard('pelanggan')->user()->hp;
 
         // $data['tagihan'] = Invoice::where('inv_idpel', $idpel)->where('inv_status', 'UNPAID')->get();
-        // $data['rincian'] = Invoice::select('input_data.*', 'registrasis.created_at AS tgl_daftar', 'registrasis.*', 'invoices.*')
-        //     ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-        //     ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-        //     ->where('invoices.inv_status', '=', 'UNPAID')
-        //     ->where('invoices.inv_idpel', '=', $idpel)
-        //     ->get();
+        $data['tagihan'] = Invoice::where('invoices.inv_idpel', '=', $idpel)
+            ->paginate(3);
         $data['layanan'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->where('invoices.inv_idpel', '=', $idpel)
             ->first();
@@ -35,7 +31,7 @@ class PelangganController extends Controller
         // $data['details'] =  $query->where('invoices.inv_status', '=', 'UNPAID')->get();
 
         // dd($idpel);
-        // dd($data['layanan']);
+        // dd($data['tagihan']);
 
 
         return view('client/index', $data);
@@ -56,15 +52,19 @@ class PelangganController extends Controller
         $idpel = Auth::guard('pelanggan')->user()->id;
         // $data['nama'] = Auth::guard('pelanggan')->user()->nama;
         // $data['total']=SubInvoice::where('subinvoice_total', $id)->where('lh_status',0)->sum('lh_kredit');
-        // $data['hp'] = Auth::guard('pelanggan')->user()->hp;
-        $data['tagihan'] = Invoice::where('inv_idpel', $idpel)->where('upd_status', 'UNPAID')->get();
-        // $data['layanan'] = Invoice::join('registrasis', 'registrasis.id', '=', 'invoices.inv_idpel')
-        //     ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-        //     ->where('invoices.inv_status', '=', 'UNPAID')
-        //     ->where('invoices.inv_idpel', '=', $idpel)
-        //     ->get();
+        // $data['tagihan'] = Invoice::where('inv_idpel', $idpel)->where('inv_status', 'UNPAID')->get();
+        $data['layanan'] = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->where('invoices.inv_id', '=', $inv_id)
+            ->where('invoices.inv_status', '=', 'UNPAID')
+            ->where('invoices.inv_idpel', '=', $idpel)
+            ->first();
+
+        $data['subinvoice'] = SubInvoice::where('subinvoice_id', $data['layanan']->inv_id)->get();
         // $data['rincian'] = SubInvoice::where('subinvoice_id', $inv_id)->get();
         // $data['channels'] = (new TripayController)->getPaymentChannels();
+
+        // dd($data);
 
         return view('client/tagihan', $data);
     }

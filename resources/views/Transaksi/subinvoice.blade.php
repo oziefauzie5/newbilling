@@ -84,8 +84,8 @@
                   <div class="col-6">
                     <input type="text"  id="diskon" class="form-control">
                     <input type="hidden"  id="inv_id" value="{{$invoice->inv_id}}" class="form-control">
-                    <input type="hidden"  id="inv_harga" value="{{$sumharga}}" class="form-control">
-                    <input type="hidden"  id="inv_jumlah" value="{{$sumharga+$sumppn}}" class="form-control">
+                    <input type="hidden"  id="inv_harga" value="{{$sumharga-$sumppn}}" class="form-control">
+                    <input type="hidden"  id="inv_jumlah" value="{{$sumharga}}" class="form-control">
                   </div>
                   <div class="col">
                     <button class="btn btn-primary btn-block btn-sm" id="submit_diskon">Diskon</button>
@@ -103,7 +103,7 @@
                   <table class="table" id="Table">
                     <tr>
                       <th style="width:50%">Subtotal:</th>
-                      <td>Rp {{number_format($sumharga)}}</td>
+                      <td>Rp {{number_format($sumharga-$sumppn)}}</td>
                     </tr>
                     <tr>
                       <th>PPN {{$ppnj}}%</th>
@@ -115,7 +115,7 @@
                     </tr>
                     <tr>
                       <th>Total:</th>
-                      <td id="tot">Rp {{number_format($sumharga+$sumppn-$invoice->inv_diskon)}}</td>
+                      <td id="tot">Rp {{number_format($sumharga-$invoice->inv_diskon)}}</td>
                     </tr>
                   </table>
                 </div>
