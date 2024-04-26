@@ -36,7 +36,7 @@ class InvoiceController extends Controller
         $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')->where('invoices.inv_id', $id)->get();
 
 
-        $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga');
+        $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');
         $data['sumppn'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn');
         $data['ppnj'] = env('PPN');
         $data['akun'] = SettingAkun::all();

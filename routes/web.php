@@ -31,6 +31,7 @@ Route::get('/logout-client', [LoginPelangganController::class, 'logout'])->name(
 
 Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 'client.'], function () {
     Route::get('/home', [PelangganController::class, 'index'])->name('index');
+    Route::get('/details', [PelangganController::class, 'details'])->name('details');
     Route::get('/tagihan/{inv}', [PelangganController::class, 'tagihan'])->name('tagihan');
     // Route::post('/transaksi', [TransaksiController::class, 'payment_tripay'])->name('payment_tripay');
     // Route::get('/transaksi/show/{refrensi}', [TransaksiController::class, 'show'])->name('show');

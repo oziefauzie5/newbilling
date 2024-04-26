@@ -15,29 +15,44 @@
 
 
         <div class="row mt--5">
-            <div class="col-6 col-sm-6">
-              <div class="card ">
-                <div class="card-body p-3 text-center">
-                  <div class="text-right text-danger">
+          <a style="text-decoration:none" href="{{route('client.details')}}" class="col">
+            <div class="card card-stats card-round">
+              <div class="card-body ">
+                <h4>LAYANAN</h4><hr>
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div class="icon-big text-center icon-primary bubble-shadow-small">
+                      <i class="fas fa-rss"></i>
+                    </div>
                   </div>
+                  <div class="col col-stats ml-3 ml-sm-0">
+                    <div class="numbers">
+                      <h4 class="card-title">{{$nama}}</h4>
+                      @if($layanan->inv_status=='SUSPEND')
+                      <p class="card-category">Status <span class="badge badge-danger">Terisolir</span></p>
+                      @endif
+                      <p class="card-category">Status <span class="badge badge-success">Aktif</span></p>
+                    </div>
+                  </div>
+                  <div class="col-4 pl-0 text-right">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                </div>
+              </div>
+            </div>
+          </a>
+            {{-- <div class="col-12 col-sm-12">
+              <div class="card ">
+                <div class="card-body p-3">
+                  <div class="h4 m-0"><span >LAYANAN</span></div><hr>
+                  <div class="text-muted mb-3">97237598239</div>
                   @if($layanan->inv_status=='SUSPEND')
                   <div class="h1 m-0"><span class="badge badge-danger">Terisolir</span></div>
                   @endif
                   <div class="h1 m-0"><span class="badge badge-success">Aktif</span></div>
-                  <div class="text-muted mb-3">Status Internet</div>
                 </div>
               </div>
-            </div>
-            <div class="col-6 col-sm-6">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="text-right text-success">
-                  </div>
-                  <div class="h1 m-0">7</div>
-                  <div class="text-muted mb-3">Pengguanaan</div>
-                </div>
-              </div>
-            </div>
+            </div> --}}
           </div>
 
           <section class="content mt-3">
