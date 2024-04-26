@@ -14,28 +14,31 @@ class TripayController extends Controller
     {
 
         $setting_tripay = SettingTripay::first();
-        $apiKey = $setting_tripay->tripay_apikey;
+        if ($setting_tripay) {
 
-        $curl = curl_init();
+            $apiKey = $setting_tripay->tripay_apikey;
 
-        curl_setopt_array($curl, array(
-            CURLOPT_FRESH_CONNECT  => true,
-            CURLOPT_URL            => 'https://tripay.co.id/api-sandbox/merchant/payment-channel',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER         => false,
-            CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . $apiKey],
-            CURLOPT_FAILONERROR    => false,
-            CURLOPT_IPRESOLVE      => CURL_IPRESOLVE_V4
-        ));
+            $curl = curl_init();
 
-        $response = curl_exec($curl);
-        $error = curl_error($curl);
-        curl_close($curl);
+            curl_setopt_array($curl, array(
+                CURLOPT_FRESH_CONNECT  => true,
+                CURLOPT_URL            => 'https://tripay.co.id/api-sandbox/merchant/payment-channel',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HEADER         => false,
+                CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . $apiKey],
+                CURLOPT_FAILONERROR    => false,
+                CURLOPT_IPRESOLVE      => CURL_IPRESOLVE_V4
+            ));
 
-        $response = json_decode($response)->data;
-        // dd($response);
+            $response = curl_exec($curl);
+            $error = curl_error($curl);
+            curl_close($curl);
 
-        return $response ? $response : $error;
+            $response = json_decode($response)->data;
+            // dd($response);
+
+            return $response ? $response : $error;
+        }
     }
 
     public function requestTransaksi($method, $inv, $icon)
