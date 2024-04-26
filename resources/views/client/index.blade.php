@@ -30,8 +30,9 @@
                       <h4 class="card-title">{{$nama}}</h4>
                       @if($layanan->inv_status=='SUSPEND')
                       <p class="card-category">Status <span class="badge badge-danger">Terisolir</span></p>
-                      @endif
+                      @else
                       <p class="card-category">Status <span class="badge badge-success">Aktif</span></p>
+                      @endif
                     </div>
                   </div>
                   <div class="col-4 pl-0 text-right">

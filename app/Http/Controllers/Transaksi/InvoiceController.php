@@ -171,7 +171,7 @@ class InvoiceController extends Controller
             $data['subinvoice_ppn'] = $request->ppn;
             $data['subinvoice_total'] = $request->total;
             $data['subinvoice_status'] = '1';
-            $upd['inv_total'] = $unp->upd_total + $request->total;
+            $upd['inv_total'] = $unp->inv_total + $request->total;
             SubInvoice::create($data);
             Invoice::where('inv_id', $id)->update($upd);
             $notifikasi = array(

@@ -35,7 +35,7 @@ class PelangganController extends Controller
         // $data['details'] =  $query->where('invoices.inv_status', '=', 'UNPAID')->get();
 
         // dd($idpel);
-        // dd($data);
+        // dd($data['layanan']);
 
 
         return view('client/index', $data);

@@ -120,7 +120,7 @@ class PsbController extends Controller
         $update['input_alamat_ktp'] = $request->input_alamat_ktp;
         $update['input_alamat_pasang'] = $request->input_alamat_pasang;
         $update['input_subseles'] = $request->input_subseles;
-        $update['password'] = Hash::make('0' . $request->input_hp);
+        $update['password'] = Hash::make($nomorhp);
         $update['input_maps'] = $request->input_maps;
         $update['input_status'] = '0';
         $update['input_keterangan'] = $request->input_keterangan;
