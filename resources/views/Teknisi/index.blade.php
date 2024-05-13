@@ -54,7 +54,7 @@
                                     <a href="{{ route('admin.teknisi.list_aktivasi') }}" class="card-body p-3 text-center">
                                         <div class="text-right text-success">
                                         </div>
-                                        <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/ceklis.png') }}" class=" bg-light"></div>
+                                        <div class="h1 m-0"><img class="img" src="{{ asset('atlantis/assets/img/ceklis.png') }}" class=" bg-light"></div>
                                         <div class="text-light mb-3">Aktivasi</div>
                                       </a>
                                 </th>
@@ -62,7 +62,7 @@
                                     <div class="card-body p-3 text-center">
                                         <div class="text-right text-success">
                                         </div>
-                                        <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/selesai.png') }}" class=" bg-light"></div>
+                                        <div class="h1 m-0"><img class="img" src="{{ asset('atlantis/assets/img/selesai.png') }}" class=" bg-light"></div>
                                         <div class="text-light mb-3">Selesai</div>
                                       </div>
                                 </th>
@@ -70,7 +70,7 @@
                                     <div class="card-body p-3 text-center">
                                         <div class="text-right text-success">
                                         </div>
-                                        <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/komisi.png') }}" class=" bg-light"></div>
+                                        <div class="h1 m-0"><img class="img" src="{{ asset('atlantis/assets/img/komisi.png') }}" class=" bg-light"></div>
                                         <div class="text-light mb-3">Komisi</div>
                                       </div>
                                 </th>
@@ -78,7 +78,7 @@
                                     <div class="card-body p-3 text-center">
                                         <div class="text-right text-success">
                                         </div>
-                                        <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/cari.png') }}" class=" bg-light"></div>
+                                        <div class="h1 m-0"><img class="img" src="{{ asset('atlantis/assets/img/cari.png') }}" class=" bg-light"></div>
                                         <div class="text-light mb-3">Cari</div>
                                       </div>
                                 </th>
@@ -86,7 +86,7 @@
                                     <div class="card-body p-3 text-center">
                                         <div class="text-right text-success">
                                         </div>
-                                        <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/values.png') }}" class=" bg-light"></div>
+                                        <div class="h1 m-0"><img class="img" src="{{ asset('atlantis/assets/img/values.png') }}" class=" bg-light"></div>
                                         <div class="text-light mb-3">Penilaian</div>
                                       </div>
                                 </th>
@@ -94,7 +94,7 @@
                                   <a href="{{ route('logout') }}" class="card-body p-3 text-center">
                                     <div class="text-right text-success">
                                     </div>
-                                    <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/shutdown.png') }}" class=" bg-light"></div>
+                                    <div class="h1 m-0"><img class="img" src="{{ asset('atlantis/assets/img/shutdown.png') }}" class=" bg-light"></div>
                                     <div class="text-light mb-3">Logout</div>
                                   </a>
                                 </th>
