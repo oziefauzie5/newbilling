@@ -16,6 +16,7 @@ use App\Http\Controllers\Router\PaketController;
 use App\Http\Controllers\Router\RouterController;
 use App\Http\Controllers\Sales\SalesController;
 use App\Http\Controllers\Teknisi\TeknisiController;
+use App\Http\Controllers\Transaksi\CallbackController;
 use App\Http\Controllers\Transaksi\InvoiceController;
 use App\Http\Controllers\User\UserController;
 use App\Models\Transaksi\Invoice;
@@ -37,12 +38,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/tagihan/show/{refrensi}', [PelangganController::class, 'show'])->name('show');
 });
 
-// Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 'client.'], function () {
-//     Route::get('/home', [PelangganController::class, 'index'])->name('index');
-//     Route::get('/tagihan/{inv}', [PelangganController::class, 'tagihan'])->name('tagihan');
-// Route::post('/transaksi', [TransaksiController::class, 'payment_tripay'])->name('payment_tripay');
-// Route::get('/transaksi/show/{refrensi}', [TransaksiController::class, 'show'])->name('show');
-// });
+Route::post('/callback', [CallbackController::class, 'handle']);
 
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.'], function () {
@@ -52,7 +48,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware('can:admin');
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
     Route::put('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
-    Route::delete('/use/{id}r/delete', [UserController::class, 'delete'])->name('user.delete');
+    Route::delete('/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
     Route::get('/setting', [AppController::class, 'index'])->name('app.index')->middleware('can:admin');
     Route::post('/setting/app', [AppController::class, 'akun_store'])->name('app.akun_store')->middleware('can:admin');
@@ -90,6 +86,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/PSB/Input-Data_update', [PsbController::class, 'input_data_update'])->name('psb.input_data_update');
     Route::delete('/PSB/Input-data-delete/{id}', [PsbController::class, 'input_data_delete'])->name('psb.input_data_delete');
     Route::get('/PSB/Registrasi', [RegistrasiController::class, 'index'])->name('reg.index');
+    Route::get('/PSB/Delete/{id}/Registrasi', [RegistrasiController::class, 'delete_registrasi'])->name('reg.delete_registrasi');
     Route::get('/PSB/{id}/berita_acara', [RegistrasiController::class, 'berita_acara'])->name('psb.berita_acara');
     Route::get('/PSB/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar');
 

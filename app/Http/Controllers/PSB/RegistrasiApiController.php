@@ -21,6 +21,8 @@ class RegistrasiApiController extends Controller
             ->where('input_data.id', $id)->first();
         $router = Router::whereId($regist->reg_router)->first();
         $tgl_aktif = date('d/m/Y', strtotime($regist->created_at));
+
+
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
         $pass = $router->router_password;
@@ -33,7 +35,7 @@ class RegistrasiApiController extends Controller
                 'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
                 'service' => 'pppoe',
                 'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
-                'comment' => $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn == '' ? '' : $regist->input_nama . '|' . $regist->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $regist->reg_mac . '|' . $regist->reg_sn,
+                'comment' => $regist->reg_jenis_tagihan == '' ? '' : $regist->reg_jenis_tagihan,
                 'disabled' => 'yes',
             ]);
 
@@ -162,6 +164,10 @@ class RegistrasiApiController extends Controller
 
         return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id]);
     }
+
+
+
+    
     public function update_profile(Request $request, $id)
     {
 
@@ -331,7 +337,7 @@ class RegistrasiApiController extends Controller
                         'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                        'comment' => $query->input_nama . '|' . $query->reg_jenis_tagihan . '|' . $query->reg_tgl_pasang . '|' . $query->reg_mac == '' ? '' : $query->input_nama . '|' . $query->reg_jenis_tagihan . '|' . $query->reg_tgl_pasang . '|' . $query->reg_mac,
+                        'comment' => $query->reg_jenis_tagihan == '' ? '' : $query->reg_jenis_tagihan,
                         'disabled' => 'yes',
                     ]);
 
@@ -384,7 +390,7 @@ class RegistrasiApiController extends Controller
                         'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                        'comment' => $query->input_nama . '|' . $query->reg_jenis_tagihan . '|' . $query->reg_tgl_pasang . '|' . $query->reg_mac == '' ? '' : $query->input_nama . '|' . $query->reg_jenis_tagihan . '|' . $query->reg_tgl_pasang . '|' . $query->reg_mac,
+                        'comment' => $query->reg_jenis_tagihan == '' ? '' : $query->reg_jenis_tagihan,
                         'disabled' => 'yes',
                     ]);
 

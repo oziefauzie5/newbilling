@@ -227,7 +227,7 @@
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_los_opm}}</td>
                       <td>{{$d->reg_catatan}}</td>
                     </tr>
-                      <!-- Modal Edit -->
+                      {{-- <!-- Modal Edit -->
                       <div class="modal fade" id="modal_edit{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
@@ -302,9 +302,9 @@
                           </div>
                         </div>
                       </div>
-                      <!-- End Modal Edit -->
+                      <!-- End Modal Edit --> --}}
                       <!-- Modal Hapus -->
-                      <div class="modal fade" id="modal_hapus{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal fade" id="modal_hapus{{$d->reg_idpel}}" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header no-bd">
@@ -320,9 +320,10 @@
                               <p>Apakah anda yakin, akan menghapus data {{$d->name}} ??</p>
                               </div>
                               <div class="modal-footer no-bd">
-                                <form action="{{route('admin.user.delete',['id'=>$d->id])}}" method="POST">
+                                <form action="{{route('admin.reg.delete_registrasi',['id'=>$d->reg_idpel])}}" method="POST">
                                 @csrf
                                 @method('DELETE')
+                                <input type="text">
                                 <button type="submit" class="btn btn-success">Hapus</button>
                               </form>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

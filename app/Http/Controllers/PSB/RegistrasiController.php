@@ -197,6 +197,20 @@ class RegistrasiController extends Controller
         // return redirect()->route('admin.reg.registrasi_api', ['id' => $data['reg_idpel']]);
     }
 
+    public function delete_registrasi($id)
+    {
+
+        $data = Registrasi::where('reg_idpel', $id);
+        if ($data) {
+            $data->delete();
+        }
+        $notifikasi = [
+            'pesan' => 'Berhasil Hapus Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+    }
+
     public function pilih_pelanggan_registrasi($id)
     {
         $data['tampil_data'] =  InputData::whereId($id)->first();

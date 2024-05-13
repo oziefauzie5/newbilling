@@ -46,7 +46,7 @@
                                     <div class="card-body p-3 text-center">
                                         <div class="text-right text-success">
                                         </div>
-                                        <div class="h1 m-0"><img src="{{ asset('atlantis/assets/img/add_user.png') }}" class=" bg-light"></div>
+                                        <div class="h1 m-0"><img class="img" src="{{ asset('atlantis/assets/img/add_user.png') }}" class=" bg-light"></div>
                                         <div class="text-light mb-3">Registrasi</div>
                                       </div>
                                 </th>
