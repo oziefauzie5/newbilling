@@ -122,6 +122,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/barang/rekap-barang/{id}', [BarangController::class, 'rekap_barang'])->name('barang.rekap_barang');
     Route::get('/barang/Hapus-sub-barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
     Route::put('/barang/input-subbarang/{id}', [BarangController::class, 'input_subbarang'])->name('barang.input_subbarang');
+    Route::get('/barang/Print-Kode/{id}', [BarangController::class, 'print_kode_barang'])->name('barang.print_kode');
 
     Route::get('/Teknisi', [TeknisiController::class, 'index'])->name('teknisi.index');
     Route::post('/Teknisi/Job', [TeknisiController::class, 'job'])->name('teknisi.job');

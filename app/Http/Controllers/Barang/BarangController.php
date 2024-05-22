@@ -246,4 +246,19 @@ class BarangController extends Controller
         );
         return redirect()->route('admin.barang.index')->with($notifikasi);
     }
+
+    public function print_kode_barang($id)
+    {
+        // $data['kategori'] = Kategori::all();
+        // $data['SubBarang'] = SubBarang::join('barangs', 'barangs.id_barang', '=', 'sub_barangs.subbarang_idbarang')
+        //     ->join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
+        //     ->orderBy('subbarang_nama', 'ASC', 'subbarang_tgl_masuk', 'ASC')
+        //     ->where('sub_barangs.subbarang_idbarang', $id)->get();
+        // $data['idbarang'] = $id;
+
+        $data['kode_barang'] = SubBarang::where('subbarang_idbarang', $id)->get();
+        // dd($data['kode_barang']->id_subbarang);
+
+        return view('barang/kode_barang', $data);
+    }
 }

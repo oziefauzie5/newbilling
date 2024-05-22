@@ -6,8 +6,9 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
-                  <a href="{{ route('admin.barang.index')}}" ><button class="btn btn-primary btn-sm mb-3"><i class="fas fa-arrow-left"></i>Kembali</button></a>
-                  <button class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#add"><i class="fas fa-plus"></i></i>Tambah</button>
+                  <a href="{{ route('admin.barang.index')}}" ><button class="btn btn-primary btn-sm mb-3"><i class="fas fa-arrow-left"></i>  Kembali</button></a>
+                  <button class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#add"><i class="fas fa-plus"></i></i>  Tambah</button>
+                  <a href="{{ route('admin.barang.print_kode',['id'=>$idbarang])}}" target="_blank" ><button class="btn btn-primary btn-sm mb-3"><i class="fas fa-print"></i>   Print Kode</button></a>
                   <div class="table-responsive">
                     <table id="input_data" class="display table table-striped table-hover text-nowrap" >  
                   <thead>
@@ -21,6 +22,7 @@
                       <td>Terpakai</td>
                       <td>Stok</td>
                       <td>Harga Satuan</td>
+                      <td>Serial Number</td>
                       <td>Mac Address</td>
                       <td>Keterangan</td>
                     </tr>
