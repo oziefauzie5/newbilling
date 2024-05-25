@@ -13,6 +13,7 @@ use App\Models\PSB\Registrasi;
 use App\Models\Router\Paket;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
+use App\Models\Teknisi\Teknisi;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\SubInvoice;
 use App\Models\User;
@@ -286,21 +287,36 @@ class RegistrasiController extends Controller
         $data['biaya_sales'] = SettingBiaya::first();
         // dd($data['profile_perusahaan']->app_logo);
         $data['nama_admin'] = Auth::user()->name;
-        $data['kas'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
-            ->where('registrasis.reg_idpel', $id)
-            ->where('teknisis.teknisi_job', 'PSB')
-            ->where('teknisis.teknisi_psb', '>', '0')
-            ->first();
-        $update['reg_progres'] = '3';
-        Registrasi::where('reg_idpel', $id)->update($update);
+        $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
+
+        if ($teknisi) {
+            $data['kas'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+                ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+                ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
+                ->where('registrasis.reg_idpel', $id)
+                ->where('teknisis.teknisi_job', 'PSB')
+                ->where('teknisis.teknisi_psb', '>', '0')
+                ->first();
+            $update['reg_progres'] = '3';
+            Registrasi::where('reg_idpel', $id)->update($update);
+            if ($data['kas']->input_sales) {
+                $data['seles'] = User::whereId($data['kas']->input_sales)->first();
+            } else {
+                dd('jonk');
+            }
+            return view('PSB/bukti_kas_keluar', $data);
+        } else {
+            $notifikasi = [
+                'pesan' => 'Teknisi tidak ditemukan',
+                'alert' => 'error',
+            ];
+            return redirect()->route('admin.psb.index')->with($notifikasi);
+        }
+
+        // dd($data['kas']);
 
 
-        $data['seles'] = User::whereId($data['kas']->input_sales)->first();
-        return view('PSB/bukti_kas_keluar', $data);
-        // dd($data);
 
 
         $nama = InputData::where('id', $id)->first();
