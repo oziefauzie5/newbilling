@@ -33,6 +33,8 @@ class SementaraMigrasiController extends Controller
 
         $router_nama = Router::whereId($request->reg_router)->first();
         $paket_nama = Paket::where('paket_id', $request->reg_profile)->first();
+        $tanggal = Carbon::now()->toDateString();
+        $tgl_tagih = Carbon::create($request->tgl_jttempo)->addDay(-1)->toDateString();
 
         Session::flash('reg_nama', $request->reg_nama);
         Session::flash('reg_idpel', $request->reg_idpel);
@@ -135,13 +137,16 @@ class SementaraMigrasiController extends Controller
         $data['reg_dana_kas'] = $request->reg_dana_kas;
         $data['reg_catatan'] = $request->reg_catatan;
         $data['reg_profile'] = $request->reg_profile;
-        $data['tgl_jttempo'] = $request->tgl_jttempo;
-        $data['tgl_aktif'] = $request->tgl_aktif;
+        $data['reg_tgl_jatuh_tempo'] = $request->tgl_jttempo;
+        $data['reg_tgl_pasang'] = $request->tgl_aktif;
+        $data['reg_tgl_tagih'] = $tgl_tagih;
         $data['reg_status'] = '0';
         $data['reg_progres'] = '2';
         $update['input_tgl'] = $request->reg_tgl;
         $update['input_maps'] =  $request->maps;
         $update['input_status'] =  '2';
+
+        // dd($data);
 
 
 
