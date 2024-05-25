@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Router;
 
+use App\Exports\Export\ExportUsername;
 use App\Http\Controllers\Controller;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RouterController extends Controller
 {

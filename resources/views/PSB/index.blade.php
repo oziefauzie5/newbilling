@@ -164,7 +164,6 @@
                   <th>ODP OPM</th>
                   <th>HOME OPM</th>
                   <th>LOS OPM</th>
-                  <th>PENGGUNAAN</th>
                   <th>NOTE</th>
                 </tr>
               </thead>

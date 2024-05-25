@@ -14,7 +14,7 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 40px;
+  font-size: 30px;
 }
 
         </style>
@@ -24,7 +24,9 @@ table {
     <table>
         @foreach($kode_barang as $kode)
         <tr>
-            <th>{{$kode->id_subbarang}}</th>
+            <th>{{$kode->subbarang_ktg}}</th>
+            <th>ID  {{$kode->subbarang_idbarang}}</th>
+            <th>KODE  {{$kode->id_subbarang}}</th>
         </tr>
         @endforeach
     </table>

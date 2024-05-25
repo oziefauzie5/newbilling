@@ -12,6 +12,7 @@ use App\Http\Controllers\PSB\PsbController;
 use App\Http\Controllers\PSB\RegistrasiApiController;
 use App\Http\Controllers\PSB\RegistrasiController;
 use App\Http\Controllers\PSB\SementaraMigrasiController;
+use App\Http\Controllers\Router\ExportExcel;
 use App\Http\Controllers\Router\PaketController;
 use App\Http\Controllers\Router\RouterController;
 use App\Http\Controllers\Sales\SalesController;
