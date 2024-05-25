@@ -65,8 +65,8 @@ class SementaraMigrasiController extends Controller
         Session::flash('reg_catatan', $request->reg_catatan);
         Session::flash('reg_profile', $request->reg_profile);
         Session::flash('paket_nama', $paket_nama->paket_nama);
-        Session::flash('tgl_aktif', $paket_nama->tgl_aktif);
-        Session::flash('tgl_jttempo', $paket_nama->tgl_jttempo);
+        Session::flash('tgl_aktif', $request->tgl_aktif);
+        Session::flash('tgl_jttempo', $request->tgl_jttempo);
 
         $request->validate([
             'reg_nama' => 'required',
