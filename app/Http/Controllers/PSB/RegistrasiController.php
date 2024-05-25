@@ -268,7 +268,17 @@ class RegistrasiController extends Controller
             // ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('registrasis.reg_idpel', $id)
             ->first();
-        $data['seles'] = User::whereId($data['berita_acara']->input_sales)->first();
+        $seles = User::whereId($data['berita_acara']->input_sales)->first();
+
+        // dd($seles->name);
+
+        if ($seles) {
+            $data['seles'] = $seles->name;
+        } else {
+            $data['seles'] = '-';
+        }
+
+        // dd($data);
         $nama = InputData::where('id', $id)->first();
         if ($nama) {
             $sales = $nama->input_nama;

@@ -133,11 +133,7 @@
             <tr>
                 <td>Sales</td>
                 <td>:</td>
-                @if($seles->name)
-                <td>{{$seles->name}}</td>
-                @else
-                <td>-</td>
-                @endif
+                <td>{{$seles}}</td>
             </tr>
             <tr>
                 <td>Sub Sales</td>
