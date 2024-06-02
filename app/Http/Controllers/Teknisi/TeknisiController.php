@@ -270,7 +270,7 @@ class TeknisiController extends Controller
                     $teknisi['teknisi_ket'] = $query->input_nama;
                     $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
 
-
+                    $inv['inv_tgl_pasang'] = $tanggal;
                     $inv['inv_status'] = 'UNPAID';
                     $inv['inv_idpel'] = $query->reg_idpel;
                     $inv['inv_nolayanan'] = $query->reg_nolayanan;

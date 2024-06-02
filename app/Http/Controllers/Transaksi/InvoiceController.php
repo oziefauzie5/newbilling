@@ -14,20 +14,30 @@ use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $pasang_bulan_ini = Carbon::now()->addMonth(-0)->format('m');
+        $pasang_bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
+        $pasang_3_bulan_lalu = Carbon::now()->addMonth(-2)->format('m');
 
-        // $data_transaksi = array(
-        //     'data' => DB::table('unpaids')
-        //         ->join('registrasis', 'registrasis.id', '=', 'unpaids.inv_idpel')
-        //         ->join('pelanggans', 'pelanggans.idpel', '=', 'unpaids.inv_idpel')
-        //         ->join('pakets', 'pakets.paket_id', '=', 'pelanggans.paket')
-        //         ->where('unpaids.inv_status', '=', 'UNPAID')
-        //         ->get(),
-        //     'SettingAkun' => (new SettingAkun)->SettingAkun(),
-        // );
-        $data['data_invoice'] = Invoice::where('invoices.inv_status', '=', 'UNPAID')
-            ->get();
+        $data['data_bulan'] = $request->query('data_bulan');
+        $data['data_inv'] = $request->query('data_inv');
+        // dd($data['data_bulan']);
+
+        $query = Invoice::where('invoices.inv_status', '=', 'UNPAID');
+
+        if ($data['data_bulan'] == "PELANGGAN BARU")
+            $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_ini);
+        elseif ($data['data_bulan'] == "PELANGGAN 2 BULAN")
+            $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_lalu);
+        elseif ($data['data_bulan'] == "PELANGGAN 3 BULAN")
+            $query->whereMonth('inv_tgl_pasang', '=', $pasang_3_bulan_lalu);
+
+        $data['inv_count_all'] = $query->count();
+        $data['data_invoice'] = $query->get();
+        $data['inv_belum_lunas'] = $query->where('invoices.inv_status', '=', 'UNPAID')->sum('inv_total');
+        $data['inv_count_unpaid'] = $query->where('invoices.inv_status', '=', 'UNPAID')->count();
+        $data['inv_count_suspend'] = $query->where('invoices.inv_status', '=', 'SUSPEND')->count();
         return view('Transaksi/list_invoice', $data);
     }
     public function paid()

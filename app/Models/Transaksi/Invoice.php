@@ -18,6 +18,7 @@ class Invoice extends Model
         'inv_profile',
         'inv_mitra',
         'inv_kategori',
+        'inv_tgl_pasang',
         'inv_tgl_tagih',
         'inv_tgl_jatuh_tempo',
         'inv_tgl_isolir',

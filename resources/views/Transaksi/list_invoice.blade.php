@@ -4,82 +4,72 @@
 <div class="content">
   <div class="page-inner">
     <div class="row">
-      <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-2">
+      <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-3">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-success">
-              6%
-              <i class="fa fa-chevron-up"></i>
-            </div>
-            <div class="h1 m-0">43</div>
-            <div class="text-muted mb-3">Input Data</div>
+            <div class="h1 m-0">{{$inv_count_all}}</div>
+            <div class="text-muted mb-3">JUMLAH INVOICE</div>
           </div>
         </div>
       </a>
-      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-2">
+      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-danger">
-              -3%
-              <i class="fa fa-chevron-down"></i>
-            </div>
-            <div class="h1 m-0">17</div>
-            <div class="text-muted mb-3">Registrasi</div>
+            <div class="h1 m-0">{{$inv_count_unpaid}}</div>
+            <div class="text-muted mb-3">INV UNPAID</div>
           </div>
         </div>
       </a>
-      <div class="col-6 col-sm-4 col-lg-2">
+      <div class="col-6 col-sm-4 col-lg-3">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-success">
-              3%
-              <i class="fa fa-chevron-up"></i>
-            </div>
-            <div class="h1 m-0">27.3K</div>
-            <div class="text-muted mb-3">Teknisi</div>
+            <div class="h1 m-0">{{$inv_count_suspend}}</div>
+            <div class="text-muted mb-3">INV SUSPEND</div>
           </div>
         </div>
       </div>
-      <div class="col-6 col-sm-4 col-lg-2">
+      <div class="col-6 col-sm-4 col-lg-3">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-danger">
-              -2%
-              <i class="fa fa-chevron-down"></i>
-            </div>
-            <div class="h1 m-0">$95</div>
-            <div class="text-muted mb-3">Aktivasi</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 col-lg-2">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="text-right text-danger">
-              -1%
-              <i class="fa fa-chevron-down"></i>
-            </div>
-            <div class="h1 m-0">621</div>
-            <div class="text-muted mb-3">Pembayaran</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 col-lg-2">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="text-right text-success">
-              9%
-              <i class="fa fa-chevron-up"></i>
-            </div>
-            <div class="h1 m-0">7</div>
-            <div class="text-muted mb-3">Tiket</div>
+            <div class="h1 m-0">Rp. {{number_format($inv_belum_lunas)}}</div>
+            <div class="text-muted mb-3">TOTAL BELUM LUNAS</div>
           </div>
         </div>
       </div>
     </div>
     <div class="row">
+      
       <div class="card">
         <div class="card-body">
+          <form >
+            <div class="row mb-1">
+                <div class="col-sm-3">
+                  <select name="data_bulan" class="custom-select custom-select-sm">
+                    @if($data_bulan)
+                    <option value="{{$data_bulan}}" selected>{{$data_bulan}}</option>
+                    @endif
+                    <option value="">ALL DATA</option>
+                    <option value="PELANGGAN BARU">PELANGGAN BARU</option>
+                    <option value="PELANGGAN 2 BULAN">PELANGGAN 2 BULAN</option>
+                    <option value="PELANGGAN 3 BULAN">PELANGGAN 3 BULAN</option>
+                    <option value="1 BULAN">1 BULAN</option>
+                    <option value="2 BULAN">2 BULAN</option>
+                    <option value="3 BULAN">3 BULAN</option>
+                    <option value="4 BULAN">4 BULAN</option>
+                  </select>
+              </div>
+                <div class="col-sm-3">
+                  <select name="data_inv" class="custom-select custom-select-sm">
+                    <option value="" selected>ALL INVOICE</option>
+                    <option value="INVOICE UNPAID">INVOICE UNPAID</option>
+                    <option value="INVOICE SUSPEND">INVOICE SUSPEND</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
+                </div>
+              </div>
+          </form>
           @if ($errors->any())
           <div class="alert alert-danger">
             <div class="alert-title"><h4>Gagal!!</h4></div>

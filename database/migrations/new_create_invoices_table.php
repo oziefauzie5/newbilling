@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('inv_profile')->nullable();
             $table->string('inv_mitra')->nullable();
             $table->string('inv_kategori')->nullable();
+            $table->string('inv_tgl_pasang')->nullable();
             $table->string('inv_tgl_tagih')->nullable();
             $table->string('inv_tgl_jatuh_tempo')->nullable();
             $table->string('inv_tgl_isolir')->nullable();
