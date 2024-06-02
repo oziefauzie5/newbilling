@@ -102,6 +102,8 @@ class CallbackController extends Controller
                     //     'lh_akun' => '1',
                     // ]);
 
+                    $datas['inv_cabar'] = 'TRIPAY';
+                    $datas['inv_admin'] = 'SYSTEM';
                     $datas['inv_reference'] = $data->reference;
                     $datas['inv_payment_method'] = $data->payment_method;
                     $datas['inv_payment_method_code'] = $data->payment_method_code;
@@ -110,7 +112,7 @@ class CallbackController extends Controller
                     $datas['inv_fee_customer'] = $data->fee_customer;
                     $datas['inv_total_fee'] = $data->total_fee;
                     $datas['inv_amount_received'] = $data->amount_received;
-                    $datas['paid_at'] = $data->paid_at;
+                    $datas['inv_tgl_bayar'] = $data->paid_at;
                     $datas['inv_status'] = $data->status;
                     Invoice::where('inv_id', $data->merchant_ref)->update($datas);
                     break;

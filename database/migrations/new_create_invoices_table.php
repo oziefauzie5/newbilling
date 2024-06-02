@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('inv_periode')->nullable();
             $table->string('inv_diskon')->nullable();
             $table->string('inv_total')->nullable();
+            $table->string('inv_cabar')->nullable();
             $table->string('inv_reference')->nullable();
             $table->string('inv_payment_method')->nullable();
             $table->string('inv_payment_method_code')->nullable();
@@ -37,6 +38,7 @@ return new class extends Migration
             $table->string('inv_fee_customer')->nullable();
             $table->string('inv_total_fee')->nullable();
             $table->string('inv_amount_received')->nullable();
+            $table->string('inv_admin')->nullable();
             $table->string('inv_note')->nullable();
             $table->timestamps();
         });

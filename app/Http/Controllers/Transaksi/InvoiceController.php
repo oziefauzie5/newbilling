@@ -31,7 +31,7 @@ class InvoiceController extends Controller
     }
     public function paid()
     {
-        $data['paid'] = Paid::get();
+        $data['data_invoice'] = Invoice::where('invoices.inv_status', '=', 'PAID')->get();
         return view('Transaksi/list_invoice_paid', $data);
     }
 
