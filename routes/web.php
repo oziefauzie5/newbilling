@@ -134,6 +134,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
 
     Route::get('/Invoice', [InvoiceController::class, 'index'])->name('inv.index');
+    Route::get('/Paid', [InvoiceController::class, 'paid'])->name('inv.paid');
     Route::get('/Invoice/Detail/{id}', [InvoiceController::class, 'sub_invoice'])->name('inv.sub_invoice');
     Route::put('/Invoice/Payment/{id}', [InvoiceController::class, 'payment'])->name('inv.payment');
     Route::put('/Invoice/addons/{id}', [InvoiceController::class, 'addons'])->name('inv.addons');

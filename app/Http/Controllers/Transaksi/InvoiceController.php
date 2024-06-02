@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Transaksi\Invoice;
+use App\Models\Transaksi\Paid;
 use App\Models\Transaksi\SubInvoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,11 @@ class InvoiceController extends Controller
         $data['data_invoice'] = Invoice::where('invoices.inv_status', '=', 'UNPAID')
             ->get();
         return view('Transaksi/list_invoice', $data);
+    }
+    public function paid()
+    {
+        $data['paid'] = Paid::get();
+        return view('Transaksi/list_invoice_paid', $data);
     }
 
     public function sub_invoice($id)

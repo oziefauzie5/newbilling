@@ -25,6 +25,14 @@ class Invoice extends Model
         'inv_periode',
         'inv_diskon',
         'inv_total',
+        'inv_reference',
+        'inv_payment_method',
+        'inv_payment_method_code',
+        'inv_total_amount',
+        'inv_fee_merchant',
+        'inv_fee_customer',
+        'inv_total_fee',
+        'inv_amount_received',
         'inv_note',
     ];
 }

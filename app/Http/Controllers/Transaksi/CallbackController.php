@@ -68,23 +68,26 @@ class CallbackController extends Controller
             switch ($status) {
                 case 'PAID':
 
-                    $paid['id_unpaid'] = $data->merchant_ref; #No referensi transaksi. Contoh: T000100000000XHDFTR disini saya gunakan unpaid_id
-                    $paid['idpel_unpaid'] = $invoice->inv_idpel;
-                    $paid['reference'] = $data->reference; #No referensi/invoice merchant disini saya gunakan id pelanggan
-                    $paid['payment_method'] = $data->payment_method; #Channel pembayaran. Contoh: BRI Virtual Account
-                    $paid['payment_method_code'] = $data->payment_method_code; #Kode channel pembayaran. Contoh: BRIVA
-                    $paid['total_amount'] = $data->total_amount; #Jumlah pembayaran yang dibayar pelanggan
-                    $paid['fee_merchant'] = $data->fee_merchant; #Jumlah biaya yang dikenakan pada merchant
-                    $paid['fee_customer'] = $data->fee_customer; #Jumlah biaya yang dikenakan pada customer
-                    $paid['total_fee'] = $data->total_fee; #Jumlah biaya fee_merchant + 
-                    $paid['amount_received'] = $data->amount_received; #Jumlah bersih yang diterima merchant. Dihitung dari total_amount - (fee_merchant + fee_customer)
-                    $paid['is_closed_payment'] = $data->is_closed_payment; #Tipe pembayaran
-                    $paid['status'] = $data->status; #Status transaksi
-                    $paid['paid_at'] = $data->paid_at; #Timestamp waktu pembayaran sukses
-                    $paid['admin'] = '0'; #User Admin
-                    $paid['akun'] = '1'; #Cara Bayar
-                    $paid['note'] = $data->note; #Catatan
-                    Paid::create($paid);
+                    // $paid['id_unpaid'] = $data->merchant_ref; #No referensi transaksi. Contoh: T000100000000XHDFTR disini saya gunakan unpaid_id
+                    // $paid['idpel_unpaid'] = $invoice->inv_idpel;
+                    // $paid['reference'] = $data->reference; #No referensi/invoice merchant disini saya gunakan id pelanggan
+                    // $paid['payment_method'] = $data->payment_method; #Channel pembayaran. Contoh: BRI Virtual Account
+                    // $paid['payment_method_code'] = $data->payment_method_code; #Kode channel pembayaran. Contoh: BRIVA
+                    // $paid['total_amount'] = $data->total_amount; #Jumlah pembayaran yang dibayar pelanggan
+                    // $paid['fee_merchant'] = $data->fee_merchant; #Jumlah biaya yang dikenakan pada merchant
+                    // $paid['fee_customer'] = $data->fee_customer; #Jumlah biaya yang dikenakan pada customer
+                    // $paid['total_fee'] = $data->total_fee; #Jumlah biaya fee_merchant + 
+                    // $paid['amount_received'] = $data->amount_received; #Jumlah bersih yang diterima merchant. Dihitung dari total_amount - (fee_merchant + fee_customer)
+                    // $paid['is_closed_payment'] = $data->is_closed_payment; #Tipe pembayaran
+                    // $paid['status'] = $data->status; #Status transaksi
+                    // $paid['paid_at'] = $data->paid_at; #Timestamp waktu pembayaran sukses
+                    // $paid['admin'] = '0'; #User Admin
+                    // $paid['akun'] = '1'; #Cara Bayar
+                    // $paid['note'] = $data->note; #Catatan
+                    // dd($paid);
+                    // Paid::create($paid);
+
+
 
                     // laporanharian::create([
                     //     'lh_id' => $data->merchant_ref,
@@ -99,8 +102,16 @@ class CallbackController extends Controller
                     //     'lh_akun' => '1',
                     // ]);
 
-
-                    $datas['upd_status'] = $data->status;
+                    $datas['inv_reference'] = $data->reference;
+                    $datas['inv_payment_method'] = $data->payment_method;
+                    $datas['inv_payment_method_code'] = $data->payment_method_code;
+                    $datas['inv_total_amount'] = $data->total_amount;
+                    $datas['inv_fee_merchant'] = $data->fee_merchant;
+                    $datas['inv_fee_customer'] = $data->fee_customer;
+                    $datas['inv_total_fee'] = $data->total_fee;
+                    $datas['inv_amount_received'] = $data->amount_received;
+                    $datas['paid_at'] = $data->paid_at;
+                    $datas['inv_status'] = $data->status;
                     Invoice::where('inv_id', $data->merchant_ref)->update($datas);
                     break;
 

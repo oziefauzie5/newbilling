@@ -420,7 +420,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="{{route('admin.router.paket.index')}}">
+										<a href="{{route('admin.inv.paid')}}">
 											<span class="sub-item">Invoice  Paid</span>
 										</a>
 									</li>
