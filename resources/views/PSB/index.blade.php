@@ -99,6 +99,48 @@
         <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
           <i class="fa fa-file-import"></i> Import
         </button>
+        <hr>
+        <form >
+        <div class="row mb-1">
+          <div class="col-sm-3">
+              <select name="data" class="custom-select custom-select-sm">
+                @if($data)
+                <option value="{{$data}}" selected>{{$data}}</option>
+                @endif
+                <option value="">ALL DATA</option>
+                <option value="PPP">USER PPP</option>
+                <option value="DHCP">USER DHCP</option>
+                <option value="HOTSPOT">USER HOTSPOT</option>
+              </select>
+          </div>
+          <div class="col-sm-3">
+              <select name="router" class="custom-select custom-select-sm">
+                @if($router)
+                <option value="{{$router}}" selected>{{$r_nama}}</option>
+                @endif
+                <option value="">ALL ROUTER</option>
+                @foreach($get_router as $router)
+                <option value="{{$router->id}}">{{$router->router_nama}}</option>
+                @endforeach
+              </select>
+          </div>
+          <div class="col-sm-3">
+              <select name="paket" class="custom-select custom-select-sm">
+                @if($paket)
+                <option value="{{$paket}}" selected>{{$p_nama}}</option>
+                @endif
+                <option value="">ALL PAKET</option>
+                @foreach($get_paket as $paket)
+                <option value="{{$paket->paket_id}}">{{$paket->paket_nama}}</option>
+                @endforeach
+              </select>
+          </div>
+          <div class="col-sm-3">
+            <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
+          </div>
+        </div>
+        </form>
+        <hr>
          <!-- Modal Import -->
          <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-dialog" role="document">

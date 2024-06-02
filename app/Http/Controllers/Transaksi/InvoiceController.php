@@ -39,8 +39,8 @@ class InvoiceController extends Controller
         $data['inv_count_bulan'] = $invoice->whereMonth('inv_tgl_bayar', '=', $month)->count();
         // $data['inv_bulan'] = $invoice->sum('inv_total');
         $data['inv_bulan'] = $invoice->whereMonth('inv_tgl_bayar', '=', $month)->sum('inv_total');
-        $data['inv_hari'] = $invoice->whereDate('inv_tgl_bayar', '=', $day)->sum('inv_total');
-        // dd($day);
+        $data['inv_hari'] = $invoice->whereDay('inv_tgl_bayar', '=', $day)->sum('inv_total');
+        // dd($data['inv_hari']);
         return view('Transaksi/list_invoice_paid', $data);
     }
 

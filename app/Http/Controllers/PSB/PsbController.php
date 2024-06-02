@@ -24,18 +24,50 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PsbController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data['data_registrasi'] = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+        $data['router'] = $request->query('router');
+        $data['paket'] = $request->query('paket');
+        $data['data'] = $request->query('data');
+
+        if ($data['router']) {
+            $r = Router::where('id', $data['router'])->first();
+            $data['r_nama'] = $r->router_nama;
+        }
+        if ($data['paket']) {
+            $p = Paket::where('paket_id', $data['paket'])->first();
+            $data['p_nama'] = $p->paket_nama;
+        }
+
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->orderBy('tgl', 'DESC')
-            ->get();
+            ->orderBy('tgl', 'DESC');
+
+
+        if ($data['router'])
+            $query->where('routers.id', '=', $data['router']);
+        if ($data['paket'])
+            $query->where('pakets.paket_id', '=', $data['paket']);
+        if ($data['data'] == "PPP")
+            $query->where('registrasis.reg_layanan', '=', "PPP");
+        elseif ($data['data'] == "DHCP")
+            $query->where('registrasis.reg_layanan', '=', "DHCP");
+        elseif ($data['data'] == "HOTSPOT")
+            $query->where('registrasis.reg_layanan', '=', "HOTSPOT");
+
+
+        $data['data_registrasi'] = $query->get();
+
 
         $data['count_inputdata'] = InputData::count();
-        $data['count_registrasi'] = Registrasi::count();
+        $data['count_registrasi'] = $query->count();
         $data['count_berlangganan'] = InputData::where('input_status', '1')->count();
+
+        $data['get_router'] = Router::get();
+        $data['get_paket'] = Paket::get();
+        // $data['get_registrasi'] = Registrasi::get();
 
         return view('PSB/index', $data);
     }
