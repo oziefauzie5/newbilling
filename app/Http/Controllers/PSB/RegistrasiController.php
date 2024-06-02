@@ -119,9 +119,9 @@ class RegistrasiController extends Controller
 
 
         $dates = Carbon::now()->toDateTimeString();
+        $tgl_aktif = date('d/m/Y', strtotime($dates));
 
         $router = Router::whereId($request->reg_router)->first();
-        $tgl_aktif = date('d/m/Y', strtotime($dates));
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
         $pass = $router->router_password;

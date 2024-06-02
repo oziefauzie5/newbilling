@@ -72,7 +72,7 @@
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_profile}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_mitra}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_kategori}}</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('Y-m-d', strtotime($d->inv_tgl_bayar))}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_bayar))}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_admin}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_cabar}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_payment_method}}</td>

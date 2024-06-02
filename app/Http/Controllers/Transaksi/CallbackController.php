@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingTripay;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Paid;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -67,7 +68,7 @@ class CallbackController extends Controller
             }
             switch ($status) {
                 case 'PAID':
-
+                    $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
                     // $paid['id_unpaid'] = $data->merchant_ref; #No referensi transaksi. Contoh: T000100000000XHDFTR disini saya gunakan unpaid_id
                     // $paid['idpel_unpaid'] = $invoice->inv_idpel;
                     // $paid['reference'] = $data->reference; #No referensi/invoice merchant disini saya gunakan id pelanggan
@@ -112,7 +113,7 @@ class CallbackController extends Controller
                     $datas['inv_fee_customer'] = $data->fee_customer;
                     $datas['inv_total_fee'] = $data->total_fee;
                     $datas['inv_amount_received'] = $data->amount_received;
-                    $datas['inv_tgl_bayar'] = $data->paid_at;
+                    $datas['inv_tgl_bayar'] = $tgl_bayar;
                     $datas['inv_status'] = $data->status;
                     Invoice::where('inv_id', $data->merchant_ref)->update($datas);
                     break;
