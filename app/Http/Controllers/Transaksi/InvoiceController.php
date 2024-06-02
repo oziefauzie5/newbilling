@@ -33,10 +33,13 @@ class InvoiceController extends Controller
     public function paid()
     {
         $invoice = Invoice::where('invoices.inv_status', '=', 'PAID');
+        $month = Carbon::now()->addMonth(-0)->format('m');
         $data['data_invoice'] = $invoice->get();
-        $data['inv_count_bulan'] = $invoice->count();
-        $data['inv_bulan'] = $invoice->sum('inv_total');
+        $data['inv_count_bulan'] = $invoice->whereMonth('inv_tgl_bayar', '=', $month)->count();
+        // $data['inv_bulan'] = $invoice->sum('inv_total');
+        $data['inv_bulan'] = $invoice->whereMonth('inv_tgl_bayar', '=', $month)->sum('inv_total');
         $data['inv_hari'] = $invoice->whereTime('inv_tgl_bayar', '=', Carbon::now())->sum('inv_total');
+        // dd($data['inv_bulan']);
         return view('Transaksi/list_invoice_paid', $data);
     }
 
