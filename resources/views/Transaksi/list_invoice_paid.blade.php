@@ -7,7 +7,7 @@
       <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-4">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">43</div>
+            <div class="h1 m-0">{{$inv_count_bulan}}</div>
             <div class="text-muted mb-3">INV LUNAS BULAN INI</div>
           </div>
         </div>
@@ -15,7 +15,7 @@
       <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-4">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">17</div>
+            <div class="h1 m-0">Rp. {{number_format($inv_hari)}}</div>
             <div class="text-muted mb-3">TOTAL LUNAS HARI INI</div>
           </div>
         </div>
@@ -23,7 +23,7 @@
       <div class="col-6 col-sm-4 col-lg-4">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">27.3K</div>
+            <div class="h1 m-0">Rp. {{number_format($inv_bulan)}}</div>
             <div class="text-muted mb-3">TOTAL LUNAS BULAN INI</div>
           </div>
         </div>

@@ -8,6 +8,7 @@ use App\Models\Applikasi\SettingBiaya;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Paid;
 use App\Models\Transaksi\SubInvoice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +32,11 @@ class InvoiceController extends Controller
     }
     public function paid()
     {
-        $data['data_invoice'] = Invoice::where('invoices.inv_status', '=', 'PAID')->get();
+        $invoice = Invoice::where('invoices.inv_status', '=', 'PAID');
+        $data['data_invoice'] = $invoice->get();
+        $data['inv_count_bulan'] = $invoice->count();
+        $data['inv_bulan'] = $invoice->sum('inv_total');
+        $data['inv_hari'] = $invoice->whereTime('inv_tgl_bayar', '=', Carbon::now())->sum('inv_total');
         return view('Transaksi/list_invoice_paid', $data);
     }
 
