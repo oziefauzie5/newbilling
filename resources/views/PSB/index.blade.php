@@ -111,6 +111,8 @@
                 <option value="PPP">USER PPP</option>
                 <option value="DHCP">USER DHCP</option>
                 <option value="HOTSPOT">USER HOTSPOT</option>
+                <option value="USER BARU">USER BARU</option>
+                <option value="USER BULAN LALU">USER BULAN LALU</option>
               </select>
           </div>
           <div class="col-sm-3">

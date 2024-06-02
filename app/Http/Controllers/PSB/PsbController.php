@@ -26,6 +26,9 @@ class PsbController extends Controller
 {
     public function index(Request $request)
     {
+        $month = Carbon::now()->addMonth(-0)->format('m');
+        $bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
+
         $data['router'] = $request->query('router');
         $data['paket'] = $request->query('paket');
         $data['data'] = $request->query('data');
@@ -56,10 +59,14 @@ class PsbController extends Controller
             $query->where('registrasis.reg_layanan', '=', "DHCP");
         elseif ($data['data'] == "HOTSPOT")
             $query->where('registrasis.reg_layanan', '=', "HOTSPOT");
+        elseif ($data['data'] == "USER BARU")
+            $query->whereMonth('reg_tgl_pasang', '=', $month);
+        elseif ($data['data'] == "USER BULAN LALU")
+            $query->whereMonth('reg_tgl_pasang', '=', $bulan_lalu);
 
 
         $data['data_registrasi'] = $query->get();
-
+        // dd($data['data_registrasi']);
 
         $data['count_inputdata'] = InputData::count();
         $data['count_registrasi'] = $query->count();
