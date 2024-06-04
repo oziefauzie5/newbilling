@@ -302,7 +302,7 @@ class RegistrasiController extends Controller
 
         $data['data_registrasi'] = $query->get();
 
-        return view('psb/berita_acara', $data);
+        return view('PSB/berita_acara', $data);
     }
     public function operasional()
     {
@@ -314,7 +314,7 @@ class RegistrasiController extends Controller
 
         $data['data_registrasi'] = $query->get();
 
-        return view('psb/operasional', $data);
+        return view('PSB/operasional', $data);
     }
 
     public function bukti_kas_keluar($id)
