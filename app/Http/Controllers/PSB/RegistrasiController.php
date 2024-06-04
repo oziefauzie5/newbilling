@@ -257,7 +257,7 @@ class RegistrasiController extends Controller
 
         return response()->json($kode_ont);
     }
-    public function berita_acara($id)
+    public function print_berita_acara($id)
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
         // dd($data['profile_perusahaan']->app_logo);
@@ -286,11 +286,37 @@ class RegistrasiController extends Controller
             $sales = '-';
         }
         $pdf = App::make('dompdf.wrapper');
-        $html = view('PSB/berita_acara', $data)->render();
+        $html = view('PSB/print_berita_acara', $data)->render();
         $pdf->loadHTML($html);
         $pdf->setPaper('A4', 'potraid');
         return $pdf->download('Berita_Acara_' . $sales . '.pdf');
     }
+
+    public function berita_acara()
+    {
+
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->orderBy('tgl', 'DESC');
+
+        $data['data_registrasi'] = $query->get();
+
+        return view('psb/berita_acara', $data);
+    }
+    public function operasional()
+    {
+
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->orderBy('tgl', 'DESC');
+
+        $data['data_registrasi'] = $query->get();
+
+        return view('psb/operasional', $data);
+    }
+
     public function bukti_kas_keluar($id)
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
@@ -308,7 +334,7 @@ class RegistrasiController extends Controller
                 ->where('teknisis.teknisi_job', 'PSB')
                 ->where('teknisis.teknisi_psb', '>', '0')
                 ->first();
-            $update['reg_progres'] = '3';
+            $update['reg_progres'] = '4';
             Registrasi::where('reg_idpel', $id)->update($update);
             if ($data['kas']->input_sales) {
                 $data['seles'] = User::whereId($data['kas']->input_sales)->first();

@@ -450,6 +450,11 @@
 											<span class="sub-item">Invoice Paid</span>
 										</a>
 									</li>
+									<li>
+										<a href="{{route('admin.inv.operasional')}}">
+											<span class="sub-item">Pencairan PSB & Sales</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</li>

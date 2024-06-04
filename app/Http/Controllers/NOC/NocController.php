@@ -108,10 +108,13 @@ class NocController extends Controller
             dd('Router Disconnected');
         }
     }
-    public function pengecekan_put()
+    public function pengecekan_put($id)
     {
-        $reg = Registrasi::where('reg_progres', '3')->update(['reg_progres' => '5']);
-
-        dd($reg);
+        $reg = Registrasi::where('reg_progres', '2')->where('reg_idpel', $id)->update(['reg_progres' => '3']);
+        $notifikasi = array(
+            'pesan' => 'Pengecekan Selesai',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.noc.index')->with($notifikasi);
     }
 }

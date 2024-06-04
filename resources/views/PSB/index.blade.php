@@ -96,9 +96,15 @@
           FITUR SEMENTARA MIGRASI
         </button>
       </a>
-        <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
-          <i class="fa fa-file-import"></i> Import
-        </button>
+      <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
+        <i class="fa fa-file-import"></i> IMPORT
+      </button>
+      <a href="{{route('admin.psb.berita_acara')}}">
+      <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
+        <i class="fa fa-plus"></i>
+        BERITA ACARA
+      </button>
+    </a>
         <hr>
         <form >
         <div class="row mb-1">
@@ -182,8 +188,8 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>ID</th>
-                  <th>INET</th>
+                  {{-- <th>ID</th>
+                  <th>INET</th> --}}
                   <th>NOLAYANAN</th>
                   <th>PELANGGAN</th>
                   <th>KTG</th>
@@ -219,11 +225,11 @@
                       <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->reg_idpel}}" class="btn btn-link btn-danger">
                         <i class="fa fa-times"></i>
                       </button>
-                      <a href="{{route('admin.psb.berita_acara',['id'=>$d->reg_idpel])}}" target="_blank">
+                      {{-- <a href="{{route('admin.psb.print_berita_acara',['id'=>$d->reg_idpel])}}" target="_blank">
                       <button type="button" class="btn btn-link btn-dark">
                         Berita acara
-                      </button></a>
-                      @if($d->reg_progres == '2')
+                      </button></a> --}}
+                      {{-- @if($d->reg_progres == '2')
                       <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$d->reg_idpel])}}" target="_blank">
                       <button type="button" class="btn btn-link btn-dark">
                         Kas
@@ -239,11 +245,11 @@
                           Proses
                         </button></a>
                     
-                      @endif
+                      @endif --}}
                     </div>
                   </td>
-                      <td>{{$d->reg_progres}}</td>
-                      <td>{{$d->reg_idpel}}</td>
+                      {{-- <td>{{$d->reg_progres}}</td>
+                      <td>{{$d->reg_idpel}}</td> --}}
                       <td>{{$d->reg_nolayanan}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_layanan}}</td>

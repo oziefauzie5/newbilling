@@ -35,10 +35,28 @@
                 <tr>
                   <td>
                     <div class="form-button-action">
-                      <a href="{{route('admin.psb.print_berita_acara',['id'=>$d->reg_idpel])}}" target="_blank">
-                        <button type="button" class="btn btn-link btn-dark">
-                          Berita acara
+                      @if($d->reg_progres == '3')
+                      <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$d->reg_idpel])}}" target="_blank">
+                      <button type="button" class="btn btn-link btn-dark">
+                        Kas
+                      </button></a>
+                      @elseif($d->reg_progres == '4')
+                      <a>
+                        <button type="button" class="btn btn-link btn-success">
+                          Konfirmasi
                         </button></a>
+                      @elseif($d->reg_progres == '5')
+                      <a>
+                        <button type="button" class="btn btn-link btn-success">
+                          Lunas
+                        </button></a>
+                      @else
+                      <a>
+                        <button type="button" class="btn btn-link btn-warning">
+                          Proses
+                        </button></a>
+                    
+                      @endif
                     </div>
                   </td>
                   <td>{{$d->input_tgl}}</td>

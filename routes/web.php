@@ -93,8 +93,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::delete('/PSB/Input-data-delete/{id}', [PsbController::class, 'input_data_delete'])->name('psb.input_data_delete');
     Route::get('/PSB/Registrasi', [RegistrasiController::class, 'index'])->name('reg.index');
     Route::get('/PSB/Delete/{id}/Registrasi', [RegistrasiController::class, 'delete_registrasi'])->name('reg.delete_registrasi');
-    Route::get('/PSB/{id}/berita_acara', [RegistrasiController::class, 'berita_acara'])->name('psb.berita_acara');
-    Route::get('/PSB/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar');
+    Route::get('/PSB/berita_acara', [RegistrasiController::class, 'berita_acara'])->name('psb.berita_acara');
+    Route::get('/PSB/{id}/Print-Berita_Acara', [RegistrasiController::class, 'print_berita_acara'])->name('psb.print_berita_acara');
+    // ------------PENCAIRAN PSB-----------------
+    Route::get('/Transaksi/Operasional', [RegistrasiController::class, 'operasional'])->name('inv.operasional');
+    Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar');
 
     Route::get('/PSB/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi');
     Route::post('/PSB/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi');
@@ -113,6 +116,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::put('/PSB/Update-Profile/{id}', [RegistrasiApiController::class, 'update_profile'])->name('psb.update_profile');
     Route::put('/PSB/Update-Router/{id}', [RegistrasiApiController::class, 'update_router'])->name('psb.update_router');
     // Route::get('/PSB/edit-validasi-ont/{id}', [RegistrasiController::class, 'edit_validasi_ont'])->name('reg.edit_validasi_ont');
+
 
 
     Route::post('/Supplier/Tambah-supplier', [SupplierControoler::class, 'store'])->name('supplier.store');
