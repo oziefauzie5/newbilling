@@ -69,7 +69,7 @@ class RouterController extends Controller
         } else {
             $notifikasi = array(
                 'pesan' => 'Gagal edit router',
-                'alert' => 'success',
+                'alert' => 'error',
             );
             return redirect()->route('admin.router.index')->with($notifikasi);
         }
@@ -163,8 +163,6 @@ class RouterController extends Controller
         $API->debug = false;
         $data['id'] = $id;
         if ($API->connect($ip, $user, $pass)) {
-
-
             $data['getNat'] = $API->comm('/ip/firewal/nat/print', [
                 '?comment' => 'REMOTE_ONT',
             ]);

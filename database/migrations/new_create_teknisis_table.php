@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('teknisi_nilai')->nullable();
             $table->string('teknisi_nilai_instalasi')->nullable();
             $table->text('teknisi_note')->nullable();
-            $table->string('teknisi_pengecekan')->nullable();
-            $table->string('teknisi_pencairan')->nullable();
+            $table->string('teknisi_noc_userid')->nullable();
+            $table->string('teknisi_keuangan_userid')->nullable();
             $table->string('teknisi_status')->nullable();
             $table->timestamps();
         });

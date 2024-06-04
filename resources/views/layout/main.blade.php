@@ -386,12 +386,12 @@
 							</div>
 						</li>
 						<li class="nav-item {{\Route::is('admin.router.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#sidebarLayouts">
+							<a data-toggle="collapse" href="#sidebarRouter">
 								<i class="fas fa-server"></i>
 								<p>Router</p>
 								<span class="caret"></span>
 							</a>
-							<div class="collapse" id="sidebarLayouts">
+							<div class="collapse" id="sidebarRouter">
 								<ul class="nav nav-collapse">
 									<li>
 										<a href="{{route('admin.router.index')}}">
@@ -401,6 +401,32 @@
 									<li>
 										<a href="{{route('admin.router.paket.index')}}">
 											<span class="sub-item">Paket</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+						<li class="nav-item {{\Route::is('admin.noc.*') ? 'active' : ''}}">
+							<a data-toggle="collapse" href="#sidebarNoc">
+								<i class="fas fa-server"></i>
+								<p>NOC</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="sidebarNoc">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{route('admin.noc.index')}}">
+											<span class="sub-item">Pengecekan</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.noc.index')}}">
+											<span class="sub-item">Remote</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.noc.index')}}">
+											<span class="sub-item">Cek Trafik</span>
 										</a>
 									</li>
 								</ul>
@@ -421,7 +447,7 @@
 									</li>
 									<li>
 										<a href="{{route('admin.inv.paid')}}">
-											<span class="sub-item">Invoice  Paid</span>
+											<span class="sub-item">Invoice Paid</span>
 										</a>
 									</li>
 								</ul>

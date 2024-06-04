@@ -6,6 +6,7 @@ use App\Http\Controllers\Barang\BarangController;
 use App\Http\Controllers\Barang\KategoriController;
 use App\Http\Controllers\Barang\SupplierControoler;
 use App\Http\Controllers\Home\HomeController;
+use App\Http\Controllers\NOC\NocController;
 use App\Http\Controllers\Pelanggan\LoginPelangganController;
 use App\Http\Controllers\Pelanggan\PelangganController;
 use App\Http\Controllers\PSB\PsbController;
@@ -76,6 +77,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/router/paket/store', [PaketController::class, 'store'])->name('router.paket.store');
     Route::post('/router/paket/{id}/update', [PaketController::class, 'update'])->name('router.paket.update');
     Route::post('/router/paket/export', [PaketController::class, 'exportPaketToMikrotik'])->name('router.paket.exportPaketToMikrotik');
+
+    Route::get('/Noc', [NocController::class, 'index'])->name('noc.index');
+    Route::get('/Noc/{id}/Pengecekan', [NocController::class, 'pengecekan'])->name('noc.pengecekan');
+    Route::get('/Noc/{id}/Pengecekan-Done', [NocController::class, 'pengecekan_put'])->name('noc.pengecekan_put');
 
 
     Route::get('/PSB', [PsbController::class, 'index'])->name('psb.index');

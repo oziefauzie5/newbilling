@@ -24,5 +24,7 @@ class Teknisi extends Model
         'teknisi_pengecekan',
         'teknisi_note',
         'teknisi_status',
+        'teknisi_noc_userid',
+        'teknisi_keuangan_userid',
     ];
 }
