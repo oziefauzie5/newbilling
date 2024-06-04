@@ -54,7 +54,7 @@ class NocController extends Controller
 
         $data['get_router'] = Router::get();
 
-        return view('NOC/index', $data);
+        return view('noc/index', $data);
     }
 
     public function pengecekan($id)
