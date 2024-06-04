@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PSB;
 
 use App\Http\Controllers\Controller;
 use App\Imports\Import\RegistrasiImport;
+use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingAplikasi;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWaktuTagihan;
@@ -15,6 +16,7 @@ use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
 use App\Models\Teknisi\Teknisi;
 use App\Models\Transaksi\Invoice;
+use App\Models\Transaksi\Operasional;
 use App\Models\Transaksi\SubInvoice;
 use App\Models\User;
 use Carbon\Carbon;
@@ -307,6 +309,8 @@ class RegistrasiController extends Controller
     public function operasional()
     {
 
+        $data['data_bank'] = SettingAkun::where('id', '>', 1)->get();
+        $data['data_user'] = User::where('id', '>', 10)->get();
         $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
@@ -315,6 +319,49 @@ class RegistrasiController extends Controller
         $data['data_registrasi'] = $query->get();
 
         return view('PSB/operasional', $data);
+    }
+    public function konfirm_pencairan(Request $request, $id)
+    {
+        $admin = Auth::user()->id;
+        $biaya = SettingBiaya::first();
+        // dd($biaya->biaya_psb);
+        $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
+        $data['datapel'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->where('registrasis.reg_idpel', $request->idpel)
+            ->first();
+        $aa = 'aa';
+        $bb = 'bb';
+        Jurnal::create([
+            'jurnal_id' => rand(10000, 19999),
+            'jurnal_tgl' => $data['input_tgl'],
+            'jurnal_uraian' => 'PSB - ' . $data['datapel']->input_nama,
+            'jurnal_kategori' => 'PSB',
+            'jurnal_admin' => $admin,
+            'jurnal_penerima' => $request->penerima,
+            'jurnal_idpel' => $request->idpel,
+            'jurnal_metode_bayar' => $request->akun,
+            'jurnal_debet' => $biaya->biaya_psb,
+            'jurnal_status' => 1,
+        ]);
+        Jurnal::create([
+            'jurnal_id' => rand(10000, 19999),
+            'jurnal_tgl' => $data['input_tgl'],
+            'jurnal_uraian' => 'PSB - ' . $data['datapel']->input_nama,
+            'jurnal_kategori' => 'PSB',
+            'jurnal_admin' => $admin,
+            'jurnal_penerima' => $request->penerima,
+            'jurnal_idpel' => $request->idpel,
+            'jurnal_metode_bayar' => $request->akun,
+            'jurnal_debet' => $biaya->biaya_sales,
+            'jurnal_status' => 1,
+        ]);
+
+        Registrasi::where('reg_progres', '4')->where('reg_idpel', $request->idpel)->update(['reg_progres' => '4']);
+        $notifikasi = array(
+            'pesan' => 'Berhasil Pencairan PSB & Sales.',
+            'alert' => 'success',
+        );
+        // return redirect()->route('admin.PSB.operasional')->with($notifikasi);
     }
 
     public function bukti_kas_keluar($id)
