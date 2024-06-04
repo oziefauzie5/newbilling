@@ -57,24 +57,22 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <form ethod="post" action="{{route('admin.psb.konfirm_pencairan')}}">
+                              <form method="post" action="{{route('admin.inv.konfirm_pencairan')}}">
                                   @csrf
                                   @method('POST')
                                   <div class="form-row">
-                                    <input type="text" name="idpel" value="{{$d->reg_idpel}}">
+                                    <input type="hidden" name="idpel" value="{{$d->reg_idpel}}">
                                     <div class="col">
-                                      <label for="">METODE BAYAR<strong class="text-danger">*</strong></label>
-                                      <select name="bank" id="" class="form-control">
-                                        <option value="">PILIH</option>
+                                      <select name="bank" id="" class="form-control" required>
+                                        <option value="">PILIH METODE BAYAR</option>
                                       @foreach($data_bank as $bank)
                                       <option value="{{$bank->id}}">{{$bank->akun_nama}}</option>
                                       @endforeach
                                       </select>
                                     </div>
                                     <div class="col">
-                                      <label for="">PENERIMA<strong class="text-danger">*</strong></label>
-                                      <select name="penerima" id="" class="form-control">
-                                        <option value="">PILIH</option>
+                                      <select name="penerima" id="" class="form-control" required>
+                                        <option value="">PILIH PENERIMA</option>
                                       @foreach($data_user as $user)
                                       <option value="{{$user->id}}">{{$user->name}}</option>
                                       @endforeach
@@ -82,11 +80,11 @@
                                     </div>
                                   </div>
                               
-                              </form>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-sm btn-primary">Konfirmasi</button>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-sm btn-primary">Konfirmasi</button>
+                                </form>
                             </div>
                           </div>
                         </div>

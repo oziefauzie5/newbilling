@@ -98,7 +98,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     // ------------PENCAIRAN PSB-----------------
     Route::get('/Transaksi/Operasional', [RegistrasiController::class, 'operasional'])->name('inv.operasional');
     Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar');
-    Route::post('/Transaksi/Konfirm', [RegistrasiController::class, 'konfirm_pencairan'])->name('psb.konfirm_pencairan');
+    Route::post('/Transaksi/Konfirm', [RegistrasiController::class, 'konfirm_pencairan'])->name('inv.konfirm_pencairan');
 
     Route::get('/PSB/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi');
     Route::post('/PSB/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi');
