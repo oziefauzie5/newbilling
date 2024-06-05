@@ -48,17 +48,8 @@
             color:red;
         }
 
-
-        /* #customers tr:nth-child(even){background-color: #dbdbdb;} */
-
-        /* #customers tr:hover {background-color: #8b3838;} */
-
         #customers th {
-          /* padding-top: 12px;
-          padding-bottom: 12px; */
           text-align: left;
-          /* background-color: #b8b8b8; */
-          /* color: rgb(0, 0, 0); */
           font-size: 10pt;
 
         }
@@ -219,7 +210,7 @@
     </table>
     <br>
     <hr>
-    <table id="customers">
+    {{-- <table id="customers">
             <tr>
                 <td width="15%">Jeni Layanan</td>
                 <td>:</td>
@@ -235,12 +226,15 @@
                 <td>:</td>
                 <td>{{$berita_acara->reg_password}}</td>
             </tr>
-    </table>
-    <br><hr><br>
+    </table> --}}
+    {{-- <br><hr> --}}
+    <br>
     <span>Syarat dan Ketentuan berlaku</span>
     <ul id="sk">
         <li>Berlangganan minimal 6 Bulan</li>
         <li>Mengembalikan Perangkat ONT ( Modem ) saat berhenti berlangganan</li>
+        <li>Pelanggan akan dikenakan Denda Pengakhiran sebesar Rp 500.000,- sesuai dengan ketentuan dalam Syarat dan Ketentuan, apabila memutuskan untuk berhenti berlangganan Layanan Ovall Fiber sebelum 6 bulan.</li>
+        <li>Kontrak Berlangganan ini digunakan sebagai dasar untuk menjaga pelayanan dan komitmen antara pelanggan dengan Ovall Fiber.</li>
     </ul>
     <table id="ttd">
         <tr>

@@ -8,8 +8,10 @@ use App\Models\PSB\Registrasi;
 use App\Models\Router\Paket;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
+use App\Models\Teknisi\Teknisi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NocController extends Controller
 {
@@ -110,7 +112,10 @@ class NocController extends Controller
     }
     public function pengecekan_put($id)
     {
-        $reg = Registrasi::where('reg_progres', '2')->where('reg_idpel', $id)->update(['reg_progres' => '3']);
+        $noc_id = Auth::user()->id;
+        Registrasi::where('reg_progres', '2')->where('reg_idpel', $id)->update(['reg_progres' => '3']);
+        Teknisi::where('teknisi_idpel', $id)->where('teknisi_job', 'PSB')->where('teknisi_psb', '>', '0')->update(['teknisi_noc_userid' => $noc_id]);
+
         $notifikasi = array(
             'pesan' => 'Pengecekan Selesai',
             'alert' => 'success',

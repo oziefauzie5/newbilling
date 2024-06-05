@@ -359,7 +359,7 @@ class RegistrasiController extends Controller
                 'jurnal_status' => 1,
             ]);
 
-            Registrasi::where('reg_progres', '4')->where('reg_idpel', $request->idpel)->update(['reg_progres' => '4']);
+            Registrasi::where('reg_progres', '4')->where('reg_idpel', $request->idpel)->update(['reg_progres' => '5']);
             $notifikasi = array(
                 'pesan' => 'Berhasil Pencairan PSB & Sales.',
                 'alert' => 'success',
@@ -383,7 +383,8 @@ class RegistrasiController extends Controller
         $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
 
         if ($teknisi) {
-            $data['kas'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'pakets.*', 'teknisis.*', 'teknisis.created_at as mulai',)
+                ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
                 ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
                 ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
                 ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
@@ -393,6 +394,23 @@ class RegistrasiController extends Controller
                 ->first();
             $update['reg_progres'] = '4';
             Registrasi::where('reg_idpel', $id)->update($update);
+
+
+
+
+            $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+                ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+                // ->join('users', 'users.id', '=', 'input_data.input_sales')
+                ->where('registrasis.reg_idpel', $id)
+                ->first();
+            $data['noc'] = User::whereId($data['kas']->teknisi_noc_userid)->first();
+
+            // dd($data['noc']);
+
+
+
+
             if ($data['kas']->input_sales) {
                 $data['seles'] = User::whereId($data['kas']->input_sales)->first();
             } else {

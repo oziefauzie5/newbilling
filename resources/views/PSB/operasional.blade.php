@@ -38,7 +38,7 @@
                       @if($d->reg_progres == '3')
                       <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$d->reg_idpel])}}" target="_blank">
                       <button type="button" class="btn btn-link btn-dark">
-                        Kas
+                        Print
                       </button></a>
                       @elseif($d->reg_progres == '4')
                       <!-- Button trigger modal -->
