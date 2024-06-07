@@ -125,33 +125,33 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/kategori/Tambah-kategori', [KategoriController::class, 'store'])->name('kategori.store')->middleware(['role:admin|NOC|STAF ADMIN']);
 
-    Route::get('/barang', [BarangController::class, 'index'])->name('barang.index')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/barang/Tambah-barang', [BarangController::class, 'store'])->name('barang.store')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/barang/Tambah-subbarang', [BarangController::class, 'store_subbarang'])->name('barang.store_subbarang')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/barang/Edit/{id}', [BarangController::class, 'edit'])->name('barang.edit')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/barang/sub-barang/{id}', [BarangController::class, 'sub_barang'])->name('barang.sub_barang')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/barang/rekap-barang/{id}', [BarangController::class, 'rekap_barang'])->name('barang.rekap_barang')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/barang/Hapus-sub-barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/barang/input-subbarang/{id}', [BarangController::class, 'input_subbarang'])->name('barang.input_subbarang')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/barang/Print-Kode/{id}', [BarangController::class, 'print_kode_barang'])->name('barang.print_kode')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/barang', [BarangController::class, 'index'])->name('barang.index')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/barang/Tambah-barang', [BarangController::class, 'store'])->name('barang.store')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/barang/Tambah-subbarang', [BarangController::class, 'store_subbarang'])->name('barang.store_subbarang')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/barang/Edit/{id}', [BarangController::class, 'edit'])->name('barang.edit')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/barang/sub-barang/{id}', [BarangController::class, 'sub_barang'])->name('barang.sub_barang')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/barang/rekap-barang/{id}', [BarangController::class, 'rekap_barang'])->name('barang.rekap_barang')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/barang/Hapus-sub-barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/barang/input-subbarang/{id}', [BarangController::class, 'input_subbarang'])->name('barang.input_subbarang')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/barang/Print-Kode/{id}', [BarangController::class, 'print_kode_barang'])->name('barang.print_kode')->middleware(['role:admin|STAF ADMIN']);
 
-    Route::get('/Teknisi', [TeknisiController::class, 'index'])->name('teknisi.index')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/Teknisi/Job', [TeknisiController::class, 'job'])->name('teknisi.job')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/Teknisi/List-Aktivasi', [TeknisiController::class, 'list_aktivasi'])->name('teknisi.list_aktivasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/Teknisi/Aktivasi/{id}', [TeknisiController::class, 'aktivasi'])->name('teknisi.aktivasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/Teknisi/Proses-Aktivasi/{id}', [TeknisiController::class, 'proses_aktivasi'])->name('teknisi.proses_aktivasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/Teknisi/Teknisi-getBarang/{id}', [TeknisiController::class, 'getBarang'])->name('teknisi.getBarang')->middleware(['role:admin|NOC|STAF ADMIN']);
-
-
-    Route::get('/Invoice', [InvoiceController::class, 'index'])->name('inv.index')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/Paid', [InvoiceController::class, 'paid'])->name('inv.paid')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/Invoice/Detail/{id}', [InvoiceController::class, 'sub_invoice'])->name('inv.sub_invoice')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/Invoice/Payment/{id}', [InvoiceController::class, 'payment'])->name('inv.payment')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/Invoice/addons/{id}', [InvoiceController::class, 'addons'])->name('inv.addons')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/Invoice/diskon/{id}', [InvoiceController::class, 'addDiskon'])->name('inv.addDiskon')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::delete('/Invoice/addons-hapus/{id}/{inv}/{tot}', [InvoiceController::class, 'addons_delete'])->name('inv.addons_delete')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Teknisi', [TeknisiController::class, 'index'])->name('teknisi.index')->middleware(['role:TEKNISI']);
+    Route::post('/Teknisi/Job', [TeknisiController::class, 'job'])->name('teknisi.job')->middleware(['role:TEKNISI']);
+    Route::get('/Teknisi/List-Aktivasi', [TeknisiController::class, 'list_aktivasi'])->name('teknisi.list_aktivasi')->middleware(['role:TEKNISI']);
+    Route::get('/Teknisi/Aktivasi/{id}', [TeknisiController::class, 'aktivasi'])->name('teknisi.aktivasi')->middleware(['role:TEKNISI']);
+    Route::put('/Teknisi/Proses-Aktivasi/{id}', [TeknisiController::class, 'proses_aktivasi'])->name('teknisi.proses_aktivasi')->middleware(['role:TEKNISI']);
+    Route::get('/Teknisi/Teknisi-getBarang/{id}', [TeknisiController::class, 'getBarang'])->name('teknisi.getBarang')->middleware(['role:TEKNISI']);
 
 
-    Route::get('/Sales/index', [SalesController::class, 'index'])->name('sales.index')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/Sales/list', [SalesController::class, 'list_registrasi'])->name('sales.list_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-})->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Invoice', [InvoiceController::class, 'index'])->name('inv.index')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Paid', [InvoiceController::class, 'paid'])->name('inv.paid')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Invoice/Detail/{id}', [InvoiceController::class, 'sub_invoice'])->name('inv.sub_invoice')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/Invoice/Payment/{id}', [InvoiceController::class, 'payment'])->name('inv.payment')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/Invoice/addons/{id}', [InvoiceController::class, 'addons'])->name('inv.addons')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/Invoice/diskon/{id}', [InvoiceController::class, 'addDiskon'])->name('inv.addDiskon')->middleware(['role:admin|STAF ADMIN']);
+    Route::delete('/Invoice/addons-hapus/{id}/{inv}/{tot}', [InvoiceController::class, 'addons_delete'])->name('inv.addons_delete')->middleware(['role:admin|STAF ADMIN']);
+
+
+    Route::get('/Sales/index', [SalesController::class, 'index'])->name('sales.index')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Sales/list', [SalesController::class, 'list_registrasi'])->name('sales.list_registrasi')->middleware(['role:admin|STAF ADMIN']);
+})->middleware(['role:admin|STAF ADMIN']);
