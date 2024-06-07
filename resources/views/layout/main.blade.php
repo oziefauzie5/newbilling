@@ -495,6 +495,7 @@
 							</div>
 						</li>
 						@endrole
+						@role('admin|NOC')
 						<li class="nav-item {{\Route::is('admin.noc.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#sidebarNoc">
 								<i class="fas fa-server"></i>
@@ -544,6 +545,7 @@
 								</ul>
 							</div>
 						</li>
+						@endrole
 						
 						
 						<li class="nav-item">

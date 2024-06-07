@@ -107,18 +107,18 @@ class UserController extends Controller
     {
 
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
-        $validator = FacadesValidator::make(
-            $request->all(),
+        // $validator = FacadesValidator::make(
+        //     $request->all(),
 
-            [
-                'username' => 'unique:users',
-            ],
-            [
-                'username.unique' => 'Username sudah digunakan.',
-            ]
-        );
+        //     [
+        //         'username' => 'unique:users',
+        //     ],
+        //     [
+        //         'username.unique' => 'Username sudah digunakan.',
+        //     ]
+        // );
 
-        if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+        // if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
         $get =  explode("|", $request->level);
         $level_id = $get[0];
         $datarole['role_id'] = $level_id;
@@ -135,6 +135,8 @@ class UserController extends Controller
         } elseif ($request->level) {
             Model_Has_Role::where('model_id', $id)->update($datarole);
         }
+
+
 
         User::whereId($id)->update($data);
 

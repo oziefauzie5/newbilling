@@ -118,9 +118,6 @@
                   <th>ID</th>
                   <th>Nama</th>
                   <th>Level</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Identitas</th>
                   <th>Whatsapp</th>
                   <th width="250%">Alamat Lengkap</th>
                   <th>Status</th>
@@ -132,9 +129,6 @@
                   <th>ID</th>
                   <th>Nama</th>
                   <th>Level</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Identitas</th>
                   <th>Whatsapp</th>
                   <th width="250px">Alamat Lengkap</th>
                   <th>Status</th>
@@ -147,9 +141,6 @@
                       <td>{{$d->id}}</td>
                       <td>{{$d->name}}</td>
                       <td>{{$d->level}}</td>
-                      <td>{{$d->username}}</td>
-                      <td>{{$d->email}}</td>
-                      <td>{{$d->ktp}}</td>
                       <td>{{$d->hp}}</td>
                       <td width="250px">{{$d->alamat_lengkap}}</td>
                       <td>{{$d->status_user}}</td>
@@ -215,7 +206,7 @@
                                   <div class="col-sm-12">
                                     <div class="form-group">
                                       <label>Username</label>
-                                      <input id="username" type="text" class="form-control"  name="username" placeholder="Username">
+                                      <input id="username" type="text" class="form-control"   name="username" placeholder="Username">
                                     </div>
                                   </div>
                                   <div class="col-sm-12">
@@ -240,9 +231,9 @@
                                 </div>
                               </div>
                               <div class="modal-footer no-bd">
-                                <button type="submit" class="btn btn-success">Add</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
                               </form>
-                              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                             </div>
                           </div>
                         </div>
