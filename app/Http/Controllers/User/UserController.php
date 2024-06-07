@@ -58,8 +58,14 @@ class UserController extends Controller
         $data_level['name'] = $level;
         $data_level['guard_name'] = 'web';
 
-        Role::updateorcreate($data_level);
-        Permission::updateorcreate($data_level);
+        $cek_role = Role::whereId($level_id)->count();
+        if ($cek_role) {
+            Role::updateorcreate($data_level);
+        }
+        $cek_permision = Permission::whereId($level_id)->count();
+        if ($cek_permision) {
+            Permission::updateorcreate($data_level);
+        }
 
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
         $d = date_create($request->tgl_gabung);
