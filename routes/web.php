@@ -45,7 +45,7 @@ Route::post('/callback', [CallbackController::class, 'handle']);
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.'], function () {
 
-    Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|noc']);
+    Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN']);
     ##CRUD DATA USER
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
