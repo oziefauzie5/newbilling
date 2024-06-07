@@ -128,14 +128,13 @@ class UserController extends Controller
         $data['hp'] = $nomorhp;
         $data['alamat_lengkap'] = ucwords($request->alamat_lengkap);
         $data['name'] = ucwords($request->name);
+        $data['username'] = $request->username;
+        Model_Has_Role::where('model_id', $id)->update($datarole);
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
-        } elseif ($request->username) {
-            $data['username'] = $request->username;
-        } elseif ($request->level) {
-            Model_Has_Role::where('model_id', $id)->update($datarole);
         }
 
+        dd($data);
 
 
         User::whereId($id)->update($data);

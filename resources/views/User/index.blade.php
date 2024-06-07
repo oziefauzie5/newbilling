@@ -206,7 +206,7 @@
                                   <div class="col-sm-12">
                                     <div class="form-group">
                                       <label>Username</label>
-                                      <input id="username" type="text" class="form-control"   name="username" placeholder="Username">
+                                      <input id="username" type="text" class="form-control" name="username" placeholder="Username">
                                     </div>
                                   </div>
                                   <div class="col-sm-12">
@@ -220,7 +220,7 @@
                                       <label for="level" >Level</label>
                                       <select name="level" id="level" class="form-control" required>
                                         @if($d->level)
-                                        <option value="{{$d->role_id}}|{{$d->level}}">{{$d->level}}</option>
+                                        <option selected value="{{$d->role_id}}|{{$d->level}}">{{$d->level}}</option>
                                         @endif
                                         @foreach ($role as $r)
                                         <option value="{{$r->id}}|{{$r->name}}">{{$r->name}}</option>
