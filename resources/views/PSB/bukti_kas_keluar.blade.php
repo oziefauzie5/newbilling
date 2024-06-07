@@ -236,7 +236,7 @@
             <th width="25%" higth="20px">{{ strtoupper($nama_admin )}}</th>
             <th width="25%">{{strtoupper($noc->name)}}</th>
             <th width="25%">...................................</th>
-            <th width="25%">{{strtoupper($seles->name)}}</th>
+            <th width="25%">...................................</th>
         </tr>
     </table>
     <table id="kas_kop">
@@ -321,7 +321,7 @@
             <th width="25%" higth="20px">{{ strtoupper($nama_admin )}}</th>
             <th width="25%">{{strtoupper($noc->name)}}</th>
             <th width="25%">...................................</th>
-            <th width="25%">{{strtoupper($seles->name)}}</th>
+            <th width="25%">...................................</th>
         </tr>
     </table>
     <table id="kas_kop">
