@@ -45,21 +45,21 @@ Route::post('/callback', [CallbackController::class, 'handle']);
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.'], function () {
 
-    Route::get('/home', [HomeController::class, 'home'])->name('home');
+    Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|noc']);
     ##CRUD DATA USER
-    Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware('can:admin');
+    Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
     Route::put('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::delete('/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
-    Route::get('/setting', [AppController::class, 'index'])->name('app.index')->middleware('can:admin');
-    Route::post('/setting/app', [AppController::class, 'akun_store'])->name('app.akun_store')->middleware('can:admin');
-    Route::put('/setting/{id}/app-akun-edit', [AppController::class, 'akun_edit'])->name('app.akun_edit')->middleware('can:admin');
-    Route::delete('/setting/{id}/app-akun-delete', [AppController::class, 'akun_delete'])->name('app.akun_delete')->middleware('can:admin');
-    Route::post('/setting/app-Tripay', [AppController::class, 'tripay_store'])->name('app.tripay_store')->middleware('can:admin');
-    Route::post('/setting/applikasi', [AppController::class, 'aplikasi_store'])->name('app.aplikasi_store')->middleware('can:admin');
-    Route::post('/setting/app-biaya', [AppController::class, 'biaya_store'])->name('app.biaya_store')->middleware('can:admin');
-    Route::post('/setting/app-Waktu', [AppController::class, 'waktu_store'])->name('app.waktu_store')->middleware('can:admin');
+    Route::get('/setting', [AppController::class, 'index'])->name('app.index');
+    Route::post('/setting/app', [AppController::class, 'akun_store'])->name('app.akun_store');
+    Route::put('/setting/{id}/app-akun-edit', [AppController::class, 'akun_edit'])->name('app.akun_edit');
+    Route::delete('/setting/{id}/app-akun-delete', [AppController::class, 'akun_delete'])->name('app.akun_delete');
+    Route::post('/setting/app-Tripay', [AppController::class, 'tripay_store'])->name('app.tripay_store');
+    Route::post('/setting/applikasi', [AppController::class, 'aplikasi_store'])->name('app.aplikasi_store');
+    Route::post('/setting/app-biaya', [AppController::class, 'biaya_store'])->name('app.biaya_store');
+    Route::post('/setting/app-Waktu', [AppController::class, 'waktu_store'])->name('app.waktu_store');
 
     Route::get('/router', [RouterController::class, 'index'])->name('router.index');
     Route::post('/router/store', [RouterController::class, 'store'])->name('router.store');

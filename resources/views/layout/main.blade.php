@@ -75,7 +75,8 @@
 			<div class="logo-header" data-background-color="blue" >
 				
 				<a href="index.html" class="logo">
-					<img src="{{asset('atlantis/assets/img/logo.svg')}}" alt="navbar brand" class="navbar-brand">
+					{{-- <img src="{{asset('atlantis/assets/img/logo.svg')}}" alt="navbar brand" class="navbar-brand"> --}}
+					<h3 class="navbar-brand text-light"><strong> {{Session::get('app_brand')}}</strong></h3>
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon">
@@ -294,7 +295,7 @@
 										<div class="user-box">
 											<div class="avatar-lg"><img src="{{asset('atlantis/assets/img/profile.jpg')}}" alt="image profile" class="avatar-img rounded"></div>
 											<div class="u-text">
-												<h4>Hizrian</h4>
+												<h4>{{Auth::user()->name;}}</h4>
 												<p class="text-muted">hello@example.com</p><a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
 											</div>
 										</div>
@@ -329,7 +330,7 @@
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-									Hizrian
+									{{Auth::user()->name;}}
 									<span class="user-level">Administrator</span>
 									<span class="caret"></span>
 								</span>
@@ -364,6 +365,7 @@
 								<p>Dashboard</p>
 							</a>
 						</li>
+						@role('admin|STAF ADMIN')
 						<li class="nav-item {{\Route::is('admin.psb.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#base">
 								<i class="fas fa-users"></i>
@@ -385,53 +387,7 @@
 								</ul>
 							</div>
 						</li>
-						<li class="nav-item {{\Route::is('admin.router.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#sidebarRouter">
-								<i class="fas fa-server"></i>
-								<p>Router</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="sidebarRouter">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.router.index')}}">
-											<span class="sub-item">Router</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.router.paket.index')}}">
-											<span class="sub-item">Paket</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
-						<li class="nav-item {{\Route::is('admin.noc.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#sidebarNoc">
-								<i class="fas fa-server"></i>
-								<p>NOC</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="sidebarNoc">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.noc.index')}}">
-											<span class="sub-item">Pengecekan</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.noc.index')}}">
-											<span class="sub-item">Remote</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.noc.index')}}">
-											<span class="sub-item">Cek Trafik</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
+						
 						<li class="nav-item {{\Route::is('admin.inv.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#transaksi">
 								<i class="fas fa-server"></i>
@@ -466,6 +422,27 @@
 							</a>
 						</li>
 						
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#charts">
+								<i class="fas fa-cog"></i>
+								<p>Setting</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="charts">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{route('admin.user.index')}}">
+											<span class="sub-item">User</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.app.index')}}">
+											<span class="sub-item">Aplikasi</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</li>
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#submenu">
 								<i class="fas fa-bars"></i>
@@ -517,27 +494,58 @@
 								</ul>
 							</div>
 						</li>
-						<li class="nav-item">
-							<a data-toggle="collapse" href="#charts">
-								<i class="fas fa-cog"></i>
-								<p>Setting</p>
+						@endrole
+						<li class="nav-item {{\Route::is('admin.noc.*') ? 'active' : ''}}">
+							<a data-toggle="collapse" href="#sidebarNoc">
+								<i class="fas fa-server"></i>
+								<p>NOC</p>
 								<span class="caret"></span>
 							</a>
-							<div class="collapse" id="charts">
+							<div class="collapse" id="sidebarNoc">
 								<ul class="nav nav-collapse">
 									<li>
-										<a href="{{route('admin.user.index')}}">
-											<span class="sub-item">User</span>
+										<a href="{{route('admin.noc.index')}}">
+											<span class="sub-item">Pengecekan</span>
 										</a>
 									</li>
 									<li>
-										<a href="{{route('admin.app.index')}}">
-											<span class="sub-item">Aplikasi</span>
+										<a href="{{route('admin.noc.index')}}">
+											<span class="sub-item">Remote</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.noc.index')}}">
+											<span class="sub-item">Cek Trafik</span>
 										</a>
 									</li>
 								</ul>
 							</div>
 						</li>
+						<li class="nav-item {{\Route::is('admin.router.*') ? 'active' : ''}}">
+							<a data-toggle="collapse" href="#sidebarRouter">
+								<i class="fas fa-server"></i>
+								<p>Router</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="sidebarRouter">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{route('admin.router.index')}}">
+											<span class="sub-item">Router</span>
+										</a>
+									</li>
+									@role('admin')
+									<li>
+										<a href="{{route('admin.router.paket.index')}}">
+											<span class="sub-item">Paket</span>
+										</a>
+									</li>
+									@endrole
+								</ul>
+							</div>
+						</li>
+						
+						
 						<li class="nav-item">
 							<a  href="{{ route('logout') }}">
 								<i class="fas fa-sign-out-alt"></i>
