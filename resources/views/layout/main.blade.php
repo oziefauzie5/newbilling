@@ -421,7 +421,7 @@
 								<span class="caret"></span>
 							</a>
 						</li>
-						
+						@role('admin')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#charts">
 								<i class="fas fa-cog"></i>
@@ -443,6 +443,7 @@
 								</ul>
 							</div>
 						</li>
+						@endrole
 						{{-- <li class="nav-item">
 							<a data-toggle="collapse" href="#submenu">
 								<i class="fas fa-bars"></i>
