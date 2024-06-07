@@ -129,14 +129,14 @@ class UserController extends Controller
         $data['alamat_lengkap'] = ucwords($request->alamat_lengkap);
         $data['name'] = ucwords($request->name);
         $data['username'] = $request->username;
-        Model_Has_Role::where('model_id', $id)->update($datarole);
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }
 
-        dd($data);
+        // dd($datarole);
 
 
+        Model_Has_Role::where('model_id', $id)->update($datarole);
         User::whereId($id)->update($data);
 
         $notifikasi = [
