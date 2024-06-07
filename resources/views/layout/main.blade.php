@@ -443,7 +443,7 @@
 								</ul>
 							</div>
 						</li>
-						<li class="nav-item">
+						{{-- <li class="nav-item">
 							<a data-toggle="collapse" href="#submenu">
 								<i class="fas fa-bars"></i>
 								<p>Menu Levels</p>
@@ -493,7 +493,7 @@
 									</li>
 								</ul>
 							</div>
-						</li>
+						</li> --}}
 						@endrole
 						@role('admin|NOC')
 						<li class="nav-item {{\Route::is('admin.noc.*') ? 'active' : ''}}">
