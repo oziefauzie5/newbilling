@@ -120,38 +120,26 @@ class PsbController extends Controller
             'input_hp.unique' => 'Nomor Whatsapp sudah terdaftar',
         ]);
         $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
-
-        $Cek = InputData::where('input_hp', $nomorhp)->where('input_nama', $request->input_nama)->first();
-        if ($Cek->input_hp == $nomorhp) {
-
-            $notifikasi = [
-                'pesan' => 'Nama & Nomor hp sudah terdaftar',
-                'alert' => 'error',
-            ];
-        } else {
-
-            InputData::create([
-                'input_tgl' => $data['input_tgl'],
-                'input_nama' => ucwords($request->input_nama),
-                'id' => $request->id,
-                'input_ktp' => $request->input_ktp,
-                'input_hp' => $nomorhp,
-                'input_email' => $request->input_email,
-                'input_alamat_ktp' => ucwords($request->input_alamat_ktp),
-                'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
-                'input_sales' => $request->input_sales,
-                'input_subseles' => ucwords($request->input_subseles),
-                'password' => Hash::make($request->input_hp),
-                'input_maps' => $request->input_maps,
-                'input_status' => '0',
-                'input_keterangan' => $request->input_keterangan,
-            ]);
-            $notifikasi = [
-                'pesan' => 'Berhasil menambahkan Pelanggan',
-                'alert' => 'success',
-            ];
-        }
-
+        InputData::create([
+            'input_tgl' => $data['input_tgl'],
+            'input_nama' => ucwords($request->input_nama),
+            'id' => $request->id,
+            'input_ktp' => $request->input_ktp,
+            'input_hp' => $nomorhp,
+            'input_email' => $request->input_email,
+            'input_alamat_ktp' => ucwords($request->input_alamat_ktp),
+            'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
+            'input_sales' => $request->input_sales,
+            'input_subseles' => ucwords($request->input_subseles),
+            'password' => Hash::make($request->input_hp),
+            'input_maps' => $request->input_maps,
+            'input_status' => '0',
+            'input_keterangan' => $request->input_keterangan,
+        ]);
+        $notifikasi = [
+            'pesan' => 'Berhasil menambahkan Pelanggan',
+            'alert' => 'success',
+        ];
         if ($request->input == 12) {
             return redirect()->route('admin.sales.index')->with($notifikasi);
         } else {
