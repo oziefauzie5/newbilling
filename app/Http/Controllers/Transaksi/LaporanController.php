@@ -13,7 +13,7 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        $data['admin_user'] = Auth::user()->name;
+        $data['admin_user'] = Auth::user()->id;
         $ids = [1, 2, 5, 10, 13, 14];
         $data['dat'] = "Laporan";
         $user_admin = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
