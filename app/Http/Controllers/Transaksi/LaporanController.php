@@ -36,7 +36,9 @@ class LaporanController extends Controller
 
     public function lap_delete($id)
     {
-        $data = Laporan::find($id);
+
+        // dd($id);
+        $data = Laporan::where('lap_id', $id);
         if ($data) {
             $data->delete();
         }

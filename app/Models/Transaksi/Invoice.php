@@ -27,6 +27,7 @@ class Invoice extends Model
         'inv_diskon',
         'inv_total',
         'inv_cabar',
+        'inv_akun',
         'inv_reference',
         'inv_payment_method',
         'inv_payment_method_code',

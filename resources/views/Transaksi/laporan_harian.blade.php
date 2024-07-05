@@ -85,6 +85,7 @@
                   <th>TANGGAL</th>
                   <th>INVOICE</th>
                   <th>KETERANGAN</th>
+                  <th>CABAR</th>
                   <th>METODE BAYAR</th>
                   <th>KREDIT</th>
                   <th>AKSI</th>
@@ -98,6 +99,7 @@
                       <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->lap_inv}}</td>
                       <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->lap_keterangan}}</td>
                       <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->lap_cabar}}</td>
+                      <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->akun_nama}}</td>
                       <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->lap_kredit}}</td>
                       <td>
                         <div class="form-button-action">
@@ -124,7 +126,7 @@
                               </button>
                             </div>
                               <div class="modal-body">
-                              <p>Apakah anda yakin, akan menghapus data {{$d->inv_nama}} ??</p>
+                              <p>Apakah anda yakin, akan menghapus data {{$d->lap_keterangan}} ??</p>
                               </div>
                               <div class="modal-footer no-bd">
                                 <form action="{{route('admin.inv.lap_delete',['id'=>$d->lap_id])}}" method="POST">

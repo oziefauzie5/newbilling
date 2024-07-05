@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('inv_diskon')->nullable();
             $table->string('inv_total')->nullable();
             $table->string('inv_cabar')->nullable();
+            $table->integer('inv_akun')->nullable();
             $table->string('inv_reference')->nullable();
             $table->string('inv_payment_method')->nullable();
             $table->string('inv_payment_method_code')->nullable();

@@ -114,6 +114,7 @@ class InvoiceController extends Controller
             $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
             $datas['inv_cabar'] = $request->cabar;
             $datas['inv_admin'] = $admin_user;
+            $datas['inv_akun'] = $akun;
             $datas['inv_reference'] = '-';
             $datas['inv_payment_method'] = $akun_nama;
             $datas['inv_payment_method_code'] = $norek;
@@ -124,7 +125,7 @@ class InvoiceController extends Controller
             $datas['inv_amount_received'] = 0;
             $datas['inv_tgl_bayar'] = $tgl_bayar;
             $datas['inv_status'] = 'PAID';
-            // Invoice::where('inv_id', $id)->update($datas);
+            Invoice::where('inv_id', $id)->update($datas);
 
             $data_lap['lap_id'] = rand(10000, 19999);
             $data_lap['lap_tgl'] = $tgl_bayar;
@@ -136,6 +137,7 @@ class InvoiceController extends Controller
             $data_lap['lap_ppn'] = $request->jumlah_bayar - $tampil->inv_total;
             $data_lap['lap_jumlah_bayar'] = $request->jumlah_bayar;
             $data_lap['lap_keterangan'] = $tampil->inv_nama;
+            $data_lap['lap_akun'] = $akun;
             $data_lap['lap_idpel'] = $tampil->inv_idpel;
             $data_lap['lap_jenis_inv'] = "INVOICE";
             $data_lap['lap_status'] = "-";
