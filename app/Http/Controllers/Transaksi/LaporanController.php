@@ -38,7 +38,7 @@ class LaporanController extends Controller
                     $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
                 });
         } else {
-            $data['admin'] = Auth::user()->name;
+            $data['admin'] = User::where('id', $data['admin_user'])->first();
             $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
                 ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
