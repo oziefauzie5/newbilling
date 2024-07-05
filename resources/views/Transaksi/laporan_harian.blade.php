@@ -41,6 +41,21 @@
       
       <div class="card">
         <div class="card-body">
+          <a href="{{route('admin.reg.sementara_migrasi')}}">
+            <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#addRowModal">
+              <i class="fa fa-plus"></i>
+              FITUR SEMENTARA MIGRASI
+            </button>
+          </a>
+          <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
+            <i class="fa fa-file-import"></i> IMPORT
+          </button>
+          <a href="{{route('admin.psb.berita_acara')}}">
+          <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
+            <i class="fa fa-plus"></i>
+            BERITA ACARA
+          </button>
+        </a>
           <form >
             <div class="row mb-1">
                 <div class="col-sm-3">

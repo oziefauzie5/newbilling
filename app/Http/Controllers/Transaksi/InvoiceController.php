@@ -97,19 +97,24 @@ class InvoiceController extends Controller
 
             $admin_user = Auth::user()->id;
             $tgl = date('d-m-Y h:m:s');
+            $tampil = Invoice::where('inv_id', $id)->first();
 
             $explode = explode('|', $request->transfer);
             if ($request->cabar == 'TUNAI') {
                 $akun = '2';
                 $norek = '-';
                 $akun_nama = 'TUNAI';
+                $biaya_adm =  0;
+                $j_bayar = 0;
             } elseif ($request->cabar == 'TRANSFER') {
                 $akun = $explode[0];
                 $norek = $explode[1];
                 $akun_nama = $explode[2];
+                $biaya_adm =  $request->jumlah_bayar - $tampil->inv_total;
+                $j_bayar = $request->jumlah_bayar;
             }
 
-            $tampil = Invoice::where('inv_id', $id)->first();
+
 
             $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
             $datas['inv_cabar'] = $request->cabar;
@@ -134,8 +139,8 @@ class InvoiceController extends Controller
             $data_lap['lap_cabar'] = $request->cabar;
             $data_lap['lap_debet'] = 0;
             $data_lap['lap_kredit'] = $tampil->inv_total;
-            $data_lap['lap_adm'] = $request->jumlah_bayar - $tampil->inv_total;
-            $data_lap['lap_jumlah_bayar'] = $request->jumlah_bayar;
+            $data_lap['lap_adm'] = $biaya_adm;
+            $data_lap['lap_jumlah_bayar'] = $j_bayar;
             $data_lap['lap_keterangan'] = $tampil->inv_nama;
             $data_lap['lap_akun'] = $akun;
             $data_lap['lap_idpel'] = $tampil->inv_idpel;
