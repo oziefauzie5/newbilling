@@ -16,7 +16,7 @@ class Laporan extends Model
         'lap_cabar',
         'lap_debet',
         'lap_kredit',
-        'lap_ppn',
+        'lap_adm',
         'lap_jumlah_bayar',
         'lap_akun',
         'lap_keterangan',

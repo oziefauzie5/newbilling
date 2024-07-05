@@ -20,22 +20,22 @@
           </div>
         </div>
       </a>
-      <div class="col-6 col-sm-4 col-lg-3">
+      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">3</div>
-            <div class="text-muted mb-3">INV SUSPEND</div>
+            <div class="h1 m-0">Rp. {{number_format($biaya_adm)}}</div>
+            <div class="text-muted mb-3">ADM</div>
           </div>
         </div>
-      </div>
-      <div class="col-6 col-sm-4 col-lg-3">
+      </a>
+      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">4</div>
-            <div class="text-muted mb-3">TOTAL BELUM LUNAS</div>
+            <div class="h1 m-0">{{$count_trx}}</div>
+            <div class="text-muted mb-3">JUMLAH TRANSAKSI</div>
           </div>
         </div>
-      </div>
+      </a>
     </div>
     <div class="row">
       

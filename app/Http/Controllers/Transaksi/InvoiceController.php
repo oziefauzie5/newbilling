@@ -127,14 +127,14 @@ class InvoiceController extends Controller
             $datas['inv_status'] = 'PAID';
             Invoice::where('inv_id', $id)->update($datas);
 
-            $data_lap['lap_id'] = rand(10000, 19999);
+            $data_lap['lap_id'] = 0;
             $data_lap['lap_tgl'] = $tgl_bayar;
             $data_lap['lap_inv'] = $id;
             $data_lap['lap_admin'] = $admin_user;
             $data_lap['lap_cabar'] = $request->cabar;
             $data_lap['lap_debet'] = 0;
             $data_lap['lap_kredit'] = $tampil->inv_total;
-            $data_lap['lap_ppn'] = $request->jumlah_bayar - $tampil->inv_total;
+            $data_lap['lap_adm'] = $request->jumlah_bayar - $tampil->inv_total;
             $data_lap['lap_jumlah_bayar'] = $request->jumlah_bayar;
             $data_lap['lap_keterangan'] = $tampil->inv_nama;
             $data_lap['lap_akun'] = $akun;

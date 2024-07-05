@@ -7,11 +7,13 @@ use App\Models\Applikasi\SettingAkun;
 use App\Models\Transaksi\Laporan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LaporanController extends Controller
 {
     public function index(Request $request)
     {
+        $admin_user = Auth::user()->id;
         $ids = [1, 2, 5, 10, 13, 14];
         $data['dat'] = "Laporan";
         $data['admin'] = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
@@ -26,7 +28,7 @@ class LaporanController extends Controller
         $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
             ->join('users', 'users.id', '=', 'laporans.lap_admin')
             ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
-            // ->where('laporans.lap_admin', '=', $admin_user)
+            ->where('laporans.lap_admin', '=', $admin_user)
             ->where(function ($query) use ($data) {
                 $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
             });
@@ -37,8 +39,10 @@ class LaporanController extends Controller
             $query->where('users.name', '=', $data['adm']);
 
         $data['laporan'] = $query->get();
-        $data['pendapatan'] = $query->sum('laporans.lap_kredit');
+        $data['pendapatan'] = $query->where('lap_status', 0)->sum('laporans.lap_kredit');
         $data['refund'] = $query->where('lap_status', 0)->sum('laporans.lap_debet');
+        $data['biaya_adm'] = $query->where('lap_status', 0)->sum('laporans.lap_adm');
+        $data['count_trx'] = $query->where('lap_status', 0)->count();
         // dd($data['sum']);
         return view('Transaksi/laporan_harian', $data);
     }

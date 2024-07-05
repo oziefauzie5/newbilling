@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('lap_kredit')->nullable();
             $table->string('lap_debet')->nullable();
             $table->string('lap_jumlah_bayar')->nullable();
-            $table->string('lap_ppn')->nullable();
+            $table->string('lap_adm')->nullable();
             $table->string('lap_akun')->nullable();
             $table->string('lap_keterangan')->nullable();
             $table->string('lap_jenis_inv')->nullable();
