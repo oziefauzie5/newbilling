@@ -19,12 +19,8 @@ class LaporanController extends Controller
         $data['dat'] = "Laporan";
         $role = Model_Has_Role::where('model_id', $data['admin_user'])->first();
 
-        $user_admin = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-            ->whereIn('model_has_roles.role_id', $ids);
-        $data['admin'] = $user_admin->get();
-        // $role = $user_admin->first();
 
-        // dd($role->role_id);
+
         $data['akun'] = SettingAkun::get();
         $data['adm'] = $request->query('adm');
 
@@ -32,6 +28,8 @@ class LaporanController extends Controller
         $data['q'] = $request->query('q');
         $data['ak'] = $request->query('ak');
         if ($role->role_id == 1) {
+            $data['admin'] = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+                ->whereIn('model_has_roles.role_id', $ids)->get();
             $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
                 ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
@@ -40,6 +38,7 @@ class LaporanController extends Controller
                     $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
                 });
         } else {
+            $data['admin'] = Auth::user()->name;
             $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
                 ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
