@@ -99,10 +99,12 @@ class PsbController extends Controller
     }
     public function store(Request $request)
     {
+
+        // dd($request->input_ktp);
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
         Session::flash('input_nama', ucwords($request->input_nama));
         Session::flash('input_hp', $request->input_hp);
-        Session::flash('input_ktp', $nomorhp);
+        Session::flash('input_ktp', $request->input_ktp);
         Session::flash('input_email', $request->input_email);
         Session::flash('input_alamat_ktp', ucwords($request->input_alamat_ktp));
         Session::flash('input_alamat_pasang', ucwords($request->input_alamat_pasang));

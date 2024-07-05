@@ -722,13 +722,13 @@
 			});
 
 			// #EDIT INPUT DATA
-			var table = $('#edit_inputdata').DataTable(); $('#edit_inputdata tbody').on( 'click', 'tr', function () 
+			var table = $('#edit_inputdata').DataTable(); $('#edit_inputdata tbody').on( 'click', 'td', function () 
 			{  
 			var idpel = table.row( this ).id();
-  var url = '{{ route("admin.psb.edit_inputdata", ":id") }}';
-url = url.replace(':id', idpel);
+			var url = '{{ route("admin.psb.edit_inputdata", ":id") }}';
+			url = url.replace(':id', idpel);
 
-  $.ajax({
+			$.ajax({
                     url: url,
                     type: 'GET',
                     data: {
