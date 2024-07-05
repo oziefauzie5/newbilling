@@ -13,30 +13,44 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        $admin_user = Auth::user()->id;
+        $data['admin_user'] = Auth::user()->name;
         $ids = [1, 2, 5, 10, 13, 14];
         $data['dat'] = "Laporan";
-        $data['admin'] = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-            ->whereIn('model_has_roles.role_id', $ids)
-            ->get();
+        $user_admin = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->whereIn('model_has_roles.role_id', $ids);
+        $data['admin'] = $user_admin->get();
+        $role = $user_admin->first();
 
+        // dd($role->role_id);
         $data['akun'] = SettingAkun::get();
         $data['adm'] = $request->query('adm');
 
+
         $data['q'] = $request->query('q');
         $data['ak'] = $request->query('ak');
-        $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
-            ->join('users', 'users.id', '=', 'laporans.lap_admin')
-            ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
-            ->where('laporans.lap_admin', '=', $admin_user)
-            ->where(function ($query) use ($data) {
-                $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
-            });
+        if ($role->role_id == 1) {
+            $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
+                ->join('users', 'users.id', '=', 'laporans.lap_admin')
+                ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
+                // ->where('laporans.lap_admin', '=', $admin_user)
+                ->where(function ($query) use ($data) {
+                    $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
+                });
+        } else {
+            $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
+                ->join('users', 'users.id', '=', 'laporans.lap_admin')
+                ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
+                ->where('laporans.lap_admin', '=', $data['admin_user'])
+                ->where(function ($query) use ($data) {
+                    $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
+                });
+        }
+
 
         if ($data['ak'])
             $query->where('setting_akuns.akun_nama', '=', $data['ak']);
         if ($data['adm'])
-            $query->OrWhere('users.name', '=', $data['adm']);
+            $query->where('users.name', '=', $data['adm']);
 
         $data['laporan'] = $query->get();
         $data['pendapatan'] = $query->where('lap_status', 0)->sum('laporans.lap_kredit');
