@@ -101,6 +101,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/Transaksi/Konfirm', [RegistrasiController::class, 'konfirm_pencairan'])->name('inv.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/Transaksi/laporan-harian', [LaporanController::class, 'index'])->name('inv.laporan')->middleware(['role:admin|STAF ADMIN']);
+    Route::delete('/Transaksi/{id}/buat-laporan', [LaporanController::class, 'buat_laporan'])->name('inv.buat_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Delete', [LaporanController::class, 'lap_delete'])->name('inv.lap_delete')->middleware(['role:admin|STAF ADMIN']);
 
     Route::get('/PSB/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);

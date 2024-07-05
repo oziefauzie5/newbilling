@@ -15,6 +15,7 @@ class LaporanController extends Controller
     public function index(Request $request)
     {
         $data['admin_user'] = Auth::user()->id;
+        $data['admin_name'] = Auth::user()->name;
         $ids = [1, 2, 5, 10, 13, 14];
         $data['dat'] = "Laporan";
         $role = Model_Has_Role::where('model_id', $data['admin_user'])->first();
@@ -43,13 +44,14 @@ class LaporanController extends Controller
             $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
                 ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
-                ->where('laporans.lap_admin', '=', $data['admin'])
+                ->where('laporans.lap_admin', '=', $data['admin_user'])
                 ->where(function ($query) use ($data) {
                     $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
                 });
         }
 
 
+        $data['buat_laporan'] = $query->where('lap_status', 0)->sum('laporans.lap_kredit');
         if ($data['ak'])
             $query->where('setting_akuns.akun_nama', '=', $data['ak']);
         if ($data['adm'])
@@ -77,5 +79,10 @@ class LaporanController extends Controller
             'alert' => 'success',
         ];
         return redirect()->route('admin.inv.laporan')->with($notifikasi);
+    }
+
+    public function buat_laporan($id)
+    {
+        $data = Laporan::where('lap_id', $id) ;
     }
 }

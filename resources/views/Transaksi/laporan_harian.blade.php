@@ -41,21 +41,47 @@
       
       <div class="card">
         <div class="card-body">
-          <a href="{{route('admin.reg.sementara_migrasi')}}">
-            <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#addRowModal">
+          <!-- Modal buat laporan-->
+          <div class="modal fade" id="buat_laporan" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">BUAT LAPORAN HARIAN</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{ route('admin.inv.buat_laporan',['id'=>$admin_user])}}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group">
+                          <label for="formGroupExampleInput">Staf Admin</label>
+                          <input type="text" class="form-control" value="{{$admin_name}}">
+                        </div>
+                        <div class="form-group">
+                          <label for="formGroupExampleInput">Total Pendapatan</label>
+                          <input type="text" class="form-control" value="{{$buat_laporan}}">
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary btn-sm" >BAYAR</button>
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {{-- end modal buat laporan --}}
+       
+            <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#buat_laporan">
               <i class="fa fa-plus"></i>
-              FITUR SEMENTARA MIGRASI
+              BUAT LAPORAN
             </button>
-          </a>
           <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
-            <i class="fa fa-file-import"></i> IMPORT
+            <i class="fa fa-file-import"></i> PRINT
           </button>
-          <a href="{{route('admin.psb.berita_acara')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
-            <i class="fa fa-plus"></i>
-            BERITA ACARA
-          </button>
-        </a>
           <form >
             <div class="row mb-1">
                 <div class="col-sm-3">
