@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingAkun;
+use App\Models\Model_Has_Role;
 use App\Models\Transaksi\Laporan;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,10 +17,12 @@ class LaporanController extends Controller
         $data['admin_user'] = Auth::user()->id;
         $ids = [1, 2, 5, 10, 13, 14];
         $data['dat'] = "Laporan";
+        $role = Model_Has_Role::where('model_id', $data['admin_user'])->first();
+
         $user_admin = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->whereIn('model_has_roles.role_id', $ids);
         $data['admin'] = $user_admin->get();
-        $role = $user_admin->first();
+        // $role = $user_admin->first();
 
         // dd($role->role_id);
         $data['akun'] = SettingAkun::get();
