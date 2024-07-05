@@ -7,16 +7,16 @@
       <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-3">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">Rp. {{number_format($pendapatan)}}</div>
-            <div class="text-muted mb-3">PENDAPATAN</div>
+            <div class="h1 m-0">1</div>
+            <div class="text-muted mb-3">JUMLAH INVOICE</div>
           </div>
         </div>
       </a>
       <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">Rp. {{number_format($refund)}}</div>
-            <div class="text-muted mb-3">REFUND</div>
+            <div class="h1 m-0">2</div>
+            <div class="text-muted mb-3">INV UNPAID</div>
           </div>
         </div>
       </a>
@@ -41,35 +41,7 @@
       
       <div class="card">
         <div class="card-body">
-          <form >
-            <div class="row mb-1">
-                <div class="col-sm-3">
-                  <select name="adm" class="custom-select custom-select-sm">
-                    @if($adm)
-                    <option value="{{$adm}}" selected>{{$adm}}</option>
-                    @endif
-                    <option value="">ALL DATA</option>
-                    @foreach ($admin as $d)
-                    <option value="{{$d->name}}">{{$d->name}}</option>
-                    @endforeach
-                  </select>
-              </div>
-                <div class="col-sm-3">
-                  <select name="ak" class="custom-select custom-select-sm">
-                    @if($ak)
-                    <option value="{{$ak}}" selected>{{$ak}}</option>
-                    @endif
-                    <option value="" selected>ALL AKUN</option>
-                    @foreach ($akun as $d_akun)
-                    <option value="{{$d_akun->akun_nama}}">{{$d_akun->akun_nama}}</option>
-                    @endforeach
-                  </select>
-                </div>
-                <div class="col-sm-3">
-                  <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
-                </div>
-              </div>
-          </form>
+        
           @if ($errors->any())
           <div class="alert alert-danger">
             <div class="alert-title"><h4>Gagal!!</h4></div>
