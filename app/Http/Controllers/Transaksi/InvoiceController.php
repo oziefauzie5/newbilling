@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Transaksi\Invoice;
+use App\Models\Transaksi\Laporan;
 use App\Models\Transaksi\Paid;
 use App\Models\Transaksi\SubInvoice;
 use Carbon\Carbon;
@@ -80,108 +81,154 @@ class InvoiceController extends Controller
     }
     public function payment(Request $request, $id)
     {
-        //         $kredit = laporanharian::where('lh_admin', $id)->where('lh_status', 0)->sum('lh_kredit');
-        //         $debet = laporanharian::where('lh_admin', $id)->where('lh_status', 0)->sum('lh_debet');
-        //         $saldo_laporan_harian = $kredit - $debet;
 
-        //         $admin_user = Auth::user()->id;
-        //         $tgl = date('d-m-Y h:m:s');
+        $cek_inv = Laporan::where('lap_inv', $id)->first();
+        if ($cek_inv) {
+            $notifikasi = array(
+                'pesan' => 'Invoice telah terbayar pada laporan admin',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
+        } else {
 
-        //         $explode = explode('|', $request->transfer);
-        //         if ($request->cabar == 'TUNAI') {
-        //             $akun = '2';
-        //             $norek = '-';
-        //             $akun_nama = 'TUNAI';
-        //         } elseif ($request->cabar == 'TRANSFER') {
-        //             $akun = $explode[0];
-        //             $norek = $explode[1];
-        //             $akun_nama = $explode[2];
-        //         } else {
-        //         }
+            //         $kredit = laporanharian::where('lh_admin', $id)->where('lh_status', 0)->sum('lh_kredit');
+            //         $debet = laporanharian::where('lh_admin', $id)->where('lh_status', 0)->sum('lh_debet');
+            //         $saldo_laporan_harian = $kredit - $debet;
+
+            $admin_user = Auth::user()->id;
+            $tgl = date('d-m-Y h:m:s');
+
+            $explode = explode('|', $request->transfer);
+            if ($request->cabar == 'TUNAI') {
+                $akun = '2';
+                $norek = '-';
+                $akun_nama = 'TUNAI';
+            } elseif ($request->cabar == 'TRANSFER') {
+                $akun = $explode[0];
+                $norek = $explode[1];
+                $akun_nama = $explode[2];
+            }
+
+            $tampil = Invoice::where('inv_id', $id)->first();
+
+            $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+            $datas['inv_cabar'] = $request->cabar;
+            $datas['inv_admin'] = $admin_user;
+            $datas['inv_reference'] = '-';
+            $datas['inv_payment_method'] = $akun_nama;
+            $datas['inv_payment_method_code'] = $norek;
+            $datas['inv_total_amount'] = $tampil->inv_total;
+            $datas['inv_fee_merchant'] = 0;
+            $datas['inv_fee_customer'] = 0;
+            $datas['inv_total_fee'] = 0;
+            $datas['inv_amount_received'] = 0;
+            $datas['inv_tgl_bayar'] = $tgl_bayar;
+            $datas['inv_status'] = 'PAID';
+            // Invoice::where('inv_id', $id)->update($datas);
+
+            $data_lap['lap_id'] = rand(10000, 19999);
+            $data_lap['lap_tgl'] = $tgl_bayar;
+            $data_lap['lap_inv'] = $id;
+            $data_lap['lap_admin'] = $admin_user;
+            $data_lap['lap_cabar'] = $request->cabar;
+            $data_lap['lap_debet'] = 0;
+            $data_lap['lap_kredit'] = $tampil->inv_total;
+            $data_lap['lap_ppn'] = $request->jumlah_bayar - $tampil->inv_total;
+            $data_lap['lap_jumlah_bayar'] = $request->jumlah_bayar;
+            $data_lap['lap_keterangan'] = $tampil->inv_nama;
+            $data_lap['lap_idpel'] = $tampil->inv_idpel;
+            $data_lap['lap_jenis_inv'] = "INVOICE";
+            $data_lap['lap_status'] = "-";
+            $data_lap['lap_img'] = "-";
+
+            Laporan::create($data_lap);
+
+            // dd($data_lap);
 
 
 
-        //         $sumppn = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'); #hitung total ppn invoice
-        //         $sumharga = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'); #hitung total harga invoice
+            //         $sumppn = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'); #hitung total ppn invoice
+            //         $sumharga = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'); #hitung total harga invoice
 
-        //         // dd($id);
-        //         $tampil = (new GlobalController)->data_tagihan($id);
+            //         // dd($id);
+            //         $tampil = (new GlobalController)->data_tagihan($id);
 
-        //         $nohp = $tampil->hp;
-        //         $nolayanan = $tampil->nolayanan;
-        //         $diskon = $tampil->upd_diskon;
-        //         $harga = number_format($tampil->subinvoice_harga);
-        //         $jt_tempo = date($tampil->tgl_tagih  . '/m/Y', strtotime('+1 month'));
-
-
-        //         $total_kredit = $sumharga + $sumppn - $diskon;
-        //         $total_laporan_harian = $saldo_laporan_harian + $total_kredit;
+            //         $nohp = $tampil->hp;
+            //         $nolayanan = $tampil->nolayanan;
+            //         $diskon = $tampil->upd_diskon;
+            //         $harga = number_format($tampil->subinvoice_harga);
+            //         $jt_tempo = date($tampil->tgl_tagih  . '/m/Y', strtotime('+1 month'));
 
 
-        //         $paid['id_unpaid'] = $id; #No referensi transaksi. Contoh: T000100000000XHDFTR disini saya gunakan unpaid_id
-        //         $paid['idpel_unpaid'] = $tampil->upd_idpel;
-        //         $paid['reference'] = '';
-        //         $paid['payment_method'] = $akun_nama; #Channel pembayaran. Contoh: BRI Virtual Account
-        //         $paid['payment_method_code'] = $norek; #Kode channel pembayaran. Contoh: BRIVA
-        //         $paid['total_amount'] = $total_kredit; #Jumlah pembayaran yang dibayar pelanggan
-        //         $paid['fee_merchant'] = '0'; #Jumlah biaya yang dikenakan pada merchant
-        //         $paid['fee_customer'] = '0'; #Jumlah biaya yang dikenakan pada customer
-        //         $paid['total_fee'] = '0'; #Jumlah biaya fee_merchant + 
-        //         $paid['amount_received'] = $total_kredit; #Jumlah bersih yang diterima merchant. Dihitung dari total_amount - (fee_merchant + fee_customer)
-        //         $paid['is_closed_payment'] = '0'; #Tipe pembayaran
-        //         $paid['status'] = 'PAID'; #Status transaksi
-        //         $paid['paid_at'] = $tgl; #Timestamp waktu pembayaran sukses
-        //         $paid['admin'] = $admin_user; #User Admin
-        //         $paid['akun'] = $akun; #Cara Bayar
-        //         $paid['note'] = ''; #Catatan
-
-        //         Paid::create($paid);
+            //         $total_kredit = $sumharga + $sumppn - $diskon;
+            //         $total_laporan_harian = $saldo_laporan_harian + $total_kredit;
 
 
-        //         $lh['lh_id'] = $tampil->upd_id;
-        //         $lh['lh_admin'] = $admin_user;
-        //         $lh['lh_deskripsi'] = 'Invoice ' . $tampil->upd_id . ' ( ' . $tampil->nama . ' ) Diskon ' . number_format($diskon) . ' PPN ' . number_format($sumppn);
-        //         $lh['lh_qty'] = '1';
-        //         $lh['lh_debet'] = '0';
-        //         $lh['lh_kredit'] = $total_kredit;
-        //         $lh['lh_saldo'] = $total_laporan_harian;
-        //         $lh['lh_status'] = '0';
-        //         $lh['lh_akun'] = $akun;
-        //         $lh['lh_kategori'] = 'PEMBAYARAN';
-        //         laporanharian::create($lh);
+            //         $paid['id_unpaid'] = $id; #No referensi transaksi. Contoh: T000100000000XHDFTR disini saya gunakan unpaid_id
+            //         $paid['idpel_unpaid'] = $tampil->upd_idpel;
+            //         $paid['reference'] = '';
+            //         $paid['payment_method'] = $akun_nama; #Channel pembayaran. Contoh: BRI Virtual Account
+            //         $paid['payment_method_code'] = $norek; #Kode channel pembayaran. Contoh: BRIVA
+            //         $paid['total_amount'] = $total_kredit; #Jumlah pembayaran yang dibayar pelanggan
+            //         $paid['fee_merchant'] = '0'; #Jumlah biaya yang dikenakan pada merchant
+            //         $paid['fee_customer'] = '0'; #Jumlah biaya yang dikenakan pada customer
+            //         $paid['total_fee'] = '0'; #Jumlah biaya fee_merchant + 
+            //         $paid['amount_received'] = $total_kredit; #Jumlah bersih yang diterima merchant. Dihitung dari total_amount - (fee_merchant + fee_customer)
+            //         $paid['is_closed_payment'] = '0'; #Tipe pembayaran
+            //         $paid['status'] = 'PAID'; #Status transaksi
+            //         $paid['paid_at'] = $tgl; #Timestamp waktu pembayaran sukses
+            //         $paid['admin'] = $admin_user; #User Admin
+            //         $paid['akun'] = $akun; #Cara Bayar
+            //         $paid['note'] = ''; #Catatan
 
-        //         Invoice::where('upd_id', $id)->update([
-        //             'upd_status' => 'PAID',
-        //         ]);
+            //         Paid::create($paid);
 
-        //         $idi = rand(10000, 99999);
-        //         $pesan['id'] = $idi;
-        //         $pesan['status'] = 'Pembayaran';
-        //         $pesan['hp'] = $nohp;
-        //         $pesan['pesan'] = "Terima kasih 🙏
-        // Pembayaran invoice sudah kami terima
-        // *************************
-        // No.Layanan : $nolayanan
-        // Pelanggan : $tampil->nama
-        // Invoice : *$id*
-        // Paket : $tampil->paket_nama
-        // Total : *$harga*
-        // Channel : $akun_nama
-        // Tanggal lunas : $tgl
-        // Layanan sudah aktif dan dapat digunakan sampai dengan *$jt_tempo*
-        // *************************
-        // --------------------
-        // Pesan ini bersifat informasi dan tidak perlu dibalas
-        // *OVALL FIBER*";
-        //         Pesan::create($pesan);
-        //         // dd($pesan);
-        //         (new WhatsappController)->wa_pembayaran($id);
 
-        $notifikasi = array(
-            'pesan' => 'Berhasil melakukan pembayaran',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
+            //         $lh['lh_id'] = $tampil->upd_id;
+            //         $lh['lh_admin'] = $admin_user;
+            //         $lh['lh_deskripsi'] = 'Invoice ' . $tampil->upd_id . ' ( ' . $tampil->nama . ' ) Diskon ' . number_format($diskon) . ' PPN ' . number_format($sumppn);
+            //         $lh['lh_qty'] = '1';
+            //         $lh['lh_debet'] = '0';
+            //         $lh['lh_kredit'] = $total_kredit;
+            //         $lh['lh_saldo'] = $total_laporan_harian;
+            //         $lh['lh_status'] = '0';
+            //         $lh['lh_akun'] = $akun;
+            //         $lh['lh_kategori'] = 'PEMBAYARAN';
+            //         laporanharian::create($lh);
+
+            //         Invoice::where('upd_id', $id)->update([
+            //             'upd_status' => 'PAID',
+            //         ]);
+
+            //         $idi = rand(10000, 99999);
+            //         $pesan['id'] = $idi;
+            //         $pesan['status'] = 'Pembayaran';
+            //         $pesan['hp'] = $nohp;
+            //         $pesan['pesan'] = "Terima kasih 🙏
+            // Pembayaran invoice sudah kami terima
+            // *************************
+            // No.Layanan : $nolayanan
+            // Pelanggan : $tampil->nama
+            // Invoice : *$id*
+            // Paket : $tampil->paket_nama
+            // Total : *$harga*
+            // Channel : $akun_nama
+            // Tanggal lunas : $tgl
+            // Layanan sudah aktif dan dapat digunakan sampai dengan *$jt_tempo*
+            // *************************
+            // --------------------
+            // Pesan ini bersifat informasi dan tidak perlu dibalas
+            // *OVALL FIBER*";
+            //         Pesan::create($pesan);
+            //         // dd($pesan);
+            //         (new WhatsappController)->wa_pembayaran($id);
+
+            $notifikasi = array(
+                'pesan' => 'Berhasil melakukan pembayaran',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
+        }
     }
     public function addons(Request $request, $id)
     {

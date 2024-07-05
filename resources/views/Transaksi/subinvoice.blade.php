@@ -149,7 +149,7 @@
                         <option value="TUNAI">BAYAR TUNAI</option>
                         <option value="TRANSFER">TRANSFER BANK</option>
                        </select>
-
+<br>
                         <select name="transfer" id="transfer"  class="form-control" style="display:none;">
                           <option value="">-PILIH BANK-</option>
                           @foreach($akun as $b)
@@ -158,6 +158,8 @@
                           @endif
                           @endforeach
                         </select>
+<br>
+                        <input type="number" id="jb" name="jumlah_bayar" placeholder="Masukan jumlah pembayaran" class="form-control" style="display:none;">
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>

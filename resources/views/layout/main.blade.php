@@ -411,6 +411,16 @@
 											<span class="sub-item">Pencairan PSB & Sales</span>
 										</a>
 									</li>
+									<li>
+										<a href="{{route('admin.inv.laporan')}}">
+											<span class="sub-item">Laporan Harian</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.inv.laporan')}}">
+											<span class="sub-item">Laporan Transaksi</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</li>
@@ -1534,9 +1544,13 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 		if ($(this).val() == 'TRANSFER') {
 			$('#transfer').show();
 			$('#transfer').attr('required', 'required');;
+			$('#jb').show();
+			$('#jb').attr('required', 'required');;
 		} else {
 			$('#transfer').hide();
 			$('#transfer').removeAttr('required');
+			$('#jb').hide();
+			$('#jb').removeAttr('required');
 		}
 	});
 	</script>

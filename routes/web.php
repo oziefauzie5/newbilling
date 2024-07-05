@@ -20,6 +20,7 @@ use App\Http\Controllers\Sales\SalesController;
 use App\Http\Controllers\Teknisi\TeknisiController;
 use App\Http\Controllers\Transaksi\CallbackController;
 use App\Http\Controllers\Transaksi\InvoiceController;
+use App\Http\Controllers\Transaksi\LaporanController;
 use App\Http\Controllers\User\UserController;
 use App\Models\Transaksi\Invoice;
 use Illuminate\Support\Facades\Route;
@@ -99,6 +100,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/Operasional', [RegistrasiController::class, 'operasional'])->name('inv.operasional')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/Transaksi/Konfirm', [RegistrasiController::class, 'konfirm_pencairan'])->name('inv.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Transaksi/laporan-harian', [LaporanController::class, 'index'])->name('inv.laporan')->middleware(['role:admin|STAF ADMIN']);
+    Route::delete('/Transaksi/{id}/Delete', [LaporanController::class, 'lap_delete'])->name('inv.lap_delete')->middleware(['role:admin|STAF ADMIN']);
 
     Route::get('/PSB/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/PSB/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);

@@ -81,13 +81,13 @@
                           <select name="level" id="level" class="form-control" required value="{{ old('level') }}">
                               <option value="">-PILIH-</option>
                               <option value="1|admin">ADMINISTRATOR</option>
-                              <option value="5|staf">STAF ADMIN</option>
-                              <option value="7|noc">NOC</option>
-                              <option value="8|keuangan">KEUANGAN</option>
-                              <option value="9|gudang">GUDANG</option>
-                              <option value="11|teknisi">TEKNISI</option>
-                              <option value="12|sales">SALES</option>
-                              <option value="14|reseller">RESELLER</option>
+                              <option value="5|STAF ADMIN">STAF ADMIN</option>
+                              <option value="7|NOC">NOC</option>
+                              <option value="8|KEUANGAN">KEUANGAN</option>
+                              <option value="9|GUDANG">GUDANG</option>
+                              <option value="11|TEKNISI">TEKNISI</option>
+                              <option value="12|SALES">SALES</option>
+                              <option value="14|RESELLER">RESELLER</option>
                             </select>
                         </div>>
                       </div>
