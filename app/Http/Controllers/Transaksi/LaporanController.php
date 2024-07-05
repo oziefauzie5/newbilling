@@ -36,7 +36,7 @@ class LaporanController extends Controller
         if ($data['ak'])
             $query->where('setting_akuns.akun_nama', '=', $data['ak']);
         if ($data['adm'])
-            $query->where('users.name', '=', $data['adm']);
+            $query->OrWhere('users.name', '=', $data['adm']);
 
         $data['laporan'] = $query->get();
         $data['pendapatan'] = $query->where('lap_status', 0)->sum('laporans.lap_kredit');
