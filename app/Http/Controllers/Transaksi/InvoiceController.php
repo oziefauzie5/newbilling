@@ -145,7 +145,7 @@ class InvoiceController extends Controller
             $data_lap['lap_akun'] = $akun;
             $data_lap['lap_idpel'] = $tampil->inv_idpel;
             $data_lap['lap_jenis_inv'] = "INVOICE";
-            $data_lap['lap_status'] = "-";
+            $data_lap['lap_status'] = 0;
             $data_lap['lap_img'] = "-";
 
             Laporan::create($data_lap);

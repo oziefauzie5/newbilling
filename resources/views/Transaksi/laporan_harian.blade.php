@@ -36,6 +36,14 @@
           </div>
         </div>
       </a>
+      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h1 m-0">{{$sum_tunai}}</div>
+            <div class="text-muted mb-3">PENDAPATAN TUNAI</div>
+          </div>
+        </div>
+      </a>
     </div>
     <div class="row">
       
@@ -56,12 +64,24 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group">
+                          <label for="formGroupExampleInput">Laporan Id</label>
+                          <input type="text" class="form-control" name="lap_id" value="{{rand(10000, 59999)}}">
+                        </div>
+                        <div class="form-group">
                           <label for="formGroupExampleInput">Staf Admin</label>
-                          <input type="text" class="form-control" value="{{$admin_name}}">
+                          <input type="text" class="form-control" name="user_admin" value="{{$admin_name}}">
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan</label>
-                          <input type="text" class="form-control" value="{{$buat_laporan}}">
+                          <input type="text" class="form-control" name="total" value="{{$buat_laporan}}">
+                        </div>
+                        <div class="form-group">
+                          <label for="formGroupExampleInput">Total Pendapatan Tunai</label>
+                          <input type="text" class="form-control" name="tunai" value="{{$sum_tunai}}">
+                        </div>
+                        <div class="form-group">
+                          <label for="formGroupExampleInput">Total Pendapatan Adm</label>
+                          <input type="text" class="form-control" name="adm" value="{{$biaya_adm}}">
                         </div>
 
                 </div>
@@ -79,6 +99,8 @@
               <i class="fa fa-plus"></i>
               BUAT LAPORAN
             </button>
+            <a href="{{route('admin.inv.data_laporan')}}"><button class="btn btn-sm ml-auto m-1 btn-dark">DATA LAPORAN</button>
+            </a>
           <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
             <i class="fa fa-file-import"></i> PRINT
           </button>
