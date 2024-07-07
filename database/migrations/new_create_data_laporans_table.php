@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->integer('data_lap_id')->nullable();
             $table->string('data_lap_tgl')->nullable();
-            $table->string('data_lap_pendapatan')->nullable();
-            $table->string('data_lap_tunai')->nullable();
-            $table->string('data_lap_adm')->nullable();
-            $table->string('data_lap_admin')->nullable();
+            $table->integer('data_lap_pendapatan')->nullable();
+            $table->integer('data_lap_tunai')->nullable();
+            $table->integer('data_lap_adm')->nullable();
+            $table->integer('data_lap_admin')->nullable();
+            $table->integer('data_lap_refund')->nullable();
+            $table->string('data_lap_trx')->nullable();
             $table->string('data_lap_keterangan')->nullable();
             $table->string('data_lap_status')->nullable();
             $table->timestamps();

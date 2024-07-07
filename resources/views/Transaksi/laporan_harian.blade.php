@@ -80,8 +80,16 @@
                           <input type="text" class="form-control" name="tunai" value="{{$sum_tunai}}">
                         </div>
                         <div class="form-group">
+                          <label for="formGroupExampleInput">Total Refund</label>
+                          <input type="text" class="form-control" name="refund" value="{{$refund}}">
+                        </div>
+                        <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan Adm</label>
                           <input type="text" class="form-control" name="adm" value="{{$biaya_adm}}">
+                        </div>
+                        <div class="form-group">
+                          <label for="formGroupExampleInput">Total Transaksi</label>
+                          <input type="text" class="form-control" name="count_trx" value="{{$count_trx}}">
                         </div>
 
                 </div>
@@ -95,15 +103,16 @@
           </div>
           {{-- end modal buat laporan --}}
        
-            <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#buat_laporan">
+            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#buat_laporan">
               <i class="fa fa-plus"></i>
               BUAT LAPORAN
             </button>
-            <a href="{{route('admin.inv.data_laporan')}}"><button class="btn btn-sm ml-auto m-1 btn-dark">DATA LAPORAN</button>
+            <a href="{{route('admin.inv.data_laporan')}}"><button class="btn btn-sm ml-auto m-1 btn-primary">DATA LAPORAN</button>
             </a>
-          <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
+          <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
             <i class="fa fa-file-import"></i> PRINT
           </button>
+          <hr>
           <form >
             <div class="row mb-1">
                 <div class="col-sm-3">
@@ -129,10 +138,11 @@
                   </select>
                 </div>
                 <div class="col-sm-3">
-                  <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
+                  <button type="submit" class="btn btn-block btn-primary btn-sm">Submit
                 </div>
               </div>
           </form>
+          <hr>
           @if ($errors->any())
           <div class="alert alert-danger">
             <div class="alert-title"><h4>Gagal!!</h4></div>
@@ -147,8 +157,10 @@
             <table id="input_data" class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
+                  <th>#</th>
                   <th>ID</th>
                   <th>TANGGAL</th>
+                  <th>ADMIN</th>
                   <th>INVOICE</th>
                   <th>KETERANGAN</th>
                   <th>CABAR</th>
@@ -160,13 +172,15 @@
               <tbody>
                 @foreach ($laporan as $d)
                 <tr>
+                  <td>{{$loop->iteration}}</td>
                       <td>{{$d->lap_id}}</td>
-                      <td>{{$d->lap_tgl}}</td>
-                      <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->lap_inv}}</td>
-                      <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->lap_keterangan}}</td>
-                      <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->lap_cabar}}</td>
-                      <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->akun_nama}}</td>
-                      <td class="href_inv" data-id="{{$d->lap_id}}" >{{$d->lap_kredit}}</td>
+                      <td>{{date('d-m-Y',strtotime($d->lap_tgl))}}</td>
+                      <td>{{$d->name}}</td>
+                      <td>{{$d->lap_inv}}</td>
+                      <td>{{$d->lap_keterangan}}</td>
+                      <td>{{$d->lap_cabar}}</td>
+                      <td>{{$d->akun_nama}}</td>
+                      <td>{{$d->lap_kredit}}</td>
                       <td>
                         <div class="form-button-action">
                           <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->lap_id}}" class="btn btn-link btn-primary btn-lg">

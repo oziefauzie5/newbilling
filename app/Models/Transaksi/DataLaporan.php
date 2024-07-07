@@ -15,6 +15,8 @@ class DataLaporan extends Model
         'data_lap_tunai',
         'data_lap_adm',
         'data_lap_admin',
+        'data_lap_refund',
+        'data_lap_trx',
         'data_lap_keterangan',
         'data_lap_status',
     ];
