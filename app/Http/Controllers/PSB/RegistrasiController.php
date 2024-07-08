@@ -208,7 +208,7 @@ class RegistrasiController extends Controller
     public function delete_registrasi($id)
     {
 
-        $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->whereId('reg_idpel', $id)->first();
+        $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
         // $router = Router::whereId($data_pelanggan->reg_router)->first();
         $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
         $user = $data_pelanggan->router_username;
