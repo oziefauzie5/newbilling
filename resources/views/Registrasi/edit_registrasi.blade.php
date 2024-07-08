@@ -445,6 +445,40 @@
                 <div class="col-sm-4">
                   <input type="text" class="form-control kerjasama" id="kerjasama" name="reg_dana_kerjasama" value="{{$data->reg_dana_kerjasama}}" readonly>
                 </div>
+                <label class="form-check col-sm-2 col-form-label">Tanggal Pemasangan</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="kode_unik" name="" value="{{date('d-m-Y', strtotime($data->reg_tgl_pasang))}}" readonly >
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="form-check col-sm-2 col-form-label">Tanggal Penagihan</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="kode_unik" name="" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" readonly >
+                </div>
+                <label class="form-check col-sm-2 col-form-label">Tanggal Jatuh Tempo &nbsp;&nbsp;
+                </label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="kode_unik" name="" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}" readonly >
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="form-check col-sm-2 col-form-label">Invoice Suspand &nbsp;&nbsp;
+                </label>
+                <div class="col-sm-4">
+                  <select name="reg_inv_control" id="" class="form-control">
+                    <option value="">SAMBUNG DARI TGL BAYAR</option>
+                    <option value="">SAMBUNG DARI TGL ISOLIR</option>
+                  </select>
+                </div>
+                <label class="form-check col-sm-2 col-form-label">Isolir Manual</label>
+                <div class="col-sm-2">
+
+                  <a href="{{route('admin.noc.isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm">Isolir Manual</button></a>
+                </div>
+                <div class="col-sm-2">
+
+                  <a href="{{route('admin.noc.buka_isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm">Buka Isolir Manual</button></a>
+                </div>
               </div>
               <div class="card-footer">
                 <button type="button" class="btn  ">Batal</button>

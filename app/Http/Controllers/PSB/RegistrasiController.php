@@ -75,6 +75,7 @@ class RegistrasiController extends Controller
         Session::flash('reg_catatan', $request->reg_catatan);
         Session::flash('reg_profile', $request->reg_profile);
         Session::flash('paket_nama', $paket_nama->paket_nama);
+        Session::flash('reg_inv_control', $request->reg_inv_control);
 
         $request->validate([
             'reg_nama' => 'required',
@@ -97,6 +98,7 @@ class RegistrasiController extends Controller
             'reg_harga' => 'required',
             'input_subseles' => 'required',
             'reg_profile' => 'required',
+            'reg_inv_control' => 'required',
         ], [
             'reg_nama.required' => 'Nama tidak boleh kosong',
             'reg_idpel.unique' => 'Id Pelanggan sudah ada, Hapus input data terlebih dahulu',
@@ -118,6 +120,7 @@ class RegistrasiController extends Controller
             'reg_harga.required' => 'Harga tidak boleh kosong',
             'input_subseles.required' => 'Sub Sales tidak boleh kosong',
             'reg_profile.required' => 'Paket tidak boleh kosong',
+            'reg_inv_control.required' => 'Invoice Control tidak boleh kosong',
         ]);
 
 
@@ -167,6 +170,7 @@ class RegistrasiController extends Controller
             $data['reg_dana_kas'] = $request->reg_dana_kas;
             $data['reg_catatan'] = $request->reg_catatan;
             $data['reg_profile'] = $request->reg_profile;
+            $data['reg_inv_control'] = $request->reg_inv_control;
             $data['reg_status'] = '0';
             $data['reg_progres'] = '0';
             $update['input_maps'] =  $request->maps;

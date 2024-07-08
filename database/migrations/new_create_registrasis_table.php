@@ -53,6 +53,7 @@ return new class extends Migration
             $table->string('reg_stt_perangkat')->nullable();
             $table->string('reg_slotonu')->nullable();
             $table->string('reg_teknisi_team')->nullable();
+            $table->integer('reg_inv_control')->nullable();
             $table->timestamps();
         });
     }

@@ -15,6 +15,14 @@
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addpaket">
               <i class="fa fa-plus"></i>
               Tambah Paket Internet
+              <form action="{{route('admin.router.paket.store_isolir')}}" method="POST">
+              @csrf
+              @method('POST')
+              <button class="btn  btn-sm ml-auto m-1 btn-primary ">
+                <i class="fa fa-plus"></i>
+                Tambah Paket Isolir</button>
+              </form>
+            
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#export">
               <i class="fa fa-file-export"></i> Export to mikrotik
             </button>
@@ -187,21 +195,40 @@
                 <tbody>
                   @foreach ($data_paket as $d)
                   <tr>
-                      <td>{{$d->paket_id}}</td>
-                      <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_nama}}</td>
-                      <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">Rp. {{ number_format( $d->paket_harga)}}</td>
-                      <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">Rp. {{ number_format( $d->paket_komisi)}}</td>
-                      <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_limitasi}}</td>
-                      <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_shared}}</td>
-                      <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_masa_aktif}}</td>
-                      <td>{{$d->paket_status}}</td>
-                      <td>
-                        <div class="form-button-action">
-                          <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->paket_id}}" class="btn btn-link btn-danger">
-                            <i class="fa fa-times"></i>
-                          </button>
-                        </div>
-                      </td>
+                    @if($d->paket_nama == 'APPBILL_ISOLIR')
+                    <td>{{$d->paket_id}}</td>
+                    <td >{{$d->paket_nama}}</td>
+                    <td >Rp. {{ number_format( $d->paket_harga)}}</td>
+                    <td >Rp. {{ number_format( $d->paket_komisi)}}</td>
+                    <td >{{$d->paket_limitasi}}</td>
+                    <td >{{$d->paket_shared}}</td>
+                    <td >{{$d->paket_masa_aktif}}</td>
+                    <td>{{$d->paket_status}}</td>
+                    <td>
+                      <div class="form-button-action">
+                        <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->paket_id}}" class="btn btn-link btn-danger">
+                          <i class="fa fa-times"></i>
+                        </button>
+                      </div>
+                    </td>
+                    @else 
+                    <td>{{$d->paket_id}}</td>
+                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_nama}}</td>
+                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">Rp. {{ number_format( $d->paket_harga)}}</td>
+                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">Rp. {{ number_format( $d->paket_komisi)}}</td>
+                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_limitasi}}</td>
+                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_shared}}</td>
+                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_masa_aktif}}</td>
+                    <td>{{$d->paket_status}}</td>
+                    <td>
+                      <div class="form-button-action">
+                        <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->paket_id}}" class="btn btn-link btn-danger">
+                          <i class="fa fa-times"></i>
+                        </button>
+                      </div>
+                    </td>
+                    @endif
+                  
                       </tr>
                         <!-- Modal Edit -->
                         <div class="modal fade" id="modal_edit{{$d->paket_id}}" tabindex="-1" role="dialog" aria-hidden="true">

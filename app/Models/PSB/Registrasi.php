@@ -50,5 +50,6 @@ class Registrasi extends Model
         'reg_stt_perangkat',
         'reg_slotonu',
         'reg_teknisi_team',
+        'reg_inv_control',
     ];
 }

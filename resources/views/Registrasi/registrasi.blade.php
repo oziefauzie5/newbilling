@@ -401,6 +401,20 @@
                 <input type="text" class="form-control" id="biaya_kas" name="reg_dana_kas" value="{{Session::get('reg_dana_kas')}}" readonly>
               </div>
             </div>
+            <div class="form-group row">
+              <label class="form-check col-sm-2 col-form-label">Invoice Suspand &nbsp;&nbsp;
+              </label>
+              <div class="col-sm-4">
+                <select name="reg_inv_control" id="" class="form-control">
+                  <option value="0" selected>SAMBUNG DARI TGL ISOLIR</option>
+                  <option value="1">SAMBUNG DARI TGL BAYAR</option>
+                </select>
+              </div>
+              {{-- <label class="form-check col-sm-2 col-form-label">Tanggal Penagihan</label> --}}
+              {{-- <div class="col-sm-4">
+                  <input type="text" class="form-control" id="kode_unik" name="" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" readonly >
+              </div> --}}
+            </div>
             <h3 class="mt-3 text-bolt">CATATAN</h3><hr>
             <div class="form-group row">
               <label for="router" class="col-sm-2 col-form-label">Keterangan</label>

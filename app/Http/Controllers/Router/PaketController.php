@@ -86,6 +86,51 @@ class PaketController extends Controller
         );
         return redirect()->route('admin.router.paket.index')->with($notifikasi);
     }
+    public function store_isolir(Request $request)
+    {
+
+        $cek_paket = Paket::where('paket_nama', 'APPBILL_ISOLIR')->first();
+        if (!$cek_paket) {
+            $data['paket_nama'] = 'APPBILL_ISOLIR';
+            $data['paket_komisi'] = '0';
+            $data['paket_limitasi'] = '128K/128K 0/0 0/0 0/0 8 0/0';
+            $data['paket_lokal'] = '10.200.108.1';
+            $data['paket_harga'] = '0';
+            $data['paket_status'] = 'Enable';
+            Paket::create($data);
+        }
+
+
+        $router = Router::all();
+        $data_paket = Paket::all();
+        $API = new RouterosAPI();
+        $API->debug = false;
+        foreach ($router as $d) {
+            foreach ($data_paket as $dp) {
+
+                if ($API->connect($d->router_ip . ':' . $d->router_port_api, $d->router_username, $d->router_password)) {
+                    $API->comm('/ip/pool/add', [
+                        'name' =>  $dp->paket_nama == '' ? '' : $dp->paket_nama,
+                        'ranges' =>  '10.100.108.100-10.100.110.254' == '' ? '' : '10.100.108.100-10.100.110.254',
+                    ]);
+                    $API->comm('/ppp/profile/add', [
+                        'name' =>  $dp->paket_nama  == '' ? '' : $dp->paket_nama,
+                        'rate-limit' => $dp->paket_limitasi == '' ? '' : $dp->paket_limitasi,
+                        'local-address' => $dp['paket_lokal'] == '' ? '' : $dp['paket_lokal'],
+                        'remote-address' => $dp->paket_nama == '' ? '' : $dp->paket_nama,
+                        'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                        'queue-type' => 'default-small' == '' ? '' : 'default-small',
+                        'dns-server' => $d->router_dns == '' ? '' : $d->router_dns,
+                    ]);
+                }
+            }
+        }
+        $notifikasi = array(
+            'pesan' => 'Berhasil menambahkan Paket Isolir',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.router.paket.index')->with($notifikasi);
+    }
     public function update(Request $request, $id)
     {
 
@@ -147,7 +192,7 @@ class PaketController extends Controller
 
                 if ($API->connect($d->router_ip . ':' . $d->router_port_api, $d->router_username, $d->router_password)) {
                     $API->comm('/ip/pool/add', [
-                        'name' =>  'APPBILL1' == '' ? '' : 'APPBILL1',
+                        'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
                         'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
                     ]);
                     $API->comm('/ppp/profile/add', [
