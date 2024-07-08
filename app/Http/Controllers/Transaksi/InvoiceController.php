@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Transaksi;
 use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
+use App\Models\Applikasi\SettingWaktuTagihan;
 use App\Models\PSB\Registrasi;
+use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Laporan;
@@ -92,14 +94,39 @@ class InvoiceController extends Controller
             );
             return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
         } else {
+            // $data_pelanggan = Invoice::where('inv_id', $id)->first();
+            $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+                ->where('inv_id', $id)
+                ->first();
 
-            //         $kredit = laporanharian::where('lh_admin', $id)->where('lh_status', 0)->sum('lh_kredit');
-            //         $debet = laporanharian::where('lh_admin', $id)->where('lh_status', 0)->sum('lh_debet');
-            //         $saldo_laporan_harian = $kredit - $debet;
+            // dd($data_pelanggan);
+            // $data_pelanggan = Registrasi::join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            //     ->where('reg_idpel', $data_pelanggan->inv_idpel)
+            //     ->first();
+
+
+            $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+            #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
+            #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
+            $inv0_tagih = Carbon::create($data_pelanggan->reg_tgl_tagih)->addMonth(1)->toDateString();
+            $inv0_tagih0 = Carbon::create($inv0_tagih)->addDay(-2)->toDateString();
+            $inv0_jt_tempo = Carbon::create($data_pelanggan->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+            $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
+            $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+            $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+            if ($data_pelanggan->reg_inv_control == 0) {
+                $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
+                $reg['reg_tgl_tagih'] = $inv0_tagih0;
+            } else {
+                $reg['reg_tgl_jatuh_tempo'] = $inv1_jt_tempo;
+                $reg['reg_tgl_tagih'] = $inv1_tagih1;
+            }
+            // dd($reg);
+
 
             $admin_user = Auth::user()->id;
-            $tgl = date('d-m-Y h:m:s');
-            $tampil = Invoice::where('inv_id', $id)->first();
+
 
             $explode = explode('|', $request->transfer);
             if ($request->cabar == 'TUNAI') {
@@ -112,20 +139,18 @@ class InvoiceController extends Controller
                 $akun = $explode[0];
                 $norek = $explode[1];
                 $akun_nama = $explode[2];
-                $biaya_adm =  $request->jumlah_bayar - $tampil->inv_total;
+                $biaya_adm =  $request->jumlah_bayar - $data_pelanggan->inv_total;
                 $j_bayar = $request->jumlah_bayar;
             }
 
 
-
-            $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
             $datas['inv_cabar'] = $request->cabar;
             $datas['inv_admin'] = $admin_user;
             $datas['inv_akun'] = $akun;
             $datas['inv_reference'] = '-';
             $datas['inv_payment_method'] = $akun_nama;
             $datas['inv_payment_method_code'] = $norek;
-            $datas['inv_total_amount'] = $tampil->inv_total;
+            $datas['inv_total_amount'] = $data_pelanggan->inv_total;
             $datas['inv_fee_merchant'] = 0;
             $datas['inv_fee_customer'] = 0;
             $datas['inv_total_fee'] = 0;
@@ -134,111 +159,86 @@ class InvoiceController extends Controller
             $datas['inv_status'] = 'PAID';
             Invoice::where('inv_id', $id)->update($datas);
 
-
-
             $data_lap['lap_id'] = 0;
             $data_lap['lap_tgl'] = $tgl_bayar;
             $data_lap['lap_inv'] = $id;
             $data_lap['lap_admin'] = $admin_user;
             $data_lap['lap_cabar'] = $request->cabar;
             $data_lap['lap_debet'] = 0;
-            $data_lap['lap_kredit'] = $tampil->inv_total;
+            $data_lap['lap_kredit'] = $data_pelanggan->inv_total;
             $data_lap['lap_adm'] = $biaya_adm;
             $data_lap['lap_jumlah_bayar'] = $j_bayar;
-            $data_lap['lap_keterangan'] = $tampil->inv_nama;
+            $data_lap['lap_keterangan'] = $data_pelanggan->inv_nama;
             $data_lap['lap_akun'] = $akun;
-            $data_lap['lap_idpel'] = $tampil->inv_idpel;
+            $data_lap['lap_idpel'] = $data_pelanggan->inv_idpel;
             $data_lap['lap_jenis_inv'] = "INVOICE";
             $data_lap['lap_status'] = 0;
             $data_lap['lap_img'] = "-";
 
             Laporan::create($data_lap);
-
-            // dd($data_lap);
-
+            Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
 
 
-            //         $sumppn = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'); #hitung total ppn invoice
-            //         $sumharga = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'); #hitung total harga invoice
-
-            //         // dd($id);
-            //         $tampil = (new GlobalController)->data_tagihan($id);
-
-            //         $nohp = $tampil->hp;
-            //         $nolayanan = $tampil->nolayanan;
-            //         $diskon = $tampil->upd_diskon;
-            //         $harga = number_format($tampil->subinvoice_harga);
-            //         $jt_tempo = date($tampil->tgl_tagih  . '/m/Y', strtotime('+1 month'));
 
 
-            //         $total_kredit = $sumharga + $sumppn - $diskon;
-            //         $total_laporan_harian = $saldo_laporan_harian + $total_kredit;
+            $router = Router::whereId($data_pelanggan->reg_router)->first();
+            $ip =   $router->router_ip . ':' . $router->router_port_api;
+            $user = $router->router_username;
+            $pass = $router->router_password;
+            $API = new RouterosAPI();
+            $API->debug = false;
 
+            if ($API->connect($ip, $user, $pass)) {
+                $cek_secret = $API->comm('/ppp/secret/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_secret) {
+                    $API->comm('/ppp/secret/set', [
+                        '.id' => $cek_secret[0]['.id'],
+                        'profile' => $data_pelanggan->reg_profile,
+                    ]);
+                    $cek_status = $API->comm('/ppp/active/print', [
+                        '?name' => $data_pelanggan->reg_username,
+                    ]);
+                    if ($cek_status) {
+                        $API->comm('/ppp/active/remove', [
+                            '.id' =>  $cek_status['0']['.id'],
+                        ]);
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil melakukan pembayaran',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
+                    } else {
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil melakukan pembayaran. Namun pelanggan sedang tidak aktif',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
+                    }
+                } else {
+                    $API->comm('/ppp/secret/add', [
+                        'name' => $data_pelanggan->reg_username == '' ? '' : $data_pelanggan->reg_username,
+                        'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
+                        'service' => 'pppoe',
+                        'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
+                        'comment' =>  $reg['reg_tgl_jatuh_tempo'] == '' ? '' : $reg['reg_tgl_jatuh_tempo'],
+                        'disabled' => 'no',
+                    ]);
 
-            //         $paid['id_unpaid'] = $id; #No referensi transaksi. Contoh: T000100000000XHDFTR disini saya gunakan unpaid_id
-            //         $paid['idpel_unpaid'] = $tampil->upd_idpel;
-            //         $paid['reference'] = '';
-            //         $paid['payment_method'] = $akun_nama; #Channel pembayaran. Contoh: BRI Virtual Account
-            //         $paid['payment_method_code'] = $norek; #Kode channel pembayaran. Contoh: BRIVA
-            //         $paid['total_amount'] = $total_kredit; #Jumlah pembayaran yang dibayar pelanggan
-            //         $paid['fee_merchant'] = '0'; #Jumlah biaya yang dikenakan pada merchant
-            //         $paid['fee_customer'] = '0'; #Jumlah biaya yang dikenakan pada customer
-            //         $paid['total_fee'] = '0'; #Jumlah biaya fee_merchant + 
-            //         $paid['amount_received'] = $total_kredit; #Jumlah bersih yang diterima merchant. Dihitung dari total_amount - (fee_merchant + fee_customer)
-            //         $paid['is_closed_payment'] = '0'; #Tipe pembayaran
-            //         $paid['status'] = 'PAID'; #Status transaksi
-            //         $paid['paid_at'] = $tgl; #Timestamp waktu pembayaran sukses
-            //         $paid['admin'] = $admin_user; #User Admin
-            //         $paid['akun'] = $akun; #Cara Bayar
-            //         $paid['note'] = ''; #Catatan
-
-            //         Paid::create($paid);
-
-
-            //         $lh['lh_id'] = $tampil->upd_id;
-            //         $lh['lh_admin'] = $admin_user;
-            //         $lh['lh_deskripsi'] = 'Invoice ' . $tampil->upd_id . ' ( ' . $tampil->nama . ' ) Diskon ' . number_format($diskon) . ' PPN ' . number_format($sumppn);
-            //         $lh['lh_qty'] = '1';
-            //         $lh['lh_debet'] = '0';
-            //         $lh['lh_kredit'] = $total_kredit;
-            //         $lh['lh_saldo'] = $total_laporan_harian;
-            //         $lh['lh_status'] = '0';
-            //         $lh['lh_akun'] = $akun;
-            //         $lh['lh_kategori'] = 'PEMBAYARAN';
-            //         laporanharian::create($lh);
-
-            //         Invoice::where('upd_id', $id)->update([
-            //             'upd_status' => 'PAID',
-            //         ]);
-
-            //         $idi = rand(10000, 99999);
-            //         $pesan['id'] = $idi;
-            //         $pesan['status'] = 'Pembayaran';
-            //         $pesan['hp'] = $nohp;
-            //         $pesan['pesan'] = "Terima kasih 🙏
-            // Pembayaran invoice sudah kami terima
-            // *************************
-            // No.Layanan : $nolayanan
-            // Pelanggan : $tampil->nama
-            // Invoice : *$id*
-            // Paket : $tampil->paket_nama
-            // Total : *$harga*
-            // Channel : $akun_nama
-            // Tanggal lunas : $tgl
-            // Layanan sudah aktif dan dapat digunakan sampai dengan *$jt_tempo*
-            // *************************
-            // --------------------
-            // Pesan ini bersifat informasi dan tidak perlu dibalas
-            // *OVALL FIBER*";
-            //         Pesan::create($pesan);
-            //         // dd($pesan);
-            //         (new WhatsappController)->wa_pembayaran($id);
-
-            $notifikasi = array(
-                'pesan' => 'Berhasil melakukan pembayaran',
-                'alert' => 'success',
-            );
-            return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
+                    $notifikasi = array(
+                        'pesan' => 'Berhasil melakukan pembayaran',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
+                }
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Berhasil melakukan pembayaran. Namun Maaf..!! Router Disconnected',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
+            }
         }
     }
     public function addons(Request $request, $id)
@@ -284,50 +284,7 @@ class InvoiceController extends Controller
         );
         return redirect()->route('admin.inv.sub_invoice', ['id' => $inv])->with($notifikasi);
     }
-    public function suspand_otomatis()
+    public function suspand_otomatis($id)
     {
-        $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
-
-        $router = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->whereDate('inv_tgl_isolir', $data['now'])
-            ->where('inv_status', '!=', 'PAID')
-            ->where('inv_status', '!=', 'ISOLIR')
-            ->first();
-
-        if ($router) {
-            $ip =   $router->router_ip . ':' . $router->router_port_api;
-            $user = $router->router_username;
-            $pass = $router->router_password;
-            $API = new RouterosAPI();
-            $API->debug = false;
-
-
-            if ($API->connect($ip, $user, $pass)) {
-                $cek_secret = $API->comm('/ppp/secret/print', [
-                    '?name' => $router->reg_username,
-                ]);
-                if ($cek_secret) {
-                    $API->comm('/ppp/secret/set', [
-                        '.id' => $cek_secret[0]['.id'],
-                        'profile' => 'APPBILL_ISOLIR',
-                    ]);
-
-                    Invoice::where('inv_id', $router->inv_id)->update([
-                        'inv_status' => 'ISOLIR',
-                    ]);
-                    $cek_status = $API->comm('/ppp/active/print', [
-                        '?name' => $router->reg_username,
-                    ]);
-                    if ($cek_status) {
-                        $API->comm('/ppp/active/remove', [
-                            '.id' =>  $cek_status['0']['.id'],
-                        ]);
-                    }
-                }
-            }
-        }
     }
-    // }
 }

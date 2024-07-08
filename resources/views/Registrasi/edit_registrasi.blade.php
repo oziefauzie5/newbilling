@@ -466,8 +466,13 @@
                 </label>
                 <div class="col-sm-4">
                   <select name="reg_inv_control" id="" class="form-control">
-                    <option value="">SAMBUNG DARI TGL BAYAR</option>
-                    <option value="">SAMBUNG DARI TGL ISOLIR</option>
+                    @if($data->reg_inv_control==0)
+                    <option value="0" selected>SAMBUNG DARI TGL ISOLIR</option>
+                    @else
+                    <option value="1" selected>SAMBUNG DARI TGL BAYAR</option>
+                    @endif
+                    <option value="0">SAMBUNG DARI TGL ISOLIR</option>
+                    <option value="1">SAMBUNG DARI TGL BAYAR</option>
                   </select>
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Isolir Manual</label>
@@ -492,9 +497,6 @@
           <div class="card">
             <div class="card-body">
               <h3 class="mt-3">INSTALASI</h3><hr>
-              <form class="form-horizontal"action="{{route('admin.psb.update_profile',['id'=>$data->reg_idpel])}}" method="POST">
-                @csrf
-                @method('PUT')
               <div class="form-group row">
                   <label class=" form-check col-sm-2 col-form-label">Teknisi Team</label>
                 <div class="col-sm-4">
@@ -525,11 +527,6 @@
                     <input type="text" class="form-control" value="{{$data->reg_penggunaan_dropcore}} Meter" >
                 </div>
               </div>
-              <div class="card-footer">
-                <button type="button" class="btn  ">Batal</button>
-                <button type="submit" class="btn btn-primary float-right">Simpan</button>
-              </div>
-            </form>
             </div>
           </div>
         </div>
@@ -537,9 +534,6 @@
           <div class="card">
             <div class="card-body">
               <h3 class="mt-3">MATERIAL</h3><hr>
-              <form class="form-horizontal"action="{{route('admin.psb.update_profile',['id'=>$data->reg_idpel])}}" method="POST">
-                @csrf
-                @method('PUT')
               <div class="form-group row">
                   <label class=" form-check col-sm-2 col-form-label">KODEE KABEL</label>
                 <div class="col-sm-4">
@@ -560,7 +554,6 @@
                     <input type="text" class="form-control" value="{{$data->reg_kode_pactcore}} " >
                 </div>
               </div>
-            </form>
             </div>
           </div>
         </div>

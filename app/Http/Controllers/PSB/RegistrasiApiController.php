@@ -167,7 +167,7 @@ class RegistrasiApiController extends Controller
 
 
 
-    
+
     public function update_profile(Request $request, $id)
     {
 
@@ -187,6 +187,7 @@ class RegistrasiApiController extends Controller
                 '?name' => $paket->paket_nama,
             ]);
             if ($secret) {
+                // dd($request->reg_inv_control);
                 $cari_pel = $API->comm('/ppp/secret/print', [
                     '?name' => $query->reg_username,
                 ]);
@@ -201,6 +202,7 @@ class RegistrasiApiController extends Controller
                 $data['reg_kode_unik'] = $request->reg_kode_unik;
                 $data['reg_dana_kas'] = $request->reg_dana_kas;
                 $data['reg_profile'] = $request->reg_profile;
+                $data['reg_inv_control'] = $request->reg_inv_control;
                 if ($request->reg_jenis_tagihan == 'DEPOSIT') {
                     $data['reg_deposit'] = $sbiaya->biaya_deposit;
                 } else {
@@ -214,6 +216,7 @@ class RegistrasiApiController extends Controller
                 );
                 return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
             } else {
+
 
                 $API->comm('/ip/pool/add', [
                     'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
@@ -244,6 +247,7 @@ class RegistrasiApiController extends Controller
                 $data['reg_kode_unik'] = $request->reg_kode_unik;
                 $data['reg_dana_kas'] = $request->reg_dana_kas;
                 $data['reg_profile'] = $request->reg_profile;
+                $data['reg_inv_control'] = $request->reg_inv_control;
 
                 if ($request->reg_jenis_tagihan == 'DEPOSIT') {
                     $data['reg_deposit'] = $sbiaya->biaya_deposit;
