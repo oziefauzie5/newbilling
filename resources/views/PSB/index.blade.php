@@ -240,10 +240,14 @@
                       <td>{{$d->reg_idpel}}</td> --}}
                       <td>{{$d->reg_nolayanan}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_nama}}</td>
+                      @if($d->reg_tgl_jatuh_tempo)
                       @if($d->inv_status != 'PAID')
                       <td class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
                       @else
                       <td class="href text-dager font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
+                      @endif
+                      @else
+                      <td class="href text-dager font-weight-bold" data-id="{{$d->reg_idpel}}" >Belum Terpasang</td>
                       @endif
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>
