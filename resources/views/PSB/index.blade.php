@@ -339,20 +339,19 @@
                             <div class="modal-header no-bd">
                               <h5 class="modal-title">
                                 <span class="fw-mediumbold">
-                                Hapus Data {{$d->name}}</span> 
+                                Hapus Data</span> 
                               </h5>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
                             </div>
                               <div class="modal-body">
-                              <p>Apakah anda yakin, akan menghapus data {{$d->name}} ??</p>
+                              <p>Apakah anda yakin, akan menghapus data {{$d->input_nama}} ??</p>
                               </div>
                               <div class="modal-footer no-bd">
                                 <form action="{{route('admin.reg.delete_registrasi',['id'=>$d->reg_idpel])}}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <input type="text">
                                 <button type="submit" class="btn btn-success">Hapus</button>
                               </form>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
