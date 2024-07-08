@@ -488,6 +488,82 @@
             </div>
           </div>
         </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="mt-3">INSTALASI</h3><hr>
+              <form class="form-horizontal"action="{{route('admin.psb.update_profile',['id'=>$data->reg_idpel])}}" method="POST">
+                @csrf
+                @method('PUT')
+              <div class="form-group row">
+                  <label class=" form-check col-sm-2 col-form-label">Teknisi Team</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control harga"value="{{$data->reg_teknisi_team}}" >
+                </div>
+                <label class="form-check col-sm-2 col-form-label">Lokasi FAT</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{$data->reg_fat}}" >
+                </div>
+              </div>
+              <div class="form-group row">
+                  <label class=" form-check col-sm-2 col-form-label">FAT OPM</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control harga"value="{{$data->reg_fat_opm}} Dbm" >
+                </div>
+                <label class="form-check col-sm-2 col-form-label">HOME OPM</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{$data->reg_home_opm}} Dbm" >
+                </div>
+              </div>
+              <div class="form-group row">
+                  <label class=" form-check col-sm-2 col-form-label">Total LOSS</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control harga"value="{{$data->reg_los_opm}} Dbm" >
+                </div>
+                <label class="form-check col-sm-2 col-form-label">Panjang Kabel</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{$data->reg_penggunaan_dropcore}} Meter" >
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="button" class="btn  ">Batal</button>
+                <button type="submit" class="btn btn-primary float-right">Simpan</button>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="mt-3">MATERIAL</h3><hr>
+              <form class="form-horizontal"action="{{route('admin.psb.update_profile',['id'=>$data->reg_idpel])}}" method="POST">
+                @csrf
+                @method('PUT')
+              <div class="form-group row">
+                  <label class=" form-check col-sm-2 col-form-label">KODEE KABEL</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control harga"value="{{$data->reg_kode_dropcore}}" >
+                </div>
+                <label class="form-check col-sm-2 col-form-label">KODE ONT</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{$data->reg_kode_ont}}" >
+                </div>
+              </div>
+              <div class="form-group row">
+                  <label class=" form-check col-sm-2 col-form-label">KODE ADAPTOR</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control harga"value="{{$data->reg_kode_adaptor}} " >
+                </div>
+                <label class="form-check col-sm-2 col-form-label">KODE PACTCORE</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{$data->reg_kode_pactcore}} " >
+                </div>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
   
   </div>
 </div>

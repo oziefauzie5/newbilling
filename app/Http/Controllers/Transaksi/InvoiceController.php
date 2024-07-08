@@ -25,7 +25,7 @@ class InvoiceController extends Controller
         $data['data_inv'] = $request->query('data_inv');
         // dd($data['data_bulan']);
 
-        $query = Invoice::where('invoices.inv_status', '=', 'UNPAID');
+        $query = Invoice::where('invoices.inv_status', '!=', 'PAID');
 
         if ($data['data_bulan'] == "PELANGGAN BARU")
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_ini);
@@ -131,6 +131,8 @@ class InvoiceController extends Controller
             $datas['inv_tgl_bayar'] = $tgl_bayar;
             $datas['inv_status'] = 'PAID';
             Invoice::where('inv_id', $id)->update($datas);
+
+
 
             $data_lap['lap_id'] = 0;
             $data_lap['lap_tgl'] = $tgl_bayar;
@@ -240,6 +242,7 @@ class InvoiceController extends Controller
     public function addons(Request $request, $id)
     {
         $unp = Invoice::where('inv_id', $id)->first();
+
         // dd($id);
         if ($unp) {
 
@@ -278,5 +281,17 @@ class InvoiceController extends Controller
             'alert' => 'success',
         );
         return redirect()->route('admin.inv.sub_invoice', ['id' => $inv])->with($notifikasi);
+    }
+    public function suspand_otomatis()
+    {
+        $data['now'] = date('Y-m-d', strtotime(carbon::now()));
+        $unp = Invoice::where('inv_status', 'UNPAID')->whereDate('inv_tgl_jatuh_tempo', $data['now'])->get();
+        foreach ($unp as $d) {
+            Invoice::where('inv_id', $d->inv_id)->update([
+                'inv_status' => 'SUSPAND',
+            ]);
+        }
+
+        dd($unp);
     }
 }

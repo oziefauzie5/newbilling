@@ -195,25 +195,13 @@
                   <th>KTG</th>
                   <th>PROFILE</th>
                   <th>JENIS TAGIHAN</th>
-                  <th>TGL AKTIF</th>
-                  <th>TGL TAGIH</th>
                   <th>TGL JT TEMPO</th>
                   <th>USERNAME</th>
-                  <th>PASSWORD</th>
                   <th>ROUTER</th>
                   <th>IP ADDRESS</th>
                   <th>MAC ADDRESS</th>
                   <th>SERIAL NUMBER</th>
                   <th>ALAMAT PASANG</th>
-                  <th>TG REGISTRASI</th>
-                  <th>KODE UNIK</th>
-                  <th>KODE KABEL</th>
-                  <th>BEFORE</th>
-                  <th>AFTER</th>
-                  <th>PENGGUNAAN</th>
-                  <th>ODP OPM</th>
-                  <th>HOME OPM</th>
-                  <th>LOS OPM</th>
                   <th>NOTE</th>
                 </tr>
               </thead>
@@ -255,25 +243,13 @@
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_layanan}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_jenis_tagihan}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_tgl_pasang}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_tgl_tagih}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_tgl_jatuh_tempo}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_username}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_password}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_ip_address}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_mac}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_sn}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_alamat_pasang}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_tgl}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_kode_unik}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_kode_dropcore}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_before}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_after}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_penggunaan_dropcore}} Meter</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_fat_opm}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_home_opm}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_los_opm}}</td>
                       <td>{{$d->reg_catatan}}</td>
                     </tr>
                       {{-- <!-- Modal Edit -->

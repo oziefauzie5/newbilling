@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\invoiceJob;
+use App\Jobs\ProssesSuspand;
 use App\Jobs\WaJob;
 use App\Jobs\WhatsappInvoiceJob;
 use Illuminate\Console\Scheduling\Schedule;
@@ -16,9 +17,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->job(new WhatsappInvoiceJob)->everyTwentySeconds();
-        $schedule->job(new WaJob)->everyTwentySeconds();
-        $schedule->job(new invoiceJob)->dailyAt('2:08');
+        // $schedule->job(new WhatsappInvoiceJob)->everyTwentySeconds();
+        // $schedule->job(new WaJob)->everyTwentySeconds();
+        $schedule->job(new ProssesSuspand)->dailyAt('17:20');
     }
 
     /**
