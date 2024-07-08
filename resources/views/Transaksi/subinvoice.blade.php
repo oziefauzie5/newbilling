@@ -77,7 +77,7 @@
             </div>
             <div class="row">
               <div class="col-6">
-                @if($invoice->inv_status=='UNPAID')
+                @if($invoice->inv_status!='PAID')
                 <div class="row">
                   <label for="diskon" class="col-2">Diskon</label>
                   <div class="col-6">

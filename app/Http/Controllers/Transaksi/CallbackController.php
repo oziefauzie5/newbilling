@@ -60,7 +60,7 @@ class CallbackController extends Controller
             $invoice = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
                 ->where('inv_id', $data->merchant_ref)
                 // ->where('upd_idpel', $data->reference)
-                ->where('inv_status', '=', 'UNPAID')
+                ->where('inv_status', '!=', 'PAID')
                 ->first();
             // dd($invoice);
 
@@ -110,7 +110,7 @@ class CallbackController extends Controller
                     $data_lap['lap_id'] = 0;
                     $data_lap['lap_tgl'] = $tgl_bayar;
                     $data_lap['lap_inv'] = $data->merchant_ref;
-                    $data_lap['lap_admin'] = 1;
+                    $data_lap['lap_admin'] = 10;
                     $data_lap['lap_cabar'] = 'TRIPAY';
                     $data_lap['lap_debet'] = 0;
                     $data_lap['lap_kredit'] = $data->amount_received;
