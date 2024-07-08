@@ -234,7 +234,7 @@ class NocController extends Controller
             if ($cek_secret) {
                 $API->comm('/ppp/secret/set', [
                     '.id' => $cek_secret[0]['.id'],
-                    'profile' => $data_pelanggan->reg_profile,
+                    'profile' => $data_pelanggan->paket_nama,
                 ]);
                 $cek_status = $API->comm('/ppp/active/print', [
                     '?name' => $data_pelanggan->reg_username,
@@ -256,8 +256,16 @@ class NocController extends Controller
                     return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } else {
+                $API->comm('/ppp/secret/add', [
+                    'name' => $data_pelanggan->reg_username == '' ? '' : $data_pelanggan->reg_username,
+                    'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
+                    'service' => 'pppoe',
+                    'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
+                    'comment' =>  $data_pelanggan->reg_tgl_jatuh_tempo == '' ? '' : $data_pelanggan->reg_tgl_jatuh_tempo,
+                    'disabled' => 'no',
+                ]);
                 $notifikasi = array(
-                    'pesan' => 'Secret tidak ditemukan pada Router',
+                    'pesan' => 'Berhasil buka isolir manual ( Secret ditambahkan pada Router )',
                     'alert' => 'error',
                 );
                 return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);

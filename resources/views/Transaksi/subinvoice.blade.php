@@ -29,11 +29,10 @@
                 <b>Invoice {{$invoice->inv_id}}</b><br>
                 <br>
                 <b>Jatuh Tempo</b> {{$invoice->inv_tgl_jatuh_tempo}}<br>
-                @if($invoice->inv_status == 'UNPAID')
+                @if($invoice->inv_status != 'PAID')
                 <b>Status : </b> <span class="text-danger"><strong> {{$invoice->inv_status}}</strong></span><br>
                 @else
                 <b>Status : </b> <span class="text-success"><strong> {{$invoice->inv_status}}</strong></span><br>
-
                   @endif
               </div>
             </div>

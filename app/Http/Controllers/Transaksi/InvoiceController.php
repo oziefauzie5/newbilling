@@ -29,7 +29,7 @@ class InvoiceController extends Controller
         $data['data_inv'] = $request->query('data_inv');
         // dd($data['data_bulan']);
 
-        $query = Invoice::where('invoices.inv_status', '!=', 'PAID');
+        $query = Invoice::where('inv_status', '!=', 'PAID');
 
         if ($data['data_bulan'] == "PELANGGAN BARU")
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_ini);
@@ -40,9 +40,11 @@ class InvoiceController extends Controller
 
         $data['inv_count_all'] = $query->count();
         $data['data_invoice'] = $query->get();
-        $data['inv_belum_lunas'] = $query->where('invoices.inv_status', '=', 'UNPAID')->sum('inv_total');
-        $data['inv_count_unpaid'] = $query->where('invoices.inv_status', '=', 'UNPAID')->count();
-        $data['inv_count_suspend'] = $query->where('invoices.inv_status', '=', 'SUSPEND')->count();
+        $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();
+        $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->sum('inv_total');
+        $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->sum('inv_total');
+        $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->count();
+        $data['inv_count_isolir'] = Invoice::where('inv_status', '=', 'ISOLIR')->count();
         return view('Transaksi/list_invoice', $data);
     }
     public function paid()
@@ -94,17 +96,10 @@ class InvoiceController extends Controller
             );
             return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
         } else {
-            // $data_pelanggan = Invoice::where('inv_id', $id)->first();
             $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
                 ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
                 ->where('inv_id', $id)
                 ->first();
-
-            // dd($data_pelanggan);
-            // $data_pelanggan = Registrasi::join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            //     ->where('reg_idpel', $data_pelanggan->inv_idpel)
-            //     ->first();
-
 
             $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
@@ -122,11 +117,7 @@ class InvoiceController extends Controller
                 $reg['reg_tgl_jatuh_tempo'] = $inv1_jt_tempo;
                 $reg['reg_tgl_tagih'] = $inv1_tagih1;
             }
-            // dd($reg);
-
-
             $admin_user = Auth::user()->id;
-
 
             $explode = explode('|', $request->transfer);
             if ($request->cabar == 'TUNAI') {
@@ -195,7 +186,7 @@ class InvoiceController extends Controller
                 if ($cek_secret) {
                     $API->comm('/ppp/secret/set', [
                         '.id' => $cek_secret[0]['.id'],
-                        'profile' => $data_pelanggan->reg_profile,
+                        'profile' => $data_pelanggan->paket_nama,
                     ]);
                     $cek_status = $API->comm('/ppp/active/print', [
                         '?name' => $data_pelanggan->reg_username,
@@ -244,8 +235,6 @@ class InvoiceController extends Controller
     public function addons(Request $request, $id)
     {
         $unp = Invoice::where('inv_id', $id)->first();
-
-        // dd($id);
         if ($unp) {
 
             $data['subinvoice_id'] = $id;
