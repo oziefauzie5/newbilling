@@ -120,6 +120,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/PSB/Redirect/{id}', [RegistrasiApiController::class, 'registrasi_api'])->name('reg.registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
     // Route::get('/PSB/Redirect-Edit/{id}', [RegistrasiApiController::class, 'edit_registrasi_api'])->name('reg.edit_registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/PSB/Edit/{id}/Pelanggan', [PsbController::class, 'edit_pelanggan'])->name('psb.edit_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/PSB/Edit/{id}/Cek Status', [NocController::class, 'status_inet'])->name('noc.status_inet')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/PSB/Update/{id}/Pelanggan', [RegistrasiApiController::class, 'update_pelanggan'])->name('psb.update_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/PSB/Update-Profile/{id}', [RegistrasiApiController::class, 'update_profile'])->name('psb.update_profile')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/PSB/Update-Router/{id}', [RegistrasiApiController::class, 'update_router'])->name('psb.update_router')->middleware(['role:admin|NOC|STAF ADMIN']);

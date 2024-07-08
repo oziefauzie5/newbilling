@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PSB;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\NOC\NocController;
 use App\Imports\Import\InputDataImport;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Barang\SubBarang;
@@ -189,6 +190,9 @@ class PsbController extends Controller
 
     public function edit_pelanggan($id)
     {
+
+        $status_inet = (new NocController)->status_inet($id);
+        // dd($status_inet['status']);
         $data['input_data'] = InputData::all();
         $data['data_router'] = Router::all();
         $data['data_paket'] = Paket::all();
@@ -199,6 +203,8 @@ class PsbController extends Controller
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->where('input_data.id', $id)
             ->first();
+        $data['status'] = $status_inet['status'];
+        $data['uptime'] = $status_inet['uptime'];
         return view('Registrasi/edit_registrasi', $data);
     }
     public function input_data_import(Request $request)

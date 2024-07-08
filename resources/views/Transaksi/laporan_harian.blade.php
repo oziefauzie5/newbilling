@@ -4,46 +4,46 @@
 <div class="content">
   <div class="page-inner">
     <div class="row">
-      <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-3">
+      <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">Rp. {{number_format($pendapatan)}}</div>
+            <div class="h2 m-0">Rp. {{number_format($pendapatan)}}</div>
             <div class="text-muted mb-3">PENDAPATAN</div>
           </div>
         </div>
-      </a>
-      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
+      </div>
+      <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">Rp. {{number_format($refund)}}</div>
+            <div class="h2 m-0">Rp. {{number_format($refund)}}</div>
             <div class="text-muted mb-3">REFUND</div>
           </div>
         </div>
-      </a>
-      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
+      </div>
+      <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">Rp. {{number_format($biaya_adm)}}</div>
+            <div class="h2 m-0">Rp. {{number_format($biaya_adm)}}</div>
             <div class="text-muted mb-3">ADM</div>
           </div>
         </div>
-      </a>
-      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
+      </div>
+      <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">{{$count_trx}}</div>
+            <div class="h2 m-0">{{$count_trx}}</div>
             <div class="text-muted mb-3">JUMLAH TRANSAKSI</div>
           </div>
         </div>
-      </a>
-      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-3">
+      </div>
+      <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0">{{$sum_tunai}}</div>
+            <div class="h2 m-0">{{$sum_tunai}}</div>
             <div class="text-muted mb-3">PENDAPATAN TUNAI</div>
           </div>
         </div>
-      </a>
+      </div>
     </div>
     <div class="row">
       
@@ -109,9 +109,6 @@
             </button>
             <a href="{{route('admin.inv.data_laporan')}}"><button class="btn btn-sm ml-auto m-1 btn-primary">DATA LAPORAN</button>
             </a>
-          <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
-            <i class="fa fa-file-import"></i> PRINT
-          </button>
           <hr>
           <form >
             <div class="row mb-1">

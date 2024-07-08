@@ -122,4 +122,38 @@ class NocController extends Controller
         );
         return redirect()->route('admin.noc.index')->with($notifikasi);
     }
+
+    #EDIT DATA PELANGGAN
+    public function status_inet($id)
+    {
+
+
+        $data_pelanggan = Registrasi::where('reg_idpel', $id)->first();
+        $router = Router::whereId($data_pelanggan->reg_router)->first();
+        $ip =   $router->router_ip . ':' . $router->router_port_api;
+        $user = $router->router_username;
+        $pass = $router->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
+
+        // dd($data_pelanggan->reg_username);
+
+        if ($API->connect($ip, $user, $pass)) {
+            $cek = $API->comm('/ppp/active/print', [
+                '?name' => $data_pelanggan->reg_username,
+            ]);
+            if ($cek) {
+                $data['uptime'] = $cek['0']['uptime'];
+                $data['status'] = "CONNECTED";
+            } else {
+                $data['status']  = "DISCONNECTED";
+                $data['uptime'] = "-";
+            }
+            return $data;
+            // dd($data);
+            // return view('Router/pppoe', $data);
+        } else {
+            dd('Router Disconnected');
+        }
+    }
 }

@@ -156,6 +156,22 @@
                 <input type="text" class="form-control" name="reg_password" value="{{ $data->reg_password}}" >
               </div>
               </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Status Internet :</label>
+                <div class="col-sm-4">
+                  <label class="col-sm-2 col-form-label text-bold">{{ $status}}</label>
+                </div>
+                <label class="col-sm-2 col-form-label">Uptime :</label>
+              <div class="col-sm-2">
+                <label class="col-sm-2 col-form-label text-bold">{{ $uptime}}</label>
+              </div>
+              <div class="col-sm-2">
+                <a href="{{route('admin.noc.pengecekan',['id'=>$data->reg_idpel])}}" target="_blank">
+                  <button type="button" class="btn btn-sm btn-primary">
+                    Remote Router
+                  </button></a>             
+                </div>
+              </div>
 
               <div class="card-footer">
                 <button type="button" class="btn  ">Batal</button>
