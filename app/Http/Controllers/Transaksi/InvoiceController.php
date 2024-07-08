@@ -276,5 +276,8 @@ class InvoiceController extends Controller
     }
     public function suspand_otomatis($id)
     {
+        Registrasi::where('reg_progres', '4')->update([
+            'reg_progres' => 5,
+        ]);
     }
 }

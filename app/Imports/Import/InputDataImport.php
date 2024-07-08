@@ -27,7 +27,7 @@ class InputDataImport implements ToModel
             'input_nama' => $row[2],
             'input_ktp' => $row[3],
             'input_hp' => $row[4],
-            'input_email' => $row[5],
+            'input_email' => $row[2] . '@gmail.com',
             'input_alamat_ktp' => $row[6],
             'input_alamat_pasang' => $row[7],
             'input_sales' => $row[8],

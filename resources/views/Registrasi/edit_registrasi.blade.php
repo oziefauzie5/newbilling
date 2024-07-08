@@ -158,17 +158,27 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Status Internet :</label>
-                <div class="col-sm-4">
-                  <label class="col-sm-2 col-form-label text-bold">{{ $status}}</label>
+                <div class="col-sm-2">
+                  @if($status=='CONNECTED')
+                  <label class="col-sm-2 col-form-label font-weight-bold text-success" >{{ $status}}</label>
+                  @else
+                  <label class="col-sm-2 col-form-label font-weight-bold text-danger" >{{ $status}}</label>
+                  @endif
                 </div>
                 <label class="col-sm-2 col-form-label">Uptime :</label>
               <div class="col-sm-2">
-                <label class="col-sm-2 col-form-label text-bold">{{ $uptime}}</label>
+                <label class="col-sm-2 col-form-label font-weight-bold text-success" >{{ $uptime}}</label>
               </div>
               <div class="col-sm-2">
                 <a href="{{route('admin.noc.pengecekan',['id'=>$data->reg_idpel])}}" target="_blank">
-                  <button type="button" class="btn btn-sm btn-primary">
+                  <button type="button" class="btn btn-sm btn-warning btn-block">
                     Remote Router
+                  </button></a>             
+                </div>
+              <div class="col-sm-2">
+                <a href="{{route('admin.noc.pengecekan',['id'=>$data->reg_idpel])}}" target="_blank">
+                  <button type="button" class="btn btn-sm btn-danger btn-block">
+                    Kick User
                   </button></a>             
                 </div>
               </div>

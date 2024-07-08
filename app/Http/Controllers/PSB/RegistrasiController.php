@@ -208,15 +208,47 @@ class RegistrasiController extends Controller
     public function delete_registrasi($id)
     {
 
-        $data = Registrasi::where('reg_idpel', $id);
-        if ($data) {
-            $data->delete();
+        $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->whereId('reg_idpel', $id)->first();
+        // $router = Router::whereId($data_pelanggan->reg_router)->first();
+        $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
+        $user = $data_pelanggan->router_username;
+        $pass = $data_pelanggan->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
+
+        // dd($data_pelanggan->reg_username);
+
+        if ($API->connect($ip, $user, $pass)) {
+            $cek_secret = $API->comm('/ppp/secret/print', [
+                '?name' => $data_pelanggan->reg_username,
+            ]);
+            if ($cek_secret) {
+                $API->comm('/ppp/secret/remove', [
+                    '.id' => $cek_secret[0]['.id'],
+                ]);
+                $data = Registrasi::where('reg_idpel', $id);
+                if ($data) {
+                    $data->delete();
+                }
+                $notifikasi = array(
+                    'pesan' => 'Hapus Data Registrasi Berhasil berhasil',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.index', ['id' => $id])->with($notifikasi);
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Hapus data registrasi berhasil. Secret tidak ditemukan pada Router',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.index', ['id' => $id])->with($notifikasi);
+            }
+        } else {
+            $notifikasi = array(
+                'pesan' => 'Maaf..!! Router Disconnected',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
         }
-        $notifikasi = [
-            'pesan' => 'Berhasil Hapus Data',
-            'alert' => 'success',
-        ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
     }
 
     public function pilih_pelanggan_registrasi($id)
