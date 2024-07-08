@@ -85,18 +85,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Noc/{id}/Pengecekan-Done', [NocController::class, 'pengecekan_put'])->name('noc.pengecekan_put')->middleware(['role:admin|NOC|STAF ADMIN']);
 
 
-    Route::get('/PSB', [PsbController::class, 'index'])->name('psb.index')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/List-Input-Data', [PsbController::class, 'list_input'])->name('psb.list_input')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/PSB/Validasi/{ktp}', [PsbController::class, 'storeValidateKtp'])->name('psb.storeValidateKtp')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/PSB/Input-Data', [PsbController::class, 'store'])->name('psb.store')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/{id}/ShowEdit-Input-Data', [PsbController::class, 'edit_inputdata'])->name('psb.edit_inputdata')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/PSB/Input-Import', [PsbController::class, 'input_data_import'])->name('psb.input_data_import')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/PSB/Input-Data_update', [PsbController::class, 'input_data_update'])->name('psb.input_data_update')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::delete('/PSB/Input-data-delete/{id}', [PsbController::class, 'input_data_delete'])->name('psb.input_data_delete')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Registrasi', [RegistrasiController::class, 'index'])->name('reg.index')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::delete('/PSB/Delete/{id}/Registrasi', [RegistrasiController::class, 'delete_registrasi'])->name('reg.delete_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/berita_acara', [RegistrasiController::class, 'berita_acara'])->name('psb.berita_acara')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/{id}/Print-Berita_Acara', [RegistrasiController::class, 'print_berita_acara'])->name('psb.print_berita_acara')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan', [PsbController::class, 'index'])->name('psb.index')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/List-Input-Data', [PsbController::class, 'list_input'])->name('psb.list_input')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/Pelanggan/Validasi/{ktp}', [PsbController::class, 'storeValidateKtp'])->name('psb.storeValidateKtp')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/Pelanggan/Input-Data', [PsbController::class, 'store'])->name('psb.store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/{id}/ShowEdit-Input-Data', [PsbController::class, 'edit_inputdata'])->name('psb.edit_inputdata')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/Pelanggan/Input-Import', [PsbController::class, 'input_data_import'])->name('psb.input_data_import')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/Pelanggan/Input-Data_update', [PsbController::class, 'input_data_update'])->name('psb.input_data_update')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::delete('/Pelanggan/Input-data-delete/{id}', [PsbController::class, 'input_data_delete'])->name('psb.input_data_delete')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Registrasi', [RegistrasiController::class, 'index'])->name('reg.index')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::delete('/Pelanggan/Delete/{id}/Registrasi', [RegistrasiController::class, 'delete_registrasi'])->name('reg.delete_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/berita_acara', [RegistrasiController::class, 'berita_acara'])->name('psb.berita_acara')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/{id}/Print-Berita_Acara', [RegistrasiController::class, 'print_berita_acara'])->name('psb.print_berita_acara')->middleware(['role:admin|NOC|STAF ADMIN']);
     // ------------PENCAIRAN PSB-----------------
     Route::get('/Transaksi/Operasional', [RegistrasiController::class, 'operasional'])->name('inv.operasional')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -108,26 +108,26 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::delete('/Transaksi/{id}/Data-Laporan', [LaporanController::class, 'data_lap_delete'])->name('inv.data_lap_delete')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('inv.laporan_print')->middleware(['role:admin|STAF ADMIN']);
 
-    Route::get('/PSB/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/PSB/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/Pelanggan/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
 
-    Route::get('/PSB/Registrasi-cari/{id}', [RegistrasiController::class, 'pilih_pelanggan_registrasi'])->name('reg.pilih_pelanggan_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/PSB/Registrasi-Store', [RegistrasiController::class, 'store'])->name('reg.store')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Validasi1/{id}', [RegistrasiController::class, 'validasi_pachcore'])->name('reg.validasi_pachcore')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Validasi2/{id}', [RegistrasiController::class, 'validasi_adaptor'])->name('reg.validasi_adaptor')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Validasi3/{id}', [RegistrasiController::class, 'validasi_ont'])->name('reg.validasi_ont')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/get-paket{id}', [RegistrasiController::class, 'getPaket'])->name('reg.getPaket')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/PSB/Registrasi-Import', [RegistrasiController::class, 'registrasi_import'])->name('reg.registrasi_import')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Redirect/{id}', [RegistrasiApiController::class, 'registrasi_api'])->name('reg.registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
-    // Route::get('/PSB/Redirect-Edit/{id}', [RegistrasiApiController::class, 'edit_registrasi_api'])->name('reg.edit_registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Edit/{id}/Pelanggan', [PsbController::class, 'edit_pelanggan'])->name('psb.edit_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Edit/{id}/Cek Status', [NocController::class, 'status_inet'])->name('noc.status_inet')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Edit/{id}/Isolir Manual', [NocController::class, 'isolir_manual'])->name('noc.isolir_manual')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/PSB/Edit/{id}/Buka Isolir Manual', [NocController::class, 'buka_isolir_manual'])->name('noc.buka_isolir_manual')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/PSB/Update/{id}/Pelanggan', [RegistrasiApiController::class, 'update_pelanggan'])->name('psb.update_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/PSB/Update-Profile/{id}', [RegistrasiApiController::class, 'update_profile'])->name('psb.update_profile')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/PSB/Update-Router/{id}', [RegistrasiApiController::class, 'update_router'])->name('psb.update_router')->middleware(['role:admin|NOC|STAF ADMIN']);
-    // Route::get('/PSB/edit-validasi-ont/{id}', [RegistrasiController::class, 'edit_validasi_ont'])->name('reg.edit_validasi_ont')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Registrasi-cari/{id}', [RegistrasiController::class, 'pilih_pelanggan_registrasi'])->name('reg.pilih_pelanggan_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/Pelanggan/Registrasi-Store', [RegistrasiController::class, 'store'])->name('reg.store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Validasi1/{id}', [RegistrasiController::class, 'validasi_pachcore'])->name('reg.validasi_pachcore')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Validasi2/{id}', [RegistrasiController::class, 'validasi_adaptor'])->name('reg.validasi_adaptor')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Validasi3/{id}', [RegistrasiController::class, 'validasi_ont'])->name('reg.validasi_ont')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/get-paket{id}', [RegistrasiController::class, 'getPaket'])->name('reg.getPaket')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/Pelanggan/Registrasi-Import', [RegistrasiController::class, 'registrasi_import'])->name('reg.registrasi_import')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Redirect/{id}', [RegistrasiApiController::class, 'registrasi_api'])->name('reg.registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
+    // Route::get('/Pelanggan/Redirect-Edit/{id}', [RegistrasiApiController::class, 'edit_registrasi_api'])->name('reg.edit_registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Edit/{id}/Pelanggan', [PsbController::class, 'edit_pelanggan'])->name('psb.edit_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Edit/{id}/Cek Status', [NocController::class, 'status_inet'])->name('noc.status_inet')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Edit/{id}/Isolir Manual', [NocController::class, 'isolir_manual'])->name('noc.isolir_manual')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Pelanggan/Edit/{id}/Buka Isolir Manual', [NocController::class, 'buka_isolir_manual'])->name('noc.buka_isolir_manual')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/Pelanggan/Update/{id}/Pelanggan', [RegistrasiApiController::class, 'update_pelanggan'])->name('psb.update_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/Pelanggan/Update-Profile/{id}', [RegistrasiApiController::class, 'update_profile'])->name('psb.update_profile')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/Pelanggan/Update-Router/{id}', [RegistrasiApiController::class, 'update_router'])->name('psb.update_router')->middleware(['role:admin|NOC|STAF ADMIN']);
+    // Route::get('/Pelanggan/edit-validasi-ont/{id}', [RegistrasiController::class, 'edit_validasi_ont'])->name('reg.edit_validasi_ont')->middleware(['role:admin|NOC|STAF ADMIN']);
 
 
 
