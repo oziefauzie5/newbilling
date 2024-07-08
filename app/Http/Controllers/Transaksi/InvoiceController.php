@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Transaksi;
 use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
+use App\Models\PSB\Registrasi;
+use App\Models\Router\RouterosAPI;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Laporan;
 use App\Models\Transaksi\Paid;
@@ -284,14 +286,48 @@ class InvoiceController extends Controller
     }
     public function suspand_otomatis()
     {
-        $data['now'] = date('Y-m-d', strtotime(carbon::now()));
-        $unp = Invoice::where('inv_status', 'UNPAID')->whereDate('inv_tgl_jatuh_tempo', $data['now'])->get();
-        foreach ($unp as $d) {
-            Invoice::where('inv_id', $d->inv_id)->update([
-                'inv_status' => 'SUSPAND',
-            ]);
-        }
+        $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
 
-        dd($unp);
+        $router = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->whereDate('inv_tgl_isolir', $data['now'])
+            ->where('inv_status', '!=', 'PAID')
+            ->where('inv_status', '!=', 'ISOLIR')
+            ->first();
+
+        if ($router) {
+            $ip =   $router->router_ip . ':' . $router->router_port_api;
+            $user = $router->router_username;
+            $pass = $router->router_password;
+            $API = new RouterosAPI();
+            $API->debug = false;
+
+
+            if ($API->connect($ip, $user, $pass)) {
+                $cek_secret = $API->comm('/ppp/secret/print', [
+                    '?name' => $router->reg_username,
+                ]);
+                if ($cek_secret) {
+                    $API->comm('/ppp/secret/set', [
+                        '.id' => $cek_secret[0]['.id'],
+                        'profile' => 'APPBILL_ISOLIR',
+                    ]);
+
+                    Invoice::where('inv_id', $router->inv_id)->update([
+                        'inv_status' => 'ISOLIR',
+                    ]);
+                    $cek_status = $API->comm('/ppp/active/print', [
+                        '?name' => $router->reg_username,
+                    ]);
+                    if ($cek_status) {
+                        $API->comm('/ppp/active/remove', [
+                            '.id' =>  $cek_status['0']['.id'],
+                        ]);
+                    }
+                }
+            }
+        }
     }
+    // }
 }
