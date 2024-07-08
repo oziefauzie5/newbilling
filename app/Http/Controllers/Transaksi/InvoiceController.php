@@ -167,6 +167,7 @@ class InvoiceController extends Controller
             $data_lap['lap_img'] = "-";
 
             Laporan::create($data_lap);
+            $reg['reg_status'] = 'PAID';
             Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
 
 

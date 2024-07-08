@@ -190,14 +190,14 @@
                   <th>#</th>
                   {{-- <th>ID</th>
                   <th>INET</th> --}}
-                  <th>NOLAYANAN</th>
+                  <th>NO LAYANAN</th>
                   <th>PELANGGAN</th>
-                  <th>KTG</th>
-                  <th>PROFILE</th>
-                  <th>JENIS TAGIHAN</th>
                   <th>TGL JT TEMPO</th>
-                  <th>USERNAME</th>
+                  <th>PROFILE</th>
                   <th>ROUTER</th>
+                  <th>KTG</th>
+                  <th>JENIS TAGIHAN</th>
+                  <th>USERNAME</th>
                   <th>IP ADDRESS</th>
                   <th>MAC ADDRESS</th>
                   <th>SERIAL NUMBER</th>
@@ -240,12 +240,16 @@
                       <td>{{$d->reg_idpel}}</td> --}}
                       <td>{{$d->reg_nolayanan}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_nama}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_layanan}}</td>
+                      @if($d->inv_status != 'PAID')
+                      <td class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
+                      @else
+                      <td class="href text-dager font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
+                      @endif
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_jenis_tagihan}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_tgl_jatuh_tempo}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_username}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_layanan}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_jenis_tagihan}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_username}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_ip_address}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_mac}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_sn}}</td>
