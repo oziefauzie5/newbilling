@@ -59,7 +59,7 @@ class PelangganController extends Controller
         $data['layanan'] = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->where('invoices.inv_id', '=', $inv_id)
-            ->where('invoices.inv_status', '=', 'UNPAID')
+            ->where('invoices.inv_status', '!=', 'PAID')
             ->where('invoices.inv_idpel', '=', $idpel)
             ->first();
 

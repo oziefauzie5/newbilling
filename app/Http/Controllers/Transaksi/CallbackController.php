@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingTripay;
+use App\Models\PSB\Registrasi;
+use App\Models\Router\Router;
+use App\Models\Router\RouterosAPI;
 use App\Models\Transaksi\Invoice;
+use App\Models\Transaksi\Laporan;
 use App\Models\Transaksi\Paid;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -68,40 +72,26 @@ class CallbackController extends Controller
             }
             switch ($status) {
                 case 'PAID':
+                    $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+                        ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+                        ->where('inv_id', $data->merchant_ref)
+                        ->first();
                     $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
-                    // $paid['id_unpaid'] = $data->merchant_ref; #No referensi transaksi. Contoh: T000100000000XHDFTR disini saya gunakan unpaid_id
-                    // $paid['idpel_unpaid'] = $invoice->inv_idpel;
-                    // $paid['reference'] = $data->reference; #No referensi/invoice merchant disini saya gunakan id pelanggan
-                    // $paid['payment_method'] = $data->payment_method; #Channel pembayaran. Contoh: BRI Virtual Account
-                    // $paid['payment_method_code'] = $data->payment_method_code; #Kode channel pembayaran. Contoh: BRIVA
-                    // $paid['total_amount'] = $data->total_amount; #Jumlah pembayaran yang dibayar pelanggan
-                    // $paid['fee_merchant'] = $data->fee_merchant; #Jumlah biaya yang dikenakan pada merchant
-                    // $paid['fee_customer'] = $data->fee_customer; #Jumlah biaya yang dikenakan pada customer
-                    // $paid['total_fee'] = $data->total_fee; #Jumlah biaya fee_merchant + 
-                    // $paid['amount_received'] = $data->amount_received; #Jumlah bersih yang diterima merchant. Dihitung dari total_amount - (fee_merchant + fee_customer)
-                    // $paid['is_closed_payment'] = $data->is_closed_payment; #Tipe pembayaran
-                    // $paid['status'] = $data->status; #Status transaksi
-                    // $paid['paid_at'] = $data->paid_at; #Timestamp waktu pembayaran sukses
-                    // $paid['admin'] = '0'; #User Admin
-                    // $paid['akun'] = '1'; #Cara Bayar
-                    // $paid['note'] = $data->note; #Catatan
-                    // dd($paid);
-                    // Paid::create($paid);
-
-
-
-                    // laporanharian::create([
-                    //     'lh_id' => $data->merchant_ref,
-                    //     'lh_admin' => '0',
-                    //     'lh_deskripsi' => 'Invoice ' . $data->merchant_ref . ' ( ' . $data_pelanggan->nama . ' ) Diskon ' . number_format($invoice->upd_diskon) . ' PPN ' . number_format($invoice->subinvoice_ppn) . ' via : Tripay',
-                    //     'lh_qty' => '1',
-                    //     'lh_debet' => '0',
-                    //     'lh_kredit' => $data->amount_received,
-                    //     'lh_saldo' => $total_lh,
-                    //     'lh_status' => '0',
-                    //     'lh_kategori' => 'PEMBAYARAN',
-                    //     'lh_akun' => '1',
-                    // ]);
+                    #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
+                    #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
+                    $inv0_tagih = Carbon::create($data_pelanggan->reg_tgl_tagih)->addMonth(1)->toDateString();
+                    $inv0_tagih0 = Carbon::create($inv0_tagih)->addDay(-2)->toDateString();
+                    $inv0_jt_tempo = Carbon::create($data_pelanggan->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+                    $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
+                    $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                    $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                    if ($data_pelanggan->reg_inv_control == 0) {
+                        $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
+                        $reg['reg_tgl_tagih'] = $inv0_tagih0;
+                    } else {
+                        $reg['reg_tgl_jatuh_tempo'] = $inv1_jt_tempo;
+                        $reg['reg_tgl_tagih'] = $inv1_tagih1;
+                    }
 
                     $datas['inv_cabar'] = 'TRIPAY';
                     $datas['inv_admin'] = 'SYSTEM';
@@ -116,6 +106,63 @@ class CallbackController extends Controller
                     $datas['inv_tgl_bayar'] = $tgl_bayar;
                     $datas['inv_status'] = $data->status;
                     Invoice::where('inv_id', $data->merchant_ref)->update($datas);
+
+                    $data_lap['lap_id'] = 0;
+                    $data_lap['lap_tgl'] = $tgl_bayar;
+                    $data_lap['lap_inv'] = $data->merchant_ref;
+                    $data_lap['lap_admin'] = 1;
+                    $data_lap['lap_cabar'] = 'TRIPAY';
+                    $data_lap['lap_debet'] = 0;
+                    $data_lap['lap_kredit'] = $data->amount_received;
+                    $data_lap['lap_adm'] = 0;
+                    $data_lap['lap_jumlah_bayar'] = 0;
+                    $data_lap['lap_keterangan'] = $data_pelanggan->inv_nama;
+                    $data_lap['lap_akun'] = 1;
+                    $data_lap['lap_idpel'] = $data_pelanggan->inv_idpel;
+                    $data_lap['lap_jenis_inv'] = "INVOICE";
+                    $data_lap['lap_status'] = 0;
+                    $data_lap['lap_img'] = "-";
+
+                    Laporan::create($data_lap);
+                    $reg['reg_status'] = 'PAID';
+                    Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
+
+                    $router = Router::whereId($data_pelanggan->reg_router)->first();
+                    $ip =   $router->router_ip . ':' . $router->router_port_api;
+                    $user = $router->router_username;
+                    $pass = $router->router_password;
+                    $API = new RouterosAPI();
+                    $API->debug = false;
+
+                    if ($API->connect($ip, $user, $pass)) {
+                        $cek_secret = $API->comm('/ppp/secret/print', [
+                            '?name' => $data_pelanggan->reg_username,
+                        ]);
+                        if ($cek_secret) {
+                            $API->comm('/ppp/secret/set', [
+                                '.id' => $cek_secret[0]['.id'],
+                                'profile' => $data_pelanggan->paket_nama,
+                            ]);
+                            $cek_status = $API->comm('/ppp/active/print', [
+                                '?name' => $data_pelanggan->reg_username,
+                            ]);
+                            if ($cek_status) {
+                                $API->comm('/ppp/active/remove', [
+                                    '.id' =>  $cek_status['0']['.id'],
+                                ]);
+                            }
+                        } else {
+                            $API->comm('/ppp/secret/add', [
+                                'name' => $data_pelanggan->reg_username == '' ? '' : $data_pelanggan->reg_username,
+                                'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
+                                'service' => 'pppoe',
+                                'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
+                                'comment' =>  $reg['reg_tgl_jatuh_tempo'] == '' ? '' : $reg['reg_tgl_jatuh_tempo'],
+                                'disabled' => 'no',
+                            ]);
+                        }
+                    }
+
                     break;
 
                 case 'EXPIRED':

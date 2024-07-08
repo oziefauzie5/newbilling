@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'https://ovallfiber.ovallapp.com/callback'
+        'https://ovallapp.com/callback'
     ];
 }
