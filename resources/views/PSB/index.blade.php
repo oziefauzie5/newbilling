@@ -244,10 +244,10 @@
                       @if($d->inv_status != 'PAID')
                       <td class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
                       @else
-                      <td class="href text-dager font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
+                      <td class="href text-danger font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
                       @endif
                       @else
-                      <td class="href text-dager font-weight-bold" data-id="{{$d->reg_idpel}}" >Belum Terpasang</td>
+                      <td class="text-danger font-weight-bold" >Belum Terpasang</td>
                       @endif
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>
