@@ -166,6 +166,7 @@ class PsbController extends Controller
         $update['input_maps'] = $request->input_maps;
         $update['input_status'] = '0';
         $update['input_keterangan'] = $request->input_keterangan;
+        $update['input_status'] = $request->input_status;
         InputData::where('id', $request->edit_id)->update($update);
 
         $notifikasi = [

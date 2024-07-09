@@ -172,6 +172,7 @@ Keterangan :
                   <th>Nama</th>
                   <th>Whatsapp</th>
                   <th>Alamat Pasang</th>
+                  <th>Status</th>
                   <th style="width: 10%">Aksi</th>
                 </tr>
               </thead>
@@ -183,23 +184,42 @@ Keterangan :
                       <td id="{{$d->id}}">{{$d->input_nama}}</td>
                       <td id="{{$d->id}}">{{$d->input_hp}}</td>
                       <td id="{{$d->id}}">{{$d->input_alamat_pasang}}</td>
+                      <td id="{{$d->id}}">{{$d->input_status}}</td>
                       <td>
                         <div class="form-button-action">
-                          {{-- <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
-                            <i class="fa fa-edit"></i>
-                          </button> --}}
                           <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->id}}" class="btn btn-link btn-danger">
                             <i class="fa fa-times"></i>
                           </button>
                         </div>
                       </td>
+                      <div class="modal fade" id="modal_hapus{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Hapus Data</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <div>Apakah anda yakin menghapus data {{$d->input_nama}}</div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal. Abdi kurang yakin</button>
+                              <form action="{{route('admin.psb.input_data_delete',['id'=>$d->id])}}" method="POST">
+                                @csrf
+                                @method('delete')
+                              <button type="submit" class="btn btn-primary">Ya!! Abdi yakin pisan</button>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+
+                        </div>
                     </tr>
                     @endforeach
               </tbody>
             </table>
-            <button type="button" data-toggle="modal" data-target="#modal_edit" class="btn btn-link btn-danger">
-              <i class="fa fa-times"></i>
-            </button>
             <!-- Modal Edit -->
             <div class="modal fade" id="modal_edit" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -278,6 +298,16 @@ Keterangan :
                             <textarea name="input_keterangan" class="form-control" id="edit_input_keterangan" cols="10"></textarea>
                           </div>
                         </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Status</label>
+                            <select name="input_status" id="edit_input_status" class="form-control">
+                              <option value="0">0</option>
+                              <option value="1">1</option>
+                              <option value="2">MIGRASI</option>
+                            </select>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="modal-footer no-bd">
@@ -289,31 +319,8 @@ Keterangan :
               </div>
             </div>
             <!-- End Modal Edit -->
-            <div class="modal fade" id="modal_hapus" tabindex="-1" role="dialog" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header no-bd">
-                    <h5 class="modal-title">
-                      <span class="fw-mediumbold">
-                      Hapus Data</span> 
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                   
-                  </div>
-                    </div>
-                    <div class="modal-footer no-bd">
-                      <button type="submit" class="btn btn-primary">Simpan</button>
-                    </form>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
+           
             </div>
-            <!-- End Modal Hapus -->
           </div>
         </div>
       </div>

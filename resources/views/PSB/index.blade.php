@@ -239,82 +239,6 @@
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_alamat_pasang}}</td>
                       <td>{{$d->reg_catatan}}</td>
                     </tr>
-                      {{-- <!-- Modal Edit -->
-                      <div class="modal fade" id="modal_edit{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header no-bd">
-                              <h5 class="modal-title">
-                                <span class="fw-mediumbold">
-                                Edit Data {{$d->input_nama}}</span> 
-                              </h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <form action="{{route('admin.user.edit',['id'=>$d->id])}}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <div class="row">
-                                  <div class="col-sm-12">
-                                    <div class="form-group">
-                                      <label>Nama Lengkap</label>
-                                      <input id="name" type="text" class="form-control" name="name" value="{{ $d->name }}" required>
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-12">
-                                    <div class="form-group">
-                                      <label>No Identitas</label>
-                                      <input id="ktp" type="text" class="form-control" value="{{ $d->ktp }}" name="ktp" onkeyup="validasiKtp()" placeholder="No. Identitas" required>
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-12">
-                                    <div class="form-group">
-                                      <label>No Hp</label>
-                                      <input id="hp" type="text" class="form-control" value="{{ $d->hp }}" name="hp" placeholder="No. Whatsapp" required>
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-12">
-                                    <div class="form-group">
-                                      <label>Email</label>
-                                      <input id="email" type="text" class="form-control" value="{{ $d->email }}" name="email" placeholder="Email">
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-12">
-                                    <div class="form-group">
-                                      <label>Alamat Lengkap</label>
-                                      <input id="alamat_lengkap" type="text" class="form-control" value="{{ $d->alamat_lengkap }}" name="alamat_lengkap">
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-12">
-                                    <div class="form-group">
-                                      <label>Username</label>
-                                      <input id="username" type="text" class="form-control"  name="username" placeholder="Username">
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-12">
-                                    <div class="form-group">
-                                      <label>Password</label>
-                                      <input id="password" type="text" class="form-control" name="password" placeholder="Password">
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-12">
-                                    <div class="form-group">
-                                      <label for="level" >Level</label>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="modal-footer no-bd">
-                                <button type="submit" class="btn btn-success">Add</button>
-                              </form>
-                              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- End Modal Edit --> --}}
                       <!-- Modal Hapus -->
                       <div class="modal fade" id="modal_hapus{{$d->reg_idpel}}" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -335,9 +259,9 @@
                                 <form action="{{route('admin.reg.delete_registrasi',['id'=>$d->reg_idpel])}}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-success">Hapus</button>
+                                <button type="submit" class="btn btn-success">Ya.!! Abdi yakin pisan</button>
                               </form>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Batal. Abdi Kurang yakin</button>
                             </div>
                           </div>
                         </div>

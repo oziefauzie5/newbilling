@@ -760,6 +760,7 @@
 							$("#edit_input_subseles").val(data[0]['input_subseles']);
 							$("#edit_input_maps").val(data[0]['input_maps']);
 							$("#edit_input_keterangan").val(data[0]['input_keterangan']);			 
+							$("#edit_input_status").val(data[0]['input_status']);			 
                         } else {
 							console.log(data);
                         }
