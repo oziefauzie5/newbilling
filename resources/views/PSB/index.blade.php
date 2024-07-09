@@ -193,6 +193,7 @@
                   <th>NO LAYANAN</th>
                   <th>PELANGGAN</th>
                   <th>TGL JT TEMPO</th>
+                  <th>TGL Registrasi</th>
                   <th>PROFILE</th>
                   <th>ROUTER</th>
                   <th>KTG</th>
@@ -213,31 +214,8 @@
                       <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->reg_idpel}}" class="btn btn-link btn-danger">
                         <i class="fa fa-times"></i>
                       </button>
-                      {{-- <a href="{{route('admin.psb.print_berita_acara',['id'=>$d->reg_idpel])}}" target="_blank">
-                      <button type="button" class="btn btn-link btn-dark">
-                        Berita acara
-                      </button></a> --}}
-                      {{-- @if($d->reg_progres == '2')
-                      <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$d->reg_idpel])}}" target="_blank">
-                      <button type="button" class="btn btn-link btn-dark">
-                        Kas
-                      </button></a>
-                      @elseif($d->reg_progres == '3')
-                      <a>
-                        <button type="button" class="btn btn-link btn-success">
-                          Lunas
-                        </button></a>
-                      @else
-                      <a>
-                        <button type="button" class="btn btn-link btn-warning">
-                          Proses
-                        </button></a>
-                    
-                      @endif --}}
                     </div>
                   </td>
-                      {{-- <td>{{$d->reg_progres}}</td>
-                      <td>{{$d->reg_idpel}}</td> --}}
                       <td>{{$d->reg_nolayanan}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_nama}}</td>
                       @if($d->reg_tgl_jatuh_tempo)
@@ -249,6 +227,7 @@
                       @else
                       <td class="text-danger font-weight-bold" >Belum Terpasang</td>
                       @endif
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->input_tgl))}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_layanan}}</td>

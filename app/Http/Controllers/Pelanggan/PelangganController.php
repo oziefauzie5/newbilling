@@ -91,13 +91,13 @@ class PelangganController extends Controller
         } else {
             $response = json_decode($tripay)->data;
             // dd($response->reference);
-            return redirect()->route('client.show', ['refrensi' => $response->reference]);
+            return redirect()->route('client.show', ['refrensi' => $response->reference, 'inv_id' => $inv]);
         }
     }
 
-    public function show(Request $request, $refrensi)
+    public function show(Request $request, $refrensi, $inv)
     {
-        // dd($res);
+        dd($inv . ' - - ' . $refrensi);
 
         $tripay = (new TripayController)->detailsTransakasi($refrensi);
         // dd($tripay);
