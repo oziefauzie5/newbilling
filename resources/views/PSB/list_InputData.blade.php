@@ -13,7 +13,7 @@
         <div class="card-body">
           <a href="{{route('admin.psb.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary ">
             <i class="fas fa-angle-double-left "></i>
-            Kembali
+            Kembali lagi
           </button></a>
           <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
             <i class="fa fa-plus"></i>
