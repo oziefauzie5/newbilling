@@ -84,6 +84,7 @@ class PsbController extends Controller
         $data['data_user'] = User::all();
         $data['input_data'] = InputData::orderBy('input_tgl', 'DESC')->get();
         return view('PSB/list_input_data', $data);
+        dd('cek');
     }
     public function edit_inputdata($id)
     {
