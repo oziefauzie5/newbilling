@@ -7,10 +7,6 @@
       <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-success">
-              6%
-              <i class="fa fa-chevron-up"></i>
-            </div>
             <div class="h1 m-0">{{$count_inputdata}}</div>
             <div class="text-muted mb-3">Input Data</div>
           </div>
@@ -19,10 +15,6 @@
       <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-danger">
-              -3%
-              <i class="fa fa-chevron-down"></i>
-            </div>
             <div class="h1 m-0">{{$count_registrasi}}</div>
             <div class="text-muted mb-3">Registrasi</div>
           </div>
@@ -31,10 +23,6 @@
       <div class="col-6 col-sm-4 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-success">
-              3%
-              <i class="fa fa-chevron-up"></i>
-            </div>
             <div class="h1 m-0">{{$count_berlangganan}}</div>
             <div class="text-muted mb-3">Berlangganan</div>
           </div>
@@ -43,10 +31,6 @@
       <div class="col-6 col-sm-4 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-danger">
-              -2%
-              <i class="fa fa-chevron-down"></i>
-            </div>
             <div class="h1 m-0">1</div>
             <div class="text-muted mb-3">Putus Berlanggan</div>
           </div>
@@ -55,22 +39,14 @@
       <div class="col-6 col-sm-4 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-danger">
-              -1%
-              <i class="fa fa-chevron-down"></i>
-            </div>
-            <div class="h1 m-0">2</div>
-            <div class="text-muted mb-3">Isolir</div>
+            <div class="h1 m-0">{{$count_free_berlangganan}}</div>
+            <div class="text-muted mb-3">Free Berlanggan</div>
           </div>
         </div>
       </div>
       <div class="col-6 col-sm-4 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="text-right text-success">
-              9%
-              <i class="fa fa-chevron-up"></i>
-            </div>
             <div class="h1 m-0">7</div>
             <div class="text-muted mb-3">Tiket</div>
           </div>
