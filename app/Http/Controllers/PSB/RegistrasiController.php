@@ -229,7 +229,8 @@ class RegistrasiController extends Controller
                 $data = Registrasi::where('reg_idpel', $id);
                 if ($data) {
                     $data->delete();
-                    $data_input = Registrasi::where('id', $id);
+
+                    $data_input = InputData::where('id', $id);
                     if ($data_input) {
                         $data_input->update(['input_status' => '0']);
                     }

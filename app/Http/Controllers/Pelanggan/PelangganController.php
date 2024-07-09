@@ -17,25 +17,15 @@ class PelangganController extends Controller
     {
         $idpel = Auth::guard('pelanggan')->user()->id;
         $data['nama'] = Auth::guard('pelanggan')->user()->input_nama;
-        // $data['hp'] = Auth::guard('pelanggan')->user()->hp;
 
-        // $data['tagihan'] = Invoice::where('inv_idpel', $idpel)->where('inv_status', 'UNPAID')->get();
-        $data['tagihan'] = Invoice::where('invoices.inv_idpel', '=', $idpel)
+        $data['tagihan']  = Invoice::where('invoices.inv_idpel', '=', $idpel)
             ->paginate(3);
         $data['layanan'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->where('invoices.inv_idpel', '=', $idpel)
             ->first();
-        // $query = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-        //     ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-        //     ->where('invoices.inv_idpel', '=', $idpel);
-
-        // $data['details_layanan'] = $query->get();
-        // $data['details'] =  $query->where('invoices.inv_status', '=', 'UNPAID')->get();
-
-        // dd($idpel);
-        // dd($data['tagihan']);
-
-
+        $data['details'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('registrasis.reg_idpel', $idpel)->first();
         return view('client/index', $data);
     }
 
@@ -53,9 +43,6 @@ class PelangganController extends Controller
 
         $data['channels'] = (new TripayController)->getPaymentChannels();
         $idpel = Auth::guard('pelanggan')->user()->id;
-        // $data['nama'] = Auth::guard('pelanggan')->user()->nama;
-        // $data['total']=SubInvoice::where('subinvoice_total', $id)->where('lh_status',0)->sum('lh_kredit');
-        // $data['tagihan'] = Invoice::where('inv_idpel', $idpel)->where('inv_status', 'UNPAID')->get();
         $data['layanan'] = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->where('invoices.inv_id', '=', $inv_id)
@@ -64,11 +51,7 @@ class PelangganController extends Controller
             ->first();
 
         $data['subinvoice'] = SubInvoice::where('subinvoice_id', $data['layanan']->inv_id)->get();
-        // $data['rincian'] = SubInvoice::where('subinvoice_id', $inv_id)->get();
-        // $data['channels'] = (new TripayController)->getPaymentChannels();
-
-        // dd($data['channels']);
-
+        return view('client/tagihan', $data);
         return view('client/tagihan', $data);
     }
 
@@ -77,8 +60,6 @@ class PelangganController extends Controller
         $inv = $request->inv;
         $method = $request->code;
         $icon = $request->icon;
-        // $datapel = (new globalController)->data_transaksiPelanggan($inv);
-
         $tripay = (new TripayController)->requestTransaksi($method, $inv, $icon);
 
         $res = json_decode($tripay);
@@ -90,20 +71,21 @@ class PelangganController extends Controller
             return redirect()->route('client.index')->with($notifikasi);
         } else {
             $response = json_decode($tripay)->data;
-            // dd($response->reference);
             return redirect()->route('client.show', ['refrensi' => $response->reference, 'inv_id' => $inv]);
         }
     }
 
     public function show(Request $request, $refrensi, $inv)
     {
-        dd($inv . ' - - ' . $refrensi);
-
         $tripay = (new TripayController)->detailsTransakasi($refrensi);
-        // dd($tripay);
-        $date = Carbon::parse($tripay->expired_time);
-        $today = Carbon::now()->isoFormat('D MMMM Y');
-        $expire = $date->isoFormat('D MMMM Y H:m:s');
-        return view('client/tagihanshow', compact('tripay', 'expire'));
+        $cek_inv = Invoice::where('inv_id', $tripay->merchant_ref)->first();
+        if ($cek_inv->inv_status != 'PAID') {
+            $date = Carbon::parse($tripay->expired_time);
+            $today = Carbon::now()->isoFormat('D MMMM Y');
+            $expire = $date->isoFormat('D MMMM Y H:m:s');
+            return view('client/tagihanshow', compact('tripay', 'expire'));
+        } else {
+            return redirect()->route('client.index')->with('success', 'Terimakasih. Tagihan anda telah terbayar');
+        }
     }
 }

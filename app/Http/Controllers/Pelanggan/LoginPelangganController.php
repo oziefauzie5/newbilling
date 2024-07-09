@@ -54,7 +54,7 @@ class LoginPelangganController extends Controller
         }
     }
 
-    public function logout()
+    public function client_logout()
     {
         session()->forget('app_brand');
         session()->forget('app_nama');

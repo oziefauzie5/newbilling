@@ -32,6 +32,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/', [LoginPelangganController::class, 'index'])->name('login_pelanggan');
 Route::post('/proses-login', [LoginPelangganController::class, 'login_proses'])->name('proses-login');
 Route::get('/logout-client', [LoginPelangganController::class, 'logout'])->name('logout_client');
+Route::get('/Client-logout', [LoginPelangganController::class, 'client_logout'])->name('client_logout');
 
 Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 'client.'], function () {
     Route::get('/home', [PelangganController::class, 'index'])->name('index');
