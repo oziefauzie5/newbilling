@@ -3,56 +3,107 @@
 
 <div class="content">
   <div class="page-inner">
-    <div class="row">
-      <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-2">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h1 m-0">{{$count_inputdata}}</div>
-            <div class="text-muted mb-3">Input Data</div>
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row">
+            <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-2">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_inputdata}}</div>
+                  <div class="text-muted mb-3">Input Data</div>
+                </div>
+              </div>
+            </a>
+            <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-2">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_registrasi}}</div>
+                  <div class="text-muted mb-3">Registrasi</div>
+                </div>
+              </div>
+            </a>
+            <div class="col-6 col-sm-4 col-lg-2">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_berlangganan}}</div>
+                  <div class="text-muted mb-3">Berlangganan</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-2">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_pb}}</div>
+                  <div class="text-muted mb-3">Putus Berlanggan</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-2">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_ps}}</div>
+                  <div class="text-muted mb-3">Putus Sementara</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-2">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">7</div>
+                  <div class="text-muted mb-3">Tiket</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </a>
-      <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-2">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h1 m-0">{{$count_registrasi}}</div>
-            <div class="text-muted mb-3">Registrasi</div>
-          </div>
-        </div>
-      </a>
-      <div class="col-6 col-sm-4 col-lg-2">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h1 m-0">{{$count_berlangganan}}</div>
-            <div class="text-muted mb-3">Berlangganan</div>
+        <div class="carousel-item">
+          <div class="row">
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_inputdata}}</div>
+                  <div class="text-muted mb-3">PPP</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_registrasi}}</div>
+                  <div class="text-muted mb-3">DHCP</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_berlangganan}}</div>
+                  <div class="text-muted mb-3">HOTSPOT</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-3">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_free_berlangganan}}</div>
+                  <div class="text-muted mb-3">Free Berlanggan</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-6 col-sm-4 col-lg-2">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h1 m-0">1</div>
-            <div class="text-muted mb-3">Putus Berlanggan</div>
-          </div>
-        </div>
+     <div class="carousel-control-prev " type="button" data-target="#carouselExampleControls" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
       </div>
-      <div class="col-6 col-sm-4 col-lg-2">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h1 m-0">{{$count_free_berlangganan}}</div>
-            <div class="text-muted mb-3">Free Berlanggan</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 col-lg-2">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h1 m-0">7</div>
-            <div class="text-muted mb-3">Tiket</div>
-          </div>
-        </div>
+      <div class="carousel-control-next" type="button" data-target="#carouselExampleControls" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
       </div>
     </div>
+    
     <div class="row">
       <div class="card">
         <div class="card-body">
