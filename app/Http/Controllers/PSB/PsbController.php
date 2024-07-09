@@ -71,7 +71,8 @@ class PsbController extends Controller
 
         $data['count_inputdata'] = InputData::count();
         $data['count_registrasi'] = $query->count();
-        $data['count_berlangganan'] = InputData::where('input_status', '1')->count();
+        $data['count_berlangganan'] = $query->where('reg_progres', '>=', '3')->where('reg_jenis_tagihan', '!=', 'FREE')->count();
+        $data['count_free_berlangganan'] = $query->where('reg_progres', '>=', '3')->where('reg_jenis_tagihan', '=', 'FREE')->count();
 
         $data['get_router'] = Router::get();
         $data['get_paket'] = Paket::get();
