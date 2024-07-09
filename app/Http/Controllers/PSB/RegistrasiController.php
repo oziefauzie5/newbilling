@@ -226,14 +226,17 @@ class RegistrasiController extends Controller
                 $API->comm('/ppp/secret/remove', [
                     '.id' => $cek_secret[0]['.id'],
                 ]);
+                $update['input_status'] =  '0';
+                $update_barang['subbarang_status'] =  '0';
+                $update_barang['subbarang_keluar'] = '0';
+                $update_barang['subbarang_keterangan'] = '';
+                SubBarang::where('id_subbarang', $data_pelanggan->reg_kode_pactcore)->update($update_barang);
+                SubBarang::where('id_subbarang', $data_pelanggan->kode_adaptor)->update($update_barang);
+                SubBarang::where('id_subbarang', $data_pelanggan->kode_ont)->update($update_barang);
+                InputData::where('id', $data_pelanggan->reg_idpel)->update($update);
                 $data = Registrasi::where('reg_idpel', $id);
                 if ($data) {
                     $data->delete();
-
-                    $data_input = InputData::where('id', $id);
-                    if ($data_input) {
-                        $data_input->update(['input_status' => '0']);
-                    }
                 }
                 $notifikasi = array(
                     'pesan' => 'Hapus Data Registrasi Berhasil berhasil',
