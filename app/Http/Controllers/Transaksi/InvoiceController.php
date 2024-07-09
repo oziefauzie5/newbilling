@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWaktuTagihan;
+use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
@@ -276,8 +277,8 @@ class InvoiceController extends Controller
     }
     public function suspand_otomatis($id)
     {
-        Registrasi::where('reg_progres', '4')->update([
-            'reg_progres' => 5,
+        InputData::where('input_status', '1')->update([
+            'input_status' => 'REGIST',
         ]);
     }
 }
