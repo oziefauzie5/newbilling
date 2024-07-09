@@ -144,10 +144,7 @@ class SementaraMigrasiController extends Controller
         $data['reg_progres'] = '2';
         $update['input_tgl'] = $request->reg_tgl;
         $update['input_maps'] =  $request->maps;
-        $update['input_status'] =  '2';
-
-        // dd($data);
-
+        $update['input_status'] =  'REGIST';
 
 
         Registrasi::create($data);

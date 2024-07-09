@@ -32,7 +32,7 @@ class RegistrasiController extends Controller
 {
     public function index()
     {
-        $data['input_data'] = InputData::where('input_status', '0')->get();
+        $data['input_data'] = InputData::where('input_status', 'INPUT DATA')->get();
         $data['data_router'] = Router::all();
         $data['data_paket'] = Paket::all();
         $data['data_biaya'] = SettingBiaya::first();
@@ -174,7 +174,7 @@ class RegistrasiController extends Controller
             $data['reg_status'] = '0';
             $data['reg_progres'] = '0';
             $update['input_maps'] =  $request->maps;
-            $update['input_status'] =  '1';
+            $update['input_status'] =  'REGIST';
             $update_barang['subbarang_status'] =  '1';
             $update_barang['subbarang_keluar'] = '1';
             $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;

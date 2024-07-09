@@ -732,12 +732,14 @@
 			});
 
 			// #EDIT INPUT DATA
-			var table = $('#edit_inputdata').DataTable(); $('#edit_inputdata tbody').on( 'click', 'td', function () 
+			var table = $('#edit_inputdata').DataTable(); $('#edit_inputdata tbody').on( 'click', 'tr', function () 
 			{  
 			var idpel = table.row( this ).id();
+
+			
 			var url = '{{ route("admin.psb.edit_inputdata", ":id") }}';
 			url = url.replace(':id', idpel);
-
+			console.log(idpel);
 			$.ajax({
                     url: url,
                     type: 'GET',
@@ -748,7 +750,7 @@
                     success: function(data) {
 						if (data) {
 							$('#modal_edit').modal('show')
-							console.log(data[0]['input_nama'])
+							// console.log(data[0]['input_nama'])
 							$("#edit_id").val(data[0]['id']);
 							$("#edit_input_nama").val(data[0]['input_nama']);
 							$("#edit_input_hp").val(data[0]['input_hp']);

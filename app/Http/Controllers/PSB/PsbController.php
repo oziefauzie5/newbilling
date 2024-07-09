@@ -84,7 +84,6 @@ class PsbController extends Controller
         $data['data_user'] = User::all();
         $data['input_data'] = InputData::orderBy('input_tgl', 'DESC')->get();
         return view('PSB/list_input_data', $data);
-        dd('cek');
     }
     public function edit_inputdata($id)
     {
@@ -102,7 +101,6 @@ class PsbController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request->input_ktp);
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
         Session::flash('input_nama', ucwords($request->input_nama));
         Session::flash('input_hp', $request->input_hp);
@@ -137,7 +135,7 @@ class PsbController extends Controller
             'input_subseles' => ucwords($request->input_subseles),
             'password' => Hash::make($request->input_hp),
             'input_maps' => $request->input_maps,
-            'input_status' => '0',
+            'input_status' => 'INPUT DATA',
             'input_keterangan' => $request->input_keterangan,
         ]);
         $notifikasi = [

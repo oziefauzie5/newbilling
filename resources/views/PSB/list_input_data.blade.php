@@ -13,7 +13,7 @@
         <div class="card-body">
           <a href="{{route('admin.psb.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary ">
             <i class="fas fa-angle-double-left "></i>
-            Kembali Lagi
+            Kembali lagi
           </button></a>
           <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
             <i class="fa fa-plus"></i>
@@ -173,53 +173,22 @@ Keterangan :
                   <th>Whatsapp</th>
                   <th>Alamat Pasang</th>
                   <th>Status</th>
-                  <th style="width: 10%">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($input_data as $d)
-                <tr >
+                <tr id="{{$d->id}}">
                       <td id="{{$d->id}}">{{$d->id}}</td>
                       <td id="{{$d->id}}">{{ date('d-m-Y', strtotime($d->input_tgl))}}</td>
                       <td id="{{$d->id}}">{{$d->input_nama}}</td>
                       <td id="{{$d->id}}">{{$d->input_hp}}</td>
                       <td id="{{$d->id}}">{{$d->input_alamat_pasang}}</td>
                       <td id="{{$d->id}}">{{$d->input_status}}</td>
-                      <td>
-                        <div class="form-button-action">
-                          <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->id}}" class="btn btn-link btn-danger">
-                            <i class="fa fa-times"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <div class="modal fade" id="modal_hapus{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel">Hapus Data</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <div>Apakah anda yakin menghapus data {{$d->input_nama}}</div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal. Abdi kurang yakin</button>
-                              <form action="{{route('admin.psb.input_data_delete',['id'=>$d->id])}}" method="POST">
-                                @csrf
-                                @method('delete')
-                              <button type="submit" class="btn btn-primary">Ya!! Abdi yakin pisan</button>
-                            </form>
-                            </div>
-                          </div>
-                        </div>
-
-                        </div>
                     </tr>
                     @endforeach
               </tbody>
             </table>
+          
             <!-- Modal Edit -->
             <div class="modal fade" id="modal_edit" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -302,9 +271,10 @@ Keterangan :
                           <div class="form-group">
                             <label>Status</label>
                             <select name="input_status" id="edit_input_status" class="form-control">
-                              <option value="0">0</option>
-                              <option value="1">1</option>
-                              <option value="2">MIGRASI</option>
+                              <option value="INPUT DATA">INPUT DATA</option>
+                              <option value="REGIST">REGIST</option>
+                              <option value="MIGRASI">MIGRASI</option>
+                              <option value="PUTUS BERLANGGAN">PUTUS BERLANGGAN</option>
                             </select>
                           </div>
                         </div>
