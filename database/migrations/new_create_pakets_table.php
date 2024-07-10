@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('paket_lokal')->nullable();
             $table->string('paket_remote_address')->nullable();
             $table->string('paket_qris')->nullable();
+            $table->string('paket_layanan')->nullable();
+            $table->string('paket_mode')->nullable();
+            $table->string('paket_warna')->nullable();
             $table->string('paket_status')->nullable();
             $table->timestamps();
         });

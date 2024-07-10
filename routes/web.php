@@ -6,6 +6,7 @@ use App\Http\Controllers\Barang\BarangController;
 use App\Http\Controllers\Barang\KategoriController;
 use App\Http\Controllers\Barang\SupplierControoler;
 use App\Http\Controllers\Home\HomeController;
+use App\Http\Controllers\Hotspot\HotspotController;
 use App\Http\Controllers\NOC\NocController;
 use App\Http\Controllers\Pelanggan\LoginPelangganController;
 use App\Http\Controllers\Pelanggan\PelangganController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\PSB\RegistrasiController;
 use App\Http\Controllers\PSB\SementaraMigrasiController;
 use App\Http\Controllers\Router\ExportExcel;
 use App\Http\Controllers\Router\PaketController;
+use App\Http\Controllers\Router\PaketVoucherController;
 use App\Http\Controllers\Router\RouterController;
 use App\Http\Controllers\Sales\SalesController;
 use App\Http\Controllers\Teknisi\TeknisiController;
@@ -73,6 +75,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/router/{id}/{ip}', [RouterController::class, 'router_remote'])->name('router.router_remote')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/router/{id}/{idmik}/kick', [RouterController::class, 'kick_hotspot'])->name('router.kick_hotspot')->middleware(['role:admin|NOC|STAF ADMIN']);
 
+    Route::post('/router/paket/vhc', [PaketVoucherController::class, 'store'])->name('router.vhc.store')->middleware(['role:admin|NOC|STAF ADMIN']);
+
     Route::get('/router/paket', [PaketController::class, 'index'])->name('router.paket.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/router/create', [PaketController::class, 'create'])->name('router.paket.create')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/router/paket/{id}/get', [PaketController::class, 'getRouter'])->name('router.paket.getRouter')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -85,6 +89,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/noc/{id}/Pengecekan', [NocController::class, 'pengecekan'])->name('noc.pengecekan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/{id}/Pengecekan-Done', [NocController::class, 'pengecekan_put'])->name('noc.pengecekan_put')->middleware(['role:admin|NOC|STAF ADMIN']);
 
+
+    Route::get('/hotspot', [HotspotController::class, 'index'])->name('vhc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     Route::get('/pelanggan', [PsbController::class, 'index'])->name('psb.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/List-Input-Data', [PsbController::class, 'list_input'])->name('psb.list_input')->middleware(['role:admin|NOC|STAF ADMIN']);

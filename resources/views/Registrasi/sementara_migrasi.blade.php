@@ -141,7 +141,6 @@
                     @else
                     <option value="">Pilih</option>
                     <option value="PPP">PPP</option>
-                    <option value="DHCP">DHCP</option>
                     <option value="HOTSPOT">HOTSPOT</option>
                     {{-- <option value="HOTSPOT">HOTSPOT</option> --}}
                     @endif

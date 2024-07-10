@@ -20,6 +20,9 @@ class Paket extends Model
         'paket_remote_address',
         'paket_qris',
         'paket_status',
+        'paket_layanan',
+        'paket_mode',
+        'paket_warna',
 
     ];
 }

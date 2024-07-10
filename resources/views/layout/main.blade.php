@@ -366,6 +366,27 @@
 							</a>
 						</li>
 						@role('admin|STAF ADMIN')
+						<li class="nav-item {{\Route::is('admin.vhc.*') ? 'active' : ''}}">
+							<a data-toggle="collapse" href="#vhc">
+								<i class="fas fa-users"></i>
+								<p>Voucher</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="vhc">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{route('admin.vhc.index')}}">
+											<span class="sub-item">Profile Voucher</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.vhc.index')}}">
+											<span class="sub-item">Stok Voucher</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</li>
 						<li class="nav-item {{\Route::is('admin.psb.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#base">
 								<i class="fas fa-users"></i>
@@ -1556,6 +1577,22 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			$('#jb').removeAttr('required');
 		}
 	});
+// #LAYANAN REGISTRASI
+	$('select[name=reg_layanan]').change(function () {
+		if ($(this).val() == 'HOTSPOT') {
+			$('#divip').hide();
+			$(".hotspot").val("");
+			$(".hotspot").keyup(function () {
+			var value = $(this).val();
+			$(".pwhotspot").val(value);
+			}).keyup();
+			$('.pwhotspot').attr('readonly', 'readonly');;
+		} else {
+			$('#divip').show();
+		}
+	});
+
+    
 	</script>
 	
 					<script>

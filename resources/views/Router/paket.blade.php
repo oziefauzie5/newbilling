@@ -14,13 +14,16 @@
           <div class="card-body">
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addpaket">
               <i class="fa fa-plus"></i>
-              Tambah Paket Internet
+              BUAT PROFILE PPP
+            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addpaketvhc">
+              <i class="fa fa-plus"></i>
+              BUAT PROFILE HOTSPOT
               <form action="{{route('admin.router.paket.store_isolir')}}" method="POST">
               @csrf
               @method('POST')
               <button class="btn  btn-sm ml-auto m-1 btn-primary ">
                 <i class="fa fa-plus"></i>
-                Tambah Paket Isolir</button>
+                BUAT PROFILE ISOLIR</button>
               </form>
             
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#export">
@@ -33,7 +36,7 @@
                   <div class="modal-header no-bd bg-primary">
                     <h5 class="modal-title">
                       <span class="fw-mediumbold">
-                      Buat Paket</span> 
+                      Buat Profile PPP</span> 
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
@@ -46,7 +49,7 @@
                       <div class="row">
                         <div class="col-sm-12">
                           <div class="form-group">
-                            <label>Nama Lengkap</label>
+                            <label>Nama Paket</label>
                             <input type="text" class="form-control" name="paket_nama" value="{{ Session::get('paket_nama') }}" required>
                           </div>
                         </div>
@@ -87,8 +90,107 @@
                             <input type="number" class="form-control" value="{{ Session::get('paket_komisi') }}" name="paket_komisi" required>
                             <span>Komisi reseller yang akan dikeuarkan tiap pembayaran
                               (Isi 0 jika hitungan komisi dalam bentuk persentase)</span>
+                            </div>
+                          </div>
+                          
+                      </div>
+                    </div>
+                    <div class="modal-footer no-bd">
+                      <button type="button" class="btn" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{-- END MODAL BUAT PAKET PPP --}}
+            <div class="modal fade" id="addpaketvhc" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                  <div class="modal-header no-bd bg-primary">
+                    <h5 class="modal-title">
+                      <span class="fw-mediumbold">
+                      Buat Profile Hotspot</span> 
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{{route('admin.router.vhc.store')}}" method="POST">
+                      @csrf
+                      @method('POST')
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Router</label>
+                            <select type="text" class="form-control" name="router" value="{{ Session::get('router') }}" required>
+                              <option value="">- PILIH ROUTER - </option>
+                              @foreach($data_router as $s)
+                              <option value="{{$s->id}}">{{$s->router_nama}}</option>
+                              @endforeach
+                            </select>
                           </div>
                         </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Nama Profile</label>
+                            <input type="text" class="form-control" name="paket_nama" value="{{ Session::get('paket_nama') }}" required>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Limitasi</label>
+                            <input type="text" class="form-control" value="{{ Session::get('paket_limitasi') }}" name="paket_limitasi" required>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label>Shared</label>
+                            <input type="number" class="form-control" value="1" name="paket_shared" required>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label>Mode Masa Berlaku</label>
+                            <select class="form-control" onchange="RequiredV();" id="expmode" name="paket_mode" required="1">
+                              <option value=""> - Pilih Masa Berlaku - </option>
+                              <option value="0">Tidak ada masa berlaku</option>
+                              <option value="rem">Remove</option>
+                              <option value="ntf">Notice</option>
+                              <option value="remc">Remove & Record</option>
+                              <option value="ntfc">Notice & Record</option>
+                          </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label>Masa Aktif</label>
+                            <input type="text" class="form-control" name="paket_masa_aktif" required>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label>Kode Warna</label>
+                            <input type="text" class="form-control" name="paket_warna" required>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label>Harga</label>
+                            <input type="number" class="form-control" value="{{ Session::get('paket_harga') }}" name="paket_harga" required>
+                            <span>Harga diluar PPN</span>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label>Komisi</label>
+                            <input type="number" class="form-control" value="{{ Session::get('paket_komisi') }}" name="paket_komisi" required>
+                            <span>Komisi reseller yang akan dikeuarkan tiap pembayaran
+                              (Isi 0 jika hitungan komisi dalam bentuk persentase)</span>
+                            </div>
+                          </div>
+                          
                       </div>
                     </div>
                     <div class="modal-footer no-bd">

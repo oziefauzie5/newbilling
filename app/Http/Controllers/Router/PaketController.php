@@ -37,6 +37,7 @@ class PaketController extends Controller
         Session::flash('paket_limitasi', $request->paket_limitasi);
         Session::flash('paket_lokal', $request->paket_lokal);
         Session::flash('paket_harga', $request->paket_harga);
+        Session::flash('paket_layanan', $request->paket_harga);
         $request->validate([
             'paket_nama' => 'unique:pakets',
         ], [
@@ -51,6 +52,7 @@ class PaketController extends Controller
         $data['paket_lokal'] = $request->paket_lokal;
         $data['paket_masa_aktif'] = $request->paket_masa_aktif;
         $data['paket_harga'] = $request->paket_harga;
+        $data['paket_layanan'] = 'PPP';
         $data['paket_status'] = 'Enable';
         Paket::create($data);
 

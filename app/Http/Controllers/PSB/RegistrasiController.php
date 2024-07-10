@@ -127,6 +127,40 @@ class RegistrasiController extends Controller
         $dates = Carbon::now()->toDateTimeString();
         $tgl_aktif = date('d/m/Y', strtotime($dates));
 
+
+        $data['reg_idpel'] = $request->reg_idpel;
+        $data['reg_nolayanan'] = $request->reg_nolayanan;
+        $data['reg_layanan'] = $request->reg_layanan;
+        $data['reg_router'] = $request->reg_router;
+        $data['reg_ip_address'] = $request->reg_ip_address;
+        $data['reg_username'] = $request->reg_username;
+        $data['reg_password'] = $request->reg_password;
+        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+        $data['reg_mrek'] = $request->reg_mrek;
+        $data['reg_mac'] = $request->reg_mac;
+        $data['reg_sn'] = $request->reg_sn;
+        $data['reg_slotonu'] = $request->reg_slotonu;
+        $data['reg_odp'] = $request->reg_odp;
+        $data['reg_kode_pactcore'] = $request->kode_pactcore;
+        $data['reg_kode_adaptor'] = $request->kode_adaptor;
+        $data['reg_kode_ont'] = $request->kode_ont;
+        $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
+        $data['reg_harga'] = $request->reg_harga;
+        $data['reg_ppn'] = $request->reg_ppn;
+        $data['reg_dana_kerjasama'] = $request->reg_dana_kerjasama;
+        $data['reg_kode_unik'] = $request->reg_kode_unik;
+        $data['reg_dana_kas'] = $request->reg_dana_kas;
+        $data['reg_catatan'] = $request->reg_catatan;
+        $data['reg_profile'] = $request->reg_profile;
+        $data['reg_inv_control'] = $request->reg_inv_control;
+        $data['reg_status'] = '0';
+        $data['reg_progres'] = '0';
+        $update['input_maps'] =  $request->maps;
+        $update['input_status'] =  'REGIST';
+        $update_barang['subbarang_status'] =  '1';
+        $update_barang['subbarang_keluar'] = '1';
+        $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
+
         $router = Router::whereId($request->reg_router)->first();
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
@@ -134,72 +168,68 @@ class RegistrasiController extends Controller
         $API = new RouterosAPI();
         $API->debug = false;
 
-        if ($API->connect($ip, $user, $pass)) {
-            $API->comm('/ppp/secret/add', [
-                'name' => $request->reg_username == '' ? '' : $request->reg_username,
-                'password' => $request->reg_password  == '' ? '' : $request->reg_password,
-                'service' => 'pppoe',
-                'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
-                'comment' => $request->input_nama . '|' . $request->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $request->reg_mac . '|' . $request->reg_sn == '' ? '' : $request->input_nama . '|' . $request->reg_jenis_tagihan . '|' . $tgl_aktif . '|' . $request->reg_mac . '|' . $request->reg_sn,
-                'disabled' => 'yes',
-            ]);
+        if ($request->reg_layanan == 'PPP') {
+
+            if ($API->connect($ip, $user, $pass)) {
+                $API->comm('/ppp/secret/add', [
+                    'name' => $request->reg_username == '' ? '' : $request->reg_username,
+                    'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                    'service' => 'pppoe',
+                    'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
+                    'comment' => 'REGIST-' . $dates == '' ? '' : 'REGIST-' . $dates,
+                    'disabled' => 'yes',
+                ]);
+
+                Registrasi::create($data);
+                InputData::where('id', $request->reg_idpel)->update($update);
+                SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_barang);
+                SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_barang);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+
+                $notifikasi = array(
+                    'pesan' => 'Berhasil menambahkan pelanggan',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.index')->with($notifikasi);
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.index')->with($notifikasi);
+            }
+        } elseif ($request->reg_layanan == 'HOTSPOT') {
 
 
+            if ($API->connect($ip, $user, $pass)) {
+                $API->comm('/ip/hotspot/user/add', [
+                    'name' => $request->reg_username == '' ? '' : $request->reg_username,
+                    'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                    'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
+                    'comment' => $request->reg_nama  == '' ? '' : $request->reg_nama,
+                    'disabled' => 'yes',
+                ]);
+                // dd($request->reg_nama);
+                Registrasi::create($data);
+                InputData::where('id', $request->reg_idpel)->update($update);
+                SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_barang);
+                SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_barang);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
 
-            $data['reg_idpel'] = $request->reg_idpel;
-            $data['reg_nolayanan'] = $request->reg_nolayanan;
-            $data['reg_layanan'] = $request->reg_layanan;
-            $data['reg_router'] = $request->reg_router;
-            $data['reg_ip_address'] = $request->reg_ip_address;
-            $data['reg_username'] = $request->reg_username;
-            $data['reg_password'] = $request->reg_password;
-            $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
-            $data['reg_mrek'] = $request->reg_mrek;
-            $data['reg_mac'] = $request->reg_mac;
-            $data['reg_sn'] = $request->reg_sn;
-            $data['reg_slotonu'] = $request->reg_slotonu;
-            $data['reg_odp'] = $request->reg_odp;
-            $data['reg_kode_pactcore'] = $request->kode_pactcore;
-            $data['reg_kode_adaptor'] = $request->kode_adaptor;
-            $data['reg_kode_ont'] = $request->kode_ont;
-            $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
-            $data['reg_harga'] = $request->reg_harga;
-            $data['reg_ppn'] = $request->reg_ppn;
-            $data['reg_dana_kerjasama'] = $request->reg_dana_kerjasama;
-            $data['reg_kode_unik'] = $request->reg_kode_unik;
-            $data['reg_dana_kas'] = $request->reg_dana_kas;
-            $data['reg_catatan'] = $request->reg_catatan;
-            $data['reg_profile'] = $request->reg_profile;
-            $data['reg_inv_control'] = $request->reg_inv_control;
-            $data['reg_status'] = '0';
-            $data['reg_progres'] = '0';
-            $update['input_maps'] =  $request->maps;
-            $update['input_status'] =  'REGIST';
-            $update_barang['subbarang_status'] =  '1';
-            $update_barang['subbarang_keluar'] = '1';
-            $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
-
-
-            Registrasi::create($data);
-            InputData::where('id', $request->reg_idpel)->update($update);
-            SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_barang);
-            SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_barang);
-            SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-
-
-
-            $notifikasi = array(
-                'pesan' => 'Berhasil menambahkan pelanggan',
-                'alert' => 'success',
-            );
-            return redirect()->route('admin.psb.index')->with($notifikasi);
-        } else {
-            $notifikasi = array(
-                'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
-                'alert' => 'error',
-            );
-            return redirect()->route('admin.reg.index')->with($notifikasi);
+                $notifikasi = array(
+                    'pesan' => 'Berhasil menambahkan pelanggan',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.index')->with($notifikasi);
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.index')->with($notifikasi);
+            }
         }
+
 
 
         // return redirect()->route('admin.reg.registrasi_api', ['id' => $data['reg_idpel']]);
@@ -219,6 +249,18 @@ class RegistrasiController extends Controller
         // dd($data_pelanggan->reg_username);
 
         if ($API->connect($ip, $user, $pass)) {
+            $update['input_status'] =  'INPUT DATA';
+            $update_barang['subbarang_status'] =  '0';
+            $update_barang['subbarang_keluar'] = '0';
+            $update_barang['subbarang_keterangan'] = '';
+            SubBarang::where('id_subbarang', $data_pelanggan->reg_kode_pactcore)->update($update_barang);
+            SubBarang::where('id_subbarang', $data_pelanggan->kode_adaptor)->update($update_barang);
+            SubBarang::where('id_subbarang', $data_pelanggan->kode_ont)->update($update_barang);
+            InputData::where('id', $data_pelanggan->reg_idpel)->update($update);
+            // $data = Registrasi::where('reg_idpel', $id);
+            // if ($data) {
+            //     $data->delete();
+            // }
             $cek_secret = $API->comm('/ppp/secret/print', [
                 '?name' => $data_pelanggan->reg_username,
             ]);
@@ -226,18 +268,7 @@ class RegistrasiController extends Controller
                 $API->comm('/ppp/secret/remove', [
                     '.id' => $cek_secret[0]['.id'],
                 ]);
-                $update['input_status'] =  '0';
-                $update_barang['subbarang_status'] =  '0';
-                $update_barang['subbarang_keluar'] = '0';
-                $update_barang['subbarang_keterangan'] = '';
-                SubBarang::where('id_subbarang', $data_pelanggan->reg_kode_pactcore)->update($update_barang);
-                SubBarang::where('id_subbarang', $data_pelanggan->kode_adaptor)->update($update_barang);
-                SubBarang::where('id_subbarang', $data_pelanggan->kode_ont)->update($update_barang);
-                InputData::where('id', $data_pelanggan->reg_idpel)->update($update);
-                $data = Registrasi::where('reg_idpel', $id);
-                if ($data) {
-                    $data->delete();
-                }
+
                 $notifikasi = array(
                     'pesan' => 'Hapus Data Registrasi Berhasil berhasil',
                     'alert' => 'success',
