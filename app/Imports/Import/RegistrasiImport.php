@@ -30,7 +30,6 @@ class RegistrasiImport implements ToModel
         $data['reg_profile'] = $row[3];
         $data['reg_jenis_tagihan'] = $row[4];
         $data['reg_harga'] = $row[5];
-        $data['reg_kode_unik'] = $row[6];
         $data['reg_deposit'] = $row[7];
         $data['reg_ppn'] = $row[8];
         $data['reg_dana_kas'] = $row[9];

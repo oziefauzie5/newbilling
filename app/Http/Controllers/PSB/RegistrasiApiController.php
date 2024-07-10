@@ -172,10 +172,13 @@ class RegistrasiApiController extends Controller
     {
 
         $sbiaya = SettingBiaya::first();
-        $query = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')
+        $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('registrasis.reg_idpel', $id)
             ->first();
-        $paket = Paket::where("paket_id", $request->reg_profile)->first();
+
+        // $paket = Paket::where("paket_id", $request->reg_profile)->first();
         $ip =   $query->router_ip . ':' . $query->router_port_api;
         $user = $query->router_username;
         $pass = $query->router_password;
@@ -184,37 +187,71 @@ class RegistrasiApiController extends Controller
 
         if ($API->connect($ip, $user, $pass)) {
             $secret = $API->comm('/ppp/profile/print', [
-                '?name' => $paket->paket_nama,
+                '?name' => $query->paket_nama,
             ]);
             if ($secret) {
-                // dd($request->reg_inv_control);
                 $cari_pel = $API->comm('/ppp/secret/print', [
                     '?name' => $query->reg_username,
                 ]);
-                $API->comm('/ppp/secret/set', [
-                    '.id' => $cari_pel[0]['.id'],
-                    'profile' => $paket->paket_nama,
-                ]);
-                $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
-                $data['reg_harga'] = $request->reg_harga;
-                $data['reg_ppn'] = $request->reg_ppn;
-                $data['reg_dana_kerjasama'] = $request->reg_dana_kerjasama;
-                $data['reg_kode_unik'] = $request->reg_kode_unik;
-                $data['reg_dana_kas'] = $request->reg_dana_kas;
-                $data['reg_profile'] = $request->reg_profile;
-                $data['reg_inv_control'] = $request->reg_inv_control;
-                if ($request->reg_jenis_tagihan == 'DEPOSIT') {
-                    $data['reg_deposit'] = $sbiaya->biaya_deposit;
-                } else {
-                    $data['reg_deposit'] = '0';
-                }
-                Registrasi::where('reg_idpel', $id)->update($data);
+                if ($cari_pel) {
 
-                $notifikasi = array(
-                    'pesan' => 'Berhasil merubah profile pelanggan',
-                    'alert' => 'success',
-                );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    $API->comm('/ppp/secret/set', [
+                        '.id' => $cari_pel[0]['.id'],
+                        'profile' => $query->paket_nama,
+                    ]);
+                    $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
+                    $data['reg_harga'] = $request->reg_harga;
+                    $data['reg_ppn'] = $request->reg_ppn;
+                    $data['reg_dana_kerjasama'] = $request->reg_dana_kerjasama;
+                    $data['reg_kode_unik'] = $request->reg_kode_unik;
+                    $data['reg_dana_kas'] = $request->reg_dana_kas;
+                    $data['reg_profile'] = $request->reg_profile;
+                    $data['reg_inv_control'] = $request->reg_inv_control;
+                    $data['reg_tgl_tagih'] = $request->reg_tgl_tagih;
+                    $data['reg_tgl_jatuh_tempo'] = $request->reg_tgl_jatuh_tempo;
+                    if ($request->reg_jenis_tagihan == 'DEPOSIT') {
+                        $data['reg_deposit'] = $sbiaya->biaya_deposit;
+                    } else {
+                        $data['reg_deposit'] = '0';
+                    }
+                    Registrasi::where('reg_idpel', $id)->update($data);
+
+                    $notifikasi = array(
+                        'pesan' => 'Berhasil merubah profile pelanggan',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                } else {
+                    $API->comm('/ppp/secret/add', [
+                        'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                        'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                        'service' => 'pppoe',
+                        'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                        'comment' => $query->reg_jenis_tagihan == '' ? '' : $query->reg_jenis_tagihan,
+                        'disabled' => 'yes',
+                    ]);
+                    $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
+                    $data['reg_harga'] = $request->reg_harga;
+                    $data['reg_ppn'] = $request->reg_ppn;
+                    $data['reg_dana_kerjasama'] = $request->reg_dana_kerjasama;
+                    $data['reg_kode_unik'] = $request->reg_kode_unik;
+                    $data['reg_dana_kas'] = $request->reg_dana_kas;
+                    $data['reg_profile'] = $request->reg_profile;
+                    $data['reg_inv_control'] = $request->reg_inv_control;
+                    $data['reg_tgl_tagih'] = $request->reg_tgl_tagih;
+                    $data['reg_tgl_jatuh_tempo'] = $request->reg_tgl_jatuh_tempo;
+                    if ($request->reg_jenis_tagihan == 'DEPOSIT') {
+                        $data['reg_deposit'] = $sbiaya->biaya_deposit;
+                    } else {
+                        $data['reg_deposit'] = '0';
+                    }
+                    Registrasi::where('reg_idpel', $id)->update($data);
+                    $notifikasi = array(
+                        'pesan' => 'Berhasil merubah profile pelanggan',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                }
             } else {
 
 
@@ -223,13 +260,13 @@ class RegistrasiApiController extends Controller
                     'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
                 ]);
                 $API->comm('/ppp/profile/add', [
-                    'name' =>  $paket->paket_nama == '' ? '' : $paket->paket_nama,
-                    'rate-limit' => $paket->paket_limitasi == '' ? '' : $paket->paket_limitasi,
-                    'local-address' => $paket->paket_lokal == '' ? '' : $paket->paket_lokal,
+                    'name' =>  $query->paket_nama == '' ? '' : $query->paket_nama,
+                    'rate-limit' => $query->paket_limitasi == '' ? '' : $query->paket_limitasi,
+                    'local-address' => $query->paket_lokal == '' ? '' : $query->paket_lokal,
                     'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
                     'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
                     'queue-type' => 'default-small' == '' ? '' : 'default-small',
-                    'dns-server' => $paket->router_dns == '' ? '' : $paket->router_dns,
+                    'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
                     'only-one' => 'yes',
                 ]);
                 $cari_pel = $API->comm('/ppp/secret/print', [
@@ -237,7 +274,7 @@ class RegistrasiApiController extends Controller
                 ]);
                 $API->comm('/ppp/secret/set', [
                     '.id' => $cari_pel[0]['.id'],
-                    'profile' => $paket->paket_nama,
+                    'profile' => $query->paket_nama,
                 ]);
 
                 $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
@@ -316,9 +353,17 @@ class RegistrasiApiController extends Controller
                     );
                     return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                 } else {
+                    $before_API->comm('/ppp/secret/add', [
+                        'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                        'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                        'service' => 'pppoe',
+                        'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                        'comment' => $query->reg_jatuh_tempo == '' ? '' : $query->reg_jatuh_tempo,
+                        'disabled' => 'no',
+                    ]);
                     $notifikasi = array(
-                        'pesan' => 'Gagal merubah data Internet',
-                        'alert' => 'error',
+                        'pesan' => 'Berhasil merubah data Internet',
+                        'alert' => 'success',
                     );
                     return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                 }
@@ -359,10 +404,11 @@ class RegistrasiApiController extends Controller
                             $before_secret = $before_API->comm('/ppp/secret/print', [
                                 '?name' => $query->reg_username,
                             ]);
-                            $before_API->comm('/ppp/secret/remove', [
-                                '.id' => $before_secret[0]['.id'],
-                            ]);
-                            // $data['reg_router'] = $request->reg_router;
+                            if ($before_secret) {
+                                $before_API->comm('/ppp/secret/remove', [
+                                    '.id' => $before_secret[0]['.id'],
+                                ]);
+                            }
                             Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
                         }
                     }
@@ -412,10 +458,12 @@ class RegistrasiApiController extends Controller
                             $before_secret = $before_API->comm('/ppp/secret/print', [
                                 '?name' => $query->reg_username,
                             ]);
-                            $before_API->comm('/ppp/secret/remove', [
-                                '.id' => $before_secret[0]['.id'],
-                            ]);
-                            Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
+                            if ($before_secret) {
+                                $before_API->comm('/ppp/secret/remove', [
+                                    '.id' => $before_secret[0]['.id'],
+                                ]);
+                                Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
+                            }
                         }
                     }
 
