@@ -127,7 +127,7 @@
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Maps</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="tampil_maps" name="reg_maps" value="{{ Session::get('reg_maps') }}">
+                    <input type="text" class="form-control" id="tampil_maps" name="reg_maps" value="{{ Session::get('reg_maps') }}" required>
                   </div>
               </div>
               <h3 class="mt-3 text-bolt">INTERNET & HADHWARE</h3><hr>
@@ -135,14 +135,13 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Layanan</label>
                 <div class="col-sm-10">
-                  <select class="form-control" id="layanan" name="reg_layanan"  >
+                  <select class="form-control" id="layanan" name="reg_layanan" required >
                     @if( Session::get('reg_layanan'))
                     <option value="{{ Session::get('reg_layanan') }}">{{ Session::get('reg_layanan') }}</option>
                     @else
                     <option value="">Pilih</option>
                     <option value="PPP">PPP</option>
                     <option value="HOTSPOT">HOTSPOT</option>
-                    {{-- <option value="HOTSPOT">HOTSPOT</option> --}}
                     @endif
                   </select>
                 </div>
@@ -150,7 +149,7 @@
               <div class="form-group row">
                   <label for="router" class="col-sm-2 col-form-label">Router</label>
                   <div class="col-sm-10">
-                    <select class="form-control" id="regrouter" name="reg_router" >
+                    <select class="form-control" id="regrouter" name="reg_router" required>
                       @if( Session::get('reg_router'))
                     <option value="{{ Session::get('reg_router') }}">{{ Session::get('router_nama') }}</option>
                     <option value="">Pilih</option>
@@ -166,7 +165,7 @@
                     </select>
                   </div>
               </div>
-              <div class="form-group row">
+              <div id="divip" class="form-group row">
                 <label class="col-sm-2 col-form-label">IP address</label>
                 <div class="col-sm-10">
                   <input type="text"  name="reg_ip_address" value="{{ Session::get('reg_ip_address') }}" class="form-control"  >
@@ -176,11 +175,11 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Username internet *</label>
               <div class="col-sm-4">
-                <input type="text" id="tampil_username" name="reg_username" class="form-control" value="{{ Session::get('reg_username') }}"  >
+                <input type="text" id="tampil_username" name="reg_username" class="form-control hotspot" value="{{ Session::get('reg_username') }}"  >
               </div>
                 <label class=" col-sm-2 col-form-label">Passwd internet *</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="reg_password" value="1234567" >
+                <input type="text" class="form-control pwhotspot" name="reg_password" value="1234567" >
               </div>
               </div>
               <div class="form-group row">

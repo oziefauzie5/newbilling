@@ -164,7 +164,7 @@
               <div class="col-sm-4">
                 <input type="text" id="tampil_username" name="reg_username" class="form-control hotspot" value="{{ Session::get('reg_username') }}" required >
               </div>
-                <label class=" col-sm-2 col-form-label">Passwd internet *</label>
+                <label class=" col-sm-2 col-form-label" >Passwd internet *</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control pwhotspot" name="reg_password" value="1234567" required >
               </div>

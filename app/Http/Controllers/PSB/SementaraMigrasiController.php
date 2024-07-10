@@ -140,15 +140,14 @@ class SementaraMigrasiController extends Controller
         $data['reg_tgl_jatuh_tempo'] = $request->tgl_jttempo;
         $data['reg_tgl_pasang'] = $request->tgl_aktif;
         $data['reg_tgl_tagih'] = $tgl_tagih;
-        $data['reg_status'] = '0';
-        $data['reg_progres'] = '2';
+        $data['reg_status'] = 'MIGRASI';
+        $data['reg_progres'] = '5';
         $update['input_tgl'] = $request->reg_tgl;
         $update['input_maps'] =  $request->maps;
         $update['input_status'] =  'REGIST';
 
 
-        Registrasi::create($data);
-        InputData::where('id', $request->reg_idpel)->update($update);
+
 
         $regist = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
@@ -161,27 +160,58 @@ class SementaraMigrasiController extends Controller
         $API = new RouterosAPI();
         $API->debug = false;
 
-        if ($API->connect($ip, $user, $pass)) {
-            $API->comm('/ppp/secret/add', [
-                'name' => $regist->reg_username == '' ? '' : $regist->reg_username,
-                'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
-                'service' => 'pppoe',
-                'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
-                'comment' => 'MIGRASI',
-            ]);
+        if ($request->reg_layanan == 'PPP') {
+            if ($API->connect($ip, $user, $pass)) {
+                $API->comm('/ppp/secret/add', [
+                    'name' => $regist->reg_username == '' ? '' : $regist->reg_username,
+                    'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
+                    'service' => 'pppoe',
+                    'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
+                    'comment' => 'MIGRASI',
+                ]);
+                Registrasi::create($data);
+                InputData::where('id', $request->reg_idpel)->update($update);
+                $notifikasi = array(
+                    'pesan' => 'Berhasil menambahkan pelanggan',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.index')->with($notifikasi);
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Gagal menambahkan pelanggan',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.index')->with($notifikasi);
+            }
+        } elseif ($request->reg_layanan == 'HOTSPOT') {
 
-            $notifikasi = array(
-                'pesan' => 'Berhasil menambahkan pelanggan',
-                'alert' => 'success',
-            );
-            return redirect()->route('admin.psb.index')->with($notifikasi);
-        } else {
-            $notifikasi = array(
-                'pesan' => 'Gagal menambahkan pelanggan',
-                'alert' => 'error',
-            );
-            return redirect()->route('admin.reg.index')->with($notifikasi);
+
+            if ($API->connect($ip, $user, $pass)) {
+                $API->comm('/ip/hotspot/user/add', [
+                    'name' => $request->reg_username == '' ? '' : $request->reg_username,
+                    'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                    'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
+                    'comment' => $request->reg_nama  == '' ? '' : $request->reg_nama,
+                    'disabled' => 'yes',
+                ]);
+                // dd($request->reg_nama);
+                Registrasi::create($data);
+                InputData::where('id', $request->reg_idpel)->update($update);
+
+                $notifikasi = array(
+                    'pesan' => 'Berhasil menambahkan pelanggan',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.index')->with($notifikasi);
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.index')->with($notifikasi);
+            }
         }
+
 
 
         return redirect()->route('admin.reg.registrasi_api_sementara', ['id' => $data['reg_idpel']]);
