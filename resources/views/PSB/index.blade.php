@@ -277,7 +277,11 @@
                       </button>
                     </div>
                   </td>
-                      <td>{{$d->reg_nolayanan}}</td>
+                  @if($d->reg_progres == 'MIGRASI')
+                  <td class="text-info">{{$d->reg_nolayanan}}</td>
+                  @else
+                  <td>{{$d->reg_nolayanan}}</td>
+                  @endif
                       <td>{{$d->input_nama}}</td>
                       @if($d->reg_tgl_jatuh_tempo)
                       @if($d->inv_status != 'PAID')
