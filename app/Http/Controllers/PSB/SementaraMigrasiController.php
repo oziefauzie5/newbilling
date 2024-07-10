@@ -149,11 +149,12 @@ class SementaraMigrasiController extends Controller
 
 
 
+        // dd($request->reg_idpel);
         $regist = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('input_data.id', $request->reg_idpel)->first();
-        $router = Router::whereId($regist->reg_router)->first();
-        $tgl_aktif = date('d/m/Y', strtotime($regist->created_at));
+        $router = Router::whereId($data['reg_router'])->first();
+        // $tgl_aktif = date('d/m/Y', strtotime($regist->created_at));
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
         $pass = $router->router_password;
@@ -163,10 +164,10 @@ class SementaraMigrasiController extends Controller
         if ($request->reg_layanan == 'PPP') {
             if ($API->connect($ip, $user, $pass)) {
                 $API->comm('/ppp/secret/add', [
-                    'name' => $regist->reg_username == '' ? '' : $regist->reg_username,
-                    'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
+                    'name' => $data['reg_username'] == '' ? '' : $data['reg_username'],
+                    'password' => $data['reg_password'] == '' ? '' : $data['reg_password'],
                     'service' => 'pppoe',
-                    'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
+                    'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
                     'comment' => 'MIGRASI',
                 ]);
                 Registrasi::create($data);
@@ -188,8 +189,8 @@ class SementaraMigrasiController extends Controller
 
             if ($API->connect($ip, $user, $pass)) {
                 $API->comm('/ip/hotspot/user/add', [
-                    'name' => $request->reg_username == '' ? '' : $request->reg_username,
-                    'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                    'name' => $data['reg_username'] == '' ? '' : $data['reg_username'],
+                    'password' => $data['reg_password']   == '' ? '' : $data['reg_password'],
                     'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
                     'comment' => $request->reg_nama  == '' ? '' : $request->reg_nama,
                     'disabled' => 'yes',

@@ -257,10 +257,10 @@ class RegistrasiController extends Controller
             SubBarang::where('id_subbarang', $data_pelanggan->kode_adaptor)->update($update_barang);
             SubBarang::where('id_subbarang', $data_pelanggan->kode_ont)->update($update_barang);
             InputData::where('id', $data_pelanggan->reg_idpel)->update($update);
-            // $data = Registrasi::where('reg_idpel', $id);
-            // if ($data) {
-            //     $data->delete();
-            // }
+            $data = Registrasi::where('reg_idpel', $id);
+            if ($data) {
+                $data->delete();
+            }
             $cek_secret = $API->comm('/ppp/secret/print', [
                 '?name' => $data_pelanggan->reg_username,
             ]);
