@@ -33,6 +33,7 @@ class PsbController extends Controller
         $data['router'] = $request->query('router');
         $data['paket'] = $request->query('paket');
         $data['data'] = $request->query('data');
+        $data['q'] = $request->query('q');
 
         if ($data['router']) {
             $r = Router::where('id', $data['router'])->first();
@@ -47,7 +48,10 @@ class PsbController extends Controller
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->orderBy('tgl', 'DESC');
+            ->orderBy('tgl', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
+            });
 
 
         if ($data['router'])

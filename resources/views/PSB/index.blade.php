@@ -169,7 +169,7 @@
         <hr>
         <form >
         <div class="row mb-1">
-          <div class="col-sm-3">
+          <div class="col-sm-2">
               <select name="data" class="custom-select custom-select-sm">
                 @if($data)
                 <option value="{{$data}}" selected>{{$data}}</option>
@@ -182,7 +182,7 @@
                 <option value="USER BULAN LALU">USER BULAN LALU</option>
               </select>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
               <select name="router" class="custom-select custom-select-sm">
                 @if($router)
                 <option value="{{$router}}" selected>{{$r_nama}}</option>
@@ -193,7 +193,7 @@
                 @endforeach
               </select>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
               <select name="paket" class="custom-select custom-select-sm">
                 @if($paket)
                 <option value="{{$paket}}" selected>{{$p_nama}}</option>
@@ -204,7 +204,10 @@
                 @endforeach
               </select>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
+            <input name="q" type="text" class="form-control form-control-sm" placeholder="Cari">
+          </div>
+          <div class="col-sm-2">
             <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
           </div>
         </div>
