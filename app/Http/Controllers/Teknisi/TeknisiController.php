@@ -164,204 +164,408 @@ class TeknisiController extends Controller
             $pass = $query->router_password;
             $API = new RouterosAPI();
             $API->debug = false;
-            if ($API->connect($ip, $user, $pass)) {
-                $secret = $API->comm('/ppp/secret/print', [
-                    '?name' => $query->reg_username,
-                ]);
-                if ($secret) {
-                    $API->comm('/ppp/secret/set', [
-                        '.id' => $secret[0]['.id'],
-                        'disabled' => 'no',
+
+            if ($query->reg_layanan == 'PPP') {
+
+                if ($API->connect($ip, $user, $pass)) {
+                    $secret = $API->comm('/ppp/secret/print', [
+                        '?name' => $query->reg_username,
                     ]);
+                    if ($secret) {
+                        $API->comm('/ppp/secret/set', [
+                            '.id' => $secret[0]['.id'],
+                            'disabled' => 'no',
+                        ]);
 
-                    if ($query->reg_jenis_tagihan == 'FREE') {
-                        $teknisi['teknisi_psb'] = '0';
-                        $inv['inv_tgl_isolir'] = $inv_tgl_isolir12blan;
-                        $inv['inv_total'] = $tagihan_tanpa_ppn * 12 + ($query->reg_ppn * 12);
-                        $inv['inv_tgl_tagih'] = $tanggal;
-                        $inv['inv_tgl_jatuh_tempo'] = $tag_free1th;
-                        $inv['inv_periode'] = $periode12blan;
+                        if ($query->reg_jenis_tagihan == 'FREE') {
+                            $teknisi['teknisi_psb'] = '0';
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir12blan;
+                            $inv['inv_total'] = $tagihan_tanpa_ppn * 12 + ($query->reg_ppn * 12);
+                            $inv['inv_tgl_tagih'] = $tanggal;
+                            $inv['inv_tgl_jatuh_tempo'] = $tag_free1th;
+                            $inv['inv_periode'] = $periode12blan;
 
-                        $sub_inv['subinvoice_harga'] = $query->reg_harga;
-                        $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
-                        $sub_inv['subinvoice_total'] = $inv['inv_total'];
-                        $sub_inv['subinvoice_qty'] = '12';
+                            $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '12';
 
-                        $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
-                        $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
-                    } else if ($query->reg_jenis_tagihan == 'FREE 3 BULAN') {
-                        $teknisi['teknisi_psb'] = '0';
-                        $inv['inv_tgl_isolir'] = $inv_tgl_isolir3blan;
-                        $inv['inv_total'] = $tagihan_tanpa_ppn * 3 + ($query->reg_ppn * 3);
-                        $inv['inv_tgl_tagih'] = $tanggal;
-                        $inv['inv_tgl_jatuh_tempo'] = $tag_free3bln;
-                        $inv['inv_periode'] = $periode3blan;
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                        } else if ($query->reg_jenis_tagihan == 'FREE 3 BULAN') {
+                            $teknisi['teknisi_psb'] = '0';
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir3blan;
+                            $inv['inv_total'] = $tagihan_tanpa_ppn * 3 + ($query->reg_ppn * 3);
+                            $inv['inv_tgl_tagih'] = $tanggal;
+                            $inv['inv_tgl_jatuh_tempo'] = $tag_free3bln;
+                            $inv['inv_periode'] = $periode3blan;
 
-                        $sub_inv['subinvoice_harga'] = $query->reg_harga;
-                        $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
-                        $sub_inv['subinvoice_total'] = $inv['inv_total'];
-                        $sub_inv['subinvoice_qty'] = '3';
+                            $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '3';
 
-                        $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
-                        $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
-                    } else if ($query->reg_jenis_tagihan == 'PRABAYAR') {
-                        $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
-                        $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
-                        $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
-                        $inv['inv_tgl_tagih'] = $tanggal;
-                        $inv['inv_tgl_jatuh_tempo'] = $tanggal;
-                        $inv['inv_periode'] = $periode1blan;
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                        } else if ($query->reg_jenis_tagihan == 'PRABAYAR') {
+                            $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
+                            $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
+                            $inv['inv_tgl_tagih'] = $tanggal;
+                            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
+                            $inv['inv_periode'] = $periode1blan;
 
-                        $sub_inv['subinvoice_harga'] = $query->reg_harga;
-                        $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
-                        $sub_inv['subinvoice_total'] = $inv['inv_total'];
-                        $sub_inv['subinvoice_qty'] = '1';
+                            $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '1';
 
-                        $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
-                        $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
-                    } else if ($query->reg_jenis_tagihan == 'PASCABAYAR') {
-                        $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
-                        $inv['inv_tgl_isolir'] = $inv_tgl_isolir_pascabayar;
-                        $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
-                        $inv['inv_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
-                        $inv['inv_tgl_jatuh_tempo'] = $tag_pascabayar;
-                        $inv['inv_periode'] = $periode1blan;
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                        } else if ($query->reg_jenis_tagihan == 'PASCABAYAR') {
+                            $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir_pascabayar;
+                            $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
+                            $inv['inv_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
+                            $inv['inv_tgl_jatuh_tempo'] = $tag_pascabayar;
+                            $inv['inv_periode'] = $periode1blan;
 
-                        $sub_inv['subinvoice_harga'] = $query->reg_harga;
-                        $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
-                        $sub_inv['subinvoice_total'] = $inv['inv_total'];
-                        $sub_inv['subinvoice_qty'] = '1';
+                            $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '1';
 
-                        $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
-                        $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
-                    } else if ($query->reg_jenis_tagihan == 'DEPOSIT') {
-                        $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
-                        $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
-                        $inv['inv_total'] = $query->reg_deposit;
-                        $inv['inv_tgl_tagih'] = $tanggal;
-                        $inv['inv_tgl_jatuh_tempo'] = $tanggal;
-                        $inv['inv_periode'] = $periode1blan;
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                        } else if ($query->reg_jenis_tagihan == 'DEPOSIT') {
+                            $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
+                            $inv['inv_total'] = $query->reg_deposit;
+                            $inv['inv_tgl_tagih'] = $tanggal;
+                            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
+                            $inv['inv_periode'] = $periode1blan;
 
-                        $sub_inv['subinvoice_harga'] = $inv['inv_total'];
-                        $sub_inv['subinvoice_ppn'] = '0';
-                        $sub_inv['subinvoice_total'] = $inv['inv_total'];
-                        $sub_inv['subinvoice_qty'] = '1';
+                            $sub_inv['subinvoice_harga'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_ppn'] = '0';
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '1';
 
-                        $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
-                        $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
-                        $pelanggan['reg_deposit'] = $inv['inv_total'];
-                    }
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                            $pelanggan['reg_deposit'] = $inv['inv_total'];
+                        }
 
-                    $update_barang['subbarang_keluar'] = $barang->subbarang_keluar + $request->total;
-                    $update_barang['subbarang_stok'] = $barang->subbarang_stok - $request->total;
+                        $update_barang['subbarang_keluar'] = $barang->subbarang_keluar + $request->total;
+                        $update_barang['subbarang_stok'] = $barang->subbarang_stok - $request->total;
 
-                    $pelanggan['reg_progres'] = '2';
-                    $pelanggan['reg_fat'] = $request->fat;
-                    $pelanggan['reg_fat_opm'] = $request->fat_opm;
-                    $pelanggan['reg_home_opm'] = $request->home_opm;
-                    $pelanggan['reg_los_opm'] = $request->los_opm;
-                    $pelanggan['reg_kode_dropcore'] = $request->kode;
-                    $pelanggan['reg_before'] = $request->before;
-                    $pelanggan['reg_after'] = $request->after;
-                    $pelanggan['reg_penggunaan_dropcore'] = $request->total;
-                    $pelanggan['reg_tgl_pasang'] = $tanggal;
-                    $pelanggan['reg_clientid'] = $idclient;
+                        $pelanggan['reg_progres'] = '2';
+                        $pelanggan['reg_fat'] = $request->fat;
+                        $pelanggan['reg_fat_opm'] = $request->fat_opm;
+                        $pelanggan['reg_home_opm'] = $request->home_opm;
+                        $pelanggan['reg_los_opm'] = $request->los_opm;
+                        $pelanggan['reg_kode_dropcore'] = $request->kode;
+                        $pelanggan['reg_before'] = $request->before;
+                        $pelanggan['reg_after'] = $request->after;
+                        $pelanggan['reg_penggunaan_dropcore'] = $request->total;
+                        $pelanggan['reg_tgl_pasang'] = $tanggal;
+                        $pelanggan['reg_clientid'] = $idclient;
 
-                    $teknisi['teknisi_ket'] = $query->input_nama;
-                    $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
+                        $teknisi['teknisi_ket'] = $query->input_nama;
+                        $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
 
-                    $inv['inv_tgl_pasang'] = $tanggal;
-                    $inv['inv_status'] = 'UNPAID';
-                    $inv['inv_idpel'] = $query->reg_idpel;
-                    $inv['inv_nolayanan'] = $query->reg_nolayanan;
-                    $inv['inv_nama'] = $query->input_nama;
-                    $inv['inv_jenis_tagihan'] = $query->reg_jenis_tagihan;
-                    $inv['inv_profile'] = $query->paket_nama;
-                    $inv['inv_mitra'] = 'SYSTEM';
-                    $inv['inv_kategori'] = 'OTOMATIS';
-                    $inv['inv_diskon'] = '0';
-                    $inv['inv_note'] = $query->input_nama;
+                        $inv['inv_tgl_pasang'] = $tanggal;
+                        $inv['inv_status'] = 'UNPAID';
+                        $inv['inv_idpel'] = $query->reg_idpel;
+                        $inv['inv_nolayanan'] = $query->reg_nolayanan;
+                        $inv['inv_nama'] = $query->input_nama;
+                        $inv['inv_jenis_tagihan'] = $query->reg_jenis_tagihan;
+                        $inv['inv_profile'] = $query->paket_nama;
+                        $inv['inv_mitra'] = 'SYSTEM';
+                        $inv['inv_kategori'] = 'OTOMATIS';
+                        $inv['inv_diskon'] = '0';
+                        $inv['inv_note'] = $query->input_nama;
 
 
 
-                    $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
-                    $sub_inv['subinvoice_status'] = '0';
+                        $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
+                        $sub_inv['subinvoice_status'] = '0';
 
-                    #NILAI TEKNISI
-                    $waktu_kerja = Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->first();
-                    // dd($id_teknisi);
+                        #NILAI TEKNISI
+                        $waktu_kerja = Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->first();
+                        // dd($id_teknisi);
 
-                    $awal  = $waktu_kerja->teknisi_id;
-                    $akhir  = $teknisi['teknisi_job_selesai'];
+                        $awal  = $waktu_kerja->teknisi_id;
+                        $akhir  = $teknisi['teknisi_job_selesai'];
 
-                    $diff  = $akhir - $awal;
-                    if ($diff > 10800) {
-                        $nilai = '25';
-                        $kata = '
+                        $diff  = $akhir - $awal;
+                        if ($diff > 10800) {
+                            $nilai = '25';
+                            $kata = '
 "Manusia itu memiliki potensi dan kesempatan yang sama pula. Maka jangan menyerah untuk terus berusaha mendapatkan yang terbaik"';
-                    } elseif ($diff > 7200 & $diff < 10800) {
-                        $nilai = '50';
-                        $kata = '
+                        } elseif ($diff > 7200 & $diff < 10800) {
+                            $nilai = '50';
+                            $kata = '
 "Hanya karena belum ada yang berhasil melakukannya, bukan berarti kamu tidak mungkin mencapainya"';
-                    } elseif ($diff > 3600 & $diff < 7200) {
-                        $nilai = '75';
-                        $kata = '
+                        } elseif ($diff > 3600 & $diff < 7200) {
+                            $nilai = '75';
+                            $kata = '
 "Kami sangat berterima kasih atas dedikasi dan upaya Anda yang tiada henti untuk unggul dalam pekerjaan.  Kami harap Anda terus menginspirasi dan melambung lebih tinggi"';
-                    } elseif ($diff < 3600) {
-                        $nilai = '100';
-                        $kata = '
+                        } elseif ($diff < 3600) {
+                            $nilai = '100';
+                            $kata = '
 "Kinerja luar biasa Anda di tempat kerja merupakan inspirasi bagi semua orang dan kami sangat terkesan dan bangga. Pertahankan kerja bagus Anda!"';
-                    }
+                        }
 
-                    if ($request->los_opm > 3) {
-                        $nilai2 = '25';
-                    } elseif ($request->los_opm > 1 & $request->los_opm < 2) {
-                        $nilai2 = '50';
-                    } elseif ($request->los_opm < 1) {
-                        $nilai2 = '100';
+                        if ($request->los_opm > 3) {
+                            $nilai2 = '25';
+                        } elseif ($request->los_opm > 1 & $request->los_opm < 2) {
+                            $nilai2 = '50';
+                        } elseif ($request->los_opm < 1) {
+                            $nilai2 = '100';
+                        } else {
+                            $nilai2 = '20';
+                        }
+
+                        $teknisi['teknisi_waktu_kerja'] = $diff;
+                        $teknisi['teknisi_nilai'] = $nilai;
+                        $teknisi['teknisi_nilai_instalasi'] = $nilai2;
+                        $teknisi['teknisi_note'] = $kata;
+
+                        $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
+                        if ($cek_inv) {
+                            $inv['inv_id'] = $cek_inv->inv_id;
+                            $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                            Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
+                            SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
+                        } else {
+                            $inv['inv_id'] = rand(10000, 19999);
+                            $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                            Invoice::create($inv);
+                            SubInvoice::create($sub_inv);
+                        }
+                        Registrasi::where('reg_idpel', $id)->update($pelanggan);
+                        Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
+                        SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
+
+                        $notifikasi = array(
+                            'pesan' => 'Aktivasi Berhasil ',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.teknisi.index')->with($notifikasi);
                     } else {
-                        $nilai2 = '20';
+                        $notifikasi = array(
+                            'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
+                            'alert' => 'error',
+                        );
+                        return redirect()->route('admin.teknisi.aktivasi', ['id' => $id])->with($notifikasi);
                     }
-
-                    $teknisi['teknisi_waktu_kerja'] = $diff;
-                    $teknisi['teknisi_nilai'] = $nilai;
-                    $teknisi['teknisi_nilai_instalasi'] = $nilai2;
-                    $teknisi['teknisi_note'] = $kata;
-
-                    $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
-                    if ($cek_inv) {
-                        $inv['inv_id'] = $cek_inv->inv_id;
-                        $sub_inv['subinvoice_id'] = $inv['inv_id'];
-                        Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
-                        SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
-                    } else {
-                        $inv['inv_id'] = rand(10000, 19999);
-                        $sub_inv['subinvoice_id'] = $inv['inv_id'];
-                        Invoice::create($inv);
-                        SubInvoice::create($sub_inv);
-                    }
-                    Registrasi::where('reg_idpel', $id)->update($pelanggan);
-                    Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
-                    SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
-
-                    $notifikasi = array(
-                        'pesan' => 'Aktivasi Berhasil ',
-                        'alert' => 'success',
-                    );
-                    return redirect()->route('admin.teknisi.index')->with($notifikasi);
                 } else {
                     $notifikasi = array(
-                        'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
+                        'pesan' => 'Router Discconect',
                         'alert' => 'error',
                     );
                     return redirect()->route('admin.teknisi.aktivasi', ['id' => $id])->with($notifikasi);
                 }
             } else {
-                $notifikasi = array(
-                    'pesan' => 'Router Discconect',
-                    'alert' => 'error',
-                );
-                return redirect()->route('admin.teknisi.aktivasi', ['id' => $id])->with($notifikasi);
+                if ($API->connect($ip, $user, $pass)) {
+                    $secret = $API->comm('/ip/hotspot/user/print', [
+                        '?name' => $query->reg_username,
+                    ]);
+                    if ($secret) {
+                        $API->comm('/ip/hotspot/user/set', [
+                            '.id' => $secret[0]['.id'],
+                            'disabled' => 'no',
+                        ]);
+
+                        if ($query->reg_jenis_tagihan == 'FREE') {
+                            $teknisi['teknisi_psb'] = '0';
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir12blan;
+                            $inv['inv_total'] = $tagihan_tanpa_ppn * 12 + ($query->reg_ppn * 12);
+                            $inv['inv_tgl_tagih'] = $tanggal;
+                            $inv['inv_tgl_jatuh_tempo'] = $tag_free1th;
+                            $inv['inv_periode'] = $periode12blan;
+
+                            $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '12';
+
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                        } else if ($query->reg_jenis_tagihan == 'FREE 3 BULAN') {
+                            $teknisi['teknisi_psb'] = '0';
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir3blan;
+                            $inv['inv_total'] = $tagihan_tanpa_ppn * 3 + ($query->reg_ppn * 3);
+                            $inv['inv_tgl_tagih'] = $tanggal;
+                            $inv['inv_tgl_jatuh_tempo'] = $tag_free3bln;
+                            $inv['inv_periode'] = $periode3blan;
+
+                            $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '3';
+
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                        } else if ($query->reg_jenis_tagihan == 'PRABAYAR') {
+                            $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
+                            $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
+                            $inv['inv_tgl_tagih'] = $tanggal;
+                            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
+                            $inv['inv_periode'] = $periode1blan;
+
+                            $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '1';
+
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                        } else if ($query->reg_jenis_tagihan == 'PASCABAYAR') {
+                            $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir_pascabayar;
+                            $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
+                            $inv['inv_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
+                            $inv['inv_tgl_jatuh_tempo'] = $tag_pascabayar;
+                            $inv['inv_periode'] = $periode1blan;
+
+                            $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '1';
+
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                        } else if ($query->reg_jenis_tagihan == 'DEPOSIT') {
+                            $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
+                            $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
+                            $inv['inv_total'] = $query->reg_deposit;
+                            $inv['inv_tgl_tagih'] = $tanggal;
+                            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
+                            $inv['inv_periode'] = $periode1blan;
+
+                            $sub_inv['subinvoice_harga'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_ppn'] = '0';
+                            $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                            $sub_inv['subinvoice_qty'] = '1';
+
+                            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                            $pelanggan['reg_deposit'] = $inv['inv_total'];
+                        }
+
+                        $update_barang['subbarang_keluar'] = $barang->subbarang_keluar + $request->total;
+                        $update_barang['subbarang_stok'] = $barang->subbarang_stok - $request->total;
+
+                        $pelanggan['reg_progres'] = '2';
+                        $pelanggan['reg_fat'] = $request->fat;
+                        $pelanggan['reg_fat_opm'] = $request->fat_opm;
+                        $pelanggan['reg_home_opm'] = $request->home_opm;
+                        $pelanggan['reg_los_opm'] = $request->los_opm;
+                        $pelanggan['reg_kode_dropcore'] = $request->kode;
+                        $pelanggan['reg_before'] = $request->before;
+                        $pelanggan['reg_after'] = $request->after;
+                        $pelanggan['reg_penggunaan_dropcore'] = $request->total;
+                        $pelanggan['reg_tgl_pasang'] = $tanggal;
+                        $pelanggan['reg_clientid'] = $idclient;
+
+                        $teknisi['teknisi_ket'] = $query->input_nama;
+                        $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
+
+                        $inv['inv_tgl_pasang'] = $tanggal;
+                        $inv['inv_status'] = 'UNPAID';
+                        $inv['inv_idpel'] = $query->reg_idpel;
+                        $inv['inv_nolayanan'] = $query->reg_nolayanan;
+                        $inv['inv_nama'] = $query->input_nama;
+                        $inv['inv_jenis_tagihan'] = $query->reg_jenis_tagihan;
+                        $inv['inv_profile'] = $query->paket_nama;
+                        $inv['inv_mitra'] = 'SYSTEM';
+                        $inv['inv_kategori'] = 'OTOMATIS';
+                        $inv['inv_diskon'] = '0';
+                        $inv['inv_note'] = $query->input_nama;
+
+
+
+                        $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
+                        $sub_inv['subinvoice_status'] = '0';
+
+                        #NILAI TEKNISI
+                        $waktu_kerja = Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->first();
+                        // dd($id_teknisi);
+
+                        $awal  = $waktu_kerja->teknisi_id;
+                        $akhir  = $teknisi['teknisi_job_selesai'];
+
+                        $diff  = $akhir - $awal;
+                        if ($diff > 10800) {
+                            $nilai = '25';
+                            $kata = '
+"Manusia itu memiliki potensi dan kesempatan yang sama pula. Maka jangan menyerah untuk terus berusaha mendapatkan yang terbaik"';
+                        } elseif ($diff > 7200 & $diff < 10800) {
+                            $nilai = '50';
+                            $kata = '
+"Hanya karena belum ada yang berhasil melakukannya, bukan berarti kamu tidak mungkin mencapainya"';
+                        } elseif ($diff > 3600 & $diff < 7200) {
+                            $nilai = '75';
+                            $kata = '
+"Kami sangat berterima kasih atas dedikasi dan upaya Anda yang tiada henti untuk unggul dalam pekerjaan.  Kami harap Anda terus menginspirasi dan melambung lebih tinggi"';
+                        } elseif ($diff < 3600) {
+                            $nilai = '100';
+                            $kata = '
+"Kinerja luar biasa Anda di tempat kerja merupakan inspirasi bagi semua orang dan kami sangat terkesan dan bangga. Pertahankan kerja bagus Anda!"';
+                        }
+
+                        if ($request->los_opm > 3) {
+                            $nilai2 = '25';
+                        } elseif ($request->los_opm > 1 & $request->los_opm < 2) {
+                            $nilai2 = '50';
+                        } elseif ($request->los_opm < 1) {
+                            $nilai2 = '100';
+                        } else {
+                            $nilai2 = '20';
+                        }
+
+                        $teknisi['teknisi_waktu_kerja'] = $diff;
+                        $teknisi['teknisi_nilai'] = $nilai;
+                        $teknisi['teknisi_nilai_instalasi'] = $nilai2;
+                        $teknisi['teknisi_note'] = $kata;
+
+                        $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
+                        if ($cek_inv) {
+                            $inv['inv_id'] = $cek_inv->inv_id;
+                            $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                            Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
+                            SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
+                        } else {
+                            $inv['inv_id'] = rand(10000, 19999);
+                            $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                            Invoice::create($inv);
+                            SubInvoice::create($sub_inv);
+                        }
+                        Registrasi::where('reg_idpel', $id)->update($pelanggan);
+                        Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
+                        SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
+
+                        $notifikasi = array(
+                            'pesan' => 'Aktivasi Berhasil ',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.teknisi.index')->with($notifikasi);
+                    } else {
+                        $notifikasi = array(
+                            'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
+                            'alert' => 'error',
+                        );
+                        return redirect()->route('admin.teknisi.aktivasi', ['id' => $id])->with($notifikasi);
+                    }
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Router Discconect',
+                        'alert' => 'error',
+                    );
+                    return redirect()->route('admin.teknisi.aktivasi', ['id' => $id])->with($notifikasi);
+                }
             }
         }
     }
