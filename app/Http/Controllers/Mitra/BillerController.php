@@ -12,6 +12,7 @@ use App\Models\Router\RouterosAPI;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Laporan;
 use App\Models\Transaksi\SubInvoice;
+use App\Models\Transaksi\Transaksi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -163,6 +164,8 @@ class BillerController extends Controller
 
         $admin_user = Auth::user()->id; #ID USER
         $mitra = MitraSetting::where('mts_user_id', $admin_user)->where('mts_limit_minus', '!=', '0')->first();
+        $cek_trx = Transaksi::whereDate('created_at', $tgl_bayar)->where('trx_kategori', 'INVOICE')->first();
+        // return response()->json($cek_trx);
 
 
 
@@ -182,11 +185,6 @@ class BillerController extends Controller
         }
 
         if ($saldo_mitra) {
-            // return response()->json('SALDO CUKUP');
-            // return response()->json($total_bayar . ' Saldo Cukup');
-
-
-
             $biller = MitraSetting::where('mts_user_id', $admin_user)->first(); #mengambil biaya admni biller pada table mitra_setting
 
             $data_pelanggan = (new GlobalController)->data_tagihan($id);
@@ -223,7 +221,6 @@ class BillerController extends Controller
             $datas['inv_tgl_bayar'] = $tgl_bayar;
             $datas['inv_status'] = 'PAID';
             Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
-            // return response()->json($datas);
 
             $data_lap['lap_id'] = 0;
             $data_lap['lap_tgl'] = $tgl_bayar;
@@ -244,6 +241,8 @@ class BillerController extends Controller
             Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
 
 
+
+
             Mutasi::create([
                 'mt_admin' => $admin_user,
                 'mt_mts_id' => $admin_user,
@@ -257,8 +256,19 @@ class BillerController extends Controller
             ]);
 
 
-
-
+            if ($cek_trx) {
+                $data_trx['trx_admin'] = 'SYSTEM';
+                $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
+                $data_trx['trx_qty'] = $cek_trx->trx_qty + 1;
+                $data_trx['trx_total'] = $cek_trx->trx_total + $data_pelanggan->inv_total;
+                Transaksi::whereDate('created_at', $tgl_bayar)->update($data_trx);
+            } else {
+                $data_trx['trx_admin'] = 'SYSTEM';
+                $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
+                $data_trx['trx_qty'] = 1;
+                $data_trx['trx_total'] = $data_pelanggan->inv_total;
+                Transaksi::whereDate('created_at', $tgl_bayar)->create($data_trx);
+            }
 
             $router = Router::whereId($data_pelanggan->reg_router)->first();
             $ip =   $router->router_ip . ':' . $router->router_port_api;
