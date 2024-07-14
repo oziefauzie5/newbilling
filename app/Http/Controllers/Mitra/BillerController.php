@@ -20,19 +20,21 @@ use Illuminate\Support\Facades\DB;
 
 class BillerController extends Controller
 {
-    public function pembayaran()
-    {
-        $data = array(
-            'tittle' => 'TRANSAKSI',
-            'data' => DB::table('unpaids')
-                ->join('registrasis', 'registrasis.id', '=', 'unpaids.upd_idpel')
-                ->join('pelanggans', 'pelanggans.idpel', '=', 'unpaids.upd_idpel')
-                ->join('pakets', 'pakets.paket_id', '=', 'pelanggans.paket')
-                ->where('unpaids.upd_status', '=', 'UNPAID')
-                ->get(),
-        );
-        return view('mitra/index', $data);
-    }
+    // public function pembayaran()
+    // {
+
+    //     $data = array(
+    //         'tittle' => 'TRANSAKSI',
+    //         'data' => DB::table('unpaids')
+    //             ->join('registrasis', 'registrasis.id', '=', 'unpaids.upd_idpel')
+    //             ->join('pelanggans', 'pelanggans.idpel', '=', 'unpaids.upd_idpel')
+    //             ->join('pakets', 'pakets.paket_id', '=', 'pelanggans.paket')
+    //             ->where('unpaids.upd_status', '=', 'UNPAID')
+    //             ->where('unpaids.upd_status', '=', 'UNPAID')
+    //             ->get(),
+    //     );
+    //     return view('mitra/index', $data);
+    // }
 
     public function getpelanggan(Request $request, $id)
     {
@@ -57,25 +59,25 @@ class BillerController extends Controller
         }
         return response()->json($data);
     }
-    public function getDataLunas(Request $request, $id)
-    {
-        $admin_user = Auth::user()->id;
-        $data_bayar = array(
-            'data' => DB::table('unpaids')
-                ->join('registrasis', 'registrasis.id', '=', 'unpaids.upd_idpel')
-                ->join('pelanggans', 'pelanggans.idpel', '=', 'unpaids.upd_idpel')
-                ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'unpaids.upd_id')
-                ->where('unpaids.upd_status', '=', 'PAID')
-                ->where('unpaids.upd_id', '=', $id)
-                ->orWhere('unpaids.upd_nolayanan', '=', $id)
-                ->first(),
-            'sumharga' => SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'),
-            'sumppn' => SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'),
-            'biller' => MitraSetting::first(),
-            'saldo' => (new globalController)->total_mutasi($admin_user),
-        );
-        return response()->json($data_bayar);
-    }
+    // public function getDataLunas(Request $request, $id)
+    // {
+    //     $admin_user = Auth::user()->id;
+    //     $data_bayar = array(
+    //         'data' => DB::table('unpaids')
+    //             ->join('registrasis', 'registrasis.id', '=', 'unpaids.upd_idpel')
+    //             ->join('pelanggans', 'pelanggans.idpel', '=', 'unpaids.upd_idpel')
+    //             ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'unpaids.upd_id')
+    //             ->where('unpaids.upd_status', '=', 'PAID')
+    //             ->where('unpaids.upd_id', '=', $id)
+    //             ->orWhere('unpaids.upd_nolayanan', '=', $id)
+    //             ->first(),
+    //         'sumharga' => SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'),
+    //         'sumppn' => SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'),
+    //         'biller' => MitraSetting::first(),
+    //         'saldo' => (new globalController)->total_mutasi($admin_user),
+    //     );
+    //     return response()->json($data_bayar);
+    // }
     public function print(Request $request, $id)
     {
         $admin_user = Auth::user()->id;
@@ -100,20 +102,7 @@ class BillerController extends Controller
         // dd($data['data']);
         return view('biller/print', $data);
     }
-    // public function list_trx()
-    // {
-    //     $admin_user = Auth::user()->id;
-    //     $data['admin'] = Auth::user()->name;
-    //     $data['data'] = DB::table('invoices')
-    //         ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-    //         ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-    //         ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
-    //         ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'invoices.inv_akun')
-    //         ->join('users', 'users.id', '=', 'invoices.inv_admin')
-    //         ->where('invoices.inv_status', '=', 'PAID')
-    //         ->get();
-    //     return view('biller/print', $data);
-    // }
+
     public function mutasi()
     {
         $admin_user = Auth::user()->id;
@@ -154,19 +143,7 @@ class BillerController extends Controller
         $data['tittle'] = 'Payment';
         return view('biller/payment', $data);
     }
-    public function details($id)
-    {
 
-        $admin_user = Auth::user()->id;
-        $data['admin'] = Auth::user()->name;
-        $data['data'] = DB::table('invoices')
-            ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-            ->where('invoices.inv_id', '=', $id)
-            ->where('invoices.inv_status', '=', 'PAID')
-            ->get();
-        dd($data['data']);
-        return view('biller/details', $data);
-    }
     public function index()
     {
         $month = Carbon::now()->format('m');
@@ -175,7 +152,7 @@ class BillerController extends Controller
         $data['biaya_adm'] = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
 
 
-        $data['data'] = Invoice::where('inv_status', '=', 'PAID')->get();
+        $data['data'] = Invoice::where('inv_status', '=', 'PAID')->where('inv_admin', $admin_user)->get();
         return view('biller/index', $data);
     }
 
