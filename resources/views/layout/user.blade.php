@@ -224,6 +224,8 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			url = url.replace(':id', id);
 			var url_bayar = '{{ route("admin.biller.bayar", ":id") }}';
 			url_bayar = url_bayar.replace(':id', id);
+			var url_print = '{{ route("admin.biller.print", ":id") }}';
+			url_print = url_print.replace(':id', id);
 			if (id) {
 				$.ajax({
 				url: url,
@@ -299,7 +301,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 											success: function(data) {
 												
 												if(data.alert=='success'){
-													swal(data.pesan, data.alert, {
+													swal(data.pesan, {
 														icon : data.alert,
 														buttons: {        			
 															confirm: {
@@ -307,9 +309,9 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 															}
 														},
 													});
-													$("#buton").html('<input value="Lunas" disable class="btn btn-block  btn-success" ></input>');
+													$("#buton").html('<a href="'+url_print+'" target="_blank"><button class="btn btn-block  btn-success">Print</button></a>');
 											}else {
-												swal(data.pesan, data.alert, {
+												swal(data.pesan, {
 														icon : data.alert,
 														buttons: {        			
 															confirm: {
@@ -356,17 +358,29 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 				</script>
 	<script>
 		function comingson() {
-			// Swal.fire("Comingsoon");
 			swal('Comingsoon');
 		}
 		$(document).ready(function() {
 	
 			
-	$('#table').DataTable({
-		"pageLength": 5,
-		
-	});
-	});
+		$('#table').DataTable({
+			"pageLength": 5,
+			
+		});
+		$('#get_invoice').DataTable({
+			"pageLength": 5,
+			
+		});
+		});
+	</script>
+	<script>
+			$('.href').click(function(){
+							var id =$(this).data("id");
+							var url = '{{ route("admin.biller.print", ":id") }}';
+							url = url.replace(':id', id);
+							// alert(url);
+							window.location=url;
+						});
 	</script>
 	<script>
 		$('#lineChart').sparkline([102,109,120,99,110,105,115], {

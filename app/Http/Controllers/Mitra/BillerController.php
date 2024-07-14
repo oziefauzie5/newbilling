@@ -79,38 +79,45 @@ class BillerController extends Controller
     public function print(Request $request, $id)
     {
         $admin_user = Auth::user()->id;
-        $data_bayar = array(
-            'data' => DB::table('unpaids')
-                ->join('registrasis', 'registrasis.id', '=', 'unpaids.upd_idpel')
-                ->join('pelanggans', 'pelanggans.idpel', '=', 'unpaids.upd_idpel')
-                ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'unpaids.upd_id')
-                ->join('paids', 'paids.id_unpaid', '=', 'unpaids.upd_id')
-                ->join('users', 'users.id', '=', 'paids.admin')
-                ->where('unpaids.upd_status', '=', 'PAID')
-                ->where('unpaids.upd_id', '=', $id)
-                ->first(),
-            'sumharga' => SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'),
-            'sumppn' => SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'),
-            'datainvoice' => SubInvoice::where('subinvoice_id', $id)->get(),
-            'biller' => MitraSetting::first(),
-            'saldo' => (new globalController)->total_mutasi($admin_user),
-        );
+        $data['admin'] = Auth::user()->name;
+        $data['data'] = DB::table('invoices')
+            ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+            ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'invoices.inv_akun')
+            ->join('users', 'users.id', '=', 'invoices.inv_admin')
+            ->where('invoices.inv_id', '=', $id)
+            ->orWhere('invoices.inv_nolayanan', '=', $id)
+            ->where('invoices.inv_status', '=', 'PAID')
+            ->first();
+        $data['sumharga'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_harga');
+        $data['sumppn'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_ppn');
+        $data['datainvoice'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->get();
+        $data['biller'] = MitraSetting::first();
+        $data['saldo'] = (new globalController)->total_mutasi($admin_user);
 
-        // dd($data_bayar->sumharga);
-        return view('mitra/print', $data_bayar);
+
+        // dd($data['data']);
+        return view('biller/print', $data);
     }
+    // public function list_trx()
+    // {
+    //     $admin_user = Auth::user()->id;
+    //     $data['admin'] = Auth::user()->name;
+    //     $data['data'] = DB::table('invoices')
+    //         ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+    //         ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+    //         ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+    //         ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'invoices.inv_akun')
+    //         ->join('users', 'users.id', '=', 'invoices.inv_admin')
+    //         ->where('invoices.inv_status', '=', 'PAID')
+    //         ->get();
+    //     return view('biller/print', $data);
+    // }
     public function mutasi()
     {
         $admin_user = Auth::user()->id;
-
         $data['tittle'] = 'MITRA';
-        // $data['datauser']= DB::table('users')
-        //     ->select('users.name AS nama', 'users.alamat_lengkap', 'users.id', 'users.hp', 'users.username', 'roles.name', 'mitra_settings.mts_limit_minus', 'mitra_settings.mts_kode_unik', 'mitra_settings.mts_komisi')
-        //     ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-        //     ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-        //     ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
-        //     ->where('users.id', '=', $admin_user)
-        //     ->first();
         $query =  DB::table('mutasis')
             ->orderBy('mutasis.id', 'DESC')
             ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasis.mt_mts_id')
@@ -126,7 +133,6 @@ class BillerController extends Controller
 
         $data['start_date'] =  $request->start_date;
         $data['end_date'] =  $request->end_date;
-        // $end_date =   date('Y-m-d', strtotime($request->query('start_date')));
 
         $query =  DB::table('mutasis')->select('mutasis.*', 'mutasis.created_at as tgl', 'mitra_settings.*')
             ->orderBy('tgl', 'ASC')
@@ -135,12 +141,7 @@ class BillerController extends Controller
             ->whereDate('mutasis.created_at', '>=', $data['start_date'])
             ->whereDate('mutasis.created_at', '<=', $data['end_date']);
         $data['mutasi'] = $query->get();
-        // dd($data['mutasi']);
         $data['saldo'] = (new globalController)->total_mutasi($data['admin_user']);
-
-
-        // return view('biller/pdf', $data);
-
 
         $pdf = App::make('dompdf.wrapper');
         $html = view('biller/pdf', $data)->render();
@@ -156,34 +157,25 @@ class BillerController extends Controller
     public function details($id)
     {
 
-        $data = array(
-            'tittle' => 'Payment',
-            'invoice' => $id,
-        );
-        //    dd($id);
-        return view('mitra/details', $data);
+        $admin_user = Auth::user()->id;
+        $data['admin'] = Auth::user()->name;
+        $data['data'] = DB::table('invoices')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            ->where('invoices.inv_id', '=', $id)
+            ->where('invoices.inv_status', '=', 'PAID')
+            ->get();
+        dd($data['data']);
+        return view('biller/details', $data);
     }
     public function index()
     {
         $month = Carbon::now()->format('m');
         $admin_user = Auth::user()->id;
-        $saldo = (new globalController)->total_mutasi($admin_user);
-        $biaya_adm = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
+        $data['saldo'] = (new globalController)->total_mutasi($admin_user);
+        $data['biaya_adm'] = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
 
 
-        $data = array(
-            'tittle' => 'Payment',
-            'saldo' => $saldo,
-            'biaya_adm' => $biaya_adm,
-            'data_paid' => DB::table('invoices')
-                // ->join('registrasis', 'registrasis.id', '=', 'invoices.upd_idpel')
-                ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-                // ->join('users', 'users.id', '=', 'paids.admin')
-                ->where('invoices.inv_status', '=', 'PAID')
-                // ->where('paids.admin', '=', $admin_user)
-                ->get(),
-        );
+        $data['data'] = Invoice::where('inv_status', '=', 'PAID')->get();
         return view('biller/index', $data);
     }
 
