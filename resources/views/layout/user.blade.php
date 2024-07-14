@@ -31,7 +31,7 @@
   /* border-style:solid; */
 	border-width: 10px;
     border-color: rgb(255, 255, 255);
-    width: 60px;
+    width: 40px;
     border-radius: 15px;
 
 	}
