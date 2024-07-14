@@ -40,33 +40,33 @@
                         <table>
                             <tr>
                               <td>
-                                <a href="{{ route('admin.biller.payment') }}" class="card mb-2 card_custom1" style="width: 6rem;">
+                                <a href="{{ route('admin.biller.payment') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/payment.png') }}" class="card-img-center p-3" alt="...">
                                 </a>
                                 <div class="text-light mb-3 text-center">Payment</div>
                               </td>
                               <td>
-                                <a href="#" onclick="comingson()" class="card mb-2 card_custom1" style="width: 6rem;">
+                                <a href="#" onclick="comingson()" class="card mb-2 card_custom1" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/top-up.png') }}" class="card-img-center p-3" alt="...">
                                 </a>
-                                <div class="text-light mb-3 text-center">TopUp Saldo</div>
+                                <div class="text-light mb-3 text-center">TopUp</div>
                               </td>
                               <td>
-                                <a href="{{route('admin.biller.mutasi') }}" class="card mb-2 card_custom1" style="width: 6rem;">
+                                <a href="{{route('admin.biller.mutasi') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/mutasi.png') }}" class="card-img-center p-3" alt="...">
                                 </a>
                                 <div class="text-light mb-3 text-center">Mutasi</div>
                               </td>
                               @role('KOLEKTOR')
                               <td>
-                                <a href="#" onclick="comingson()" class="card mb-2 card_custom1" style="width: 6rem;">
+                                <a href="#" onclick="comingson()" class="card mb-2 card_custom1" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/transaksi.png') }}" class="card-img-center p-3" alt="...">
                                 </a>
                                 <div class="text-light mb-3 text-center">Tagihan</div>
                               </td>
                               @endrole
                               <td>
-                                <a href="{{route('logout')}}" class="card mb-2 card_custom1" style="width: 6rem;">
+                                <a href="{{route('logout')}}" class="card mb-2 card_custom1" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/shutdown.png') }}" class="card-img-center p-3" alt="...">
                                 </a>
                                 <div class="text-light mb-3 text-center">Logout</div>
