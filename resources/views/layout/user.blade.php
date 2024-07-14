@@ -29,10 +29,10 @@
 		.img{
   width: 20px;
   /* border-style:solid; */
-	border-width: 10px;
+	border-width: 20px;
     border-color: rgb(255, 255, 255);
-    width: 5px;
-    border-radius: 15px;
+    width: 10px;
+    border-radius: 3px;
 
 	}
 	.card_custom{

@@ -28,11 +28,12 @@
             </div>
           </div>
           <section class="content mt-3">
-            <div class="card card_custom1 p-3">
+            <div class="card card_custom1">
                 <div id="progress"></div>
             <div  id="text" class="text-center text-danger card"></div>
 <div class="card" id="hidden_div" style="display:none;">
-    <table class="table table-sm">
+  <div class="table-responsive">
+    <table class="display table table-striped table-hover text-nowrap" >
         <tbody>
           <tr>
             <td width="115px">Pelanggan</td>
@@ -96,6 +97,7 @@
           </tr>
         </tbody>
       </table>
+    </div>
       <div id="buton"></div>
     </div>
     <a href="{{ URL::previous() }}" class="btn btn-block btn-primary text-light">Kembali</a>
