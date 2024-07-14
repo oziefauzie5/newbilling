@@ -66,7 +66,8 @@ class InvoiceController extends Controller
     {
         $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->where('inv_id', $id)->first();
-        $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')->where('invoices.inv_id', $id)->get();
+        $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+        ->where('invoices.inv_id', $id)->get();
 
 
         $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');

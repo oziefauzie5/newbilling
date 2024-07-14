@@ -11,9 +11,6 @@
         </div>
     </div>
     <div class="page-inner mt--5">
-
-
-
         <div class="row mt--5">
             <div class="col-6 col-sm-6">
               <div class="card ">

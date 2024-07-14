@@ -193,7 +193,7 @@ class SementaraMigrasiController extends Controller
                     'password' => $data['reg_password']   == '' ? '' : $data['reg_password'],
                     'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
                     'comment' => $request->reg_nama  == '' ? '' : $request->reg_nama,
-                    'disabled' => 'yes',
+                    'disabled' => 'no',
                 ]);
                 // dd($request->reg_nama);
                 Registrasi::create($data);

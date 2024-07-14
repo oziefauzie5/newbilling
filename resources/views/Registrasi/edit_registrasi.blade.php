@@ -115,30 +115,33 @@
                     @else
                     <option value="">Pilih</option>
                     <option value="PPP">PPP</option>
+                    <option value="HOTSPOT">HOTSPOT</option>
                     {{-- <option value="HOTSPOT">HOTSPOT</option> --}}
                     @endif
                   </select>
                 </div>
               </div>
-              <div class="form-group row">
-                  <label for="router" class="col-sm-2 col-form-label">Router</label>
-                  <div class="col-sm-10">
-                    <select class="form-control" id="regrouter" name="reg_router" >
-                      @if( $data->reg_router)
-                    <option value="{{ $data->reg_router}}">{{ $data->router_nama}}</option>
-                    <option value="">Pilih</option>
-                    @foreach($data_router as $s)
-                    <option value="{{$s->id}}">{{$s->router_nama}}</option>
-                    @endforeach
-                    @else
-                    <option value="">Pilih</option>
-                    @foreach($data_router as $s)
-                    <option value="{{$s->id}}">{{$s->router_nama}}</option>
-                    @endforeach
-                    @endif
-                    </select>
-                  </div>
+             @if($data->reg_layanan=='PPP')
+             <div class="form-group row">
+              <label for="router" class="col-sm-2 col-form-label">Router</label>
+              <div class="col-sm-10">
+                <select class="form-control" id="regrouter" name="reg_router" >
+                  @if( $data->reg_router)
+                <option value="{{ $data->reg_router}}">{{ $data->router_nama}}</option>
+                <option value="">Pilih</option>
+                @foreach($data_router as $s)
+                <option value="{{$s->id}}">{{$s->router_nama}}</option>
+                @endforeach
+                @else
+                <option value="">Pilih</option>
+                @foreach($data_router as $s)
+                <option value="{{$s->id}}">{{$s->router_nama}}</option>
+                @endforeach
+                @endif
+                </select>
               </div>
+          </div>
+             @endif
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">IP address</label>
                 <div class="col-sm-10">

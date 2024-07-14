@@ -366,6 +366,12 @@
 							</a>
 						</li>
 						@role('admin|STAF ADMIN')
+						<li class="nav-item {{\Route::is('admin.mitra.*') ? 'active' : ''}}">
+							<a href="{{route('admin.mitra.index')}}">
+								<i class="fas fa-users"></i>
+								<p>Mitra</p>
+							</a>
+						</li>
 						<li class="nav-item {{\Route::is('admin.vhc.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#vhc">
 								<i class="fas fa-users"></i>

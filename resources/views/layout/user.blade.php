@@ -28,7 +28,7 @@
 	<style>
 		.img{
   width: 20px;
-  border-style:solid;
+  /* border-style:solid; */
 	border-width: 10px;
     border-color: rgb(255, 255, 255);
     width: 60px;
@@ -41,6 +41,7 @@
 	.card_custom1{
 		border-radius: 30px;;
 	}
+	
     
 	</style>
 </head>
@@ -129,6 +130,7 @@
 	<!-- Atlantis DEMO methods, don't include it in your project! -->
 	<!-- <script src="{{asset('atlantis/assets/js/setting-demo.js')}}"></script>
 	<script src="{{asset('atlantis/assets/js/demo.js')}}"></script> -->
+
 	<script>
 
 $(document).ready(function() {
@@ -169,7 +171,7 @@ $(document).ready(function() {
                         },
                         dataType: 'json',
                         success: function(data) {
-                            // console.log(data);
+                            // 
                             if (data.subbarang_stok) {
                               var after  = $("#after").val();
                               // var before = $("#before").val();
@@ -191,7 +193,7 @@ $(document).ready(function() {
                               }
                             },
                             error: function(error){
-                              // console.log('eeeeror');
+                              // or');
                               $('#before').val('');
                               $("#before").css("border-color", "red");
                               $("#notif").html('<div class="alert alert-danger" role="alert">Kode barang tidak ditemukan</div>');
@@ -212,6 +214,159 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 						},
 					});
 @endif
+	</script>
+	{{-- #BILLER PAYMENT --}}
+	<script>
+		$('#cari_pelanggan').click(function(e) {
+			let id   = $('#biller_idpel').val();
+			$("#progress").html('<button class="btn btn-block btn-primary text-light" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...</button>');
+			var url = '{{ route("admin.biller.getpelanggan", ":id") }}';
+			url = url.replace(':id', id);
+			var url_bayar = '{{ route("admin.biller.bayar", ":id") }}';
+			url_bayar = url_bayar.replace(':id', id);
+			if (id) {
+				$.ajax({
+				url: url,
+				type: 'GET',
+							data: {
+								'_token': '{{ csrf_token() }}'
+							},
+							dataType: 'json',
+							success: function(data) {
+								if(data['data']=='PAID'){
+									$("#progress").html('');
+									$("#text").html('Tagihan telah Terbayar');
+									// data']);
+								} else {
+								if (data['data']) {
+									// $('#myModal').modal('hide');
+									document.getElementById('hidden_div').style.display = "block";
+									$("#progress").html('');
+									$("#text").html('');
+									var harga = data['sumharga'];
+									var ppn = data['data'].subinvoice_ppn;
+									var komisi = data['biller'].mts_komisi;
+									var diskon = data['data'].inv_diskon;
+									if(diskon == null){
+										diskon =0;
+									}else if(ppn == null){
+										ppn =0;
+									}else if(harga==null){
+										harga=0
+									}else if(komisi==null){
+										komisi=0
+									}
+									var total = parseInt(harga)+parseInt(ppn)+parseInt(komisi)-parseInt(diskon);
+									document.getElementById("upd_pelanggan").innerHTML =data['data'].input_nama;
+									document.getElementById("hp").innerHTML =data['data'].input_hp;
+									document.getElementById("nolay").innerHTML =data['data'].inv_nolayanan;
+									document.getElementById("alamat_pasang").innerHTML =data['data'].input_alamat_pasang;
+									document.getElementById("upd_kategori").innerHTML =data['data'].inv_kategori;
+									document.getElementById("upd_tgl_tagih").innerHTML =data['data'].inv_tgl_tagih;
+									document.getElementById("upd_tgl_jatuh_tempo").innerHTML =data['data'].inv_tgl_jatuh_tempo;
+									document.getElementById("subinvoice_harga").innerHTML = new Intl.NumberFormat('id-ID', {
+																				style: 'currency',minimumFractionDigits: 0,
+																				currency: 'IDR',
+																				}).format(data['sumharga']);
+									document.getElementById("subinvoice_diskon").innerHTML = new Intl.NumberFormat('id-ID', {
+																				style: 'currency',minimumFractionDigits: 0,
+																				currency: 'IDR',
+																				}).format(data['data'].inv_diskon);
+									document.getElementById("subinvoice_ppn").innerHTML = new Intl.NumberFormat('id-ID', {
+																				style: 'currency',minimumFractionDigits: 0,
+																				currency: 'IDR',
+																				}).format(data['data'].subinvoice_ppn);
+									document.getElementById("biaya_layanan").innerHTML = new Intl.NumberFormat('id-ID', {
+																				style: 'currency',minimumFractionDigits: 0,
+																				currency: 'IDR',
+																				}).format(data['biller'].mts_komisi);
+									document.getElementById("subinvoice_total").innerHTML = new Intl.NumberFormat('id-ID', {
+																				style: 'currency',minimumFractionDigits: 0,
+																				currency: 'IDR',
+																				}).format(total);
+									$("#buton").html('<input value="Proses Pembayaran" id="bayar" class="btn btn-block  btn-primary" ></input>');
+									$('#bayar').click(function(e) {
+	
+										$("#buton").html('<button class="btn btn-block btn-primary text-light " type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...</button>');
+	
+										$.ajax({
+											url: url_bayar,
+											type: 'GET',
+											data: {
+												'_token': '{{ csrf_token() }}'
+											},
+											dataType: 'json',
+											success: function(data) {
+												
+												if(data.alert=='success'){
+													swal(data.pesan, data.alert, {
+														icon : data.alert,
+														buttons: {        			
+															confirm: {
+																className : 'btn btn-success'
+															}
+														},
+													});
+													$("#buton").html('<input value="Lunas" disable class="btn btn-block  btn-success" ></input>');
+											}else {
+												swal(data.pesan, data.alert, {
+														icon : data.alert,
+														buttons: {        			
+															confirm: {
+																className : 'btn btn-error'
+															}
+														},
+													});
+												$("#buton").html('<input value="Proses Pembayaran" id="bayar" class="btn btn-block btn-primary text-light " ></input>');
+											}
+	
+											},
+											error: function(error) {
+												$("#buton").html('<input value="Proses Pembayaran" id="bayar" class="btn btn-block btn-primary text-light" ></input>');
+												 $("#text").html('Transaksi Gagal. Coba lagi nanti...');
+	
+	
+											},
+										});
+	
+	
+	
+									});
+								}  else {
+									document.getElementById('hidden_div').style.display = "none";
+									$("#progress").html('');
+									$("#text").html('<strong>No. Invoice/Id Pelanggan tidak ditemukan</strong>');
+								}
+								}
+							},
+							error: function(error) {
+								$("#progress").html('');
+								$("#text").html('error. Coba lagi nanti...');
+							},
+	
+						});
+					} else {
+						document.getElementById('hidden_div').style.display = "none";
+								$("#progress").html('');
+								$("#text").html('Masukan No. Invoice/Id Pelanggan terlebih dahulu');
+						$('#harga').empty();
+					}
+	
+				});
+				</script>
+	<script>
+		function comingson() {
+			// Swal.fire("Comingsoon");
+			swal('Comingsoon');
+		}
+		$(document).ready(function() {
+	
+			
+	$('#table').DataTable({
+		"pageLength": 5,
+		
+	});
+	});
 	</script>
 	<script>
 		$('#lineChart').sparkline([102,109,120,99,110,105,115], {

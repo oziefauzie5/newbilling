@@ -7,6 +7,8 @@ use App\Http\Controllers\Barang\KategoriController;
 use App\Http\Controllers\Barang\SupplierControoler;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Hotspot\HotspotController;
+use App\Http\Controllers\Mitra\BillerController;
+use App\Http\Controllers\Mitra\MitraController;
 use App\Http\Controllers\NOC\NocController;
 use App\Http\Controllers\Pelanggan\LoginPelangganController;
 use App\Http\Controllers\Pelanggan\PelangganController;
@@ -169,6 +171,26 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::delete('/invoice/addons-hapus/{id}/{inv}/{tot}', [InvoiceController::class, 'addons_delete'])->name('inv.addons_delete')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/invoice/Suspand', [InvoiceController::class, 'suspand_otomatis'])->name('inv.suspand_otomatis')->middleware(['role:admin|STAF ADMIN']);
 
+    Route::get('/mitra', [MitraController::class, 'index'])->name('mitra.index')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/mitra/Create', [MitraController::class, 'create'])->name('mitra.create')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/mitra/Add-Mitra', [MitraController::class, 'addmitra'])->name('mitra.addmitra')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/mitra/data/{id}', [MitraController::class, 'data'])->name('mitra.data')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/mitra/data/top-up/{id}', [MitraController::class, 'topup'])->name('mitra.topup')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/mitra/data/debet-saldo/{id}', [MitraController::class, 'debet_saldo'])->name('mitra.debet_saldo')->middleware(['role:admin|STAF ADMIN']);
+
+    Route::get('/biller/index', [BillerController::class, 'index'])->name('biller.index')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/pembayaran', [BillerController::class, 'pembayaran'])->name('biller.pembayaran')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/data-pembayaran/{id}', [BillerController::class, 'getpelanggan'])->name('biller.getpelanggan')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/payment', [BillerController::class, 'payment'])->name('biller.payment')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/pembayaran/{id}', [BillerController::class, 'bayar'])->name('biller.bayar')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/data-lunas/{id}', [BillerController::class, 'getDataLunas'])->name('biller.getDataLunas')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/details/{id}', [BillerController::class, 'details'])->name('biller.details')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/mutasi', [BillerController::class, 'mutasi'])->name('biller.mutasi')->middleware(['role:KOLEKTOR']);
+    Route::post('/biller/export/pdf', [BillerController::class, 'mutasi_pdf'])->name('biller.export.mutasi')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/print/{id}', [BillerController::class, 'print'])->name('biller.print')->middleware(['role:KOLEKTOR']);
+
+    // Route::get('/Kolektor/Tagihan', [KolektorController::class, 'index'])->name('kolektor.index');
+    // Route::get('/Kolektor/kolektor-payment/{id}', [KolektorController::class, 'kolektor_payment'])->name('kolektor.kolektor_payment');
 
     Route::get('/sales/index', [SalesController::class, 'index'])->name('sales.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/sales/list', [SalesController::class, 'list_registrasi'])->name('sales.list_registrasi')->middleware(['role:admin|STAF ADMIN']);
