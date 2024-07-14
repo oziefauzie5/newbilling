@@ -11,7 +11,8 @@
         </div>
     </div>
     <div class="page-inner mt--5">
-        <div class="row mt--5">
+      <div class="h5 mt--5 text-light font-weight-bold ">COUNTER : {{$nama}}</div><br>
+      <div class="row mt--1">
             <div class="col-6 col-sm-6">
               <div class="card ">
                 <div class="card-body p-3 text-center">
@@ -34,7 +35,7 @@
             </div>
           </div>
 
-          <section class="content mt-3">
+          <section class="content">
                 <div class="card card-primary card_custom1 p-3">
                     <div class="table-responsive">
                         <table>

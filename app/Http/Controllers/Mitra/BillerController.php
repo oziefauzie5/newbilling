@@ -148,6 +148,7 @@ class BillerController extends Controller
     {
         $month = Carbon::now()->format('m');
         $admin_user = Auth::user()->id;
+        $data['nama'] = Auth::user()->name;
         $data['saldo'] = (new globalController)->total_mutasi($admin_user);
         $data['biaya_adm'] = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
 
