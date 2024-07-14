@@ -17,8 +17,8 @@
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-danger">
                   </div>
-                  <div class="h1 m-0">Rp {{ number_format($biaya_adm) }}</div>
-                  <div class="text-muted mb-3">PENDAPATAN</div>
+                  <div class="h3 m-0">Rp {{ number_format($biaya_adm) }}</div>
+                  <div class="h5 text-muted mb-3">PENDAPATAN</div>
                 </div>
               </div>
             </div>
@@ -27,8 +27,8 @@
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-success">
                   </div>
-                  <div class="h1 m-0">Rp {{ number_format($saldo) }}</div>
-                  <div class="text-muted mb-3">SALDO</div>
+                  <div class="h3 m-0">Rp {{ number_format($saldo) }}</div>
+                  <div class="h5 text-muted mb-3">SALDO</div>
                 </div>
               </div>
             </div>

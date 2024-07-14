@@ -36,10 +36,10 @@
 
 	}
 	.card_custom{
-		border-radius: 15px; height:100%; background: linear-gradient(to right, #5d69be, #C89FEB);
+		border-radius: 20px; height:100%; background: linear-gradient(to right, #5d69be, #C89FEB);
 	}
 	.card_custom1{
-		border-radius: 15px;;
+		border-radius: 20px;;
 	}
 	
     
