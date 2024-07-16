@@ -300,7 +300,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 											},
 											dataType: 'json',
 											success: function(data) {
-												console.log(data);
 												if(data.alert=='success'){
 													swal(data.pesan, {
 														icon : data.alert,

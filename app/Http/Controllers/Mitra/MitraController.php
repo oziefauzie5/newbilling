@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Mitra;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController as GlobalGlobalController;
-use App\Http\Controllers\globalController;
-use App\Http\Controllers\WhatsappController;
-use App\Models\Applikasi\SettingAkun as ApplikasiSettingAkun;
+use App\Models\Applikasi\SettingAkun;
 use App\Models\Global\ConvertNoHp;
-use App\Models\Laporan\laporanharian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Role;
@@ -16,9 +13,10 @@ use App\Models\Mitra\MitraSetting;
 use App\Models\Mitra\Mutasi;
 use App\Models\User;
 use App\Models\Model_Has_Role;
-use App\Models\Setting\SettingAkun;
 use App\Models\Permission;
 use App\Models\RoleHasPermission;
+use App\Models\Transaksi\Laporan;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
@@ -75,7 +73,7 @@ class MitraController extends Controller
 
         Role::updateorcreate($data_level);
         Permission::updateorcreate($data_level);
-        $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
+        $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
         $d = date_create($request->tgl_gabung);
         $th = date_format($d, "Y");
         $bl = date_format($d, "m");
@@ -127,6 +125,81 @@ class MitraController extends Controller
         );
         return redirect()->route('admin.mitra.index')->with($notifikasi);
     }
+    public function store_edit(Request $request, $id)
+    {
+
+        $get =  explode("|", $request->level);
+        $level_id = $get[0];
+        $level = $get[1];
+
+        $data_level['id'] = $level_id;
+        $data_level['name'] = $level;
+        $data_level['guard_name'] = 'web';
+
+        Role::updateorcreate($data_level);
+        Permission::updateorcreate($data_level);
+
+        $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
+        $data['email'] = $request->email;
+        $data['ktp'] = $request->ktp;
+        $data['hp'] = $nomorhp;
+        $data['alamat_lengkap'] = strtoupper($request->alamat_lengkap);
+        $data['name'] = strtoupper($request->name);
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+        if (User::whereId($id)->first('username')->username != $request->username) {
+            $data['username'] = $request->username;
+        }
+
+
+
+        $datarole['role_id'] = $level_id;
+        $datarole['model_type'] = 'App\Models\User';
+        $datarole['model_id'] = $id;
+
+        $datarolepermission['permission_id'] = $level_id;
+        $datarolepermission['role_id'] = $level_id;
+
+        $mitra_setting['mts_limit_minus'] = $request->limit_minus;
+        $mitra_setting['mts_kode_unik'] = $request->kode_unik;
+        $mitra_setting['mts_komisi'] = $request->mts_komisi;
+
+        // MitraSetting::where('mts_user_id', $id)->update($mitra_setting);
+
+        #DISABLE SEMENTAR UNTUK TES WA
+        if (!RoleHasPermission::where('permission_id', $level_id)
+            ->where('role_id', $level_id)
+            ->get()
+            ->isEmpty()) {
+            User::whereId($id)->update($data);
+            Model_Has_Role::where('model_id', $id)->update($datarole);
+            // dd(1);
+        } else {
+            User::whereId($id)->update($data);
+            Model_Has_Role::where('model_id', $id)->update($datarole);
+            RoleHasPermission::updateorcreate($datarolepermission);
+        }
+
+
+        $notifikasi = array(
+            'pesan' => 'User berhasil ditambahkan',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.mitra.index')->with($notifikasi);
+    }
+    public function edit($id)
+    {
+        $data['data_mitra'] = DB::table('users')
+            ->select('users.name AS nama', 'users.*', 'users.created_at as tgl', 'roles.name as role_name', 'roles.id as role_id', 'mitra_settings.*')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
+            ->where('users.id', $id)
+            ->first();
+
+        return view('mitra/edit', $data);
+    }
     public function data($id)
     {
 
@@ -147,7 +220,7 @@ class MitraController extends Controller
                 ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasis.mt_mts_id')
                 ->where('mutasis.mt_mts_id', '=', $id)
                 ->get(),
-            'akun' => (new ApplikasiSettingAkun())->SettingAkun(),
+            'akun' => (new SettingAkun())->SettingAkun()->get(),
             'saldo' => $saldo,
         );
         return view('mitra/data', $data);
@@ -156,6 +229,9 @@ class MitraController extends Controller
     public function topup(Request $request, $id)
     {
 
+        $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+        $akun = (new SettingAkun())->SettingAkun()->where('akun_id', $request->cabar)->first();
+        // dd($akun);
         $invoice = (new GlobalGlobalController)->no_invoice_mitra();
         $count = Mutasi::count();
         if ($count == 0) {
@@ -175,32 +251,32 @@ class MitraController extends Controller
         #Admin yang sedang aktif (Membuat topup)
         $admin_user = Auth::user()->id;
 
-        #Cek saldo terakhir pada laporan harian admin
-        // $saldo_laporan_harian = (new GlobalGlobalController)->laporan_harian($admin_user);
-        // $total_laporan_harian = $saldo_laporan_harian + $request->nominal; #SALDO LAPORAN HARIAN = DEBET - KREDIT
-
-        // dd($total_laporan_harian);
-        // dd($total_laporan_harian);
-
         $data['mt_mts_id'] = $id;
         $data['mt_admin'] = $admin_user;
         $data['mt_kategori'] = 'TOPUP';
-        $data['mt_deskripsi'] = 'TOPUP ' . $user->nama_user . ' INVOICE ' . $invoice;
+        $data['mt_deskripsi'] = 'TOPUP ' . $user->nama_user . ' INVOICE-' . $invoice;
         $data['mt_kredit'] = $request->nominal;
         $data['mt_saldo'] = $total;
         $data['mt_cabar'] = $request->cabar;
         Mutasi::create($data); #INSERT LAPORAN TOPUP KE TABLE MUTASI
 
-        // $lh['lh_id'] = $invoice;
-        // $lh['lh_admin'] = $admin_user;
-        // $lh['lh_deskripsi'] = 'TOPUP ' . $user->nama_user . ' INVOICE ' . $invoice;
-        // $lh['lh_qty'] = '1';
-        // $lh['lh_kredit'] = $request->nominal;
-        // $lh['lh_saldo'] = $total_laporan_harian;
-        // $lh['lh_akun'] = $request->cabar;
-        // $lh['lh_status'] = '0';
-        // $lh['lh_kategori'] = 'TOPUP';
-        // laporanharian::create($lh); #INSERT LAPORAN TOPUP KE TABLE LAPORAN HARIAN
+        $data_lap['lap_id'] = 0;
+        $data_lap['lap_tgl'] = $tgl_bayar;
+        $data_lap['lap_inv'] = $invoice;
+        $data_lap['lap_admin'] = $admin_user;
+        $data_lap['lap_cabar'] = $akun->akun_nama;
+        $data_lap['lap_debet'] = 0;
+        $data_lap['lap_kredit'] = $request->nominal;
+        $data_lap['lap_adm'] = 0;
+        $data_lap['lap_jumlah_bayar'] = $request->nominal;
+        $data_lap['lap_keterangan'] = 'TOPUP ' . $user->nama_user . ' INVOICE-' . $invoice;
+        $data_lap['lap_akun'] = $request->cabar;
+        $data_lap['lap_idpel'] = 0;
+        $data_lap['lap_jenis_inv'] = "TOPUP";
+        $data_lap['lap_status'] = 0;
+        $data_lap['lap_img'] = "-";
+        Laporan::create($data_lap);
+
 
 
         $notifikasi = array(
@@ -212,12 +288,14 @@ class MitraController extends Controller
     public function debet_saldo(Request $request, $id)
     {
         $admin_user = Auth::user()->id;
-        $invoice = (new globalController)->no_invoice_mitra();
-        $saldo = (new globalController)->total_mutasi($id);
-        $user = (new globalController)->data_user($id);
+        $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+        $akun = (new SettingAkun())->SettingAkun()->where('akun_id', $request->cabar)->first();
+        $invoice = (new GlobalGlobalController)->no_invoice_mitra();
+        $saldo = (new GlobalGlobalController)->total_mutasi($id);
+        $user = (new GlobalGlobalController)->data_user($id);
         $total = $saldo - $request->nominal_debet;
-        $saldo_laporan_harian = (new globalController)->laporan_harian($admin_user);
-        $total_laporan_harian = $saldo_laporan_harian - $request->nominal_debet;
+        // $saldo_laporan_harian = (new GlobalGlobalController)->laporan_harian($admin_user);
+        // $total_laporan_harian = $saldo_laporan_harian - $request->nominal_debet;
 
         // dd($total_laporan_harian);
 
@@ -227,29 +305,38 @@ class MitraController extends Controller
                 'alert' => 'error',
             );
         } else {
-            $invoice = (new globalController)->no_invoice_mitra();
+            $invoice = (new GlobalGlobalController)->no_invoice_mitra();
 
             $data['mt_mts_id'] = $id;
             $data['mt_admin'] = $admin_user;
             $data['mt_kategori'] = $request->kategori;
-            $data['mt_deskripsi'] = 'Invoice ' . $invoice;
+            $data['mt_deskripsi'] = 'INVOICE-' . $invoice;
             $data['mt_kredit'] = '0';
             $data['mt_debet'] = $request->nominal_debet;
             $data['mt_saldo'] = $total;
             $data['mt_cabar'] = $request->cabar;
             Mutasi::create($data);
 
-            $lh['lh_id'] = $invoice;
-            $lh['lh_admin'] = $admin_user;
-            $lh['lh_deskripsi'] = $request->kategori . ' ' . $user->nama_user . ' INVOICE ' . $invoice;
-            $lh['lh_qty'] = '1';
-            $lh['lh_kredit'] = '0';
-            $lh['lh_debet'] = $request->nominal_debet;
-            $lh['lh_saldo'] = $total_laporan_harian;
-            $lh['lh_akun'] = $request->cabar;
-            $lh['lh_status'] = '0';
-            $lh['lh_kategori'] = $request->kategori;
-            laporanharian::create($lh);
+            // dd($data['mt_debet']);
+
+            $data_lap['lap_id'] = 0;
+            $data_lap['lap_tgl'] = $tgl_bayar;
+            $data_lap['lap_inv'] = $invoice;
+            $data_lap['lap_admin'] = $admin_user;
+            $data_lap['lap_cabar'] = $akun->akun_nama;
+            $data_lap['lap_kredit'] = 0;
+            $data_lap['lap_debet'] = $data['mt_debet'];
+            $data_lap['lap_adm'] = 0;
+            $data_lap['lap_jumlah_bayar'] = $data['mt_debet'];
+            $data_lap['lap_keterangan'] = $request->kategori . ' ' . $user->nama_user . ' INVOICE-' . $invoice;
+            $data_lap['lap_akun'] = $request->cabar;
+            $data_lap['lap_idpel'] = 0;
+            $data_lap['lap_jenis_inv'] = "TOPUP";
+            $data_lap['lap_status'] = 0;
+            $data_lap['lap_img'] = "-";
+            Laporan::create($data_lap);
+            // dd($data_lap);
+
             $notifikasi = array(
                 'pesan' => $request->kategori . ' Saldo berhasil',
                 'alert' => 'success',

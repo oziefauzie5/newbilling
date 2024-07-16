@@ -18,8 +18,7 @@ class SettingAkun extends Model
     ];
     public function SettingAkun()
     {
-        $SettingAkun = SettingAkun::where('akun_status', 'Enable')->get();
-
+        $SettingAkun = SettingAkun::where('akun_status', 'Enable');
         return $SettingAkun;
     }
 }

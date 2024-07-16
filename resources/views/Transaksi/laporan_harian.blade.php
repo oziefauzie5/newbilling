@@ -7,7 +7,7 @@
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. {{number_format($pendapatan)}}</div>
+            <div class="h2 m-0">Rp. {{number_format($pendapatan-$refund)}}</div>
             <div class="text-muted mb-3">PENDAPATAN</div>
           </div>
         </div>
@@ -163,6 +163,7 @@
                   <th>CABAR</th>
                   <th>METODE BAYAR</th>
                   <th>KREDIT</th>
+                  <th>DEBET</th>
                   <th>AKSI</th>
                 </tr>
               </thead>
@@ -178,6 +179,7 @@
                       <td>{{$d->lap_cabar}}</td>
                       <td>{{$d->akun_nama}}</td>
                       <td>{{$d->lap_kredit}}</td>
+                      <td>{{$d->lap_debet}}</td>
                       <td>
                         <div class="form-button-action">
                           <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->lap_id}}" class="btn btn-link btn-primary btn-lg">

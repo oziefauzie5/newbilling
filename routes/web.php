@@ -175,19 +175,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/mitra/Create', [MitraController::class, 'create'])->name('mitra.create')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/mitra/Add-Mitra', [MitraController::class, 'addmitra'])->name('mitra.addmitra')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/mitra/data/{id}', [MitraController::class, 'data'])->name('mitra.data')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/mitra/edit/{id}', [MitraController::class, 'edit'])->name('mitra.edit')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/mitra/store/edit/{id}', [MitraController::class, 'store_edit'])->name('mitra.store_edit')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/mitra/data/top-up/{id}', [MitraController::class, 'topup'])->name('mitra.topup')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/mitra/data/debet-saldo/{id}', [MitraController::class, 'debet_saldo'])->name('mitra.debet_saldo')->middleware(['role:admin|STAF ADMIN']);
 
-    Route::get('/biller/index', [BillerController::class, 'index'])->name('biller.index')->middleware(['role:KOLEKTOR']);
-    Route::get('/biller/pembayaran', [BillerController::class, 'pembayaran'])->name('biller.pembayaran')->middleware(['role:KOLEKTOR']);
-    Route::get('/biller/data-pembayaran/{id}', [BillerController::class, 'getpelanggan'])->name('biller.getpelanggan')->middleware(['role:KOLEKTOR']);
-    Route::get('/biller/payment', [BillerController::class, 'payment'])->name('biller.payment')->middleware(['role:KOLEKTOR']);
-    Route::get('/biller/pembayaran/{id}', [BillerController::class, 'bayar'])->name('biller.bayar')->middleware(['role:KOLEKTOR']);
-    Route::get('/biller/data-lunas/{id}', [BillerController::class, 'getDataLunas'])->name('biller.getDataLunas')->middleware(['role:KOLEKTOR']);
-    Route::get('/biller/mutasi', [BillerController::class, 'mutasi'])->name('biller.mutasi')->middleware(['role:KOLEKTOR']);
-    // Route::get('/biller/daftar/transaksi', [BillerController::class, 'list_trx'])->name('biller.list_trx')->middleware(['role:KOLEKTOR']);
-    Route::post('/biller/export/pdf', [BillerController::class, 'mutasi_pdf'])->name('biller.export.mutasi')->middleware(['role:KOLEKTOR']);
-    Route::get('/biller/print/{id}', [BillerController::class, 'print'])->name('biller.print')->middleware(['role:KOLEKTOR']);
+    Route::get('/biller/index', [BillerController::class, 'index'])->name('biller.index')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/pembayaran', [BillerController::class, 'pembayaran'])->name('biller.pembayaran')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/data-pembayaran/{id}', [BillerController::class, 'getpelanggan'])->name('biller.getpelanggan')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/payment', [BillerController::class, 'payment'])->name('biller.payment')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/pembayaran/{id}', [BillerController::class, 'bayar'])->name('biller.bayar')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/data-lunas/{id}', [BillerController::class, 'getDataLunas'])->name('biller.getDataLunas')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/mutasi', [BillerController::class, 'mutasi'])->name('biller.mutasi')->middleware(['role:KOLEKTOR|BILLER']);
+    // Route::get('/biller/daftar/transaksi', [BillerController::class, 'list_trx'])->name('biller.list_trx')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::post('/biller/export/pdf', [BillerController::class, 'mutasi_pdf'])->name('biller.export.mutasi')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/print/{id}', [BillerController::class, 'print'])->name('biller.print')->middleware(['role:KOLEKTOR|BILLER']);
 
     // Route::get('/Kolektor/Tagihan', [KolektorController::class, 'index'])->name('kolektor.index');
     // Route::get('/Kolektor/kolektor-payment/{id}', [KolektorController::class, 'kolektor_payment'])->name('kolektor.kolektor_payment');

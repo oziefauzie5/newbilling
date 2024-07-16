@@ -59,7 +59,7 @@ class LaporanController extends Controller
         $data['pendapatan'] = $query->where('lap_status', 0)->sum('laporans.lap_kredit');
         $data['refund'] = $query->where('lap_status', 0)->sum('laporans.lap_debet');
         $data['biaya_adm'] = $query->where('lap_status', 0)->sum('laporans.lap_adm');
-        $data['count_trx'] = $query->where('lap_status', 0)->count();
+        $data['count_ trx'] = $query->where('lap_status', 0)->count();
 
 
         if ($role->role_id == 1) {

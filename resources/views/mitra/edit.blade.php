@@ -3,13 +3,14 @@
 
     <section class="content">
         <div class="page-inner">
-            <form action="{{route('admin.mitra.addmitra')}}" method="POST" class="needs-validation" novalidate>
+            <form action="{{route('admin.mitra.store_edit',['id'=>$data_mitra->mts_user_id])}}" method="POST" class="needs-validation" novalidate>
                 @csrf
+                @method('POST')
                 <div class="row">
                   <div class="col-md-6">
                     <div class="card">
                       <div class="card-header bg-primary">
-                        <h3 class="card-title">Tambah Pengguna</h3>
+                        <h3 class="card-title">EDIT MITRA</h3>
                       </div>
                       @if ($errors->any())
                       <div class="alert alert-danger" role="alert">
@@ -25,21 +26,21 @@
                         <div class="card-body ">
                             <div class="form-group">
                               <label for="name">Nama Lengkap</label>
-                              <input type="text" class="form-control" id="validationCustom05" name="name" required value="{{ old('name') }}">
+                              <input type="text" class="form-control" id="validationCustom05" name="name" required value="{{$data_mitra->nama}}">
                               <div class="invalid-feedback">
                                   Nama tidak boleh kosong
                               </div>
                           </div>
                             <div class="form-group">
                               <label for="ktp">Nomor Identitas</label>
-                              <input type="number" class="form-control" id="ktp" name="ktp" required value="{{ old('ktp') }}">
+                              <input type="number" class="form-control" id="ktp" name="ktp" required value="{{$data_mitra->ktp}}">
                               <div class="invalid-feedback">
                                   Nomor Identitas tidak boleh kosong
                               </div>
                           </div>
                             <div class="form-group">
                               <label for="hp">Nomor Whatsapp</label>
-                              <input type="number" class="form-control" id="hp" name="hp" required value="{{ old('hp') }}">
+                              <input type="number" class="form-control" id="hp" name="hp" required value="{{$data_mitra->hp}}">
                               <div class="invalid-feedback">
                                   Nomor Whatsapp tidak boleh kosong
                               </div>
@@ -47,56 +48,53 @@
                           </div>
                             <div class="form-group">
                               <label for="alamat_lengkap">Alamat Lengkap</label>
-                              <input type="text" class="form-control" id="alamat_lengkap" name="alamat_lengkap" required value="{{ old('alamat_lengkap') }}" >
+                              <input type="text" class="form-control" id="alamat_lengkap" name="alamat_lengkap" required value="{{$data_mitra->alamat_lengkap}}" >
                               <div class="invalid-feedback">
                                   Alamat tidak boleh kosong
                               </div>
                           </div>
                             <div class="form-group">
                               <label for="email">Email</label>
-                              <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" >
+                              <input type="email" class="form-control" id="email" name="email" value="{{$data_mitra->email}}" >
                               <div class="invalid-feedback">
                                   Email tidak boleh kosong
                               </div>
                       </div>
                       <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required value="{{ old('username') }}">
+                        <input type="text" class="form-control" id="username" name="username" required value="{{$data_mitra->username}}">
                         <div class="invalid-feedback">
                           Username tidak boleh kosong
                       </div>
                 </div>
                       <div class="form-group">
                           <label for="password" >Password</label>
-                          <input type="password" class="form-control" id="password" name="password" required >
-                          <div class="invalid-feedback">
-                          Password tidak boleh kosong
-                        </div>
+                          <input type="password" class="form-control" id="password" name="password" >
                             </div>
                       <div class="form-group">
                           <label for="password" >Tanggal Gabung</label>
-                          <input type="text" class="form-control pickupDate" id="tgl_gabung"  name="tgl_gabung" required value="{{ old('tgl_gabung') }}">
+                          <input type="text" class="form-control pickupDate" id="tgl_gabung"  name="tgl_gabung" required value="{{$data_mitra->tgl}}">
                           <div class="invalid-feedback">
                             Tanggal Bergabung tidak boleh kosong
                         </div>
                             </div>
                             <div class="form-group">
                                 <label>Limit Minus</label>
-                                <input type="number" class="form-control" id="limit_minus"  name="limit_minus" value="{{ old('limit_minus') }}" required>
+                                <input type="number" class="form-control" id="limit_minus"  name="limit_minus" value="{{$data_mitra->mts_limit_minus}}" required>
                                 <div class="invalid-feedback">
                                     Limit Minus tidak boleh kosong
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Kode Unik</label>
-                                <input type="number" class="form-control" id="kode_unik"  name="kode_unik" value="0" required>
+                                <input type="number" class="form-control" id="kode_unik"  name="kode_unik" value="{{$data_mitra->mts_kode_unik}}" required>
                                 <div class="invalid-feedback">
                                     Kode Unik tidak boleh kosong
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Komisi</label>
-                                <input type="number" class="form-control" id="mts_komisi"  name="mts_komisi" value="0" required>
+                                <input type="number" class="form-control" id="mts_komisi"  name="mts_komisi" value="{{$data_mitra->mts_komisi}}" required>
                                 <div class="invalid-feedback">
                                     Kode Unik tidak boleh kosong
                                 </div>
@@ -104,6 +102,9 @@
                       <div class="form-group">
                           <label for="level" >Level</label>
                           <select name="level" id="level" class="form-control" required >
+                            @if($data_mitra->role_id)
+                            <option value="{{$data_mitra->role_id}}|{{$data_mitra->role_name}}" selected>{{$data_mitra->role_name}}</option>
+                            @endif
                               <option value="">-PILIH-</option>
                               <option value="10|BILLER">BILLER</option>
                             <option value="13|KOLEKTOR">KOLEKTOR</option>
