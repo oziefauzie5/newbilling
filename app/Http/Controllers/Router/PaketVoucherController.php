@@ -89,6 +89,7 @@ class PaketVoucherController extends Controller
             $mode = "set limit-uptime=1s";
         } elseif ($data['paket_mode'] == "0" && $price != "") {
             $onlogin = ':put (",,' . $price . ',,,noexp,' . $getlock . ',")' . $lock;
+            $mode = "";
         } else {
             $onlogin = "";
         }
@@ -97,57 +98,56 @@ class PaketVoucherController extends Controller
 
 
 
-        // dd($data);
 
 
-        $router = Router::all();
+        $router = Router::where('id', $request->router)->first();
+        // dd($router);
         $API = new RouterosAPI();
         $API->debug = false;
-        foreach ($router as $d) {
-            if ($API->connect($d->router_ip . ':' . $d->router_port_api, $d->router_username, $d->router_password)) {
+        if ($API->connect($router->router_ip . ':' . $router->router_port_api, $router->router_username, $router->router_password)) {
 
 
-                $API->comm('/ip/hotspot/user/profile/add', [
-                    'name' =>  $name == '' ? '' : $name,
-                    "rate-limit" => $data['paket_limitasi'] == '' ? '' : $data['paket_limitasi'],
-                    'keepalive-timeout' => '1m' == '' ? '' : '1m',
-                    'status-autorefresh' => '1m' == '' ? '' : '1m',
-                    "on-login" => "$onlogin",
-                    'shared-users' => $data['paket_shared'] == '' ? '' : $data['paket_shared'],
-                    'add-mac-cookie' => 'yes' == '' ? '' : 'yes',
-                    'mac-cookie-timeout' => $data['paket_masa_aktif'] == '' ? '' : $data['paket_masa_aktif'],
+            $API->comm('/ip/hotspot/user/profile/add', [
+                'name' =>  $name == '' ? '' : $name,
+                "rate-limit" => $data['paket_limitasi'] == '' ? '' : $data['paket_limitasi'],
+                'keepalive-timeout' => '1m' == '' ? '' : '1m',
+                'status-autorefresh' => '1m' == '' ? '' : '1m',
+                "on-login" => "$onlogin",
+                'shared-users' => $data['paket_shared'] == '' ? '' : $data['paket_shared'],
+                'add-mac-cookie' => 'yes' == '' ? '' : 'yes',
+                'mac-cookie-timeout' => $data['paket_masa_aktif'] == '' ? '' : $data['paket_masa_aktif'],
 
-                ]);
-                if ($data['paket_mode'] != "0") {
-                    if (empty($monid)) {
-                        $API->comm("/system/scheduler/add", array(
-                            "name" => "$name",
-                            "start-time" => "$randstarttime",
-                            "interval" => "$randinterval",
-                            "on-event" => "$bgservice",
-                            "disabled" => "no",
-                            "comment" => "Monitor Profile $name",
-                        ));
-                    } else {
-                        $API->comm("/system/scheduler/set", array(
-                            ".id" => "$monid",
-                            "name" => "$name",
-                            "start-time" => "$randstarttime",
-                            "interval" => "$randinterval",
-                            "on-event" => "$bgservice",
-                            "disabled" => "no",
-                            "comment" => "Monitor Profile $name",
-                        ));
-                    }
+            ]);
+            if ($data['paket_mode'] != "0") {
+                if (empty($monid)) {
+                    $API->comm("/system/scheduler/add", array(
+                        "name" => "$name",
+                        "start-time" => "$randstarttime",
+                        "interval" => "$randinterval",
+                        "on-event" => "$bgservice",
+                        "disabled" => "no",
+                        "comment" => "Monitor Profile $name",
+                    ));
+                } else {
+                    $API->comm("/system/scheduler/set", array(
+                        ".id" => "$monid",
+                        "name" => "$name",
+                        "start-time" => "$randstarttime",
+                        "interval" => "$randinterval",
+                        "on-event" => "$bgservice",
+                        "disabled" => "no",
+                        "comment" => "Monitor Profile $name",
+                    ));
                 }
-                Paket::create($data);
             }
-            // else {
-            //     $API->comm("/system/scheduler/remove", array(
-            //         ".id" => "$monid"
-            //     ));
-            // }
+            // dd($data);
+            Paket::create($data);
         }
+        // else {
+        //     $API->comm("/system/scheduler/remove", array(
+        //         ".id" => "$monid"
+        //     ));
+        // }
         $notifikasi = array(
             'pesan' => 'Berhasil menambahkan Profile Hotspot',
             'alert' => 'success',

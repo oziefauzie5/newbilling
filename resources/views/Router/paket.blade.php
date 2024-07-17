@@ -49,6 +49,17 @@
                       <div class="row">
                         <div class="col-sm-12">
                           <div class="form-group">
+                            <label>Router</label>
+                            <select type="text" class="form-control" name="router" value="{{ Session::get('router') }}" required>
+                              <option value="">- PILIH ROUTER - </option>
+                              @foreach($data_router as $s)
+                              <option value="{{$s->id}}">{{$s->router_nama}}</option>
+                              @endforeach
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
                             <label>Nama Paket</label>
                             <input type="text" class="form-control" name="paket_nama" value="{{ Session::get('paket_nama') }}" required>
                           </div>

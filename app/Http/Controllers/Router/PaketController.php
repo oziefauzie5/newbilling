@@ -54,39 +54,44 @@ class PaketController extends Controller
         $data['paket_harga'] = $request->paket_harga;
         $data['paket_layanan'] = 'PPP';
         $data['paket_status'] = 'Enable';
-        Paket::create($data);
 
-        $router = Router::all();
-        $data_paket = Paket::all();
+
+        $router = Router::where('id', $request->router)->first();
+        // $data_paket = Paket::all();
         $API = new RouterosAPI();
         $API->debug = false;
-        foreach ($router as $d) {
-            foreach ($data_paket as $dp) {
+        // foreach ($router as $d) {
+        //     foreach ($data_paket as $dp) {
 
-                if ($API->connect($d->router_ip . ':' . $d->router_port_api, $d->router_username, $d->router_password)) {
-                    $API->comm('/ip/pool/add', [
-                        'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                        'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
-                    ]);
-                    $API->comm('/ppp/profile/add', [
-                        'name' =>  $dp->paket_nama == '' ? '' : $dp->paket_nama,
-                        'rate-limit' => $dp->paket_limitasi == '' ? '' : $dp->paket_limitasi,
-                        'local-address' => $request->paket_lokal == '' ? '' : $request->paket_lokal,
-                        'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
-                        'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
-                        'queue-type' => 'default-small' == '' ? '' : 'default-small',
-                        'dns-server' => $d->router_dns == '' ? '' : $d->router_dns,
-                        'disabled' => 'yes',
-                        'only-one' => 'yes',
-                    ]);
-                }
-            }
+        if ($API->connect($router->router_ip . ':' . $router->router_port_api, $router->router_username, $router->router_password)) {
+            $API->comm('/ip/pool/add', [
+                'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
+                'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
+            ]);
+            $API->comm('/ppp/profile/add', [
+                'name' =>  $request->paket_nama == '' ? '' : $request->paket_nama,
+                'rate-limit' => $$request->paket_nama == '' ? '' : $$request->paket_nama,
+                'local-address' => $request->paket_lokal == '' ? '' : $request->paket_lokal,
+                'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
+                'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                'queue-type' => 'default-small' == '' ? '' : 'default-small',
+                'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
+                'disabled' => 'yes',
+                'only-one' => 'yes',
+            ]);
+            Paket::create($data);
+            $notifikasi = array(
+                'pesan' => 'Berhasil menambhkan paket',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.router.paket.index')->with($notifikasi);
+        } else {
+            $notifikasi = array(
+                'pesan' => 'Gagal menambhkan paket',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.router.paket.index')->with($notifikasi);
         }
-        $notifikasi = array(
-            'pesan' => 'Berhasil menambahkan Pelanggan',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.router.paket.index')->with($notifikasi);
     }
     public function store_isolir(Request $request)
     {
