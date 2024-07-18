@@ -30,20 +30,47 @@ class RegistrasiApiController extends Controller
         $API->debug = false;
 
         if ($API->connect($ip, $user, $pass)) {
-            $API->comm('/ppp/secret/add', [
-                'name' => $regist->reg_username == '' ? '' : $regist->reg_username,
-                'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
-                'service' => 'pppoe',
-                'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
-                'comment' => $regist->reg_jenis_tagihan == '' ? '' : $regist->reg_jenis_tagihan,
-                'disabled' => 'yes',
-            ]);
 
-            $notifikasi = array(
-                'pesan' => 'Berhasil menambahkan pelanggan',
-                'alert' => 'success',
-            );
-            return redirect()->route('admin.psb.index')->with($notifikasi);
+            $API->comm('/ip/pool/add', [
+                'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
+                'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
+            ]);
+            $API->comm('/ppp/profile/add', [
+                'name' =>  $regist->paket_nama == '' ? '' : $regist->paket_nama,
+                'rate-limit' => $regist->paket_nama == '' ? '' : $regist->paket_nama,
+                'local-address' => $regist->paket_lokal == '' ? '' : $regist->paket_lokal,
+                'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
+                'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                'queue-type' => 'default-small' == '' ? '' : 'default-small',
+                'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
+                'disabled' => 'yes',
+                'only-one' => 'yes',
+            ]);
+            $profile = $API->comm('/ppp/profile/print', [
+                '?name' => $regist->paket_nama,
+            ]);
+            if ($profile) {
+                $API->comm('/ppp/secret/add', [
+                    'name' => $regist->reg_username == '' ? '' : $regist->reg_username,
+                    'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
+                    'service' => 'pppoe',
+                    'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
+                    'comment' => $regist->reg_jenis_tagihan == '' ? '' : $regist->reg_jenis_tagihan,
+                    'disabled' => 'yes',
+                ]);
+
+                $notifikasi = array(
+                    'pesan' => 'Berhasil menambahkan pelanggan',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.index')->with($notifikasi);
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Gagal menambah pelanggan..Paket Tidak tersedia pada router',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.psb.index')->with($notifikasi);
+            }
         } else {
             $notifikasi = array(
                 'pesan' => 'Gagal menambahkan pelanggan',

@@ -70,7 +70,7 @@ class PaketController extends Controller
             ]);
             $API->comm('/ppp/profile/add', [
                 'name' =>  $request->paket_nama == '' ? '' : $request->paket_nama,
-                'rate-limit' => $$request->paket_nama == '' ? '' : $$request->paket_nama,
+                'rate-limit' => $request->paket_nama == '' ? '' : $request->paket_nama,
                 'local-address' => $request->paket_lokal == '' ? '' : $request->paket_lokal,
                 'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
                 'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',

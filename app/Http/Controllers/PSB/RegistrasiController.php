@@ -162,6 +162,7 @@ class RegistrasiController extends Controller
         $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
 
         $router = Router::whereId($request->reg_router)->first();
+        $profile = Paket::where('paket_id', $request->reg_profile)->first();
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
         $pass = $router->router_password;
@@ -171,26 +172,53 @@ class RegistrasiController extends Controller
         if ($request->reg_layanan == 'PPP') {
 
             if ($API->connect($ip, $user, $pass)) {
-                $API->comm('/ppp/secret/add', [
-                    'name' => $request->reg_username == '' ? '' : $request->reg_username,
-                    'password' => $request->reg_password  == '' ? '' : $request->reg_password,
-                    'service' => 'pppoe',
-                    'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
-                    'comment' => 'REGIST-' . $dates == '' ? '' : 'REGIST-' . $dates,
+                $API->comm('/ip/pool/add', [
+                    'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
+                    'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
+                ]);
+                $API->comm('/ppp/profile/add', [
+                    'name' =>  $profile->paket_nama == '' ? '' : $profile->paket_nama,
+                    'rate-limit' => $profile->paket_nama == '' ? '' : $profile->paket_nama,
+                    'local-address' => $profile->paket_lokal == '' ? '' : $profile->paket_lokal,
+                    'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
+                    'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                    'queue-type' => 'default-small' == '' ? '' : 'default-small',
+                    'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
                     'disabled' => 'yes',
+                    'only-one' => 'yes',
                 ]);
 
-                Registrasi::create($data);
-                InputData::where('id', $request->reg_idpel)->update($update);
-                SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_barang);
-                SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_barang);
-                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+                $profile = $API->comm('/ppp/profile/print', [
+                    '?name' => $profile->paket_nama,
+                ]);
+                if ($profile) {
+                    $API->comm('/ppp/secret/add', [
+                        'name' => $request->reg_username == '' ? '' : $request->reg_username,
+                        'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                        'service' => 'pppoe',
+                        'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
+                        'comment' => 'REGIST-' . $dates == '' ? '' : 'REGIST-' . $dates,
+                        'disabled' => 'yes',
+                    ]);
 
-                $notifikasi = array(
-                    'pesan' => 'Berhasil menambahkan pelanggan',
-                    'alert' => 'success',
-                );
-                return redirect()->route('admin.psb.index')->with($notifikasi);
+                    Registrasi::create($data);
+                    InputData::where('id', $request->reg_idpel)->update($update);
+                    SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_barang);
+                    SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_barang);
+                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+
+                    $notifikasi = array(
+                        'pesan' => 'Berhasil menambahkan pelanggan',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.psb.index')->with($notifikasi);
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Gagal menambah pelanggan..Paket Tidak tersedia pada router',
+                        'alert' => 'error',
+                    );
+                    return redirect()->route('admin.psb.index')->with($notifikasi);
+                }
             } else {
                 $notifikasi = array(
                     'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
