@@ -8,6 +8,7 @@ use App\Models\Applikasi\SettingAplikasi;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingTripay;
 use App\Models\Applikasi\SettingWaktuTagihan;
+use App\Models\Applikasi\SettingWhatsapp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -82,6 +83,19 @@ class AppController extends Controller
         } else {
             $data['wt_jeda_isolir_hari'] = $SettingBiaya->wt_jeda_isolir_hari;
             $data['wt_jeda_tagihan_pertama'] = $SettingBiaya->wt_jeda_tagihan_pertama;
+        }
+
+        $SettingWhatsapp = SettingWhatsapp::first();
+        if (isset($SettingWhatsapp) == NULL) {
+            $data['wa_nama'] = " ";
+            $data['wa_key'] = " ";
+            $data['wa_url'] = " ";
+            $data['wa_status'] = "";
+        } else {
+            $data['wa_nama'] = $SettingWhatsapp->wa_nama;
+            $data['wa_key'] = $SettingWhatsapp->wa_key;
+            $data['wa_url'] = $SettingWhatsapp->wa_url;
+            $data['wa_status'] = $SettingWhatsapp->wa_status;
         }
         $data['SettingAkun'] =  (new SettingAkun())->SettingAkun();
         $count = SettingAkun::count();
@@ -345,6 +359,37 @@ class AppController extends Controller
                 [
                     'wt_jeda_isolir_hari' => $request->wt_jeda_isolir_hari,
                     'wt_jeda_tagihan_pertama' => $request->wt_jeda_tagihan_pertama,
+                ]
+            );
+        }
+        $notifikasi = array(
+            'pesan' => 'Menambah Akun Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.index')->with($notifikasi);
+    }
+    public function whatsapp_store(Request $request)
+    {
+        // dd($request->wa_status);
+        $cek = SettingWhatsapp::count();
+        if ($cek == 0) {
+            SettingWhatsapp::create(
+                [
+                    'id' => '1',
+                    'wa_nama' => $request->wa_nama,
+                    'wa_key' => $request->wa_key,
+                    'wa_url' => $request->wa_url,
+                    'wa_status' => $request->wa_status,
+                ]
+            );
+        } else {
+            SettingWhatsapp::whereId('1')->update(
+                [
+                    'wa_nama' => $request->wa_nama,
+                    'wa_key' => $request->wa_key,
+                    'wa_key' => $request->wa_key,
+                    'wa_url' => $request->wa_url,
+                    'wa_status' => $request->wa_status,
                 ]
             );
         }

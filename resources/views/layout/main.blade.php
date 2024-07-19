@@ -368,13 +368,13 @@
 						@role('admin|STAF ADMIN')
 						<li class="nav-item {{\Route::is('admin.mitra.*') ? 'active' : ''}}">
 							<a href="{{route('admin.mitra.index')}}">
-								<i class="fas fa-users"></i>
+								<i class="fas fas fa-user-friends"></i>
 								<p>Mitra</p>
 							</a>
 						</li>
 						<li class="nav-item {{\Route::is('admin.vhc.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#vhc">
-								<i class="fas fa-users"></i>
+								<i class="fas fa-wifi"></i>
 								<p>Voucher</p>
 								<span class="caret"></span>
 							</a>
@@ -414,10 +414,16 @@
 								</ul>
 							</div>
 						</li>
+						<li class="nav-item {{\Route::is('admin.tiket.*') ? 'active' : ''}}">
+							<a href="{{route('admin.tiket.index')}}">
+								<i class="fas fa-ticket-alt"></i>
+								<p>Tiket</p>
+							</a>
+						</li>
 						
 						<li class="nav-item {{\Route::is('admin.inv.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#transaksi">
-								<i class="fas fa-server"></i>
+								<i class="fas fa-random"></i>
 								<p>Transaksi</p>
 								<span class="caret"></span>
 							</a>
@@ -453,7 +459,7 @@
 						</li>
 						<li class="nav-item {{\Route::is('admin.gudang.*') ? 'active' : ''}}">
 							<a href="{{route('admin.barang.index')}}">
-								<i class="fas fa-server"></i>
+								<i class="fas fa-list-alt"></i>
 								<p>Barang</p>
 								<span class="caret"></span>
 							</a>
@@ -757,6 +763,9 @@
 			$('#pilih_data').DataTable({
 				"pageLength": 5,
 			});
+			$('#tiket_pilih_pelanggan').DataTable({
+				"pageLength": 5,
+			});
 
 			// #EDIT INPUT DATA
 			var table = $('#edit_inputdata').DataTable(); $('#edit_inputdata tbody').on( 'click', 'tr', function () 
@@ -791,7 +800,7 @@
 							$("#edit_input_keterangan").val(data[0]['input_keterangan']);			 
 							$("#edit_input_status").val(data[0]['input_status']);			 
                         } else {
-							console.log(data);
+							
                         }
                     }
                 });
@@ -847,7 +856,7 @@ function myFunction() {
 							$("#loading").addClass('d-none');
 						}
 					} else {
-						console.log(data);
+						
 						$("#loading").addClass('d-none');
 						$("#alert").removeClass('d-none');
 						$("#myId").addClass('d-none');
@@ -951,7 +960,7 @@ url = url.replace(':id', idpel);
                     },
                     dataType: 'json',
                     success: function(data) {
-						console.log(data)
+						
 						if (data) {
 							$("#cari_data").modal('hide');
 							document.getElementById("tampil_hp").value =data['tampil_data']['input_hp'];
@@ -966,7 +975,7 @@ url = url.replace(':id', idpel);
 								document.getElementById("tampil_keterangan").value =data['tampil_data']['input_keterangan'];
 								
                         } else {
-							console.log(data);
+							
                         }
                     }
                 });
@@ -1151,7 +1160,7 @@ url = url.replace(':id', idpel);
 							dataType: 'json',
 							success: function(data) {
 								if(data.id_subbarang){
-									console.log(data)
+									
 									$('#validasi_ont').removeClass("has-error has-feedback");
 									$("#validasi_ont").addClass("has-success");
 									$('#notif_ont').html('');
@@ -1267,7 +1276,7 @@ url = url.replace(':id', idpel);
 							dataType: 'json',
 							success: function(data) {
 								if(data.id_subbarang){
-									console.log(data)
+									
 									$('#edit_validasi_ont').removeClass("has-error has-feedback");
 									$("#edit_validasi_ont").addClass("has-success");
 									$('#edit_notif_ont').html('');
@@ -1389,7 +1398,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
                         },
                         dataType: 'json',
                         success: function(data) {
-							console.log(data);
+							
                                      },
 						error: function(response){
 							$.each( response.responseJSON.errors, function( key, value ) {
@@ -1600,6 +1609,54 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 
     
 	</script>
+	<script>
+	$('.whatsapp').change(function () {
+		if ($(this).is(":checked")) {
+			$('#wa').html('Enable');
+			$('.whatsapp').val('Enable');
+		} else {
+			$('.whatsapp').val('Disable');
+			$("#wa").html('Disable');
+			alert('Disable');
+		}
+	});
+		</script>
+		<script>
+			// BUAT TIKET
+			$(function(){ 
+  var table = $('#tiket_pilih_pelanggan').DataTable(); $('#tiket_pilih_pelanggan tbody').on( 'click', 'tr', function () 
+			{  
+			var idpel = table.row( this ).id();
+  var url = '{{ route("admin.tiket.pilih_pelanggan", ":id") }}';
+url = url.replace(':id', idpel);
+  $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+						// console.log(data)
+							$("#cari_data").modal('hide');
+							$("#tiket_pelanggan").val(data['data_pelanggan']['input_nama']);
+							$("#tiket_nolayanan").val(data['data_pelanggan']['reg_nolayanan']);
+							$("#tiket_idpel").val(data['data_pelanggan']['reg_idpel']);
+                    }
+                });
+ });
+});
+		</script>
+		<script>
+			// DETAILS TIKET
+			$('.tiket').click(function(){
+				var id =$(this).data("id");
+				var url = '{{ route("admin.tiket.details", ":id") }}';
+				url = url.replace(':id', id);
+				// alert(url);
+				window.location=url;
+			});
+		</script>
 	
 					<script>
 		Circles.create({

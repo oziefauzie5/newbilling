@@ -4733,7 +4733,8 @@ label.error {
 .timeline {
   list-style: none;
   padding: 20px 0 20px;
-  position: relative; }
+  position: relative; 
+}
   .timeline:before {
     top: 0;
     bottom: 0;

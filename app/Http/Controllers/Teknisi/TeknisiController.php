@@ -10,6 +10,8 @@ use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\RouterosAPI;
 use App\Models\Teknisi\Teknisi;
+use App\Models\Tiket\SubTiket;
+use App\Models\Tiket\Tiket;
 use App\Models\Transaksi\Addons;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\SubInvoice;
@@ -41,6 +43,14 @@ class TeknisiController extends Controller
         //     $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
         // });
         $data['data_pelanggan'] = $query->get();
+
+        $data['data_tiket'] = Tiket::select('registrasis.*', 'input_data.*', 'tikets.*', 'tikets.created_at as tgl_tiket')
+            ->join('registrasis', 'registrasis.reg_nolayanan', '=', 'tikets.tiket_nolayanan')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->where('tiket_status', '!=', 'CLOSED')->get();
+
+        // dd($data['data_tiket']);
+
         $data['data_user'] = DB::table('roles')
             ->join('model_has_roles', 'model_has_roles.role_id', '=', 'roles.id')
             ->join('users', 'users.id', '=', 'model_has_roles.model_id')
@@ -82,6 +92,37 @@ class TeknisiController extends Controller
         ];
         return redirect()->route('admin.teknisi.list_aktivasi')->with($notifikasi);
     }
+    public function job_tiket(Request $request)
+    {
+        $request->validate([
+            'teknisi_id' => 'unique:teknisis',
+        ], [
+            'teknisi_id.unique' => 'Ulangi kembali',
+        ]);
+
+        $explode1 = explode("|", $request->teknisi);
+        $team = $explode1[1] . ' & ' . ucwords($request->sub_teknisi);
+        $id = strtotime(Carbon::now());
+        $data['teknisi_id'] = $id;
+        $data['teknisi_userid'] = $explode1[0];
+        $data['teknisi_team'] = $team;
+        $data['teknisi_job'] = $request->job;
+        $data['teknisi_idpel'] = $request->idpel;
+        $data['teknisi_status'] = '1';
+        $data['teknisi_psb'] = '0';
+        // $yesterday = date("d F Y, H:i:s", $id);
+        Teknisi::create($data);
+        $update['tiket_status'] = 'OPEN';
+        Tiket::where('tiket_idpel', $request->idpel)->update($update);
+        $updates['subtiket_status'] = 'OPEN';
+        $updates['subtiket_teknisi_team'] = $team;
+        SubTiket::where('tiket_idpel', $request->idpel)->update($update);
+        $notifikasi = [
+            'pesan' => 'Berhasil mengambil job',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.teknisi.list_aktivasi')->with($notifikasi);
+    }
 
     public function list_aktivasi()
     {
@@ -93,6 +134,16 @@ class TeknisiController extends Controller
             ->where('teknisis.teknisi_userid', '=', $teknisi_id);
         $data['data_pelanggan'] = $query->get();
         return view('Teknisi/list_aktivasi', $data);
+    }
+    public function list_tiket()
+    {
+        $teknisi_id = Auth::user()->id;
+        $query = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'input_data.id')
+            ->where('registrasis.reg_progres', '=', '1')
+            ->where('teknisis.teknisi_userid', '=', $teknisi_id);
+        $data['data_pelanggan'] = $query->get();
+        return view('Teknisi/list_tiket', $data);
     }
     public function aktivasi($id)
     {

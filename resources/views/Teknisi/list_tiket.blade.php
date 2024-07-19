@@ -78,8 +78,6 @@
                              <li class="list-group-item">Lokasi : <a href="{{$job->input_maps}}" target="_blank">Lihat Google Maps</a> </li>
                              <li class="list-group-item">Whatsapp : <a href="https://wa.me/62{{$job->input_hp}}?text=Assalamualaikum" target="_blank"> <i class="fas fa-phone"></i> &nbsp;&nbsp;Hubungi</a>
                             </li>
-                            <li class="list-group-item">Sales : {{$job->input_sales}}</li>
-                            <li class="list-group-item">Sub Sales : {{$job->input_subseles}}</li>
                             </ul>
                           <hr>
                           <label for="barang" class=" col-form-label">AKTIVASI</label>
