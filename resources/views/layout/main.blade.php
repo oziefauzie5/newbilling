@@ -1209,10 +1209,6 @@ url = url.replace(':id', idpel);
 		<script>
 
 			$(document).ready(function() {
-				
-			
-			// //Validasi ONT
-				
 			$("#edit_ont").click(function() {
 				if($(this).is(":checked")) {
 					$('#edit_modal_ont').modal('show')

@@ -40,11 +40,7 @@
             <section class="content mt-3">
                 @foreach($data_pelanggan as $job)
                 <div class="col">
-                    {{-- @if($job->reg_progres==1) --}}
-                    <div class="card card_custom1"  data-toggle="modal" data-target="#exampleModal{{$job->reg_idpel}}">
-                    {{-- @else
-                    <div class="card card_custom1"  data-toggle="modal" data-target="#exampleModal1{{$job->reg_idpel}}">
-                    @endif --}}
+                    <a href="{{route('admin.teknisi.tiket.details',['id'=>$job->tiket_id])}}" class="card card_custom1">
                         <div class="card-body skew-shadow">
                             <div class="row">
                                 <div class="col-8 pr-0">
@@ -57,14 +53,14 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 {{-- modal lihat job --}}
                 <div class="modal fade" id="exampleModal{{$job->reg_idpel}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog ">
                       <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">Terima Pekerjaan</h5>
+                        <div class="modal-header bg-primary">
+                          <h5 class="modal-title" id="exampleModalLabel">CLOSE TIKET</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
@@ -75,8 +71,6 @@
                              <li class="list-group-item">No. Layanan   : {{$job->reg_nolayanan}}</li>
                              <li class="list-group-item">Nama   : {{$job->input_nama}}</li>
                              <li class="list-group-item">Alamat : {{$job->input_alamat_pasang}}</li>
-                             <li class="list-group-item">Lokasi : <a href="{{$job->input_maps}}" target="_blank">Lihat Google Maps</a> </li>
-                             <li class="list-group-item">Whatsapp : <a href="https://wa.me/62{{$job->input_hp}}?text=Assalamualaikum" target="_blank"> <i class="fas fa-phone"></i> &nbsp;&nbsp;Hubungi</a>
                             </li>
                             </ul>
                           <hr>
@@ -98,11 +92,38 @@
                               </div>
                           </div>
                             <hr>
-                            <label for="barang" class=" col-form-label">PEMBAYARAN</label>
-                            <ul class="list-group">
-                             <li class="list-group-item">Jenis Tagihan: {{$job->reg_jenis_tagihan}}</li>
-                             <li class="list-group-item">Jumlah Tagihan   : Rp. {{ number_format($job->reg_harga) }}</li>
-                            </ul>
+                            <label for="barang" class=" col-form-label">TINDAKAN</label>
+                            <div class="form-row mb-2">
+                              <div class="form-group row">
+                                <div class="form-check">
+                                  <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="pactcore" value="1" name="pactcore">
+                                    <span class="form-check-sign">Ganti Pachtcore</span>
+                                  </label>
+                                  <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="adaptor" value="1" name="adaptor">
+                                    <span class="form-check-sign">Ganti Adaptor</span>
+                                  </label>
+                                  <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="edit_ont" value="1" name="edit_ont">
+                                    <span class="form-check-sign">Ganti ONT</span>
+                                  </label>
+                                  <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="edit_lain" value="1" name="edit_lain">
+                                    <span class="form-check-sign">Lainnya</span>
+                                  </label>
+                                </div>
+                                </div>
+                                 
+                            </div>
+                            <hr>
+                            <label for="barang" class=" col-form-label">DESKRIPSI</label>
+                            <div class="form-row mb-2">
+                            <div class="col-12">
+                              <span>Sebutkan alasan atau tindakan yang sudah dilakukan</span>
+                                <textarea class="form-control" name="tiket_tindakan" rows="5"></textarea>
+                            </div>
+                            </div>
                     
                         </div>
                         <div class="modal-footer">

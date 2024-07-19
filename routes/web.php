@@ -124,9 +124,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
     Route::get('/pelanggan/Registrasi-cari/{id}', [RegistrasiController::class, 'pilih_pelanggan_registrasi'])->name('reg.pilih_pelanggan_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/Registrasi-Store', [RegistrasiController::class, 'store'])->name('reg.store')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/pelanggan/Validasi1/{id}', [RegistrasiController::class, 'validasi_pachcore'])->name('reg.validasi_pachcore')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/pelanggan/Validasi2/{id}', [RegistrasiController::class, 'validasi_adaptor'])->name('reg.validasi_adaptor')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/pelanggan/Validasi3/{id}', [RegistrasiController::class, 'validasi_ont'])->name('reg.validasi_ont')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/pelanggan/Validasi1/{id}', [RegistrasiController::class, 'validasi_pachcore'])->name('reg.validasi_pachcore')->middleware(['role:admin|NOC|TEKNISI|STAF ADMIN']);
+    Route::get('/pelanggan/Validasi2/{id}', [RegistrasiController::class, 'validasi_adaptor'])->name('reg.validasi_adaptor')->middleware(['role:admin|NOC|TEKNISI|STAF ADMIN']);
+    Route::get('/pelanggan/Validasi3/{id}', [RegistrasiController::class, 'validasi_ont'])->name('reg.validasi_ont')->middleware(['role:admin|NOC|TEKNISI|STAF ADMIN']);
     Route::get('/pelanggan/get-paket{id}', [RegistrasiController::class, 'getPaket'])->name('reg.getPaket')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/Registrasi-Import', [RegistrasiController::class, 'registrasi_import'])->name('reg.registrasi_import')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/Redirect/{id}', [RegistrasiApiController::class, 'registrasi_api'])->name('reg.registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -160,6 +160,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/teknisi', [TeknisiController::class, 'index'])->name('teknisi.index')->middleware(['role:TEKNISI']);
     Route::post('/teknisi/job', [TeknisiController::class, 'job'])->name('teknisi.job')->middleware(['role:TEKNISI']);
     Route::post('/teknisi/tiket-job', [TeknisiController::class, 'job_tiket'])->name('teknisi.job_tiket')->middleware(['role:TEKNISI']);
+    Route::get('/teknisi/tiket/details/{id}', [TeknisiController::class, 'details'])->name('teknisi.tiket.details')->middleware(['role:TEKNISI']);
+    Route::put('/teknisi/tiket/close/{id}', [TeknisiController::class, 'close_tiket'])->name('teknisi.tiket.close_tiket')->middleware(['role:TEKNISI']);
+    Route::get('/teknisi/tiket/{id}', [TeknisiController::class, 'update_tiket'])->name('teknisi.update_tiket')->middleware(['role:TEKNISI']);
     Route::get('/teknisi/list-aktivasi', [TeknisiController::class, 'list_aktivasi'])->name('teknisi.list_aktivasi')->middleware(['role:TEKNISI']);
     Route::get('/teknisi/list-tiket', [TeknisiController::class, 'list_tiket'])->name('teknisi.list_tiket')->middleware(['role:TEKNISI']);
     Route::get('/teknisi/Aktivasi/{id}', [TeknisiController::class, 'aktivasi'])->name('teknisi.aktivasi')->middleware(['role:TEKNISI']);

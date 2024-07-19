@@ -43,7 +43,6 @@ class RegistrasiApiController extends Controller
                 'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
                 'queue-type' => 'default-small' == '' ? '' : 'default-small',
                 'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
-                'disabled' => 'yes',
                 'only-one' => 'yes',
             ]);
             $profile = $API->comm('/ppp/profile/print', [
@@ -56,7 +55,6 @@ class RegistrasiApiController extends Controller
                     'service' => 'pppoe',
                     'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
                     'comment' => $regist->reg_jenis_tagihan == '' ? '' : $regist->reg_jenis_tagihan,
-                    'disabled' => 'yes',
                 ]);
 
                 $notifikasi = array(
@@ -467,7 +465,7 @@ class RegistrasiApiController extends Controller
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
                         'comment' => $query->reg_tgl_jatuh_tempo == '' ? '' : $query->reg_tgl_jatuh_tempo,
-                        'disabled' => 'yes',
+                        'disabled' => 'no',
                     ]);
 
                     $secret_after = $API->comm('/ppp/secret/print', [
@@ -521,7 +519,7 @@ class RegistrasiApiController extends Controller
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
                         'comment' => $query->reg_tgl_jatuh_tempo == '' ? '' : $query->reg_tgl_jatuh_tempo,
-                        'disabled' => 'yes',
+                        'disabled' => 'no',
                     ]);
 
                     $secret_after = $API->comm('/ppp/secret/print', [

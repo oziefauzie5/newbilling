@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('subtiket_status')->nullable();
             $table->string('subtiket_teknisi_team')->nullable();
             $table->text('subtiket_deskripsi')->nullable();
+            $table->text('tiket_tindakan')->nullable();
             $table->timestamps();
         });
     }

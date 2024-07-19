@@ -42,6 +42,12 @@
                       <div class="timeline-heading">
                         <h4 class="timeline-title">{{$d->subtiket_deskripsi}}</h4>
                         <span>STATUS : {{$d->subtiket_status}}</span><br>
+                        @if($tiket->tiket_tindakan)
+                        <span>TINDAKAN : {{$tiket->tiket_tindakan}}</span><br>
+                        @endif
+                        @if($d->subtiket_teknisi_team)
+                        <span>PELAKSANA : {{$d->subtiket_teknisi_team}}</span><br>
+                        @endif
                         <span>{{date('d-M-Y H:m:s', strtotime($d->tgl_progres))}}</span><br>
                         <span>BY : {{$d->name}}</span><br>
                       </div>

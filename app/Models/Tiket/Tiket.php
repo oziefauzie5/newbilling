@@ -20,5 +20,6 @@ class Tiket extends Model
         'tiket_judul',
         'tiket_prioritas',
         'tiket_deskripsi',
+        'tiket_tindakan',
     ];
 }

@@ -383,6 +383,136 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 						});
 	</script>
 	<script>
+			$(document).ready(function() {
+    $('#update_tiket').click(function(e) {  
+		let id   = $('#tiket_id').val();
+		var url = '{{ route("admin.teknisi.update_tiket", ":id") }}';
+			url = url.replace(':id', id);
+                $.ajax({
+                  url: url,
+				  type: 'GET',
+                    data: {
+						'_token': '{{ csrf_token() }}'
+                    },
+                        dataType: 'json',
+                        success: function(data) {
+							console.log(data);
+
+						}
+                    });
+				});
+			});
+		
+	</script>
+	<script>
+		$(document).ready(function() {
+			$("#edit_seting").click(function() {
+				if($(this).is(":checked")) {
+					$('#seting_ulang').show()
+					
+				} else {
+					$('#seting_ulang').hide()
+				}
+			});
+			$("#edit_ont").click(function() {
+				if($(this).is(":checked")) {
+					$('#edit_modal_ont').modal('show')
+					$('.edit_ont').attr('required', 'required');
+
+				} else {
+					$('#edit_validasi_ont').removeClass("has-error has-feedback");
+					$('#edit_validasi_ont').removeClass("has-success");
+					$("#edit_kode_ont").val('');
+					$('#edit_notif_ont').html('');
+					$('#edit_note_ont').html('');
+					$('#edit_reg_mac').val('');
+					$('#edit_reg_sn').val('');
+					$('#edit_reg_mrek').val('');
+					$('#alasan').val('');
+					$('#keterangan').val('');
+					$('.edit_ont').removeAttr('required');
+					$("#edit_validasi_keterangan").removeClass("has-error has-feedback");
+								$('#edit_notif_keterangan').html('');
+								$("#edit_validasi_alasan").removeClass("has-error has-feedback");
+						$('#edit_notif_alasan').html('');
+				}
+			});
+			$('.edit_hide_ont').click(function(){
+				$("#edit_modal_ont").modal('hide');
+				$("#edit_ont").prop('checked', false);
+				$('#edit_validasi_ont').removeClass("has-error has-feedback");
+				$('#edit_validasi_ont').removeClass("has-success");
+				$("#edit_kode_ont").val('');
+				$('#edit_notif_ont').html('');
+				$('#edit_note_ont').html('');
+				$('#edit_reg_mac').val('');
+				$('#edit_reg_sn').val('');
+				$('#edit_reg_mrek').val('');
+			});
+
+				$('.edit_val_ont').click(function(){
+
+					if($('#alasan').val()=== ""){
+						$("#edit_validasi_alasan").addClass("has-error has-feedback");
+						$('#edit_notif_alasan').html('<small class="form-text text-muted text-danger">Alasan tidak boleh kosong</small>');
+					}  else {
+						$('#edit_validasi_alasan').removeClass("has-error has-feedback");
+						$('#edit_notif_alasan').html('');
+						if($('#keterangan').val()=== ""){
+								$("#edit_validasi_keterangan").addClass("has-error has-feedback");
+								$('#edit_notif_keterangan').html('<small class="form-text text-muted text-danger">keterangan tidak boleh kosong</small>');
+							} else {
+								$('#edit_validasi_keterangan').removeClass("has-error has-feedback");
+								$('#edit_notif_keterangan').html('');
+								var kode_pact = $('#edit_kode_ont').val();
+					var url = '{{ route("admin.reg.validasi_ont", ":id") }}';
+					url = url.replace(':id', kode_pact);
+					
+						$.ajax({
+							url: url,
+							type: 'GET',
+							data: {
+								'_token': '{{ csrf_token() }}'
+							},
+							dataType: 'json',
+							success: function(data) {
+								if(data.id_subbarang){
+									$('#show_ont').show()
+									$('#edit_validasi_ont').removeClass("has-error has-feedback");
+									$("#edit_validasi_ont").addClass("has-success");
+									$('#edit_notif_ont').html('');
+									$("#edit_modal_ont").modal('hide');
+									$('#edit_note_ont').html('');
+									$('#edit_reg_mac').val(data.subbarang_mac);
+									$('#edit_reg_sn').val(data.subbarang_sn);
+									$('#edit_reg_mrek').val(data.subbarang_nama);
+									$('#edit_reg_kode_ont').val(data.id_subbarang);
+								}else{
+									$("#edit_validasi_ont").addClass("has-error has-feedback");
+									$('#edit_notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak ada atau telah digunakan</small>');
+									$('#edit_note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+									$('#edit_reg_mac').val('');
+									$('#edit_reg_sn').val('');
+									$('#edit_reg_mrek').val('');
+								}
+							},
+							error: function(data) {
+								$("#edit_validasi_ont").addClass("has-error has-feedback");
+								$('#edit_notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak boleh kosong</small>');
+								$('#edit_note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+								$('#edit_reg_mac').val('');
+									$('#edit_reg_sn').val('');
+									$('#edit_reg_mrek').val('');
+							}
+						});
+							}
+					}
+				});
+
+
+		});
+	</script>
+	<script>
 		$('#lineChart').sparkline([102,109,120,99,110,105,115], {
 			type: 'line',
 			height: '70',

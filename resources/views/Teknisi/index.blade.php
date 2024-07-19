@@ -91,8 +91,9 @@
 
             <section class="content mt-3">
                 @foreach($data_tiket as $job_tiket)
-                <div class="col">
-                    <div class="card card_custom1 @if($job_tiket->prioritas == 'CRITICAL') bg-danger @else bg-warning @endif"  data-toggle="modal" data-target="#exampleModal{{$job_tiket->tiket_id}}">
+                <div class="col">{{$job_tiket->tiket_status}}
+                  @if($job_tiket->tiket_status == 'NEW')
+                    <div class="card card_custom1  @if($job_tiket->prioritas == 'CRITICAL') bg-danger @else bg-warning @endif"  data-toggle="modal" data-target="#exampleModal{{$job_tiket->tiket_id}}" id="update_tiket" >
                         <div class="card-body skew-shadow">
                             <div class="row">
                                 <div class="col-8 pr-0">
@@ -106,9 +107,40 @@
                             </div>
                         </div>
                     </div>
+                    @elseif($job_tiket->tiket_status == 'OPEN') 
+                    <div class="card card_custom1  @if($job_tiket->prioritas == 'CRITICAL') bg-danger @else bg-warning @endif"  data-toggle="modal" data-target="#exampleModal{{$job_tiket->tiket_id}}" id="update_tiket" >
+                      <div class="card-body skew-shadow">
+                          <div class="row">
+                              <div class="col-8 pr-0">
+                                  <h3 class="fw-bold mb-1">{{$job_tiket->input_nama}}</h3>
+                                  <div class="text-small text-uppercase fw-bold op-8">{{$job_tiket->input_alamat_pasang}}</div>
+                              </div>
+                              <div class="col-4 pl-0 text-right">
+                                  <h3 class="fw-bold mb-1">{{date('d M Y H:m:s',strtotime($job_tiket->tgl_tiket))}}</h3>
+                                  <div class="text-small text-uppercase fw-bold op-8">TIKET GANGGUAN</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                    @else 
+                    <div class="card card_custom1  @if($job_tiket->prioritas == 'CRITICAL') bg-danger @else bg-warning @endif"  data-toggle="modal" id="update_tiket" >
+                      <div class="card-body skew-shadow">
+                          <div class="row">
+                              <div class="col-8 pr-0">
+                                  <h3 class="fw-bold mb-1">{{$job_tiket->input_nama}}</h3>
+                                  <div class="text-small text-uppercase fw-bold op-8">{{$job_tiket->input_alamat_pasang}}</div>
+                              </div>
+                              <div class="col-4 pl-0 text-right">
+                                  <h3 class="fw-bold mb-1">{{date('d M Y H:m:s',strtotime($job_tiket->tgl_tiket))}}</h3>
+                                  <div class="text-small text-uppercase fw-bold op-8">TIKET GANGGUAN</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                    @endif 
                 </div>
                 {{-- modal lihat job_tiket --}}
-                <div class="modal fade" id="exampleModal{{$job_tiket->tiket_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade"  id="exampleModal{{$job_tiket->tiket_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="exampleModal{{$job_tiket->tiket_id}}" >
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -147,6 +179,7 @@
                                                   </select>
                                                   <input type="text" class="form-control" id="sub_teknisi" name="sub_teknisi" required>
                                                   <input type="hidden" id="idpel" name="idpel" value="{{$job_tiket->reg_idpel}}">
+                                                  <input type="hidden" id="tiket_id" name="tiket_id" value="{{$job_tiket->tiket_id}}">
                                                   <input type="hidden" id="job" name="job" value="TIKET">
                                               </div>
                     
