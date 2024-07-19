@@ -512,6 +512,7 @@ class RegistrasiApiController extends Controller
                         'queue-type' => 'default-small' == '' ? '' : 'default-small',
                         'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
                         'only-one' => 'yes',
+                        'disabled' => 'no',
                     ]);
                     $API->comm('/ppp/secret/add', [
                         'name' => $query->reg_username == '' ? '' : $query->reg_username,

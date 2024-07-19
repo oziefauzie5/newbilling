@@ -747,8 +747,8 @@
 	<script src="{{asset('atlantis/assets/js/atlantis.min.js')}}"></script>
 
 	<!-- Atlantis DEMO methods, don't include it in your project! -->
-	<script src="{{asset('atlantis/assets/js/setting-demo.js')}}"></script>
-	<script src="{{asset('atlantis/assets/js/demo.js')}}"></script>
+	{{-- <script src="{{asset('atlantis/assets/js/setting-demo.js')}}"></script>
+	<script src="{{asset('atlantis/assets/js/demo.js')}}"></script> --}}
 
 
   {{-- JAVASCRIPT INPUT DATA REGIST PELANGGAN --}}
