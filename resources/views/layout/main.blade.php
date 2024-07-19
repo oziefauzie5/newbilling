@@ -757,14 +757,14 @@
 	
 			
 			$('#input_data').DataTable({
-				"pageLength": 5,
+				"pageLength": 10,
 				
 			});
 			$('#pilih_data').DataTable({
-				"pageLength": 5,
+				"pageLength": 10,
 			});
 			$('#tiket_pilih_pelanggan').DataTable({
-				"pageLength": 5,
+				"pageLength": 10,
 			});
 
 			// #EDIT INPUT DATA

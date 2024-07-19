@@ -248,7 +248,7 @@
           </div>
         </div>
           <div class="table-responsive">
-            <table id="input_data" class="display table table-striped table-hover text-nowrap" >
+            <table id="" class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
                   <th>#</th>
@@ -339,6 +339,7 @@
               </tbody>
             </table>
           </div>
+          {{ $data_registrasi->links('pagination::bootstrap-4') }}
         </div>
       </div>
     </div>

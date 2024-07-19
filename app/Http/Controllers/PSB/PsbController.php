@@ -51,6 +51,7 @@ class PsbController extends Controller
             ->orderBy('tgl', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
             });
 
 
@@ -70,7 +71,7 @@ class PsbController extends Controller
             $query->whereMonth('reg_tgl_pasang', '=', $bulan_lalu);
 
 
-        $data['data_registrasi'] = $query->get();
+        $data['data_registrasi'] = $query->paginate(15);
         // dd($data['data_registrasi']);
 
         $data['count_inputdata'] = InputData::count();
