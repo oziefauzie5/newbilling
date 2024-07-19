@@ -117,7 +117,7 @@
           <table id="tiket_pilih_pelanggan" class="display table table-striped table-hover text-nowrap" >
             <thead>
               <tr>
-                <th>Tanggal Regist</th>
+                <th>Id</th>
                 <th>Nama</th>
                 <th>Whatsapp</th>
                 <th>Alamat Pasang</th>
@@ -125,8 +125,8 @@
             </thead>
             <tbody>
               @foreach($input_data as $d)
-              <tr id="{{$d->id}}">
-                <td>{{$d->input_tgl}}</td>
+              <tr id="{{$d->reg_idpel}}">
+                <td>{{$d->id}}</td>
                 <td>{{$d->input_nama}}</td>
                 <td>{{$d->input_hp}}</td>
                 <td>{{$d->input_alamat_pasang}}</td>

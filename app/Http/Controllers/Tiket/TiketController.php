@@ -15,7 +15,7 @@ class TiketController extends Controller
     public function index()
     {
         $data['tiket'] = Tiket::join('users', 'users.id', '=', 'tikets.tiket_admin')->get();
-        $data['input_data'] = InputData::all();
+        $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
 
         return view('tiket/index', $data);
     }
@@ -23,7 +23,7 @@ class TiketController extends Controller
     public function pilih_pelanggan($id)
     {
         $data['data_pelanggan'] =  InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
-            ->where('input_data.id', $id)
+            ->where('registrasis.reg_idpel', $id)
             ->first();
         return response()->json($data);
     }
