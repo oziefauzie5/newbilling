@@ -182,19 +182,14 @@ class NocController extends Controller
                 $API->comm('/ppp/secret/set', [
                     '.id' => $cek_secret[0]['.id'],
                     'profile' => 'APPBILL_ISOLIR',
+                    'comment' => 'ISOLIR MANUAL',
                 ]);
-                $cek_status = $API->comm('/ppp/active/print', [
-                    '?name' => $data_pelanggan->reg_username,
-                ]);
-                if ($cek_status) {
-                    $API->comm('/ppp/active/remove', [
-                        '.id' =>  $cek_status['0']['.id'],
-                    ]);
 
-                    $pesan_group['ket'] = 'aktivasi psb';
-                    $pesan_group['status'] = '0';
-                    $pesan_group['target'] = $data_pelanggan->input_hp;
-                    $pesan_group['pesan'] = '
+
+                $pesan_group['ket'] = 'isolir manual';
+                $pesan_group['status'] = '0';
+                $pesan_group['target'] = $data_pelanggan->input_hp;
+                $pesan_group['pesan'] = '
 Pelanggan yang terhormat,
 Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya
 Agar dapat digunakan kembali dimohon untuk melakukan pembayaran tagihan sebagai berikut :
@@ -211,8 +206,14 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
 
 ';
-                    Pesan::create($pesan_group);
-
+                Pesan::create($pesan_group);
+                $cek_status = $API->comm('/ppp/active/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_status) {
+                    $API->comm('/ppp/active/remove', [
+                        '.id' =>  $cek_status['0']['.id'],
+                    ]);
                     $notifikasi = array(
                         'pesan' => 'ISOLIR Pelanggan berhasil',
                         'alert' => 'success',
