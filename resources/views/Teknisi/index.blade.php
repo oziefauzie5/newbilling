@@ -140,7 +140,7 @@
                               <li class="list-group-item">No. Layanan   : {{$job_tiket->reg_nolayanan}}</li>
                               <li class="list-group-item">Nama   : {{$job_tiket->input_nama}}</li>
                              <li class="list-group-item">Alamat : {{$job_tiket->input_alamat_pasang}}</li>
-                             <li class="list-group-item"><button class="btn btn-primary btn-sm"><a href="{{$job_tiket->input_maps}}" target="_blank"></a>Lihat Google Maps</button>&nbsp;&nbsp;<button class="btn btn-primary btn-sm"><a href="https://wa.me/62{{$job_tiket->input_hp}}?text=Assalamualaikum" target="_blank"></a><i class="fas fa-phone"></i> &nbsp;&nbsp;Whatsapp</button> </li>
+                             <li class="list-group-item"><a href="{{$job_tiket->input_maps}}" target="_blank"><button class="btn btn-primary btn-sm">Lihat Google Maps</button></a>&nbsp;&nbsp;<a href="https://wa.me/62{{$job_tiket->input_hp}}?text=Assalamualaikum" target="_blank"><button class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> &nbsp;&nbsp;Whatsapp</button></a> </li>
                              <label for="barang" class=" col-form-label">DESKRIPSI</label>
                             </ul>
                             <ul class="list-group">

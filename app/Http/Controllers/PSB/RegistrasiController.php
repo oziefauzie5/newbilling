@@ -177,7 +177,7 @@ class RegistrasiController extends Controller
 Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
 
 No.Layanan : *' . $request->reg_nolayanan . '*
-Pelanggan : *' . $request->reg_nama . '*
+Nama : *' . $request->reg_nama . '*
 Alamat pasang : ' . $request->reg_alamat_pasang . '
 Paket : *' . $profile->paket_nama . '*
 Jenis tagihan : ' . $request->reg_jenis_tagihan . '
@@ -201,7 +201,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 Antrian pemasangan tanggal ' . date('d-m-Y', strtotime($tgl_pasang)) . ' 
 
 No.Layanan : *' . $request->reg_nolayanan . '*
-Pelanggan : ' . $request->input_nama . '
+Nama : ' . $request->reg_nama . '
 Alamat : ' . $request->reg_alamat_pasang .
             '
 Paket : *' . $profile->paket_nama . '*

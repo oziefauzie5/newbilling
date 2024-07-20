@@ -447,7 +447,6 @@ class TeknisiController extends Controller
 
 Pemasangan telah selesai dikerjakan  😊
 
-
 Pelanggan : ' . $query->input_nama . '
 Alamat : ' . $query->input_alamat_pasang . '
 
