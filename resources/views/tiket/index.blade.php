@@ -118,6 +118,7 @@
             <thead>
               <tr>
                 <th>Id</th>
+                <th>No. Layanan</th>
                 <th>Nama</th>
                 <th>Whatsapp</th>
                 <th>Alamat Pasang</th>
@@ -127,6 +128,7 @@
               @foreach($input_data as $d)
               <tr id="{{$d->reg_idpel}}">
                 <td>{{$d->id}}</td>
+                <td>{{$d->reg_nolayanan}}</td>
                 <td>{{$d->input_nama}}</td>
                 <td>{{$d->input_hp}}</td>
                 <td>{{$d->input_alamat_pasang}}</td>
