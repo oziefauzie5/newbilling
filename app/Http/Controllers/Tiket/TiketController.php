@@ -58,30 +58,35 @@ class TiketController extends Controller
         $pesan_group['ket'] = 'tiket';
         $pesan_group['status'] = '0';
         $pesan_group['target'] = '120363028776966861@g.us';
-        $pesan_group['pesan'] = '-- TIKET GANGGUAN --
+        $pesan_group['pesan'] = '       -- TIKET GANGGUAN --
 
 Hallo Broo..  
 Ada tiket masuk ke sistem nih! 😊
-Notiket : ' . $tiket_id . '
+
+Notiket : *' . $tiket_id . '*
 Topik : ' . $request->tiket_judul . '
-Deskripsi : ' . $request->tiket_deskripsi . '
+Deskripsi : *' . $request->tiket_deskripsi . '*
+
 Pelanggan : ' . $request->tiket_pelanggan . '
 Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
 Tanggal tiket : ' . $tanggal . '
+
 Mohon segera diproses dari aplikasi dan di tindak lanjuti ya.
 Terima kasih.';
 
         $pesan_pelanggan['ket'] = 'tiket';
         $pesan_pelanggan['status'] = '0';
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
-        $pesan_pelanggan['pesan'] = '-- TIKET GANGGUAN --
+        $pesan_pelanggan['pesan'] = '       -- TIKET GANGGUAN --
 
 Pelanggan yth
 Tiket anda sudah masuk ke system kami.
+
 Nomor tiket : *' . $tiket_id . '* 
 Topik : ' . $request->tiket_judul . '
 Deskripsi : ' . $request->tiket_deskripsi . '
 Tanggal tiket : ' . $tanggal . '
+
 Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu aktif agar bisa di hubungi kembali.
 Terima kasih.';
 
