@@ -811,7 +811,7 @@ Tanggal tiket : ' . $tanggal . '
 
         $pesan_pelanggan['ket'] = 'close tiket';
         $pesan_pelanggan['status'] = '0';
-        $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
+        $pesan_pelanggan['target'] = $tiket->input_hp;
         $pesan_pelanggan['pesan'] = '               -- CLOSE TIKET --
 
 Pelanggan yth
