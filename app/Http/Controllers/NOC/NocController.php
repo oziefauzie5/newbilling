@@ -193,7 +193,7 @@ class NocController extends Controller
 
                     $pesan_group['ket'] = 'aktivasi psb';
                     $pesan_group['status'] = '0';
-                    $pesan_group['target'] = '120363028776966861@g.us';
+                    $pesan_group['target'] = $data_pelanggan->input_hp;
                     $pesan_group['pesan'] = '
 Pelanggan yang terhormat,
 Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya
