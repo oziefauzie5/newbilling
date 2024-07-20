@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\NOC;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Paket;
@@ -162,7 +163,8 @@ class NocController extends Controller
     public function isolir_manual($id)
     {
 
-        $data_pelanggan = Registrasi::where('reg_idpel', $id)->first();
+        $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->where('reg_idpel', $id)->first();
         $router = Router::whereId($data_pelanggan->reg_router)->first();
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
@@ -188,6 +190,29 @@ class NocController extends Controller
                     $API->comm('/ppp/active/remove', [
                         '.id' =>  $cek_status['0']['.id'],
                     ]);
+
+                    $pesan_group['ket'] = 'aktivasi psb';
+                    $pesan_group['status'] = '0';
+                    $pesan_group['target'] = '120363028776966861@g.us';
+                    $pesan_group['pesan'] = '
+Pelanggan yang terhormat,
+Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya
+Agar dapat digunakan kembali dimohon untuk melakukan pembayaran tagihan sebagai berikut :
+
+No.Layanan : *' . $data_pelanggan->reg_nolayanan . '*
+Pelanggan : ' . $data_pelanggan->input_nama . '
+Invoice : 013524
+Jatuh Tempo : ' . $data_pelanggan->reg_tgl_jatuh_tempo . '
+Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama) . '*
+
+--------------------
+Pesan ini bersifat informasi dan tidak perlu dibalas
+*OVALL FIBER*
+
+
+';
+                    Pesan::create($pesan_group);
+
                     $notifikasi = array(
                         'pesan' => 'ISOLIR Pelanggan berhasil',
                         'alert' => 'success',
