@@ -29,11 +29,17 @@ class RegistrasiApiController extends Controller
         $API = new RouterosAPI();
         $API->debug = false;
 
+        if ($regist->reg_jenis_tagihan == 'FREE') {
+            $comment = 'FREE';
+        } else {
+            $comment = 'MIGRASI';
+        }
+
         if ($API->connect($ip, $user, $pass)) {
 
             $API->comm('/ip/pool/add', [
                 'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
+                'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
             ]);
             $API->comm('/ppp/profile/add', [
                 'name' =>  $regist->paket_nama == '' ? '' : $regist->paket_nama,
@@ -54,7 +60,8 @@ class RegistrasiApiController extends Controller
                     'password' => $regist->reg_password  == '' ? '' : $regist->reg_password,
                     'service' => 'pppoe',
                     'profile' => $regist->paket_nama  == '' ? 'default' : $regist->paket_nama,
-                    'comment' => $regist->reg_jenis_tagihan == '' ? '' : $regist->reg_jenis_tagihan,
+                    'comment' => $comment == '' ? '' : $comment,
+                    'disabled' => 'no',
                 ]);
 
                 $notifikasi = array(
@@ -168,14 +175,18 @@ class RegistrasiApiController extends Controller
             ->where('registrasis.reg_idpel', $id)
             ->first();
 
-        // $paket = Paket::where("paket_id", $request->reg_profile)->first();
         $ip =   $query->router_ip . ':' . $query->router_port_api;
         $user = $query->router_username;
         $pass = $query->router_password;
         $API = new RouterosAPI();
         $API->debug = false;
         #
-
+        // dd($query->reg_layanan);
+        if ($query->reg_jenis_tagihan == 'FREE') {
+            $comment = 'FREE';
+        } else {
+            $comment = $query->reg_tgl_jatuh_tempo;
+        }
         if ($query->reg_layanan == 'PPP') {
             if ($API->connect($ip, $user, $pass)) {
                 $secret = $API->comm('/ppp/profile/print', [
@@ -186,11 +197,10 @@ class RegistrasiApiController extends Controller
                         '?name' => $query->reg_username,
                     ]);
                     if ($cari_pel) {
-
                         $API->comm('/ppp/secret/set', [
                             '.id' => $cari_pel[0]['.id'],
                             'profile' => $query->paket_nama,
-                            'comment' => $query->reg_tgl_jatuh_tempo == '' ? '' : $query->reg_tgl_jatuh_tempo,
+                            'comment' => $comment == '' ? '' : $comment,
                         ]);
                         $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
                         $data['reg_harga'] = $request->reg_harga;
@@ -220,7 +230,7 @@ class RegistrasiApiController extends Controller
                             'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                             'service' => 'pppoe',
                             'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                            'comment' => $query->reg_tgl_jatuh_tempo == '' ? '' : $query->reg_tgl_jatuh_tempo,
+                            'comment' => $comment == '' ? '' : $comment,
                             'disabled' => 'no',
                         ]);
                         $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
@@ -250,7 +260,7 @@ class RegistrasiApiController extends Controller
 
                     $API->comm('/ip/pool/add', [
                         'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                        'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
+                        'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
                     ]);
                     $API->comm('/ppp/profile/add', [
                         'name' =>  $query->paket_nama == '' ? '' : $query->paket_nama,
@@ -268,6 +278,7 @@ class RegistrasiApiController extends Controller
                     $API->comm('/ppp/secret/set', [
                         '.id' => $cari_pel[0]['.id'],
                         'profile' => $query->paket_nama,
+                        'comment' => $comment == '' ? '' : $comment,
                     ]);
 
                     $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
@@ -314,7 +325,7 @@ class RegistrasiApiController extends Controller
                         $API->comm('/ip/hotspot/user/set', [
                             '.id' => $cari_pel[0]['.id'],
                             'profile' => $query->paket_nama,
-                            'comment' => $query->reg_tgl_jatuh_tempo == '' ? '' : $query->reg_tgl_jatuh_tempo,
+                            'comment' => $comment == '' ? '' : $comment,
                         ]);
                         $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
                         $data['reg_harga'] = $request->reg_harga;
@@ -343,7 +354,7 @@ class RegistrasiApiController extends Controller
                             'name' => $query->reg_username == '' ? '' : $query->reg_username,
                             'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                             'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                            'comment' => $query->reg_tgl_jatuh_tempo == '' ? '' : $query->reg_tgl_jatuh_tempo,
+                            'comment' => $comment == '' ? '' : $comment,
                             'disabled' => 'no',
                         ]);
                         $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
@@ -396,7 +407,11 @@ class RegistrasiApiController extends Controller
             ->where('registrasis.reg_idpel', $id)
             ->first();
         // $paket = Paket::where("paket_id", $query->reg_profile)->first();
-
+        if ($query->reg_jenis_tagihan == 'FREE') {
+            $comment = 'FREE';
+        } else {
+            $comment = $query->reg_tgl_jatuh_tempo;
+        }
 
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
@@ -419,6 +434,7 @@ class RegistrasiApiController extends Controller
                     $before_API->comm('/ppp/secret/set', [
                         '.id' => $before_secret[0]['.id'],
                         'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                        'comment' => $comment == '' ? '' : $comment,
                     ]);
 
                     $data['reg_ip_address'] = $request->reg_ip_address;
@@ -436,7 +452,7 @@ class RegistrasiApiController extends Controller
                         'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                        'comment' => $query->reg_jatuh_tempo == '' ? '' : $query->reg_jatuh_tempo,
+                        'comment' => $comment == '' ? '' : $comment,
                         'disabled' => 'no',
                     ]);
                     $notifikasi = array(
@@ -464,7 +480,7 @@ class RegistrasiApiController extends Controller
                         'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                        'comment' => $query->reg_tgl_jatuh_tempo == '' ? '' : $query->reg_tgl_jatuh_tempo,
+                        'comment' => $comment == '' ? '' : $comment,
                         'disabled' => 'no',
                     ]);
 
@@ -501,7 +517,7 @@ class RegistrasiApiController extends Controller
 
                     $API->comm('/ip/pool/add', [
                         'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                        'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
+                        'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
                     ]);
                     $API->comm('/ppp/profile/add', [
                         'name' =>  $query->paket_nama == '' ? '' : $query->paket_nama,
@@ -519,7 +535,7 @@ class RegistrasiApiController extends Controller
                         'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                        'comment' => $query->reg_tgl_jatuh_tempo == '' ? '' : $query->reg_tgl_jatuh_tempo,
+                        'comment' => $comment == '' ? '' : $comment,
                         'disabled' => 'no',
                     ]);
 

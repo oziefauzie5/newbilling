@@ -164,11 +164,13 @@ class NocController extends Controller
     {
 
         $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->where('reg_idpel', $id)->first();
-        $router = Router::whereId($data_pelanggan->reg_router)->first();
-        $ip =   $router->router_ip . ':' . $router->router_port_api;
-        $user = $router->router_username;
-        $pass = $router->router_password;
+        // $router = Router::whereId($data_pelanggan->reg_router)->first();
+        $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
+        $user = $data_pelanggan->router_username;
+        $pass = $data_pelanggan->router_password;
         $API = new RouterosAPI();
         $API->debug = false;
 
@@ -181,9 +183,11 @@ class NocController extends Controller
             if ($cek_secret) {
                 $API->comm('/ppp/secret/set', [
                     '.id' => $cek_secret[0]['.id'],
-                    'profile' => 'APPBILL_ISOLIR',
                     'comment' => 'ISOLIR MANUAL',
+                    'disabled' => 'yes',
                 ]);
+                // 'profile' => 'APPBILL_ISOLIR',
+                // dd($cek_secret);
 
 
                 $pesan_group['ket'] = 'isolir manual';
@@ -227,11 +231,30 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } else {
-                $notifikasi = array(
-                    'pesan' => 'Secret tidak ditemukan pada Router',
-                    'alert' => 'error',
-                );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                $API->comm('/ppp/secret/add', [
+                    'name' => $data_pelanggan->reg_username == '' ? '' : $data_pelanggan->reg_username,
+                    'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
+                    'service' => 'pppoe',
+                    'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
+                    'comment' =>  'ISOLIR MANUAL' == '' ? '' : 'ISOLIR MANUAL',
+                    'disabled' => 'yes',
+                ]);
+                $cek_secret = $API->comm('/ppp/secret/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_secret) {
+                    $notifikasi = array(
+                        'pesan' => 'ISOLIR Pelanggan berhasil',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Secret tidak ditemukan pada Router',
+                        'alert' => 'error',
+                    );
+                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                }
             }
         } else {
             $notifikasi = array(
@@ -262,7 +285,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             if ($cek_secret) {
                 $API->comm('/ppp/secret/set', [
                     '.id' => $cek_secret[0]['.id'],
-                    'profile' => $data_pelanggan->paket_nama,
+                    'comment' => 'BUKA ISOLIR MANUAL',
+                    'disabled' => 'no',
                 ]);
                 $cek_status = $API->comm('/ppp/active/print', [
                     '?name' => $data_pelanggan->reg_username,
@@ -289,8 +313,9 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                     'service' => 'pppoe',
                     'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                    'comment' =>  $data_pelanggan->reg_tgl_jatuh_tempo == '' ? '' : $data_pelanggan->reg_tgl_jatuh_tempo,
+                    'comment' => 'BUKA ISOLIR MANUAL',
                     'disabled' => 'no',
+
                 ]);
                 $notifikasi = array(
                     'pesan' => 'Berhasil buka isolir manual ( Secret ditambahkan pada Router )',

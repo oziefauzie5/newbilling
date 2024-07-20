@@ -27,30 +27,19 @@ class TeknisiController extends Controller
     public function index(Request $request)
     {
         $teknisi_id = Auth::user()->id;
-        // $kredit = komisi::where('komisi_user_id', $teknisi_id)->sum('komisi_kredit');
-        // $debet = komisi::where('komisi_user_id', $teknisi_id)->sum('komisi_debet');
-        // $komisi = $kredit - $debet;
 
-        // 'tittle' => 'Registrasi',
-        // 'data_teknisi' => DB::table('registrasis')->join('pelanggans', 'pelanggans.idpel', '=', 'registrasis.id')->where('pelanggans.status', 'Pemasangan')->get(),
-        // 'data_teknisi' => Teknisi::all(),
         $data['q'] = $request->query('q');
         $query = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('registrasis.reg_progres', '=', '0')
             ->orderBy('input_data.input_tgl', 'DESC');
-        // ->where(function ($query) use ($data) {
-        //     $query->where('input_nama', 'like', '%' . $data['q'] . '%');
-        //     $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
-        // });
+
         $data['data_pelanggan'] = $query->get();
 
         $data['data_tiket'] = Tiket::select('registrasis.*', 'input_data.*', 'tikets.*', 'tikets.created_at as tgl_tiket')
             ->join('registrasis', 'registrasis.reg_nolayanan', '=', 'tikets.tiket_nolayanan')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->where('tiket_status', '!=', 'DONE')->get();
-
-        // dd($data['data_tiket']);
 
         $data['data_user'] = DB::table('roles')
             ->join('model_has_roles', 'model_has_roles.role_id', '=', 'roles.id')
@@ -59,8 +48,6 @@ class TeknisiController extends Controller
             ->where('users.id', '=', $teknisi_id)
             ->get();
 
-        // $data['komisi'] = $komisi;
-        // $data['debet'] = $debet;
         return view('Teknisi/index', $data);
     }
 
@@ -82,7 +69,6 @@ class TeknisiController extends Controller
         $data['teknisi_idpel'] = $request->idpel;
         $data['teknisi_status'] = '1';
         $data['teknisi_psb'] = '0';
-        // $yesterday = date("d F Y, H:i:s", $id);
         Teknisi::create($data);
         $update['reg_progres'] = '1';
         $update['reg_teknisi_team'] = $team;

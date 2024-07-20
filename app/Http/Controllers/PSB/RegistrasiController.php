@@ -228,7 +228,7 @@ Diregistrasi Oleh : *' . $admin . '*
             if ($API->connect($ip, $user, $pass)) {
                 $API->comm('/ip/pool/add', [
                     'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                    'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
+                    'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
                 ]);
                 $API->comm('/ppp/profile/add', [
                     'name' =>  $profile->paket_nama == '' ? '' : $profile->paket_nama,
