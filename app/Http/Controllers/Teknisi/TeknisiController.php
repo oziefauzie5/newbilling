@@ -47,7 +47,7 @@ class TeknisiController extends Controller
         $data['data_tiket'] = Tiket::select('registrasis.*', 'input_data.*', 'tikets.*', 'tikets.created_at as tgl_tiket')
             ->join('registrasis', 'registrasis.reg_nolayanan', '=', 'tikets.tiket_nolayanan')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->where('tiket_status', '!=', 'CLOSED')->get();
+            ->where('tiket_status', '!=', 'DONE')->get();
 
         // dd($data['data_tiket']);
 
@@ -125,22 +125,22 @@ class TeknisiController extends Controller
         ];
         return redirect()->route('admin.teknisi.list_tiket')->with($notifikasi);
     }
-    public function update_tiket($id)
+    public function update_tiket($tiket_id)
     {
         $teknisi_id = Auth::user()->id;
-        $cek = SubTiket::where('subtiket_admin', $teknisi_id)->where('subtiket_status', 'OPEN')->first();
-        if ($cek->subtiket_status != 'OPEN') {
+        $cek = SubTiket::where('subtiket_admin', $teknisi_id)->where('subtiket_id', $tiket_id)->where('subtiket_status', 'OPEN')->first();
+        // return response()->json($cek);
+        if (!$cek) {
             $teknisi_name = Auth::user()->name;
             $update['tiket_status'] = 'OPEN';
-            Tiket::where('tiket_id', $id)->update($update);
-            $updates['subtiket_id'] = $id;
+            Tiket::where('tiket_id', $tiket_id)->update($update);
+            $updates['subtiket_id'] = $tiket_id;
             $updates['subtiket_status'] = 'OPEN';
             $updates['subtiket_admin'] = $teknisi_id;
             $updates['subtiket_teknisi_team'] = $teknisi_name;
             $updates['subtiket_deskripsi'] = 'Membuka Tiket';
             SubTiket::create($updates);
         }
-        // return response()->json($id);
     }
 
     public function list_aktivasi()
@@ -673,82 +673,80 @@ class TeknisiController extends Controller
             ->join('tikets', 'tikets.tiket_idpel', '=', 'input_data.id')
             ->where('tikets.tiket_id', '=', $id);
         $tiket = $query->first();
-        // dd($data['tiket']->reg_idpel);
+        // dd($id);
+        if ($request->kode_adaptor) {
+            $update_adaptor['subbarang_status'] = '1';
+            $update_adaptor['subbarang_keluar'] = '1';
+            $update_adaptor['subbarang_stok'] = '0';
+            $update_adaptor['subbarang_keterangan'] = ' Ganti Pactcore ' . $tiket->input_nama;
 
-        // dd($request->alasan);
-        // $request->validate([
-        //     'reg_mrek' => 'required',
-        //     'reg_mac' => 'required',
-        //     'reg_sn' => 'required',
-        //     'kode_pactcore' => 'required',
-        //     'kode_adaptor' => 'required',
-        //     'kode_ont_lama' => 'required',
-        // ], [
-
-        //     'reg_mrek.required' => 'Merek Perangkat tidak boleh kosong',
-        //     'reg_mac.required' => 'Mac Address tidak boleh kosong',
-        //     'reg_sn.required' => 'Serial Number Perangkat tidak boleh kosong',
-        //     'kode_pactcore.required' => 'Kode Pactcore tidak boleh kosong',
-        //     'kode_adaptor.required' => 'Kode Adaptor tidak boleh kosong',
-        //     'kode_ont_lama.required' => 'Kode ONT tidak boleh kosong',
-
-        // ]);
-
-        if ($request->alasan == 'Rusak') {
-            $data['reg_sn'] = $request->edit_reg_sn;
-            $data['reg_mac'] = $request->edit_reg_mac;
-            $data['reg_mrek'] = $request->edit_reg_mrek;
-            $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
-            // $data['keterangan'] = $request->edit_keterangan;
-            $update_barang['subbarang_status'] = '1';
-            $update_barang['subbarang_keluar'] = '1';
-            $update_barang['subbarang_stok'] = '0';
-            $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . ' Karna Rusak. ( ' . $request->keterangan . ' )';
-
-            $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
-            $update_barang_lama['subbarang_stok'] = '0';
-            $update_barang_lama['subbarang_status'] = '1';
-            $update_barang_lama['subbarang_keluar'] = '1';
-            Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
-            SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
-            SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-        } else if ($request->alasan == 'Tukar') {
-            $data['edit_reg_sn'] = $request->edit_reg_sn;
-            $data['edit_reg_mac'] = $request->edit_reg_mac;
-            $data['edit_reg_mrek'] = $request->edit_reg_mrek;
-            $data['edit_reg_kode_ont'] = $request->edit_reg_kode_ont;
-            // $data['edit_keterangan'] = $request->edit_keterangan;
-            $update_barang['subbarang_status'] = '1';
-            $update_barang['subbarang_keluar'] = '1';
-            $update_barang['subbarang_stok'] = '0';
-            $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
-            $update_barang_lama['subbarang_status'] = '0';
-            $update_barang_lama['subbarang_keluar'] = '0';
-            $update_barang_lama['subbarang_stok'] = '1';
-            $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
-            Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
-            SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
-            SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-        } else if ($request->alasan == 'Upgrade') {
-            $data['edit_reg_sn'] = $request->edit_reg_sn;
-            $data['edit_reg_mac'] = $request->edit_reg_mac;
-            $data['edit_reg_mrek'] = $request->edit_reg_mrek;
-            $data['edit_reg_kode_ont'] = $request->edit_reg_kode_ont;
-            $data['edit_keterangan'] = $request->edit_keterangan;
-            $update_barang['subbarang_status'] = '1';
-            $update_barang['subbarang_keluar'] = '1';
-            $update_barang['subbarang_stok'] = '0';
-
-            $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
-            $update_barang_lama['subbarang_status'] = '0';
-            $update_barang_lama['subbarang_keluar'] = '0';
-            $update_barang_lama['subbarang_stok'] = '1';
-
-            $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
-            Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
-            SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
-            SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+            SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
         }
+        if ($request->kode_pactcore) {
+            $update_pactcore['subbarang_status'] = '1';
+            $update_pactcore['subbarang_keluar'] = '1';
+            $update_pactcore['subbarang_stok'] = '0';
+            $update_pactcore['subbarang_keterangan'] = ' Ganti Pactcore ' . $tiket->input_nama;
+
+            SubBarang::where('id_subbarang', $request->kode_pactcore)->update($update_pactcore);
+        }
+        if ($request->kode_ont) {
+
+            if ($request->alasan == 'Rusak') {
+                $data['reg_sn'] = $request->edit_reg_sn;
+                $data['reg_mac'] = $request->edit_reg_mac;
+                $data['reg_mrek'] = $request->edit_reg_mrek;
+                $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                $update_barang['subbarang_status'] = '1';
+                $update_barang['subbarang_keluar'] = '1';
+                $update_barang['subbarang_stok'] = '0';
+                $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $request->kode_ont_lama . ' Pel. ' . $tiket->input_nama . ' Karna Rusak. ( ' . $request->keterangan . ' )';
+
+                $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
+                $update_barang_lama['subbarang_stok'] = '0';
+                $update_barang_lama['subbarang_status'] = '1';
+                $update_barang_lama['subbarang_keluar'] = '1';
+                Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
+                SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+            } else if ($request->alasan == 'Tukar') {
+                $data['reg_sn'] = $request->edit_reg_sn;
+                $data['reg_mac'] = $request->edit_reg_mac;
+                $data['reg_mrek'] = $request->edit_reg_mrek;
+                $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                $update_barang['subbarang_status'] = '1';
+                $update_barang['subbarang_keluar'] = '1';
+                $update_barang['subbarang_stok'] = '0';
+                $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $request->kode_ont_lama . ' Pel. ' . $tiket->input_nama . '. ( ' . $request->keterangan . ' )';
+                $update_barang_lama['subbarang_status'] = '0';
+                $update_barang_lama['subbarang_keluar'] = '0';
+                $update_barang_lama['subbarang_stok'] = '1';
+                $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
+                Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
+                SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+            } else if ($request->alasan == 'Upgrade') {
+                $data['reg_sn'] = $request->edit_reg_sn;
+                $data['reg_mac'] = $request->edit_reg_mac;
+                $data['reg_mrek'] = $request->edit_reg_mrek;
+                $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                $update_barang['subbarang_status'] = '1';
+                $update_barang['subbarang_keluar'] = '1';
+                $update_barang['subbarang_stok'] = '0';
+
+                $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $request->kode_ont_lama . ' Pel. ' . $tiket->input_nama . '. ( ' . $request->keterangan . ' )';
+                $update_barang_lama['subbarang_status'] = '0';
+                $update_barang_lama['subbarang_keluar'] = '0';
+                $update_barang_lama['subbarang_stok'] = '1';
+
+                $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
+                Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
+                SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+            }
+        }
+
+        $update['tiket_tindakan'] = $request->edit_keterangan;
         $update['tiket_status'] = 'DONE';
         Tiket::where('tiket_id', $id)->update($update);
         $updates['subtiket_id'] = $id;
@@ -757,11 +755,48 @@ class TeknisiController extends Controller
         $updates['subtiket_teknisi_team'] = $tiket->teknisi_team;
         $updates['subtiket_deskripsi'] = 'Menyelesaikan Tiket';
         SubTiket::create($updates);
+
+        $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
+        #NILAI TEKNISI
+        $waktu_kerja = Teknisi::where('teknisi_idpel', $tiket->reg_idpel)->where('teknisi_job', 'TIKET')->where('teknisi_status', '1')->where('teknisi_userid', $teknisi_id)->first();
+
+        $awal  = $waktu_kerja->teknisi_id;
+        $akhir  = $teknisi['teknisi_job_selesai'];
+
+        $diff  = $akhir - $awal;
+        if ($diff > 10800) {
+            $nilai = '25';
+            $kata = '
+"Manusia itu memiliki potensi dan kesempatan yang sama pula. Maka jangan menyerah untuk terus berusaha mendapatkan yang terbaik"';
+        } elseif ($diff > 7200 & $diff < 10800) {
+            $nilai = '50';
+            $kata = '
+"Hanya karena belum ada yang berhasil melakukannya, bukan berarti kamu tidak mungkin mencapainya"';
+        } elseif ($diff > 3600 & $diff < 7200) {
+            $nilai = '75';
+            $kata = '
+"Kami sangat berterima kasih atas dedikasi dan upaya Anda yang tiada henti untuk unggul dalam pekerjaan.  Kami harap Anda terus menginspirasi dan melambung lebih tinggi"';
+        } elseif ($diff < 3600) {
+            $nilai = '100';
+            $kata = '
+"Kinerja luar biasa Anda di tempat kerja merupakan inspirasi bagi semua orang dan kami sangat terkesan dan bangga. Pertahankan kerja bagus Anda!"';
+        }
+
+        $teknisi['teknisi_waktu_kerja'] = $diff;
+        $teknisi['teknisi_nilai'] = $nilai;
+        $teknisi['teknisi_note'] = $kata;
+
+        Teknisi::where('teknisi_idpel', $tiket->reg_idpel)->where('teknisi_job', 'TIKET')->where('teknisi_status', '1')->where('teknisi_userid', $teknisi_id)->update($teknisi);
+
+
+
+
+
         $notifikasi = [
             'pesan' => 'Berhasil mengambil job',
             'alert' => 'success',
         ];
-        dd($data);
+        // dd('berhasil');
         return redirect()->route('admin.teknisi.index')->with($notifikasi);
     }
 }

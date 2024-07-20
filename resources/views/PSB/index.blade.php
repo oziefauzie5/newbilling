@@ -339,8 +339,8 @@
               </tbody>
             </table>
           </div>
-          {{ $data_registrasi->links('pagination::bootstrap-4') }}
         </div>
+        {{ $data_registrasi->links('pagination::bootstrap-4') }}
       </div>
     </div>
   </div>

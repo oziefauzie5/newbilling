@@ -80,11 +80,11 @@
             <div class="form-group row">
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="pactcore" value="1" name="pactcore">
+                  <input class="form-check-input" type="checkbox" id="edit_pactcore" value="1" name="pactcore">
                   <span class="form-check-sign">Ganti Pachtcore</span>
                 </label>
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="adaptor" value="1" name="adaptor">
+                  <input class="form-check-input" type="checkbox" id="edit_adaptor" value="1" name="adaptor">
                   <span class="form-check-sign">Ganti Adaptor</span>
                 </label>
                 <label class="form-check-label">
@@ -100,31 +100,56 @@
                   <span class="form-check-sign">Setting Ulang</span>
                 </label>
               </div>
+              {{-- MODAL VALIDASI PACTCORE --}}
+              <div class="modal fade" id="edit_modal_pactcore" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE PACTCORE</h5>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group row" id="edit_validasi_pactcore">
+                        <label class="col-sm-4 col-form-label">Kode Pactcore</label>
+                        <div class="col-sm-8">
+                          <input type="text"  name="kode_pactcore" id="edit_kode_pactcore" class="form-control"  >
+                          <div id="edit_notif_pactcore"></div>
+                        </div>
+                      </div>
+                      <div id="edit_note_pactcore"></div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary edit_hide_pactcore">Close</button>
+                      <input class="btn btn-outline-secondary edit_val_pactcore" value="Validasi"  type="button"></input>
+                      <div id="buton"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <!-- Modal Validasi adaptor -->
-              <div class="modal fade" id="modal_adaptor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal fade" id="edit_modal_adaptor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header bg-primary">
                       <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE ADAPTOR</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <button type="button" class="edit_hide_adaptor close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
                       
-                      <div class="form-group row" id="validasi_adp">
+                      <div class="form-group row" id="edit_validasi_adaptor">
                         <label class="col-sm-4 col-form-label">Kode Adaptor</label>
                         <div class="col-sm-8">
-                          <input type="text"  name="kode_adaptor" id="kode_adaptor" class="form-control" value="{{ $tiket->reg_kode_adaptor}}" >
-                          <div id="notif_adp"></div>
+                          <input type="text"  name="kode_adaptor" id="edit_kode_adaptor" class="form-control edit_kode_adaptor" >
+                          <div id="edit_notif_adaptor"></div>
                         </div>
                       </div>
-                      <div id="note_adp"></div>
+                      <div id="edit_note_adaptor"></div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_adp">Close</button>
-                      <input class="btn btn-outline-secondary val_adp" value="Validasi"  type="button"></input>
-                      <div id="buton_adp"></div>
+                      <button type="button" class="btn btn-secondary edit_hide_adaptor">Close</button>
+                      <input class="btn btn-outline-secondary edit_val_adaptor" value="Validasi"  type="button"></input>
+                      <div id="buton_adaptor"></div>
                     </div>
                   </div>
                 </div>
@@ -149,14 +174,14 @@
                       <div class="form-group row" id="edit_validasi_ont">
                         <label class="col-sm-4 col-form-label">Kode Ont baru</label>
                         <div class="col-sm-8">
-                          <input type="text"  name="kode_ont" id="edit_kode_ont"  class="form-control"  >
+                          <input type="text"  name="kode_ont" id="edit_kode_ont"  class="form-control edit_kode_ont"  >
                           <div id="edit_notif_ont"></div>
                         </div>
                       </div>
                       <div class="form-group row" id="edit_validasi_alasan">
                         <label class="col-sm-4 col-form-label">Alasan Ganti</label>
                         <div class="col-sm-8">
-                          <select name="alasan" id="alasan" class="form-control">
+                          <select name="alasan" id="alasan" class="form-control alasan">
                             <option value="">Pilih</option>
                             <option value="Rusak">Rusak</option>
                             <option value="Tukar">Tukar</option>
@@ -168,7 +193,7 @@
                       <div class="form-group row" id="edit_validasi_keterangan">
                         <label class="col-sm-4 col-form-label">Keterangan</label>
                         <div class="col-sm-8">
-                          <input type="text"  name="keterangan" id="keterangan" class="form-control"  >
+                          <input type="text"  name="keterangan" id="keterangan" class="form-control keterangan"   >
                           <div id="edit_notif_keterangan"></div>
                         </div>
                       </div>

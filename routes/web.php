@@ -162,7 +162,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/teknisi/tiket-job', [TeknisiController::class, 'job_tiket'])->name('teknisi.job_tiket')->middleware(['role:TEKNISI']);
     Route::get('/teknisi/tiket/details/{id}', [TeknisiController::class, 'details'])->name('teknisi.tiket.details')->middleware(['role:TEKNISI']);
     Route::put('/teknisi/tiket/close/{id}', [TeknisiController::class, 'close_tiket'])->name('teknisi.tiket.close_tiket')->middleware(['role:TEKNISI']);
-    Route::get('/teknisi/tiket/{id}', [TeknisiController::class, 'update_tiket'])->name('teknisi.update_tiket')->middleware(['role:TEKNISI']);
+    Route::get('/teknisi/tiket/{tiket_id}', [TeknisiController::class, 'update_tiket'])->name('teknisi.update_tiket')->middleware(['role:TEKNISI']);
     Route::get('/teknisi/list-aktivasi', [TeknisiController::class, 'list_aktivasi'])->name('teknisi.list_aktivasi')->middleware(['role:TEKNISI']);
     Route::get('/teknisi/list-tiket', [TeknisiController::class, 'list_tiket'])->name('teknisi.list_tiket')->middleware(['role:TEKNISI']);
     Route::get('/teknisi/Aktivasi/{id}', [TeknisiController::class, 'aktivasi'])->name('teknisi.aktivasi')->middleware(['role:TEKNISI']);

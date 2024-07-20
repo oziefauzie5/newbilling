@@ -91,23 +91,8 @@
 
             <section class="content mt-3">
                 @foreach($data_tiket as $job_tiket)
-                <div class="col">{{$job_tiket->tiket_status}}
-                  @if($job_tiket->tiket_status == 'NEW')
-                    <div class="card card_custom1  @if($job_tiket->prioritas == 'CRITICAL') bg-danger @else bg-warning @endif"  data-toggle="modal" data-target="#exampleModal{{$job_tiket->tiket_id}}" id="update_tiket" >
-                        <div class="card-body skew-shadow">
-                            <div class="row">
-                                <div class="col-8 pr-0">
-                                    <h3 class="fw-bold mb-1">{{$job_tiket->input_nama}}</h3>
-                                    <div class="text-small text-uppercase fw-bold op-8">{{$job_tiket->input_alamat_pasang}}</div>
-                                </div>
-                                <div class="col-4 pl-0 text-right">
-                                    <h3 class="fw-bold mb-1">{{date('d M Y H:m:s',strtotime($job_tiket->tgl_tiket))}}</h3>
-                                    <div class="text-small text-uppercase fw-bold op-8">TIKET GANGGUAN</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @elseif($job_tiket->tiket_status == 'OPEN') 
+                <div class="col">
+                  @if($job_tiket->tiket_status != 'DONE'&& $job_tiket->tiket_status != 'PROGRES')
                     <div class="card card_custom1  @if($job_tiket->prioritas == 'CRITICAL') bg-danger @else bg-warning @endif"  data-toggle="modal" data-target="#exampleModal{{$job_tiket->tiket_id}}" id="update_tiket" >
                       <div class="card-body skew-shadow">
                           <div class="row">

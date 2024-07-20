@@ -52,6 +52,9 @@ class PsbController extends Controller
             ->where(function ($query) use ($data) {
                 $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_username', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
             });
 
 
@@ -71,7 +74,7 @@ class PsbController extends Controller
             $query->whereMonth('reg_tgl_pasang', '=', $bulan_lalu);
 
 
-        $data['data_registrasi'] = $query->paginate(15);
+        $data['data_registrasi'] = $query->paginate(10);
         // dd($data['data_registrasi']);
 
         $data['count_inputdata'] = InputData::count();
