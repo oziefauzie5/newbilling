@@ -449,9 +449,10 @@ Pemasangan telah selesai dikerjakan  😊
 
 
 Pelanggan : ' . $query->input_nama . '
-Alamat : ' . $query->input_alamat_pasang .
-                            '
-Teknisi Team : ' . $query->teknisi_team . '
+Alamat : ' . $query->input_alamat_pasang . '
+
+
+Teknisi Team : ' . $waktu_kerja->teknisi_team . '
 FAT OPM : ' . $request->fat_opm . '
 Home OPM : ' . $request->home_opm . '
 Los OPM : ' . $request->los_opm . '
