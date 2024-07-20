@@ -168,9 +168,9 @@
                   <label class="col-sm-2 col-form-label font-weight-bold text-danger" >{{ $status}}</label>
                   @endif
                 </div>
-                <label class="col-sm-2 col-form-label">Uptime :</label>
+                <label class="col-sm-2 col-form-label">IP Address :</label>
               <div class="col-sm-2">
-                <label class="col-sm-2 col-form-label font-weight-bold text-success" >{{ $uptime}}</label>
+                <label class="col-sm-2 col-form-label font-weight-bold text-danger" >{{ $address}}</label>
               </div>
               <div class="col-sm-2">
                 <a href="{{route('admin.noc.pengecekan',['id'=>$data->reg_idpel])}}" target="_blank">

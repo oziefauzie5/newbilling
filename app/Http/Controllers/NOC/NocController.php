@@ -152,8 +152,8 @@ class NocController extends Controller
                 $data['status']  = "DISCONNECTED";
                 $data['uptime'] = "-";
             }
-            return $data;
             // dd($data);
+            return $data;
             // return view('Router/pppoe', $data);
         } else {
             dd('Router Disconnected');
