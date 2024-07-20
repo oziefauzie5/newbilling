@@ -205,7 +205,9 @@ class InvoiceController extends Controller
                 if ($cek_secret) {
                     $API->comm('/ppp/secret/set', [
                         '.id' => $cek_secret[0]['.id'],
-                        'profile' => $data_pelanggan->paket_nama,
+                        'profile' =>  $data_pelanggan->paket_nama == '' ? '' : $data_pelanggan->paket_nama,
+                        'comment' => $reg['reg_tgl_jatuh_tempo'] == '' ? '' : $reg['reg_tgl_jatuh_tempo'],
+                        'disabled' => 'no',
                     ]);
                     $cek_status = $API->comm('/ppp/active/print', [
                         '?name' => $data_pelanggan->reg_username,
@@ -232,7 +234,7 @@ class InvoiceController extends Controller
                         'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                         'service' => 'pppoe',
                         'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                        'comment' =>  $reg['reg_tgl_jatuh_tempo'] == '' ? '' : $reg['reg_tgl_jatuh_tempo'],
+                        'comment' => $reg['reg_tgl_jatuh_tempo'] == '' ? '' : $reg['reg_tgl_jatuh_tempo'],
                         'disabled' => 'no',
                     ]);
 
