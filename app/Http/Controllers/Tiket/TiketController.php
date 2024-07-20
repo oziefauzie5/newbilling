@@ -58,7 +58,7 @@ class TiketController extends Controller
         $pesan_group['ket'] = 'tiket';
         $pesan_group['status'] = '0';
         $pesan_group['target'] = '120363028776966861@g.us';
-        $pesan_group['pesan'] = '       -- TIKET GANGGUAN --
+        $pesan_group['pesan'] = '               -- TIKET GANGGUAN --
 
 Hallo Broo..  
 Ada tiket masuk ke sistem nih! 😊
@@ -77,7 +77,7 @@ Terima kasih.';
         $pesan_pelanggan['ket'] = 'tiket';
         $pesan_pelanggan['status'] = '0';
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
-        $pesan_pelanggan['pesan'] = '       -- TIKET GANGGUAN --
+        $pesan_pelanggan['pesan'] = '               -- TIKET GANGGUAN --
 
 Pelanggan yth
 Tiket anda sudah masuk ke system kami.

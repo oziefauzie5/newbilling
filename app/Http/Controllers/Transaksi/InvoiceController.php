@@ -293,54 +293,54 @@ class InvoiceController extends Controller
     }
     public function suspand_otomatis()
     {
-        $cek_pesan = Pesan::where('status', '0')->count();
-        if ($cek_pesan) {
-            $whatsapp = SettingWhatsapp::where('wa_nama', 'CUSTUMER SERVICE')->where('wa_status', 'Enable')->first();
-            $pesan = Pesan::where('status', '0')->first();
-            $body = array(
-                "api_key" => $whatsapp->wa_key,
-                "target" => $pesan->target,
-                "data" => array("message" => $pesan->pesan)
-            );
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $whatsapp->wa_url . "/send",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => array(
-                    'target' => $pesan->target,
-                    'message' => $pesan->pesan,
-                    // 'url' => 'https://md.fonnte.com/images/wa-logo.png',
-                    // 'filename' => 'filename',
-                    // 'schedule' => 0,
-                    // 'typing' => false,
-                    // 'delay' => '5',
-                    'countryCode' => '62',
-                    // 'file' => new CURLFile("localfile.jpg"),
-                    'location' => '-6.60857950392001, 106.755854',
-                    // 'followup' => 0,
-                ),
-                CURLOPT_HTTPHEADER => array(
-                    'Authorization: ' . $whatsapp->wa_key . ''
-                ),
-            ));
+        // $cek_pesan = Pesan::where('status', '0')->count();
+        // if ($cek_pesan) {
+        //     $whatsapp = SettingWhatsapp::where('wa_nama', 'CUSTUMER SERVICE')->where('wa_status', 'Enable')->first();
+        //     $pesan = Pesan::where('status', '0')->first();
+        //     $body = array(
+        //         "api_key" => $whatsapp->wa_key,
+        //         "target" => $pesan->target,
+        //         "data" => array("message" => $pesan->pesan)
+        //     );
+        //     $curl = curl_init();
+        //     curl_setopt_array($curl, array(
+        //         CURLOPT_URL => $whatsapp->wa_url . "/send",
+        //         CURLOPT_RETURNTRANSFER => true,
+        //         CURLOPT_ENCODING => '',
+        //         CURLOPT_MAXREDIRS => 10,
+        //         CURLOPT_TIMEOUT => 0,
+        //         CURLOPT_FOLLOWLOCATION => true,
+        //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //         CURLOPT_CUSTOMREQUEST => 'POST',
+        //         CURLOPT_POSTFIELDS => array(
+        //             'target' => $pesan->target,
+        //             'message' => $pesan->pesan,
+        //             // 'url' => 'https://md.fonnte.com/images/wa-logo.png',
+        //             // 'filename' => 'filename',
+        //             // 'schedule' => 0,
+        //             // 'typing' => false,
+        //             // 'delay' => '5',
+        //             'countryCode' => '62',
+        //             // 'file' => new CURLFile("localfile.jpg"),
+        //             'location' => '-6.60857950392001, 106.755854',
+        //             // 'followup' => 0,
+        //         ),
+        //         CURLOPT_HTTPHEADER => array(
+        //             'Authorization: ' . $whatsapp->wa_key . ''
+        //         ),
+        //     ));
 
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            curl_close($curl);
-            if ($err) {
-                $mesage['status'] = 'Fail';
-            } else {
-                echo $response;
-                $mesage['status'] = 'Done';
-            }
-            dd($mesage['status']);
-            // Pesan::where('id', $pesan->id)->update($mesage);
-        }
+        //     $response = curl_exec($curl);
+        //     $err = curl_error($curl);
+        //     curl_close($curl);
+        //     if ($err) {
+        //         $mesage['status'] = 'Fail';
+        //     } else {
+        //         echo $response;
+        //         $mesage['status'] = 'Done';
+        //     }
+        //     dd($mesage['status']);
+        //     // Pesan::where('id', $pesan->id)->update($mesage);
+        // }
     }
 }

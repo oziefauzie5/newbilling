@@ -13,6 +13,7 @@ use App\Models\Teknisi\Teknisi;
 use App\Models\Tiket\SubTiket;
 use App\Models\Tiket\Tiket;
 use App\Models\Transaksi\Addons;
+use App\Models\Pesan\Pesan;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\SubInvoice;
 use Carbon\Carbon;
@@ -666,6 +667,7 @@ class TeknisiController extends Controller
 
     public function close_tiket(Request $request, $id)
     {
+        $tanggal = date('d M Y H:m:s', strtotime(Carbon::now()));
         $teknisi_id = Auth::user()->id;
         $query = InputData::select('registrasis.*', 'teknisis.*', 'input_data.*', 'tikets.*', 'tikets.created_at as tgl_dibuat')
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
@@ -789,7 +791,43 @@ class TeknisiController extends Controller
         Teknisi::where('teknisi_idpel', $tiket->reg_idpel)->where('teknisi_job', 'TIKET')->where('teknisi_status', '1')->where('teknisi_userid', $teknisi_id)->update($teknisi);
 
 
+        $pesan_group['ket'] = 'close tiket';
+        $pesan_group['status'] = '0';
+        $pesan_group['target'] = '120363028776966861@g.us';
+        $pesan_group['pesan'] = '               -- CLOSE TIKET --
 
+Hallo Broo..  
+Terimakasih tiket sudah anda selesaikan  😊
+
+Notiket : *' . $id . '*
+Topik : ' . $tiket->tiket_judul . '
+Deskripsi : *' . $request->edit_keterangan . '*
+
+Teknisi : ' . $tiket->teknisi_team . '
+Pelanggan : ' . $request->tiket_pelanggan . '
+Alamat : ' . $tiket->input_alamat_pasang . '
+Tanggal tiket : ' . $tanggal . '
+';
+
+        $pesan_pelanggan['ket'] = 'close tiket';
+        $pesan_pelanggan['status'] = '0';
+        $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
+        $pesan_pelanggan['pesan'] = '               -- CLOSE TIKET --
+
+Pelanggan yth
+Terimaksi kasih atas kepercayan anda menggunakan layanan kami.
+Saat ini gangguan telah selesai ditangani.
+
+Nomor tiket : *' . $id . '* 
+Topik : ' . $tiket->tiket_judul . '
+Tindakan : *' . $request->edit_keterangan . '*
+Tanggal tiket : ' . $tanggal . '
+
+Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu aktif agar bisa di hubungi kembali.
+Terima kasih.';
+
+        // dd($pesan_pelanggan);
+        Pesan::create($pesan_pelanggan);
 
 
         $notifikasi = [

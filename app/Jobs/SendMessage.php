@@ -56,12 +56,11 @@ class SendMessage implements ShouldQueue
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
-                $mesage['status'] = 'Fail';
+                $mesage['status'] = '0';
             } else {
                 echo $response;
                 $mesage['status'] = 'Done';
             }
-            // dd($mesage);
             Pesan::where('id', $pesan->id)->update($mesage);
         }
     }
