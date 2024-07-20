@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Jobs\invoiceJob;
 use App\Jobs\ProssesIsolir;
 use App\Jobs\ProssesSuspand;
+use App\Jobs\SendMessage;
 use App\Jobs\WaJob;
 use App\Jobs\WhatsappInvoiceJob;
 use Illuminate\Console\Scheduling\Schedule;
@@ -22,6 +23,7 @@ class Kernel extends ConsoleKernel
         // $schedule->job(new WaJob)->everyTwentySeconds();
         $schedule->job(new ProssesSuspand)->dailyAt('00:20');
         $schedule->job(new ProssesIsolir)->everySecond();
+        $schedule->job(new SendMessage)->everyTwentySeconds();
     }
 
     /**
