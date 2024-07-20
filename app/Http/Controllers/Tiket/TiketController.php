@@ -62,24 +62,27 @@ class TiketController extends Controller
             ->get();
 
         foreach ($users_teknisi as $t) {
-            $pesan_group['ket'] = 'tiket';
-            $pesan_group['status'] = '0';
-            $pesan_group['target'] = $t->hp;
-            $pesan_group['pesan'] = '               -- TIKET GANGGUAN --
+
+            Pesan::create([
+                'ket' =>  'tiket',
+                'status' =>  '0',
+                'target' =>  $t->hp,
+                'pesan' => '               -- TIKET GANGGUAN --
     
-    Hallo Broo ' . $t->nama_teknisi . '
-    Ada tiket masuk ke sistem nih! 😊
-    
-    No. Tiket : *' . $tiket_id . '*
-    Topik : ' . $request->tiket_judul . '
-    Deskripsi : *' . $request->tiket_deskripsi . '*
-    
-    Pelanggan : ' . $request->tiket_pelanggan . '
-    Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
-    Tanggal tiket : ' . $tanggal . '
-    
-    Mohon segera diproses dari aplikasi dan di tindak lanjuti ya.
-    Terima kasih.';
+Hallo Broo ' . $t->nama_teknisi . '
+Ada tiket masuk ke sistem nih! 😊
+
+No. Tiket : *' . $tiket_id . '*
+Topik : ' . $request->tiket_judul . '
+Deskripsi : *' . $request->tiket_deskripsi . '*
+
+Pelanggan : ' . $request->tiket_pelanggan . '
+Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+Tanggal tiket : ' . $tanggal . '
+
+Mohon segera diproses dari aplikasi dan di tindak lanjuti ya.
+Terima kasih.'
+            ]);
         }
 
         $pesan_group['ket'] = 'tiket';
