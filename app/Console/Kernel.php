@@ -18,11 +18,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
-        // $schedule->job(new WhatsappInvoiceJob)->everyTwentySeconds();
-        // $schedule->job(new WaJob)->everyTwentySeconds();
+
         $schedule->job(new ProssesSuspand)->dailyAt('00:20');
-        $schedule->job(new ProssesIsolir)->everySecond();
+        // $schedule->job(new ProssesIsolir)->everySecond();
         $schedule->job(new SendMessage)->everyTwentySeconds();
     }
 

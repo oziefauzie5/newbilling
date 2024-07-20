@@ -145,7 +145,9 @@ class NocController extends Controller
             if ($cek) {
                 $data['uptime'] = $cek['0']['uptime'];
                 $data['status'] = "CONNECTED";
+                $data['address'] = $cek['0']['address'];
             } else {
+                $data['address'] = '-';
                 $data['status']  = "DISCONNECTED";
                 $data['uptime'] = "-";
             }
