@@ -210,6 +210,7 @@ class TeknisiController extends Controller
 
 
         $id_teknisi = Auth::user()->id;
+        $teknisi_nama = Auth::user()->name;
         $swaktu = SettingWaktuTagihan::first();
         $sbiaya = SettingBiaya::first();
         $barang = SubBarang::where('id_subbarang', $request->kode)->first();
@@ -379,6 +380,9 @@ class TeknisiController extends Controller
                         $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
                         $sub_inv['subinvoice_status'] = '0';
 
+
+
+
                         #NILAI TEKNISI
                         $waktu_kerja = Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->first();
                         // dd($id_teknisi);
@@ -435,6 +439,36 @@ class TeknisiController extends Controller
                         Registrasi::where('reg_idpel', $id)->update($pelanggan);
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
                         SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
+
+                        $pesan_group['ket'] = 'aktivasi psb';
+                        $pesan_group['status'] = '0';
+                        $pesan_group['target'] = '120363028776966861@g.us';
+                        $pesan_group['pesan'] = '               -- PSB SELESAI --
+
+Pemasangan telah selesai dikerjakan  😊
+
+
+Pelanggan : ' . $query->input_nama . '
+Alamat : ' . $query->input_alamat_pasang .
+                            '
+Teknisi Team : ' . $query->teknisi_team . '
+FAT OPM : ' . $request->fat_opm . '
+Home OPM : ' . $request->home_opm . '
+Los OPM : ' . $request->los_opm . '
+
+Kode Kabel : ' . $request->kode . '
+Before Kabel : ' . $request->before . '
+after Kabel : ' . $request->after . '
+Panjang Kabel : ' . $request->total . '
+
+Waktu Selesai : ' . $tanggal . '
+Waktu Pengerjaan : ' . date('H:m:s', strtotime($diff)) . '
+
+Diaktivasi Oleh : ' . $teknisi_nama . '
+';
+
+
+                        Pesan::create($pesan_group);
 
                         $notifikasi = array(
                             'pesan' => 'Aktivasi Berhasil ',
@@ -636,6 +670,37 @@ class TeknisiController extends Controller
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
                         SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
 
+
+                        $pesan_group['ket'] = 'aktivasi psb';
+                        $pesan_group['status'] = '0';
+                        $pesan_group['target'] = '120363028776966861@g.us';
+                        $pesan_group['pesan'] = '               -- PSB SELESAI --
+
+Pemasangan telah selesai dikerjakan  😊
+
+
+Pelanggan : ' . $query->input_nama . '
+Alamat : ' . $query->input_alamat_pasang .
+                            '
+Teknisi Team : ' . $query->teknisi_team . '
+FAT OPM : ' . $request->fat_opm . '
+Home OPM : ' . $request->home_opm . '
+Los OPM : ' . $request->los_opm . '
+
+Kode Kabel : ' . $request->kode . '
+Before Kabel : ' . $request->before . '
+after Kabel : ' . $request->after . '
+Panjang Kabel : ' . $request->total . '
+
+Waktu Selesai : ' . $tanggal . '
+Waktu Pengerjaan : ' . date('H:m:s', strtotime($diff)) . '
+
+Diaktivasi Oleh : ' . $teknisi_nama . '
+';
+
+
+                        Pesan::create($pesan_group);
+
                         $notifikasi = array(
                             'pesan' => 'Aktivasi Berhasil ',
                             'alert' => 'success',
@@ -673,7 +738,8 @@ class TeknisiController extends Controller
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'input_data.id')
             ->join('tikets', 'tikets.tiket_idpel', '=', 'input_data.id')
-            ->where('tikets.tiket_id', '=', $id);
+            ->where('tikets.tiket_id', '=', $id)
+            ->where('teknisis.teknisi_userid', '=', $teknisi_id);
         $tiket = $query->first();
         // dd($id);
         if ($request->kode_adaptor) {
@@ -801,12 +867,14 @@ Terimakasih tiket sudah anda selesaikan  😊
 
 Notiket : *' . $id . '*
 Topik : ' . $tiket->tiket_judul . '
-Deskripsi : *' . $request->edit_keterangan . '*
+Tindakan : *' . $request->edit_keterangan . '*
 
 Teknisi : ' . $tiket->teknisi_team . '
-Pelanggan : ' . $request->tiket_pelanggan . '
-Alamat : ' . $tiket->input_alamat_pasang . '
-Tanggal tiket : ' . $tanggal . '
+
+Pelanggan : ' . $tiket->input_nama . '
+Alamat : ' . $tiket->input_alamat_pasang .
+            '
+Tanggal Seliesa : ' . $tanggal . '
 ';
 
         $pesan_pelanggan['ket'] = 'close tiket';
@@ -821,7 +889,8 @@ Saat ini gangguan telah selesai ditangani.
 Nomor tiket : *' . $id . '* 
 Topik : ' . $tiket->tiket_judul . '
 Tindakan : *' . $request->edit_keterangan . '*
-Tanggal tiket : ' . $tanggal . '
+
+Tanggal Seliesa : ' . $tanggal . '
 
 Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu aktif agar bisa di hubungi kembali.
 Terima kasih.';
