@@ -20,6 +20,7 @@ use App\Models\Transaksi\Jurnal;
 use App\Models\Transaksi\Operasional;
 use App\Models\Transaksi\SubInvoice;
 use App\Models\User;
+use App\Models\Pesan\Pesan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,7 @@ class RegistrasiController extends Controller
     }
     public function store(Request $request)
     {
-
+        $admin = Auth::user()->name;
         $router_nama = Router::whereId($request->reg_router)->first();
         $paket_nama = Paket::where('paket_id', $request->reg_profile)->first();
 
@@ -125,7 +126,9 @@ class RegistrasiController extends Controller
 
 
         $dates = Carbon::now()->toDateTimeString();
-        $tgl_aktif = date('d/m/Y', strtotime($dates));
+        $tanggal = Carbon::now()->toDateString();
+        // $tgl_aktif = date('d/m/Y', strtotime($dates));
+        $tgl_pasang = Carbon::create($tanggal)->addDay(1)->toDateString();
 
 
         $data['reg_idpel'] = $request->reg_idpel;
@@ -161,8 +164,60 @@ class RegistrasiController extends Controller
         $update_barang['subbarang_keluar'] = '1';
         $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
 
+
+
         $router = Router::whereId($request->reg_router)->first();
         $profile = Paket::where('paket_id', $request->reg_profile)->first();
+
+
+        $pesan_pelanggan['ket'] = 'registrasi';
+        $pesan_pelanggan['status'] = '0';
+        $pesan_pelanggan['target'] = $request->reg_hp;
+        $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
+Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
+
+No.Layanan : *' . $request->reg_nolayanan . '*
+Pelanggan : *' . $request->reg_nama . '*
+Alamat pasang : ' . $request->reg_alamat_pasang . '
+Paket : *' . $profile->paket_nama . '*
+Jenis tagihan : ' . $request->reg_jenis_tagihan . '
+Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_dana_kerjasama + $request->reg_kode_unik + $request->reg_dana_kas . '
+Tanggal Pasang : ' . date('d-m-Y', strtotime($tgl_pasang)) . '
+
+Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *https://ovallapp.com/adminapp*
+
+--------------------
+Pesan ini bersifat informasi dan tidak perlu dibalas
+*OVALL FIBER*
+';
+
+        Pesan::create($pesan_pelanggan);
+
+        $pesan_group['ket'] = 'registrasi';
+        $pesan_group['status'] = '0';
+        $pesan_group['target'] = '120363262623415382@g.us';
+        $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
+
+Antrian pemasangan tanggal ' . date('d-m-Y', strtotime($tgl_pasang)) . ' 
+
+No.Layanan : *' . $request->reg_nolayanan . '*
+Pelanggan : ' . $request->input_nama . '
+Alamat : ' . $request->reg_alamat_pasang .
+            '
+Paket : *' . $profile->paket_nama . '*
+Jenis tagihan : ' . $request->reg_jenis_tagihan . '
+Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_dana_kerjasama + $request->reg_kode_unik + $request->reg_dana_kas . '
+Tanggal Pasang : ' . date('d-m-Y', strtotime($tgl_pasang)) . ' 
+
+Diregistrasi Oleh : *' . $admin . '*
+';
+
+
+        Pesan::create($pesan_group);
+
+
+
+
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
         $pass = $router->router_password;
@@ -206,6 +261,8 @@ class RegistrasiController extends Controller
                     SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_barang);
                     SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_barang);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+
+
 
                     $notifikasi = array(
                         'pesan' => 'Berhasil menambahkan pelanggan',
