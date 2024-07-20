@@ -827,6 +827,7 @@ Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu 
 Terima kasih.';
 
         // dd($pesan_pelanggan);
+        Pesan::create($pesan_group);
         Pesan::create($pesan_pelanggan);
 
 
