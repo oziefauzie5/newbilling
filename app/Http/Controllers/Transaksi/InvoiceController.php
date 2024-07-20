@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWaktuTagihan;
+use App\Models\Applikasi\SettingWhatsapp;
+use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Router;
@@ -289,10 +291,56 @@ class InvoiceController extends Controller
         );
         return redirect()->route('admin.inv.sub_invoice', ['id' => $inv])->with($notifikasi);
     }
-    public function suspand_otomatis($id)
+    public function suspand_otomatis()
     {
-        InputData::where('input_status', '1')->update([
-            'input_status' => 'REGIST',
-        ]);
+        $cek_pesan = Pesan::where('status', '0')->count();
+        if ($cek_pesan) {
+            $whatsapp = SettingWhatsapp::where('wa_nama', 'CUSTUMER SERVICE')->where('wa_status', 'Enable')->first();
+            $pesan = Pesan::where('status', '0')->first();
+            $body = array(
+                "api_key" => $whatsapp->wa_key,
+                "target" => $pesan->target,
+                "data" => array("message" => $pesan->pesan)
+            );
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $whatsapp->wa_url . "/send",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array(
+                    'target' => $pesan->target,
+                    'message' => $pesan->pesan,
+                    // 'url' => 'https://md.fonnte.com/images/wa-logo.png',
+                    // 'filename' => 'filename',
+                    // 'schedule' => 0,
+                    // 'typing' => false,
+                    // 'delay' => '5',
+                    'countryCode' => '62',
+                    // 'file' => new CURLFile("localfile.jpg"),
+                    'location' => '-6.60857950392001, 106.755854',
+                    // 'followup' => 0,
+                ),
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: ' . $whatsapp->wa_key . ''
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            if ($err) {
+                $mesage['status'] = 'Fail';
+            } else {
+                echo $response;
+                $mesage['status'] = 'Done';
+            }
+            dd($mesage['status']);
+            // Pesan::where('id', $pesan->id)->update($mesage);
+        }
     }
 }
