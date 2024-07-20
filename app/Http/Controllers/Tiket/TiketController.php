@@ -55,6 +55,33 @@ class TiketController extends Controller
         $datas['subtiket_status'] = 'NEW';
         $datas['subtiket_deskripsi'] = 'Membuat tiket dengan nomor' . $tiket_id;
 
+        $users_teknisi = User::select('model_has_roles.*', 'roles.*', 'users.*', 'users.name as nama_teknisi')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('roles.id', '11')
+            ->get();
+
+        foreach ($users_teknisi as $t) {
+            $pesan_group['ket'] = 'tiket';
+            $pesan_group['status'] = '0';
+            $pesan_group['target'] = $t->hp;
+            $pesan_group['pesan'] = '               -- TIKET GANGGUAN --
+    
+    Hallo Broo ' . $t->nama_teknisi . '
+    Ada tiket masuk ke sistem nih! 😊
+    
+    No. Tiket : *' . $tiket_id . '*
+    Topik : ' . $request->tiket_judul . '
+    Deskripsi : *' . $request->tiket_deskripsi . '*
+    
+    Pelanggan : ' . $request->tiket_pelanggan . '
+    Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+    Tanggal tiket : ' . $tanggal . '
+    
+    Mohon segera diproses dari aplikasi dan di tindak lanjuti ya.
+    Terima kasih.';
+        }
+
         $pesan_group['ket'] = 'tiket';
         $pesan_group['status'] = '0';
         $pesan_group['target'] = '120363028776966861@g.us';
@@ -63,7 +90,7 @@ class TiketController extends Controller
 Hallo Broo..  
 Ada tiket masuk ke sistem nih! 😊
 
-Notiket : *' . $tiket_id . '*
+No. tiket : *' . $tiket_id . '*
 Topik : ' . $request->tiket_judul . '
 Deskripsi : *' . $request->tiket_deskripsi . '*
 

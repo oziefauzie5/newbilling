@@ -177,7 +177,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::put('/invoice/addons/{id}', [InvoiceController::class, 'addons'])->name('inv.addons')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/invoice/diskon/{id}', [InvoiceController::class, 'addDiskon'])->name('inv.addDiskon')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/invoice/addons-hapus/{id}/{inv}/{tot}', [InvoiceController::class, 'addons_delete'])->name('inv.addons_delete')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/invoice/Suspand', [InvoiceController::class, 'suspand_otomatis'])->name('inv.suspand_otomatis')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/test', [InvoiceController::class, 'suspand_otomatis'])->name('inv.suspand_otomatis')->middleware(['role:admin|STAF ADMIN']);
 
     Route::get('/mitra', [MitraController::class, 'index'])->name('mitra.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/mitra/Create', [MitraController::class, 'create'])->name('mitra.create')->middleware(['role:admin|STAF ADMIN']);

@@ -440,6 +440,9 @@ class TeknisiController extends Controller
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
                         SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
 
+
+
+
                         $pesan_group['ket'] = 'aktivasi psb';
                         $pesan_group['status'] = '0';
                         $pesan_group['target'] = '120363028776966861@g.us';

@@ -169,7 +169,6 @@ class RegistrasiController extends Controller
         $router = Router::whereId($request->reg_router)->first();
         $profile = Paket::where('paket_id', $request->reg_profile)->first();
 
-
         $pesan_pelanggan['ket'] = 'registrasi';
         $pesan_pelanggan['status'] = '0';
         $pesan_pelanggan['target'] = $request->reg_hp;

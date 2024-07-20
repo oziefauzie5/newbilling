@@ -17,6 +17,7 @@ use App\Models\Transaksi\Laporan;
 use App\Models\Transaksi\Paid;
 use App\Models\Transaksi\SubInvoice;
 use App\Models\Transaksi\Transaksi;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -293,6 +294,15 @@ class InvoiceController extends Controller
     }
     public function suspand_otomatis()
     {
+        $users_teknisi = User::select('model_has_roles.*', 'roles.*', 'users.*', 'users.name as nama_teknisi')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('roles.id', '11')
+            ->get();
+
+        foreach ($users_teknisi as $t) {
+            echo $t->nama_teknisi . '<br>';
+        }
         // $cek_pesan = Pesan::where('status', '0')->count();
         // if ($cek_pesan) {
         //     $whatsapp = SettingWhatsapp::where('wa_nama', 'CUSTUMER SERVICE')->where('wa_status', 'Enable')->first();
