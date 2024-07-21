@@ -24,6 +24,7 @@ use App\Http\Controllers\Sales\SalesController;
 use App\Http\Controllers\Teknisi\TeknisiController;
 use App\Http\Controllers\Tiket\TiketController;
 use App\Http\Controllers\Transaksi\CallbackController;
+use App\Http\Controllers\Transaksi\GenerateInvoice;
 use App\Http\Controllers\Transaksi\InvoiceController;
 use App\Http\Controllers\Transaksi\LaporanController;
 use App\Http\Controllers\User\UserController;
@@ -171,6 +172,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
 
     Route::get('/invoice', [InvoiceController::class, 'index'])->name('inv.index')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/invoice/generate', [GenerateInvoice::class, 'generate_invoice'])->name('inv.generate_invoice')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/paid', [InvoiceController::class, 'paid'])->name('inv.paid')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/invoice/Detail/{id}', [InvoiceController::class, 'sub_invoice'])->name('inv.sub_invoice')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/invoice/Payment/{id}', [InvoiceController::class, 'payment'])->name('inv.payment')->middleware(['role:admin|STAF ADMIN']);

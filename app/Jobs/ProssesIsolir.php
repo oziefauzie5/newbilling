@@ -52,7 +52,8 @@ class ProssesIsolir implements ShouldQueue
                 if ($cek_secret) {
                     $API->comm('/ppp/secret/set', [
                         '.id' => $cek_secret[0]['.id'],
-                        'profile' => 'APPBILL_ISOLIR',
+                        'comment' => 'ISOLIR OTOMATIS' == '' ? '' : 'ISOLIR OTOMATIS',
+                        'disabled' => 'yes',
                     ]);
 
                     Invoice::where('inv_id', $router->inv_id)->update([

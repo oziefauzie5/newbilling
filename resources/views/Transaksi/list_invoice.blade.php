@@ -86,6 +86,9 @@
                 <div class="col-sm-3">
                   <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
                 </div>
+                <div class="col-sm-3">
+                  <a href="{{route('admin.inv.generate_invoice')}}"><button type="button" class="btn btn-block btn-info btn-sm">Genearte Invoice</button></a>
+                </div>
               </div>
           </form>
           @if ($errors->any())
