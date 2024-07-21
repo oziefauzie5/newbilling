@@ -466,7 +466,7 @@
               <div class="form-group row">
                 <label class="form-check col-sm-2 col-form-label">Tanggal Penagihan</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" id="kode_unik" name="reg_tgl_tagih" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" >
+                    <input type="text" class="form-control" id="kode_unik" name="reg_tgl_tagih" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" readonly >
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Tanggal Jatuh Tempo &nbsp;&nbsp;
                 </label>

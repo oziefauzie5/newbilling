@@ -32,9 +32,16 @@ class InvoiceController extends Controller
 
         $data['data_bulan'] = $request->query('data_bulan');
         $data['data_inv'] = $request->query('data_inv');
+        $data['q'] = $request->query('q');
         // dd($data['data_bulan']);
 
-        $query = Invoice::where('inv_status', '!=', 'PAID');
+        $query = Invoice::where('inv_status', '!=', 'PAID')
+            ->where(function ($query) use ($data) {
+                $query->where('inv_id', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
+            });
 
         if ($data['data_bulan'] == "PELANGGAN BARU")
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_ini);
@@ -44,7 +51,7 @@ class InvoiceController extends Controller
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_3_bulan_lalu);
 
         $data['inv_count_all'] = $query->count();
-        $data['data_invoice'] = $query->get();
+        $data['data_invoice'] = $query->paginate(20);
         $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();
         $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->sum('inv_total');
         $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->sum('inv_total');

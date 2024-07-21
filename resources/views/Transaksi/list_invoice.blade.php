@@ -84,9 +84,12 @@
                   </select>
                 </div>
                 <div class="col-sm-3">
-                  <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
+                 <input type="text" name="q" class="form-control form-control-sm" value="{{$q}}">
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-1">
+                  <button type="submit" class="btn btn-block btn-dark btn-sm">Cari
+                </div>
+                <div class="col-sm-2">
                   <a href="{{route('admin.inv.generate_invoice')}}"><button type="button" class="btn btn-block btn-info btn-sm">Genearte Invoice</button></a>
                 </div>
               </div>
@@ -102,7 +105,7 @@
           </div> 
         @endif
           <div class="table-responsive">
-            <table id="input_data" class="display table table-striped table-hover text-nowrap" >
+            <table class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
                   <th>STATUS</th>
@@ -185,6 +188,7 @@
             </table>
           </div>
         </div>
+        {{ $data_invoice->links('pagination::bootstrap-4') }}
       </div>
     </div>
   </div>
