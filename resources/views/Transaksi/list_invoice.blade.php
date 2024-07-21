@@ -37,6 +37,7 @@
         </div>
       </div>
       </div>
+      @role('admin')
       <div class="row">
       <div class="col-6 col-sm-4 col-lg-6">
         <div class="card">
@@ -50,11 +51,12 @@
         <div class="card">
           <div class="card-body p-3 text-center">
             <div class="h1 m-0 font-weight-bold text-success">Rp. {{number_format($inv_lunas)}}</div>
-            <div class="text-muted mb-3 font-weight-bold text-success">TOTAL LUNAS</div>
+            <div class="text-muted mb-3 font-weight-bold text-success">TOTAL LUNAS  {{$inv_lunas}}</div>
           </div>
         </div>
       </div>
     </div>
+    @endrole
     <div class="row">
       
       <div class="card">
@@ -67,20 +69,17 @@
                     <option value="{{$data_bulan}}" selected>{{$data_bulan}}</option>
                     @endif
                     <option value="">ALL DATA</option>
-                    <option value="PELANGGAN BARU">PELANGGAN BARU</option>
-                    <option value="PELANGGAN 2 BULAN">PELANGGAN 2 BULAN</option>
-                    <option value="PELANGGAN 3 BULAN">PELANGGAN 3 BULAN</option>
-                    <option value="1 BULAN">1 BULAN</option>
-                    <option value="2 BULAN">2 BULAN</option>
-                    <option value="3 BULAN">3 BULAN</option>
-                    <option value="4 BULAN">4 BULAN</option>
+                    <option value="1">PELANGGAN BARU</option>
+                    <option value="2">PELANGGAN 2 BULAN</option>
+                    <option value="3">PELANGGAN 3 BULAN</option>
                   </select>
               </div>
                 <div class="col-sm-3">
                   <select name="data_inv" class="custom-select custom-select-sm">
                     <option value="" selected>ALL INVOICE</option>
-                    <option value="INVOICE UNPAID">INVOICE UNPAID</option>
-                    <option value="INVOICE SUSPEND">INVOICE SUSPEND</option>
+                    <option value="UNPAID">INVOICE UNPAID</option>
+                    <option value="SUSPEND">INVOICE SUSPEND</option>
+                    <option value="ISOLIR">INVOICE ISOLIR</option>
                   </select>
                 </div>
                 <div class="col-sm-3">
@@ -89,9 +88,11 @@
                 <div class="col-sm-1">
                   <button type="submit" class="btn btn-block btn-dark btn-sm">Cari
                 </div>
+                @role('admin')
                 <div class="col-sm-2">
                   <a href="{{route('admin.inv.generate_invoice')}}"><button type="button" class="btn btn-block btn-info btn-sm">Genearte Invoice</button></a>
                 </div>
+                @endrole
               </div>
           </form>
           @if ($errors->any())

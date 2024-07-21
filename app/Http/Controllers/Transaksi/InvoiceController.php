@@ -29,6 +29,7 @@ class InvoiceController extends Controller
         $pasang_bulan_ini = Carbon::now()->addMonth(-0)->format('m');
         $pasang_bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
         $pasang_3_bulan_lalu = Carbon::now()->addMonth(-2)->format('m');
+        // dd($pasang_3_bulan_lalu);
 
         $data['data_bulan'] = $request->query('data_bulan');
         $data['data_inv'] = $request->query('data_inv');
@@ -43,11 +44,11 @@ class InvoiceController extends Controller
                 $query->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
             });
 
-        if ($data['data_bulan'] == "PELANGGAN BARU")
+        if ($data['data_bulan'] == "1")
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_ini);
-        elseif ($data['data_bulan'] == "PELANGGAN 2 BULAN")
+        elseif ($data['data_bulan'] == "2")
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_lalu);
-        elseif ($data['data_bulan'] == "PELANGGAN 3 BULAN")
+        elseif ($data['data_bulan'] == "3")
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_3_bulan_lalu);
 
         $data['inv_count_all'] = $query->count();

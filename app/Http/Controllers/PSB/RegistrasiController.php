@@ -183,7 +183,7 @@ Jenis tagihan : ' . $request->reg_jenis_tagihan . '
 Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_dana_kerjasama + $request->reg_kode_unik + $request->reg_dana_kas . '
 Tanggal Pasang : ' . date('d-m-Y', strtotime($tgl_pasang)) . '
 
-Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *https://ovallapp.com/adminapp*
+Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *https://ovallapp.com*
 
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
