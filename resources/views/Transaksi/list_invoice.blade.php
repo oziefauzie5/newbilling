@@ -51,7 +51,7 @@
         <div class="card">
           <div class="card-body p-3 text-center">
             <div class="h1 m-0 font-weight-bold text-success">Rp. {{number_format($inv_lunas)}}</div>
-            <div class="text-muted mb-3 font-weight-bold text-success">TOTAL LUNAS  {{$inv_lunas}}</div>
+            <div class="text-muted mb-3 font-weight-bold text-success">TOTAL LUNAS  {{$inv_count_lunas}}</div>
           </div>
         </div>
       </div>

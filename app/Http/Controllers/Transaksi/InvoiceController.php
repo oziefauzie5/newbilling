@@ -26,9 +26,9 @@ class InvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $pasang_bulan_ini = Carbon::now()->addMonth(-0)->format('m');
-        $pasang_bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
-        $pasang_3_bulan_lalu = Carbon::now()->addMonth(-2)->format('m');
+        $pasang_bulan_ini = Carbon::now()->addMonth(-0)->format('Y-m-d');
+        $pasang_bulan_lalu = Carbon::now()->addMonth(-1)->format('Y-m-d');
+        $pasang_3_bulan_lalu = Carbon::now()->addMonth(-2)->format('Y-m-d');
         // dd($pasang_3_bulan_lalu);
 
         $data['data_bulan'] = $request->query('data_bulan');
@@ -44,12 +44,16 @@ class InvoiceController extends Controller
                 $query->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
             });
 
-        if ($data['data_bulan'] == "1")
+        if ($data['data_bulan'] == "1") {
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_ini);
-        elseif ($data['data_bulan'] == "2")
+            $data['data_bulan'] = 'PELANGGAN BARU';
+        } elseif ($data['data_bulan'] == "2") {
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_lalu);
-        elseif ($data['data_bulan'] == "3")
+            $data['data_bulan'] = 'PELANGGAN 2 BULAN';
+        } elseif ($data['data_bulan'] == "3") {
             $query->whereMonth('inv_tgl_pasang', '=', $pasang_3_bulan_lalu);
+            $data['data_bulan'] = 'PELANGGAN 3 BULAN';
+        }
 
         $data['inv_count_all'] = $query->count();
         $data['data_invoice'] = $query->paginate(20);
@@ -58,6 +62,7 @@ class InvoiceController extends Controller
         $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->sum('inv_total');
         $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->count();
         $data['inv_count_isolir'] = Invoice::where('inv_status', '=', 'ISOLIR')->count();
+        $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->count();
         return view('Transaksi/list_invoice', $data);
     }
     public function paid()
