@@ -51,6 +51,10 @@ class GenerateInvoice extends Controller
                 ]
             );
         }
-        dd($data_pelanggan);
+        $notifikasi = array(
+            'pesan' => 'Generate Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.inv.index')->with($notifikasi);
     }
 }
