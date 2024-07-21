@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
 
-        $schedule->job(new ProssesSuspand)->dailyAt('00:20');
+        // $schedule->job(new ProssesSuspand)->dailyAt('00:20');
         // $schedule->job(new ProssesIsolir)->everySecond();
         $schedule->job(new SendMessage)->everyTwentySeconds();
     }
