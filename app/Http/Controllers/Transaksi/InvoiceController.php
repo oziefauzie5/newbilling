@@ -55,6 +55,10 @@ class InvoiceController extends Controller
             $data['data_bulan'] = 'PELANGGAN 3 BULAN';
         }
 
+        if ($data['data_inv'])
+            $query->where('inv_status', '=', $data['data_inv']);
+
+
         $data['inv_count_all'] = $query->count();
         $data['data_invoice'] = $query->paginate(20);
         $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();

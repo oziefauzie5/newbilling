@@ -76,6 +76,9 @@
               </div>
                 <div class="col-sm-3">
                   <select name="data_inv" class="custom-select custom-select-sm">
+                    @if($data_inv)
+                    <option value="{{$data_inv}}" selected>{{$data_inv}}</option>
+                    @endif
                     <option value="" selected>ALL INVOICE</option>
                     <option value="UNPAID">INVOICE UNPAID</option>
                     <option value="SUSPEND">INVOICE SUSPEND</option>
@@ -110,6 +113,7 @@
               <thead>
                 <tr>
                   <th>STATUS</th>
+                  <th>JTH TEMPO</th>
                   <th>INVOICE</th>
                   <th>NO.LAYANAN</th>
                   <th>PELANGGAN</th>
@@ -117,7 +121,6 @@
                   <th>MITRA</th>
                   <th>KATEGORI</th>
                   <th>TGL TERBIT</th>
-                  <th>JTH TEMPO</th>
                   <th>TOTAL</th>
                   <th>NOTE</th>
                   <th>ACTION</th>
@@ -135,6 +138,7 @@
                   @elseif($d->inv_status == 'ISOLIR')
                   <td> <span class="badge badge-danger">{{$d->inv_status}}</span></td>
                   @endif
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_jatuh_tempo))}}</td>
                       <td>{{$d->inv_id}}</td>
                       <td>{{$d->inv_nolayanan}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nama}}</td>
@@ -142,7 +146,6 @@
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_mitra}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_kategori}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_tgl_tagih}}</td>
-                      <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_tgl_jatuh_tempo}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_total}}</td>
                       <td>{{$d->inv_note}}</td>
                       <td>

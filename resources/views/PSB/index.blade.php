@@ -251,7 +251,7 @@
             <table id="" class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th class="text-center">{{$count_registrasi}}</th>
                   {{-- <th>ID</th>
                   <th>INET</th> --}}
                   <th>NO LAYANAN</th>
@@ -287,8 +287,8 @@
                   @endif
                       <td>{{$d->input_nama}}</td>
                       @if($d->reg_tgl_jatuh_tempo)
-                      @if($d->inv_status != 'PAID')
-                      <td class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
+                      @if($d->reg_status != 'PAID')
+                      <td class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}---</td>
                       @else
                       <td class="href text-danger font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
                       @endif
