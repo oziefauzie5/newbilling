@@ -682,7 +682,6 @@ Diregistrasi Oleh : *' . $admin . '*
         $API->debug = false;
 
 
-
         // dd($query);
         if ($API->connect($ip, $user, $pass)) {
             $cek_status = $API->comm('/ppp/active/print', [
@@ -698,7 +697,7 @@ Diregistrasi Oleh : *' . $admin . '*
             ]);
             if ($cari_pel) {
                 $API->comm('/ppp/secret/set', [
-                    '.id' =>  $cek_status['0']['.id'],
+                    '.id' =>  $cari_pel['0']['.id'],
                     'comment' => 'PUTUS BERLANGGANAN' == '' ? '' : 'PUTUS BERLANGGANAN',
                     'disabled' => 'yes',
                 ]);

@@ -181,8 +181,6 @@ class RegistrasiApiController extends Controller
         $tgl_isolir = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
         $tgl_penagihan = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay(-2)->toDateString();
         $cek_invid = Invoice::where('inv_idpel', $id)->latest('inv_tgl_jatuh_tempo')->first();
-
-        // dd($cek_invid);
         $ip =   $query->router_ip . ':' . $query->router_port_api;
         $user = $query->router_username;
         $pass = $query->router_password;
@@ -194,9 +192,9 @@ class RegistrasiApiController extends Controller
 
 
         if ($query->reg_jenis_tagihan == 'FREE') {
-            $comment = 'FREE';
+            $comment = '( Done ) FREE ';
         } else {
-            $comment = $query->reg_tgl_jatuh_tempo;
+            $comment = '( Done ) ' . date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
         }
         if ($query->reg_layanan == 'PPP') {
             if ($API->connect($ip, $user, $pass)) {
@@ -263,17 +261,15 @@ class RegistrasiApiController extends Controller
                         $data['reg_dana_kas'] = $request->reg_dana_kas;
                         $data['reg_profile'] = $request->reg_profile;
                         $data['reg_inv_control'] = $request->reg_inv_control;
-                        if ($cek_invid) {
-                            if ($cek_invid->inv_status != 'PAID') {
-                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                        if ($cek_invid->inv_status != 'PAID') {
+                            $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                            $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
 
-                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
-                                Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
-                            }
+                            $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                            $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                            $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                            Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                         }
                         if ($request->reg_jenis_tagihan == 'DEPOSIT') {
                             $data['reg_deposit'] = $sbiaya->biaya_deposit;
@@ -307,6 +303,8 @@ class RegistrasiApiController extends Controller
                     $cari_pel = $API->comm('/ppp/secret/print', [
                         '?name' => $query->reg_username,
                     ]);
+                    // dd( $cari_pel );
+
                     $API->comm('/ppp/secret/set', [
                         '.id' => $cari_pel[0]['.id'],
                         'profile' => $query->paket_nama,
@@ -321,17 +319,15 @@ class RegistrasiApiController extends Controller
                     $data['reg_dana_kas'] = $request->reg_dana_kas;
                     $data['reg_profile'] = $request->reg_profile;
                     $data['reg_inv_control'] = $request->reg_inv_control;
-                    if ($cek_invid) {
-                        if ($cek_invid->inv_status != 'PAID') {
-                            $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                            $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                    if ($cek_invid->inv_status != 'PAID') {
+                        $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                        $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
 
-                            $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                            $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                            $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
-                            Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
-                        }
+                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                        Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                     }
 
                     if ($request->reg_jenis_tagihan == 'DEPOSIT') {
@@ -379,17 +375,15 @@ class RegistrasiApiController extends Controller
                         $data['reg_dana_kas'] = $request->reg_dana_kas;
                         $data['reg_profile'] = $request->reg_profile;
                         $data['reg_inv_control'] = $request->reg_inv_control;
-                        if ($cek_invid) {
-                            if ($cek_invid->inv_status != 'PAID') {
-                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                        if ($cek_invid->inv_status != 'PAID') {
+                            $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                            $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
 
-                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
-                                Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
-                            }
+                            $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                            $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                            $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                            Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                         }
                         if ($request->reg_jenis_tagihan == 'DEPOSIT') {
                             $data['reg_deposit'] = $sbiaya->biaya_deposit;
@@ -419,17 +413,15 @@ class RegistrasiApiController extends Controller
                         $data['reg_dana_kas'] = $request->reg_dana_kas;
                         $data['reg_profile'] = $request->reg_profile;
                         $data['reg_inv_control'] = $request->reg_inv_control;
-                        if ($cek_invid) {
-                            if ($cek_invid->inv_status != 'PAID') {
-                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                        if ($cek_invid->inv_status != 'PAID') {
+                            $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                            $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
 
-                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
-                                Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
-                            }
+                            $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                            $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                            $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                            Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                         }
                         $data['reg_tgl_jatuh_tempo'] = $request->reg_tgl_jatuh_tempo;
                         if ($request->reg_jenis_tagihan == 'DEPOSIT') {
@@ -473,9 +465,9 @@ class RegistrasiApiController extends Controller
             ->first();
         // $paket = Paket::where("paket_id", $query->reg_profile)->first();
         if ($query->reg_jenis_tagihan == 'FREE') {
-            $comment = 'FREE';
+            $comment = '( Done ) FREE  ';
         } else {
-            $comment = $query->reg_tgl_jatuh_tempo;
+            $comment = ('Done') . date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
         }
 
         $ip =   $router->router_ip . ':' . $router->router_port_api;
@@ -496,6 +488,7 @@ class RegistrasiApiController extends Controller
                     '?name' => $query->reg_username,
                 ]);
                 if ($before_secret) {
+
                     $before_API->comm('/ppp/secret/set', [
                         '.id' => $before_secret[0]['.id'],
                         'password' => $request->reg_password  == '' ? '' : $request->reg_password,
