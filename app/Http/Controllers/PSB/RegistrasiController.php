@@ -688,7 +688,7 @@ Diregistrasi Oleh : *' . $admin . '*
             $cek_status = $API->comm('/ppp/active/print', [
                 '?name' => $query->reg_username,
             ]);
-            $API->comm('/ppp/active/set', [
+            $API->comm('/ppp/secret/set', [
                 '.id' =>  $cek_status['0']['.id'],
                 'comment' => 'PUTUS BERLANGGANAN' == '' ? '' : 'PUTUS BERLANGGANAN',
                 'disabled' => 'yes',
