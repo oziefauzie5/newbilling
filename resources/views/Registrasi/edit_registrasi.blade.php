@@ -204,7 +204,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Username internet *</label>
               <div class="col-sm-4">
-                <input type="text" id="tampil_username" name="reg_username" class="form-control" value="{{ $data->reg_username}}" readonly >
+                <input type="text" id="tampil_username" name="reg_username" class="form-control" value="{{ $data->reg_username}}" >
               </div>
                 <label class=" col-sm-2 col-form-label">Passwd internet *</label>
               <div class="col-sm-4">
