@@ -8,7 +8,9 @@ use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingAplikasi;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWaktuTagihan;
+use App\Models\Barang\Barang;
 use App\Models\Barang\SubBarang;
+use App\Models\Barang\supplier;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Paket;
@@ -21,6 +23,7 @@ use App\Models\Transaksi\Operasional;
 use App\Models\Transaksi\SubInvoice;
 use App\Models\User;
 use App\Models\Pesan\Pesan;
+use App\Models\PSB\PutusBerlanggan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -662,5 +665,130 @@ Diregistrasi Oleh : *' . $admin . '*
             'alert' => 'success',
         ];
         return redirect()->route('admin.psb.index')->with($notifikasi);
+    }
+
+    public function putus_berlanggan(Request $request, $idpel)
+    {
+
+        $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
+        $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->where('registrasis.reg_idpel', $idpel)->first();
+
+        $ip =   $query->router_ip . ':' . $query->router_port_api;
+        $user = $query->router_username;
+        $pass = $query->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
+
+
+
+        // dd($query);
+        if ($API->connect($ip, $user, $pass)) {
+            $cek_status = $API->comm('/ppp/active/print', [
+                '?name' => $query->reg_username,
+            ]);
+            $API->comm('/ppp/active/set', [
+                '.id' =>  $cek_status['0']['.id'],
+                'comment' => 'PUTUS BERLANGGANAN' == '' ? '' : 'PUTUS BERLANGGANAN',
+                'disabled' => 'yes',
+            ]);
+            $cari_pel = $API->comm('/ppp/secret/print', [
+                '?name' => $query->reg_username,
+            ]);
+            $API->comm('/ppp/secret/remove', [
+                '.id' => $cari_pel[0]['.id'],
+            ]);
+
+            $data = Invoice::where('inv_idpel', $idpel)->where('inv_status', '!=', 'PAID')->first();
+            if ($data) {
+                $data->delete();
+                SubInvoice::where('subinvoice_id', $data->inv_id)->delete();
+            }
+            // CEK BARANG 
+            $cek_subbarang = SubBarang::where('subbarang_mac', $request->reg_mac)->first();
+            $cek_suplier = supplier::where('supplier_nama', 'OVALL SOLUSINDO MANDIRI')->first();
+            if ($cek_subbarang) {
+                // JIKA ONT ADA 
+                $update_barang['subbarang_status'] = '0';
+                $update_barang['subbarang_keluar'] = '0';
+                $update_barang['subbarang_stok'] = '1';
+                $update_barang['subbarang_keterangan'] = 'PUTUS BERLANGGANAN ' . $query->input_nama;
+                SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
+            } else {
+                // JIKA ONT TIDAK ADA
+                // BUAT DAFTAR ONT BARU
+                // BUAT DENGAN NAMA SUPLIER ONT TARIKAN
+                // CEK SUDAH ADA ATAU BELUM NAMA SUPLIER ONT TARIKAN
+
+
+
+                if ($cek_suplier) {
+                    // JIKA SUPLIER ADA MAKA EKSEKUSI BUAT DAFTAR BARANG
+                    $data['supplier'] = $cek_suplier->id_supplier;
+                } else {
+                    // JIKA SUPLIER TIDAK ADA MAKA EKSEKUSI BUAT SUPLIER TERLEBIH DAHULU
+                    $count = supplier::count();
+                    if ($count == 0) {
+                        $id_supplier = 1;
+                    } else {
+                        $id_supplier = $count + 1;
+                    }
+                    $id_supplier = '1' . sprintf("%03d", $id_supplier);
+
+                    supplier::create([
+                        'id_supplier' => $id_supplier,
+                        'supplier_nama' => 'OVALL SOLUSINDO MANDIRI',
+                        'supplier_alamat' => 'Jl. Tampomas Perum. Alam Tirta Lestari Blok D5 No 06',
+                        'supplier_tlp' => '081386987015',
+                    ]);
+                    $data['supplier'] = $id_supplier;
+                }
+
+                $cek_barang = Barang::where('id_supplier', $data['supplier'])->first();
+                if ($cek_barang) {
+                    $id['subbarang_idbarang'] = $cek_barang->id_barang;
+                } else {
+
+                    $id['subbarang_idbarang'] = mt_rand(100000, 999999);
+                    Barang::create([
+                        'id_barang' => $id['subbarang_idbarang'],
+                        'id_trx' => '-',
+                        'id_supplier' => $data['supplier'],
+                        'barang_tgl_beli' => '1',
+                    ]);
+                }
+
+                SubBarang::create(
+                    [
+                        "id_subbarang" => mt_rand(100000, 999999),
+                        "subbarang_idbarang" => $id['subbarang_idbarang'],
+                        "subbarang_nama" => 'PUTUS BERLANGGANAN ' . $query->input_nama,
+                        "subbarang_ktg" => 'ONT',
+                        "subbarang_qty" => 1,
+                        "subbarang_keluar" => '0',
+                        "subbarang_stok" => 1,
+                        "subbarang_harga" => 0,
+                        "subbarang_tgl_masuk" => $tgl,
+                        "subbarang_status" => '0',
+                    ]
+                );
+            }
+            Registrasi::where('reg_idpel', $idpel)->update(['reg_progres' => '100'], ['reg_catatan' => $request->reg_catatan]);
+            $notifikasi = [
+                'pesan' => 'Berhasil melakukan pemutusan pelanggan',
+                'alert' => 'success',
+            ];
+            // echo '<p style="font-size: 200px" >CILUK........BA</p>';
+            return redirect()->route('admin.psb.index')->with($notifikasi);
+        } else {
+            $notifikasi = [
+                'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
+                'alert' => 'error',
+            ];
+            return redirect()->route('admin.psb.index')->with($notifikasi);
+        }
+
+        // dd($idpel);
     }
 }

@@ -18,8 +18,9 @@ class GenerateInvoice extends Controller
             ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
             ->where('reg_progres', 5)->get();
         $swaktu = SettingWaktuTagihan::first();
+        $i = 1;
         foreach ($data_pelanggan as $dp) {
-            $inv_id = rand(10000, 19999);
+            $inv_id = rand(1000, 1999) . $i++;
             $periode1blan = date('d-m-Y', strtotime(Carbon::create($dp->reg_tgl_jatuh_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($dp->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString()));
             $tgl_isolir =  Carbon::create($dp->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
             Invoice::create([

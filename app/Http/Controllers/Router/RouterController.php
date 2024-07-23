@@ -130,6 +130,16 @@ class RouterController extends Controller
         $data['id'] = $id;
         if ($API->connect($ip, $user, $pass)) {
             $data['getuseractive'] = $API->comm('/ppp/active/print');
+            //     foreach ($data['getuseractive'] as $d) {
+
+
+            //         echo ' <table>
+            //     <tr>
+            //         <td>' . $d['name'] . '</td>
+            //     </tr>
+            //     </tr>
+            // </table>';
+            //     }
             return view('Router/pppoe', $data);
         } else {
             dd('tidak konek');

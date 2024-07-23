@@ -9,8 +9,8 @@ class SubBarang extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'id_subbarang  ',
-        'subbarang_idbarang  ',
+        'id_subbarang',
+        'subbarang_idbarang',
         'subbarang_nama',
         'subbarang_ktg',
         'subbarang_qty',
