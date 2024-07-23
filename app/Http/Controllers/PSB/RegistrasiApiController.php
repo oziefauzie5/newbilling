@@ -467,7 +467,7 @@ class RegistrasiApiController extends Controller
         if ($query->reg_jenis_tagihan == 'FREE') {
             $comment = '( Done ) FREE  ';
         } else {
-            $comment = ('Done') . date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+            $comment = '( Done )' . date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
         }
 
         $ip =   $router->router_ip . ':' . $router->router_port_api;
