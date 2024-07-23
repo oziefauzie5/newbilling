@@ -688,17 +688,21 @@ Diregistrasi Oleh : *' . $admin . '*
             $cek_status = $API->comm('/ppp/active/print', [
                 '?name' => $query->reg_username,
             ]);
-            $API->comm('/ppp/secret/set', [
-                '.id' =>  $cek_status['0']['.id'],
-                'comment' => 'PUTUS BERLANGGANAN' == '' ? '' : 'PUTUS BERLANGGANAN',
-                'disabled' => 'yes',
-            ]);
+            if ($cek_status) {
+                $API->comm('/ppp/active/remove', [
+                    '.id' => $cek_status[0]['.id'],
+                ]);
+            }
             $cari_pel = $API->comm('/ppp/secret/print', [
                 '?name' => $query->reg_username,
             ]);
-            $API->comm('/ppp/secret/remove', [
-                '.id' => $cari_pel[0]['.id'],
-            ]);
+            if ($cari_pel) {
+                $API->comm('/ppp/secret/set', [
+                    '.id' =>  $cek_status['0']['.id'],
+                    'comment' => 'PUTUS BERLANGGANAN' == '' ? '' : 'PUTUS BERLANGGANAN',
+                    'disabled' => 'yes',
+                ]);
+            }
 
             $data = Invoice::where('inv_idpel', $idpel)->where('inv_status', '!=', 'PAID')->first();
             if ($data) {
