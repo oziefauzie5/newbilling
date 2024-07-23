@@ -496,6 +496,7 @@ class RegistrasiApiController extends Controller
                     ]);
 
                     $data['reg_ip_address'] = $request->reg_ip_address;
+                    $data['reg_username'] = $request->reg_username;
                     $data['reg_password'] = $request->reg_password;
                     $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
                     Registrasi::where('reg_idpel', $id)->update($data);
