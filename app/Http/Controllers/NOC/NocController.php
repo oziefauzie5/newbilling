@@ -130,33 +130,64 @@ class NocController extends Controller
 
 
         $data_pelanggan = Registrasi::where('reg_idpel', $id)->first();
-        $router = Router::whereId($data_pelanggan->reg_router)->first();
-        $ip =   $router->router_ip . ':' . $router->router_port_api;
-        $user = $router->router_username;
-        $pass = $router->router_password;
-        $API = new RouterosAPI();
-        $API->debug = false;
+        if ($data_pelanggan->reg_layanan == 'PPP') {
+            $router = Router::whereId($data_pelanggan->reg_router)->first();
+            $ip =   $router->router_ip . ':' . $router->router_port_api;
+            $user = $router->router_username;
+            $pass = $router->router_password;
+            $API = new RouterosAPI();
+            $API->debug = false;
 
-        // dd($data_pelanggan->reg_username);
+            // dd($data_pelanggan->reg_username);
 
-        if ($API->connect($ip, $user, $pass)) {
-            $cek = $API->comm('/ppp/active/print', [
-                '?name' => $data_pelanggan->reg_username,
-            ]);
-            if ($cek) {
-                $data['uptime'] = $cek['0']['uptime'];
-                $data['status'] = "CONNECTED";
-                $data['address'] = $cek['0']['address'];
+            if ($API->connect($ip, $user, $pass)) {
+                $cek = $API->comm('/ppp/active/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek) {
+                    $data['uptime'] = $cek['0']['uptime'];
+                    $data['status'] = "CONNECTED";
+                    $data['address'] = $cek['0']['address'];
+                } else {
+                    $data['address'] = '-';
+                    $data['status']  = "DISCONNECTED";
+                    $data['uptime'] = "-";
+                }
+                // dd($data);
+                return $data;
+                // return view('Router/pppoe', $data);
             } else {
-                $data['address'] = '-';
-                $data['status']  = "DISCONNECTED";
-                $data['uptime'] = "-";
+                dd('Router Disconnected');
             }
-            // dd($data);
-            return $data;
-            // return view('Router/pppoe', $data);
-        } else {
-            dd('Router Disconnected');
+        } elseif ($data_pelanggan->reg_layanan == 'HOTSPOT') {
+            $router = Router::whereId($data_pelanggan->reg_router)->first();
+            $ip =   $router->router_ip . ':' . $router->router_port_api;
+            $user = $router->router_username;
+            $pass = $router->router_password;
+            $API = new RouterosAPI();
+            $API->debug = false;
+
+            // dd($data_pelanggan->reg_username);
+
+            if ($API->connect($ip, $user, $pass)) {
+                $cek = $API->comm('/ip/hotspot/active/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek) {
+                    $data['uptime'] = $cek['0']['uptime'];
+                    $data['status'] = "CONNECTED";
+                    $data['address'] = $cek['0']['address'];
+                } else {
+                    $data['address'] = '-';
+                    $data['status']  = "DISCONNECTED";
+                    $data['uptime'] = "-";
+                }
+                // dd($data);
+                return $data;
+                // return view('Router/pppoe', $data);
+            } else {
+                dd('Router Disconnected');
+            }
         }
     }
     #EDIT DATA PELANGGAN
