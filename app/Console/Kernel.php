@@ -21,7 +21,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new ProssesSuspand)->dailyAt('00:20');
         // $schedule->job(new ProssesIsolir)->everySecond();
-        $schedule->job(new ProssesSuspand)->everySecond();
         $schedule->job(new SendMessage)->everyTwentySeconds();
     }
 

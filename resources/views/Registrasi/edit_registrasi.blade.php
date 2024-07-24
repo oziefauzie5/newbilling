@@ -173,7 +173,7 @@
                   </select>
                 </div>
               </div>
-             @if($data->reg_layanan=='PPP')
+             {{-- @if($data->reg_layanan=='PPP') --}}
              <div class="form-group row">
               <label for="router" class="col-sm-2 col-form-label">Router</label>
               <div class="col-sm-10">
@@ -193,7 +193,7 @@
                 </select>
               </div>
           </div>
-             @endif
+             {{-- @endif --}}
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">IP address</label>
                 <div class="col-sm-10">
