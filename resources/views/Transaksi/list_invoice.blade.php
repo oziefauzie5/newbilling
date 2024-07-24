@@ -137,6 +137,8 @@
                   <td> <span class="badge badge-danger">{{$d->inv_status}}</span></td>
                   @elseif($d->inv_status == 'ISOLIR')
                   <td> <span class="badge badge-danger">{{$d->inv_status}}</span></td>
+                  @else
+                  <td> <span class="badge badge-danger"></span></td>
                   @endif
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_jatuh_tempo))}}</td>
                       <td>{{$d->inv_id}}</td>

@@ -32,10 +32,10 @@ class ProssesSuspand implements ShouldQueue
         $unp = Invoice::where('inv_status', 'UNPAID')->whereDate('inv_tgl_jatuh_tempo', '<=', $data['now'])->get();
         foreach ($unp as $d) {
             Invoice::where('inv_id', $d->inv_id)->update([
-                'inv_status' => 'SUSPAND',
+                'inv_status' => 'SUSPEND',
             ]);
             Registrasi::where('reg_idpel', $d->inv_idpel)->update([
-                'reg_status' => 'SUSPAND',
+                'reg_status' => 'SUSPEND',
             ]);
         }
     }
