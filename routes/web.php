@@ -99,6 +99,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/hotspot', [HotspotController::class, 'index'])->name('vhc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     Route::get('/pelanggan', [PsbController::class, 'index'])->name('psb.index')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/pelanggan/putus-langganan', [PsbController::class, 'listputus_langganan'])->name('psb.listputus_langganan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/List-Input-Data', [PsbController::class, 'list_input'])->name('psb.list_input')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/Validasi/{ktp}', [PsbController::class, 'storeValidateKtp'])->name('psb.storeValidateKtp')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/Input-Data', [PsbController::class, 'store'])->name('psb.store')->middleware(['role:admin|NOC|STAF ADMIN']);

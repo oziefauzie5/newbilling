@@ -301,7 +301,6 @@ class RegistrasiApiController extends Controller
                     }
                 } else {
 
-
                     $API->comm('/ip/pool/add', [
                         'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
                         'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',

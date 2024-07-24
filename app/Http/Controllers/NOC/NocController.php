@@ -10,6 +10,7 @@ use App\Models\Router\Paket;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
 use App\Models\Teknisi\Teknisi;
+use App\Models\Transaksi\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -219,6 +220,12 @@ class NocController extends Controller
                 ]);
                 // 'profile' => 'APPBILL_ISOLIR',
                 // dd($cek_secret);
+                Invoice::where('inv_id', $data_pelanggan->inv_id)->update([
+                    'inv_status' => 'ISOLIR',
+                ]);
+                Registrasi::where('reg_idpel', $data_pelanggan->inv_idpel)->update([
+                    'reg_status' => 'ISOLIR',
+                ]);
 
 
                 $pesan_group['ket'] = 'isolir manual';
@@ -269,6 +276,12 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
                     'comment' =>  'ISOLIR MANUAL' == '' ? '' : 'ISOLIR MANUAL',
                     'disabled' => 'yes',
+                ]);
+                Invoice::where('inv_id', $data_pelanggan->inv_id)->update([
+                    'inv_status' => 'ISOLIR',
+                ]);
+                Registrasi::where('reg_idpel', $data_pelanggan->inv_idpel)->update([
+                    'reg_status' => 'ISOLIR',
                 ]);
                 $cek_secret = $API->comm('/ppp/secret/print', [
                     '?name' => $data_pelanggan->reg_username,

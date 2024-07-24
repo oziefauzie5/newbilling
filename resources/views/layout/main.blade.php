@@ -407,7 +407,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="{{route('admin.psb.index')}}">
+										<a href="{{route('admin.psb.listputus_langganan')}}">
 											<span class="sub-item">Putus Berlangganan</span>
 										</a>
 									</li>

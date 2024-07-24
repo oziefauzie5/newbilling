@@ -91,6 +91,72 @@ class PsbController extends Controller
 
         return view('PSB/index', $data);
     }
+    public function listputus_langganan(Request $request)
+    {
+        $month = Carbon::now()->addMonth(-0)->format('m');
+        $bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
+
+        $data['router'] = $request->query('router');
+        $data['paket'] = $request->query('paket');
+        $data['data'] = $request->query('data');
+        $data['q'] = $request->query('q');
+
+        if ($data['router']) {
+            $r = Router::where('id', $data['router'])->first();
+            $data['r_nama'] = $r->router_nama;
+        }
+        if ($data['paket']) {
+            $p = Paket::where('paket_id', $data['paket'])->first();
+            $data['p_nama'] = $p->paket_nama;
+        }
+
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->where('reg_progres', '=', 100)
+            ->orderBy('tgl', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_username', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
+            });
+
+
+        if ($data['router'])
+            $query->where('routers.id', '=', $data['router']);
+        if ($data['paket'])
+            $query->where('pakets.paket_id', '=', $data['paket']);
+        if ($data['data'] == "PPP")
+            $query->where('registrasis.reg_layanan', '=', "PPP");
+        elseif ($data['data'] == "DHCP")
+            $query->where('registrasis.reg_layanan', '=', "DHCP");
+        elseif ($data['data'] == "HOTSPOT")
+            $query->where('registrasis.reg_layanan', '=', "HOTSPOT");
+        elseif ($data['data'] == "USER BARU")
+            $query->whereMonth('reg_tgl_pasang', '=', $month);
+        elseif ($data['data'] == "USER BULAN LALU")
+            $query->whereMonth('reg_tgl_pasang', '=', $bulan_lalu);
+
+
+        $data['data_registrasi'] = $query->paginate(10);
+        // dd($data['data_registrasi']);
+
+        $data['count_inputdata'] = InputData::count();
+        $data['count_registrasi'] = $query->count();
+        $data['count_berlangganan'] = Registrasi::where('reg_progres', '>=', '3')->where('reg_jenis_tagihan', '!=', 'FREE')->count();
+        $data['count_free_berlangganan'] = Registrasi::where('reg_progres', '>=', '3')->where('reg_jenis_tagihan', '=', 'FREE')->count();
+        $data['count_ps'] = Registrasi::where('reg_progres', 'ps')->count();
+        $data['count_pb'] = Registrasi::where('reg_progres', 'pb')->count();
+
+        $data['get_router'] = Router::get();
+        $data['get_paket'] = Paket::get();
+        // $data['get_registrasi'] = Registrasi::get();
+
+        return view('PSB/putus_langganan', $data);
+    }
     public function list_input()
     {
         $data['data_user'] = User::all();

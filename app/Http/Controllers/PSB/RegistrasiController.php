@@ -696,10 +696,8 @@ Diregistrasi Oleh : *' . $admin . '*
                 '?name' => $query->reg_username,
             ]);
             if ($cari_pel) {
-                $API->comm('/ppp/secret/set', [
-                    '.id' =>  $cari_pel['0']['.id'],
-                    'comment' => 'PUTUS BERLANGGANAN' == '' ? '' : 'PUTUS BERLANGGANAN',
-                    'disabled' => 'yes',
+                $API->comm('/ppp/secret/remove', [
+                    '.id' =>  $cari_pel['0']['.id']
                 ]);
             }
 
