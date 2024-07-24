@@ -142,6 +142,9 @@ class PsbController extends Controller
 
 
         $data['data_registrasi'] = $query->paginate(10);
+
+        $data['count_registrasi'] = $query->count();
+
         $data['get_router'] = Router::get();
         $data['get_paket'] = Paket::get();
         // $data['get_registrasi'] = Registrasi::get();
