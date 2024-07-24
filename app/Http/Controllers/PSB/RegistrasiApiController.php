@@ -769,7 +769,7 @@ class RegistrasiApiController extends Controller
                                     '?name' => $query->reg_username,
                                 ]);
                                 if ($before_secret) {
-                                    $before_API->comm('/ip/hotspot/user/active/remove', [
+                                    $before_API->comm('/ip/hotspot/active/remove', [
                                         '.id' => $before_secret[0]['.id'],
                                     ]);
                                 }

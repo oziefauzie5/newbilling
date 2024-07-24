@@ -171,7 +171,7 @@ class NocController extends Controller
 
             if ($API->connect($ip, $user, $pass)) {
                 $cek = $API->comm('/ip/hotspot/active/print', [
-                    '?name' => $data_pelanggan->reg_username,
+                    '?user' => $data_pelanggan->reg_username,
                 ]);
                 if ($cek) {
                     $data['uptime'] = $cek['0']['uptime'];
