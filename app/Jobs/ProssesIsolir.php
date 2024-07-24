@@ -35,6 +35,7 @@ class ProssesIsolir implements ShouldQueue
             ->whereDate('inv_tgl_isolir', $data['now'])
             ->where('inv_status', '!=', 'PAID')
             ->where('inv_status', '!=', 'ISOLIR')
+            ->where('registrasis', 'registrasis.reg_layanan', '!=', 'FREE')
             ->first();
 
         if ($router) {

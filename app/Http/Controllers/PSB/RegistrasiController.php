@@ -791,7 +791,5 @@ Diregistrasi Oleh : *' . $admin . '*
             ];
             return redirect()->route('admin.psb.index')->with($notifikasi);
         }
-
-        // dd($idpel);
     }
 }
