@@ -714,6 +714,7 @@ Diregistrasi Oleh : *' . $admin . '*
                 $update_barang['subbarang_status'] = '0';
                 $update_barang['subbarang_keluar'] = '0';
                 $update_barang['subbarang_stok'] = '1';
+                $update_barang['subbarang_mac'] = $request->reg_mac;
                 $update_barang['subbarang_keterangan'] = 'PUTUS BERLANGGANAN ' . $query->input_nama;
                 SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
             } else {
@@ -772,6 +773,7 @@ Diregistrasi Oleh : *' . $admin . '*
                         "subbarang_harga" => 0,
                         "subbarang_tgl_masuk" => $tgl,
                         "subbarang_status" => '0',
+                        "subbarang_mac" => $request->reg_mac,
                     ]
                 );
             }

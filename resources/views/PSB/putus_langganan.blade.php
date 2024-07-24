@@ -7,17 +7,6 @@
     <div class="row">
       <div class="card">
         <div class="card-body">
-          @if ($errors->any())
-          <div class="alert alert-danger">
-            <div class="alert-title"><h4>Gagal!!</h4></div>
-              <ul>
-                @foreach ($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-          </div> 
-        @endif
-        <hr>
         <form >
         <div class="row mb-1">
           <div class="col-sm-2">
@@ -108,15 +97,10 @@
                   <th>NO LAYANAN</th>
                   <th>PELANGGAN</th>
                   <th>TGL JT TEMPO</th>
-                  <th>TGL Registrasi</th>
                   <th>PROFILE</th>
                   <th>ROUTER</th>
                   <th>KTG</th>
                   <th>JENIS TAGIHAN</th>
-                  <th>USERNAME</th>
-                  <th>IP ADDRESS</th>
-                  <th>MAC ADDRESS</th>
-                  <th>SERIAL NUMBER</th>
                   <th>ALAMAT PASANG</th>
                   <th>NOTE</th>
                 </tr>
@@ -146,16 +130,11 @@
                       @else
                       <td class="text-danger font-weight-bold" >Belum Terpasang</td>
                       @endif
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->input_tgl))}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_layanan}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_jenis_tagihan}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_username}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_ip_address}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_mac}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_sn}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_alamat_pasang}}</td>
+                      <td>{{$d->paket_nama}}</td>
+                      <td>{{$d->router_nama}}</td>
+                      <td>{{$d->reg_layanan}}</td>
+                      <td>{{$d->reg_jenis_tagihan}}</td>
+                      <td>{{$d->input_alamat_pasang}}</td>
                       <td>{{$d->reg_catatan}}</td>
                     </tr>
                       <!-- Modal Hapus -->

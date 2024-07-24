@@ -549,6 +549,7 @@ class RegistrasiApiController extends Controller
 
                         $before_API->comm('/ppp/secret/set', [
                             '.id' => $before_secret[0]['.id'],
+                            'name' => $request->reg_username  == '' ? '' : $request->reg_username,
                             'password' => $request->reg_password  == '' ? '' : $request->reg_password,
                             'comment' => $comment == '' ? '' : $comment,
                         ]);
@@ -565,13 +566,18 @@ class RegistrasiApiController extends Controller
                         return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
                         $before_API->comm('/ppp/secret/add', [
-                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
-                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                            'name' => $request->reg_username == '' ? '' : $request->reg_username,
+                            'password' => $request->reg_password  == '' ? '' : $request->reg_password,
                             'service' => 'pppoe',
                             'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
                             'comment' => $comment == '' ? '' : $comment,
                             'disabled' => 'no',
                         ]);
+                        $data['reg_ip_address'] = $request->reg_ip_address;
+                        $data['reg_username'] = $request->reg_username;
+                        $data['reg_password'] = $request->reg_password;
+                        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+                        Registrasi::where('reg_idpel', $id)->update($data);
                         $notifikasi = array(
                             'pesan' => 'Berhasil merubah data Internet',
                             'alert' => 'success',
@@ -594,6 +600,7 @@ class RegistrasiApiController extends Controller
 
                         $before_API->comm('/ip/hotspot/user/set', [
                             '.id' => $before_secret[0]['.id'],
+                            'name' => $request->reg_username  == '' ? '' : $request->reg_username,
                             'password' => $request->reg_password  == '' ? '' : $request->reg_password,
                             'comment' => $comment == '' ? '' : $comment,
                         ]);
@@ -610,12 +617,17 @@ class RegistrasiApiController extends Controller
                         return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
                         $before_API->comm('/ip/hotspot/user/add', [
-                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
-                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                            'name' => $request->reg_username == '' ? '' : $request->reg_username,
+                            'password' => $request->reg_password  == '' ? '' : $request->reg_password,
                             'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
                             'comment' => $comment  == '' ? '' : $comment,
                             'disabled' => 'no',
                         ]);
+                        $data['reg_ip_address'] = $request->reg_ip_address;
+                        $data['reg_username'] = $request->reg_username;
+                        $data['reg_password'] = $request->reg_password;
+                        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+                        Registrasi::where('reg_idpel', $id)->update($data);
                         $notifikasi = array(
                             'pesan' => 'Berhasil merubah data Internet',
                             'alert' => 'success',
