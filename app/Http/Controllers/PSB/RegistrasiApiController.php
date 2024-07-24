@@ -540,156 +540,263 @@ class RegistrasiApiController extends Controller
             $before_API = new RouterosAPI();
             $before_API->debug = false;
 
-            if ($before_API->connect($before_ip, $before_user, $before_pass)) {
-                $before_secret = $before_API->comm('/ppp/secret/print', [
-                    '?name' => $query->reg_username,
-                ]);
-                if ($before_secret) {
+            if ($query->reg_layanan == 'PPP') {
 
-                    $before_API->comm('/ppp/secret/set', [
-                        '.id' => $before_secret[0]['.id'],
-                        'password' => $request->reg_password  == '' ? '' : $request->reg_password,
-                        'comment' => $comment == '' ? '' : $comment,
+                if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+                    $before_secret = $before_API->comm('/ppp/secret/print', [
+                        '?name' => $query->reg_username,
                     ]);
+                    if ($before_secret) {
 
-                    $data['reg_ip_address'] = $request->reg_ip_address;
-                    $data['reg_username'] = $request->reg_username;
-                    $data['reg_password'] = $request->reg_password;
-                    $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
-                    Registrasi::where('reg_idpel', $id)->update($data);
-                    $notifikasi = array(
-                        'pesan' => 'Berhasil merubah data Internet',
-                        'alert' => 'success',
-                    );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        $before_API->comm('/ppp/secret/set', [
+                            '.id' => $before_secret[0]['.id'],
+                            'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                            'comment' => $comment == '' ? '' : $comment,
+                        ]);
+
+                        $data['reg_ip_address'] = $request->reg_ip_address;
+                        $data['reg_username'] = $request->reg_username;
+                        $data['reg_password'] = $request->reg_password;
+                        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+                        Registrasi::where('reg_idpel', $id)->update($data);
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil merubah data Internet',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    } else {
+                        $before_API->comm('/ppp/secret/add', [
+                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                            'service' => 'pppoe',
+                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                            'comment' => $comment == '' ? '' : $comment,
+                            'disabled' => 'no',
+                        ]);
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil merubah data Internet',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    }
                 } else {
-                    $before_API->comm('/ppp/secret/add', [
-                        'name' => $query->reg_username == '' ? '' : $query->reg_username,
-                        'password' => $query->reg_password  == '' ? '' : $query->reg_password,
-                        'service' => 'pppoe',
-                        'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                        'comment' => $comment == '' ? '' : $comment,
-                        'disabled' => 'no',
-                    ]);
                     $notifikasi = array(
-                        'pesan' => 'Berhasil merubah data Internet',
-                        'alert' => 'success',
+                        'pesan' => 'Router Disconect',
+                        'alert' => 'error',
                     );
                     return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                 }
-            } else {
-                $notifikasi = array(
-                    'pesan' => 'Router Disconect',
-                    'alert' => 'error',
-                );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
-            }
-        } else {
-            if ($API->connect($ip, $user, $pass)) {
-                $secret = $API->comm('/ppp/profile/print', [
-                    '?name' => $query->paket_nama,
-                ]);
-                if ($secret) {
-
-                    $API->comm('/ppp/secret/add', [
-                        'name' => $query->reg_username == '' ? '' : $query->reg_username,
-                        'password' => $query->reg_password  == '' ? '' : $query->reg_password,
-                        'service' => 'pppoe',
-                        'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                        'comment' => $comment == '' ? '' : $comment,
-                        'disabled' => 'no',
-                    ]);
-
-                    $secret_after = $API->comm('/ppp/secret/print', [
+            } elseif ($query->reg_layanan == 'HOTSPOT') {
+                if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+                    $before_secret = $before_API->comm('/ip/hotspot/user/print', [
                         '?name' => $query->reg_username,
                     ]);
-                    if ($secret_after) {
-                        $before_ip =   $query->router_ip . ':' . $query->router_port_api;
-                        $before_user = $query->router_username;
-                        $before_pass = $query->router_password;
-                        $before_API = new RouterosAPI();
-                        $before_API->debug = false;
+                    if ($before_secret) {
 
-                        if ($before_API->connect($before_ip, $before_user, $before_pass)) {
-                            $before_secret = $before_API->comm('/ppp/secret/print', [
-                                '?name' => $query->reg_username,
-                            ]);
-                            if ($before_secret) {
-                                $before_API->comm('/ppp/secret/remove', [
-                                    '.id' => $before_secret[0]['.id'],
-                                ]);
-                            }
-                            Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
-                        }
+                        $before_API->comm('/ip/hotspot/user/set', [
+                            '.id' => $before_secret[0]['.id'],
+                            'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                            'comment' => $comment == '' ? '' : $comment,
+                        ]);
+
+                        $data['reg_ip_address'] = $request->reg_ip_address;
+                        $data['reg_username'] = $request->reg_username;
+                        $data['reg_password'] = $request->reg_password;
+                        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+                        Registrasi::where('reg_idpel', $id)->update($data);
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil merubah data Internet',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    } else {
+                        $before_API->comm('/ip/hotspot/user/add', [
+                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                            'comment' => $comment  == '' ? '' : $comment,
+                            'disabled' => 'no',
+                        ]);
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil merubah data Internet',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                     }
-
+                } else {
                     $notifikasi = array(
-                        'pesan' => 'Berhasil merubah router',
-                        'alert' => 'success',
+                        'pesan' => 'Router Disconect',
+                        'alert' => 'error',
                     );
                     return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
-                } else {
+                }
+            }
+        } else {
 
+            if ($query->reg_layanan == 'PPP') {
+                if ($API->connect($ip, $user, $pass)) {
+                    $secret = $API->comm('/ppp/profile/print', [
+                        '?name' => $query->paket_nama,
+                    ]);
+                    if ($secret) {
 
-                    $API->comm('/ip/pool/add', [
-                        'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                        'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
-                    ]);
-                    $API->comm('/ppp/profile/add', [
-                        'name' =>  $query->paket_nama == '' ? '' : $query->paket_nama,
-                        'rate-limit' => $query->paket_limitasi == '' ? '' : $query->paket_limitasi,
-                        'local-address' => $query->paket_lokal == '' ? '' : $query->paket_lokal,
-                        'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
-                        'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
-                        'queue-type' => 'default-small' == '' ? '' : 'default-small',
-                        'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
-                        'only-one' => 'yes',
-                        'disabled' => 'no',
-                    ]);
-                    $API->comm('/ppp/secret/add', [
-                        'name' => $query->reg_username == '' ? '' : $query->reg_username,
-                        'password' => $query->reg_password  == '' ? '' : $query->reg_password,
-                        'service' => 'pppoe',
-                        'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                        'comment' => $comment == '' ? '' : $comment,
-                        'disabled' => 'no',
-                    ]);
+                        $API->comm('/ppp/secret/add', [
+                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                            'service' => 'pppoe',
+                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                            'comment' => $comment == '' ? '' : $comment,
+                            'disabled' => 'no',
+                        ]);
 
-                    $secret_after = $API->comm('/ppp/secret/print', [
-                        '?name' => $query->reg_username,
-                    ]);
-                    if ($secret_after) {
-                        $before_ip =   $query->router_ip . ':' . $query->router_port_api;
-                        $before_user = $query->router_username;
-                        $before_pass = $query->router_password;
-                        $before_API = new RouterosAPI();
-                        $before_API->debug = false;
+                        $secret_after = $API->comm('/ppp/secret/print', [
+                            '?name' => $query->reg_username,
+                        ]);
+                        if ($secret_after) {
+                            $before_ip =   $query->router_ip . ':' . $query->router_port_api;
+                            $before_user = $query->router_username;
+                            $before_pass = $query->router_password;
+                            $before_API = new RouterosAPI();
+                            $before_API->debug = false;
 
-                        if ($before_API->connect($before_ip, $before_user, $before_pass)) {
-                            $before_secret = $before_API->comm('/ppp/secret/print', [
-                                '?name' => $query->reg_username,
-                            ]);
-                            if ($before_secret) {
-                                $before_API->comm('/ppp/secret/remove', [
-                                    '.id' => $before_secret[0]['.id'],
+                            if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+                                $before_secret = $before_API->comm('/ppp/secret/print', [
+                                    '?name' => $query->reg_username,
                                 ]);
+                                if ($before_secret) {
+                                    $before_API->comm('/ppp/secret/remove', [
+                                        '.id' => $before_secret[0]['.id'],
+                                    ]);
+                                }
                                 Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
                             }
                         }
-                    }
 
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil merubah router',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    } else {
+
+
+                        $API->comm('/ip/pool/add', [
+                            'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
+                            'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
+                        ]);
+                        $API->comm('/ppp/profile/add', [
+                            'name' =>  $query->paket_nama == '' ? '' : $query->paket_nama,
+                            'rate-limit' => $query->paket_limitasi == '' ? '' : $query->paket_limitasi,
+                            'local-address' => $query->paket_lokal == '' ? '' : $query->paket_lokal,
+                            'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
+                            'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                            'queue-type' => 'default-small' == '' ? '' : 'default-small',
+                            'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
+                            'only-one' => 'yes',
+                            'disabled' => 'no',
+                        ]);
+                        $API->comm('/ppp/secret/add', [
+                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                            'service' => 'pppoe',
+                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                            'comment' => $comment == '' ? '' : $comment,
+                            'disabled' => 'no',
+                        ]);
+
+                        $secret_after = $API->comm('/ppp/secret/print', [
+                            '?name' => $query->reg_username,
+                        ]);
+                        if ($secret_after) {
+                            $before_ip =   $query->router_ip . ':' . $query->router_port_api;
+                            $before_user = $query->router_username;
+                            $before_pass = $query->router_password;
+                            $before_API = new RouterosAPI();
+                            $before_API->debug = false;
+
+                            if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+                                $before_secret = $before_API->comm('/ppp/secret/print', [
+                                    '?name' => $query->reg_username,
+                                ]);
+                                if ($before_secret) {
+                                    $before_API->comm('/ppp/secret/remove', [
+                                        '.id' => $before_secret[0]['.id'],
+                                    ]);
+                                    Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
+                                }
+                            }
+                        }
+
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil merubah router',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    }
+                } else {
                     $notifikasi = array(
-                        'pesan' => 'Berhasil merubah router',
-                        'alert' => 'success',
+                        'pesan' => 'Router Disconect',
+                        'alert' => 'error',
                     );
                     return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                 }
-            } else {
-                $notifikasi = array(
-                    'pesan' => 'Router Disconect',
-                    'alert' => 'error',
-                );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            } elseif ($query->reg_layanan == 'HOTSPOT') {
+                if ($API->connect($ip, $user, $pass)) {
+                    $secret = $API->comm('/ip/hotspot/user/profile/print', [
+                        '?name' => $query->paket_nama,
+                    ]);
+                    if ($secret) {
+                        $API->comm('/ip/hotspot/user/add', [
+                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                            'comment' => $comment  == '' ? '' : $comment,
+                            'disabled' => 'no',
+                        ]);
+
+                        $secret_after = $API->comm('/ip/hotspot/user/print', [
+                            '?name' => $query->reg_username,
+                        ]);
+                        if ($secret_after) {
+                            $before_ip =   $query->router_ip . ':' . $query->router_port_api;
+                            $before_user = $query->router_username;
+                            $before_pass = $query->router_password;
+                            $before_API = new RouterosAPI();
+                            $before_API->debug = false;
+
+                            if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+                                $before_secret = $before_API->comm('/ip/hotspot/user/print', [
+                                    '?name' => $query->reg_username,
+                                ]);
+                                if ($before_secret) {
+                                    $before_API->comm('/ip/hotspot/user/active/remove', [
+                                        '.id' => $before_secret[0]['.id'],
+                                    ]);
+                                }
+                                Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
+                            }
+                        }
+
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil merubah router',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    } else {
+
+                        $notifikasi = array(
+                            'pesan' => 'Gagal edit router. Paket tidak tersedia pada router ini',
+                            'alert' => 'error',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    }
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Router Disconect',
+                        'alert' => 'error',
+                    );
+                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                }
             }
         }
     }
