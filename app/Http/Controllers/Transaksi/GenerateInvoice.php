@@ -14,43 +14,53 @@ class GenerateInvoice extends Controller
 {
     public function generate_invoice()
     {
+        $now = Carbon::now();
+        $month = $now->format('m');
+        $year = $now->format('Y');
         $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
-            ->where('reg_progres', 5)->get();
+            ->where('reg_progres', 5)
+            ->whereMonth('reg_tgl_jatuh_tempo', $month)
+            ->whereYear('reg_tgl_jatuh_tempo', $year)
+            ->count();
+
+        dd($data_pelanggan);
         $swaktu = SettingWaktuTagihan::first();
         $i = 1;
         foreach ($data_pelanggan as $dp) {
-            $inv_id = rand(1000, 1999) . $i++;
-            $periode1blan = date('d-m-Y', strtotime(Carbon::create($dp->reg_tgl_jatuh_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($dp->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString()));
-            $tgl_isolir =  Carbon::create($dp->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
-            Invoice::create([
-                'inv_id' => $inv_id,
-                'inv_status' => 'UNPAID',
-                'inv_idpel' => $dp->reg_idpel,
-                'inv_nolayanan' => $dp->reg_nolayanan,
-                'inv_nama' => $dp->input_nama,
-                'inv_jenis_tagihan' => $dp->reg_jenis_tagihan,
-                'inv_profile' => $dp->paket_nama,
-                'inv_mitra' => 'SYSTEM',
-                'inv_kategori' => 'OTOMATIS',
-                'inv_tgl_tagih' => $dp->reg_tgl_tagih,
-                'inv_tgl_jatuh_tempo' => $dp->reg_tgl_jatuh_tempo,
-                'inv_tgl_isolir' => $tgl_isolir,
-                'inv_periode' => $periode1blan,
-                'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
-            ]);
+            if ($dp->reg_status != 'PAID') {
+                $inv_id = rand(1000, 1999) . $i++;
+                $periode1blan = date('d-m-Y', strtotime(Carbon::create($dp->reg_tgl_jatuh_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($dp->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString()));
+                $tgl_isolir =  Carbon::create($dp->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
+                Invoice::create([
+                    'inv_id' => $inv_id,
+                    'inv_status' => 'UNPAID',
+                    'inv_idpel' => $dp->reg_idpel,
+                    'inv_nolayanan' => $dp->reg_nolayanan,
+                    'inv_nama' => $dp->input_nama,
+                    'inv_jenis_tagihan' => $dp->reg_jenis_tagihan,
+                    'inv_profile' => $dp->paket_nama,
+                    'inv_mitra' => 'SYSTEM',
+                    'inv_kategori' => 'OTOMATIS',
+                    'inv_tgl_tagih' => $dp->reg_tgl_tagih,
+                    'inv_tgl_jatuh_tempo' => $dp->reg_tgl_jatuh_tempo,
+                    'inv_tgl_isolir' => $tgl_isolir,
+                    'inv_periode' => $periode1blan,
+                    'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                ]);
 
-            SubInvoice::create(
-                [
-                    'subinvoice_id' => $inv_id,
-                    'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
-                    'subinvoice_harga' => $dp->reg_harga + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
-                    'subinvoice_ppn' => $dp->reg_ppn,
-                    'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
-                    'subinvoice_qty' => 1,
-                    'subinvoice_status' => 0,
-                ]
-            );
+                SubInvoice::create(
+                    [
+                        'subinvoice_id' => $inv_id,
+                        'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
+                        'subinvoice_harga' => $dp->reg_harga + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                        'subinvoice_ppn' => $dp->reg_ppn,
+                        'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                        'subinvoice_qty' => 1,
+                        'subinvoice_status' => 0,
+                    ]
+                );
+            }
         }
         $notifikasi = array(
             'pesan' => 'Generate Berhasil',
