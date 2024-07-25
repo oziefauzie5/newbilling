@@ -20,11 +20,12 @@ class GenerateInvoice extends Controller
         $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
             ->where('reg_progres', 5)
+            ->where('reg_status', '!=', 'PAID')
             ->whereMonth('reg_tgl_jatuh_tempo', $month)
             ->whereYear('reg_tgl_jatuh_tempo', $year)
-            ->count();
+            ->get();
 
-        dd($data_pelanggan);
+        // dd($data_pelanggan);
         $swaktu = SettingWaktuTagihan::first();
         $i = 1;
         foreach ($data_pelanggan as $dp) {
