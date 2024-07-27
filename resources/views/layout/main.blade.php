@@ -461,7 +461,12 @@
 							<a href="{{route('admin.barang.index')}}">
 								<i class="fas fa-list-alt"></i>
 								<p>Barang</p>
-								<span class="caret"></span>
+							</a>
+						</li>
+						<li class="nav-item {{\Route::is('admin.wa.*') ? 'active' : ''}}">
+							<a href="{{route('admin.wa.index')}}">
+								<i class="fas fa-list-alt"></i>
+								<p>whatsapp</p>
 							</a>
 						</li>
 						@role('admin')

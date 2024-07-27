@@ -31,6 +31,7 @@ class ProssesIsolir implements ShouldQueue
     {
         $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
         $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->whereDate('inv_tgl_isolir', '<=', $data['now'])
@@ -50,7 +51,7 @@ Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh s
 Agar dapat digunakan kembali dimohon untuk melakukan pembayaran tagihan sebagai berikut :
 
 No.Layanan : *' . $data_pelanggan->reg_nolayanan . '*
-Pelanggan : ' . $data_pelanggan->input_nama . '
+Pelanggan : ' . $data_pelanggan->inv_nama . '
 Invoice : 013524
 Jatuh Tempo : ' . $data_pelanggan->reg_tgl_jatuh_tempo . '
 Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama) . '*

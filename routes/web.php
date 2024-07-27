@@ -29,6 +29,7 @@ use App\Http\Controllers\Transaksi\InvoiceController;
 use App\Http\Controllers\Transaksi\LaporanController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Whatsapp\WhatsappApi;
+use App\Http\Controllers\Whatsapp\WhatsappController;
 use App\Models\Transaksi\Invoice;
 use Illuminate\Support\Facades\Route;
 
@@ -215,4 +216,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
     Route::get('/sales/index', [SalesController::class, 'index'])->name('sales.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/sales/list', [SalesController::class, 'list_registrasi'])->name('sales.list_registrasi')->middleware(['role:admin|STAF ADMIN']);
+
+
+    Route::get('/whatsapp/pesan', [WhatsappController::class, 'index'])->name('wa.index')->middleware(['role:admin|STAF ADMIN']);
 })->middleware(['role:admin|STAF ADMIN']);
