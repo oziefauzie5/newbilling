@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\Registrasi;
 use App\Models\Transaksi\Invoice;
+use App\Models\Transaksi\SubInvoice;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,13 +35,19 @@ class ProsesBayarPengurus implements ShouldQueue
 
         foreach ($unp as $d) {
             Invoice::where('inv_id', $d->inv_id)->update([
-                'inv_status' => 'LUNAS',
+                'inv_status' => 'PAID',
+                'inv_total' => '0',
+            ]);
+            SubInvoice::where('subinvoive_id', $d->inv_id)->update([
+                'subinvoice_harga' => '0',
+                'subinvoice_ppn' => '0',
+                'subinvoice_total' => '0',
             ]);
             Registrasi::where('reg_idpel', $d->inv_idpel)->update([
-                'reg_status' => 'LUNAS',
+                'reg_status' => 'PAID',
             ]);
 
-            $pesan_group['ket'] = 'isolir manual';
+            $pesan_group['ket'] = 'pengurus';
             $pesan_group['status'] = '0';
             $pesan_group['target'] = $d->input_hp;
             $pesan_group['pesan'] = '
