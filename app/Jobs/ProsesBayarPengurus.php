@@ -30,7 +30,7 @@ class ProsesBayarPengurus implements ShouldQueue
     public function handle(): void
     {
         $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
-        $unp = Invoice::join('input_data', 'input_data.id', '=', 'invocies.inv_idpel')->where('inv_status', '!=', 'PAID')->where('inv_jenis_tagihan', '!=', 'FREE')->whereDate('inv_tgl_jatuh_tempo', '<=', $data['now'])->get();
+        $unp = Invoice::join('input_data', 'input_data.id', '=', 'invocies.inv_idpel')->where('inv_status', '!=', 'PAID')->where('inv_jenis_tagihan', 'FREE')->get();
 
         foreach ($unp as $d) {
             Invoice::where('inv_id', $d->inv_id)->update([
