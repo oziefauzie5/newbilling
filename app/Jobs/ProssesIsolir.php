@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Pesan\Pesan;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\RouterosAPI;
 use App\Models\Transaksi\Invoice;
@@ -40,6 +41,27 @@ class ProssesIsolir implements ShouldQueue
             ->first();
 
         if ($data_pelanggan) {
+
+            $pesan_group['ket'] = 'isolir otomatis';
+            $pesan_group['status'] = '0';
+            $pesan_group['target'] = $data_pelanggan->input_hp;
+            $pesan_group['pesan'] = '
+Pelanggan yang terhormat,
+Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya
+Agar dapat digunakan kembali dimohon untuk melakukan pembayaran tagihan sebagai berikut :
+
+No.Layanan : *' . $data_pelanggan->reg_nolayanan . '*
+Pelanggan : ' . $data_pelanggan->input_nama . '
+Invoice : 013524
+Jatuh Tempo : ' . $data_pelanggan->reg_tgl_jatuh_tempo . '
+Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama) . '*
+
+--------------------
+Pesan ini bersifat informasi dan tidak perlu dibalas
+*OVALL FIBER*
+';
+            Pesan::create($pesan_group);
+
             $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
             $user = $data_pelanggan->router_username;
             $pass = $data_pelanggan->router_password;
