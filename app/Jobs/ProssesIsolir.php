@@ -30,14 +30,13 @@ class ProssesIsolir implements ShouldQueue
     public function handle(): void
     {
         $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
-
         $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->whereDate('inv_tgl_isolir', $data['now'])
+            ->whereDate('inv_tgl_isolir', '<=', $data['now'])
             ->where('inv_status', '!=', 'PAID')
             ->where('inv_status', '!=', 'ISOLIR')
-            ->where('registrasis', 'registrasis.reg_layanan', '!=', 'FREE')
+            ->where('inv_jenis_tagihan', '!=', 'FREE')
             ->first();
 
         if ($data_pelanggan) {
