@@ -52,7 +52,6 @@ class PelangganController extends Controller
 
         $data['subinvoice'] = SubInvoice::where('subinvoice_id', $data['layanan']->inv_id)->get();
         return view('client/tagihan', $data);
-        return view('client/tagihan', $data);
     }
 
     public function payment_tripay(Request $request)
@@ -60,7 +59,9 @@ class PelangganController extends Controller
         $inv = $request->inv;
         $method = $request->code;
         $icon = $request->icon;
-        $tripay = (new TripayController)->requestTransaksi($method, $inv, $icon);
+        $data_inv = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')->where('inv_id', $inv)->first();
+        $tripay = (new TripayController)->requestTransaksi($method, $data_inv, $inv, $icon);
+
 
         $res = json_decode($tripay);
         if ($res->success == false) {
@@ -71,12 +72,14 @@ class PelangganController extends Controller
             return redirect()->route('client.index')->with($notifikasi);
         } else {
             $response = json_decode($tripay)->data;
-            return redirect()->route('client.show', ['refrensi' => $response->reference, 'inv_id' => $inv]);
+
+            return redirect()->route('client.show', ['refrensi' => $response->reference]);
         }
     }
 
-    public function show(Request $request, $refrensi, $inv)
+    public function show(Request $request, $refrensi)
     {
+        // dd($refrensi);
         $tripay = (new TripayController)->detailsTransakasi($refrensi);
         $cek_inv = Invoice::where('inv_id', $tripay->merchant_ref)->first();
         if ($cek_inv->inv_status != 'PAID') {

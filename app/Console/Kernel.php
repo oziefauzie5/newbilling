@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\invoiceJob;
+use App\Jobs\ProsesBayarPengurus;
 use App\Jobs\ProssesIsolir;
 use App\Jobs\ProssesSuspand;
 use App\Jobs\SendMessage;
@@ -22,6 +23,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new ProssesSuspand)->dailyAt('00:20');
         // $schedule->job(new ProssesIsolir)->everySecond();
         $schedule->job(new SendMessage)->everyTwentySeconds();
+        $schedule->job(new ProsesBayarPengurus)->everyTwentySeconds();
     }
 
     /**

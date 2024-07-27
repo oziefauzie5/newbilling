@@ -215,7 +215,7 @@
                              <li class="list-group-item">No. Layanan   : {{$job->reg_nolayanan}}</li>
                              <li class="list-group-item">Nama   : {{$job->input_nama}}</li>
                              <li class="list-group-item">Alamat : {{$job->input_alamat_pasang}}</li>
-                             <li class="list-group-item"><a href="{{$job_tiket->input_maps}}" target="_blank"><button class="btn btn-primary btn-sm">Lihat Google Maps</button></a>&nbsp;&nbsp;<a href="https://wa.me/62{{$job_tiket->input_hp}}?text=Assalamualaikum" target="_blank"><button class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> &nbsp;&nbsp;Whatsapp</button></a> </li>
+                             <li class="list-group-item"><a href="{{$job->input_maps}}" target="_blank"><button class="btn btn-primary btn-sm">Lihat Google Maps</button></a>&nbsp;&nbsp;<a href="https://wa.me/62{{$job->input_hp}}?text=Assalamualaikum" target="_blank"><button class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> &nbsp;&nbsp;Whatsapp</button></a> </li>
                             <li class="list-group-item">Sales : {{$job->input_sales}}</li>
                             <li class="list-group-item">Sub Sales : {{$job->input_subseles}}</li>
                             </ul>

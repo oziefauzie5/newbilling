@@ -37,6 +37,7 @@ class InvoiceController extends Controller
         // dd($data['data_bulan']);
 
         $query = Invoice::where('inv_status', '!=', 'PAID')
+            ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('inv_id', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
