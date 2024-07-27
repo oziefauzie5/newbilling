@@ -30,26 +30,18 @@ class ProsesBayarPengurus implements ShouldQueue
      */
     public function handle(): void
     {
+
         $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
-        $unp = Invoice::join('input_data', 'input_data.id', '=', 'invocies.inv_idpel')->where('inv_status', '!=', 'PAID')->where('inv_jenis_tagihan', 'FREE')->get();
+        $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
+
+        $unp = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->where('inv_status', '!=', 'PAID')
+            ->where('inv_jenis_tagihan', 'FREE')->get();
 
         foreach ($unp as $d) {
-            Invoice::where('inv_id', $d->inv_id)->update([
-                'inv_status' => 'PAID',
-                'inv_total' => '0',
-            ]);
-            SubInvoice::where('subinvoive_id', $d->inv_id)->update([
-                'subinvoice_harga' => '0',
-                'subinvoice_ppn' => '0',
-                'subinvoice_total' => '0',
-            ]);
-            Registrasi::where('reg_idpel', $d->inv_idpel)->update([
-                'reg_status' => 'PAID',
-            ]);
-
             Pesan::create([
                 'ket' => 'pengurus',
-                'status' => 'pengurus',
+                'status' => '0',
                 'target' => $d->input_hp,
                 'pesan' => 'Terima kasih 🙏
 Pembayaran invoice sudah kami terima
@@ -65,6 +57,27 @@ Tanggal lunas : ' . date('Y-m-d H:m:s', strtotime(Carbon::now())) . '
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *OVALL FIBER*',
+            ]);
+
+            Invoice::where('inv_id', $d->inv_id)->update([
+                'inv_cabar' => 'TUNAI',
+                'inv_akun' => '2',
+                'inv_reference' => '-',
+                'inv_payment_method' => 'TUNAI',
+                'inv_status' => 'PAID',
+                'inv_tgl_bayar' => $data['now'],
+                'inv_total' => '0',
+            ]);
+            SubInvoice::where('subinvoice_id', $d->inv_id)->update([
+                'subinvoice_harga' => '0',
+                'subinvoice_ppn' => '0',
+                'subinvoice_total' => '0',
+            ]);
+
+            Registrasi::where('reg_idpel', $d->inv_idpel)->update([
+                'reg_tgl_tagih' => Carbon::create($d->inv_tgl_jatuh_tempo)->addMonth(1)->addDay(-2)->toDateString(),
+                'reg_tgl_jatuh_tempo' => Carbon::create($d->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString(),
+                'reg_status' => 'PAID',
             ]);
         }
     }
