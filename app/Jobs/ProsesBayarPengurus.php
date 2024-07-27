@@ -47,11 +47,11 @@ class ProsesBayarPengurus implements ShouldQueue
                 'reg_status' => 'PAID',
             ]);
 
-            $pesan_group['ket'] = 'pengurus';
-            $pesan_group['status'] = '0';
-            $pesan_group['target'] = $d->input_hp;
-            $pesan_group['pesan'] = '
-Terima kasih 🙏
+            Pesan::create([
+                'ket' => 'pengurus',
+                'status' => 'pengurus',
+                'target' => $d->input_hp,
+                'pesan' => 'Terima kasih 🙏
 Pembayaran invoice sudah kami terima
 *************************
 No.Layanan : ' . $d->reg_nolayanan . '
@@ -64,8 +64,8 @@ Tanggal lunas : ' . date('Y-m-d H:m:s', strtotime(Carbon::now())) . '
 *************************
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*';
-            Pesan::create($pesan_group);
+*OVALL FIBER*',
+            ]);
         }
     }
 }
