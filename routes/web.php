@@ -27,10 +27,12 @@ use App\Http\Controllers\Transaksi\CallbackController;
 use App\Http\Controllers\Transaksi\GenerateInvoice;
 use App\Http\Controllers\Transaksi\InvoiceController;
 use App\Http\Controllers\Transaksi\LaporanController;
+use App\Http\Controllers\Transaksi\TransaksiController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Whatsapp\WhatsappApi;
 use App\Http\Controllers\Whatsapp\WhatsappController;
 use App\Models\Transaksi\Invoice;
+use App\Models\Transaksi\Transaksi;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/adminapp', [LoginController::class, 'index'])->name('adminapp');
@@ -121,6 +123,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/Data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Data-Laporan', [LaporanController::class, 'data_lap_delete'])->name('inv.data_lap_delete')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('inv.laporan_print')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Transaksi', [TransaksiController::class, 'index'])->name('inv.trx.index')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     Route::get('/pelanggan/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);

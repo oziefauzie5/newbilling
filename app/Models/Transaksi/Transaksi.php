@@ -10,6 +10,7 @@ class Transaksi extends Model
     use HasFactory;
     protected $fillable = [
         'trx_kategori',
+        'trx_jenis',
         'trx_admin',
         'trx_deskripsi',
         'trx_qty',

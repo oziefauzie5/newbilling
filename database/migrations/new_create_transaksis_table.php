@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
             $table->string('trx_kategori')->nullable();
+            $table->string('trx_jenis')->nullable();
             $table->string('trx_admin')->nullable();
             $table->string('trx_deskripsi')->nullable();
             $table->integer('trx_qty')->nullable();

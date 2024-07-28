@@ -450,8 +450,8 @@
 										</a>
 									</li>
 									<li>
-										<a href="{{route('admin.inv.laporan')}}">
-											<span class="sub-item">Laporan Transaksi</span>
+										<a href="{{route('admin.inv.trx.index')}}">
+											<span class="sub-item">Transaksi</span>
 										</a>
 									</li>
 								</ul>

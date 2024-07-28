@@ -78,7 +78,10 @@ class CallbackController extends Controller
                         ->where('inv_id', $data->merchant_ref)
                         ->first();
                     $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
-                    $cek_trx = Transaksi::whereDate('created_at', $tgl_bayar)->where('trx_kategori', 'INVOICE')->first();
+                    $query_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar);
+                    $count_trx = $query_trx->count();
+                    $sum_trx = $query_trx->sum('trx_total');
+
                     #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
                     #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
                     $inv0_tagih = Carbon::create($data_pelanggan->reg_tgl_tagih)->addMonth(1)->toDateString();
@@ -129,19 +132,19 @@ class CallbackController extends Controller
                     $reg['reg_status'] = 'PAID';
                     Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
 
-                    if ($cek_trx) {
-                        $data_trx['trx_admin'] = 'SYSTEM';
-                        $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
-                        $data_trx['trx_qty'] = $cek_trx->trx_qty + 1;
-                        $data_trx['trx_total'] = $cek_trx->trx_total + $data_pelanggan->inv_total;
-                        Transaksi::whereDate('created_at', $tgl_bayar)->update($data_trx);
-                    } else {
+                    if ($count_trx == 0) {
                         $data_trx['trx_admin'] = 'SYSTEM';
                         $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
                         $data_trx['trx_qty'] = 1;
                         $data_trx['trx_total'] = $data_pelanggan->inv_total;
-                        Transaksi::whereDate('created_at', $tgl_bayar)->create($data_trx);
+                        Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->create($data_trx);
+                    } else {
+
+                        $data_trx['trx_qty'] = $count_trx + 1;
+                        $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
+                        Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
                     }
+
 
                     $router = Router::whereId($data_pelanggan->reg_router)->first();
                     $ip =   $router->router_ip . ':' . $router->router_port_api;
