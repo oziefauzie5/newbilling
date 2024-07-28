@@ -4,11 +4,37 @@
 <div class="content">
   <div class="page-inner">
     <div class="row">
+        <div href="{{route('admin.psb.list_input')}}" class="col">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h2 m-0">Rp. {{number_format($sum_pemasukan)}}</div>
+              <div class="text-muted mb-3">PEMASUKAN {{$bulan}}</div>
+            </div>
+          </div>
+        </div>
+        <div href="{{route('admin.reg.index')}}" class="col">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h2 m-0">Rp. {{number_format($sum_pengeluaran)}}</div>
+              <div class="text-muted mb-3">PENGELUARAN {{$bulan}}</div>
+            </div>
+          </div>
+        </div>
+        <div href="{{route('admin.reg.index')}}" class="col">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h2 m-0">Rp. {{number_format($sum_pemasukan-$sum_pengeluaran)}}</div>
+              <div class="text-muted mb-3">TOTAL {{$bulan}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-primary">
             <div class="d-flex align-items-center">
-              <h4 class="card-title text-light">TIKET</h4>
+              <h4 class="card-title text-light">DATA TRANSAKSI</h4>
             </div>
           </div>
           <div class="card-body">
@@ -23,8 +49,6 @@
             <button class="btn  btn-sm ml-auto m-1 btn-danger ">
               <i class="fas fa-broom"></i> KOSONGKAN</button>        
             </div>
-
-
             
             @if ($errors->any())
             <div class="alert alert-danger">
@@ -59,7 +83,7 @@
                     <td>{{$d->trx_admin}}</td>
                     <td>{{$d->trx_deskripsi}}</td>
                     <td>{{$d->trx_qty}}</td>
-                    <td>{{$d->trx_total}}</td>
+                    <td>Rp. {{number_format($d->trx_total)}}</td>
                   </tr>
                   @endforeach
                 </tbody>
