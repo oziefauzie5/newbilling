@@ -133,11 +133,13 @@ class CallbackController extends Controller
                     Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
 
                     if ($count_trx == 0) {
+                        $data_trx['trx_kategori'] = 'PEMASUKAN';
+                        $data_trx['trx_jenis'] = 'INVOICE';
                         $data_trx['trx_admin'] = 'SYSTEM';
                         $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
                         $data_trx['trx_qty'] = 1;
                         $data_trx['trx_total'] = $data_pelanggan->inv_total;
-                        Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->create($data_trx);
+                        Transaksi::where('trx_jenis', 'INVOICE')->create($data_trx);
                     } else {
 
                         $data_trx['trx_qty'] = $count_trx + 1;
