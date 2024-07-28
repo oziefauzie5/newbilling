@@ -14,12 +14,18 @@ use Illuminate\Support\Facades\Auth;
 
 class TiketController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data['tiket'] = Tiket::select('users.*', 'tikets.*', 'tikets.created_at as tgl')
-            ->join('users', 'users.id', '=', 'tikets.tiket_admin')
-            ->orderBy('tgl', 'DESC')
-            ->paginate(10);
+        $data['q'] = $request->query('q');
+        $query = Tiket::join('users', 'users.id', '=', 'tikets.tiket_admin')
+            ->orderBy('tikets.created_at', 'DESC', 'tikets.tiket_status', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('tiket_id', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('tiket_pelanggan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('tiket_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('tiket_status', 'like', '%' . $data['q'] . '%');
+            });
+        $data['tiket'] = $query->paginate(10);
         $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
 
         return view('tiket/index', $data);

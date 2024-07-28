@@ -155,9 +155,19 @@
                 </ul>
             </div> 
             @endif
-            
+                        <form >
+              <div class="row mb-1">
+                <div class="col-sm-4">
+                  <input name="q" type="text" class="form-control form-control-sm" placeholder="Cari">
+                </div>
+                <div class="col-sm-2">
+                  <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
+                </div>
+              </div>
+              </form>
+              <hr>
             <div class="table-responsive">
-              <table id="input_data" class="display table table-striped table-hover text-nowrap" >
+              <table class="display table table-striped table-hover text-nowrap" >
                 <thead>
                   <tr>
                     <th>Status</th>
@@ -201,6 +211,19 @@
                   @endforeach
                 </tbody>
               </table>
+              <div class="pull-left">
+                Showing
+                {{$tiket->firstItem()}}
+                to
+                {{$tiket->lastItem()}}
+                of
+                {{$tiket->total()}}
+                entries
+              </div>
+              <div class="pull-right">
+                {{ $tiket->withQueryString()->links('pagination::bootstrap-4') }}
+              </div>
+  
             </div>
           </div>
         </div>
