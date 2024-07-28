@@ -16,7 +16,8 @@ class TiketController extends Controller
 {
     public function index()
     {
-        $data['tiket'] = Tiket::join('users', 'users.id', '=', 'tikets.tiket_admin')
+        $data['tiket'] = Tiket::select('users.*', 'tikets.*', 'tikets.created_at as tgl')
+            ->join('users', 'users.id', '=', 'tikets.tiket_admin')
             ->orderBy('tgl', 'DESC')
             ->paginate(10);
         $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
