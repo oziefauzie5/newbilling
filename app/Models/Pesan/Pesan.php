@@ -10,6 +10,7 @@ class Pesan extends Model
     use HasFactory;
     protected $fillable = [
         'target',
+        'nama',
         'schedule',
         'delay',
         'pesan',

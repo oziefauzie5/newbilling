@@ -67,6 +67,7 @@ class TiketController extends Controller
                 'ket' =>  'tiket',
                 'status' =>  '0',
                 'target' =>  $t->hp,
+                'nama' =>  $t->nama_teknisi,
                 'pesan' => '               -- TIKET GANGGUAN --
     
 Hallo Broo ' . $t->nama_teknisi . '

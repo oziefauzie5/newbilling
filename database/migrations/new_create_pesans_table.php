@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pesans', function (Blueprint $table) {
             $table->id();
             $table->string('target')->nullable();
+            $table->string('nama')->nullable();
             $table->string('schedule')->nullable();
             $table->string('delay')->nullable();
             $table->text('pesan')->nullable();

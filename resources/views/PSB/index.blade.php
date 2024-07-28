@@ -338,9 +338,20 @@
                     @endforeach
               </tbody>
             </table>
+            <div class="pull-left">
+              Showing
+              {{$data_registrasi->firstItem()}}
+              to
+              {{$data_registrasi->lastItem()}}
+              of
+              {{$data_registrasi->total()}}
+              entries
+            </div>
+            <div class="pull-right">
+              {{ $data_registrasi->withQueryString()->links('pagination::bootstrap-4') }}
+            </div>
           </div>
         </div>
-        {{ $data_registrasi->links('pagination::bootstrap-4') }}
       </div>
     </div>
   </div>

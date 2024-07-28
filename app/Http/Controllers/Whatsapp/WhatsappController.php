@@ -10,7 +10,7 @@ class WhatsappController extends Controller
 {
     public function index()
     {
-        $data['whatsapp'] = Pesan::get();
+        $data['whatsapp'] = Pesan::paginate(15);
         // dd($data);
         return view('whatsapp/index', $data);
     }

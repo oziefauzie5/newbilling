@@ -8,7 +8,7 @@
         <div class="card">
           <div class="card-header bg-primary">
             <div class="d-flex align-items-center">
-              <h4 class="card-title text-light">TIKET</h4>
+              <h4 class="card-title text-light">WHATSAPP GETEWAY</h4>
             </div>
           </div>
           <div class="card-body">
@@ -34,7 +34,7 @@
             @endif
             
             <div class="table-responsive">
-              <table id="input_data" class="display table table-striped table-hover text-nowrap" >
+              <table class="display table table-striped table-hover text-nowrap" >
                 <thead>
                   <tr>
                     <th>Tujuan</th>
@@ -52,6 +52,19 @@
                   @endforeach
                 </tbody>
               </table>
+              <div class="pull-left">
+                Showing
+                {{$whatsapp->firstItem()}}
+                to
+                {{$whatsapp->lastItem()}}
+                of
+                {{$whatsapp->total()}}
+                entries
+              </div>
+              <div class="pull-right">
+                {{ $whatsapp->withQueryString()->links('pagination::bootstrap-4') }}
+              </div>
+  
             </div>
           </div>
         </div>

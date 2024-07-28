@@ -405,7 +405,13 @@ class TeknisiController extends Controller
                             $nilai2 = '20';
                         }
 
-                        $teknisi['teknisi_waktu_kerja'] = $diff;
+                        $startTime = Carbon::parse($awal);
+                        $endTime = Carbon::parse($akhir);
+                        $duration = $endTime->diffInMinutes($startTime);
+                        $totalminutes = $duration;
+
+
+                        $teknisi['teknisi_waktu_kerja'] = date('H:i', mktime(0, $totalminutes));
                         $teknisi['teknisi_nilai'] = $nilai;
                         $teknisi['teknisi_nilai_instalasi'] = $nilai2;
                         $teknisi['teknisi_note'] = $kata;
@@ -432,6 +438,7 @@ class TeknisiController extends Controller
                         $pesan_group['ket'] = 'aktivasi psb';
                         $pesan_group['status'] = '0';
                         $pesan_group['target'] = '120363028776966861@g.us';
+                        $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
                         $pesan_group['pesan'] = '               -- PSB SELESAI --
 
 Pemasangan telah selesai dikerjakan  😊
@@ -450,8 +457,8 @@ Before Kabel : ' . $request->before . '
 after Kabel : ' . $request->after . '
 Panjang Kabel : ' . $request->total . '
 
-Waktu Selesai : ' . $tanggal . '
-Waktu Pengerjaan : ' . date('H:m:s', strtotime($diff)) . '
+Waktu Selesai : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+Waktu Pengerjaan : ' . date('H:i', mktime(0, $totalminutes)) . '
 
 Diaktivasi Oleh : ' . $teknisi_nama . '
 ';
@@ -637,8 +644,12 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                         } else {
                             $nilai2 = '20';
                         }
+                        $startTime = Carbon::parse($awal);
+                        $endTime = Carbon::parse($akhir);
+                        $duration = $endTime->diffInMinutes($startTime);
+                        $totalminutes = $duration;
 
-                        $teknisi['teknisi_waktu_kerja'] = $diff;
+                        $teknisi['teknisi_waktu_kerja'] = date('H:i', mktime(0, $totalminutes));
                         $teknisi['teknisi_nilai'] = $nilai;
                         $teknisi['teknisi_nilai_instalasi'] = $nilai2;
                         $teknisi['teknisi_note'] = $kata;
@@ -663,6 +674,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                         $pesan_group['ket'] = 'aktivasi psb';
                         $pesan_group['status'] = '0';
                         $pesan_group['target'] = '120363028776966861@g.us';
+                        $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
                         $pesan_group['pesan'] = '               -- PSB SELESAI --
 
 Pemasangan telah selesai dikerjakan  😊
@@ -681,8 +693,8 @@ Before Kabel : ' . $request->before . '
 after Kabel : ' . $request->after . '
 Panjang Kabel : ' . $request->total . '
 
-Waktu Selesai : ' . $tanggal . '
-Waktu Pengerjaan : ' . date('H:m:s', strtotime($diff)) . '
+Waktu Selesai : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+Waktu Pengerjaan : ' . date('H:i', mktime(0, $totalminutes)) . '
 
 Diaktivasi Oleh : ' . $teknisi_nama . '
 ';
@@ -849,6 +861,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
         $pesan_group['ket'] = 'close tiket';
         $pesan_group['status'] = '0';
         $pesan_group['target'] = '120363028776966861@g.us';
+        $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
         $pesan_group['pesan'] = '               -- CLOSE TIKET --
 
 Hallo Broo..  
@@ -861,14 +874,15 @@ Tindakan : *' . $request->edit_keterangan . '*
 Teknisi : ' . $tiket->teknisi_team . '
 
 Pelanggan : ' . $tiket->input_nama . '
-Alamat : ' . $tiket->input_alamat_pasang .
-            '
-Tanggal Seliesa : ' . $tanggal . '
+Alamat : ' . $tiket->input_alamat_pasang . '
+
+Tanggal Selesai : ' . $tanggal . '
 ';
 
         $pesan_pelanggan['ket'] = 'close tiket';
         $pesan_pelanggan['status'] = '0';
         $pesan_pelanggan['target'] = $tiket->input_hp;
+        $pesan_group['nama'] = $tiket->input_nama;
         $pesan_pelanggan['pesan'] = '               -- CLOSE TIKET --
 
 Pelanggan yth
@@ -879,7 +893,7 @@ Nomor tiket : *' . $id . '*
 Topik : ' . $tiket->tiket_judul . '
 Tindakan : *' . $request->edit_keterangan . '*
 
-Tanggal Seliesa : ' . $tanggal . '
+Tanggal Selesai : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
 
 Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu aktif agar bisa di hubungi kembali.
 Terima kasih.';

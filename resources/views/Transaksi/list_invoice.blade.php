@@ -192,9 +192,20 @@
                     @endforeach
               </tbody>
             </table>
+            <div class="pull-left">
+              Showing
+              {{$data_invoice->firstItem()}}
+              to
+              {{$data_invoice->lastItem()}}
+              of
+              {{$data_invoice->total()}}
+              entries
+            </div>
+            <div class="pull-right">
+              {{ $data_invoice->withQueryString()->links('pagination::bootstrap-4') }}
+            </div>
           </div>
         </div>
-        {{ $data_invoice->links('pagination::bootstrap-4') }}
       </div>
     </div>
   </div>
