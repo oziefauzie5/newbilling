@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 use App\Models\Permission;
 use App\Models\Pesan;
-
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -130,6 +130,14 @@ class UserController extends Controller
         $level_id = $get[0];
         $datarole['role_id'] = $level_id;
 
+        $photo = $request->file('file');
+        // $filename = date('Y-m-d', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+        // $path = 'photo-user/' . $filename;
+        $fileName = time() . '.' . $photo->extension();
+        $request->file->move(public_path('uploads'), $fileName);
+        // Storage::disk('public')->put($path, file_get_contents($photo));
+        dd($fileName);
+
         $data['email'] = $request->email;
         $data['ktp'] = $request->ktp;
         $data['hp'] = $nomorhp;
@@ -139,9 +147,6 @@ class UserController extends Controller
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }
-
-        // dd($datarole);
-
 
         Model_Has_Role::where('model_id', $id)->update($datarole);
         User::whereId($id)->update($data);

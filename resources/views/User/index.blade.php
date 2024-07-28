@@ -7,7 +7,7 @@
       <div class="card">
         <div class="card-header">
           <div class="d-flex align-items-center">
-            <h4 class="card-title">INPUT DATA</h4>
+            <h4 class="card-title">DATA USER</h4>
             <button class="btn btn-primary btn-round ml-auto btn-sm" data-toggle="modal" data-target="#addRowModal">
               <i class="fa fa-plus"></i>
               Input Data
@@ -169,7 +169,7 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <form action="{{route('admin.user.edit',['id'=>$d->id])}}" method="POST">
+                              <form action="{{route('admin.user.edit',['id'=>$d->id])}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
@@ -213,6 +213,13 @@
                                     <div class="form-group">
                                       <label>Password</label>
                                       <input id="password" type="text" class="form-control" name="password" placeholder="Password">
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12">
+                                    <div class="form-group">
+                                      <label>Upload Foto</label>
+                                      <input  type="file" class="form-control-file" name="file">
+                                      <img src="{{ asset('storage/uploads/1722171197.png') }}" alt="" title="">
                                     </div>
                                   </div>
                                   <div class="col-sm-12">
