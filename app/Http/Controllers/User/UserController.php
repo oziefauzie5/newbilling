@@ -131,17 +131,17 @@ class UserController extends Controller
         $datarole['role_id'] = $level_id;
 
         $photo = $request->file('file');
-        // $filename = date('Y-m-d', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+        $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
         // $path = 'photo-user/' . $filename;
-        $fileName = time() . '.' . $photo->extension();
-        $request->file->move(public_path('photo-user'), $fileName);
+        // $fileName = date('d-m-Y', strtotime(Carbon::now())) . '.' . $photo->extension();
+        $request->file->move(public_path('photo-user'), $filename);
         // Storage::disk('public')->put($path, file_get_contents($photo));
-        // dd($fileName);
+        dd($filename);
 
         $data['email'] = $request->email;
         $data['ktp'] = $request->ktp;
         $data['hp'] = $nomorhp;
-        $data['photo'] = $fileName;
+        $data['photo'] = $filename;
         $data['alamat_lengkap'] = ucwords($request->alamat_lengkap);
         $data['name'] = ucwords($request->name);
         $data['username'] = $request->username;
