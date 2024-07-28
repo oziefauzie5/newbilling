@@ -134,13 +134,14 @@ class UserController extends Controller
         // $filename = date('Y-m-d', strtotime(Carbon::now())) . $photo->getClientOriginalName();
         // $path = 'photo-user/' . $filename;
         $fileName = time() . '.' . $photo->extension();
-        $request->file->move(public_path('uploads'), $fileName);
+        $request->file->move(public_path('photo-user'), $fileName);
         // Storage::disk('public')->put($path, file_get_contents($photo));
-        dd($fileName);
+        // dd($fileName);
 
         $data['email'] = $request->email;
         $data['ktp'] = $request->ktp;
         $data['hp'] = $nomorhp;
+        $data['photo'] = $fileName;
         $data['alamat_lengkap'] = ucwords($request->alamat_lengkap);
         $data['name'] = ucwords($request->name);
         $data['username'] = $request->username;

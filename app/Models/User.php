@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'ktp',
         'hp',
+        'photo',
         'alamat_lengkap',
         'status_user',
     ];

@@ -116,6 +116,7 @@
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Foto</th>
                   <th>Nama</th>
                   <th>Level</th>
                   <th>Whatsapp</th>
@@ -127,6 +128,7 @@
               <tfoot>
                 <tr>
                   <th>ID</th>
+                  <th>Foto</th>
                   <th>Nama</th>
                   <th>Level</th>
                   <th>Whatsapp</th>
@@ -139,6 +141,7 @@
                 @foreach ($data_user as $d)
                 <tr>
                       <td>{{$d->id}}</td>
+                      <td> <img src="{{ asset('photo-user/'.$d->name) }}" width="100" alt="" title=""></img></td>
                       <td>{{$d->name}}</td>
                       <td>{{$d->level}}</td>
                       <td>{{$d->hp}}</td>

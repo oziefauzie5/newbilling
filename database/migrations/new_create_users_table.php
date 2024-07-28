@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('username')->unique()->nullable();
             $table->string('ktp')->nullable();
             $table->string('hp')->nullable();
+            $table->string('photo')->nullable();
             $table->string('alamat_lengkap')->nullable();
             $table->string('status_user')->nullable();
             $table->rememberToken();
