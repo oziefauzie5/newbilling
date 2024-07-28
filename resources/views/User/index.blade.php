@@ -141,7 +141,7 @@
                 @foreach ($data_user as $d)
                 <tr>
                       <td>{{$d->id}}</td>
-                      <td> <img src="{{ asset('photo-user/'.$d->name) }}" width="100" alt="" title=""></img></td>
+                      <td> <img src="{{ asset('storage/photo-user/'.$d->photo) }}" width="100" alt="" title=""></img></td>
                       <td>{{$d->name}}</td>
                       <td>{{$d->level}}</td>
                       <td>{{$d->hp}}</td>
@@ -222,7 +222,6 @@
                                     <div class="form-group">
                                       <label>Upload Foto</label>
                                       <input  type="file" class="form-control-file" name="file">
-                                      <img src="{{ asset('storage/uploads/1722171197.png') }}" alt="" title="">
                                     </div>
                                   </div>
                                   <div class="col-sm-12">

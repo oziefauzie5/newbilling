@@ -21,6 +21,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
@@ -127,6 +128,7 @@ class InvoiceController extends Controller
             return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
         } else {
             $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+                ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
                 ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
                 ->where('inv_id', $id)
                 ->first();
@@ -147,6 +149,7 @@ class InvoiceController extends Controller
                 $reg['reg_tgl_tagih'] = $inv1_tagih1;
             }
             $admin_user = Auth::user()->id;
+            $admin_nama = Auth::user()->name;
 
             $explode = explode('|', $request->transfer);
             if ($request->cabar == 'TUNAI') {
@@ -161,6 +164,21 @@ class InvoiceController extends Controller
                 $akun_nama = $explode[2];
                 $biaya_adm =  $request->jumlah_bayar - $data_pelanggan->inv_total;
                 $j_bayar = $request->jumlah_bayar;
+                $file = $request->file('inv_bukti_bayar');
+                $filename = date('d-m-Y', strtotime(Carbon::now())) . '-' . $data_pelanggan->inv_nama;
+                $path = 'bukti-transfer/' . $filename;
+                Storage::disk('public')->put($path, file_get_contents($file));
+
+                $pesan_group['ket'] = 'isolir manual';
+                $pesan_group['status'] = '0';
+                $pesan_group['target'] = '120363290384277234@g.us';
+                $pesan_group['nama'] = 'GROUP INVOICE';
+                $pesan_group['file'] = 'https://ovallapp.com/storage/bukti-transfer/' . $filename;
+                $pesan_group['pesan'] = '
+Admin : ' . $admin_nama . '
+Pelanggan : ' . $data_pelanggan->inv_nama . '
+Waktu Transaksi : ' . date('Y-m-d H:m:s', strtotime(Carbon::now())) . '
+';
             }
 
 
@@ -176,6 +194,7 @@ class InvoiceController extends Controller
             $datas['inv_total_fee'] = 0;
             $datas['inv_amount_received'] = 0;
             $datas['inv_tgl_bayar'] = $tgl_bayar;
+            $datas['inv_bukti_bayar'] = $filename;
             $datas['inv_status'] = 'PAID';
             Invoice::where('inv_id', $id)->update($datas);
 

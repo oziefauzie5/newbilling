@@ -231,6 +231,7 @@ class NocController extends Controller
                 $pesan_group['ket'] = 'isolir manual';
                 $pesan_group['status'] = '0';
                 $pesan_group['target'] = $data_pelanggan->input_hp;
+                $pesan_group['nama'] = $data_pelanggan->input_nama;
                 $pesan_group['pesan'] = '
 Pelanggan yang terhormat,
 Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya

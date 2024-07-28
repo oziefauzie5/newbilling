@@ -16,5 +16,6 @@ class Pesan extends Model
         'pesan',
         'status',
         'ket',
+        'file',
     ];
 }

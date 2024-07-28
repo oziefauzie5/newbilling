@@ -31,6 +31,20 @@ class SendMessage implements ShouldQueue
         if ($cek_pesan) {
             $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->first();
             $pesan = Pesan::where('status', '0')->first();
+            if ($pesan->file) {
+                $data = array(
+                    'target' => $pesan->target,
+                    'message' => $pesan->pesan,
+                    'countryCode' => '62',
+                    'url' => $pesan->file,
+                );
+            } else {
+                $data = array(
+                    'target' => $pesan->target,
+                    'message' => $pesan->pesan,
+                    'countryCode' => '62',
+                );
+            }
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -42,15 +56,12 @@ class SendMessage implements ShouldQueue
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => array(
-                    'target' => $pesan->target,
-                    'message' => $pesan->pesan,
-                    'countryCode' => '62',
-                ),
+                CURLOPT_POSTFIELDS => $data,
                 CURLOPT_HTTPHEADER => array(
                     'Authorization: ' . $whatsapp->wa_key . ''
                 ),
             ));
+
 
             $response = curl_exec($curl);
             $err = curl_error($curl);

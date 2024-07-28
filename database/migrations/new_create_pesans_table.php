@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('pesan')->nullable();
             $table->string('status')->nullable();
             $table->string('ket')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

@@ -10,6 +10,7 @@ use App\Models\Model_Has_Role;
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use App\Models\RoleHasPermission;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 use App\Models\Permission;
@@ -132,11 +133,8 @@ class UserController extends Controller
 
         $photo = $request->file('file');
         $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
-        // $path = 'photo-user/' . $filename;
-        // $fileName = date('d-m-Y', strtotime(Carbon::now())) . '.' . $photo->extension();
-        $request->file->move(public_path('photo-user'), $filename);
-        // Storage::disk('public')->put($path, file_get_contents($photo));
-        // dd($filename);
+        $path = 'photo-user/' . $filename;
+        Storage::disk('public')->put($path, file_get_contents($photo));
 
         $data['email'] = $request->email;
         $data['ktp'] = $request->ktp;

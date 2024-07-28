@@ -38,5 +38,6 @@ class Invoice extends Model
         'inv_amount_received',
         'inv_admin',
         'inv_note',
+        'inv_bukti_bayar',
     ];
 }

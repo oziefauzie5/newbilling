@@ -140,7 +140,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                  <form action="{{ route('admin.inv.payment',['id'=>$invoice->inv_id])}}" method="POST">
+                  <form action="{{ route('admin.inv.payment',['id'=>$invoice->inv_id])}}" method="POST" enctype="multipart/form-data">
                           @csrf
                           @method('PUT')
                        <select name="cabar" id="cabar"  class="form-control" required>
@@ -157,8 +157,18 @@
                           @endif
                           @endforeach
                         </select>
-<br>
+                        <br>
                         <input type="number" id="jb" name="jumlah_bayar" placeholder="Masukan jumlah pembayaran" class="form-control" style="display:none;">
+                        <br>
+                        <div class="input-group mb-3" id="bb" style="display:none;">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupFileAddon01">Upload Bukti Trasnfer</span>
+                          </div>
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile01" name="inv_bukti_bayar" aria-describedby="inputGroupFileAddon01">
+                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                          </div>
+                        </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>

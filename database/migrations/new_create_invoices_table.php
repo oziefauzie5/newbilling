@@ -42,6 +42,7 @@ return new class extends Migration
             $table->string('inv_amount_received')->nullable();
             $table->string('inv_admin')->nullable();
             $table->string('inv_note')->nullable();
+            $table->string('inv_bukti_bayar')->nullable();
             $table->timestamps();
         });
     }
