@@ -8,7 +8,7 @@
         <div class="card">
           <div class="card-header bg-primary">
             <div class="d-flex align-items-center">
-              <h4 class="card-title text-light">TIKET</h4>
+              <h4 class="card-title text-light">DATA TIKET</h4>
             </div>
           </div>
           <div class="card-body">
@@ -176,7 +176,11 @@
                 <tbody>
                   @foreach ($tiket as $d)
                   <tr>
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_status}}</td>
+                    @if($d->tiket_status == 'DONE')
+                    <td><div class="badge badge-success">{{$d->tiket_status}}</div></td>
+                    @else
+                    <td><div class="badge badge-danger">{{$d->tiket_status}}</div></td>
+                    @endif
                     <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->created_at}}</td>
                     <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_id}}</td>
                     <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_departemen}}</td>
