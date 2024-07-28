@@ -405,7 +405,7 @@ class TeknisiController extends Controller
                             $nilai2 = '20';
                         }
 
-                        $startTime = Carbon::parse($waktu_kerja->teknisi_id);
+                        $startTime = Carbon::parse(date('Y-m-d H:m:s', strtotime($waktu_kerja->teknisi_id)));
                         $endTime = Carbon::now();
                         $duration = $endTime->diffInMinutes($startTime);
                         $totalminutes = $duration;
@@ -644,7 +644,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                         } else {
                             $nilai2 = '20';
                         }
-                        $startTime = Carbon::parse($waktu_kerja->teknisi_id);
+                        $startTime = Carbon::parse(date('Y-m-d H:m:s', strtotime($waktu_kerja->teknisi_id)));
                         $endTime = Carbon::now();
                         $duration = $endTime->diffInMinutes($startTime);
                         $totalminutes = $duration;
