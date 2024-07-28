@@ -136,7 +136,7 @@ class UserController extends Controller
         // $fileName = date('d-m-Y', strtotime(Carbon::now())) . '.' . $photo->extension();
         $request->file->move(public_path('photo-user'), $filename);
         // Storage::disk('public')->put($path, file_get_contents($photo));
-        dd($filename);
+        // dd($filename);
 
         $data['email'] = $request->email;
         $data['ktp'] = $request->ktp;
