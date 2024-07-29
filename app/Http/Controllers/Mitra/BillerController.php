@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Mitra\MitraSetting;
 use App\Models\Mitra\Mutasi;
+use App\Models\Pesan\Pesan;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
@@ -273,6 +274,28 @@ class BillerController extends Controller
                 $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
                 Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
             }
+
+            //             $pesan_group['ket'] = 'payment biller';
+            //             $pesan_group['status'] = '0';
+            //             $pesan_group['target'] = $data_pelanggan->input_hp;
+            //             $pesan_group['nama'] = $data_pelanggan->input_nama;
+            //             $pesan_group['pesan'] = '
+            // Terima kasih 🙏
+            // Pembayaran invoice sudah kami terima
+            // *************************
+            // No.Layanan : ' . $data_pelanggan->inv_nolayanan . '
+            // Pelanggan : ' . $data_pelanggan->inv_nama . '
+            // Invoice : *' . $data_pelanggan->inv_id . '*
+            // Profil : ' . $data_pelanggan->inv_profile . '
+            // Total : *Rp' . $data_pelanggan->inv_total . '*
+
+            // Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+            // Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
+            // *************************
+            // --------------------
+            // Pesan ini bersifat informasi dan tidak perlu dibalas
+            // *OVALL FIBER*';
+            //             Pesan::create($pesan_group);
 
 
             $router = Router::whereId($data_pelanggan->reg_router)->first();

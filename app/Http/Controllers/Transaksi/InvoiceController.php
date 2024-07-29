@@ -158,6 +158,7 @@ class InvoiceController extends Controller
                 $akun_nama = 'TUNAI';
                 $biaya_adm =  0;
                 $j_bayar = 0;
+                $filename = "";
             } elseif ($request->cabar == 'TRANSFER') {
                 $akun = $explode[0];
                 $norek = $explode[1];
@@ -165,20 +166,9 @@ class InvoiceController extends Controller
                 $biaya_adm =  $request->jumlah_bayar - $data_pelanggan->inv_total;
                 $j_bayar = $request->jumlah_bayar;
                 $file = $request->file('inv_bukti_bayar');
-                $filename = date('d-m-Y', strtotime(Carbon::now())) . '-' . $data_pelanggan->inv_nama;
+                $filename = date('d-m-Y', strtotime(Carbon::now())) . '-' . str_replace(" ", "-", $data_pelanggan->inv_nama) . '.jpeg';
                 $path = 'bukti-transfer/' . $filename;
                 Storage::disk('public')->put($path, file_get_contents($file));
-
-                $pesan_group['ket'] = 'isolir manual';
-                $pesan_group['status'] = '0';
-                $pesan_group['target'] = '120363290384277234@g.us';
-                $pesan_group['nama'] = 'GROUP INVOICE';
-                $pesan_group['file'] = 'https://ovallapp.com/storage/bukti-transfer/' . $filename;
-                $pesan_group['pesan'] = '
-Admin : ' . $admin_nama . '
-Pelanggan : ' . $data_pelanggan->inv_nama . '
-Waktu Transaksi : ' . date('Y-m-d H:m:s', strtotime(Carbon::now())) . '
-';
             }
 
 
@@ -232,6 +222,28 @@ Waktu Transaksi : ' . date('Y-m-d H:m:s', strtotime(Carbon::now())) . '
                 $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
                 Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
             }
+
+            //             $pesan_group['ket'] = 'payment';
+            //             $pesan_group['status'] = '0';
+            //             $pesan_group['target'] = $data_pelanggan->input_hp;
+            //             $pesan_group['nama'] = $data_pelanggan->input_nama;
+            //             $pesan_group['pesan'] = '
+            // Terima kasih 🙏
+            // Pembayaran invoice sudah kami terima
+            // *************************
+            // No.Layanan : ' . $data_pelanggan->inv_nolayanan . '
+            // Pelanggan : ' . $data_pelanggan->inv_nama . '
+            // Invoice : *' . $data_pelanggan->inv_id . '*
+            // Profil : ' . $data_pelanggan->inv_profile . '
+            // Total : *Rp' . $data_pelanggan->inv_total . '*
+
+            // Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+            // Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
+            // *************************
+            // --------------------
+            // Pesan ini bersifat informasi dan tidak perlu dibalas
+            // *OVALL FIBER*';
+            //             Pesan::create($pesan_group);
 
             $router = Router::whereId($data_pelanggan->reg_router)->first();
             $ip =   $router->router_ip . ':' . $router->router_port_api;
