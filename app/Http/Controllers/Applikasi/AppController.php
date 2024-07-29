@@ -243,17 +243,18 @@ class AppController extends Controller
         ]);
 
         if ($request->file('app_logo')) {
-            $app_logo = $request->file('app_logo');
-            $filename1 = $request->nama . '_' . $app_logo->getClientOriginalName();
-            $path = 'logo/' . $filename1;
-            Storage::disk('public')->put($path, file_get_contents($app_logo));
+
+            $photo = $request->file('app_logo');
+            $filename1 = $photo->getClientOriginalName();
+            $path = 'img/' . $filename1;
+            Storage::disk('public')->put($path, file_get_contents($photo));
         } else {
             $filename1 = '';
         }
-        if ($request->file('app_logo')) {
+        if ($request->file('app_favicon')) {
             $app_favicon = $request->file('app_favicon');
-            $filename2 = $request->nama . '_' . $app_logo->getClientOriginalName();
-            $path = 'logo/' . $filename2;
+            $filename2 = $app_favicon->getClientOriginalName();
+            $path = 'img/' . $filename2;
             Storage::disk('public')->put($path, file_get_contents($app_favicon));
         } else {
             $filename2 = '';
