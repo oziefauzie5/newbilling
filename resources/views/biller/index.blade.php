@@ -58,14 +58,14 @@
                                 </a>
                                 <div class="text-light mb-3 text-center">Mutasi</div>
                               </td>
-                              @role('KOLEKTOR')
+                              {{-- @role('KOLEKTOR') --}}
                               <td>
-                                <a href="#" onclick="comingson()" class="card mb-2 card_custom1" style="width: 4rem;">
+                                <a href="{{route('admin.biller.list_tagihan') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/tagihan.png') }}" class="card-img-center p-2" alt="...">
                                 </a>
                                 <div class="text-light mb-3 text-center">Tagihan</div>
                               </td>
-                              @endrole
+                              {{-- @endrole --}}
                               <td>
                                 <div class="card mb-2 card_custom1 " data-toggle="modal" data-target="#exampleModal" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/transaksi.png') }}" class="card-img-center p-2" alt="...">

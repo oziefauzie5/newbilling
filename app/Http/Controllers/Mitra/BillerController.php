@@ -364,4 +364,51 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             return response()->json($notifikasi);
         }
     }
+
+    public function list_tagihan(Request $request)
+    {
+        $pasang_bulan_ini = Carbon::now()->addMonth(-0)->format('Y-m-d');
+        $pasang_bulan_lalu = Carbon::now()->addMonth(-1)->format('Y-m-d');
+        $pasang_3_bulan_lalu = Carbon::now()->addMonth(-2)->format('Y-m-d');
+
+        $data['data_bulan'] = $request->query('data_bulan');
+        $data['data_inv'] = $request->query('data_inv');
+        $data['q'] = $request->query('q');
+
+        $query = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('inv_id', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
+            });
+
+        if ($data['data_bulan'] == "1") {
+            $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_ini);
+            $data['data_bulan'] = 'PELANGGAN BARU';
+        } elseif ($data['data_bulan'] == "2") {
+            $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_lalu);
+            $data['data_bulan'] = 'PELANGGAN 2 BULAN';
+        } elseif ($data['data_bulan'] == "3") {
+            $query->whereMonth('inv_tgl_pasang', '=', $pasang_3_bulan_lalu);
+            $data['data_bulan'] = 'PELANGGAN 3 BULAN';
+        }
+
+        if ($data['data_inv'])
+            $query->where('inv_status', '=', $data['data_inv']);
+
+
+        $data['inv_count_all'] = $query->count();
+        $data['data_invoice'] = $query->paginate(20);
+        $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();
+        $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->sum('inv_total');
+        $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->sum('inv_total');
+        $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->count();
+        $data['inv_count_isolir'] = Invoice::where('inv_status', '=', 'ISOLIR')->count();
+        $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->count();
+        return view('biller/list_tagihan', $data);
+    }
 }
