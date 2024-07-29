@@ -201,6 +201,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/biller/pembayaran', [BillerController::class, 'pembayaran'])->name('biller.pembayaran')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/data-pembayaran/{id}', [BillerController::class, 'getpelanggan'])->name('biller.getpelanggan')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/payment', [BillerController::class, 'payment'])->name('biller.payment')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/payment-tagihan/{inv_id}', [BillerController::class, 'paymentbytagihan'])->name('biller.paymentbytagihan')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/pembayaran/{id}', [BillerController::class, 'bayar'])->name('biller.bayar')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/data-lunas/{id}', [BillerController::class, 'getDataLunas'])->name('biller.getDataLunas')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/mutasi', [BillerController::class, 'mutasi'])->name('biller.mutasi')->middleware(['role:KOLEKTOR|BILLER']);

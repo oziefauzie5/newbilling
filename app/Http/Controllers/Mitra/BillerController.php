@@ -145,6 +145,11 @@ class BillerController extends Controller
         $data['tittle'] = 'Payment';
         return view('biller/payment', $data);
     }
+    public function paymentbytagihan($inv_id)
+    {
+        $data['invoice_id'] = $inv_id;
+        return view('biller/paymentbytagihan', $data);
+    }
 
     public function index()
     {
@@ -165,14 +170,10 @@ class BillerController extends Controller
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
 
         $admin_user = Auth::user()->id; #ID USER
+        $nama_user = Auth::user()->name; #NAMA USER
         $mitra = MitraSetting::where('mts_user_id', $admin_user)->where('mts_limit_minus', '!=', '0')->first();
-        $query_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar);
-        $count_trx = $query_trx->count();
-        $sum_trx = $query_trx->sum('trx_total');
-
-        // return response()->json($cek_trx);
-
-
+        $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
+        $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->count();
 
         $saldo_mutasi = (new GlobalController)->total_mutasi($admin_user); #Cek saldo mutasi terlebih dahulu sebelum melakukan pemabayaran
         $cek_tagihan = (new GlobalController)->data_tagihan($id); #cek data tagihan pembayaran
@@ -286,11 +287,14 @@ Pembayaran invoice sudah kami terima
 No.Layanan : ' . $data_pelanggan->inv_nolayanan . '
 Pelanggan : ' . $data_pelanggan->inv_nama . '
 Invoice : *' . $data_pelanggan->inv_id . '*
-Profil : ' . $data_pelanggan->inv_profile . '
-Total : *Rp' . $data_pelanggan->inv_total . '*
+Profile : ' . $data_pelanggan->inv_profile . '
+Biaya adm : *Rp' . number_format($biller->mts_komisi) . '*
+Total : *Rp' . number_format($biller->mts_komisi + $data_pelanggan->inv_total) . '*
 
 Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
 Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
+
+BY : ' . $nama_user . '
 *************************
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas

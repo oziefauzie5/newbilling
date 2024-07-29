@@ -80,9 +80,8 @@ class CallbackController extends Controller
                         ->where('inv_id', $data->merchant_ref)
                         ->first();
                     $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
-                    $query_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar);
-                    $count_trx = $query_trx->count();
-                    $sum_trx = $query_trx->sum('trx_total');
+                    $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
+                    $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->count();
 
                     #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
                     #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran

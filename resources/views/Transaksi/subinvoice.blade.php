@@ -28,12 +28,14 @@
               <div class="col-sm-4">
                 <b>Invoice {{$invoice->inv_id}}</b><br>
                 <br>
-                <b>Jatuh Tempo</b> {{$invoice->inv_tgl_jatuh_tempo}}<br>
                 @if($invoice->inv_status != 'PAID')
+                <b>Jatuh Tempo</b> {{$invoice->inv_tgl_jatuh_tempo}}<br>
                 <b>Status : </b> <span class="text-danger"><strong> {{$invoice->inv_status}}</strong></span><br>
                 @else
+                <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>
+                <b>Tanggal Bayar</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_bayar))}}<br>
                 <b>Status : </b> <span class="text-success"><strong> {{$invoice->inv_status}}</strong></span><br>
-                  @endif
+                @endif
               </div>
             </div>
 
@@ -97,7 +99,32 @@
                 @else
                 <div class="row">
                   <div class="col">
-                    <img src="{{ asset('storage/bukti-transfer/'.$invoice->inv_bukti_bayar) }}" alt="">
+                    <!-- Button trigger modal -->
+                      <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#exampleModal">
+                        Lihat Bukti Transfer
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Bukti Transfer</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                            <img class="rounded mx-auto d-block" src="{{ asset('storage/bukti-transfer/'.$invoice->inv_bukti_bayar) }}" width="300" alt="">
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- ---end modal---- -->
+                    
                   </div>
                 </div>
                 @endif
@@ -130,12 +157,12 @@
             <div class="row no-print">
               <div class="col-12">
                 <a href="#" class="btn btn-default btn-sm"><i class="fas fa-print"></i> PRINT</a>
-                @if($invoice->inv_status='PAID')
-                <button type="button" class="btn btn-danger float-right btn-sm" ><i class="far fa-credit-card"></i> ROLBACK
-                </button>
-                @else
+                @if($invoice->inv_status!='PAID')
                 <button type="button" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#staticBackdrop" id="modal_bayar" ><i class="far fa-credit-card"></i> BAYAR
-                </button>
+              </button>
+              @else
+              <button type="button" class="btn btn-danger float-right btn-sm" ><i class="far fa-credit-card"></i> ROLBACK
+              </button>
                 @endif
               </div>
             </div>

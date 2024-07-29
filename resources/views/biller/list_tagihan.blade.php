@@ -104,9 +104,8 @@
                              <li class="list-group-item">Jumlah Tagihan   : Rp. {{ number_format($list->reg_harga) }}</li>
                              <li class="list-group-item">Jatuh Tempo   : {{ date('d-m-Y',strtotime($list->reg_tgl_jatuh_tempo)) }}</li>
                              <li class="list-group-item">Tanggal Isolir   : {{ date('d-m-Y',strtotime($list->inv_tgl_isolir))  }}</li>
-                             <li class="list-group-item"><a href="{{route('admin.biller.bayar',['id'=>$list->inv_id])}}"><button class="btn btn-block btn-primary">BAYAR</button></a></li>
+                             <li class="list-group-item"><a href="{{route('admin.biller.paymentbytagihan',['inv_id'=>$list->inv_id])}}"><button class="btn btn-block btn-primary">BAYAR</button></a></li>
                             </ul>
-                    
                         </div>
                       </div>
                     </div>

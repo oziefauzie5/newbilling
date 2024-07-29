@@ -217,6 +217,15 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 	</script>
 	{{-- #BILLER PAYMENT --}}
 	<script>
+	
+// 	function myFunction() {
+// 		let idi   = $('#invoice_id').val();
+// 		var url_kolektor = '{{ route("admin.biller.paymentbytagihan", ":id") }}';
+// 		url_kolektor = url_kolektor.replace(':id', idi);
+// 		// alert(url_kolektor);
+// 		window.location.href = url_kolektor;
+// }
+
 		$('#cari_pelanggan').click(function(e) {
 			let id   = $('#biller_idpel').val();
 			$("#progress").html('<button class="btn btn-block btn-primary text-light" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...</button>');
@@ -356,6 +365,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 	
 				});
 				</script>
+				
 	<script>
 		function comingson() {
 			swal('Comingsoon');

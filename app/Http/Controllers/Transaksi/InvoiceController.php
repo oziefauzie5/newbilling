@@ -119,13 +119,9 @@ class InvoiceController extends Controller
     }
     public function payment(Request $request, $id)
     {
-        // $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
-        $query_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar);
-        $count_trx = $query_trx->count();
-        // dd($count_trx+1);
-        $sum_trx = $query_trx->sum('trx_total');
-        // $cek_trx = Transaksi::whereDate('created_at', $tgl_bayar)->where('trx_kategori', 'INVOICE')->first();
+        $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
+        $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->count();
 
         $cek_inv = Laporan::where('lap_inv', $id)->first();
         if ($cek_inv) {
