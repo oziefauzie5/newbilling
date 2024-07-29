@@ -42,8 +42,20 @@
               </ul>
           </div> 
         @endif
+        <hr>
+        <form >
+          <div class="row mb-1">
+            <div class="col-sm-4">
+              <input name="q" type="text" class="form-control form-control-sm" placeholder="Cari">
+            </div>
+            <div class="col-sm-2">
+              <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
+            </div>
+          </div>
+          </form>
+          <hr>
           <div class="table-responsive">
-            <table id="input_data" class="display table table-striped table-hover text-nowrap" >
+            <table id="" class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
                   <th>INVOICE</th>
@@ -84,6 +96,19 @@
               </tbody>
             </table>
           </div>
+          <div class="pull-left">
+            Showing
+            {{$data_invoice->firstItem()}}
+            to
+            {{$data_invoice->lastItem()}}
+            of
+            {{$data_invoice->total()}}
+            entries
+          </div>
+          <div class="pull-right">
+            {{ $data_invoice->withQueryString()->links('pagination::bootstrap-4') }}
+          </div>
+
         </div>
       </div>
     </div>

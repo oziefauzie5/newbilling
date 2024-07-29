@@ -71,17 +71,24 @@ class InvoiceController extends Controller
         $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->count();
         return view('Transaksi/list_invoice', $data);
     }
-    public function paid()
+    public function paid(Request $request)
     {
-        $invoice = Invoice::where('invoices.inv_status', '=', 'PAID');
+        $data['q'] = $request->query('q');
+        $invoice = Invoice::where('invoices.inv_status', '=', 'PAID')
+            ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('inv_id', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
+            });
         $day = Carbon::now()->format('d');
         $month = Carbon::now()->addMonth(-0)->format('m');
-        $data['data_invoice'] = $invoice->get();
+        $data['data_invoice'] = $invoice->paginate(10);
         $data['inv_count_bulan'] = $invoice->whereMonth('inv_tgl_bayar', '=', $month)->count();
         // $data['inv_bulan'] = $invoice->sum('inv_total');
         $data['inv_bulan'] = $invoice->whereMonth('inv_tgl_bayar', '=', $month)->sum('inv_total');
         $data['inv_hari'] = $invoice->whereDay('inv_tgl_bayar', '=', $day)->sum('inv_total');
-        // dd($data['inv_hari']);
         return view('Transaksi/list_invoice_paid', $data);
     }
 
@@ -116,6 +123,7 @@ class InvoiceController extends Controller
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
         $query_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar);
         $count_trx = $query_trx->count();
+        // dd($count_trx+1);
         $sum_trx = $query_trx->sum('trx_total');
         // $cek_trx = Transaksi::whereDate('created_at', $tgl_bayar)->where('trx_kategori', 'INVOICE')->first();
 
@@ -217,8 +225,8 @@ class InvoiceController extends Controller
                 $data_trx['trx_total'] = $data_pelanggan->inv_total;
                 Transaksi::where('trx_jenis', 'INVOICE')->create($data_trx);
             } else {
-
-                $data_trx['trx_qty'] = $count_trx + 1;
+                $i = '1';
+                $data_trx['trx_qty'] = $count_trx + $i;
                 $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
                 Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
             }

@@ -269,8 +269,8 @@ class BillerController extends Controller
                 $data_trx['trx_total'] = $data_pelanggan->inv_total;
                 Transaksi::where('trx_jenis', 'INVOICE')->create($data_trx);
             } else {
-
-                $data_trx['trx_qty'] = $count_trx + 1;
+                $i = '1';
+                $data_trx['trx_qty'] = $count_trx + $i;
                 $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
                 Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
             }

@@ -94,6 +94,12 @@
                     <button class="btn btn-primary btn-block btn-sm mt-3"  data-toggle="modal" data-target="#exampleModal" >Add Ons</button>
                   </div>
                 </div>
+                @else
+                <div class="row">
+                  <div class="col">
+                    <img src="{{ asset('storage/bukti-transfer/'.$invoice->inv_bukti_bayar) }}" alt="">
+                  </div>
+                </div>
                 @endif
               </div>
 
@@ -123,9 +129,14 @@
 
             <div class="row no-print">
               <div class="col-12">
-                <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default btn-sm"><i class="fas fa-print"></i> PRINT</a>
+                <a href="#" class="btn btn-default btn-sm"><i class="fas fa-print"></i> PRINT</a>
+                @if($invoice->inv_status='PAID')
+                <button type="button" class="btn btn-danger float-right btn-sm" ><i class="far fa-credit-card"></i> ROLBACK
+                </button>
+                @else
                 <button type="button" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#staticBackdrop" id="modal_bayar" ><i class="far fa-credit-card"></i> BAYAR
                 </button>
+                @endif
               </div>
             </div>
 
