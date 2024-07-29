@@ -22,7 +22,7 @@
       <form action="{{ route('proses-login')}}" method="post">
         @csrf
         <div class="input-group mb-3">
-          <input type="text" class="form-control" name="input_hp" placeholder="Masukan nomor Whatsapp" value="{{ old('input_hp')}}">
+          <input type="number" class="form-control" name="input_hp" placeholder="Masukan nomor Whatsapp" value="{{ old('input_hp')}}">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-phone"></span>
@@ -36,9 +36,9 @@
           <div class="col-8">
             <div class="icheck-primary">
               <input type="checkbox" id="remember">
-              <label for="remember">
+              {{-- <label for="remember">
                 Remember Me
-              </label>
+              </label> --}}
             </div>
           </div>
           <div class="col-4 r">
