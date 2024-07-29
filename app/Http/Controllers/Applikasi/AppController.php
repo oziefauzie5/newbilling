@@ -97,7 +97,8 @@ class AppController extends Controller
             $data['wa_url'] = $SettingWhatsapp->wa_url;
             $data['wa_status'] = $SettingWhatsapp->wa_status;
         }
-        $data['SettingAkun'] =  (new SettingAkun())->SettingAkun();
+        $data['SettingAkun'] =  (new SettingAkun())->SettingAkun()->get();
+        // dd($data['SettingAkun']);
         $count = SettingAkun::count();
         if ($count == 0) {
             $data['akun_id'] = $Settingakun_id = 1;

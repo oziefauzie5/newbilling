@@ -493,7 +493,7 @@
             </tr>
     </table>
     <br><hr><br>
-    <div> Hallo {{strtoupper($berita_acara->reg_teknisi_team)}}. Terimakasih telah menyelesaikan tugas anda. Anda mulai mengerjakan Pukul {{ date('H:m:s', strtotime( $kas->mulai)) }} dan selesai Pukul {{ date('H:m:s', strtotime( $kas->teknisi_job_selesai)) }}, dengan waktu {{ gmdate('H:i:s', $kas->teknisi_waktu_kerja) }}</div><br>
+    <div> Hallo {{strtoupper($berita_acara->reg_teknisi_team)}}. Terimakasih telah menyelesaikan tugas anda. Anda mulai mengerjakan Pukul {{ date('H:m:s', strtotime( $kas->mulai)) }} dan selesai Pukul {{ date('H:m:s', strtotime( $kas->teknisi_job_selesai)) }}, dengan waktu {{ $kas->teknisi_waktu_kerja }}</div><br>
 
     <div>Nilai untuk anda : {{$kas->teknisi_nilai}}</div>
     <div>Pesan untuk anda : {{$kas->teknisi_note}}</div>

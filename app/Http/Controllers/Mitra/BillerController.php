@@ -161,6 +161,7 @@ class BillerController extends Controller
 
     public function bayar(Request $request, $id)
     {
+
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
 
         $admin_user = Auth::user()->id; #ID USER
@@ -178,7 +179,6 @@ class BillerController extends Controller
         $sumharga = SubInvoice::where('subinvoice_id', $cek_tagihan->inv_id)->sum('subinvoice_harga'); #hitung total harga invoice
         $sumppn = SubInvoice::where('subinvoice_id', $cek_tagihan->inv_id)->sum('subinvoice_ppn'); #hitung total ppn invoice
         $total_bayar = $sumharga + $sumppn - $cek_tagihan->inv_diskon;
-
 
 
         if ($mitra) {
@@ -378,6 +378,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         $query = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('inv_status', '!=', 'PAID')
             ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('inv_id', 'like', '%' . $data['q'] . '%');
@@ -402,7 +403,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
 
         $data['inv_count_all'] = $query->count();
-        $data['data_invoice'] = $query->paginate(20);
+        $data['data_invoice'] = $query->get();
         $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();
         $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->sum('inv_total');
         $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->sum('inv_total');

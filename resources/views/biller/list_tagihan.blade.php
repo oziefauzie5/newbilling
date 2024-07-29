@@ -20,8 +20,8 @@
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-danger">
                   </div>
-                  <div class="h1 m-0">621</div>
-                  <div class="text-muted mb-3">Pembayaran</div>
+                  <div class="h1 m-0 text-warning">{{$inv_count_suspend}}</div>
+                  <div class="text-muted mb-3">SUSPEND</div>
                 </div>
               </div>
             </div>
@@ -30,8 +30,24 @@
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-success">
                   </div>
-                  <div class="h1 m-0">7</div>
-                  <div class="text-muted mb-3">Tiket</div>
+                  <div class="h1 m-0 text-danger">{{$inv_count_isolir}}</div>
+                  <div class="text-muted mb-3">ISOLIR</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div class="row">
+            <div class="col">
+              <div class="card ">
+                <div class="card-body p-3 text-center">
+                  <form > 
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" name="q" placeholder="Nama, No Layanan, No Invoice" >
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="submit" id="button-addon2">Cari</button>
+                  </div>
+                </div>
+              </form>
                 </div>
               </div>
             </div>
@@ -49,11 +65,20 @@
                             <div class="row">
                                 <div class="col-8 pr-0">
                                     <h3 class="fw-bold mb-1">{{$list->input_nama}}</h3>
-                                    <div class="text-small text-uppercase fw-bold op-8 ">{{$list->input_alamat_pasang}}</div>
+                                    <!-- <div class="text-small text-uppercase fw-bold op-8 ">{{$list->input_alamat_pasang}}</div> -->
                                 </div>
                                 <div class="col-4 pl-0 text-right">
-                                    <h3 class="fw-bold mb-1">{{date('d-m-Y',strtotime($list->inv_tgl_jatuh_tempo))}}</h3>
-                                    <div class="text-danger text-uppercase fw-bold op-8 ">Rp. {{number_format($list->inv_total)}}</div>
+                                  <div class="text-primary text-uppercase fw-bold op-8 ">Rp. {{number_format($list->inv_total)}}</div>
+                                  <!-- <h6 class="fw-bold mb-1">{{date('d-m-Y',strtotime($list->inv_tgl_jatuh_tempo))}}</h6> -->
+                                </div>
+                                <div class="col-12 pr-0">
+                                    <div class="text-small text-uppercase fw-bold op-8 ">{{$list->input_alamat_pasang}}</div>
+                                </div>
+                                <div class="col-8 pr-0">
+                                  <div class="text-danger text-uppercase fw-bold op-8 ">Jatuh Tempo</div>
+                                </div>
+                                <div class="col-4 pl-0 text-right">
+                                  <div class="text-danger text-uppercase fw-bold op-8 ">{{date('d-m-Y',strtotime($list->inv_tgl_jatuh_tempo))}}</div>
                                 </div>
                             </div>
                         </div>
@@ -77,6 +102,9 @@
                             <ul class="list-group">
                              <li class="list-group-item">Jenis Tagihan: {{$list->reg_jenis_tagihan}}</li>
                              <li class="list-group-item">Jumlah Tagihan   : Rp. {{ number_format($list->reg_harga) }}</li>
+                             <li class="list-group-item">Jatuh Tempo   : {{ date('d-m-Y',strtotime($list->reg_tgl_jatuh_tempo)) }}</li>
+                             <li class="list-group-item">Tanggal Isolir   : {{ date('d-m-Y',strtotime($list->inv_tgl_isolir))  }}</li>
+                             <li class="list-group-item"><a href="{{route('admin.biller.bayar',['id'=>$list->inv_id])}}"><button class="btn btn-block btn-primary">BAYAR</button></a></li>
                             </ul>
                     
                         </div>
