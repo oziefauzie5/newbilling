@@ -34,7 +34,7 @@
                   @foreach ($mutasi as $d )
                   <tr>
                    <td class="text-center">{{$loop->iteration}}</td>
-                    <td class="text-center">{{ $d->created_at }}</td>
+                   <td>{{ date('d-m-Y H:m:s', strtotime($d->tgl_trx ))}}</td>
                     <td class="text-center">{{ $d->mt_kategori }}</td>
                     <td >{{ $d->mt_deskripsi }}</td>
                     <td class="text-right">Rp. {{ number_format($d->mt_kredit) }}</td>
