@@ -166,6 +166,7 @@ class RegistrasiController extends Controller
         $update_barang['subbarang_status'] =  '1';
         $update_barang['subbarang_keluar'] = '1';
         $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
+        $update_barang['subbarang_admin'] = $admin;
 
 
 
@@ -669,19 +670,21 @@ Diregistrasi Oleh : *' . $admin . '*
 
     public function putus_berlanggan(Request $request, $idpel)
     {
-        if ($request->status == 'PUTUS LANGGANAN') {
-            $keterangan = 'PUTUS BERLANGGANAN';
-            $progres = '100';
-        } else {
-            $keterangan = 'PUTUS SEMENTARA';
-            $progres = '90';
-        }
-
+        $data['nama_admin'] = Auth::user()->name;
         // dd($progres);
         $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
         $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->where('registrasis.reg_idpel', $idpel)->first();
+
+        if ($request->status == 'PUTUS LANGGANAN') {
+            $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
+            $progres = '100';
+        } else {
+            $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
+            $progres = '90';
+        }
+
 
         if ($query->reg_mac) {
             if ($query->reg_mac == $request->reg_mac) {
@@ -727,7 +730,8 @@ Diregistrasi Oleh : *' . $admin . '*
                         $update_barang['subbarang_keluar'] = '0';
                         $update_barang['subbarang_stok'] = '1';
                         $update_barang['subbarang_mac'] = $request->reg_mac;
-                        $update_barang['subbarang_keterangan'] = $keterangan . ' ' . $query->input_nama;
+                        $update_barang['subbarang_keterangan'] = $keterangan;
+                        $update_barang['subbarang_admin'] = $data['nama_admin'];
                         SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
                     } else {
                         // JIKA ONT TIDAK ADA
@@ -777,7 +781,7 @@ Diregistrasi Oleh : *' . $admin . '*
                             [
                                 "id_subbarang" => mt_rand(100000, 999999),
                                 "subbarang_idbarang" => $id['subbarang_idbarang'],
-                                "subbarang_nama" => $keterangan . ' ' . $query->input_nama,
+                                "subbarang_nama" => $keterangan,
                                 "subbarang_ktg" => 'ONT',
                                 "subbarang_qty" => 1,
                                 "subbarang_keluar" => '0',
@@ -786,6 +790,7 @@ Diregistrasi Oleh : *' . $admin . '*
                                 "subbarang_tgl_masuk" => $tgl,
                                 "subbarang_status" => '0',
                                 "subbarang_mac" => $request->reg_mac,
+                                "subbarang_admin" => $data['nama_admin'],
                             ]
                         );
                     }
@@ -860,7 +865,8 @@ Diregistrasi Oleh : *' . $admin . '*
                     $update_barang['subbarang_keluar'] = '0';
                     $update_barang['subbarang_stok'] = '1';
                     $update_barang['subbarang_mac'] = $request->reg_mac;
-                    $update_barang['subbarang_keterangan'] = $keterangan . ' ' . $query->input_nama;
+                    $update_barang['subbarang_keterangan'] = $keterangan;
+                    $update_barang['subbarang_admin'] = $data['nama_admin'];
                     SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
                 } else {
                     // JIKA ONT TIDAK ADA
@@ -910,7 +916,7 @@ Diregistrasi Oleh : *' . $admin . '*
                         [
                             "id_subbarang" => mt_rand(100000, 999999),
                             "subbarang_idbarang" => $id['subbarang_idbarang'],
-                            "subbarang_nama" => $keterangan . ' ' . $query->input_nama,
+                            "subbarang_nama" => $keterangan,
                             "subbarang_ktg" => 'ONT',
                             "subbarang_qty" => 1,
                             "subbarang_keluar" => '0',
@@ -919,6 +925,7 @@ Diregistrasi Oleh : *' . $admin . '*
                             "subbarang_tgl_masuk" => $tgl,
                             "subbarang_status" => '0',
                             "subbarang_mac" => $request->reg_mac,
+                            "subbarang_admin" => $data['nama_admin'],
                         ]
                     );
                 }

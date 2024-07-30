@@ -88,7 +88,7 @@
                   </div>
                   <div class="col">
                     <label for="">Harga<strong class="text-danger">*</strong></label>
-                    <input type="number" class="form-control" id="harga" name="harga" required>
+                    <input type="number" class="form-control" id="harga" name="harga" value="" required>
                     <div class="invalid-feedback">
                         Harga barang tidak boleh kosong
                     </div>
@@ -144,15 +144,15 @@
                 <div class="form-row">
                   <div class="col-4">
                     <label for="">Serial Number</label>
-                    <input type="text" class="form-control" name="sn" >
+                    <input type="text" class="form-control" name="sn" value="{{$sub->subbarang_sn}}" >
                   </div>
                   <div class="col-4">
                     <label for="">Mac Address</label>
-                    <input type="text" class="form-control" name="mac" >
+                    <input type="text" class="form-control" name="mac" value="{{$sub->subbarang_mac}}" >
                   </div>
                   <div class="col">
                     <label for="">Keterangan<strong class="text-danger">*</strong></label>
-                    <input type="text" class="form-control" id="ket" name="ket" required>
+                    <input type="text" class="form-control" id="ket" name="ket" value="{{$sub->subbarang_keterangan}}" required>
                     <div class="invalid-feedback">
                         Keterangan tidak boleh kosong
                     </div>

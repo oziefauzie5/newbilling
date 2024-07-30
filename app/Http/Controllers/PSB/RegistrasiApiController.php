@@ -14,6 +14,7 @@ use App\Models\Router\RouterosAPI;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\SubInvoice;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -93,6 +94,7 @@ class RegistrasiApiController extends Controller
 
     public function update_pelanggan(Request $request, $id)
     {
+        $data['nama_admin'] = Auth::user()->name;
         $request->validate([
             'reg_stt_perangkat' => 'required',
             'reg_mrek' => 'required',
@@ -127,6 +129,7 @@ class RegistrasiApiController extends Controller
             $update_barang['subbarang_status'] = '1';
             $update_barang['subbarang_keluar'] = '1';
             $update_barang['subbarang_stok'] = '0';
+            $update_barang['subbarang_admin'] = $data['nama_admin'];
             $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . ' Karna Rusak. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
 
@@ -140,10 +143,12 @@ class RegistrasiApiController extends Controller
             $data['reg_sn'] = $request->reg_sn;
             $update_barang['subbarang_status'] = '1';
             $update_barang['subbarang_keluar'] = '1';
+            $update_barang['subbarang_admin'] = $data['nama_admin'];
             $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
             $update_barang_lama['subbarang_keluar'] = '0';
             $update_barang_lama['subbarang_keterangan'] = '-';
+            $update_barang_lama['subbarang_admin'] = $data['nama_admin'];
             Registrasi::where('reg_idpel', $id)->update($data);
             SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
             SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
@@ -154,10 +159,12 @@ class RegistrasiApiController extends Controller
             $data['reg_sn'] = $request->reg_sn;
             $update_barang['subbarang_status'] = '1';
             $update_barang['subbarang_keluar'] = '1';
+            $update_barang['subbarang_admin'] = $data['nama_admin'];
             $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
             $update_barang_lama['subbarang_keluar'] = '0';
             $update_barang_lama['subbarang_keterangan'] = '-';
+            $update_barang_lama['subbarang_admin'] = $data['nama_admin'];
             Registrasi::where('reg_idpel', $id)->update($data);
             SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
             SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);

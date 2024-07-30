@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('subbarang_mac')->nullable();
             $table->string('subbarang_status')->nullable();
             $table->string('subbarang_tgl_masuk')->nullable();
+            $table->string('subbarang_admin')->nullable();
             $table->timestamps();
         });
     }
