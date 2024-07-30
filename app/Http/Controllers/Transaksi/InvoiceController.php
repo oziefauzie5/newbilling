@@ -120,6 +120,9 @@ class InvoiceController extends Controller
     public function payment(Request $request, $id)
     {
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+        $now = Carbon::now();
+        $month = $now->format('m');
+        $year = $now->format('Y');
         $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
         $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->count();
 
@@ -139,9 +142,15 @@ class InvoiceController extends Controller
 
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
             #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
-            $inv0_tagih = Carbon::create($data_pelanggan->reg_tgl_tagih)->addMonth(1)->toDateString();
+
+
+            $hari_jt_tempo = date('d', strtotime($data_pelanggan->reg_tgl_jatuh_tempo)); #new
+            $hari_tgl_tagih = date('d', strtotime($data_pelanggan->reg_tgl_tagih)); #new
+
+            $inv0_tagih = Carbon::create($year . '-' . $month . '-' . $hari_tgl_tagih)->addMonth(1)->toDateString(); #new
             $inv0_tagih0 = Carbon::create($inv0_tagih)->addDay(-2)->toDateString();
-            $inv0_jt_tempo = Carbon::create($data_pelanggan->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+            $inv0_jt_tempo = Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString(); #new
+
             $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
             $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
             $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
