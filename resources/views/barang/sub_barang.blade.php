@@ -18,13 +18,13 @@
                           @endrole
                       <td>ID Barang</td>
                       <td>Id SubBarang</td>
+                      <td>Kategori</td>
                       <td>Mac Address</td>
                       <td>Keterangan</td>
                       <td>Jumlah</td>
                       <td>Terpakai</td>
                       <td>Stok</td>
                       <td>Nama Barang</td>
-                      <td>Kategori</td>
                       <td>Serial Number</td>
                     </tr>
                   </thead>
@@ -201,13 +201,13 @@
                           @endrole
                           <td>{{$sub->subbarang_idbarang}}</td>
                           <td class="text-bold text-primary" data-toggle="modal" data-target="#input{{$sub->id_subbarang}}">{{$sub->id_subbarang}}</td>
+                          <td>{{$sub->subbarang_ktg}}</td>
                           <td>{{$sub->subbarang_mac}}</td>
                           <td>{{$sub->subbarang_keterangan}}</td>
                           <td>{{$sub->subbarang_qty}}</td>
                           <td>{{$sub->subbarang_keluar}}</td>
                           <td>{{$sub->subbarang_stok}}</td>
                           <td>{{$sub->subbarang_nama}}</td>
-                          <td>{{$sub->subbarang_ktg}}</td>
                           <td>{{$sub->subbarang_sn}}</td>
                         </tr>
                       @endforeach
