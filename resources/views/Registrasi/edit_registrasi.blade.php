@@ -91,9 +91,15 @@
               </div>
               <div class="form-group row">
                 <div class="col-sm-4">
+                  @if($data->reg_progres == '5')
                  <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#exampleModal">
                   STOP BERLANGGANAN
                 </button>
+                @elseif($data->reg_progres >= '5')
+                <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#putus_sementara">
+                  SAMBUNG KEMBALI
+                </button>
+                @endif
 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -143,9 +149,17 @@
                 </div> 
                 </div>
                 <div class="col-sm-4">
-                  <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#putus_sementara">
-                    SAMBUNG KEMBALI
+                  @if($data->reg_progres == '5')
+                  <button type="button" class="btn btn-danger btn-block">
+                    DISABLE
                   </button>
+                  @elseif($data->reg_progres == '80')
+                  <button type="button" class="btn btn-info btn-block">
+                    ENABLE
+                  </button>
+                  @endif
+                </div>
+                  
   
                   <!-- Modal -->
                   <div class="modal fade" id="putus_sementara" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -183,7 +197,6 @@
                       </div>
                     </div>
                   </div> 
-                 </div>
                 <div class="col-sm-4">
                   <button type="submit" class="btn btn-primary btn-block">Simpan</button>
                  </div>
