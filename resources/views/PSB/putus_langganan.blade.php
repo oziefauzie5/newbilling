@@ -130,12 +130,12 @@
                       @else
                       <td class="text-danger font-weight-bold" >Belum Terpasang</td>
                       @endif
-                      <td>{{$d->paket_nama}}</td>
-                      <td>{{$d->router_nama}}</td>
-                      <td>{{$d->reg_layanan}}</td>
-                      <td>{{$d->reg_jenis_tagihan}}</td>
-                      <td>{{$d->input_alamat_pasang}}</td>
-                      <td>{{$d->reg_catatan}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->paket_nama}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->router_nama}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->reg_layanan}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->reg_jenis_tagihan}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->input_alamat_pasang}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->reg_catatan}}</td>
                     </tr>
                       <!-- Modal Hapus -->
                       <div class="modal fade" id="modal_hapus{{$d->reg_idpel}}" tabindex="-1" role="dialog" aria-hidden="true">

@@ -92,7 +92,7 @@
               <div class="form-group row">
                 <div class="col-sm-4">
                  <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#exampleModal">
-                  PUTUS BERLANGGANAN
+                  STOP BERLANGGANAN
                 </button>
 
                 <!-- Modal -->
@@ -119,7 +119,7 @@
                           <div class="col-sm-12">
                             <div class="form-group">
                               <label>Mac Address ONT</label>
-                              <input type="text" class="form-control" name="reg_mac"  step="00.01" required maxlength="17" minlength="17" value="">
+                              <input type="text" class="form-control" name="reg_mac"  step="00.01" maxlength="17" minlength="17" value="">
                             </div>
                           </div>
                           <div class="col-sm-12">
