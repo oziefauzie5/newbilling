@@ -147,11 +147,11 @@
         </div>
           @foreach($pengambilan_perangkat as $list)
           <div class="col">
-              <div class="card card_custom1"  data-toggle="modal" data-target="#exampleModal{{$list->inv_id}}">
+              <div class="card card_custom1 bg-warning"  data-toggle="modal" data-target="#exampleModal{{$list->inv_id}}">
                   <div class="card-body skew-shadow">
                       <div class="row">
                         <div class="col-12 pl-0 text-center">
-                          <div class="text-danger text-uppercase fw-bold op-8 ">PENGAMBILAN PERANGKAT</div><hr>
+                          <div class=" text-uppercase fw-bold op-8 ">PENGAMBILAN PERANGKAT</div><hr>
                         </div>
                           <div class="col-8 pr-0">
                               <h3 class="fw-bold mb-1">{{$list->input_nama}}</h3>
