@@ -39,28 +39,40 @@ class BarangController extends Controller
         $data['kategori'] = Kategori::all();
         $data['supplier'] = supplier::all();
         $data['q'] = $request->query('q');
-        // if ($data['q']) {
-        //     dd($sub_barang->subbarang_idbarang);
-        // }
+        $sub_barang = SubBarang::where('id_subbarang', $data['q'])->orWhere('subbarang_mac', $data['q'])->first();
+        if ($sub_barang) {
+            if ($data['q']) {
+                return redirect()->route('admin.barang.sub_barang', ['id' => $sub_barang->subbarang_idbarang . '?q=' . $data['q']]);
+            }
+        } else {
+            $notifikasi = [
+                'pesan' => 'Kode Barang atau Mac Address tidak ditemukan',
+                'alert' => 'error',
+            ];
+            return redirect()->route('admin.barang.index')->with($notifikasi);
+        }
 
         $data['tittle'] = 'Data Barang';
-        $data['sub_barang'] = SubBarang::where('id_subbarang', $data['q'])->orWhere('subbarang_mac', $data['q'])->first();
         $query = Barang::join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
-            ->orderBy('barangs.created_at', 'DESC')
-            ->where(function ($query) use ($data) {
-                $query->where('id_barang', 'like', '%' . $data['sub_barang']->subbarang_idbarang . '%');
-            });
+            ->orderBy('barangs.created_at', 'DESC');
         $data['barang'] = $query->get();
         return view('barang/barang', $data);
     }
-    public function sub_barang($id)
+    public function sub_barang(Request $request, $id)
     {
         $data['tittle'] = 'Sub Barang';
         $data['kategori'] = Kategori::all();
-        $data['SubBarang'] = SubBarang::join('barangs', 'barangs.id_barang', '=', 'sub_barangs.subbarang_idbarang')
+        $data['q'] = $request->query('q');
+        $query = SubBarang::join('barangs', 'barangs.id_barang', '=', 'sub_barangs.subbarang_idbarang')
             ->join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
             ->orderBy('subbarang_nama', 'ASC', 'subbarang_tgl_masuk', 'ASC')
-            ->where('sub_barangs.subbarang_idbarang', $id)->get();
+            ->where('sub_barangs.subbarang_idbarang', $id)
+            ->where(function ($query) use ($data) {
+                $query->where('id_subbarang', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('subbarang_mac', 'like', '%' . $data['q'] . '%');
+            });
+
+        $data['SubBarang'] = $query->get();
         $data['idbarang'] = $id;
 
         return view('barang/sub_barang', $data);
