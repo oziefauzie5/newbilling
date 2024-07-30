@@ -14,6 +14,7 @@ use App\Models\Router\RouterosAPI;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\SubInvoice;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 
 class RegistrasiApiController extends Controller
@@ -172,6 +173,8 @@ class RegistrasiApiController extends Controller
     public function update_profile(Request $request, $id)
     {
 
+
+
         $sbiaya = SettingBiaya::first();
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
@@ -182,6 +185,31 @@ class RegistrasiApiController extends Controller
         $tgl_isolir = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
         $tgl_penagihan = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay(-2)->toDateString();
         $cek_invid = Invoice::where('inv_idpel', $id)->latest('inv_tgl_jatuh_tempo')->first();
+
+
+
+
+        // $month_before = date('m', strtotime(Carbon::now()));
+        // $month_after = date('m', strtotime($request->reg_tgl_jatuh_tempo));
+
+        // $tanggal_before = new DateTime($query->reg_tgl_jatuh_tempo);
+        // $tanggal_after = new DateTime($request->reg_tgl_jatuh_tempo);
+        // $jarak = $tanggal_after->diff($tanggal_before);
+        // dd($jarak->days);
+
+        // if ($month_before == $month_after) {
+
+
+
+
+        //     dd('rubah tanggal berhasil');
+        // } else {
+        //     dd('rubah tanggal tidak bisa berbeda bulan');
+        // }
+        // dd('los');
+
+
+
         $ip =   $query->router_ip . ':' . $query->router_port_api;
         $user = $query->router_username;
         $pass = $query->router_password;

@@ -136,6 +136,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/pelanggan/get-paket{id}', [RegistrasiController::class, 'getPaket'])->name('reg.getPaket')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/Registrasi-Import', [RegistrasiController::class, 'registrasi_import'])->name('reg.registrasi_import')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/pb/{idpel}', [RegistrasiController::class, 'putus_berlanggan'])->name('psb.putus_berlanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/pelanggan/ps/{idpel}', [RegistrasiController::class, 'putus_sementara'])->name('psb.putus_sementara')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/Redirect/{id}', [RegistrasiApiController::class, 'registrasi_api'])->name('reg.registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
     // Route::get('/pelanggan/Redirect-Edit/{id}', [RegistrasiApiController::class, 'edit_registrasi_api'])->name('reg.edit_registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/Edit/{id}/Pelanggan', [PsbController::class, 'edit_pelanggan'])->name('psb.edit_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);

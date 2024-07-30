@@ -133,9 +133,46 @@
                 </div> 
                 </div>
                 <div class="col-sm-4">
-                  <a href="http://"><button type="button" class="btn btn-info  btn-block  ">PUTUS SEMENTARA</button></a>
-                  <!-- Button trigger modal -->
-
+                  <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#putus_sementara">
+                    PUTUS SEMENTARA
+                  </button>
+  
+                  <!-- Modal -->
+                  <div class="modal fade" id="putus_sementara" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">PUTUS SEMENTARA</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{route('admin.psb.putus_berlanggan',['idpel'=>$data->reg_idpel])}}" method="POST">
+                            @csrf
+                            @method('PUT')
+  
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                <label for="tiket_deskripsi">Alasan Putus</label>
+                                <textarea class="form-control" name="reg_catatan" rows="5"></textarea>
+                              </div>
+                            </div>
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                <label>Mac Address ONT</label>
+                                <input type="text" class="form-control" name="reg_mac"  step="00.01" required maxlength="17" minlength="17" value="">
+                              </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
+                            <button type="submit" class="btn btn-primary">PEGATKEUN AYEUNA</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
                  </div>
                 <div class="col-sm-4">
                   <button type="submit" class="btn btn-primary btn-block">Simpan</button>
