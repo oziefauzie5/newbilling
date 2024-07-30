@@ -55,8 +55,8 @@ class BarangController extends Controller
         $data['tittle'] = 'Data Barang';
         $query = Barang::join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
             ->join('sub_barangs', 'sub_barangs.subbarang_idbarang', '=', 'barangs.id_barang')
-            ->select('suppliers.*', 'barangs.*', 'sub_barangs.subbarang_idbarang', DB::raw('sum(subbarang_stok) as total')) #subbarang_stok
-            ->groupBy('id_barang')
+            ->select('suppliers.supplier_nama', 'barangs.id_barang', 'barangs.barang_tgl_beli', 'sub_barangs.subbarang_idbarang', DB::raw('sum(subbarang_stok) as total')) #subbarang_stok
+            ->groupBy('barangs.id_barang', 'suppliers.supplier_nama', 'sub_barangs.subbarang_idbarang', 'barangs.barang_tgl_beli')
             ->orderBy('barangs.created_at', 'DESC');
         $data['barang'] = $query->get();
 
