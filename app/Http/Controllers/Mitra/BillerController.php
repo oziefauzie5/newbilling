@@ -385,6 +385,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         $pasang_bulan_ini = Carbon::now()->addMonth(-0)->format('Y-m-d');
         $pasang_bulan_lalu = Carbon::now()->addMonth(-1)->format('Y-m-d');
         $pasang_3_bulan_lalu = Carbon::now()->addMonth(-2)->format('Y-m-d');
+        $bulan_ini = date('m', strtotime(Carbon::now()));
 
         $data['data_bulan'] = $request->query('data_bulan');
         $data['data_inv'] = $request->query('data_inv');
@@ -394,6 +395,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_status', '!=', 'PAID')
+            ->whereMonth('inv_tgl_jatuh_tempo', '=', $bulan_ini)
             ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('inv_id', 'like', '%' . $data['q'] . '%');
