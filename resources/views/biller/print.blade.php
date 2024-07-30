@@ -210,8 +210,12 @@
                 <td class="price" style="text-align:right">{{ number_format($data->inv_diskon) }}</td>
             </tr>
             <tr>
+                <td colspan="2" class="sum-up">Biaya Admin</td>
+                <td class="price" style="text-align:right">{{ number_format($biller->mts_komisi) }}</td>
+            </tr>
+            <tr>
                 <th colspan="2" class="sum-up">Total</th>
-                <th class="sum-up" style="text-align:right">{{ number_format($sumharga+$sumppn-$data->inv_diskon) }}</th>
+                <th class="sum-up" style="text-align:right">{{ number_format($sumharga+$sumppn+$biller->mts_komisi-$data->inv_diskon) }}</th>
             </tr>
         </tbody>
     </table>

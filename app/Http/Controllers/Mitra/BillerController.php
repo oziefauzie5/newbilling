@@ -97,7 +97,7 @@ class BillerController extends Controller
         $data['sumharga'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_harga');
         $data['sumppn'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_ppn');
         $data['datainvoice'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->get();
-        $data['biller'] = MitraSetting::first();
+        $data['biller'] = MitraSetting::where('mts_user_id', $admin_user)->first();
         $data['saldo'] = (new globalController)->total_mutasi($admin_user);
 
 
