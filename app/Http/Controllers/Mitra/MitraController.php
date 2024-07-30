@@ -216,6 +216,7 @@ class MitraController extends Controller
                 ->where('users.id', '=', $id)
                 ->first(),
             'mutasi' =>  DB::table('mutasis')
+                ->select('mutasis.*', 'mutasis.created_at as tgl_trx', 'mitra_settings.*')
                 ->orderBy('mutasis.id', 'DESC')
                 ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasis.mt_mts_id')
                 ->where('mutasis.mt_mts_id', '=', $id)

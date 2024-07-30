@@ -161,7 +161,7 @@
                             <th>NO</th>
                             <th>TANGGAL</th>
                             <th>KATEGORI</th>
-                            <th>KETERANGAN</th>
+                            <th>KETERANGAN</th> 
                             <th>KREDIT</th>
                             <th>DEBET</th>
                             <th>SALDO</th>
@@ -172,7 +172,7 @@
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 {{-- <td>{{ $d->id }}</td> --}}
-                                <td>{{ $d->created_at }}</td>
+                                <td>{{ date('d-m-Y H:m:s', strtotime($d->tgl_trx ))}}</td>
                                 <td>{{ $d->mt_kategori }}</td>
                                 <td>{{ $d->mt_deskripsi }}</td>
                                 <td>{{ number_format($d->mt_kredit) }}</td>
