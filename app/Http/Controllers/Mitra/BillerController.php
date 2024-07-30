@@ -165,6 +165,7 @@ class BillerController extends Controller
         $data['pengambilan_perangkat'] = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('inv_status', '!=', 'PAID')
             ->whereMonth('inv_tgl_jatuh_tempo', '<=', $bulan_lalu)
             ->orderBy('inv_tgl_jatuh_tempo', 'DESC')->get();
 
