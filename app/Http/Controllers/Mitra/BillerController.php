@@ -243,7 +243,6 @@ class BillerController extends Controller
             $datas['inv_amount_received'] = $data_pelanggan->inv_total;
             $datas['inv_tgl_bayar'] = $tgl_bayar;
             $datas['inv_status'] = 'PAID';
-            Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
 
             $data_lap['lap_id'] = 0;
             $data_lap['lap_tgl'] = $tgl_bayar;
@@ -259,40 +258,20 @@ class BillerController extends Controller
             $data_lap['lap_idpel'] = $data_pelanggan->inv_idpel;
             $data_lap['lap_jenis_inv'] = "INVOICE";
             $data_lap['lap_status'] = 0;
-            Laporan::create($data_lap);
             $reg['reg_status'] = 'PAID';
-            Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
+
+            $mutasi['mt_admin'] = $admin_user;
+            $mutasi['mt_mts_id'] = $admin_user;
+            $mutasi['mt_kategori'] = 'PEMBAYARAN';
+            $mutasi['mt_deskripsi'] = $data_pelanggan->input_nama . ' INVOICE-' . $data_pelanggan->inv_id;
+            $mutasi['mt_debet'] = $data_pelanggan->inv_total;
+            $mutasi['mt_kredit'] = '0';
+            $mutasi['mt_saldo'] = $total;
+            $mutasi['mt_biaya_adm'] = $biller->mts_komisi;
+            $mutasi['mt_cabar'] = '2';
 
 
 
-
-            Mutasi::create([
-                'mt_admin' => $admin_user,
-                'mt_mts_id' => $admin_user,
-                'mt_kategori' => 'PEMBAYARAN',
-                'mt_deskripsi' => $data_pelanggan->input_nama . ' INVOICE-' . $data_pelanggan->inv_id,
-                'mt_debet' => $data_pelanggan->inv_total,
-                'mt_kredit' => '0',
-                'mt_saldo' => $total,
-                'mt_biaya_adm' => $biller->mts_komisi,
-                'mt_cabar' => '2',
-            ]);
-
-
-            if ($count_trx == 0) {
-                $data_trx['trx_kategori'] = 'PEMASUKAN';
-                $data_trx['trx_jenis'] = 'INVOICE';
-                $data_trx['trx_admin'] = 'SYSTEM';
-                $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
-                $data_trx['trx_qty'] = 1;
-                $data_trx['trx_total'] = $data_pelanggan->inv_total;
-                Transaksi::where('trx_jenis', 'INVOICE')->create($data_trx);
-            } else {
-                $i = '1';
-                $data_trx['trx_qty'] = $count_trx + $i;
-                $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
-                Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
-            }
 
             $pesan_group['ket'] = 'payment biller';
             $pesan_group['status'] = '0';
@@ -318,7 +297,6 @@ BY : ' . $nama_user . '
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *OVALL FIBER*';
-            Pesan::create($pesan_group);
 
 
             $router = Router::whereId($data_pelanggan->reg_router)->first();
@@ -337,6 +315,25 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         '.id' => $cek_secret[0]['.id'],
                         'profile' => $data_pelanggan->paket_nama,
                     ]);
+                    if ($count_trx == 0) {
+                        $data_trx['trx_kategori'] = 'PEMASUKAN';
+                        $data_trx['trx_jenis'] = 'INVOICE';
+                        $data_trx['trx_admin'] = 'SYSTEM';
+                        $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
+                        $data_trx['trx_qty'] = 1;
+                        $data_trx['trx_total'] = $data_pelanggan->inv_total;
+                        Transaksi::where('trx_jenis', 'INVOICE')->create($data_trx);
+                    } else {
+                        $i = '1';
+                        $data_trx['trx_qty'] = $count_trx + $i;
+                        $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
+                        Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
+                    }
+                    Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
+                    Laporan::create($data_lap);
+                    Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
+                    Mutasi::create($mutasi);
+                    Pesan::create($pesan_group);
                     $cek_status = $API->comm('/ppp/active/print', [
                         '?name' => $data_pelanggan->reg_username,
                     ]);
@@ -365,6 +362,25 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         'comment' =>  $reg['reg_tgl_jatuh_tempo'] == '' ? '' : $reg['reg_tgl_jatuh_tempo'],
                         'disabled' => 'no',
                     ]);
+                    if ($count_trx == 0) {
+                        $data_trx['trx_kategori'] = 'PEMASUKAN';
+                        $data_trx['trx_jenis'] = 'INVOICE';
+                        $data_trx['trx_admin'] = 'SYSTEM';
+                        $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
+                        $data_trx['trx_qty'] = 1;
+                        $data_trx['trx_total'] = $data_pelanggan->inv_total;
+                        Transaksi::where('trx_jenis', 'INVOICE')->create($data_trx);
+                    } else {
+                        $i = '1';
+                        $data_trx['trx_qty'] = $count_trx + $i;
+                        $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
+                        Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
+                    }
+                    Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
+                    Laporan::create($data_lap);
+                    Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
+                    Mutasi::create($mutasi);
+                    Pesan::create($pesan_group);
 
                     $notifikasi = array(
                         'pesan' => 'Berhasil melakukan pembayaran',
