@@ -6,7 +6,21 @@
     <div class="col-md-12">
       <div class="card">
           <div class="card-body">
-          <button class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#add">Tambah Barang</button>
+          
+            <form >
+          <div class="row">
+            <div class="col-6">
+              <button class="btn btn-primary btn-sm mb-3 btn-block" type="button" data-toggle="modal" data-target="#add">Tambah Barang</button>
+            </div>
+            <div class="col-4">
+              <input type="text" class="form-control form-control-sm" name="q" placeholder="Kode Barang, Mac Address," >
+            </div>
+            <div class="col-2">
+              <button type="submit" class="btn btn-dark btn-sm mb-3 btn-block">Cari</button>
+            </div>
+          </div>
+        </form>
+          <hr>
            <div class="table-responsive">
             <table id="input_data" class="display table table-striped table-hover text-nowrap" >                          <thead>
                           <tr class="text-center">

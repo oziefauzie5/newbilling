@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\App;
 class BarangController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-
+        // dd('t');
         $count = Kategori::count();
 
         if ($count == 0) {
@@ -38,10 +38,18 @@ class BarangController extends Controller
         $data['id_supplier'] = '1' . sprintf("%03d", $id_supplier);
         $data['kategori'] = Kategori::all();
         $data['supplier'] = supplier::all();
-        $data['SubBarang'] = SubBarang::all();
+        $data['q'] = $request->query('q');
+        // if ($data['q']) {
+        //     dd($sub_barang->subbarang_idbarang);
+        // }
 
         $data['tittle'] = 'Data Barang';
-        $query = Barang::join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier');
+        $data['sub_barang'] = SubBarang::where('id_subbarang', $data['q'])->orWhere('subbarang_mac', $data['q'])->first();
+        $query = Barang::join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
+            ->orderBy('barangs.created_at', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('id_barang', 'like', '%' . $data['sub_barang']->subbarang_idbarang . '%');
+            });
         $data['barang'] = $query->get();
         return view('barang/barang', $data);
     }
