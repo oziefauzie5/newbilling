@@ -44,7 +44,7 @@
                             <td>{{ $d->id_trx }}</td>
                             <td>{{  date('d-m-Y', strtotime($d->barang_tgl_beli)); }}</td>
                             <td>{{ $d->supplier_nama }}</td>
-                            <td class="text-right">{{ number_format( $d->barang_total ) }}</td>
+                            <td class="text-right">{{ $sum }}</td>
                           </tr>
                       
                           {{-- -----------------------------------------------------------EDIT BARANG--------------------------------------------------------------- --}}
