@@ -167,7 +167,7 @@ class BillerController extends Controller
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_status', '!=', 'PAID')
             ->whereMonth('inv_tgl_jatuh_tempo', '<=', $bulan_lalu)
-            ->orderBy('inv_tgl_jatuh_tempo', 'DESC')->get();
+            ->orderBy('inv_tgl_jatuh_tempo', 'ASC')->get();
 
         $data['data'] = Invoice::where('inv_status', '=', 'PAID')->where('inv_admin', $admin_user)->get();
         return view('biller/index', $data);
