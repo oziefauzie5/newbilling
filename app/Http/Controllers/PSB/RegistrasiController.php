@@ -165,6 +165,7 @@ class RegistrasiController extends Controller
         $update['input_status'] =  'REGIST';
         $update_barang['subbarang_status'] =  '1';
         $update_barang['subbarang_keluar'] = '1';
+        $update_barang['subbarang_stok'] = '0';
         $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
         $update_barang['subbarang_admin'] = $admin;
 

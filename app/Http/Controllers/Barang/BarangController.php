@@ -106,11 +106,16 @@ class BarangController extends Controller
 
     public function input_subbarang(Request $request, $id)
     {
+        // dd($request->stok);
+        $sub['subbarang_stok'] = $request->stok;
+        if ($sub['subbarang_stok'] == '1') {
+            $sub['subbarang_keluar'] = '0';
+        } elseif ($sub['subbarang_stok'] == '0') {
+            $sub['subbarang_keluar'] = '1';
+        }
         $sub['subbarang_keterangan'] = $request->ket;
         $sub['subbarang_sn'] = $request->sn;
         $sub['subbarang_mac'] = $request->mac;
-        // $sub['subbarang_keluar'] = '1';
-        // $sub['subbarang_stok'] = '0';
         SubBarang::where('id_subbarang', $id)->update($sub);
         $notifikasi = array(
             'pesan' => 'Berhasil input data',

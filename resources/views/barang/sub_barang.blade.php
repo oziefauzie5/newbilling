@@ -19,13 +19,13 @@
                       <td>ID Barang</td>
                       <td>Id SubBarang</td>
                       <td>Mac Address</td>
-                      <td>Nama Barang</td>
-                      <td>Kategori</td>
-                      <td>Stok</td>
+                      <td>Keterangan</td>
                       <td>Jumlah</td>
                       <td>Terpakai</td>
+                      <td>Stok</td>
+                      <td>Nama Barang</td>
+                      <td>Kategori</td>
                       <td>Serial Number</td>
-                      <td>Keterangan</td>
                     </tr>
                   </thead>
                   <tbody>
@@ -126,9 +126,13 @@
                 @csrf
                 @method('PUT')
                 <div class="form-row">
-                <div class="col">
+                <div class="col-2">
                     <label for="">ID Barang<strong class="text-danger">*</strong></label>
                     <input type="text" class="form-control" value="{{$sub->id_barang}}" name="idbarang"  readonly>
+                  </div>
+                <div class="col-2">
+                    <label for="">Stok<strong class="text-danger">*</strong></label>
+                    <input type="number" class="form-control" value="{{$sub->subbarang_stok}}" max="1" name="stok">
                   </div>
                   <div class="col">
                     <label for="">Supplier<strong class="text-danger">*</strong></label>
@@ -198,13 +202,13 @@
                           <td>{{$sub->subbarang_idbarang}}</td>
                           <td class="text-bold text-primary" data-toggle="modal" data-target="#input{{$sub->id_subbarang}}">{{$sub->id_subbarang}}</td>
                           <td>{{$sub->subbarang_mac}}</td>
-                          <td>{{$sub->subbarang_nama}}</td>
-                          <td>{{$sub->subbarang_ktg}}</td>
-                          <td>{{$sub->subbarang_stok}}</td>
+                          <td>{{$sub->subbarang_keterangan}}</td>
                           <td>{{$sub->subbarang_qty}}</td>
                           <td>{{$sub->subbarang_keluar}}</td>
+                          <td>{{$sub->subbarang_stok}}</td>
+                          <td>{{$sub->subbarang_nama}}</td>
+                          <td>{{$sub->subbarang_ktg}}</td>
                           <td>{{$sub->subbarang_sn}}</td>
-                          <td>{{$sub->subbarang_keterangan}}</td>
                         </tr>
                       @endforeach
                   </tbody>
