@@ -131,13 +131,23 @@
         </section>
         @role('KOLEKTOR')
         <section class="content mt-3">
+          <div class="col">
+            <div class="card card_custom1">
+                <div class="card-body skew-shadow">
+                    <div class="row">
+                      <div class="col-12 pl-0 text-center">
+                        <div class="text-danger text-uppercase fw-bold op-8 ">JUMLAH PENGAMBILAN PERANGKAT</div>
+                      </div>
+                        <div class="col-12 pr-0">
+                            <h1 class="fw-bold op-8 text-center ">{{$count_pengambilan_perangkat}} Pelanggan</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
           @foreach($pengambilan_perangkat as $list)
           <div class="col">
-              {{-- @if($list->reg_progres==1) --}}
               <div class="card card_custom1"  data-toggle="modal" data-target="#exampleModal{{$list->inv_id}}">
-              {{-- @else
-              <div class="card card_custom1"  data-toggle="modal" data-target="#exampleModal1{{$list->inv_id}}">
-              @endif --}}
                   <div class="card-body skew-shadow">
                       <div class="row">
                         <div class="col-12 pl-0 text-center">
@@ -145,11 +155,9 @@
                         </div>
                           <div class="col-8 pr-0">
                               <h3 class="fw-bold mb-1">{{$list->input_nama}}</h3>
-                              <!-- <div class="text-small text-uppercase fw-bold op-8 ">{{$list->input_alamat_pasang}}</div> -->
                           </div>
                           <div class="col-4 pl-0 text-right">
                             <div class="text-primary text-uppercase fw-bold op-8 ">Rp. {{number_format($list->inv_total)}}</div>
-                            <!-- <h6 class="fw-bold mb-1">{{date('d-m-Y',strtotime($list->inv_tgl_jatuh_tempo))}}</h6> -->
                           </div>
                           <div class="col-12 pr-0">
                               <div class="text-small text-uppercase fw-bold op-8 ">{{$list->input_alamat_pasang}}</div>
