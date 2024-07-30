@@ -13,14 +13,17 @@
                     <table id="input_data" class="display table table-striped table-hover text-nowrap" >  
                   <thead>
                     <tr>
+                      @role('admin')
+                      <td></td>
+                          @endrole
                       <td>ID Barang</td>
                       <td>Nomor Transaksi</td>
                       <td>Id SubBarang</td>
                       <td>Nama Barang</td>
                       <td>Kategori</td>
+                      <td>Stok</td>
                       <td>Jumlah</td>
                       <td>Terpakai</td>
-                      <td>Stok</td>
                       <td>Harga Satuan</td>
                       <td>Serial Number</td>
                       <td>Mac Address</td>
@@ -167,15 +170,41 @@
       </div>
     </div>
   </div>
+   <!-- --------------------------------------------------------------------------------HAPUS BARANG--------------------------------------------------- -->
+   <div class="modal fade" id="hapus{{ $sub->id_subbarang }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Edit Barang</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+            <div class="modal-body">
+                <div>Anda akan menghapus data : {{$sub->subbarang_nama}}</div>
+            </div>
+            <div class="modal-footer">
+              <form action="{{route('admin.barang.destroy_subbarang',['id'=>$sub->id_subbarang])}}" method="DELETE">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+                <button type="submit" class="btn btn-primary">Hapus</button>
+                </form>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div> 
                         <tr>
+                          @role('admin')
+                          <td><i class="fas fa-trash" data-toggle="modal" data-target="#hapus{{ $sub->id_subbarang }}"></i>&nbsp;&nbsp;</td>
+                          @endrole
                           <td>{{$sub->subbarang_idbarang}}</td>
                           <td>{{$sub->id_trx}}</td>
                           <td class="text-bold text-primary" data-toggle="modal" data-target="#input{{$sub->id_subbarang}}">{{$sub->id_subbarang}}</td>
                           <td>{{$sub->subbarang_nama}}</td>
                           <td>{{$sub->subbarang_ktg}}</td>
+                          <td>{{$sub->subbarang_stok}}</td>
                           <td>{{$sub->subbarang_qty}}</td>
                           <td>{{$sub->subbarang_keluar}}</td>
-                          <td>{{$sub->subbarang_stok}}</td>
                           <td class="text-right">{{number_format($sub->subbarang_harga)}}</td>
                           <td>{{$sub->subbarang_mac}}</td>
                           <td>{{$sub->subbarang_sn}}</td>

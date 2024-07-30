@@ -270,6 +270,20 @@ class BarangController extends Controller
         );
         return redirect()->route('admin.barang.index')->with($notifikasi);
     }
+    public function destroy_subbarang(string $id)
+    {
+        $data = SubBarang::where('id_subbarang', $id);
+
+        $data_subbarang = $data->first();
+        if ($data) {
+            $data->delete();
+        }
+        $notifikasi = array(
+            'pesan' => 'Berhasil menghapus barang',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.barang.sub_barang', ['id' => $data_subbarang->subbarang_idbarang])->with($notifikasi);
+    }
 
     public function print_kode_barang($id)
     {
