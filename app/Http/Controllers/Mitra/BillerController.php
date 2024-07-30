@@ -154,11 +154,19 @@ class BillerController extends Controller
     public function index()
     {
         $month = Carbon::now()->format('m');
+        $bulan_lalu = date('m', strtotime(Carbon::create(Carbon::now())->addMonth(-1)->toDateString()));
+
+        // dd();
         $admin_user = Auth::user()->id;
         $data['nama'] = Auth::user()->name;
         $data['saldo'] = (new globalController)->total_mutasi($admin_user);
         $data['biaya_adm'] = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
 
+        $data['pengambilan_perangkat'] = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->whereMonth('inv_tgl_jatuh_tempo', '<=', $bulan_lalu)
+            ->orderBy('inv_tgl_jatuh_tempo', 'DESC')->get();
 
         $data['data'] = Invoice::where('inv_status', '=', 'PAID')->where('inv_admin', $admin_user)->get();
         return view('biller/index', $data);

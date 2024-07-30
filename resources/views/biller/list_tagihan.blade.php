@@ -89,23 +89,24 @@
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-body">
-                            <label for="barang" class=" col-form-label">DATA LANGGANAN</label>
                             <ul class="list-group">
                              <li class="list-group-item">No. Layanan   : {{$list->reg_nolayanan}}</li>
                              <li class="list-group-item">Nama   : {{$list->input_nama}}</li>
                              <li class="list-group-item">Alamat : {{$list->input_alamat_pasang}}</li>
-                             <li class="list-group-item"><a href="https://wa.me/62{{$list->input_hp}}?text=Assalamualaikum" target="_blank">  <button class="btn btn-block btn-primary"><i class="fas fa-phone"></i>&nbsp;&nbsp;HUBUNGI</button></a>&nbsp;&nbsp;<a href="{{$list->input_maps}}"> <button class="btn btn-block btn-primary"><i class="fas fa-phone"></i>&nbsp;&nbsp;LOKASI</button></a>
-                             </li>
-                            </ul>
-                          <hr>
-                            <label for="barang" class=" col-form-label">PEMBAYARAN</label>
-                            <ul class="list-group">
-                             <li class="list-group-item">Jenis Tagihan: {{$list->reg_jenis_tagihan}}</li>
                              <li class="list-group-item">Jumlah Tagihan   : Rp. {{ number_format($list->reg_harga) }}</li>
                              <li class="list-group-item">Jatuh Tempo   : {{ date('d-m-Y',strtotime($list->reg_tgl_jatuh_tempo)) }}</li>
-                             <li class="list-group-item">Tanggal Isolir   : {{ date('d-m-Y',strtotime($list->inv_tgl_isolir))  }}</li>
-                             <li class="list-group-item"><a href="{{route('admin.biller.paymentbytagihan',['inv_id'=>$list->inv_id])}}"><button class="btn btn-block btn-primary">BAYAR</button></a></li>
                             </ul>
+                            <div class="row">
+                              <div class="col">
+                                <a href="https://wa.me/62{{$list->input_hp}}?text=Assalamualaikum" target="_blank">  <button class="btn btn-block btn-primary"><i class="fas fa-phone"></i>&nbsp;&nbsp;HUBUNGI</button></a>&nbsp;&nbsp;
+                              </div>
+                              <div class="col">
+                                <a href="{{$list->input_maps}}"> <button class="btn btn-block btn-primary"><i class="fas fa-phone"></i>&nbsp;&nbsp;LOKASI</button></a>
+                              </div>
+                              <div class="col">
+                                <a href="{{route('admin.biller.paymentbytagihan',['inv_id'=>$list->inv_id])}}"><button class="btn btn-block btn-primary">PROSES PEMBAYARAN</button></a>
+                              </div>
+                            </div>
                         </div>
                       </div>
                     </div>
