@@ -26,25 +26,27 @@
                           <tr class="text-center">
                             <th>#</th>
                             <th>ID Barang</th>
+                            <th>Stok</th>
                             <th>Nomor Transaksi</th>
                             <th>Tgl Masuk</th>
                             <th>Supplier</th>
-                            <th>Total</th>
                           </tr>
                           </thead>
                           <tbody>
                           @foreach ($barang as $d)
                           <tr>
                             <td>
-                                <button class="btn" data-toggle="modal" data-target="#hapus{{ $d->id_barang }}"><i class="fas fa-trash"></i></button>
-                                <button class="btn" data-toggle="modal" data-target="#edit{{ $d->id_barang }}"><i class="fas fa-edit"></i></button>
+                                <i class="fas fa-trash" data-toggle="modal" data-target="#hapus{{ $d->id_barang }}"></i>&nbsp;&nbsp;
+                                {{-- <button class="btn btn-danger" data-toggle="modal" data-target="#hapus{{ $d->id_barang }}"><i class="fas fa-trash"></i></button> --}}
+                                {{-- <button class="btn" data-toggle="modal" data-target="#edit{{ $d->id_barang }}"><i class="fas fa-edit"></i></button> --}}
+                                <i class="fas fa-edit" data-toggle="modal" data-target="#edit{{ $d->id_barang }}"></i>
                                 <a href="{{ route('admin.barang.rekap_barang',['id'=>$d->id_barang])}}" class="btn"><i class="fas fa-print"></i></a>
                              </td>
                             <td class="text-center text-bold"><a href="{{ route('admin.barang.sub_barang',['id'=>$d->id_barang])}}">{{ $d->id_barang }}</a> </td>
+                            <td class="text-center">{{ $d->total }}</td>
                             <td>{{ $d->id_trx }}</td>
                             <td>{{  date('d-m-Y', strtotime($d->barang_tgl_beli)); }}</td>
                             <td>{{ $d->supplier_nama }}</td>
-                            <td class="text-right">{{ $sum }}</td>
                           </tr>
                       
                           {{-- -----------------------------------------------------------EDIT BARANG--------------------------------------------------------------- --}}

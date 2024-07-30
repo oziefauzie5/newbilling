@@ -54,15 +54,12 @@ class BarangController extends Controller
 
         $data['tittle'] = 'Data Barang';
         $query = Barang::join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
+            ->join('sub_barangs', 'sub_barangs.subbarang_idbarang', '=', 'barangs.id_barang')
+            ->select('suppliers.*', 'barangs.*', 'sub_barangs.subbarang_idbarang', DB::raw('sum(subbarang_stok) as total')) #subbarang_stok
+            ->groupBy('id_barang')
             ->orderBy('barangs.created_at', 'DESC');
         $data['barang'] = $query->get();
-        $hitung = Barang::get();
-        foreach ($hitung as $sum) {
-            // dd($sum);
-            $data['sum'] = SubBarang::where('subbarang_idbarang', $sum->id_barang)->count();
-            // echo $data['sum'];
-            // dd($data['sum']);
-        }
+
         return view('barang/barang', $data);
     }
     public function sub_barang(Request $request, $id)
