@@ -17,16 +17,14 @@
                       <td></td>
                           @endrole
                       <td>ID Barang</td>
-                      <td>Nomor Transaksi</td>
                       <td>Id SubBarang</td>
+                      <td>Mac Address</td>
                       <td>Nama Barang</td>
                       <td>Kategori</td>
                       <td>Stok</td>
                       <td>Jumlah</td>
                       <td>Terpakai</td>
-                      <td>Harga Satuan</td>
                       <td>Serial Number</td>
-                      <td>Mac Address</td>
                       <td>Keterangan</td>
                     </tr>
                   </thead>
@@ -198,15 +196,13 @@
                           <td><i class="fas fa-trash" data-toggle="modal" data-target="#hapus{{ $sub->id_subbarang }}"></i>&nbsp;&nbsp;</td>
                           @endrole
                           <td>{{$sub->subbarang_idbarang}}</td>
-                          <td>{{$sub->id_trx}}</td>
                           <td class="text-bold text-primary" data-toggle="modal" data-target="#input{{$sub->id_subbarang}}">{{$sub->id_subbarang}}</td>
+                          <td>{{$sub->subbarang_mac}}</td>
                           <td>{{$sub->subbarang_nama}}</td>
                           <td>{{$sub->subbarang_ktg}}</td>
                           <td>{{$sub->subbarang_stok}}</td>
                           <td>{{$sub->subbarang_qty}}</td>
                           <td>{{$sub->subbarang_keluar}}</td>
-                          <td class="text-right">{{number_format($sub->subbarang_harga)}}</td>
-                          <td>{{$sub->subbarang_mac}}</td>
                           <td>{{$sub->subbarang_sn}}</td>
                           <td>{{$sub->subbarang_keterangan}}</td>
                         </tr>
