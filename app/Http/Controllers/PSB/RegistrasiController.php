@@ -669,7 +669,15 @@ Diregistrasi Oleh : *' . $admin . '*
 
     public function putus_berlanggan(Request $request, $idpel)
     {
+        if ($request->status == 'PUTUS LANGGANAN') {
+            $keterangan = 'PUTUS BERLANGGANAN';
+            $progres = '100';
+        } else {
+            $keterangan = 'PUTUS SEMENTARA';
+            $progres = '90';
+        }
 
+        // dd($progres);
         $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
         $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
@@ -715,7 +723,7 @@ Diregistrasi Oleh : *' . $admin . '*
                 $update_barang['subbarang_keluar'] = '0';
                 $update_barang['subbarang_stok'] = '1';
                 $update_barang['subbarang_mac'] = $request->reg_mac;
-                $update_barang['subbarang_keterangan'] = 'PUTUS BERLANGGANAN ' . $query->input_nama;
+                $update_barang['subbarang_keterangan'] = $keterangan . ' ' . $query->input_nama;
                 SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
             } else {
                 // JIKA ONT TIDAK ADA
@@ -765,7 +773,7 @@ Diregistrasi Oleh : *' . $admin . '*
                     [
                         "id_subbarang" => mt_rand(100000, 999999),
                         "subbarang_idbarang" => $id['subbarang_idbarang'],
-                        "subbarang_nama" => 'PUTUS BERLANGGANAN ' . $query->input_nama,
+                        "subbarang_nama" => $keterangan . ' ' . $query->input_nama,
                         "subbarang_ktg" => 'ONT',
                         "subbarang_qty" => 1,
                         "subbarang_keluar" => '0',
@@ -777,7 +785,7 @@ Diregistrasi Oleh : *' . $admin . '*
                     ]
                 );
             }
-            Registrasi::where('reg_idpel', $idpel)->update(['reg_progres' => '100'], ['reg_catatan' => $request->reg_catatan]);
+            Registrasi::where('reg_idpel', $idpel)->update(['reg_progres' => $progres], ['reg_catatan' => $request->reg_catatan]);
             $notifikasi = [
                 'pesan' => 'Berhasil melakukan pemutusan pelanggan',
                 'alert' => 'success',
