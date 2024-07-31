@@ -167,7 +167,7 @@ class BillerController extends Controller
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_status', '!=', 'PAID')
-            ->whereMonth('inv_tgl_jatuh_tempo', '<=', $bulan_lalu)
+            ->whereMonth('inv_tgl_jatuh_tempo', '<', $month)
             ->orderBy('inv_tgl_jatuh_tempo', 'ASC');
         $data['pengambilan_perangkat'] =  $QUERY->get();
         $data['count_pengambilan_perangkat'] = $QUERY->count();

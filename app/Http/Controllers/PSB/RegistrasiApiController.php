@@ -147,7 +147,7 @@ class RegistrasiApiController extends Controller
             $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
             $update_barang_lama['subbarang_keluar'] = '0';
-            $update_barang_lama['subbarang_keterangan'] = '-';
+            $update_barang_lama['subbarang_keterangan'] = 'Tukar Barang';
             $update_barang_lama['subbarang_admin'] = $data['nama_admin'];
             Registrasi::where('reg_idpel', $id)->update($data);
             SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);

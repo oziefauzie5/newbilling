@@ -151,6 +151,7 @@
               </ul>
           </div> 
         @endif
+        @role('admin')
         <a href="{{route('admin.reg.sementara_migrasi')}}">
         <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#addRowModal">
           <i class="fa fa-plus"></i>
@@ -160,6 +161,7 @@
       <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
         <i class="fa fa-file-import"></i> IMPORT
       </button>
+      @endrole
       <a href="{{route('admin.psb.berita_acara')}}">
       <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
         <i class="fa fa-plus"></i>
