@@ -162,15 +162,35 @@ class BillerController extends Controller
         $data['nama'] = Auth::user()->name;
         $data['saldo'] = (new globalController)->total_mutasi($admin_user);
         $data['biaya_adm'] = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
+
+        // $QUERY = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+        //     ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+        //     ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+        //     ->where('inv_status', '!=', 'PAID')
+        //     ->whereMonth('inv_tgl_jatuh_tempo', '<', $month)
+        //     ->orderBy('inv_tgl_jatuh_tempo', 'ASC');
+
+
+
+
+
+        // $data['pengambilan_perangkat'] =  $QUERY->get();
+        // $data['count_pengambilan_perangkat'] = $QUERY->count();
         $data['q'] = $request->query('q');
-        $QUERY = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->where('inv_status', '!=', 'PAID')
-            ->whereMonth('inv_tgl_jatuh_tempo', '<', $month)
-            ->orderBy('inv_tgl_jatuh_tempo', 'ASC');
-        $data['pengambilan_perangkat'] =  $QUERY->get();
-        $data['count_pengambilan_perangkat'] = $QUERY->count();
+        $query_isolir = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('reg_status', '!=', 'PAID')
+            ->whereMonth('reg_tgl_jatuh_tempo', '<', $month)
+            ->orderBy('reg_tgl_jatuh_tempo', 'DESC')
+            ->where(function ($query_isolir) use ($data) {
+                $query_isolir->Where('reg_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query_isolir->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
+                $query_isolir->orWhere('reg_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
+            });
+        $data['pengambilan_perangkat'] =  $query_isolir->get();
+
+        // dd($data['pengambilan_perangkat']);
+        $data['count_pengambilan_perangkat'] = $query_isolir->count();
 
         $data['data'] = Invoice::where('inv_status', '=', 'PAID')->where('inv_admin', $admin_user)->get();
         return view('biller/index', $data);

@@ -161,7 +161,7 @@
         </div>
           @foreach($pengambilan_perangkat as $list)
           <div class="col">
-              <div class="card card_custom1 bg-warning"  data-toggle="modal" data-target="#exampleModal{{$list->inv_id}}">
+              <div class="card card_custom1 bg-warning"  data-toggle="modal" data-target="#exampleModal{{$list->reg_idpel}}">
                   <div class="card-body skew-shadow">
                       <div class="row">
                         <div class="col-12 pl-0 text-center">
@@ -188,7 +188,7 @@
           </div>
           
           {{-- modal lihat job --}}
-          <div class="modal fade" id="exampleModal{{$list->inv_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="exampleModal{{$list->reg_idpel}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-body">
@@ -207,7 +207,7 @@
                           <a href="{{$list->input_maps}}"> <button class="btn btn-block btn-primary"><i class="fas fa-phone"></i>&nbsp;&nbsp;LOKASI</button></a>
                         </div>
                         <div class="col">
-                          <a href="{{route('admin.biller.paymentbytagihan',['inv_id'=>$list->inv_id])}}"><button class="btn btn-block btn-primary">PROSES PEMBAYARAN</button></a>
+                          <a href="{{route('admin.biller.paymentbytagihan',['inv_id'=>$list->reg_nolayanan])}}"><button class="btn btn-block btn-primary">PROSES PEMBAYARAN</button></a>
                         </div>
                       </div>
                   </div>
