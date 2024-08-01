@@ -180,7 +180,7 @@
                             <div class="text-danger text-uppercase fw-bold op-8 ">Jatuh Tempo</div>
                           </div>
                           <div class="col-4 pl-0 text-right">
-                            <div class="text-danger text-uppercase fw-bold op-8 ">{{date('d-m-Y',strtotime($list->inv_tgl_jatuh_tempo))}}</div>
+                            <div class="text-danger text-uppercase fw-bold op-8 ">{{date('d-m-Y',strtotime($list->reg_tgl_jatuh_tempo))}}</div>
                           </div>
                       </div>
                   </div>
