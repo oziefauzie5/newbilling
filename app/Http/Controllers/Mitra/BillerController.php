@@ -168,13 +168,7 @@ class BillerController extends Controller
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_status', '!=', 'PAID')
             ->whereMonth('inv_tgl_jatuh_tempo', '<', $month)
-            ->orderBy('inv_tgl_jatuh_tempo', 'ASC')
-            ->where(function ($QUERY) use ($data) {
-                $QUERY->where('inv_id', 'like', '%' . $data['q'] . '%');
-                $QUERY->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
-                $QUERY->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
-                $QUERY->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
-            });
+            ->orderBy('inv_tgl_jatuh_tempo', 'ASC');
         $data['pengambilan_perangkat'] =  $QUERY->get();
         $data['count_pengambilan_perangkat'] = $QUERY->count();
 
