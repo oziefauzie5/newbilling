@@ -146,6 +146,20 @@
             </div>
         </div>
           @foreach($pengambilan_perangkat as $list)
+            <div class="col">
+              <div class="card ">
+                <div class="card-body p-3 text-center">
+                  <form > 
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" name="q" placeholder="Nama, No Layanan, No Invoice" >
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="submit" id="button-addon2">Cari</button>
+                  </div>
+                </div>
+              </form>
+                </div>
+              </div>
+            </div>
           <div class="col">
               <div class="card card_custom1 bg-warning"  data-toggle="modal" data-target="#exampleModal{{$list->inv_id}}">
                   <div class="card-body skew-shadow">
@@ -172,6 +186,7 @@
                   </div>
               </div>
           </div>
+          
           {{-- modal lihat job --}}
           <div class="modal fade" id="exampleModal{{$list->inv_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">

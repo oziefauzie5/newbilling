@@ -152,7 +152,7 @@ class BillerController extends Controller
         return view('biller/paymentbytagihan', $data);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $month = Carbon::now()->format('m');
         $bulan_lalu = date('m', strtotime(Carbon::create(Carbon::now())->addMonth(-1)->toDateString()));
@@ -162,13 +162,19 @@ class BillerController extends Controller
         $data['nama'] = Auth::user()->name;
         $data['saldo'] = (new globalController)->total_mutasi($admin_user);
         $data['biaya_adm'] = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
-
+        $data['q'] = $request->query('q');
         $QUERY = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_status', '!=', 'PAID')
             ->whereMonth('inv_tgl_jatuh_tempo', '<', $month)
-            ->orderBy('inv_tgl_jatuh_tempo', 'ASC');
+            ->orderBy('inv_tgl_jatuh_tempo', 'ASC')
+            ->where(function ($QUERY) use ($data) {
+                $QUERY->where('inv_id', 'like', '%' . $data['q'] . '%');
+                $QUERY->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
+                $QUERY->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
+                $QUERY->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
+            });
         $data['pengambilan_perangkat'] =  $QUERY->get();
         $data['count_pengambilan_perangkat'] = $QUERY->count();
 
