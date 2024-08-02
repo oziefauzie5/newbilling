@@ -487,7 +487,7 @@ Diregistrasi Oleh : *' . $admin . '*
     }
     public function konfirm_pencairan(Request $request)
     {
-
+        // dd($request->idpel);
         $admin = Auth::user()->id;
         $biaya = SettingBiaya::first();
         // dd($biaya->biaya_psb);

@@ -42,12 +42,12 @@
                       </button></a>
                       @elseif($d->reg_progres == '4')
                       <!-- Button trigger modal -->
-                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_pencairan">
+                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_pencairan{{$d->reg_idpel}}">
                         Konfirmasi
                       </button>
 
                       <!-- Modal -->
-                      <div class="modal fade" id="modal_pencairan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal fade" id="modal_pencairan{{$d->reg_idpel}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">

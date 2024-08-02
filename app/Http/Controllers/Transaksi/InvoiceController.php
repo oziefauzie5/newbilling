@@ -31,7 +31,7 @@ class InvoiceController extends Controller
         $pasang_bulan_lalu = Carbon::now()->addMonth(-1)->format('Y-m-d');
         $pasang_3_bulan_lalu = Carbon::now()->addMonth(-2)->format('Y-m-d');
         // dd($pasang_3_bulan_lalu);
-
+        $month = Carbon::now()->format('m');
         $data['data_bulan'] = $request->query('data_bulan');
         $data['data_inv'] = $request->query('data_inv');
         $data['q'] = $request->query('q');
@@ -66,7 +66,7 @@ class InvoiceController extends Controller
         $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();
         $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->sum('inv_total');
         $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->sum('inv_total');
-        $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->count();
+        $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
         $data['inv_count_isolir'] = Invoice::where('inv_status', '=', 'ISOLIR')->count();
         $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->count();
         return view('Transaksi/list_invoice', $data);

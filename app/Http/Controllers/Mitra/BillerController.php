@@ -157,25 +157,11 @@ class BillerController extends Controller
         $month = Carbon::now()->format('m');
         $bulan_lalu = date('m', strtotime(Carbon::create(Carbon::now())->addMonth(-1)->toDateString()));
 
-        // dd();
         $admin_user = Auth::user()->id;
         $data['nama'] = Auth::user()->name;
         $data['saldo'] = (new globalController)->total_mutasi($admin_user);
         $data['biaya_adm'] = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
 
-        // $QUERY = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-        //     ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-        //     ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-        //     ->where('inv_status', '!=', 'PAID')
-        //     ->whereMonth('inv_tgl_jatuh_tempo', '<', $month)
-        //     ->orderBy('inv_tgl_jatuh_tempo', 'ASC');
-
-
-
-
-
-        // $data['pengambilan_perangkat'] =  $QUERY->get();
-        // $data['count_pengambilan_perangkat'] = $QUERY->count();
         $data['q'] = $request->query('q');
         $query_isolir = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
