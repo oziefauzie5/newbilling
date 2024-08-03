@@ -51,7 +51,7 @@
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-success">
                   </div>
-                  <div class="h1 m-0">Rp. {{number_format($sum_saldo)}}</div>
+                  <div class="h5 m-0">Rp. {{number_format($sum_saldo)}}</div>
                   <div class="text-muted mb-3">SALDO</div>
                 </div>
               </div>
@@ -61,7 +61,7 @@
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-success">
                   </div>
-                  <div class="h1 m-0">Rp. {{number_format($sum_pencairan)}}</div>
+                  <div class="h5 m-0">Rp. {{number_format($sum_pencairan)}}</div>
                   <div class="text-muted mb-3">PENCAIRAN</div>
                 </div>
               </div>
