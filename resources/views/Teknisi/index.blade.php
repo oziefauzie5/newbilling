@@ -138,8 +138,8 @@
                                   <h3 class="fw-bold mb-1">{{$job_tiket->input_nama}}</h3>
                                   <div class="text-small text-uppercase fw-bold op-8">{{$job_tiket->input_alamat_pasang}}</div>
                               </div>
-                              <div class="col-12 pl-0 text-right">
-                                  <h3 class="fw-bold mb-1">{{date('d M Y H:m:s',strtotime($job_tiket->tgl_tiket))}}</h3>
+                              <div class="col-12 pr-0">
+                                  <div class="text-small text-uppercase fw-bold text-danger">{{date('d M Y H:m:s',strtotime($job_tiket->tgl_tiket))}}</div>
                               </div>
                               <div class="col-12 pl-0 text-right">
                                   <div class="text-small text-uppercase fw-bold op-8">TIKET GANGGUAN</div>
@@ -155,8 +155,8 @@
                                   <h3 class="fw-bold mb-1">{{$job_tiket->input_nama}}</h3>
                                   <div class="text-small text-uppercase fw-bold op-8">{{$job_tiket->input_alamat_pasang}}</div>
                               </div>
-                              <div class="col-12 pl-0 text-right">
-                                <h3 class="fw-bold mb-1">{{date('d M Y H:m:s',strtotime($job_tiket->tgl_tiket))}}</h3>
+                              <div class="col-12 pr-0">
+                                <div class="text-small text-uppercase fw-bold text-danger">{{date('d M Y H:m:s',strtotime($job_tiket->tgl_tiket))}}</div>
                             </div>
                             <div class="col-12 pl-0 text-right">
                                 <div class="text-small text-uppercase fw-bold op-8">TIKET GANGGUAN</div>
