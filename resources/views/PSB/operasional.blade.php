@@ -23,7 +23,7 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>TGL REGIST</th>
+                  <th>TGL PASANG</th>
                   <th>NO. LAYANAN</th>
                   <th>PELANGGAN</th>
                   <th>ROUTER</th>
@@ -103,7 +103,7 @@
                       @endif
                     </div>
                   </td>
-                  <td>{{$d->input_tgl}}</td>
+                  <td>{{date('d-m-Y', strtotime($d->reg_tgl_pasang))}}</td>
                   <td>{{$d->reg_nolayanan}}</td>
                   <td>{{$d->input_nama}}</td>
                   <td>{{$d->router_nama}}</td>

@@ -26,11 +26,12 @@ class TeknisiController extends Controller
 {
     public function index(Request $request)
     {
+        $month = Carbon::now()->format('m');
         $teknisi_id = Auth::user()->id;
         $data['nama'] = Auth::user()->name;
-        $data_teknisi = Teknisi::where('teknisi_userid', $teknisi_id);
-        $data['sum_pencairan'] = $data_teknisi->where('teknisi_keuangan_userid', '!=', NULL)->sum('teknisi_psb');
-        $data['sum_saldo'] = $data_teknisi->where('teknisi_keuangan_userid', '=', NULL)->sum('teknisi_psb');
+        $data['sum_saldo'] = Teknisi::where('teknisi_userid', $teknisi_id)->where('teknisi_keuangan_userid', '<', '0')->sum('teknisi_psb');
+        $data['sum_pencairan'] = Teknisi::where('teknisi_userid', $teknisi_id)->where('teknisi_keuangan_userid', '>', '0')->whereMonth('created_at', '=', $month)->sum('teknisi_psb');
+
 
         $data['q'] = $request->query('q');
         $query = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
