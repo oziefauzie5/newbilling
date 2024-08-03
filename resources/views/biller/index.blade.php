@@ -209,11 +209,64 @@
                         <div class="col">
                           <a href="{{route('admin.biller.paymentbytagihan',['inv_id'=>$list->reg_nolayanan])}}"><button class="btn btn-block btn-primary">PROSES PEMBAYARAN</button></a>
                         </div>
+                        <div class="col">
+                          <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#putus_sementara{{$list->reg_idpel}}">AMBIL ALAT</button>
+                         
+                        </div>
                       </div>
+                      
                   </div>
                 </div>
               </div>
             </div>
+
+             <!-- Modal -->
+             <div class="modal fade" id="putus_sementara{{$list->reg_idpel}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">STOP BERLANGGANAN</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{{route('admin.biller.biller_putus_berlanggan',['idpel'=>$list->reg_idpel])}}" method="POST">
+                      @csrf
+                      @method('PUT')
+
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label for="tiket_deskripsi">Alasan Putus</label>
+                          <textarea class="form-control" name="reg_catatan" rows="5"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>Mac Address ONT</label>
+                          <input type="text" class="form-control" name="reg_mac"  step="00.01" maxlength="17" minlength="17" value="">
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>Status</label>
+                          <select name="status" class="form-control" required>
+                            <option value="PUTUS LANGGANAN">PUTUS LANGGANAN</option>
+                            <option value="PUTUS SEMENTARA">PUTUS SEMENTARA</option>
+                          </select>
+                          {{-- <input type="text" class="form-control" name="reg_mac"  step="00.01" required maxlength="17" minlength="17" value=""> --}}
+                        </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
+                      <button type="submit" class="btn btn-primary">PEGATKEUN AYEUNA</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div> 
+                  {{-- END MODAL --}}
           @endforeach
       </section>
       @endrole

@@ -29,7 +29,7 @@
                 <b>Invoice {{$invoice->inv_id}}</b><br>
                 <br>
                 @if($invoice->inv_status != 'PAID')
-                <b>Jatuh Tempo</b> {{$invoice->inv_tgl_jatuh_tempo}}<br>
+                <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>
                 <b>Status : </b> <span class="text-danger"><strong> {{$invoice->inv_status}}</strong></span><br>
                 @else
                 <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>

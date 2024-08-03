@@ -177,6 +177,7 @@
                 <option value="{{$data}}" selected>{{$data}}</option>
                 @endif
                 <option value="">ALL DATA</option>
+                <option value="BELUM TERPASANG">BELUM TERPASANG</option>
                 <option value="PPP">USER PPP</option>
                 <option value="DHCP">USER DHCP</option>
                 <option value="HOTSPOT">USER HOTSPOT</option>
@@ -290,9 +291,9 @@
                       <td>{{$d->input_nama}}</td>
                       @if($d->reg_tgl_jatuh_tempo)
                       @if($d->reg_status != 'PAID')
-                      <td class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}---</td>
-                      @else
                       <td class="href text-danger font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
+                      @else
+                      <td class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}---</td>
                       @endif
                       @else
                       <td class="text-danger font-weight-bold" >Belum Terpasang</td>

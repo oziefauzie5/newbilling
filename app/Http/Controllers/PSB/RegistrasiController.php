@@ -161,7 +161,7 @@ class RegistrasiController extends Controller
         $data['reg_inv_control'] = $request->reg_inv_control;
         $data['reg_status'] = '0';
         $data['reg_progres'] = '0';
-        $update['input_maps'] =  $request->maps;
+        $update['input_maps'] =  $request->reg_maps;
         $update['input_status'] =  'REGIST';
         $update_barang['subbarang_status'] =  '1';
         $update_barang['subbarang_keluar'] = '1';
@@ -671,7 +671,7 @@ Diregistrasi Oleh : *' . $admin . '*
 
     public function putus_berlanggan(Request $request, $idpel)
     {
-        $data['nama_admin'] = Auth::user()->name;
+        $nama_admin = Auth::user()->name;
         // dd($progres);
         $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
         $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -732,7 +732,7 @@ Diregistrasi Oleh : *' . $admin . '*
                         $update_barang['subbarang_stok'] = '1';
                         $update_barang['subbarang_mac'] = $request->reg_mac;
                         $update_barang['subbarang_keterangan'] = $keterangan;
-                        $update_barang['subbarang_admin'] = $data['nama_admin'];
+                        $update_barang['subbarang_admin'] = $nama_admin;
                         SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
                     } else {
                         // JIKA ONT TIDAK ADA
@@ -792,7 +792,7 @@ Diregistrasi Oleh : *' . $admin . '*
                                 "subbarang_tgl_masuk" => $tgl,
                                 "subbarang_status" => '0',
                                 "subbarang_mac" => $request->reg_mac,
-                                "subbarang_admin" => $data['nama_admin'],
+                                "subbarang_admin" => $nama_admin,
                             ]
                         );
                     }
@@ -868,7 +868,7 @@ Diregistrasi Oleh : *' . $admin . '*
                     $update_barang['subbarang_stok'] = '1';
                     $update_barang['subbarang_mac'] = $request->reg_mac;
                     $update_barang['subbarang_keterangan'] = $keterangan;
-                    $update_barang['subbarang_admin'] = $data['nama_admin'];
+                    $update_barang['subbarang_admin'] = $nama_admin;
                     SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
                 } else {
                     // JIKA ONT TIDAK ADA
@@ -928,7 +928,7 @@ Diregistrasi Oleh : *' . $admin . '*
                             "subbarang_tgl_masuk" => $tgl,
                             "subbarang_status" => '0',
                             "subbarang_mac" => $request->reg_mac,
-                            "subbarang_admin" => $data['nama_admin'],
+                            "subbarang_admin" => $nama_admin,
                         ]
                     );
                 }

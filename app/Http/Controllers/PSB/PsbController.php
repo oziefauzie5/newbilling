@@ -48,7 +48,8 @@ class PsbController extends Controller
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('reg_progres', '<', 100)
+            ->where('reg_progres', '>=', 2)
+            ->where('reg_progres', '<=', 5)
             ->orderBy('tgl', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
@@ -64,7 +65,9 @@ class PsbController extends Controller
             $query->where('routers.id', '=', $data['router']);
         if ($data['paket'])
             $query->where('pakets.paket_id', '=', $data['paket']);
-        if ($data['data'] == "PPP")
+        if ($data['data'] == "BELUM TERPASANG")
+            $query->where('registrasis.reg_progres', '<', "2");
+        elseif ($data['data'] == "PPP")
             $query->where('registrasis.reg_layanan', '=', "PPP");
         elseif ($data['data'] == "DHCP")
             $query->where('registrasis.reg_layanan', '=', "DHCP");
@@ -115,7 +118,7 @@ class PsbController extends Controller
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('reg_progres', '=', 100)
+            ->where('reg_progres', '>=', 90)
             ->orderBy('tgl', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('reg_progres', 'like', '%' . $data['q'] . '%');

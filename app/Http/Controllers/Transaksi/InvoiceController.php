@@ -68,7 +68,7 @@ class InvoiceController extends Controller
         $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->sum('inv_total');
         $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
         $data['inv_count_isolir'] = Invoice::where('inv_status', '=', 'ISOLIR')->count();
-        $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->count();
+        $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
         return view('Transaksi/list_invoice', $data);
     }
     public function paid(Request $request)

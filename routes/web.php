@@ -209,6 +209,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     // Route::get('/biller/daftar/transaksi', [BillerController::class, 'list_trx'])->name('biller.list_trx')->middleware(['role:KOLEKTOR|BILLER']);
     Route::post('/biller/export/pdf', [BillerController::class, 'mutasi_pdf'])->name('biller.export.mutasi')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/print/{id}', [BillerController::class, 'print'])->name('biller.print')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::put('/biller/pb/{idpel}', [BillerController::class, 'biller_putus_berlanggan'])->name('biller.biller_putus_berlanggan')->middleware(['role:KOLEKTOR']);
 
     // Route::get('/Kolektor/Tagihan', [KolektorController::class, 'index'])->name('kolektor.index');
     // Route::get('/Kolektor/kolektor-payment/{id}', [KolektorController::class, 'kolektor_payment'])->name('kolektor.kolektor_payment');
