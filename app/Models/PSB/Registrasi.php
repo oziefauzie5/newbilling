@@ -51,5 +51,6 @@ class Registrasi extends Model
         'reg_slotonu',
         'reg_teknisi_team',
         'reg_inv_control',
+        'reg_img',
     ];
 }

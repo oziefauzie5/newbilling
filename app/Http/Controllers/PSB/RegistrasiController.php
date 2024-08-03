@@ -489,12 +489,21 @@ Diregistrasi Oleh : *' . $admin . '*
     {
         // dd($request->idpel);
         $admin = Auth::user()->id;
+        $nama_admin = Auth::user()->name;
         $biaya = SettingBiaya::first();
         // dd($biaya->biaya_psb);
         $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
         $data['datapel'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->where('registrasis.reg_idpel', $request->idpel)
             ->first();
+
+
+        $penerima = User::where('id', $request->penerima)->first();
+        $sales = User::where('id', $data['datapel']->input_sales)->first();
+
+
+
+        // dd($data['datapel']->reg_teknisi_team . ' Penerima = ' . $penerima->name . ' Sales = ' . $sales->name);
         // dd($data['datapel']->input_nama);
         $cek = Jurnal::where('jurnal_kategori', 'PSB')->where('jurnal_idpel', $request->idpel)->count();
         if ($cek < '1') {
@@ -503,6 +512,9 @@ Diregistrasi Oleh : *' . $admin . '*
             $teknisi_update['teknisi_keuangan_userid'] = $admin;
             $teknisi_update['teknisi_status'] = '2';
             Teknisi::where('teknisi_id', $kode->teknisi_id)->update($teknisi_update);
+
+
+
             Jurnal::create([
                 'jurnal_id' => rand(10000, 19999),
                 'jurnal_tgl' => $data['input_tgl'],
@@ -528,7 +540,57 @@ Diregistrasi Oleh : *' . $admin . '*
                 'jurnal_status' => 1,
             ]);
 
+
+            $pesan_group['ket'] = 'pencairan psb';
+            $pesan_group['status'] = '0';
+            $pesan_group['target'] = '120363028776966861@g.us';
+            $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
+            $pesan_group['pesan'] = '               -- PENCAIRAN DANA --
+            
+Pencairan dana berhasil 😊
+
+Pelanggan : ' . $data['datapel']->input_nama . '
+Alamat : ' . $data['datapel']->input_alamat_pasang . '
+
+
+Teknisi Team : ' . $data['datapel']->reg_teknisi_team . '
+Sales : ' . $sales->name . '
+Jumlah Pencairan : Rp. ' . number_format($biaya->biaya_sales + $biaya->biaya_psb) . '
+Waktu Pencairan : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+
+Dikeluarkan oleh: ' . $nama_admin . '
+Diterima oleh: ' . $penerima->name . '
+';
+
+
+            Pesan::create($pesan_group);
+            $pesan_personal['ket'] = 'pencairan psb';
+            $pesan_personal['status'] = '0';
+            $pesan_personal['target'] = $sales->hp;
+            $pesan_personal['nama'] = $sales->name;
+            $pesan_personal['pesan'] = '               -- PENCAIRAN DANA --
+            
+Pencairan dana berhasil 😊
+
+Pelanggan : ' . $data['datapel']->input_nama . '
+Alamat : ' . $data['datapel']->input_alamat_pasang . '
+
+
+Teknisi Team : ' . $data['datapel']->reg_teknisi_team . '
+Sales : ' . $sales->name . '
+Jumlah Pencairan : Rp. ' . number_format($biaya->biaya_sales) . '
+Waktu Pencairan : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+
+Dikeluarkan oleh: ' . $nama_admin . '
+Diterima oleh: ' . $penerima->name . '
+';
+
+
+            Pesan::create($pesan_personal);
             Registrasi::where('reg_progres', '4')->where('reg_idpel', $request->idpel)->update(['reg_progres' => '5']);
+
+
+
             $notifikasi = array(
                 'pesan' => 'Berhasil Pencairan PSB & Sales.',
                 'alert' => 'success',

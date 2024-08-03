@@ -6,7 +6,7 @@
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
 	<link rel="icon" href="{{asset('atlantis/assets/img/icon.ico')}}" type="image/x-icon"/>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js')}}"></script>  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
 	<script src="{{asset('atlantis/assets/js/plugin/webfont/webfont.min.js')}}"></script>
 	<script>
 		WebFont.load({

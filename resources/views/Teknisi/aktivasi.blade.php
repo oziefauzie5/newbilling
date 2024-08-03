@@ -9,7 +9,7 @@
       <section class="content">
         <div class="card ">
  
-        <form action="{{ route('admin.teknisi.proses_aktivasi',['id'=> $data_aktivasi->reg_idpel]) }}" method="POST">
+        <form action="{{ route('admin.teknisi.proses_aktivasi',['id'=> $data_aktivasi->reg_idpel]) }}" method="POST" enctype="multipart/form-data">
          @csrf
          @method('PUT')
 
@@ -22,6 +22,7 @@
            </div>
          </div>
          <hr> --}}
+         
          <div class="form-row m-1">
            <div class="col">
              <label for="inputCity">Penggunaan Kabel</label>
@@ -63,6 +64,11 @@
                 <label for="inputCity">Hasil</label>
                 <input type="text" class="form-control" step="0.01"  placeholder="Los" name="los_opm" id="los_opm" value="{{Session::get('los_opm')}}" readonly required maxlength="6" minlength="6"> 
               </div>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlFile1">Upload Foto Rumah ( Tampak Depan )</label>
+                <input type="file" class="form-control-file" name="reg_img" value="{{Session::get('reg_img')}}">
               </div>
  
               

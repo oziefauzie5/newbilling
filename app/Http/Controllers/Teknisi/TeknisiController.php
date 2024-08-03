@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class TeknisiController extends Controller
 {
@@ -200,6 +201,9 @@ class TeknisiController extends Controller
         Session::flash('los_opm', $request->los_opm);
         Session::flash('kode', $request->kode);
         Session::flash('id', $request->id);
+        Session::flash('reg_img', $request->reg_img);
+
+
 
 
 
@@ -354,6 +358,8 @@ class TeknisiController extends Controller
                         $pelanggan['reg_tgl_pasang'] = $tanggal;
                         $pelanggan['reg_clientid'] = $idclient;
 
+
+
                         $teknisi['teknisi_ket'] = $query->input_nama;
                         $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
 
@@ -436,6 +442,13 @@ class TeknisiController extends Controller
                             Invoice::create($inv);
                             SubInvoice::create($sub_inv);
                         }
+
+                        $photo = $request->file('reg_img');
+                        $filename = $photo->getClientOriginalName();
+                        $path = 'photo-rumah/' . $filename;
+                        Storage::disk('public')->put($path, file_get_contents($photo));
+                        $pelanggan['reg_img'] = $filename;
+
                         Registrasi::where('reg_idpel', $id)->update($pelanggan);
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
                         SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
@@ -674,6 +687,13 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                             Invoice::create($inv);
                             SubInvoice::create($sub_inv);
                         }
+
+                        $photo = $request->file('reg_img');
+                        $filename = $photo->getClientOriginalName();
+                        $path = 'photo-rumah/' . $filename;
+                        Storage::disk('public')->put($path, file_get_contents($photo));
+                        $pelanggan['reg_img'] = $filename;
+
                         Registrasi::where('reg_idpel', $id)->update($pelanggan);
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
                         SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
