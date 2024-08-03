@@ -11,10 +11,21 @@
         </div>
     </div>
     <div class="page-inner mt--5">
-                
+      <div class="user mt--5">
+        <div class="avatar-sm float-left mr-2">
+          <img src="{{ asset('storage/photo-user/'.Auth::user()->photo) }}" alt="..." class="avatar-img rounded-circle">
+        </div>
+        <div class="info">
+          <span> 
+              <span class="user-level text-light font-weight-bold">{{strtoupper(Auth::user()->name)}}</span><br>
+              <h6 class="user-level text-light ">TEKNISI</h6>
+          <div class="clearfix"></div>
+        </span>
+        </div>
 
-      <div class="h5 mt--5 text-light font-weight-bold ">TEKNISI : {{strtoupper($nama)}}</div><br>
-        <div class="row mt--1">
+      {{-- <div class="h5 mt--5 text-light font-weight-bold ">TEKNISI : {{strtoupper($nama)}}</div><br> --}}
+      
+        <div class="row mt-1">
             <div class="col-6 col-sm-6">
               <div class="card ">
                 <div class="card-body p-3 text-center">

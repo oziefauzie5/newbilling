@@ -1,4 +1,4 @@
-@extends('layout.user')
+@extends('layout.pelanggan')
 @section('content')
         <style>
             blink {

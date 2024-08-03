@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>{{Session::get('app_brand')}}</title>
+	<title>OVALL FIBER</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-	<link rel="icon" href="{{ asset('storage/img/'.Session::get('app_favicon')) }}" type="image/x-icon"/>
+	<link rel="icon" href="{{asset('atlantis/assets/img/icon.ico')}}" type="image/x-icon"/>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js')}}"></script>  
 	<script src="{{asset('atlantis/assets/js/plugin/webfont/webfont.min.js')}}"></script>
@@ -52,7 +52,7 @@
 			<div class="logo-header" data-background-color="blue">
 				
 				<a href="index.html" class="logo">
-					<img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" alt="navbar brand" class="navbar-brand">
+					<img src="{{asset('atlantis/assets/img/ovall_logo.png')}}" alt="navbar brand" class="navbar-brand">
 				</a>
 				<button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
 			
@@ -65,14 +65,14 @@
 				<div class="container-fluid">
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 						<li class="nav-item dropdown hidden-caret">
-							<a class="nav-link dropdown-toggle" href="{{ route('logout') }}" >
+							<a class="nav-link dropdown-toggle" href="{{ route('client_logout') }}" >
 							<i class="fas fa-sign-out-alt"> </i> LOGOUT
 							</a>
 						</li>
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 								<div class="avatar-sm">
-									<img src="{{ asset('storage/photo-user/'.Auth::user()->photo) }}" alt="..." class="avatar-img rounded-circle">
+									<img src="{{asset('atlantis/assets/img/profile.jpg')}}" alt="..." class="avatar-img rounded-circle">
 								</div>
 							</a>
 						</li>
