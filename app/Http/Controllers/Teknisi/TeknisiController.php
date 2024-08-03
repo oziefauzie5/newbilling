@@ -30,8 +30,8 @@ class TeknisiController extends Controller
         $month = Carbon::now()->format('m');
         $teknisi_id = Auth::user()->id;
         $data['nama'] = Auth::user()->name;
-        $data['sum_saldo'] = Teknisi::where('teknisi_userid', $teknisi_id)->where('teknisi_keuangan_userid', '<', '0')->sum('teknisi_psb');
-        $data['sum_pencairan'] = Teknisi::where('teknisi_userid', $teknisi_id)->where('teknisi_keuangan_userid', '>', '0')->whereMonth('created_at', '=', $month)->sum('teknisi_psb');
+        $data['sum_saldo'] = Teknisi::where('teknisi_userid', $teknisi_id)->where('teknisi_status', '=', '1')->sum('teknisi_psb');
+        $data['sum_pencairan'] = Teknisi::where('teknisi_userid', $teknisi_id)->where('teknisi_status', '=', '2')->whereMonth('created_at', '=', $month)->sum('teknisi_psb');
 
 
         $data['q'] = $request->query('q');
@@ -201,10 +201,7 @@ class TeknisiController extends Controller
         Session::flash('los_opm', $request->los_opm);
         Session::flash('kode', $request->kode);
         Session::flash('id', $request->id);
-        Session::flash('reg_img', $request->reg_img);
-
-
-
+        // Session::flash('reg_img', $request->reg_img);
 
 
         $id_teknisi = Auth::user()->id;
@@ -443,11 +440,11 @@ class TeknisiController extends Controller
                             SubInvoice::create($sub_inv);
                         }
 
-                        $photo = $request->file('reg_img');
-                        $filename = $photo->getClientOriginalName();
-                        $path = 'photo-rumah/' . $filename;
-                        Storage::disk('public')->put($path, file_get_contents($photo));
-                        $pelanggan['reg_img'] = $filename;
+                        // $photo = $request->file('reg_img');
+                        // $filename = $photo->getClientOriginalName();
+                        // $path = 'photo-rumah/' . $filename;
+                        // Storage::disk('public')->put($path, file_get_contents($photo));
+                        // $pelanggan['reg_img'] = $filename;
 
                         Registrasi::where('reg_idpel', $id)->update($pelanggan);
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
@@ -688,11 +685,11 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                             SubInvoice::create($sub_inv);
                         }
 
-                        $photo = $request->file('reg_img');
-                        $filename = $photo->getClientOriginalName();
-                        $path = 'photo-rumah/' . $filename;
-                        Storage::disk('public')->put($path, file_get_contents($photo));
-                        $pelanggan['reg_img'] = $filename;
+                        // $photo = $request->file('reg_img');
+                        // $filename = $photo->getClientOriginalName();
+                        // $path = 'photo-rumah/' . $filename;
+                        // Storage::disk('public')->put($path, file_get_contents($photo));
+                        // // $pelanggan['reg_img'] = $filename;
 
                         Registrasi::where('reg_idpel', $id)->update($pelanggan);
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);

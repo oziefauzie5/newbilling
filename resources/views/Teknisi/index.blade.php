@@ -26,46 +26,27 @@
       {{-- <div class="h5 mt--5 text-light font-weight-bold ">TEKNISI : {{strtoupper($nama)}}</div><br> --}}
       
         <div class="row mt-1">
-            <div class="col-6 col-sm-6">
-              <div class="card ">
-                <div class="card-body p-3 text-center">
-                  <div class="text-right text-danger">
-                  </div>
-                  <div class="h1 m-0">{{$count_psb}}</div>
-                  <div class="text-muted mb-3">JOB</div>
+          <div class="col-6 col-sm-6">
+            <div class="card">
+              <div class="card-body p-3 text-center">
+                <div class="text-right text-success">
                 </div>
+                <div class="h5 m-0">Rp. {{number_format($sum_saldo)}}</div>
+                <div class="text-muted mb-3">SALDO</div>
               </div>
             </div>
-            <div class="col-6 col-sm-6">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="text-right text-success">
-                  </div>
-                  <div class="h1 m-0">{{$count_tiket}}</div>
-                  <div class="text-muted mb-3">Tiket</div>
+          </div>
+          <div class="col-6 col-sm-6">
+            <div class="card">
+              <div class="card-body p-3 text-center">
+                <div class="text-right text-success">
                 </div>
+                <div class="h5 m-0">Rp. {{number_format($sum_pencairan)}}</div>
+                <div class="text-muted mb-3">PENCAIRAN</div>
               </div>
             </div>
-            <div class="col-6 col-sm-6">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="text-right text-success">
-                  </div>
-                  <div class="h5 m-0">Rp. {{number_format($sum_saldo)}}</div>
-                  <div class="text-muted mb-3">SALDO</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-6">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="text-right text-success">
-                  </div>
-                  <div class="h5 m-0">Rp. {{number_format($sum_pencairan)}}</div>
-                  <div class="text-muted mb-3">PENCAIRAN</div>
-                </div>
-              </div>
-            </div>
+          </div>
+            
           </div>
 
         <section class="content">
@@ -120,6 +101,29 @@
                     </div>
                 </div>
         </section>
+        <div class="row mt-1">
+            <div class="col-6 col-sm-6">
+              <div class="card ">
+                <div class="card-body p-3 text-center">
+                  <div class="text-right text-danger">
+                  </div>
+                  <div class="h1 m-0">{{$count_psb}}</div>
+                  <div class="text-muted mb-3">JOB</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-6">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="text-right text-success">
+                  </div>
+                  <div class="h1 m-0">{{$count_tiket}}</div>
+                  <div class="text-muted mb-3">Tiket</div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
 
 
 
