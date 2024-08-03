@@ -295,14 +295,14 @@ Pembayaran invoice sudah kami terima
 *************************
 No.Layanan : ' . $data_pelanggan->inv_nolayanan . '
 Pelanggan : ' . $data_pelanggan->inv_nama . '
-Invoice : *' . $data_pelanggan->inv_id . '*
-Profile : ' . $data_pelanggan->inv_profile . '
+Invoice : *INV' . $data_pelanggan->inv_id . '*
+Paket : ' . $data_pelanggan->inv_profile . '
 Periode : ' . $data_pelanggan->inv_periode . '
 Biaya adm : *Rp' . number_format($biller->mts_komisi) . '*
 Total : *Rp' . number_format($biller->mts_komisi + $data_pelanggan->inv_total) . '*
 
 Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
-Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
+Layanan sudah aktif dan dapat digunakan sampai dengan *' . date('d-m-Y', strtotime($reg['reg_tgl_jatuh_tempo'])) . '*
 
 BY : ' . $nama_user . '
 *************************
@@ -326,6 +326,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     $API->comm('/ppp/secret/set', [
                         '.id' => $cek_secret[0]['.id'],
                         'profile' => $data_pelanggan->paket_nama,
+                        'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                         'disabled' => 'no',
                     ]);
                     if ($count_trx == 0) {
@@ -372,7 +373,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                         'service' => 'pppoe',
                         'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                        'comment' =>  $reg['reg_tgl_jatuh_tempo'] == '' ? '' : $reg['reg_tgl_jatuh_tempo'],
+                        'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                         'disabled' => 'no',
                     ]);
                     if ($count_trx == 0) {

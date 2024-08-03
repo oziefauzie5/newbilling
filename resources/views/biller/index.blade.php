@@ -206,10 +206,10 @@
                         <div class="col">
                           <a href="{{$list->input_maps}}"> <button class="btn btn-block btn-primary"><i class="fas fa-phone"></i>&nbsp;&nbsp;LOKASI</button></a>
                         </div>
-                        <div class="col">
+                        <div class="col mt-3">
                           <a href="{{route('admin.biller.paymentbytagihan',['inv_id'=>$list->reg_nolayanan])}}"><button class="btn btn-block btn-primary">PROSES PEMBAYARAN</button></a>
                         </div>
-                        <div class="col">
+                        <div class="col mt-3">
                           <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#putus_sementara{{$list->reg_idpel}}">AMBIL ALAT</button>
                          
                         </div>

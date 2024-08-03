@@ -27,6 +27,10 @@ class TeknisiController extends Controller
     public function index(Request $request)
     {
         $teknisi_id = Auth::user()->id;
+        $data['nama'] = Auth::user()->name;
+        $data_teknisi = Teknisi::where('teknisi_userid', $teknisi_id);
+        $data['sum_pencairan'] = $data_teknisi->where('teknisi_keuangan_userid', '!=', NULL)->sum('teknisi_psb');
+        $data['sum_saldo'] = $data_teknisi->where('teknisi_keuangan_userid', '=', NULL)->sum('teknisi_psb');
 
         $data['q'] = $request->query('q');
         $query = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
@@ -35,11 +39,14 @@ class TeknisiController extends Controller
             ->orderBy('input_data.input_tgl', 'DESC');
 
         $data['data_pelanggan'] = $query->get();
+        $data['count_psb'] = $query->count();
 
-        $data['data_tiket'] = Tiket::select('registrasis.*', 'input_data.*', 'tikets.*', 'tikets.created_at as tgl_tiket')
+        $query_tiket = Tiket::select('registrasis.*', 'input_data.*', 'tikets.*', 'tikets.created_at as tgl_tiket')
             ->join('registrasis', 'registrasis.reg_nolayanan', '=', 'tikets.tiket_nolayanan')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->where('tiket_status', '!=', 'DONE')->get();
+            ->where('tiket_status', '!=', 'DONE');
+        $data['data_tiket'] = $query_tiket->get();
+        $data['count_tiket'] = $query_tiket->count();
 
         $data['data_user'] = DB::table('roles')
             ->join('model_has_roles', 'model_has_roles.role_id', '=', 'roles.id')

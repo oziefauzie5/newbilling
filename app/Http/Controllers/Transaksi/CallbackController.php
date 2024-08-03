@@ -59,6 +59,7 @@ class CallbackController extends Controller
 
 
         if ($data->is_closed_payment === 1) {
+            $nama_user = 'SYSTEM';
             $invoice = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
                 ->where('inv_id', $data->merchant_ref)
                 // ->where('upd_idpel', $data->reference)
@@ -158,27 +159,29 @@ class CallbackController extends Controller
                         Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
                     }
 
-                    //                     $pesan_group['ket'] = 'payment tripay';
-                    //                     $pesan_group['status'] = '0';
-                    //                     $pesan_group['target'] = $data_pelanggan->input_hp;
-                    //                     $pesan_group['nama'] = $data_pelanggan->input_nama;
-                    //                     $pesan_group['pesan'] = '
-                    // Terima kasih 🙏
-                    // Pembayaran invoice sudah kami terima
-                    // *************************
-                    // No.Layanan : ' . $data_pelanggan->inv_nolayanan . '
-                    // Pelanggan : ' . $data_pelanggan->inv_nama . '
-                    // Invoice : *' . $data_pelanggan->inv_id . '*
-                    // Profil : ' . $data_pelanggan->inv_profile . '
-                    // Total : *Rp' . $data_pelanggan->inv_total . '*
+                    $pesan_group['ket'] = 'payment tripay';
+                    $pesan_group['status'] = '0';
+                    $pesan_group['target'] = $data_pelanggan->input_hp;
+                    $pesan_group['nama'] = $data_pelanggan->input_nama;
+                    $pesan_group['pesan'] = '
+Terima kasih 🙏
+Pembayaran invoice sudah kami terima
+*************************
+No.Layanan : ' . $data_pelanggan->inv_nolayanan . '
+Pelanggan : ' . $data_pelanggan->inv_nama . '
+Invoice : *' . $data_pelanggan->inv_id . '*
+Profil : ' . $data_pelanggan->inv_profile . '
+Total : *Rp' . $data_pelanggan->inv_total . '*
 
-                    // Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
-                    // Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
-                    // *************************
-                    // --------------------
-                    // Pesan ini bersifat informasi dan tidak perlu dibalas
-                    // *OVALL FIBER*';
-                    //                     Pesan::create($pesan_group);
+Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
+
+BY : ' . $nama_user . '
+*************************
+--------------------
+Pesan ini bersifat informasi dan tidak perlu dibalas
+*OVALL FIBER*';
+                    Pesan::create($pesan_group);
 
 
                     $router = Router::whereId($data_pelanggan->reg_router)->first();
@@ -196,7 +199,7 @@ class CallbackController extends Controller
                             $API->comm('/ppp/secret/set', [
                                 '.id' => $cek_secret[0]['.id'],
                                 'profile' => $data_pelanggan->paket_nama,
-                                'comment' => $reg['reg_tgl_jatuh_tempo'],
+                                'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                                 'disabled' => 'no',
                             ]);
                             $cek_status = $API->comm('/ppp/active/print', [
@@ -213,7 +216,7 @@ class CallbackController extends Controller
                                 'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                                 'service' => 'pppoe',
                                 'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                                'comment' =>  $reg['reg_tgl_jatuh_tempo'] == '' ? '' : $reg['reg_tgl_jatuh_tempo'],
+                                'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                                 'disabled' => 'no',
                             ]);
                         }

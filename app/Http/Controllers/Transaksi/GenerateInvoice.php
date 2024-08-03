@@ -19,16 +19,12 @@ class GenerateInvoice extends Controller
         $year = $now->format('Y');
         $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
-            ->where('reg_progres', 5)
-            // ->where('reg_status', '=', 'PAID')
+            ->where('reg_progres', '>=', 2)
+            ->where('reg_progres', '<=', 5)
             ->get();
-
-        // dd($data_pelanggan);
         $swaktu = SettingWaktuTagihan::first();
         $i = 1;
         foreach ($data_pelanggan as $dp) {
-            // $cek_invoice = Invoice::where('inv_idpel', $dp->reg_idpel)->where('inv_status', 'UNPAID')->get();
-            // dd($cek_invoice);
             if ($dp->reg_status == 'PAID') {
                 $inv_id = rand(1000, 1999) . $i++;
                 $hari_jt_tempo = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
@@ -79,14 +75,7 @@ class GenerateInvoice extends Controller
                     $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
 
                     Invoice::where('inv_id', $inv->inv_id)->update([
-                        'inv_status' => 'UNPAID',
-                        'inv_idpel' => $dp->reg_idpel,
-                        'inv_nolayanan' => $dp->reg_nolayanan,
-                        'inv_nama' => $dp->input_nama,
-                        'inv_jenis_tagihan' => $dp->reg_jenis_tagihan,
-                        'inv_profile' => $dp->paket_nama,
-                        'inv_mitra' => 'SYSTEM',
-                        'inv_kategori' => 'OTOMATIS',
+                        'inv_status' => 'ISOLIR',
                         'inv_tgl_tagih' => $hari_tgl_tagih,
                         'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
                         'inv_tgl_isolir' => $tgl_isolir,
@@ -95,7 +84,6 @@ class GenerateInvoice extends Controller
                     ]);
                     SubInvoice::where('subinvoice_id', $inv->inv_id)->update(
                         [
-                            'subinvoice_id' => $inv_id,
                             'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
                             'subinvoice_harga' => $dp->reg_harga + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
                             'subinvoice_ppn' => $dp->reg_ppn,

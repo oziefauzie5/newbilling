@@ -60,9 +60,41 @@
                       <td><div class="badge badge-danger">@if($d->status=='0')Process @else {{$d->status}} @endif</div></td>
                       @endif
                       <td>0{{$d->target}}</td>
-                      <td>{{$d->nama}}</td>
-                      <td>{{$d->pesan}}</td>
+                      <td >{{$d->nama}}</td>
+                      <td data-toggle="modal" data-target="#exampleModal{{$d->id}}">{{$d->pesan}}</td>
                     </tr>
+                    <!-- Modal -->
+<div class="modal fade" id="exampleModal{{$d->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">PESAN WHATSAPP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-mb-3">
+          <label class="col-lg-12 col-form-label" >Tujuan</label>
+          <div class="col-lg-12">
+          <input type="text" class="form-control" name="tujuan" value="0{{$d->target}}" required>
+          </div>
+      </div>
+      
+      <div class="col-mb-3">
+          <label class="col-lg-12 col-form-label" >Isi pesan</label>
+          <div class="col-lg-12">
+          <textarea class="form-control" name="pesan" rows="12" required>{{$d->pesan}}</textarea>
+          </div>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
                     @endforeach
                   </tbody>
                 </table>

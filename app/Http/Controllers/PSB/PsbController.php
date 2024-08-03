@@ -48,7 +48,7 @@ class PsbController extends Controller
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('reg_progres', '>=', 2)
+            // ->where('reg_progres', '>=', 2)
             ->where('reg_progres', '<=', 5)
             ->orderBy('tgl', 'DESC')
             ->where(function ($query) use ($data) {

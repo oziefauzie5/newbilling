@@ -498,6 +498,11 @@ Diregistrasi Oleh : *' . $admin . '*
         // dd($data['datapel']->input_nama);
         $cek = Jurnal::where('jurnal_kategori', 'PSB')->where('jurnal_idpel', $request->idpel)->count();
         if ($cek < '1') {
+            $kode = Teknisi::where('teknisi_idpel', $request->idpel)->where('teknisi_status', '1')->where('teknisi_job', 'PSB')->first();
+            // dd($kode->teknisi_id);
+            $teknisi_update['teknisi_keuangan_userid'] = $admin;
+            $teknisi_update['teknisi_status'] = '2';
+            Teknisi::where('teknisi_id', $kode->teknisi_id)->update($teknisi_update);
             Jurnal::create([
                 'jurnal_id' => rand(10000, 19999),
                 'jurnal_tgl' => $data['input_tgl'],
@@ -545,7 +550,7 @@ Diregistrasi Oleh : *' . $admin . '*
         // dd($data['profile_perusahaan']->app_logo);
         $data['nama_admin'] = Auth::user()->name;
         $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
-
+        // dd($teknisi);
         if ($teknisi) {
             $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'pakets.*', 'teknisis.*', 'teknisis.created_at as mulai',)
                 ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')

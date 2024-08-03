@@ -154,11 +154,12 @@ class NocController extends Controller
                     $data['status']  = "DISCONNECTED";
                     $data['uptime'] = "-";
                 }
-                // dd($data);
                 return $data;
-                // return view('Router/pppoe', $data);
             } else {
-                dd('Router Disconnected');
+                $data['address'] = '-';
+                $data['status']  = "TIDAK TERSAMBUNG KE SERVER";
+                $data['uptime'] = "-";
+                return $data;
             }
         } elseif ($data_pelanggan->reg_layanan == 'HOTSPOT') {
             $router = Router::whereId($data_pelanggan->reg_router)->first();
