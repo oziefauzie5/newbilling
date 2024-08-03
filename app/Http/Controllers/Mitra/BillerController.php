@@ -159,6 +159,8 @@ class BillerController extends Controller
     {
         $month = Carbon::now()->format('m');
         $bulan_lalu = date('m', strtotime(Carbon::create(Carbon::now())->addMonth(-1)->toDateString()));
+        $tagihan_kedepan = Carbon::now()->addday(5)->format('Y-m-d');
+        $tagihan_kebelakang = Carbon::create($tagihan_kedepan)->addMonth(-1)->toDateString();
 
         $admin_user = Auth::user()->id;
         $data['nama'] = Auth::user()->name;
@@ -169,8 +171,8 @@ class BillerController extends Controller
         $query_isolir = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('reg_status', '!=', 'PAID')
-            ->whereMonth('reg_tgl_jatuh_tempo', '<', $month)
-            ->orderBy('reg_tgl_jatuh_tempo', 'DESC')
+            ->whereDate('reg_tgl_jatuh_tempo', '<', $tagihan_kebelakang)
+            ->orderBy('reg_tgl_jatuh_tempo', 'ASC')
             ->where(function ($query_isolir) use ($data) {
                 $query_isolir->Where('reg_nolayanan', 'like', '%' . $data['q'] . '%');
                 $query_isolir->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
@@ -417,10 +419,16 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
     public function list_tagihan(Request $request)
     {
+        $tagihan_kedepan = Carbon::now()->addday(5)->format('Y-m-d');
+        $tagihan_kebelakang = Carbon::create($tagihan_kedepan)->addMonth(-1)->toDateString();
+
+        // dd($tagihan_kebelakang);
+
         $pasang_bulan_ini = Carbon::now()->addMonth(-0)->format('Y-m-d');
         $pasang_bulan_lalu = Carbon::now()->addMonth(-1)->format('Y-m-d');
         $pasang_3_bulan_lalu = Carbon::now()->addMonth(-2)->format('Y-m-d');
-        $bulan_ini = date('m', strtotime(Carbon::now()));
+        // $bulan_ini = date('m', strtotime(Carbon::now()));
+
 
         $data['data_bulan'] = $request->query('data_bulan');
         $data['data_inv'] = $request->query('data_inv');
@@ -430,8 +438,9 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_status', '!=', 'PAID')
-            ->whereMonth('inv_tgl_jatuh_tempo', '=', $bulan_ini)
-            ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
+            ->whereDate('inv_tgl_jatuh_tempo', '>', $tagihan_kebelakang)
+            ->whereDate('inv_tgl_jatuh_tempo', '<=', $tagihan_kedepan)
+            ->orderBy('inv_tgl_jatuh_tempo', 'ASC')
             ->where(function ($query) use ($data) {
                 $query->where('inv_id', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');

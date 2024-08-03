@@ -171,7 +171,7 @@
                               <h3 class="fw-bold mb-1">{{$list->input_nama}}</h3>
                           </div>
                           <div class="col-4 pl-0 text-right">
-                            <div class="text-primary text-uppercase fw-bold op-8 ">Rp. {{number_format($list->inv_total)}}</div>
+                            <div class="text-primary text-uppercase fw-bold op-8 ">Rp. {{number_format($list->reg_harga+$list->reg_kode_unik+$list->reg_ppn+$list->reg_dana_kas+$list->reg_dana_kerja_sama)}}</div>
                           </div>
                           <div class="col-12 pr-0">
                               <div class="text-small text-uppercase fw-bold op-8 ">{{$list->input_alamat_pasang}}</div>
@@ -260,7 +260,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
-                      <button type="submit" class="btn btn-primary">PEGATKEUN AYEUNA</button>
+                      <button type="submit" class="btn btn-primary">SIMPAN</button>
                     </form>
                   </div>
                 </div>
