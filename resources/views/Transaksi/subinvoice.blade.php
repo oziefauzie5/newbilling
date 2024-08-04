@@ -161,8 +161,69 @@
                 <button type="button" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#staticBackdrop" id="modal_bayar" ><i class="far fa-credit-card"></i> BAYAR
               </button>
               @else
-              <button type="button" class="btn btn-danger float-right btn-sm" ><i class="far fa-credit-card"></i> ROLBACK
+              <button type="button" class="btn btn-danger float-right btn-sm" data-toggle="modal" data-target="#modal-rolback{{$invoice->inv_id}}"><i class="far fa-credit-card"></i> ROLBACK
               </button>
+              <div class="modal fade" id="modal-rolback{{$invoice->inv_id}}">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">ROLLBACK INVOICE</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{{ route('admin.inv.rollback', ['id'=>$invoice->inv_id]) }}" method="POST">
+                        @csrf
+                          @method('PUT')
+                        <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-4 col-form-label">INVOICE</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control"   name="id" value="{{$invoice->inv_id}}">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputPassword" class="col-sm-4 col-form-label">PELANGGAN</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="inputtext" name="nama" value="{{$invoice->inv_nama}}">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputtext" class="col-sm-4 col-form-label">KATEGORI</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="inputtext" value="{{$invoice->inv_kategori}}">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputtext" class="col-sm-4 col-form-label">TGL BAYAR</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="inputtext" value="{{$invoice->inv_tgl_bayar}}">
+                        </div>
+                      </div>
+                      <div class="form-group row"> 
+                        <label for="inputtext" class="col-sm-4 col-form-label" >ADMIN</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="inputtext" name="admin" value="{{$invoice->inv_admin}}">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputtext" class="col-sm-4 col-form-label">TOTAL</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="inputtext" name="total" value="{{$invoice->inv_total}}">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputtext" class="col-sm-4 col-form-label">STATUS</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" value="{{$invoice->inv_status}}" >
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-block btn-danger">ROLLBACK INVOICE</button>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
                 @endif
               </div>
             </div>

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Global\GlobalController;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWaktuTagihan;
 use App\Models\Applikasi\SettingWhatsapp;
+use App\Models\Mitra\MitraSetting;
+use App\Models\Mitra\Mutasi;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
@@ -21,6 +24,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
@@ -117,6 +121,123 @@ class InvoiceController extends Controller
         Invoice::where('inv_id', $id)->update($data);
         return response()->json($data);
     }
+
+    public function rollback(Request $request, $id)
+    {
+
+        // $data_laporan = Laporan::where('lap_inv',$id)->first();
+        // if($data_laporan->)
+
+        $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+        $admin_user = Auth::user()->id;
+        $tampil = (new GlobalController)->data_tagihan($id);
+        $diskon = $tampil->inv_diskon;
+
+        $sumppn = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'); #hitung total ppn invoice
+        $sumharga = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'); #hitung total harga invoice
+        $total_debet = $sumharga + $sumppn - $diskon;
+
+
+        $data_lap['lap_id'] = 0;
+        $data_lap['lap_tgl'] = $tgl_bayar;
+
+        $data_lap['lap_admin'] = $admin_user;
+        $data_lap['lap_cabar'] = 'TUNAI';
+        $data_lap['lap_kredit'] = 0;
+        $data_lap['lap_debet'] = $tampil->inv_total;
+        $data_lap['lap_adm'] = 0;
+        $data_lap['lap_jumlah_bayar'] = 0;
+        $data_lap['lap_keterangan'] = 'Rollback Invoice ' . $tampil->inv_id . ' ( ' . $tampil->inv_nama . ' )';
+        $data_lap['lap_akun'] = 2;
+        $data_lap['lap_idpel'] = $tampil->inv_idpel;
+        $data_lap['lap_jenis_inv'] = "PENGEMBALIAN SALDO";
+        $data_lap['lap_status'] = 0;
+        $data_lap['lap_img'] = "-";
+        Laporan::create($data_lap);
+
+        $update_lap['lap_inv'] = '';
+        Laporan::where('lap_inv', $id)->update($update_lap);
+
+        $cek_role = DB::table('users')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('users.id', $tampil->inv_admin)
+            ->first();
+
+        if ($cek_role->role_id >= '10' && $cek_role->role_id <= '13') {
+
+            $saldo = (new GlobalController)->total_mutasi($tampil->inv_admin);
+            $total = $saldo + $total_debet; #SALDO MUTASI = DEBET - KREDIT
+            $biller = MitraSetting::where('mts_user_id', $tampil->inv_admin)->first(); #mengambil biaya admni biller pada table mitra_setting
+            $pengurangan_adm = -$biller->mts_komisi;
+
+
+            Mutasi::create([
+                'mt_admin' => $admin_user,
+                'mt_mts_id' => $tampil->inv_admin,
+                'mt_kategori' => 'ROLLBACK',
+                'mt_cabar' => '2',
+                'mt_deskripsi' => 'Rollback Invoice ' . $tampil->inv_id . ' ( ' . $tampil->inv_nama . ' ) ',
+                'mt_kredit' => $total_debet,
+                'mt_saldo' => $total,
+                'mt_biaya_adm' => $pengurangan_adm,
+            ]);
+        }
+
+        if ($tgl_bayar >= $tampil->inv_tgl_jatuh_tempo) {
+            $status = 'SUSPEND';
+        } elseif ($tgl_bayar < $tampil->inv_tgl_jatuh_tempo) {
+            $status = 'UNPAID';
+            $router = Router::whereId($tampil->reg_router)->first();
+            $ip =   $router->router_ip . ':' . $router->router_port_api;
+            $user = $router->router_username;
+            $pass = $router->router_password;
+            $API = new RouterosAPI();
+            $API->debug = false;
+
+            if ($API->connect($ip, $user, $pass)) {
+                $cek_secret = $API->comm('/ppp/secret/print', [
+                    '?name' => $tampil->reg_username,
+                ]);
+                if ($cek_secret) {
+                    $API->comm('/ppp/secret/set', [
+                        '.id' => $cek_secret[0]['.id'],
+                        'profile' =>  $tampil->paket_nama == '' ? '' : $tampil->paket_nama,
+                        'comment' => 'By: ROLBACK -' . $tampil->inv_tgl_jatuh_tempo == '' ? '' : 'By: ROLBACK -' . $tampil->inv_tgl_jatuh_tempo,
+                        'disabled' => 'no',
+                    ]);
+                } else {
+                    $API->comm('/ppp/secret/add', [
+                        'name' => $tampil->reg_username == '' ? '' : $tampil->reg_username,
+                        'password' => $tampil->reg_password  == '' ? '' : $tampil->reg_password,
+                        'service' => 'pppoe',
+                        'profile' => $tampil->paket_nama  == '' ? 'default' : $tampil->paket_nama,
+                        'comment' => 'By: ROLBACK -' . $tampil->inv_tgl_jatuh_tempo == '' ? '' : 'By: ROLBACK -' . $tampil->inv_tgl_jatuh_tempo,
+                        'disabled' => 'no',
+                    ]);
+                }
+            }
+        }
+
+        $data['inv_akun'] = '0';
+        $data['inv_cabar'] = '';
+        $data['inv_tgl_bayar'] = '';
+        $data['inv_status'] = $status;
+        Invoice::where('inv_id', $id)->update($data);
+
+
+        Registrasi::where('reg_idpel', $tampil->inv_idpel)->update([
+            'reg_status' => $status,
+        ]);
+
+        // dd($tampil->inv_idpel);
+        $notifikasi = array(
+            'pesan' => 'Berhasil melakukan Rollback',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.inv.sub_invoice', ['id' => $tampil->inv_id])->with($notifikasi);
+    }
+
     public function payment(Request $request, $id)
     {
         $nama_user = Auth::user()->name; #NAMA USER
