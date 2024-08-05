@@ -179,33 +179,29 @@
                             <div class="form-group row">
                               <label class=" col-sm-2 col-form-label">Status perangkat</label>
                             <div class="col-sm-4">
-                              <select type="text" name="reg_stt_perangkat" class="form-control" value="{{ Session::get('reg_stt_perangkat') }}" >
+                              <select type="text" name="sam_stt_perangkat" class="form-control" value="{{ Session::get('reg_stt_perangkat') }}" >
                                 <option value="DIPINJAMKAN">DIPINJAMKAN</option>
                                 <option value="MILIK PROBADI">MILIK PROBADI</option>
                               </select>
                             </div>
                             <label class="col-sm-2 col-form-label">Merk perangkat</label>
                             <div class="col-sm-4">
-                              <input type="text" name="reg_mrek" id="reg_mrek" class="form-control ont" value="{{ Session::get('reg_mrek') }}" readonly >
+                              <input type="text" name="sam_mrek" id="reg_mrek" class="form-control ont" value="{{ Session::get('reg_mrek') }}" readonly >
                             </div>
                             </div>
                             <div class="form-group row">
                               <label class="col-sm-2 col-form-label">Mac perangkat</label>
                               <div class="col-sm-4">
-                                <input type="text" name="reg_mac" id="reg_mac"  class="form-control ont" value="{{ Session::get('reg_mac') }}" readonly >
+                                <input type="text" name="sam_mac" id="reg_mac"  class="form-control ont" value="{{ Session::get('reg_mac') }}" readonly >
                               </div>
                               <label class=" col-sm-2 col-form-label" >SN perangkat</label>
                             <div class="col-sm-4">
-                              <input type="text" name="reg_sn" id="reg_sn" class="form-control ont" value="{{ Session::get('reg_sn') }}" readonly >
+                              <input type="text" name="sam_sn" id="reg_sn" class="form-control ont" value="{{ Session::get('reg_sn') }}" readonly >
                             </div>
                             </div>
                             <div class="form-group row">
                             <label class=" col-sm-2 col-form-label">Kode Barang</label>
                             <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" id="pactcore" value="1" name="pactcore" @if( Session::get('kode_pactcore')) checked @endif >
-                                <span class="form-check-sign">Pachtcore</span>
-                              </label>
                               <label class="form-check-label">
                                 <input class="form-check-input" type="checkbox" id="adaptor" value="1" name="adaptor" @if( Session::get('kode_adaptor')) checked @endif>
                                 <span class="form-check-sign">Adaptor</span>
@@ -216,32 +212,7 @@
                               </label>
                             </div>
                             </div>
-
-                             <!-- Modal Validasi Pactcore -->
-              <div class="modal fade" id="modal_pactcore" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE PACTCORE</h5>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi">
-                        <label class="col-sm-4 col-form-label">Kode Pactcore</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_pactcore" id="kode_pactcore" value="{{ Session::get('kode_pactcore') }}" class="form-control"  >
-                          <div id="notif"></div>
-                        </div>
-                      </div>
-                      <div id="note"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_pachcore">Close</button>
-                      <input class="btn btn-outline-secondary val_pachcore" value="Validasi"  type="button"></input>
-                      <div id="buton"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                            
               <!-- Modal Validasi adaptor -->
               <div class="modal fade" id="modal_adaptor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -302,7 +273,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
-                            <button type="submit" class="btn btn-primary">PEGATKEUN AYEUNA</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                           </form>
                         </div>
                       </div>

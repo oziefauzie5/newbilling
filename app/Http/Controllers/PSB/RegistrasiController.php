@@ -220,11 +220,13 @@ Diregistrasi Oleh : *' . $admin . '*
         $update_barang['subbarang_stok'] = '0';
         $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
         $update_barang['subbarang_admin'] = $admin;
+
         $update_pactcore['subbarang_status'] =  '1';
         $update_pactcore['subbarang_keluar'] = '1';
         $update_pactcore['subbarang_stok'] = '0';
         $update_pactcore['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
         $update_pactcore['subbarang_admin'] = $admin;
+
         $update_adaptor['subbarang_status'] =  '1';
         $update_adaptor['subbarang_keluar'] = '1';
         $update_adaptor['subbarang_stok'] = '0';
@@ -274,7 +276,7 @@ Diregistrasi Oleh : *' . $admin . '*
 
                     Registrasi::create($data);
                     InputData::where('id', $request->reg_idpel)->update($update);
-                    SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_pactcore);
+                    SubBarang::where('id_subbarang', $request->kode_pactcore)->update($update_pactcore);
                     SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
 
@@ -789,7 +791,7 @@ Diterima oleh: ' . $penerima->name . '
                         'service' => 'pppoe',
                         'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
                         'comment' => 'SK-' . $dates == '' ? '' : 'SK-' . $dates,
-                        'disabled' => 'yes',
+                        'disabled' => 'no',
                     ]);
 
 
@@ -839,6 +841,14 @@ Diterima oleh: ' . $penerima->name . '
                     $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
                     $pelanggan['reg_status'] = 'UNPAID';
                     $pelanggan['reg_progres'] = '5';
+
+                    $pelanggan['reg_kode_adaptor'] = $request->kode_adaptor;
+                    $pelanggan['reg_kode_ont'] = $request->kode_ont;
+
+                    $pelanggan['reg_mrek'] = $request->sam_mrek;
+                    $pelanggan['reg_stt_perangkat'] = $request->sam_stt_perangkat;
+                    $pelanggan['reg_mac'] = $request->sam_mac;
+                    $pelanggan['reg_sn'] = $request->sam_sn;
                     Registrasi::where('reg_idpel', $idpel)->update($pelanggan);
 
 
@@ -874,7 +884,7 @@ Diterima oleh: ' . $penerima->name . '
                     'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                     'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
                     'comment' => $query->reg_nama  == '' ? '' : $query->reg_nama,
-                    'disabled' => 'yes',
+                    'disabled' => 'no',
                 ]);
                 $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
                 $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
@@ -920,6 +930,14 @@ Diterima oleh: ' . $penerima->name . '
                 $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
                 $pelanggan['reg_status'] = 'UNPAID';
                 $pelanggan['reg_progres'] = '5';
+
+                $pelanggan['reg_kode_adaptor'] = $request->kode_adaptor;
+                $pelanggan['reg_kode_ont'] = $request->kode_ont;
+
+                $pelanggan['reg_mrek'] = $request->sam_mrek;
+                $pelanggan['reg_stt_perangkat'] = $request->sam_stt_perangkat;
+                $pelanggan['reg_mac'] = $request->sam_mac;
+                $pelanggan['reg_sn'] = $request->sam_sn;
                 Registrasi::where('reg_idpel', $idpel)->update($pelanggan);
 
 
