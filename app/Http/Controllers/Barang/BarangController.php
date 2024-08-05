@@ -64,6 +64,10 @@ class BarangController extends Controller
     }
     public function sub_barang(Request $request, $id)
     {
+
+        // SubBarang::where('subbarang_idbarang','512878')->where('subbarang_ktg','ONT')->update(['subbarang_idbarang'=>'442585']);
+        // dd('berhasil');
+
         $data['tittle'] = 'Sub Barang';
         $data['kategori'] = Kategori::all();
         $data['q'] = $request->query('q');

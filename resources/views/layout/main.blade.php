@@ -391,6 +391,11 @@
 											<span class="sub-item">Stok Voucher</span>
 										</a>
 									</li>
+									<li>
+										<a href="{{route('admin.vhc.titik_vhc')}}">
+											<span class="sub-item">Titik Voucher</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</li>

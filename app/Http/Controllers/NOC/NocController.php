@@ -14,11 +14,14 @@ use App\Models\Transaksi\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class NocController extends Controller
 {
     public function index(Request $request)
     {
+
+
         $month = Carbon::now()->addMonth(-0)->format('m');
         $bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
 
@@ -115,6 +118,7 @@ class NocController extends Controller
     public function pengecekan_put($id)
     {
         $noc_id = Auth::user()->id;
+
         Registrasi::where('reg_progres', '2')->where('reg_idpel', $id)->update(['reg_progres' => '3']);
         Teknisi::where('teknisi_idpel', $id)->where('teknisi_job', 'PSB')->where('teknisi_psb', '>', '0')->update(['teknisi_noc_userid' => $noc_id]);
 
@@ -123,6 +127,30 @@ class NocController extends Controller
             'alert' => 'success',
         );
         return redirect()->route('admin.noc.index')->with($notifikasi);
+    }
+    public function upload(Request $request, $id)
+    {
+        $noc_id = Auth::user()->id;
+        $admin = Auth::user()->name;
+        if ($photo = $request->file('file')) {
+            $photo = $request->file('file');
+            $filename = str_replace(" ", "-", $admin) . '-' . str_replace(" ", "-",  $request->pelanggan) . '-' . $photo->getClientOriginalName();
+            $path = 'photo-rumah/' . $filename;
+            Storage::disk('public')->put($path, file_get_contents($photo));
+            Registrasi::where('reg_progres', '2')->where('reg_idpel', $id)->update(['reg_img' => $filename]);
+            $notifikasi = array(
+                'pesan' => 'Upload Berhasil',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.noc.index')->with($notifikasi);
+        } else {
+
+            $notifikasi = array(
+                'pesan' => 'Upload gagal!',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.noc.index')->with($notifikasi);
+        }
     }
 
     #EDIT DATA PELANGGAN

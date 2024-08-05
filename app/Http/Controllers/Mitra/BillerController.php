@@ -170,6 +170,7 @@ class BillerController extends Controller
         $data['q'] = $request->query('q');
         $query_isolir = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('reg_progres', '=', '5')
             ->where('reg_status', '!=', 'PAID')
             ->whereDate('reg_tgl_jatuh_tempo', '<', $tagihan_kebelakang)
             ->orderBy('reg_tgl_jatuh_tempo', 'ASC')

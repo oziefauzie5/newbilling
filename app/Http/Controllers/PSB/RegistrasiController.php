@@ -163,11 +163,7 @@ class RegistrasiController extends Controller
         $data['reg_progres'] = '0';
         $update['input_maps'] =  $request->reg_maps;
         $update['input_status'] =  'REGIST';
-        $update_barang['subbarang_status'] =  '1';
-        $update_barang['subbarang_keluar'] = '1';
-        $update_barang['subbarang_stok'] = '0';
-        $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
-        $update_barang['subbarang_admin'] = $admin;
+
 
 
 
@@ -219,6 +215,22 @@ Diregistrasi Oleh : *' . $admin . '*
 
         Pesan::create($pesan_group);
 
+        $update_barang['subbarang_status'] =  '1';
+        $update_barang['subbarang_keluar'] = '1';
+        $update_barang['subbarang_stok'] = '0';
+        $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
+        $update_barang['subbarang_admin'] = $admin;
+        $update_pactcore['subbarang_status'] =  '1';
+        $update_pactcore['subbarang_keluar'] = '1';
+        $update_pactcore['subbarang_stok'] = '0';
+        $update_pactcore['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
+        $update_pactcore['subbarang_admin'] = $admin;
+        $update_adaptor['subbarang_status'] =  '1';
+        $update_adaptor['subbarang_keluar'] = '1';
+        $update_adaptor['subbarang_stok'] = '0';
+        $update_adaptor['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
+        $update_adaptor['subbarang_admin'] = $admin;
+
 
 
 
@@ -262,8 +274,8 @@ Diregistrasi Oleh : *' . $admin . '*
 
                     Registrasi::create($data);
                     InputData::where('id', $request->reg_idpel)->update($update);
-                    SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_barang);
-                    SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_barang);
+                    SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_pactcore);
+                    SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
 
 
@@ -300,9 +312,8 @@ Diregistrasi Oleh : *' . $admin . '*
                 ]);
                 // dd($request->reg_nama);
                 Registrasi::create($data);
-                InputData::where('id', $request->reg_idpel)->update($update);
-                SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_barang);
-                SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_barang);
+                SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_pactcore);
+                SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
                 SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
 
                 $notifikasi = array(
@@ -427,7 +438,6 @@ Diregistrasi Oleh : *' . $admin . '*
     public function print_berita_acara($id)
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
-        // dd($data['profile_perusahaan']->app_logo);
         $data['nama_admin'] = Auth::user()->name;
         $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
@@ -436,9 +446,6 @@ Diregistrasi Oleh : *' . $admin . '*
             ->where('registrasis.reg_idpel', $id)
             ->first();
         $seles = User::whereId($data['berita_acara']->input_sales)->first();
-
-        // dd($seles->name);
-
         if ($seles) {
             $data['seles'] = $seles->name;
         } else {
@@ -487,31 +494,19 @@ Diregistrasi Oleh : *' . $admin . '*
     }
     public function konfirm_pencairan(Request $request)
     {
-        // dd($request->idpel);
         $admin = Auth::user()->id;
         $nama_admin = Auth::user()->name;
         $biaya = SettingBiaya::first();
-        // dd($biaya->biaya_psb);
         $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
         $data['datapel'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->where('registrasis.reg_idpel', $request->idpel)
             ->first();
 
-
         $penerima = User::where('id', $request->penerima)->first();
         $sales = User::where('id', $data['datapel']->input_sales)->first();
 
-
-
-        // dd($data['datapel']->reg_teknisi_team . ' Penerima = ' . $penerima->name . ' Sales = ' . $sales->name);
-        // dd($data['datapel']->input_nama);
         $cek = Jurnal::where('jurnal_kategori', 'PSB')->where('jurnal_idpel', $request->idpel)->count();
         if ($cek < '1') {
-            $kode = Teknisi::where('teknisi_idpel', $request->idpel)->where('teknisi_status', '1')->where('teknisi_job', 'PSB')->first();
-            // dd($kode->teknisi_id);
-            $teknisi_update['teknisi_keuangan_userid'] = $admin;
-            $teknisi_update['teknisi_status'] = '2';
-            Teknisi::where('teknisi_id', $kode->teknisi_id)->update($teknisi_update);
 
 
 
@@ -589,6 +584,11 @@ Diterima oleh: ' . $penerima->name . '
             Pesan::create($pesan_personal);
             Registrasi::where('reg_progres', '4')->where('reg_idpel', $request->idpel)->update(['reg_progres' => '5']);
 
+            $kode = Teknisi::where('teknisi_idpel', $request->idpel)->where('teknisi_status', '1')->where('teknisi_job', 'PSB')->first();
+            // dd($kode->teknisi_id);
+            $teknisi_update['teknisi_keuangan_userid'] = $admin;
+            $teknisi_update['teknisi_status'] = '2';
+            Teknisi::where('teknisi_id', $kode->teknisi_id)->update($teknisi_update);
 
 
             $notifikasi = array(
@@ -609,10 +609,8 @@ Diterima oleh: ' . $penerima->name . '
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
         $data['biaya_sales'] = SettingBiaya::first();
-        // dd($data['profile_perusahaan']->app_logo);
         $data['nama_admin'] = Auth::user()->name;
         $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
-        // dd($teknisi);
         if ($teknisi) {
             $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'pakets.*', 'teknisis.*', 'teknisis.created_at as mulai',)
                 ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -626,20 +624,12 @@ Diterima oleh: ' . $penerima->name . '
             $update['reg_progres'] = '4';
             Registrasi::where('reg_idpel', $id)->update($update);
 
-
-
-
             $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
                 ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
                 ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-                // ->join('users', 'users.id', '=', 'input_data.input_sales')
                 ->where('registrasis.reg_idpel', $id)
                 ->first();
             $data['noc'] = User::whereId($data['kas']->teknisi_noc_userid)->first();
-
-            // dd($data['noc']);
-
-
 
 
             if ($data['kas']->input_sales) {
@@ -655,11 +645,6 @@ Diterima oleh: ' . $penerima->name . '
             ];
             return redirect()->route('admin.psb.index')->with($notifikasi);
         }
-
-        // dd($data['kas']);
-
-
-
 
         $nama = InputData::where('id', $id)->first();
         if ($nama) {
@@ -677,8 +662,6 @@ Diterima oleh: ' . $penerima->name . '
     {
         Excel::import(new RegistrasiImport(), $request->file('file'));
 
-        // $data['tgl_sekarang'] = Carbon::now()->toDateString();
-        // $data['tgl_jatuh_tempo'] =  Carbon::create('2024-04-3')->toDateString();
 
         $q = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
@@ -791,7 +774,7 @@ Diterima oleh: ' . $penerima->name . '
 
                     // CEK BARANG 
                     $cek_subbarang = SubBarang::where('subbarang_mac', $request->reg_mac)->first();
-                    $cek_suplier = supplier::where('supplier_nama', 'OVALL SOLUSINDO MANDIRI')->first();
+                    $cek_suplier = supplier::where('supplier_nama', 'ONT')->first();
                     if ($cek_subbarang) {
                         // JIKA ONT ADA 
                         $update_barang['subbarang_status'] = '0';
@@ -824,7 +807,7 @@ Diterima oleh: ' . $penerima->name . '
 
                             supplier::create([
                                 'id_supplier' => $id_supplier,
-                                'supplier_nama' => 'OVALL SOLUSINDO MANDIRI',
+                                'supplier_nama' => 'ONT',
                                 'supplier_alamat' => 'Jl. Tampomas Perum. Alam Tirta Lestari Blok D5 No 06',
                                 'supplier_tlp' => '081386987015',
                             ]);

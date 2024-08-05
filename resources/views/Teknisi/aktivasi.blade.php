@@ -60,7 +60,7 @@
               <div class="form-group">
                 <label >Upload Foto Rumah ( Tampak Depan )</label>
                 <input type="file" class="form-control-file" name="file" disabled>
-                <span class="text-danger" style="font-size: 12px">Fitur ini dalam pengembangan. Sementara kirim ke admin agar bisa pencairan PSB</span>
+                <span class="text-danger" style="font-size: 12px">Fitur ini dalam pengembangan. Sementara kirim ke Bapak Devi Septia Maulana untuk di upload, agar bisa pencairan PSB</span>
               </div>
  
               
@@ -96,7 +96,7 @@
  
             <div class="form-row m-1">
               <div class="col">
-                <a href="https://wa.me/6285158155520?text=Min"><button type="button" class="btn btn-success btn-block mb-2">Kirim Photo</button></a>
+                <a href="https://wa.me/6281563437262?text=Bang%20ini%20foto%20rumah%20si%20'.$data_aktivasi->input_nama.'%20ya."><button type="button" class="btn btn-success btn-block mb-2">Kirim Photo</button></a>
                 <button type="submit" class="btn btn-primary btn-block">Proses Aktivasi</button>
                 <button type="button" class="btn btn-primary btn-block">Kembali</button>
               </div>

@@ -182,7 +182,8 @@
                               <li class="list-group-item">No. Layanan   : {{$job_tiket->reg_nolayanan}}</li>
                               <li class="list-group-item">Nama   : {{$job_tiket->input_nama}}</li>
                              <li class="list-group-item">Alamat : {{$job_tiket->input_alamat_pasang}}</li>
-                             <li class="list-group-item"><a href="{{$job_tiket->input_maps}}" target="_blank"><button class="btn btn-primary btn-sm">Lihat Google Maps</button></a>&nbsp;&nbsp;<a href="https://wa.me/62{{$job_tiket->input_hp}}?text=Assalamualaikum" target="_blank"><button class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> &nbsp;&nbsp;Whatsapp</button></a> </li>                             <label for="barang" class=" col-form-label">DESKRIPSI</label>
+                             <li class="list-group-item"><a href="{{$job_tiket->input_maps}}" target="_blank"><button class="btn btn-primary btn-sm">Lihat Google Maps</button></a>&nbsp;&nbsp;<a href="https://wa.me/62{{$job_tiket->input_hp}}?text=Assalamualaikum" target="_blank"><button class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> &nbsp;&nbsp;Whatsapp</button></a>&nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#photo-tiket{{$job_tiket->reg_idpel}}"><i class="fas fa-home"></i> &nbsp;&nbsp;Lihat Rumah</button> </li>                             
+                             <label for="barang" class=" col-form-label">DESKRIPSI</label>
                             </ul>
                             <ul class="list-group">
                               <li class="list-group-item font-weight-bold">{{$job_tiket->tiket_judul}}  </li>
@@ -219,6 +220,26 @@
                       </div>
                     </div>
                   </div>
+                  <!-- Modal -->
+<div class="modal fade" id="photo-tiket{{$job_tiket->reg_idpel}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">FOTO RUMAH PELANGGAN</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img class="rounded mx-auto d-block" src="{{ asset('storage/photo-rumah/'.$job_tiket->reg_img) }}" width="300" alt="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
                 @endforeach
                 @foreach($data_pelanggan as $job)
                 <div class="col">
@@ -251,13 +272,13 @@
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body">photo-psb{{$job->reg_idpel}}
                             <label for="barang" class=" col-form-label">DATA LANGGANAN</label>
                             <ul class="list-group">
                              <li class="list-group-item">No. Layanan   : {{$job->reg_nolayanan}}</li>
                              <li class="list-group-item">Nama   : {{$job->input_nama}}</li>
                              <li class="list-group-item">Alamat : {{$job->input_alamat_pasang}}</li>
-                             <li class="list-group-item"><a href="{{$job->input_maps}}" target="_blank"><button class="btn btn-primary btn-sm">Lihat Google Maps</button></a>&nbsp;&nbsp;<a href="https://wa.me/62{{$job->input_hp}}?text=Assalamualaikum" target="_blank"><button class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> &nbsp;&nbsp;Whatsapp</button></a> </li>
+                             <li class="list-group-item"><a href="{{$job->input_maps}}" target="_blank"><button class="btn btn-primary btn-sm">Lihat Google Maps</button></a>&nbsp;&nbsp;<a href="https://wa.me/62{{$job->input_hp}}?text=Assalamualaikum" target="_blank"><button class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> &nbsp;&nbsp;Whatsapp</button></a>&nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#photo-psb{{$job_psb->reg_idpel}}"><i class="fas fa-home"></i> &nbsp;&nbsp;Lihat Rumah</button> </li>
                             <li class="list-group-item">Sales : {{$job->input_sales}}</li>
                             <li class="list-group-item">Sub Sales : {{$job->input_subseles}}</li>
                             </ul>
@@ -297,6 +318,26 @@
                       </div>
                     </div>
                   </div>
+                  <!-- Modal -->
+<div class="modal fade" id="photo-psb{{$job->reg_idpel}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">FOTO RUMAH PELANGGAN</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img class="rounded mx-auto d-block" src="{{ asset('storage/photo-rumah/'.$job_tiket->reg_img) }}" width="300" alt="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
                 @endforeach
             </section>
 

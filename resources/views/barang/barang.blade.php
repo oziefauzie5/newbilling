@@ -7,6 +7,7 @@
       <div class="card">
           <div class="card-body">
           
+          @role('admin')
             <form >
           <div class="row">
             <div class="col-6">
@@ -19,7 +20,8 @@
               <button type="submit" class="btn btn-dark btn-sm mb-3 btn-block">Cari</button>
             </div>
           </div>
-        </form>
+            </form>
+          @endrole
           <hr>
            <div class="table-responsive">
             <table id="input_data" class="display table table-striped table-hover text-nowrap" >                          <thead>
@@ -248,8 +250,8 @@
                       <option value="ONT">ONT</option>
                         <option value="DROPCORE">DROPCORE</option>
                         <option value="PACTCORE">PACTCORE</option>
-                        <option value="PIG8 2 CORE">PIG8 2 CORE</option>
-                        <option value="PIG8 >2 CORE">PIG8 >2 CORE</option>
+                        <option value="TALI TIES">TALI TIES</option>
+                        <option value="KLEM KABEL">KLEM KABEL</option>
                         <option value="ARMORE">ARMORE</option>
                         <option value="ADSS">ADSS</option>
                         <option value="SPLITER">SPLITER</option>

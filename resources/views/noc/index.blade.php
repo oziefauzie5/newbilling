@@ -72,13 +72,59 @@
                     </button></a>
                     @if($d->reg_progres == '2')
                       <a href="{{route('admin.noc.pengecekan',['id'=>$d->reg_idpel])}}" target="_blank">
-                      <button type="button" class="btn btn-link btn-dark">
-                        Cek
+                      <button type="button" class="btn btn-block btn-info btn-sm">
+                        Cek Router
                       </button></a>
+                      @if($d->reg_img);
                       <a href="{{route('admin.noc.pengecekan_put',['id'=>$d->reg_idpel])}}">
-                      <button type="button" class="btn btn-link btn-dark">
-                        Done
-                      </button></a>
+                        <button type="button" class="btn btn-block btn-success btn-sm">
+                          Done
+                        </button></a>
+                      @else
+                      <button type="button" class="btn btn-block btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+                        Upload Foto
+                      </button>
+
+                          <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Upload Foto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.noc.upload',['id'=>$d->reg_idpel])}}" method="post" enctype="multipart/form-data"> 
+          @csrf
+          @method('PUT')
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label>Nama Pelanggan</label>
+                <input type="text" class="form-control" name="pelanggan"placeholder="Nama Lengkap" value="{{ $d->input_nama }}" required>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group">
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" name="file">
+                  <label class="custom-file-label" >Pilih File</label>
+                </div>              </div>
+         
+            </div>
+          </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+                          @endif
                       @endif
                     </div>
                   </td>

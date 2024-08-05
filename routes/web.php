@@ -7,6 +7,7 @@ use App\Http\Controllers\Barang\KategoriController;
 use App\Http\Controllers\Barang\SupplierControoler;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Hotspot\HotspotController;
+use App\Http\Controllers\Hotspot\TitikvhcController;
 use App\Http\Controllers\Mitra\BillerController;
 use App\Http\Controllers\Mitra\MitraController;
 use App\Http\Controllers\NOC\NocController;
@@ -85,6 +86,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/router/{id}/{idmik}/kick', [RouterController::class, 'kick_hotspot'])->name('router.kick_hotspot')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     Route::post('/router/paket/vhc', [PaketVoucherController::class, 'store'])->name('router.vhc.store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/router/titik-vhc', [TitikvhcController::class, 'titik_vhc'])->name('vhc.titik_vhc')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/router/titik-vhc-regist', [TitikvhcController::class, 'regist_titik'])->name('vhc.regist_titik')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/router/titik-vhc-store', [TitikvhcController::class, 'store_titik'])->name('vhc.store_titik')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     Route::get('/router/paket', [PaketController::class, 'index'])->name('router.paket.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/router/create', [PaketController::class, 'create'])->name('router.paket.create')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -97,6 +101,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/noc', [NocController::class, 'index'])->name('noc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/{id}/Pengecekan', [NocController::class, 'pengecekan'])->name('noc.pengecekan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/{id}/Pengecekan-Done', [NocController::class, 'pengecekan_put'])->name('noc.pengecekan_put')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/noc/{id}/upload', [NocController::class, 'upload'])->name('noc.upload')->middleware(['role:admin|NOC|STAF ADMIN']);
 
 
     Route::get('/hotspot', [HotspotController::class, 'index'])->name('vhc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
