@@ -98,6 +98,15 @@ class BarangController extends Controller
         $data['kategori'] = Kategori::all();
         $data['q'] = $request->query('q');
         $data['status'] = $request->query('status');
+        if ($data['status'] == 'Belum Terpakai') {
+            $nilai = '<';
+            $value = '1';
+        } elseif ($data['status'] == 'Terpakai') {
+            $nilai = '>';
+            $value = '0';
+        } else {
+            $nilai = '=';
+        }
         $query = SubBarang::join('barangs', 'barangs.id_barang', '=', 'sub_barangs.subbarang_idbarang')
             ->join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
             ->orderBy('subbarang_nama', 'ASC', 'subbarang_tgl_masuk', 'ASC')
@@ -109,7 +118,7 @@ class BarangController extends Controller
             });
 
         if ($data['status'])
-            $query->where('subbarang_status', '=', $data['status']);
+            $query->where('sub_barangs.subbarang_status', $nilai, $value);
 
 
         $data['SubBarang'] = $query->paginate(20);
