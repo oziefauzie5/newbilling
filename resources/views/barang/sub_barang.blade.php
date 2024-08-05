@@ -18,7 +18,7 @@
                       <button type="submit" class="btn btn-dark btn-sm mb-3 btn-block">Cari</button>
                     </div>
                   </div>
-                   </div>
+                  
                   </form>
                   <div class="table-responsive">
                     <table class="display table table-striped table-hover text-nowrap" >  
@@ -224,7 +224,6 @@
                       @endforeach
                   </tbody>
                 </table>
-                </div>
                 <div class="pull-left">
                   Showing
                   {{$SubBarang->firstItem()}}
@@ -237,9 +236,11 @@
                 <div class="pull-right">
                   {{ $SubBarang->withQueryString()->links('pagination::bootstrap-4') }}
                 </div>
-    
-                </div>
               </div>
+              
+            </div>
+            
+            </div>
             </div>
         </div>
       </div>
