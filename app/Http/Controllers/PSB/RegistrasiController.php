@@ -719,6 +719,228 @@ Diterima oleh: ' . $penerima->name . '
         return redirect()->route('admin.psb.index')->with($notifikasi);
     }
 
+    public function sambung_kembali(Request $request, $idpel)
+    {
+
+        $swaktu = SettingWaktuTagihan::first();
+        $admin = Auth::user()->name;
+        $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('reg_idpel', $idpel)->first();
+
+
+        $dates = Carbon::now()->toDateTimeString();
+        $tanggal = Carbon::now()->toDateString();
+        // $tgl_aktif = date('d/m/Y', strtotime($dates));
+        $tgl_pasang = Carbon::create($tanggal)->addDay(1)->toDateString();
+        $inv_tgl_isolir1blan = Carbon::create($tanggal)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+        $tagihan_tanpa_ppn = $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik;
+        $periode1blan = Carbon::create($tanggal)->toDateString() . ' - ' . Carbon::create($tanggal)->addMonth(1)->toDateString();
+
+
+        $update_barang['subbarang_status'] =  '1';
+        $update_barang['subbarang_keluar'] = '1';
+        $update_barang['subbarang_stok'] = '0';
+        $update_barang['subbarang_keterangan'] = 'SAMBUNG KEMBLI ' . $query->input_nama;
+        $update_barang['subbarang_admin'] = $admin;
+        $update_adaptor['subbarang_status'] =  '1';
+        $update_adaptor['subbarang_keluar'] = '1';
+        $update_adaptor['subbarang_stok'] = '0';
+        $update_adaptor['subbarang_keterangan'] = 'SAMBUNG KEMBLI ' . $query->input_nama;
+        $update_adaptor['subbarang_admin'] = $admin;
+
+
+
+
+
+        $ip =   $query->router_ip . ':' . $query->router_port_api;
+        $user = $query->router_username;
+        $pass = $query->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
+
+        if ($query->reg_layanan == 'PPP') {
+
+            if ($API->connect($ip, $user, $pass)) {
+                $API->comm('/ip/pool/add', [
+                    'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
+                    'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
+                ]);
+                $API->comm('/ppp/profile/add', [
+                    'name' =>  $query->paket_nama == '' ? '' : $query->paket_nama,
+                    'rate-limit' => $query->paket_nama == '' ? '' : $query->paket_nama,
+                    'local-address' => $query->paket_lokal == '' ? '' : $query->paket_lokal,
+                    'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
+                    'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                    'queue-type' => 'default-small' == '' ? '' : 'default-small',
+                    'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
+                    'disabled' => 'no',
+                    'only-one' => 'yes',
+                ]);
+
+                $profile = $API->comm('/ppp/profile/print', [
+                    '?name' => $query->paket_nama,
+                ]);
+                if ($profile) {
+                    $API->comm('/ppp/secret/add', [
+                        'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                        'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                        'service' => 'pppoe',
+                        'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                        'comment' => 'SK-' . $dates == '' ? '' : 'SK-' . $dates,
+                        'disabled' => 'yes',
+                    ]);
+
+
+
+
+                    $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
+                    $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
+                    $inv['inv_tgl_tagih'] = $tanggal;
+                    $inv['inv_tgl_jatuh_tempo'] = $tanggal;
+                    $inv['inv_periode'] = $periode1blan;
+                    $inv['inv_tgl_pasang'] = $tanggal;
+                    $inv['inv_status'] = 'UNPAID';
+                    $inv['inv_idpel'] = $query->reg_idpel;
+                    $inv['inv_nolayanan'] = $query->reg_nolayanan;
+                    $inv['inv_nama'] = $query->input_nama;
+                    $inv['inv_jenis_tagihan'] = $query->reg_jenis_tagihan;
+                    $inv['inv_profile'] = $query->paket_nama;
+                    $inv['inv_mitra'] = 'SYSTEM';
+                    $inv['inv_kategori'] = 'OTOMATIS';
+                    $inv['inv_diskon'] = '0';
+                    $inv['inv_note'] = $query->input_nama;
+
+
+
+                    $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
+                    $sub_inv['subinvoice_status'] = '0';
+                    $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                    $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                    $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                    $sub_inv['subinvoice_qty'] = '1';
+
+                    $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
+                    if ($cek_inv) {
+                        $inv['inv_id'] = $cek_inv->inv_id;
+                        $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                        Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
+                        SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
+                    } else {
+                        $inv['inv_id'] = rand(10000, 19999);
+                        $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                        Invoice::create($inv);
+                        SubInvoice::create($sub_inv);
+                    }
+
+
+                    $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                    $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                    $pelanggan['reg_status'] = 'UNPAID';
+                    $pelanggan['reg_progres'] = '5';
+                    Registrasi::where('reg_idpel', $idpel)->update($pelanggan);
+
+
+                    SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
+                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+
+
+                    $notifikasi = array(
+                        'pesan' => 'Berhasil menambahkan pelanggan',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.psb.index')->with($notifikasi);
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Gagal menambah pelanggan..Paket Tidak tersedia pada router',
+                        'alert' => 'error',
+                    );
+                    return redirect()->route('admin.psb.index')->with($notifikasi);
+                }
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.index')->with($notifikasi);
+            }
+        } elseif ($request->reg_layanan == 'HOTSPOT') {
+
+
+            if ($API->connect($ip, $user, $pass)) {
+                $API->comm('/ip/hotspot/user/add', [
+                    'name' => $query->reg_username == '' ? '' : $query->reg_username,
+                    'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+                    'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+                    'comment' => $query->reg_nama  == '' ? '' : $query->reg_nama,
+                    'disabled' => 'yes',
+                ]);
+                $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
+                $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
+                $inv['inv_tgl_tagih'] = $tanggal;
+                $inv['inv_tgl_jatuh_tempo'] = $tanggal;
+                $inv['inv_periode'] = $periode1blan;
+                $inv['inv_tgl_pasang'] = $tanggal;
+                $inv['inv_status'] = 'UNPAID';
+                $inv['inv_idpel'] = $query->reg_idpel;
+                $inv['inv_nolayanan'] = $query->reg_nolayanan;
+                $inv['inv_nama'] = $query->input_nama;
+                $inv['inv_jenis_tagihan'] = $query->reg_jenis_tagihan;
+                $inv['inv_profile'] = $query->paket_nama;
+                $inv['inv_mitra'] = 'SYSTEM';
+                $inv['inv_kategori'] = 'OTOMATIS';
+                $inv['inv_diskon'] = '0';
+                $inv['inv_note'] = $query->input_nama;
+
+
+
+                $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
+                $sub_inv['subinvoice_status'] = '0';
+                $sub_inv['subinvoice_harga'] = $query->reg_harga;
+                $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+                $sub_inv['subinvoice_total'] = $inv['inv_total'];
+                $sub_inv['subinvoice_qty'] = '1';
+
+                $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
+                if ($cek_inv) {
+                    $inv['inv_id'] = $cek_inv->inv_id;
+                    $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                    Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
+                    SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
+                } else {
+                    $inv['inv_id'] = rand(10000, 19999);
+                    $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                    Invoice::create($inv);
+                    SubInvoice::create($sub_inv);
+                }
+
+
+                $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
+                $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+                $pelanggan['reg_status'] = 'UNPAID';
+                $pelanggan['reg_progres'] = '5';
+                Registrasi::where('reg_idpel', $idpel)->update($pelanggan);
+
+
+                SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+
+                $notifikasi = array(
+                    'pesan' => 'Berhasil menambahkan pelanggan',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.index')->with($notifikasi);
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.index')->with($notifikasi);
+            }
+        }
+    }
+
     public function putus_berlanggan(Request $request, $idpel)
     {
         $nama_admin = Auth::user()->name;

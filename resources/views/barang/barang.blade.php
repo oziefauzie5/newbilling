@@ -7,11 +7,15 @@
       <div class="card">
           <div class="card-body">
           
-          @role('admin')
             <form >
-          <div class="row">
-            <div class="col-6">
+              <div class="row">
+            @role('admin')
+            <div class="col">
               <button class="btn btn-primary btn-sm mb-3 btn-block" type="button" data-toggle="modal" data-target="#add">Tambah Barang</button>
+            </div>
+            @endrole
+            <div class="col">
+              <button class="btn btn-primary btn-sm mb-3 btn-block" type="button" data-toggle="modal" data-target="#barang_keluar">Keluar Barang</button>
             </div>
             <div class="col-4">
               <input type="text" class="form-control form-control-sm" name="q" placeholder="Kode Barang, Mac Address," >
@@ -21,7 +25,6 @@
             </div>
           </div>
             </form>
-          @endrole
           <hr>
            <div class="table-responsive">
             <table id="input_data" class="display table table-striped table-hover text-nowrap" >                          <thead>
@@ -220,6 +223,81 @@
       </div>
     </div>
   </div>
+{{-- ----------------------------------------------------------MODAL ADD BARANG------------------------------------------------------- --}}
+  <div class="modal fade" id="barang_keluar" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Tambah Barang Keluar</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form method="post" action="{{ route('admin.barang.store') }}" >
+                @csrf
+                @method('POST')
+                <div class="form-row">
+                <div class="col">
+                    <label for="">Nama Barang<strong class="text-danger">*</strong></label>
+                    <input type="text" class="form-control" name="nama_barang"  data-toggle="modal" data-target="#cari_data">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col">
+                    <label for="">Dipergunakan untuk :</label>
+                    <textarea class="form-control" name="reg_catatan" rows="5"></textarea>
+                  </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {{-- MODAL CARI DATA  --}}
+<div class="modal fade" id="cari_data" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title" id="staticBackdropLabel">Cari Data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table id="pilih_barang" class="display table table-striped table-hover text-nowrap" >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>NAMA BARANG</th>
+                <th>STOK</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($sub_barang as $d)
+              <tr id="{{$d->id_subbarang}}">
+                <td>{{$d->id_subbarang}}</td>
+                <td>{{$d->subbarang_nama}}</td>
+                <td>{{$d->subbarang_stok}}</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-sm">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

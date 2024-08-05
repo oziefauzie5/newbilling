@@ -108,6 +108,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
     Route::get('/pelanggan', [PsbController::class, 'index'])->name('psb.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/putus-langganan', [PsbController::class, 'listputus_langganan'])->name('psb.listputus_langganan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/pelanggan/sambung-kembali/{idpel}', [RegistrasiController::class, 'sambung_kembali'])->name('psb.sambung_kembali')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/List-Input-Data', [PsbController::class, 'list_input'])->name('psb.list_input')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/Validasi/{ktp}', [PsbController::class, 'storeValidateKtp'])->name('psb.storeValidateKtp')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/Input-Data', [PsbController::class, 'store'])->name('psb.store')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -169,6 +170,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/barang/Hapus-sub-barang/{id}', [BarangController::class, 'destroy_subbarang'])->name('barang.destroy_subbarang')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/barang/input-subbarang/{id}', [BarangController::class, 'input_subbarang'])->name('barang.input_subbarang')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/barang/Print-Kode/{id}', [BarangController::class, 'print_kode_barang'])->name('barang.print_kode')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/barang/pilih/{id}', [BarangController::class, 'pilih_barang'])->name('barang.pilih_barang')->middleware(['role:admin|STAF ADMIN']);
 
     Route::get('/teknisi', [TeknisiController::class, 'index'])->name('teknisi.index')->middleware(['role:TEKNISI']);
     Route::post('/teknisi/job', [TeknisiController::class, 'job'])->name('teknisi.job')->middleware(['role:TEKNISI']);

@@ -60,8 +60,17 @@ class BarangController extends Controller
             ->orderBy('barangs.created_at', 'DESC');
         $data['barang'] = $query->get();
 
+        $data['sub_barang'] = SubBarang::where('subbarang_status', '0')->get();
+
         return view('barang/barang', $data);
     }
+
+    public function pilih_barang($id)
+    {
+        $data['tampil_data'] =  SubBarang::where('id_subbarang', $id)->first();
+        return response()->json($data);
+    }
+
     public function sub_barang(Request $request, $id)
     {
 

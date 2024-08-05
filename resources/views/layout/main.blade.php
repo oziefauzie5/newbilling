@@ -953,9 +953,7 @@ $('.checkboxClass').change(function () {
 // END CHECKBOX PPN #REGISTRASI
 
 //  pilih registrasi
-$(function(){ //jQuery shortcut for .ready (ensures DOM ready)
-//  $('.pilih').click(function(){
-//   var idpel = (this.id);
+$(function(){ 
   var table = $('#input_data').DataTable(); $('#input_data tbody').on( 'click', 'tr', function () 
 			{  
 			var idpel = table.row( this ).id();
@@ -982,6 +980,37 @@ url = url.replace(':id', idpel);
 								document.getElementById("tampil_tgl").value =data['tampil_data']['input_tgl'];
 								document.getElementById("tampil_subsales").value =data['tampil_data']['input_subseles'];
 								document.getElementById("tampil_keterangan").value =data['tampil_data']['input_keterangan'];
+								
+                        } else {
+							
+                        }
+                    }
+                });
+ });
+});
+//  cari barang
+$(function(){ 
+  var table = $('#cari_barang').DataTable(); $('#cari_barang tbody').on( 'click', 'tr', function () 
+			{  
+			var idpel = table.row( this ).id();
+  var url = '{{ route("admin.barang.pilih_barang", ":id") }}';
+url = url.replace(':id', idpel);
+
+console.log(idpel);
+  $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+						
+						if (data) {
+							$("#cari_data").modal('hide');
+							document.getElementById("tampil_hp").value =data['tampil_data']['input_hp'];
+							document.getElementById("tampil_alamat_pasang").value =data['tampil_data']['input_alamat_pasang'];
+							document.getElementById("tampil_idpel").value =data['tampil_data']['id'];
 								
                         } else {
 							
