@@ -12,9 +12,10 @@
                   <form action="">
                    <div class="row">
                     <div class="col-4">
-                     <select name="status" class="form-control form-control-sm" id="">
-                      <option value="0">Terpakai</option>
-                      <option value="1">Belum Terpakai</option>
+                     <select name="status" class="form-control form-control-sm" >
+                      <option value="">All Status</option>
+                      <option value="0">Belum Terpakai</option>
+                      <option value="1">Terpakai</option>
                      </select>
                     </div>
                     <div class="col-4">
