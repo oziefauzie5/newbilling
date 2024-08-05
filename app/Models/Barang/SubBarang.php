@@ -22,6 +22,7 @@ class SubBarang extends Model
         'subbarang_mac',
         'subbarang_status',
         'subbarang_tgl_masuk',
+        'subbarang_tgl_keluar',
         'subbarang_admin',
     ];
 }

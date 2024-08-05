@@ -342,6 +342,7 @@ class TeknisiController extends Controller
 
                         $update_barang['subbarang_keluar'] = $barang->subbarang_keluar + $request->total;
                         $update_barang['subbarang_stok'] = $barang->subbarang_stok - $request->total;
+                        $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
                         $pelanggan['reg_progres'] = '2';
                         $pelanggan['reg_fat'] = $request->fat;
@@ -594,6 +595,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
 
                         $update_barang['subbarang_keluar'] = $barang->subbarang_keluar + $request->total;
                         $update_barang['subbarang_stok'] = $barang->subbarang_stok - $request->total;
+                        $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
                         $pelanggan['reg_progres'] = '2';
                         $pelanggan['reg_fat'] = $request->fat;
@@ -773,6 +775,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
             $update_adaptor['subbarang_keluar'] = '1';
             $update_adaptor['subbarang_stok'] = '0';
             $update_adaptor['subbarang_keterangan'] = ' Ganti Pactcore ' . $tiket->input_nama;
+            $update_adaptor['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
             SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
         }
@@ -781,6 +784,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
             $update_pactcore['subbarang_keluar'] = '1';
             $update_pactcore['subbarang_stok'] = '0';
             $update_pactcore['subbarang_keterangan'] = ' Ganti Pactcore ' . $tiket->input_nama;
+            $update_pactcore['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
             SubBarang::where('id_subbarang', $request->kode_pactcore)->update($update_pactcore);
         }
@@ -795,7 +799,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                 $update_barang['subbarang_keluar'] = '1';
                 $update_barang['subbarang_stok'] = '0';
                 $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $request->kode_ont_lama . ' Pel. ' . $tiket->input_nama . ' Karna Rusak. ( ' . $request->keterangan . ' )';
-
+                $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
                 $update_barang_lama['subbarang_keterangan'] = $request->alasan . ' ' . $request->keterangan;
                 $update_barang_lama['subbarang_stok'] = '0';
                 $update_barang_lama['subbarang_status'] = '1';
@@ -812,6 +816,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                 $update_barang['subbarang_keluar'] = '1';
                 $update_barang['subbarang_stok'] = '0';
                 $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $request->kode_ont_lama . ' Pel. ' . $tiket->input_nama . '. ( ' . $request->keterangan . ' )';
+                $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
                 $update_barang_lama['subbarang_status'] = '0';
                 $update_barang_lama['subbarang_keluar'] = '0';
                 $update_barang_lama['subbarang_stok'] = '1';
@@ -827,6 +832,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                 $update_barang['subbarang_status'] = '1';
                 $update_barang['subbarang_keluar'] = '1';
                 $update_barang['subbarang_stok'] = '0';
+                $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
                 $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $request->kode_ont_lama . ' Pel. ' . $tiket->input_nama . '. ( ' . $request->keterangan . ' )';
                 $update_barang_lama['subbarang_status'] = '0';

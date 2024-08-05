@@ -252,31 +252,31 @@
                 <div id="div_cari_barang" style="display:none;">
                 <div class="form-row ">
                 <div class="col">
-                    <label for="">Nama Barang<strong class="text-danger">*</strong></label>
+                    <label for="">Nama Barang</label>
                     <input type="text" class="form-control" id="nama_barang" readonly>
                     </div>
                   </div>
                 <div class="form-row">
                 <div class="col">
-                    <label for="">ID<strong class="text-danger">*</strong></label>
+                    <label for="">ID</label>
                     <input type="text" class="form-control" id="subbarang_idbarang" name="subbarang_idbarang"  readonly>
                     </div>
                 <div class="col">
-                    <label for="">Stok<strong class="text-danger">*</strong></label>
+                    <label for="">Stok</label>
                     <input type="text" class="form-control" id="subbarang_stok"  readonly>
                     </div>
                 <div class="col">
-                    <label for="">Kategori<strong class="text-danger">*</strong></label>
+                    <label for="">Kategori</label>
                     <input type="text" class="form-control" id="subbarang_ktg"  readonly>
                     </div>
                   </div>
                 <div class="form-row" id="div_ont" style="display:none;">
                 <div class="col">
-                    <label for="">Mac Address<strong class="text-danger">*</strong></label>
+                    <label for="">Mac Address</label>
                     <input type="text" class="form-control" id="subbarang_mac" readonly>
                     </div>
                 <div class="col">
-                    <label for="">Serial Number<strong class="text-danger">*</strong></label>
+                    <label for="">Serial Number</label>
                     <input type="text" class="form-control" id="subbarang_sn" readonly>
                     </div>
                   </div>
@@ -284,7 +284,7 @@
                 <div class="form-row">
                   <div class="col">
                     <label for="">Deskripsi :</label>
-                    <textarea class="form-control" rows="5" id="subbarang_keterangan" readonly></textarea>
+                    <textarea class="form-control" rows="5" id="subbarang_keterangan" disabled></textarea>
                   </div>
                 </div>
                 <div class="form-row">

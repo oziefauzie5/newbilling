@@ -8,6 +8,7 @@ use App\Models\Barang\Barang;
 use App\Models\Barang\SubBarang;
 use App\Models\Barang\Kategori;
 use App\Models\Barang\supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -72,16 +73,19 @@ class BarangController extends Controller
     }
     public function barang_keluar(Request $request)
     {
-        $data['subbarang_stok'] = '0';
-        $data['subbarang_status'] = '1';
-        $data['subbarang_keluar'] = '1';
-        $data['subbarang_keterangan'] = $request->subbarang_keterangan;
-        $data =  SubBarang::where('id_subbarang', $request->id_subbarang)->update($data);
-        $notifikasi = [
-            'pesan' => 'Berhasil',
-            'alert' => 'success',
-        ];
-        return redirect()->route('admin.barang.sub_barang', ['id' => $request->subbarang_idbarang])->with($notifikasi);
+        if ($request->id_subbarang) {
+            $data['subbarang_stok'] = '0';
+            $data['subbarang_status'] = '1';
+            $data['subbarang_keluar'] = '1';
+            $data['subbarang_keterangan'] = $request->subbarang_keterangan;
+            $data['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+            $data =  SubBarang::where('id_subbarang', $request->id_subbarang)->update($data);
+            $notifikasi = [
+                'pesan' => 'Berhasil',
+                'alert' => 'success',
+            ];
+            return redirect()->route('admin.barang.sub_barang', ['id' => $request->subbarang_idbarang])->with($notifikasi);
+        }
     }
 
     public function sub_barang(Request $request, $id)

@@ -220,18 +220,21 @@ Diregistrasi Oleh : *' . $admin . '*
         $update_barang['subbarang_stok'] = '0';
         $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
         $update_barang['subbarang_admin'] = $admin;
+        $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
         $update_pactcore['subbarang_status'] =  '1';
         $update_pactcore['subbarang_keluar'] = '1';
         $update_pactcore['subbarang_stok'] = '0';
         $update_pactcore['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
         $update_pactcore['subbarang_admin'] = $admin;
+        $update_pactcore['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
         $update_adaptor['subbarang_status'] =  '1';
         $update_adaptor['subbarang_keluar'] = '1';
         $update_adaptor['subbarang_stok'] = '0';
         $update_adaptor['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
         $update_adaptor['subbarang_admin'] = $admin;
+        $update_adaptor['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
 
 
@@ -746,11 +749,13 @@ Diterima oleh: ' . $penerima->name . '
         $update_barang['subbarang_stok'] = '0';
         $update_barang['subbarang_keterangan'] = 'SAMBUNG KEMBLI ' . $query->input_nama;
         $update_barang['subbarang_admin'] = $admin;
+        $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
         $update_adaptor['subbarang_status'] =  '1';
         $update_adaptor['subbarang_keluar'] = '1';
         $update_adaptor['subbarang_stok'] = '0';
         $update_adaptor['subbarang_keterangan'] = 'SAMBUNG KEMBLI ' . $query->input_nama;
         $update_adaptor['subbarang_admin'] = $admin;
+        $update_adaptor['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
 
 
@@ -1023,6 +1028,9 @@ Diterima oleh: ' . $penerima->name . '
                         $update_barang['subbarang_mac'] = $request->reg_mac;
                         $update_barang['subbarang_keterangan'] = $keterangan;
                         $update_barang['subbarang_admin'] = $nama_admin;
+                        $update_barang['subbarang_tgl_masuk'] = $tgl;
+
+
 
                         SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
 
@@ -1195,6 +1203,7 @@ Diterima oleh: ' . $penerima->name . '
                     $update_barang['subbarang_mac'] = $request->reg_mac;
                     $update_barang['subbarang_keterangan'] = $keterangan;
                     $update_barang['subbarang_admin'] = $nama_admin;
+                    $update_barang['subbarang_tgl_masuk'] = $tgl;
                     SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
 
                     SubBarang::create(
