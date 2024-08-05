@@ -195,29 +195,6 @@ class RegistrasiApiController extends Controller
         $periode = Carbon::create($request->reg_tgl_jatuh_tempo)->toDateString() . ' - ' . Carbon::create($request->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
 
 
-
-
-        // $month_before = date('m', strtotime(Carbon::now()));
-        // $month_after = date('m', strtotime($request->reg_tgl_jatuh_tempo));
-
-        // $tanggal_before = new DateTime($query->reg_tgl_jatuh_tempo);
-        // $tanggal_after = new DateTime($request->reg_tgl_jatuh_tempo);
-        // $jarak = $tanggal_after->diff($tanggal_before);
-        // dd($jarak->days);
-
-        // if ($month_before == $month_after) {
-
-
-
-
-        //     dd('rubah tanggal berhasil');
-        // } else {
-        //     dd('rubah tanggal tidak bisa berbeda bulan');
-        // }
-        // dd('los');
-
-
-
         $ip =   $query->router_ip . ':' . $query->router_port_api;
         $user = $query->router_username;
         $pass = $query->router_password;
@@ -278,6 +255,19 @@ class RegistrasiApiController extends Controller
                                 // dd($update_subinv);
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
+                            } else {
+                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+
+                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                $update_inv['inv_periode'] = $periode;
+                                $update_subinv['subinvoice_deskripsi'] = $periode;
+                                // dd($update_subinv);
+                                SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
+                                Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             }
                         }
                         $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -330,6 +320,19 @@ class RegistrasiApiController extends Controller
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
                                 $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                                 $update_subinv['subinvoice_deskripsi'] = $periode;
+                                SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
+                                Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
+                            } else {
+                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+
+                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                $update_inv['inv_periode'] = $periode;
+                                $update_subinv['subinvoice_deskripsi'] = $periode;
+                                // dd($update_subinv);
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             }
@@ -407,6 +410,19 @@ class RegistrasiApiController extends Controller
                             $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
                             $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                             $update_subinv['subinvoice_deskripsi'] = $periode;
+                            SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
+                            Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
+                        } else {
+                            $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                            $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+
+                            $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                            $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                            $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                            $update_inv['inv_periode'] = $periode;
+                            $update_subinv['subinvoice_deskripsi'] = $periode;
+                            // dd($update_subinv);
                             SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                             Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                         }
@@ -487,6 +503,19 @@ class RegistrasiApiController extends Controller
                                 $update_subinv['subinvoice_deskripsi'] = $periode;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
+                            } else {
+                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+
+                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                $update_inv['inv_periode'] = $periode;
+                                $update_subinv['subinvoice_deskripsi'] = $periode;
+                                // dd($update_subinv);
+                                SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
+                                Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             }
                         }
                         $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -544,6 +573,19 @@ class RegistrasiApiController extends Controller
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
                                 $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                                 $update_subinv['subinvoice_deskripsi'] = $periode;
+                                SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
+                                Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
+                            } else {
+                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+
+                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                $update_inv['inv_periode'] = $periode;
+                                $update_subinv['subinvoice_deskripsi'] = $periode;
+                                // dd($update_subinv);
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             }

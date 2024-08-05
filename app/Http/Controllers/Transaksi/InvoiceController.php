@@ -77,8 +77,12 @@ class InvoiceController extends Controller
     }
     public function paid(Request $request)
     {
+        $day = Carbon::now()->format('d');
+        $month = Carbon::now()->addMonth(-0)->format('m');
         $data['q'] = $request->query('q');
         $invoice = Invoice::where('invoices.inv_status', '=', 'PAID')
+            // ->where('invoices.inv_jenis_tagihan', '!=', 'FREE')
+            // ->whereMonth('invoices.inv_tgl_jatuh_tempo', '=',$month )
             ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('inv_id', 'like', '%' . $data['q'] . '%');
@@ -86,8 +90,12 @@ class InvoiceController extends Controller
                 $query->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
             });
-        $day = Carbon::now()->format('d');
-        $month = Carbon::now()->addMonth(-0)->format('m');
+
+        // $export = $invoice->get();
+        // foreach ($export as $value) {
+        //     echo '<table><th><td>'.$value->inv_nolayanan.'</td><td>'.$value->inv_nama.'</td><td>'.$value->inv_tgl_jatuh_tempo.'</td></th></table>';
+        // }
+        // dd('test');
         $data['data_invoice'] = $invoice->paginate(10);
         $data['inv_count_bulan'] = $invoice->whereMonth('inv_tgl_bayar', '=', $month)->count();
         // $data['inv_bulan'] = $invoice->sum('inv_total');
