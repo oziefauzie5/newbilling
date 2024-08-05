@@ -11,16 +11,16 @@
                   <a href="{{ route('admin.barang.print_kode',['id'=>$idbarang])}}" target="_blank" ><button class="btn btn-primary btn-sm mb-3"><i class="fas fa-print"></i>   Print Kode</button></a>
                   <form action="">
                    <div class="row">
-                    <div class="col-4">
-                     <select name="status" class="form-control form-control-sm" >
-                      <option value="">All Status</option>
-                      <option value="Belum Terpakai">Belum Terpakai</option>
-                      <option value="Terpakai">Terpakai</option>
-                     </select>
-                    </div>
-                    <div class="col-4">
-                      <input type="text" class="form-control form-control-sm" name="q" placeholder="Kode Barang, Mac Address," >
-                    </div>
+                     <div class="col-4">
+                       <input type="text" class="form-control form-control-sm" name="q" placeholder="Kode Barang, Mac Address, Nama" >
+                      </div>
+                      <div class="col-4">
+                       <select name="status" class="form-control form-control-sm" >
+                        <option value="">All Status</option>
+                        <option value="Belum Terpakai">Belum Terpakai</option>
+                        <option value="Terpakai">Terpakai</option>
+                       </select>
+                      </div>
                     <div class="col-2">
                       <button type="submit" class="btn btn-dark btn-sm mb-3 btn-block">Cari</button>
                     </div>

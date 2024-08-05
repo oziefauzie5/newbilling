@@ -52,7 +52,7 @@ Agar dapat digunakan kembali dimohon untuk melakukan pembayaran tagihan sebagai 
 
 No.Layanan : *' . $data_pelanggan->reg_nolayanan . '*
 Pelanggan : ' . $data_pelanggan->inv_nama . '
-Invoice : 013524
+Invoice : ' . $data_pelanggan->inv_id . '
 Jatuh Tempo : ' . $data_pelanggan->reg_tgl_jatuh_tempo . '
 Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama) . '*
 
