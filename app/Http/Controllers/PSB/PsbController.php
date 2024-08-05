@@ -58,6 +58,7 @@ class PsbController extends Controller
                 $query->orWhere('reg_username', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('reg_mac', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
             });
 
 

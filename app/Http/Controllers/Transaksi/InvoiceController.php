@@ -280,6 +280,7 @@ class InvoiceController extends Controller
             $inv0_tagih = Carbon::create($year . '-' . $month . '-' . $hari_tgl_tagih)->addMonth(1)->toDateString(); #new
             $inv0_tagih0 = Carbon::create($inv0_tagih)->addDay(-2)->toDateString();
             $inv0_jt_tempo = Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString(); #new
+            // dd($inv0_tagih);
 
             $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
             $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
