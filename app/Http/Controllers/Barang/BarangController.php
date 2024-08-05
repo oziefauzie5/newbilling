@@ -109,7 +109,7 @@ class BarangController extends Controller
             });
 
         if ($data['status'])
-            $query->where('subbarang_status.id', '=', $data['status']);
+            $query->where('subbarang_status', '=', $data['status']);
 
 
         $data['SubBarang'] = $query->paginate(20);
