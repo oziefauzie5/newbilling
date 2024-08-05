@@ -106,7 +106,7 @@ class BarangController extends Controller
                 $query->orWhere('subbarang_mac', 'like', '%' . $data['q'] . '%');
             });
 
-        $data['SubBarang'] = $query->get();
+        $data['SubBarang'] = $query->paginate(20);
         $data['idbarang'] = $id;
 
         return view('barang/sub_barang', $data);

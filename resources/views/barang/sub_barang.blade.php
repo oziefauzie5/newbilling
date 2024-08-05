@@ -9,8 +9,19 @@
                   <a href="{{ route('admin.barang.index')}}" ><button class="btn btn-primary btn-sm mb-3"><i class="fas fa-arrow-left"></i>  Kembali</button></a>
                   <button class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#add"><i class="fas fa-plus"></i></i>  Tambah</button>
                   <a href="{{ route('admin.barang.print_kode',['id'=>$idbarang])}}" target="_blank" ><button class="btn btn-primary btn-sm mb-3"><i class="fas fa-print"></i>   Print Kode</button></a>
+                  <form action="">
+                   <div class="row">
+                    <div class="col-4">
+                      <input type="text" class="form-control form-control-sm" name="q" placeholder="Kode Barang, Mac Address," >
+                    </div>
+                    <div class="col-2">
+                      <button type="submit" class="btn btn-dark btn-sm mb-3 btn-block">Cari</button>
+                    </div>
+                  </div>
+                   </div>
+                  </form>
                   <div class="table-responsive">
-                    <table id="input_data" class="display table table-striped table-hover text-nowrap" >  
+                    <table class="display table table-striped table-hover text-nowrap" >  
                   <thead>
                     <tr>
                       @role('admin')
@@ -214,6 +225,19 @@
                   </tbody>
                 </table>
                 </div>
+                <div class="pull-left">
+                  Showing
+                  {{$SubBarang->firstItem()}}
+                  to
+                  {{$SubBarang->lastItem()}}
+                  of
+                  {{$SubBarang->total()}}
+                  entries
+                </div>
+                <div class="pull-right">
+                  {{ $SubBarang->withQueryString()->links('pagination::bootstrap-4') }}
+                </div>
+    
                 </div>
               </div>
             </div>
