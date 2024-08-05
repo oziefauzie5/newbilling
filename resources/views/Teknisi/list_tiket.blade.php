@@ -128,7 +128,11 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          @if($job->reg_img)
+                          <a href="https://wa.me/6281563437262?text=Bang%20ini%20foto%20rumah%20si%20'.$data_aktivasi->input_nama.'%20ya."><button type="button" class="btn btn-success btn-block mb-2">Kirim Photo Rumah</button></a>
+                          @else
                           <a href="{{route('admin.teknisi.aktivasi',['id'=> $job->reg_idpel])}}" class="btn btn-secondary" >Lanjutkan</a>
+                          @endif
                         </div>
                       </div>
                     </div>
