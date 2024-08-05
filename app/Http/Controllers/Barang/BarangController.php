@@ -97,6 +97,7 @@ class BarangController extends Controller
         $data['tittle'] = 'Sub Barang';
         $data['kategori'] = Kategori::all();
         $data['q'] = $request->query('q');
+        $data['status'] = $request->query('status');
         $query = SubBarang::join('barangs', 'barangs.id_barang', '=', 'sub_barangs.subbarang_idbarang')
             ->join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
             ->orderBy('subbarang_nama', 'ASC', 'subbarang_tgl_masuk', 'ASC')
@@ -106,6 +107,10 @@ class BarangController extends Controller
                 $query->orWhere('subbarang_mac', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('subbarang_nama', 'like', '%' . $data['q'] . '%');
             });
+
+        if ($data['status'])
+            $query->where('subbarang_status', 'like', '%' . $data['status'] . '%');
+
 
         $data['SubBarang'] = $query->paginate(20);
         $data['idbarang'] = $id;
