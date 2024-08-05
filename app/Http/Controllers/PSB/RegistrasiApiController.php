@@ -180,7 +180,7 @@ class RegistrasiApiController extends Controller
     public function update_profile(Request $request, $id)
     {
 
-
+        $hari_ini = date('Y-m-d', strtotime(Carbon::now()));
 
         $sbiaya = SettingBiaya::first();
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -241,6 +241,17 @@ class RegistrasiApiController extends Controller
 
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
+                                    $data['reg_status'] = 'SUSPEND';
+                                    $update_inv['inv_status'] = 'SUSPEND';
+                                } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
+                                    $data['reg_status'] = 'UNPAID';
+                                    $update_inv['inv_status'] = 'UNPAID';
+                                }
+
+
+                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
 
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -258,6 +269,9 @@ class RegistrasiApiController extends Controller
                             } else {
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+                                $data['reg_status'] = $cek_invid->inv_status;
+                                $update_inv['inv_status'] = $cek_invid->inv_status;
 
 
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -307,6 +321,14 @@ class RegistrasiApiController extends Controller
                         if ($cek_invid) {
                             if ($cek_invid->inv_status != 'PAID') {
 
+                                if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
+                                    $data['reg_status'] = 'SUSPEND';
+                                    $update_inv['inv_status'] = 'SUSPEND';
+                                } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
+                                    $data['reg_status'] = 'UNPAID';
+                                    $update_inv['inv_status'] = 'UNPAID';
+                                }
+
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
@@ -325,6 +347,9 @@ class RegistrasiApiController extends Controller
                             } else {
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+                                $data['reg_status'] = $cek_invid->inv_status;
+                                $update_inv['inv_status'] = $cek_invid->inv_status;
 
 
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -400,6 +425,14 @@ class RegistrasiApiController extends Controller
                             $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                             $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
+                            if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
+                                $data['reg_status'] = 'SUSPEND';
+                                $update_inv['inv_status'] = 'SUSPEND';
+                            } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
+                                $data['reg_status'] = 'UNPAID';
+                                $update_inv['inv_status'] = 'UNPAID';
+                            }
+
 
                             $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                             $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
@@ -415,6 +448,9 @@ class RegistrasiApiController extends Controller
                         } else {
                             $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                             $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+                            $data['reg_status'] = $cek_invid->inv_status;
+                            $update_inv['inv_status'] = $cek_invid->inv_status;
 
 
                             $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -491,6 +527,14 @@ class RegistrasiApiController extends Controller
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
+                                if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
+                                    $data['reg_status'] = 'SUSPEND';
+                                    $update_inv['inv_status'] = 'SUSPEND';
+                                } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
+                                    $data['reg_status'] = 'UNPAID';
+                                    $update_inv['inv_status'] = 'UNPAID';
+                                }
+
 
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
@@ -506,6 +550,9 @@ class RegistrasiApiController extends Controller
                             } else {
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+                                $data['reg_status'] = $cek_invid->inv_status;
+                                $update_inv['inv_status'] = $cek_invid->inv_status;
 
 
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -563,6 +610,14 @@ class RegistrasiApiController extends Controller
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
+                                if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
+                                    $data['reg_status'] = 'SUSPEND';
+                                    $update_inv['inv_status'] = 'SUSPEND';
+                                } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
+                                    $data['reg_status'] = 'UNPAID';
+                                    $update_inv['inv_status'] = 'UNPAID';
+                                }
+
 
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
@@ -578,6 +633,9 @@ class RegistrasiApiController extends Controller
                             } else {
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+                                $data['reg_status'] = $cek_invid->inv_status;
+                                $update_inv['inv_status'] = $cek_invid->inv_status;
 
 
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
