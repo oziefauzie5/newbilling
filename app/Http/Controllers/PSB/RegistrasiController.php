@@ -1194,7 +1194,7 @@ Diterima oleh: ' . $penerima->name . '
 
                 // CEK BARANG 
                 $cek_subbarang = SubBarang::where('subbarang_mac', $request->reg_mac)->first();
-                $cek_suplier = supplier::where('supplier_nama', 'OVALL SOLUSINDO MANDIRI')->first();
+                $cek_suplier = supplier::where('supplier_nama', 'ONT')->first();
                 if ($cek_subbarang) {
                     // JIKA ONT ADA 
                     $update_barang['subbarang_status'] = '0';
@@ -1245,7 +1245,7 @@ Diterima oleh: ' . $penerima->name . '
 
                         supplier::create([
                             'id_supplier' => $id_supplier,
-                            'supplier_nama' => 'OVALL SOLUSINDO MANDIRI',
+                            'supplier_nama' => 'ONT',
                             'supplier_alamat' => 'Jl. Tampomas Perum. Alam Tirta Lestari Blok D5 No 06',
                             'supplier_tlp' => '081386987015',
                         ]);

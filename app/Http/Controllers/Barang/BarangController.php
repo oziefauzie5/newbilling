@@ -40,7 +40,7 @@ class BarangController extends Controller
         $data['kategori'] = Kategori::all();
         $data['supplier'] = supplier::all();
         $data['q'] = $request->query('q');
-        $sub_barang = SubBarang::where('id_subbarang', $data['q'])->orWhere('subbarang_mac', $data['q'])->first();
+        $sub_barang = SubBarang::where('id_subbarang', $data['q'])->orWhere('subbarang_mac', $data['q'])->orWhere('subbarang_nama', $data['q'])->first();
         if ($sub_barang) {
             if ($data['q']) {
                 return redirect()->route('admin.barang.sub_barang', ['id' => $sub_barang->subbarang_idbarang . '?q=' . $data['q']]);
@@ -104,6 +104,7 @@ class BarangController extends Controller
             ->where(function ($query) use ($data) {
                 $query->where('id_subbarang', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('subbarang_mac', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('subbarang_nama', 'like', '%' . $data['q'] . '%');
             });
 
         $data['SubBarang'] = $query->paginate(20);
