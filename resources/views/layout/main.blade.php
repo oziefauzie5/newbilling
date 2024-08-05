@@ -988,38 +988,72 @@ url = url.replace(':id', idpel);
                 });
  });
 });
-//  cari barang
-$(function(){ 
-  var table = $('#cari_barang').DataTable(); $('#cari_barang tbody').on( 'click', 'tr', function () 
-			{  
-			var idpel = table.row( this ).id();
-  var url = '{{ route("admin.barang.pilih_barang", ":id") }}';
-url = url.replace(':id', idpel);
+//  CARI BARANG
 
-console.log(idpel);
-  $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        '_token': '{{ csrf_token() }}'
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-						
-						if (data) {
-							$("#cari_data").modal('hide');
-							document.getElementById("tampil_hp").value =data['tampil_data']['input_hp'];
-							document.getElementById("tampil_alamat_pasang").value =data['tampil_data']['input_alamat_pasang'];
-							document.getElementById("tampil_idpel").value =data['tampil_data']['id'];
+$('#submit_cari_kode').click(function(e) {
+			let id   = $('#kode_barang').val();
+			$("#progress").html('<button class="btn btn-block btn-primary text-light" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...</button>');
+			var url = '{{ route("admin.barang.cari_barang", ":id") }}';
+			url = url.replace(':id', id);
+
+			if (id) {
+				$.ajax({
+				url: url,
+				type: 'GET',
+							data: {
+								'_token': '{{ csrf_token() }}'
+							},
+							dataType: 'json',
+							success: function(data) {
+								if (data) {
+									// $('#myModal').modal('hide');
+									// document.getElementById('hidden_div').style.display = "block";
+									$('#div_cari_barang').show();
+									$("#progress").html('');
+									$("#nama_barang").val(data['subbarang_nama']);
+									$("#subbarang_stok").val(data['subbarang_stok']);
+									$("#subbarang_ktg").val(data['subbarang_ktg']);
+									$("#subbarang_keterangan").val(data['subbarang_keterangan']);
+									$("#subbarang_idbarang").val(data['subbarang_idbarang']);
+									
+									if(data['subbarang_ktg']=='ONT'){
+										$('#div_ont').show();
+										$("#subbarang_mac").val(data['subbarang_mac']);
+										$("#subbarang_sn").val(data['subbarang_sn']);
+									}else {
+										$('#div_ont').hide();
+
+									}
+									console.log(data)
+
+									
+								}  else {
+									document.getElementById('hidden_div').style.display = "none";
+									$("#progress").html('');
+									$("#text").html('<strong>No. Invoice/Id Pelanggan tidak ditemukan</strong>');
+								}
 								
-                        } else {
-							
-                        }
-                    }
-                });
- });
-});
-// end pilih registrasi
+							},
+							error: function(error) {
+								$("#progress").html('');
+								$("#text").html('error. Coba lagi nanti...');
+							},
+	
+						});
+					} else {
+						document.getElementById('hidden_div').style.display = "none";
+								$("#progress").html('');
+								$("#text").html('Masukan No. Invoice/Id Pelanggan terlebih dahulu');
+						$('#harga').empty();
+					}
+	
+				});
+
+//  END CARI BARANG
+
+
+
+
 
 
 

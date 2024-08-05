@@ -234,21 +234,66 @@
           </button>
         </div>
         <div class="modal-body">
-            <form method="post" action="{{ route('admin.barang.store') }}" >
+            <form method="post" action="{{ route('admin.barang.barang_keluar') }}" >
                 @csrf
-                @method('POST')
+                @method('PUT')
                 <div class="form-row">
                 <div class="col">
+                    {{-- <label for="">Nama Barang<strong class="text-danger">*</strong></label>
+                    <input type="text" class="form-control" name="nama_barang"> --}}
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="id_subbarang" id="kode_barang" placeholder="Cari kode barang" >
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="submit_cari_kode">Cari</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="div_cari_barang" style="display:none;">
+                <div class="form-row ">
+                <div class="col">
                     <label for="">Nama Barang<strong class="text-danger">*</strong></label>
-                    <input type="text" class="form-control" name="nama_barang"  data-toggle="modal" data-target="#cari_data">
+                    <input type="text" class="form-control" id="nama_barang" readonly>
+                    </div>
+                  </div>
+                <div class="form-row">
+                <div class="col">
+                    <label for="">ID<strong class="text-danger">*</strong></label>
+                    <input type="text" class="form-control" id="subbarang_idbarang" name="subbarang_idbarang"  readonly>
+                    </div>
+                <div class="col">
+                    <label for="">Stok<strong class="text-danger">*</strong></label>
+                    <input type="text" class="form-control" id="subbarang_stok"  readonly>
+                    </div>
+                <div class="col">
+                    <label for="">Kategori<strong class="text-danger">*</strong></label>
+                    <input type="text" class="form-control" id="subbarang_ktg"  readonly>
+                    </div>
+                  </div>
+                <div class="form-row" id="div_ont" style="display:none;">
+                <div class="col">
+                    <label for="">Mac Address<strong class="text-danger">*</strong></label>
+                    <input type="text" class="form-control" id="subbarang_mac" readonly>
+                    </div>
+                <div class="col">
+                    <label for="">Serial Number<strong class="text-danger">*</strong></label>
+                    <input type="text" class="form-control" id="subbarang_sn" readonly>
+                    </div>
+                  </div>
+                <div id="progress"></div>
+                <div class="form-row">
+                  <div class="col">
+                    <label for="">Deskripsi :</label>
+                    <textarea class="form-control" rows="5" id="subbarang_keterangan" readonly></textarea>
                   </div>
                 </div>
                 <div class="form-row">
                   <div class="col">
                     <label for="">Dipergunakan untuk :</label>
-                    <textarea class="form-control" name="reg_catatan" rows="5"></textarea>
+                    <textarea class="form-control" name="subbarang_keterangan" rows="5"></textarea>
                   </div>
                 </div>
+            </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
@@ -259,49 +304,7 @@
     </div>
   </div>
 
-  {{-- MODAL CARI DATA  --}}
-<div class="modal fade" id="cari_data" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <h5 class="modal-title" id="staticBackdropLabel">Cari Data</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="table-responsive">
-          <table id="pilih_barang" class="display table table-striped table-hover text-nowrap" >
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>NAMA BARANG</th>
-                <th>STOK</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach($sub_barang as $d)
-              <tr id="{{$d->id_subbarang}}">
-                <td>{{$d->id_subbarang}}</td>
-                <td>{{$d->subbarang_nama}}</td>
-                <td>{{$d->subbarang_stok}}</td>
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-sm" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary btn-sm">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
+ 
 
 {{-- ----------------------------------------------------------MODAL ADD KATEGORI------------------------------------------------------- --}}
   <div class="modal fade" id="addkategori" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

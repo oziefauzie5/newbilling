@@ -65,10 +65,23 @@ class BarangController extends Controller
         return view('barang/barang', $data);
     }
 
-    public function pilih_barang($id)
+    public function cari_barang($id)
     {
-        $data['tampil_data'] =  SubBarang::where('id_subbarang', $id)->first();
+        $data =  SubBarang::where('id_subbarang', $id)->first();
         return response()->json($data);
+    }
+    public function barang_keluar(Request $request)
+    {
+        $data['subbarang_stok'] = '0';
+        $data['subbarang_status'] = '1';
+        $data['subbarang_keluar'] = '1';
+        $data['subbarang_keterangan'] = $request->subbarang_keterangan;
+        $data =  SubBarang::where('id_subbarang', $request->id_subbarang)->update($data);
+        $notifikasi = [
+            'pesan' => 'Berhasil',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.barang.sub_barang', ['id' => $request->subbarang_idbarang])->with($notifikasi);
     }
 
     public function sub_barang(Request $request, $id)
