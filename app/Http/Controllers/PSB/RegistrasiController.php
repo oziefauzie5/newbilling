@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Global\GlobalController;
 
 class RegistrasiController extends Controller
 {
@@ -170,8 +171,18 @@ class RegistrasiController extends Controller
         $router = Router::whereId($request->reg_router)->first();
         $profile = Paket::where('paket_id', $request->reg_profile)->first();
 
+        $status = (new GlobalController)->whatsapp_status();
+
+        if ($status->wa_status == 'Enable') {
+            $pesan_pelanggan['status'] = '0';
+            $pesan_group['status'] = '0';
+        } else {
+            $pesan_pelanggan['status'] = '10';
+            $pesan_group['status'] = '10';
+        }
+
+
         $pesan_pelanggan['ket'] = 'registrasi';
-        $pesan_pelanggan['status'] = '0';
         $pesan_pelanggan['target'] = $request->reg_hp;
         $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
 Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
@@ -193,8 +204,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
         Pesan::create($pesan_pelanggan);
 
+
         $pesan_group['ket'] = 'registrasi';
-        $pesan_group['status'] = '0';
         $pesan_group['target'] = '120363262623415382@g.us';
         $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
 
@@ -540,9 +551,16 @@ Diregistrasi Oleh : *' . $admin . '*
                 'jurnal_status' => 1,
             ]);
 
+            $status = (new GlobalController)->whatsapp_status();
+
+            if ($status->wa_status == 'Enable') {
+                $pesan_group['status'] = '0';
+            } else {
+                $pesan_group['status'] = '10';
+            }
+
 
             $pesan_group['ket'] = 'pencairan psb';
-            $pesan_group['status'] = '0';
             $pesan_group['target'] = '120363028776966861@g.us';
             $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
             $pesan_group['pesan'] = '               -- PENCAIRAN DANA --
@@ -564,8 +582,15 @@ Diterima oleh: ' . $penerima->name . '
 
 
             Pesan::create($pesan_group);
+
+            $status = (new GlobalController)->whatsapp_status();
+
+            if ($status->wa_status == 'Enable') {
+                $pesan_personal['status'] = '0';
+            } else {
+                $pesan_personal['status'] = '10';
+            }
             $pesan_personal['ket'] = 'pencairan psb';
-            $pesan_personal['status'] = '0';
             $pesan_personal['target'] = $sales->hp;
             $pesan_personal['nama'] = $sales->name;
             $pesan_personal['pesan'] = '               -- PENCAIRAN DANA --

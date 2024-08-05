@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teknisi;
 
+use App\Http\Controllers\Global\GlobalController;
 use App\Http\Controllers\Controller;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWaktuTagihan;

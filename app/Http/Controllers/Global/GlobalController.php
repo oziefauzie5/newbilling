@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Global;
 
 use App\Http\Controllers\Controller;
+use App\Models\Applikasi\SettingWhatsapp;
 use App\Models\Mitra\Mutasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,5 +59,10 @@ class GlobalController extends Controller
             ->orWhere('inv_nolayanan', '=', $invoice)
             ->first();
         return $data_tagihan;
+    }
+    public function whatsapp_status()
+    {
+        $wa_status =  SettingWhatsapp::first();
+        return $wa_status;
     }
 }

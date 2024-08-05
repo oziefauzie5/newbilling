@@ -15,6 +15,7 @@ use App\Models\Transaksi\Transaksi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\Global\GlobalController;
 
 class CallbackController extends Controller
 {
@@ -159,8 +160,15 @@ class CallbackController extends Controller
                         Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
                     }
 
+                    $status = (new GlobalController)->whatsapp_status();
+
+                    if ($status->wa_status == 'Enable') {
+                        $pesan_group['status'] = '0';
+                    } else {
+                        $pesan_group['status'] = '10';
+                    }
+
                     $pesan_group['ket'] = 'payment tripay';
-                    $pesan_group['status'] = '0';
                     $pesan_group['target'] = $data_pelanggan->input_hp;
                     $pesan_group['nama'] = $data_pelanggan->input_nama;
                     $pesan_group['pesan'] = '

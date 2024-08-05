@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tiket;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Global\GlobalController;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\Tiket\SubTiket;
@@ -69,34 +70,73 @@ class TiketController extends Controller
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->where('roles.id', '11')
             ->get();
+        $status = (new GlobalController)->whatsapp_status();
+        if ($status->wa_status == 'Enable') {
+            $pesan_group['status'] = '0';
+            $pesan_pelanggan['status'] = '0';
+        } else {
+            $pesan_group['status'] = '10';
+            $pesan_pelanggan['status'] = '10';
+        }
+
+
+
 
         foreach ($users_teknisi as $t) {
 
-            Pesan::create([
-                'ket' =>  'tiket',
-                'status' =>  '0',
-                'target' =>  $t->hp,
-                'nama' =>  $t->nama_teknisi,
-                'pesan' => '               -- TIKET GANGGUAN --
+            if ($status->wa_status == 'Enable') {
+
+                Pesan::create([
+                    'ket' =>  'tiket',
+                    'target' =>  $t->hp,
+                    'status' =>  '0',
+                    'nama' =>  $t->nama_teknisi,
+                    'pesan' => '               -- TIKET GANGGUAN --
+        
+    Hallo Broo ' . $t->nama_teknisi . '
+    Ada tiket masuk ke sistem nih! 😊
     
-Hallo Broo ' . $t->nama_teknisi . '
-Ada tiket masuk ke sistem nih! 😊
-
-No. Tiket : *' . $tiket_id . '*
-Topik : ' . $request->tiket_judul . '
-Deskripsi : *' . $request->tiket_deskripsi . '*
-
-Pelanggan : ' . $request->tiket_pelanggan . '
-Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
-Tanggal tiket : ' . $tanggal . '
-
-Mohon segera diproses dari aplikasi dan di tindak lanjuti ya.
-Terima kasih.'
-            ]);
+    No. Tiket : *' . $tiket_id . '*
+    Topik : ' . $request->tiket_judul . '
+    Deskripsi : *' . $request->tiket_deskripsi . '*
+    
+    Pelanggan : ' . $request->tiket_pelanggan . '
+    Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+    Tanggal tiket : ' . $tanggal . '
+    
+    Mohon segera diproses dari aplikasi dan di tindak lanjuti ya.
+    Terima kasih.'
+                ]);
+            } else {
+                Pesan::create([
+                    'ket' =>  'tiket',
+                    'target' =>  $t->hp,
+                    'status' =>  '10',
+                    'nama' =>  $t->nama_teknisi,
+                    'pesan' => '               -- TIKET GANGGUAN --
+        
+    Hallo Broo ' . $t->nama_teknisi . '
+    Ada tiket masuk ke sistem nih! 😊
+    
+    No. Tiket : *' . $tiket_id . '*
+    Topik : ' . $request->tiket_judul . '
+    Deskripsi : *' . $request->tiket_deskripsi . '*
+    
+    Pelanggan : ' . $request->tiket_pelanggan . '
+    Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+    Tanggal tiket : ' . $tanggal . '
+    
+    Mohon segera diproses dari aplikasi dan di tindak lanjuti ya.
+    Terima kasih.'
+                ]);
+            }
         }
 
+
+
+
+
         $pesan_group['ket'] = 'tiket';
-        $pesan_group['status'] = '0';
         $pesan_group['target'] = '120363028776966861@g.us';
         $pesan_group['pesan'] = '               -- TIKET GANGGUAN --
 
@@ -114,8 +154,10 @@ Tanggal tiket : ' . $tanggal . '
 Mohon segera diproses dari aplikasi dan di tindak lanjuti ya.
 Terima kasih.';
 
+
+
+
         $pesan_pelanggan['ket'] = 'tiket';
-        $pesan_pelanggan['status'] = '0';
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
         $pesan_pelanggan['pesan'] = '               -- TIKET GANGGUAN --
 

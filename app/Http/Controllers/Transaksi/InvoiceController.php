@@ -248,6 +248,8 @@ class InvoiceController extends Controller
 
     public function payment(Request $request, $id)
     {
+
+
         $nama_user = Auth::user()->name; #NAMA USER
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
         $now = Carbon::now();
@@ -367,8 +369,15 @@ class InvoiceController extends Controller
                 Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
             }
 
+            $status = (new GlobalController)->whatsapp_status();
+
+            if ($status->wa_status == 'Enable') {
+                $pesan_group['status'] = '0';
+            } else {
+                $pesan_group['status'] = '10';
+            }
+
             $pesan_group['ket'] = 'payment';
-            $pesan_group['status'] = '0';
             $pesan_group['target'] = $data_pelanggan->input_hp;
             $pesan_group['nama'] = $data_pelanggan->input_nama;
             $pesan_group['pesan'] = '

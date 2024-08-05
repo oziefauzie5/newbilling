@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+
 class BillerController extends Controller
 {
     // public function pembayaran()
@@ -283,11 +284,16 @@ class BillerController extends Controller
             $mutasi['mt_biaya_adm'] = $biller->mts_komisi;
             $mutasi['mt_cabar'] = '2';
 
+            $status = (new GlobalController)->whatsapp_status();
 
+            if ($status->wa_status == 'Enable') {
+                $pesan_group['status'] = '0';
+            } else {
+                $pesan_group['status'] = '10';
+            }
 
 
             $pesan_group['ket'] = 'payment biller';
-            $pesan_group['status'] = '0';
             $pesan_group['target'] = $data_pelanggan->input_hp;
             $pesan_group['nama'] = $data_pelanggan->input_nama;
             $pesan_group['pesan'] = '

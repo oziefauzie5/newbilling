@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\NOC;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Global\GlobalController;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
@@ -255,6 +256,13 @@ class NocController extends Controller
                 Registrasi::where('reg_idpel', $data_pelanggan->inv_idpel)->update([
                     'reg_status' => 'ISOLIR',
                 ]);
+                $status = (new GlobalController)->whatsapp_status();
+
+                if ($status->wa_status == 'Enable') {
+                    $pesan_group['status'] = '0';
+                } else {
+                    $pesan_group['status'] = '10';
+                }
 
 
                 $pesan_group['ket'] = 'isolir manual';
