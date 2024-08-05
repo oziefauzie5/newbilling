@@ -542,6 +542,23 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         $update_barang['subbarang_keterangan'] = $keterangan;
                         $update_barang['subbarang_admin'] = $nama_admin;
                         SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
+
+                        SubBarang::create(
+                            [
+                                "id_subbarang" => mt_rand(100000, 999999),
+                                "subbarang_idbarang" => '811170',
+                                "subbarang_nama" => $keterangan,
+                                "subbarang_keterangan" => $keterangan,
+                                "subbarang_ktg" => 'ADAPTOR',
+                                "subbarang_qty" => 1,
+                                "subbarang_keluar" => '0',
+                                "subbarang_stok" => 1,
+                                "subbarang_harga" => 0,
+                                "subbarang_tgl_masuk" => $tgl,
+                                "subbarang_status" => '0',
+                                "subbarang_admin" => $nama_admin,
+                            ]
+                        );
                     } else {
                         // JIKA ONT TIDAK ADA
                         // BUAT DAFTAR ONT BARU
@@ -600,6 +617,23 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                                 "subbarang_tgl_masuk" => $tgl,
                                 "subbarang_status" => '0',
                                 "subbarang_mac" => $request->reg_mac,
+                                "subbarang_admin" => $nama_admin,
+                            ]
+                        );
+
+                        SubBarang::create(
+                            [
+                                "id_subbarang" => mt_rand(100000, 999999),
+                                "subbarang_idbarang" => '811170',
+                                "subbarang_nama" => $keterangan,
+                                "subbarang_keterangan" => $keterangan,
+                                "subbarang_ktg" => 'ADAPTOR',
+                                "subbarang_qty" => 1,
+                                "subbarang_keluar" => '0',
+                                "subbarang_stok" => 1,
+                                "subbarang_harga" => 0,
+                                "subbarang_tgl_masuk" => $tgl,
+                                "subbarang_status" => '0',
                                 "subbarang_admin" => $nama_admin,
                             ]
                         );
@@ -678,6 +712,23 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     $update_barang['subbarang_keterangan'] = $keterangan;
                     $update_barang['subbarang_admin'] = $nama_admin;
                     SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
+
+                    SubBarang::create(
+                        [
+                            "id_subbarang" => mt_rand(100000, 999999),
+                            "subbarang_idbarang" => '811170',
+                            "subbarang_nama" => $keterangan,
+                            "subbarang_keterangan" => $keterangan,
+                            "subbarang_ktg" => 'ADAPTOR',
+                            "subbarang_qty" => 1,
+                            "subbarang_keluar" => '0',
+                            "subbarang_stok" => 1,
+                            "subbarang_harga" => 0,
+                            "subbarang_tgl_masuk" => $tgl,
+                            "subbarang_status" => '0',
+                            "subbarang_admin" => $nama_admin,
+                        ]
+                    );
                 } else {
                     // JIKA ONT TIDAK ADA
                     // BUAT DAFTAR ONT BARU
@@ -736,6 +787,23 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                             "subbarang_tgl_masuk" => $tgl,
                             "subbarang_status" => '0',
                             "subbarang_mac" => $request->reg_mac,
+                            "subbarang_admin" => $nama_admin,
+                        ]
+                    );
+
+                    SubBarang::create(
+                        [
+                            "id_subbarang" => mt_rand(100000, 999999),
+                            "subbarang_idbarang" => '811170',
+                            "subbarang_nama" => $keterangan,
+                            "subbarang_keterangan" => $keterangan,
+                            "subbarang_ktg" => 'ADAPTOR',
+                            "subbarang_qty" => 1,
+                            "subbarang_keluar" => '0',
+                            "subbarang_stok" => 1,
+                            "subbarang_harga" => 0,
+                            "subbarang_tgl_masuk" => $tgl,
+                            "subbarang_status" => '0',
                             "subbarang_admin" => $nama_admin,
                         ]
                     );
