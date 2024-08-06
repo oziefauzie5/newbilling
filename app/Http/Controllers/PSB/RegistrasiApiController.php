@@ -181,6 +181,9 @@ class RegistrasiApiController extends Controller
     {
 
         $hari_ini = date('Y-m-d', strtotime(Carbon::now()));
+        $now = Carbon::now();
+        $month = $now->format('m');
+        $year = $now->format('Y');
 
         $sbiaya = SettingBiaya::first();
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -195,11 +198,31 @@ class RegistrasiApiController extends Controller
         $periode = date('d-m-Y', strtotime(Carbon::create($request->reg_tgl_jatuh_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($request->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString()));
 
         $dikurang_1_bulan = Carbon::create($request->reg_tgl_jatuh_tempo)->addMonth(-1)->toDateString();
+
+        // HITUNG TELAT PEMBAYARAN
+        $date1 = Carbon::createFromDate($request->reg_tgl_jatuh_tempo); // start date
+        $date2 = Carbon::createFromDate($hari_ini); // end date
+        $monthDifference = $date1->diffInMonths($date2);
+
+        // if ($monthDifference > 0) {
+        //     dd($monthDifference);
+        // } else {
+        //     dd('Belum 1 bulan');
+        // }
+        // dd($monthDifference);
+
         $paid_periode = date('d-m-Y', strtotime(Carbon::create($dikurang_1_bulan)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($dikurang_1_bulan)->addMonth(1)->toDateString()));
         $paid_tgl_isolir = Carbon::create($dikurang_1_bulan)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
         $paid_tgl_penagihan = Carbon::create($dikurang_1_bulan)->addDay(-2)->toDateString();
 
-        // dd(date('Y-m-d', strtotime($paid_tgl_penagihan)));
+
+        $hari_jt_tempo = date('d', strtotime($request->reg_tgl_jatuh_tempo));
+        $telat_tgl_tagih = date($year . '-' . $month . '-d', strtotime(Carbon::create($request->reg_tgl_jatuh_tempo)->addDay(-2)->toDateString()));
+        $telat_periode = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+        $telat_tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($request->reg_tgl_jatuh_tempo));
+        $telat_tgl_isolir =  Carbon::create($telat_tgl_jt_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
+
+        // dd($telat_periode);
 
         $ip =   $query->router_ip . ':' . $query->router_port_api;
         $user = $query->router_username;
@@ -247,29 +270,51 @@ class RegistrasiApiController extends Controller
 
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
                                 if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
-                                    $data['reg_status'] = 'SUSPEND';
-                                    $update_inv['inv_status'] = 'SUSPEND';
+
+                                    if ($monthDifference > 0) {
+                                        $data['reg_status'] = 'ISOLIR';
+                                        $update_inv['inv_status'] = 'ISOLIR';
+                                        $update_inv['inv_periode'] = $telat_periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                    } else {
+                                        $data['reg_status'] = 'SUSPEND';
+                                        $update_inv['inv_status'] = 'SUSPEND';
+                                        $update_inv['inv_periode'] = $periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    }
                                 } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
-                                    $data['reg_status'] = 'UNPAID';
-                                    $update_inv['inv_status'] = 'UNPAID';
+                                    if ($monthDifference > 0) {
+                                        $data['reg_status'] = 'ISOLIR';
+                                        $update_inv['inv_status'] = 'ISOLIR';
+                                        $update_inv['inv_periode'] = $telat_periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                    } else {
+                                        $data['reg_status'] = 'UNPAID';
+                                        $update_inv['inv_status'] = 'UNPAID';
+                                        $update_inv['inv_periode'] = $periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    }
                                 }
 
 
-                                $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-
-
-                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
                                 $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_inv['inv_periode'] = $periode;
                                 $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
                                 $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_subinv['subinvoice_deskripsi'] = $periode;
-                                // dd($update_subinv);
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {
@@ -327,29 +372,80 @@ class RegistrasiApiController extends Controller
                         if ($cek_invid) {
                             if ($cek_invid->inv_status != 'PAID') {
 
-                                if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
-                                    $data['reg_status'] = 'SUSPEND';
-                                    $update_inv['inv_status'] = 'SUSPEND';
-                                } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
-                                    $data['reg_status'] = 'UNPAID';
-                                    $update_inv['inv_status'] = 'UNPAID';
-                                }
 
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
+                                if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
 
-                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    if ($monthDifference > 0) {
+                                        $data['reg_status'] = 'ISOLIR';
+                                        $update_inv['inv_status'] = 'ISOLIR';
+                                        $update_inv['inv_periode'] = $telat_periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                    } else {
+                                        $data['reg_status'] = 'SUSPEND';
+                                        $update_inv['inv_status'] = 'SUSPEND';
+                                        $update_inv['inv_periode'] = $periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    }
+                                } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
+                                    if ($monthDifference > 0) {
+                                        $data['reg_status'] = 'ISOLIR';
+                                        $update_inv['inv_status'] = 'ISOLIR';
+                                        $update_inv['inv_periode'] = $telat_periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                    } else {
+                                        $data['reg_status'] = 'UNPAID';
+                                        $update_inv['inv_status'] = 'UNPAID';
+                                        $update_inv['inv_periode'] = $periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    }
+                                }
+
+
                                 $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_inv['inv_periode'] = $periode;
                                 $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
                                 $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_subinv['subinvoice_deskripsi'] = $periode;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
+
+                                // if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
+                                //     $data['reg_status'] = 'SUSPEND';
+                                //     $update_inv['inv_status'] = 'SUSPEND';
+                                // } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
+                                //     $data['reg_status'] = 'UNPAID';
+                                //     $update_inv['inv_status'] = 'UNPAID';
+                                // }
+
+                                // $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                // $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+
+
+                                // $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                // $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                // $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                // $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                // $update_inv['inv_periode'] = $periode;
+                                // $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                // $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
+                                // $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                // $update_subinv['subinvoice_deskripsi'] = $periode;
+                                // SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
+                                // Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
@@ -428,27 +524,54 @@ class RegistrasiApiController extends Controller
                     if ($cek_invid) {
                         if ($cek_invid->inv_status != 'PAID') {
 
+
                             $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                             $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
                             if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
-                                $data['reg_status'] = 'SUSPEND';
-                                $update_inv['inv_status'] = 'SUSPEND';
+
+                                if ($monthDifference > 0) {
+                                    $data['reg_status'] = 'ISOLIR';
+                                    $update_inv['inv_status'] = 'ISOLIR';
+                                    $update_inv['inv_periode'] = $telat_periode;
+                                    $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                    $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                    $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                    $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                } else {
+                                    $data['reg_status'] = 'SUSPEND';
+                                    $update_inv['inv_status'] = 'SUSPEND';
+                                    $update_inv['inv_periode'] = $periode;
+                                    $update_subinv['subinvoice_deskripsi'] = $periode;
+                                    $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                    $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                    $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                }
                             } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
-                                $data['reg_status'] = 'UNPAID';
-                                $update_inv['inv_status'] = 'UNPAID';
+                                if ($monthDifference > 0) {
+                                    $data['reg_status'] = 'ISOLIR';
+                                    $update_inv['inv_status'] = 'ISOLIR';
+                                    $update_inv['inv_periode'] = $telat_periode;
+                                    $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                    $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                    $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                    $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                } else {
+                                    $data['reg_status'] = 'UNPAID';
+                                    $update_inv['inv_status'] = 'UNPAID';
+                                    $update_inv['inv_periode'] = $periode;
+                                    $update_subinv['subinvoice_deskripsi'] = $periode;
+                                    $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                    $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                    $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                }
                             }
 
 
-                            $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                            $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                            $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
                             $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                            $update_inv['inv_periode'] = $periode;
                             $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                             $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
                             $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                            $update_subinv['subinvoice_deskripsi'] = $periode;
                             SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                             Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                         } else {
@@ -530,27 +653,54 @@ class RegistrasiApiController extends Controller
                         if ($cek_invid) {
                             if ($cek_invid->inv_status != 'PAID') {
 
+
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
                                 if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
-                                    $data['reg_status'] = 'SUSPEND';
-                                    $update_inv['inv_status'] = 'SUSPEND';
+
+                                    if ($monthDifference > 0) {
+                                        $data['reg_status'] = 'ISOLIR';
+                                        $update_inv['inv_status'] = 'ISOLIR';
+                                        $update_inv['inv_periode'] = $telat_periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                    } else {
+                                        $data['reg_status'] = 'SUSPEND';
+                                        $update_inv['inv_status'] = 'SUSPEND';
+                                        $update_inv['inv_periode'] = $periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    }
                                 } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
-                                    $data['reg_status'] = 'UNPAID';
-                                    $update_inv['inv_status'] = 'UNPAID';
+                                    if ($monthDifference > 0) {
+                                        $data['reg_status'] = 'ISOLIR';
+                                        $update_inv['inv_status'] = 'ISOLIR';
+                                        $update_inv['inv_periode'] = $telat_periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                    } else {
+                                        $data['reg_status'] = 'UNPAID';
+                                        $update_inv['inv_status'] = 'UNPAID';
+                                        $update_inv['inv_periode'] = $periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    }
                                 }
 
 
-                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
                                 $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_inv['inv_periode'] = $periode;
                                 $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
                                 $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_subinv['subinvoice_deskripsi'] = $periode;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {
@@ -613,27 +763,54 @@ class RegistrasiApiController extends Controller
                         if ($cek_invid) {
                             if ($cek_invid->inv_status != 'PAID') {
 
+
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
 
                                 if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
-                                    $data['reg_status'] = 'SUSPEND';
-                                    $update_inv['inv_status'] = 'SUSPEND';
+
+                                    if ($monthDifference > 0) {
+                                        $data['reg_status'] = 'ISOLIR';
+                                        $update_inv['inv_status'] = 'ISOLIR';
+                                        $update_inv['inv_periode'] = $telat_periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                    } else {
+                                        $data['reg_status'] = 'SUSPEND';
+                                        $update_inv['inv_status'] = 'SUSPEND';
+                                        $update_inv['inv_periode'] = $periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    }
                                 } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
-                                    $data['reg_status'] = 'UNPAID';
-                                    $update_inv['inv_status'] = 'UNPAID';
+                                    if ($monthDifference > 0) {
+                                        $data['reg_status'] = 'ISOLIR';
+                                        $update_inv['inv_status'] = 'ISOLIR';
+                                        $update_inv['inv_periode'] = $telat_periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $telat_periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
+                                    } else {
+                                        $data['reg_status'] = 'UNPAID';
+                                        $update_inv['inv_status'] = 'UNPAID';
+                                        $update_inv['inv_periode'] = $periode;
+                                        $update_subinv['subinvoice_deskripsi'] = $periode;
+                                        $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                                        $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                                        $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
+                                    }
                                 }
 
 
-                                $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
                                 $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_inv['inv_periode'] = $periode;
                                 $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
                                 $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_subinv['subinvoice_deskripsi'] = $periode;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {
