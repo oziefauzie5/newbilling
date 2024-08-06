@@ -128,6 +128,7 @@
 
 
             <section class="content mt-3">
+              @if($data_tiket)
                 @foreach($data_tiket as $job_tiket)
                 <div class="col">
                   @if($job_tiket->tiket_status != 'DONE'&& $job_tiket->tiket_status != 'PROGRES')
@@ -240,6 +241,7 @@
     </div>
   </div>
 </div>
+@endif
                 @endforeach
                 @foreach($data_pelanggan as $job)
                 <div class="col">
