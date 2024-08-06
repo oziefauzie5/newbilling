@@ -128,7 +128,6 @@
 
 
             <section class="content mt-3">
-              @if($data_tiket)
                 @foreach($data_tiket as $job_tiket)
                 <div class="col">
                   @if($job_tiket->tiket_status != 'DONE'&& $job_tiket->tiket_status != 'PROGRES')
@@ -241,7 +240,6 @@
     </div>
   </div>
 </div>
-@endif
                 @endforeach
                 @foreach($data_pelanggan as $job)
                 <div class="col">
@@ -331,7 +329,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <img class="rounded mx-auto d-block" src="{{ asset('storage/photo-rumah/'.$job_tiket->reg_img) }}" width="300" alt="">
+        <img class="rounded mx-auto d-block" src="{{ asset('storage/photo-rumah/'.$job->reg_img) }}" width="300" alt="">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
