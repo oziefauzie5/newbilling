@@ -81,12 +81,12 @@
                           Done
                         </button></a>
                       @else
-                      <button type="button" class="btn btn-block btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+                      <button type="button" class="btn btn-block btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$d->reg_nolayanan}}">
                         Upload Foto
                       </button>
 
                           <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal{{$d->reg_nolayanan}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

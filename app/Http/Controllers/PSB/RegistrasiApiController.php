@@ -147,6 +147,7 @@ class RegistrasiApiController extends Controller
             $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
             $update_barang_lama['subbarang_keluar'] = '0';
+            $update_barang_lama['subbarang_stok'] = '1';
             $update_barang_lama['subbarang_keterangan'] = 'Tukar Barang';
             $update_barang_lama['subbarang_admin'] = $nama_admin;
             Registrasi::where('reg_idpel', $id)->update($data);
@@ -163,6 +164,7 @@ class RegistrasiApiController extends Controller
             $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
             $update_barang_lama['subbarang_keluar'] = '0';
+            $update_barang_lama['subbarang_stok'] = '1';
             $update_barang_lama['subbarang_keterangan'] = '-';
             $update_barang_lama['subbarang_admin'] = $nama_admin;
             Registrasi::where('reg_idpel', $id)->update($data);
@@ -179,7 +181,7 @@ class RegistrasiApiController extends Controller
 
     public function update_profile(Request $request, $id)
     {
-
+        $nama_admin = Auth::user()->name;
         $hari_ini = date('Y-m-d', strtotime(Carbon::now()));
         $now = Carbon::now();
         $month = $now->format('m');
@@ -232,9 +234,9 @@ class RegistrasiApiController extends Controller
 
 
         if ($query->reg_jenis_tagihan == 'FREE') {
-            $comment = '( Done ) FREE ';
+            $comment = 'FREE Update-Profile-By:' . $nama_admin;
         } else {
-            $comment = '( Done ) ' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
+            $comment = 'Update-Profile By: ' . $nama_admin . ' Jatuh-Tempo :' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
         }
         if ($query->reg_layanan == 'PPP') {
             if ($API->connect($ip, $user, $pass)) {
@@ -864,7 +866,7 @@ class RegistrasiApiController extends Controller
     }
     public function update_router(Request $request, $id)
     {
-
+        $nama_admin = Auth::user()->name;
         $router = Router::whereId($request->reg_router)->first();
 
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -877,6 +879,12 @@ class RegistrasiApiController extends Controller
             $comment = '( Done ) FREE  ';
         } else {
             $comment = '( Done ) ' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
+        }
+
+        if ($query->reg_jenis_tagihan == 'FREE') {
+            $comment = 'FREE Update-Router-By:' . $nama_admin;
+        } else {
+            $comment = 'Update-Router By: ' . $nama_admin . ' Jatuh-Tempo :' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
         }
 
         $ip =   $router->router_ip . ':' . $router->router_port_api;

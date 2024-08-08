@@ -260,6 +260,7 @@ class TeknisiController extends Controller
                     if ($secret) {
                         $API->comm('/ppp/secret/set', [
                             '.id' => $secret[0]['.id'],
+                            'comment' => 'Aktivasi-' . $teknisi_nama . '-' . $tanggal == '' ? '' : 'Aktivasi-' . $teknisi_nama . '-' . $tanggal,
                             'disabled' => 'no',
                         ]);
 
@@ -513,6 +514,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                     if ($secret) {
                         $API->comm('/ip/hotspot/user/set', [
                             '.id' => $secret[0]['.id'],
+                            'comment' => 'Aktivasi-' . $teknisi_nama . '-' . $tanggal == '' ? '' : 'Aktivasi-' . $teknisi_nama . '-' . $tanggal,
                             'disabled' => 'no',
                         ]);
 
