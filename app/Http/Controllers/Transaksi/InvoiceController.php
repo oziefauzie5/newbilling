@@ -107,6 +107,7 @@ class InvoiceController extends Controller
     public function sub_invoice($id)
     {
         $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('users', 'users.id', '=', 'invoices.inv_admin')
             ->where('inv_id', $id)->first();
         $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
             ->where('invoices.inv_id', $id)->get();
@@ -120,6 +121,46 @@ class InvoiceController extends Controller
 
 
         return view('Transaksi/subinvoice', $data);
+    }
+    public function print_inv(Request $request, $id)
+    {
+        if ($request->cara_print == 1) {
+            $admin_user = Auth::user()->id;
+            $data['admin'] = Auth::user()->name;
+            $data['data'] = DB::table('invoices')
+                ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+                ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+                ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+                ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'invoices.inv_akun')
+                ->join('users', 'users.id', '=', 'invoices.inv_admin')
+                ->where('invoices.inv_id', '=', $id)
+                ->orWhere('invoices.inv_nolayanan', '=', $id)
+                ->where('invoices.inv_status', '=', 'PAID')
+                ->first();
+            $data['sumharga'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_harga');
+            $data['sumppn'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_ppn');
+            $data['datainvoice'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->get();
+            $data['biller'] = MitraSetting::where('mts_user_id', $admin_user)->first();
+            $data['saldo'] = (new globalController)->total_mutasi($admin_user);
+            return view('Transaksi/print_thermal', $data);
+        } else {
+
+            $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+                ->join('users', 'users.id', '=', 'invoices.inv_admin')
+                ->where('inv_id', $id)->first();
+            $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+                ->where('invoices.inv_id', $id)->get();
+
+
+            $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');
+            $data['sumppn'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn');
+            $data['ppnj'] = env('PPN');
+            $data['akun'] = SettingAkun::all();
+            $data['ppn'] = SettingBiaya::first();
+
+
+            return view('Transaksi/print_subinvoice', $data);
+        }
     }
     public function addDiskon(Request $request, $id)
     {

@@ -21,6 +21,7 @@
                   {{$invoice->input_hp}}<br>
                   {{$invoice->input_email}}
                 </address>
+                <b>Counter : </b> <span ><strong> {{$invoice->name}}</strong></span><br>
               </div>
               <div class="col-sm-4">
 
@@ -161,7 +162,39 @@
 
             <div class="row no-print">
               <div class="col-12">
-                <a href="#" class="btn btn-default btn-sm"><i class="fas fa-print"></i> PRINT</a>
+                <!-- Button trigger modal -->
+<button type="button"  data-toggle="modal" data-target="#exampleModalprint" class="btn btn-default btn-sm"><i class="fas fa-print"></i>
+  PRINT
+</button>
+
+<!-- Modal print -->
+<div class="modal fade" id="exampleModalprint" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">PILIH JENIS KERTAS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ route('admin.inv.print_inv', ['id'=>$invoice->inv_id]) }}" method="POST">
+          @csrf
+          @method('PUT')
+          <select name="cara_print" id="" class="form-control">
+            <option value="1">ROL PAPER HTML</option>
+            <option value="2">HVS PAPER HTML</option>
+            {{-- <option value="ROL PAPER PDF">ROL PAPER PDF</option> --}}
+            {{-- <option value="HVS PAPER PDF">HVS PAPER PDF</option> --}}
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-block">PRINT</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
                 @if($invoice->inv_status!='PAID')
                 <button type="button" class="btn btn-primary float-right btn-sm" data-toggle="modal" data-target="#staticBackdrop" id="modal_bayar" ><i class="far fa-credit-card"></i> BAYAR
               </button>
