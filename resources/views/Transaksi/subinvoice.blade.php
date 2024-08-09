@@ -26,7 +26,7 @@
 
               </div>
               <div class="col-sm-4">
-                <b>Invoice {{$invoice->inv_id}}</b><br>
+                <b>Invoice : INV-{{$invoice->inv_id}}</b><br>
                 <br>
                 @if($invoice->inv_status != 'PAID')
                 <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>
@@ -34,7 +34,9 @@
                 @else
                 <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>
                 <b>Tanggal Bayar</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_bayar))}}<br>
+                <b>Metode Bayar : </b> <span ><strong> {{$invoice->inv_payment_method}}</strong></span><br>
                 <b>Status : </b> <span class="text-success"><strong> {{$invoice->inv_status}}</strong></span><br>
+             
                 @endif
               </div>
             </div>
@@ -99,6 +101,8 @@
                 @else
                 <div class="row">
                   <div class="col">
+                       @if($invoice->inv_cabar=='TRANSFER')
+               
                     <!-- Button trigger modal -->
                       <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#exampleModal">
                         Lihat Bukti Transfer
@@ -124,6 +128,7 @@
                         </div>
                       </div>
                       <!-- ---end modal---- -->
+                      @endif
                     
                   </div>
                 </div>

@@ -215,14 +215,24 @@ class NocController extends Controller
                 $cek = $API->comm('/ip/hotspot/active/print', [
                     '?user' => $data_pelanggan->reg_username,
                 ]);
+                $cek_secret = $API->comm('/ip/hotspot/user/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_secret) {
+                    $status_pelanggan = $cek_secret[0]['disabled'];
+                } else {
+                    $status_pelanggan = 'null';
+                }
                 if ($cek) {
                     $data['uptime'] = $cek['0']['uptime'];
                     $data['status'] = "CONNECTED";
                     $data['address'] = $cek['0']['address'];
+                    $data['status_secret'] = $status_pelanggan;
                 } else {
                     $data['address'] = '-';
                     $data['status']  = "DISCONNECTED";
                     $data['uptime'] = "-";
+                    $data['status_secret'] = $status_pelanggan;
                 }
                 // dd($data);
                 return $data;
@@ -570,9 +580,14 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     $API->comm('/ip/hotspot/active/remove', [
                         '.id' =>  $cek_status['0']['.id'],
                     ]);
+                    $notifikasi = array(
+                        'pesan' => 'Kick Pelanggan berhasil.',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
                 } else {
                     $notifikasi = array(
-                        'pesan' => 'Kick Pelanggan berhasil. Pelanggan Sedang Disconnected',
+                        'pesan' => 'Kick Pelanggan berhasil. Pelanggan sudah Disconnected',
                         'alert' => 'success',
                     );
                     return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
