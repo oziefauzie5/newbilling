@@ -399,6 +399,8 @@
 								</ul>
 							</div>
 						</li>
+						@endrole
+						@role('admin|STAF ADMIN|NOC')
 						<li class="nav-item {{\Route::is('admin.psb.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#base">
 								<i class="fas fa-users"></i>
@@ -420,6 +422,8 @@
 								</ul>
 							</div>
 						</li>
+						@endrole
+						@role('admin|STAF ADMIN')
 						<li class="nav-item {{\Route::is('admin.tiket.*') ? 'active' : ''}}">
 							<a href="{{route('admin.tiket.index')}}">
 								<i class="fas fa-ticket-alt"></i>

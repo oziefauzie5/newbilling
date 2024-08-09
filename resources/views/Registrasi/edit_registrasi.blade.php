@@ -82,17 +82,19 @@
                 <div class="col-sm-10">
                 <input type="text" id="kordinat" name="kordinat" class="form-control" >
               </div>
-              </div> --}}
-              <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Maps</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="tampil_maps" name="reg_maps" value="{{ $data->input_maps}}">
-                  </div>
+            </div> --}}
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Maps</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="tampil_maps" name="reg_maps" value="{{ $data->input_maps}}">
               </div>
+            </div>
+           
               <div class="form-group row">
-                <div class="col-sm-4">
-                  @if($data->reg_progres == '5')
-                 <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#exampleModal">
+                <div class="col-sm-6">
+                @role('admin|STAF ADMIN')
+                @if($data->reg_progres == '5')
+                <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#exampleModal">
                   STOP BERLANGGANAN
                 </button>
                 @elseif($data->reg_progres >= '5')
@@ -100,6 +102,8 @@
                   SAMBUNG KEMBALI
                 </button>
                 @endif
+                @endrole
+               
 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -141,23 +145,12 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
-                          <button type="submit" class="btn btn-primary">PEGATKEUN AYEUNA</button>
+                          <button type="submit" class="btn btn-primary">Simpan</button>
                         </form>
                       </div>
                     </div>
                   </div>
                 </div> 
-                </div>
-                <div class="col-sm-4">
-                  @if($data->reg_progres == '5')
-                  <button type="button" class="btn btn-danger btn-block">
-                    DISABLE
-                  </button>
-                  @elseif($data->reg_progres == '80')
-                  <button type="button" class="btn btn-info btn-block">
-                    ENABLE
-                  </button>
-                  @endif
                 </div>
                   
   
@@ -181,7 +174,7 @@
                             <div class="col-sm-4">
                               <select type="text" name="sam_stt_perangkat" class="form-control" value="{{ Session::get('reg_stt_perangkat') }}" >
                                 <option value="DIPINJAMKAN">DIPINJAMKAN</option>
-                                <option value="MILIK PROBADI">MILIK PROBADI</option>
+                                <option value="MILIK PROBADI">MILIK PRIBADI</option>
                               </select>
                             </div>
                             <label class="col-sm-2 col-form-label">Merk perangkat</label>
@@ -279,13 +272,15 @@
                       </div>
                     </div>
                   </div> 
-                <div class="col-sm-4">
-                  <button type="submit" class="btn btn-primary btn-block">Simpan</button>
+                <div class="col-sm-6">
+                <button type="submit" class="btn btn-primary btn-block">Simpan</button>
                  </div>
               </div>
               {{-- <div class="card-footer">
+                @role('admin|STAF ADMIN')
                 <button type="button" class="btn  ">Batal</button>
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
+                @endrole
               </div> --}}
             </form>
             </div>
@@ -366,24 +361,42 @@
               <div class="col-sm-2">
                 <label class="col-sm-2 col-form-label font-weight-bold text-danger" >{{ $address}}</label>
               </div>
-              <div class="col-sm-2">
+              <div class="col-sm-1">
                 <a href="{{route('admin.noc.pengecekan',['id'=>$data->reg_idpel])}}" target="_blank">
                   <button type="button" class="btn btn-sm btn-warning btn-block">
-                    Remote Router
+                    Remote
                   </button></a>             
                 </div>
-              <div class="col-sm-2">
-                <a href="{{route('admin.noc.pengecekan',['id'=>$data->reg_idpel])}}" target="_blank">
+              <div class="col-sm-1">
+                <a href="{{route('admin.noc.kick',['id'=>$data->reg_idpel])}}" target="_blank">
                   <button type="button" class="btn btn-sm btn-danger btn-block">
-                    Kick User
+                    Kick
                   </button></a>             
+                </div>
+              <div class="col-sm-1">
+                @if($status_secret=='false')
+                <a href="{{route('admin.noc.status_secret',['id'=>$data->reg_idpel.'?stat=false'])}}">
+                  <button type="button" class="btn btn-sm btn-danger btn-block">
+                    Disable
+                  </button></a>     
+                  @elseif($status_secret=='true')
+                  <a href="{{route('admin.noc.status_secret',['id'=>$data->reg_idpel.'?stat=true'])}}">
+                    <button type="button" class="btn btn-sm btn-success btn-block">
+                      Enable
+                    </button></a>   
+                    @else
+                    <button type="button" class="btn btn-sm btn-danger btn-block">
+                      Data tidak ditemukan
+                    </button>
+                  @endif        
                 </div>
               </div>
-
+              @role('admin|STAF ADMIN')
               <div class="card-footer">
                 <button type="button" class="btn  ">Batal</button>
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
               </div>
+              @endrole
             </form>
             </div>
           </div>
@@ -430,9 +443,10 @@
                   <input type="text" name="reg_odp" value="{{ $data->reg_odp}}" class="form-control" >
                 </div>
               </div>
+              @role('admin|STAF ADMIN')
               <div class="form-group row">
-              <label class=" col-sm-2 col-form-label">Kode Barang</label>
-              <div class="form-check">
+                <label class=" col-sm-2 col-form-label">Kode Barang</label>
+                <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" type="checkbox" id="pactcore" value="1" name="pactcore" @if( $data->reg_kode_pactcore) checked @endif disabled>
                   <span class="form-check-sign">Pachtcore</span>
@@ -446,7 +460,8 @@
                   <span class="form-check-sign">ONT</span>
                 </label>
               </div>
-              </div>
+              @endrole
+            </div>
 
 
               <!-- Modal Validasi Pactcore -->
@@ -555,6 +570,10 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-12">
+          <!-- <div class="card">
+            <div class="card-body">  -->
+            
               <h3 class="mt-3 text-bolt">CATATAN</h3><hr>
             <div class="form-group row">
               <label for="router" class="col-sm-2 col-form-label">Catatan</label>
@@ -564,15 +583,17 @@
               </div>
             </div>
             <div class="card-footer">
-              <button type="button" class="btn  ">Batal</button>
-              <button type="submit" class="btn btn-primary float-right">Simpan</button>
+            @role('admin|STAF ADMIN')
+            <button type="button" class="btn  ">Batal</button>
+            <button type="submit" class="btn btn-primary float-right">Simpan</button>
+            @endrole
             </div>
            </form>
           </div>
          </div>
         </div>
-                
-                
+        @role('admin|STAF ADMIN')
+        
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
@@ -619,13 +640,13 @@
                 </div>
               </div>
               <div class="form-group row">
-                  <label class=" form-check col-sm-2 col-form-label">Harga prorata</label>
+                <label class=" form-check col-sm-2 col-form-label">Harga prorata</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control harga" id="harga" name="reg_harga" value="{{$data->reg_harga}}" readonly >
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Kode Unik</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" id="kode_unik" name="reg_kode_unik" value="{{$data->reg_kode_unik}}" >
+                  <input type="text" class="form-control" id="kode_unik" name="reg_kode_unik" value="{{$data->reg_kode_unik}}" >
                 </div>
               </div>
               <div class="form-group row">
@@ -640,7 +661,7 @@
                     <input class="form-check-input checkboxkas" type="checkbox" id="kas" value="{{$data_biaya->dana_kas}}" @if( $data->reg_dana_kas) checked @endif>
                     <span class="form-check-sign"></span>
                   </label>
-                <div class="col-sm-4">
+                  <div class="col-sm-4">
                   <input type="text" class="form-control biaya_kas" id="biaya_kas" name="reg_dana_kas" value="{{$data->reg_dana_kas}}" readonly>
                 </div>
               </div>
@@ -654,13 +675,13 @@
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Tanggal Pemasangan</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" id="kode_unik" name="" value="{{date('d-m-Y', strtotime($data->reg_tgl_pasang))}}" readonly >
+                  <input type="text" class="form-control" id="kode_unik" name="" value="{{date('d-m-Y', strtotime($data->reg_tgl_pasang))}}" readonly >
                 </div>
               </div>
               <div class="form-group row">
                 <label class="form-check col-sm-2 col-form-label">Tanggal Penagihan</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" id="kode_unik" name="reg_tgl_tagih" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" readonly >
+                  <input type="text" class="form-control" id="kode_unik" name="reg_tgl_tagih" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" readonly >
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Tanggal Jatuh Tempo &nbsp;&nbsp;
                 </label>
@@ -670,12 +691,12 @@
               </div>
               <div class="form-group row">
                 <label class="form-check col-sm-2 col-form-label">Invoice Suspand &nbsp;&nbsp;
-                </label>
-                <div class="col-sm-4">
-                  <select name="reg_inv_control" id="" class="form-control">
-                    @if($data->reg_inv_control==0)
-                    <option value="0" selected>SAMBUNG DARI TGL ISOLIR</option>
-                    @else
+                  </label>
+                  <div class="col-sm-4">
+                    <select name="reg_inv_control" id="" class="form-control">
+                      @if($data->reg_inv_control==0)
+                      <option value="0" selected>SAMBUNG DARI TGL ISOLIR</option>
+                      @else
                     <option value="1" selected>SAMBUNG DARI TGL BAYAR</option>
                     @endif
                     <option value="0">SAMBUNG DARI TGL ISOLIR</option>
@@ -684,11 +705,11 @@
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Isolir Manual</label>
                 <div class="col-sm-2">
-
+                  
                   <a href="{{route('admin.noc.isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm">Isolir Manual</button></a>
                 </div>
                 <div class="col-sm-2">
-
+                  
                   <a href="{{route('admin.noc.buka_isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm">Buka Isolir Manual</button></a>
                 </div>
               </div>
@@ -700,12 +721,13 @@
             </div>
           </div>
         </div>
+        @endrole 
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
               <h3 class="mt-3">INSTALASI</h3><hr>
               <div class="form-group row">
-                  <label class=" form-check col-sm-2 col-form-label">Teknisi Team</label>
+                <label class=" form-check col-sm-2 col-form-label">Teknisi Team</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control harga"value="{{$data->reg_teknisi_team}}" >
                 </div>

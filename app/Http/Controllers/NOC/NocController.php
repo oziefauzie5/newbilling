@@ -174,14 +174,25 @@ class NocController extends Controller
                 $cek = $API->comm('/ppp/active/print', [
                     '?name' => $data_pelanggan->reg_username,
                 ]);
+                $cek_secret = $API->comm('/ppp/secret/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_secret) {
+                    $status_pelanggan = $cek_secret[0]['disabled'];
+                } else {
+                    $status_pelanggan = 'null';
+                }
+                // dd($status_pelanggan );
                 if ($cek) {
                     $data['uptime'] = $cek['0']['uptime'];
                     $data['status'] = "CONNECTED";
                     $data['address'] = $cek['0']['address'];
+                    $data['status_secret'] = $status_pelanggan;
                 } else {
                     $data['address'] = '-';
                     $data['status']  = "DISCONNECTED";
                     $data['uptime'] = "-";
+                    $data['status_secret'] = $status_pelanggan;
                 }
                 return $data;
             } else {
@@ -242,6 +253,7 @@ class NocController extends Controller
             $cek_secret = $API->comm('/ppp/secret/print', [
                 '?name' => $data_pelanggan->reg_username,
             ]);
+
             if ($cek_secret) {
                 $API->comm('/ppp/secret/set', [
                     '.id' => $cek_secret[0]['.id'],
@@ -411,6 +423,166 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 'alert' => 'error',
             );
             return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+        }
+    }
+    public function status_secret(Request $request, $id)
+    {
+
+
+        $admin = Auth::user()->name;
+        $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
+        $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
+        $user = $data_pelanggan->router_username;
+        $pass = $data_pelanggan->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
+
+        if ($request->query('stat') == 'false') {
+            $proses = 'yes';
+            $comment = 'Disable';
+        } else {
+            $comment = 'Enable';
+            $proses = 'no';
+        }
+        if ($data_pelanggan->reg_layanan == 'PPP') {
+            if ($API->connect($ip, $user, $pass)) {
+                $cek_secret = $API->comm('/ppp/secret/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_secret) {
+                    $API->comm('/ppp/secret/set', [
+                        '.id' => $cek_secret[0]['.id'],
+                        'comment' => $comment . ' By-' . $admin,
+                        'disabled' => $proses,
+                    ]);
+                    $cek_status = $API->comm('/ppp/active/print', [
+                        '?name' => $data_pelanggan->reg_username,
+                    ]);
+                    if ($cek_status) {
+                        if ($request->query('stat') == 'false') {
+                            $API->comm('/ppp/active/remove', [
+                                '.id' =>  $cek_status['0']['.id'],
+                            ]);
+                        }
+                        $notifikasi = array(
+                            'pesan' => 'Disable Pelanggan berhasil',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    } else {
+                        $notifikasi = array(
+                            'pesan' => 'Disable Pelanggan berhasil. Pelanggan Sedang Disconnected',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    }
+                }
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Maaf..!! Router Disconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            }
+        } else {
+            if ($API->connect($ip, $user, $pass)) {
+                $cek_secret = $API->comm('/ip/hotspot/user/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_secret) {
+                    $API->comm('/ip/hotspot/user/set', [
+                        '.id' => $cek_secret[0]['.id'],
+                        'comment' => $comment . ' By-' . $admin,
+                        'disabled' => $proses,
+                    ]);
+                    $cek_status = $API->comm('/ip/hotspot/active/print', [
+                        '?user' => $data_pelanggan->reg_username,
+                    ]);
+                    if ($cek_status) {
+                        if ($request->query('stat') == 'false') {
+                            $API->comm('/ip/hotspot/active/remove', [
+                                '.id' =>  $cek_status['0']['.id'],
+                            ]);
+                        }
+                        $notifikasi = array(
+                            'pesan' => 'Disable Pelanggan berhasil',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    } else {
+                        $notifikasi = array(
+                            'pesan' => 'Disable Pelanggan berhasil. Pelanggan Sedang Disconnected',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    }
+                }
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Maaf..!! Router Disconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            }
+        }
+    }
+    public function kick(Request $request, $id)
+    {
+
+        $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
+        $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
+        $user = $data_pelanggan->router_username;
+        $pass = $data_pelanggan->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
+
+        if ($data_pelanggan->reg_layanan == 'PPP') {
+            if ($API->connect($ip, $user, $pass)) {
+
+                $cek_status = $API->comm('/ppp/active/print', [
+                    '?name' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_status) {
+                    $API->comm('/ppp/active/remove', [
+                        '.id' =>  $cek_status['0']['.id'],
+                    ]);
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Pelanggan Sedang Disconnected',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                }
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Maaf..!! Router Disconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            }
+        } else {
+            if ($API->connect($ip, $user, $pass)) {
+                $cek_status = $API->comm('/ip/hotspot/active/print', [
+                    '?user' => $data_pelanggan->reg_username,
+                ]);
+                if ($cek_status) {
+                    $API->comm('/ip/hotspot/active/remove', [
+                        '.id' =>  $cek_status['0']['.id'],
+                    ]);
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Kick Pelanggan berhasil. Pelanggan Sedang Disconnected',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                }
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Maaf..!! Router Disconnected',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            }
         }
     }
 }

@@ -3,9 +3,11 @@
 
 <div class="content">
   <div class="page-inner">
+    @role('admin|STAF ADMIN')
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active">
+          
           <div class="row">
               <div class="col-6 col-sm-4 col-lg-1"  data-target="#carouselExampleControls" data-slide="prev">
                 <div class="card">
@@ -137,6 +139,7 @@
         <span class="sr-only">Next</span>
       </div>
     </div>
+    @endrole
     
     <div class="row">
       <div class="card">
@@ -163,11 +166,11 @@
       </button>
       @endrole
       <a href="{{route('admin.psb.berita_acara')}}">
-      <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
-        <i class="fa fa-plus"></i>
-        BERITA ACARA
-      </button>
-    </a>
+        <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
+          <i class="fa fa-plus"></i>
+          BERITA ACARA
+        </button>
+      </a>
         <hr>
         <form >
         <div class="row mb-1">
