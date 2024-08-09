@@ -368,7 +368,7 @@
                   </button></a>             
                 </div>
               <div class="col-sm-1">
-                <a href="{{route('admin.noc.kick',['id'=>$data->reg_idpel])}}" target="_blank">
+                <a href="{{route('admin.noc.kick',['id'=>$data->reg_idpel])}}">
                   <button type="button" class="btn btn-sm btn-danger btn-block">
                     Kick
                   </button></a>             

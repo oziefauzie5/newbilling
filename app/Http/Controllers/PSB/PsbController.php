@@ -283,6 +283,7 @@ class PsbController extends Controller
         $data['status'] = $status_inet['status'];
         $data['uptime'] = $status_inet['uptime'];
         $data['address'] = $status_inet['address'];
+        $data['status_secret'] = $status_inet['status_secret'];
         return view('Registrasi/edit_registrasi', $data);
     }
     public function input_data_import(Request $request)

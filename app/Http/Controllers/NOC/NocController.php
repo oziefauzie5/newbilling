@@ -542,6 +542,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 $cek_status = $API->comm('/ppp/active/print', [
                     '?name' => $data_pelanggan->reg_username,
                 ]);
+                // dd($cek_status);
                 if ($cek_status) {
                     $API->comm('/ppp/active/remove', [
                         '.id' =>  $cek_status['0']['.id'],
