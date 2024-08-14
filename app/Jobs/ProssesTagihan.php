@@ -48,18 +48,19 @@ class ProssesTagihan implements ShouldQueue
                     'ket' => 'tagihan',
                     'status' => '0',
                     'target' => $key->input_hp,
+                    'nama' => $key->input_nama,
                     'pesan' => '
 Pelanggan Yth.
 
 Terima kasih sudah menjadi pelanggan setia kami,
 berikut kami sampaikan tanggal jatuh tempo dan rincian tagihan bulan ini :
 
-No.Layanan : *' . $key->reg_nolayanan . '*
+No.Layanan : ' . $key->reg_nolayanan . '
 Pelanggan : ' . $key->inv_nama . '
 Invoice : ' . $key->inv_id . '
 Periode : ' . $key->inv_periode . '
 Total tagihan : *' . number_format($key->reg_harga + $key->reg_ppn + $key->reg_kode_unik + $key->reg_dana_kas + $key->reg_dana_kerjasama) . '*
-Pembayaran paling lambat : ' . date('d-m-Y', strtotime($key->reg_tgl_jatuh_tempo)) . '
+Pembayaran paling lambat : ' . date('d/m/Y', strtotime($key->reg_tgl_jatuh_tempo)) . '
 
 *PELUNASAN OTOMATIS*
 Silahkan login ke aplikasi client area *https://ovallapp.com*
@@ -77,20 +78,21 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     'ket' => 'tagihan',
                     'status' => '10',
                     'target' => $key->input_hp,
+                    'nama' => $key->input_nama,
                     'pesan' => '
 Pelanggan Yth.
 Terima kasih sudah menjadi pelanggan setia kami,
 berikut kami sampaikan tanggal jatuh tempo dan rincian tagihan bulan ini :
 
-No.Layanan : *' . $key->reg_nolayanan . '*
+No.Layanan : ' . $key->reg_nolayanan . '
 Pelanggan : ' . $key->inv_nama . '
 Invoice : ' . $key->inv_id . '
 Periode : ' . $key->inv_periode . '
 Total tagihan : *' . number_format($key->reg_harga + $key->reg_ppn + $key->reg_kode_unik + $key->reg_dana_kas + $key->reg_dana_kerjasama) . '*
-Pembayaran paling lambat : ' . date('d-m-Y', strtotime($key->reg_tgl_jatuh_tempo)) . '
+Pembayaran paling lambat : ' . date('d/m/Y', strtotime($key->reg_tgl_jatuh_tempo)) . '
 
 *PELUNASAN OTOMATIS*
-Silahkan login ke aplikasi client area *https://ovallapp.com*
+Silahkan login ke aplikasi client area https://ovallapp.com
 Tagihan otomatis lunas setelah melakukan pembayaran, jika menggunakan QRIS, Virtual account, Indomaret, Alfamart dan lain lain.
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas

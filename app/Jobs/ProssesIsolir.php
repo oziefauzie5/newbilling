@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\Global\GlobalController;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\RouterosAPI;
@@ -41,10 +42,16 @@ class ProssesIsolir implements ShouldQueue
             ->first();
 
         if ($data_pelanggan) {
+            $status = (new GlobalController)->whatsapp_status();
+            if ($status->wa_status == 'Enable') {
+                $pesan_group['status'] = '0';
+            } else {
+                $pesan_group['status'] = '10';
+            }
 
             $pesan_group['ket'] = 'isolir otomatis';
-            $pesan_group['status'] = '0';
             $pesan_group['target'] = $data_pelanggan->input_hp;
+            $pesan_group['nama'] = $data_pelanggan->input_nama;
             $pesan_group['pesan'] = '
 Pelanggan yang terhormat,
 Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya

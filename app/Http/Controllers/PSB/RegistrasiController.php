@@ -184,6 +184,7 @@ class RegistrasiController extends Controller
 
         $pesan_pelanggan['ket'] = 'registrasi';
         $pesan_pelanggan['target'] = $request->reg_hp;
+        $pesan_pelanggan['nama'] = $request->reg_nama;
         $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
 Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
 
@@ -207,6 +208,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
         $pesan_group['ket'] = 'registrasi';
         $pesan_group['target'] = '120363262623415382@g.us';
+        $pesan_group['nama'] = $request->reg_nama;
         $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
 
 Antrian pemasangan tanggal ' . date('d-m-Y', strtotime($tgl_pasang)) . ' 

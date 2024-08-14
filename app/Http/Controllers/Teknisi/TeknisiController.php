@@ -891,9 +891,16 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
 
         Teknisi::where('teknisi_idpel', $tiket->reg_idpel)->where('teknisi_job', 'TIKET')->where('teknisi_status', '1')->where('teknisi_userid', $teknisi_id)->update($teknisi);
 
+        $status = (new GlobalController)->whatsapp_status();
+        if ($status->wa_status == 'Enable') {
+            $pesan_group['status'] = '0';
+            $pesan_pelanggan['status'] = '0';
+        } else {
+            $pesan_group['status'] = '10';
+            $pesan_pelanggan['status'] = '10';
+        }
 
         $pesan_group['ket'] = 'close tiket';
-        $pesan_group['status'] = '0';
         $pesan_group['target'] = '120363028776966861@g.us';
         $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
         $pesan_group['pesan'] = '               -- CLOSE TIKET --
@@ -914,7 +921,6 @@ Tanggal Selesai : ' . $tanggal . '
 ';
 
         $pesan_pelanggan['ket'] = 'close tiket';
-        $pesan_pelanggan['status'] = '0';
         $pesan_pelanggan['target'] = $tiket->input_hp;
         $pesan_group['nama'] = $tiket->input_nama;
         $pesan_pelanggan['pesan'] = '               -- CLOSE TIKET --
@@ -929,7 +935,6 @@ Tindakan : *' . $request->edit_keterangan . '*
 
 Tanggal Selesai : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
 
-Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu aktif agar bisa di hubungi kembali.
 Terima kasih.';
 
         // dd($pesan_pelanggan);
