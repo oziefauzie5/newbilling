@@ -73,7 +73,7 @@
         }
 
         .items td {
-            font-size: 12px;
+            font-size: 10px;
             /* text-align: right; */
             vertical-align: bottom;
             /* height: 30PX; */
@@ -136,65 +136,73 @@
     <table class="items">
         <thead>
             <tr>
-                <th class="heading name" colspan="2">{{Session::get('app_brand')}}</th>
-                <th class="heading name " style="text-align:right" >{{ $admin }}</th>
+                <!-- <th class="heading name" colspan="3">{{Session::get('app_brand')}}</th> -->
+                <td  colspan="3"><center><img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" ></center></td>
+                <!-- <th class="heading name " style="text-align:right" >{{ $nama_admin }}</th> -->
             </tr>
+            <tr >
+                <td class="heading name " colspan="3"></td>
+            </tr>
+            
 
         </thead>
 
         <tbody>
 
             <tr>
-                <td style="width:10%;">NO.INVOICE</td>
+                <td style="width:30%;">NO.INVOICE</td>
                 <td style="width:1%;">:</td>
-                <td colspan="2" style="width:auto;">{{ $data->inv_id }}</td>
+                <td colspan="2" style="width:auto;">{{ $invoice->inv_id }}</td>
             </tr>
             <tr>
-                <td>NO.LAYANAN</td>
+                <td style="width:30%;">NO.LAYANAN</td>
                 <td>:</td>
-                <td  colspan="2">{{ $data->inv_nolayanan }}</td>
+                <td  colspan="2">{{ $invoice->inv_nolayanan }}</td>
               </tr>
 
 
               <tr>
-                <td>PELANGGAN</td>
+                <td style="width:30%;">PELANGGAN</td>
                 <td>:</td>
-                <td  colspan="2">{{ $data->inv_nama }}</td>
+                <td  colspan="2">{{ $invoice->inv_nama }}</td>
               </tr>
 
 
               <tr>
-                <td>TGL INV</td>
+                <td style="width:30%;">TGL INV</td>
                 <td>:</td>
-                <td colspan="2">{{ date('d/m/Y',strtotime($data->inv_tgl_tagih)) }}</td>
+                <td colspan="2">{{ date('d/m/Y',strtotime($invoice->inv_tgl_tagih)) }}</td>
               </tr>
               <tr>
-                <td>JTH TEMPO</td>
+                <td style="width:30%;">JTH TEMPO</td>
                 <td>:</td>
-                <td  colspan="2">{{ date('d/m/Y',strtotime($data->inv_tgl_jatuh_tempo)) }}</td>
-              </tr>
-
-
-              <tr>
-                <td>TGL BAYAR</td>
-                <td>:</td>
-                <td  colspan="2">{{ date('d/m/Y',strtotime($data->inv_tgl_bayar)) }}</td>
+                <td  colspan="2">{{ date('d/m/Y',strtotime($invoice->inv_tgl_jatuh_tempo)) }}</td>
               </tr>
 
+
               <tr>
-                <td>CHANNEL</td>
+                <td style="width:30%;">TGL BAYAR</td>
                 <td>:</td>
-                <td  colspan="2">{{ $data->akun_nama }}</td>
+                <td  colspan="2">{{ date('d/m/Y',strtotime($invoice->inv_tgl_bayar)) }}</td>
+              </tr>
+
+              <tr>
+                <td style="width:30%;">CHANNEL</td>
+                <td>:</td>
+                <td  colspan="2">{{ $invoice->akun_nama }}</td>
               </tr>
               <tr>
-                <td>STS BAYAR</td>
+                <td style="width:30%;">STS BAYAR</td>
                 <td>:</td>
                 <td  colspan="2">Sudah Lunas</td>
               </tr>
-              @foreach ($datainvoice as $c )
+              @foreach ($deskripsi as $c )
 <tr>
-<td colspan="2" class="line" style="width:95%;">{{ $c->subinvoice_deskripsi . ' x ' . $c->subinvoice_qty }}<br><sup style="font-size:8px; margin-top:0px"></sup></td>
-<td class="line" style="font-weight:bold; text-align:right">{{ number_format($c->subinvoice_harga) }}</td>
+<td colspan="3" class="line" style="width:95%;">{{ $c->subinvoice_deskripsi . ' x ' . $c->subinvoice_qty }}<br><sup style="font-size:8px; margin-top:0px"></sup></td>
+<tr>
+    <td colspan="2"></td>
+    <td  style="font-weight:bold; text-align:right">{{ number_format($c->subinvoice_harga) }}</td>
+</tr>
 </tr>
 @endforeach
             <tr>
@@ -207,17 +215,17 @@
             </tr>
             <tr>
                 <td colspan="2" class="sum-up">Diskon</td>
-                <td class="price" style="text-align:right">{{ number_format($data->inv_diskon) }}</td>
+                <td class="price" style="text-align:right">{{ number_format($sumppn) }}</td>
             </tr>
 
             <tr>
                 <th colspan="2" class="sum-up">Total</th>
-                <th class="sum-up" style="text-align:right">{{ number_format($sumharga+$sumppn-$data->inv_diskon) }}</th>
+                <th class="sum-up" style="text-align:right">{{ number_format($sumharga+$sumppn-$invoice->inv_diskon) }}</th>
             </tr>
         </tbody>
     </table>
 <br><br><br>
-<button onclick="window.print()" class="no-print">Print</button>
+<!-- <button onclick="window.print()" class="no-print">Print</button> -->
 </body>
 
 </html>

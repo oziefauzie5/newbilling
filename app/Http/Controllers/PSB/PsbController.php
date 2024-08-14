@@ -78,6 +78,15 @@ class PsbController extends Controller
             $query->whereMonth('reg_tgl_pasang', '=', $month);
         elseif ($data['data'] == "USER BULAN LALU")
             $query->whereMonth('reg_tgl_pasang', '=', $bulan_lalu);
+        elseif ($data['data'] == "FREE")
+            $query->where('reg_jenis_tagihan', '=', $data['data']);
+
+        //          $variable = $query->get();
+        //     foreach ($variable as $key) {
+        //         echo '<table><tr><td>'.$key->reg_nolayanan.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_tgl_jatuh_tempo.'</td></tr></table>';
+
+        //     }
+        // dd('CILUKBA');
 
 
         $data['data_registrasi'] = $query->paginate(10);

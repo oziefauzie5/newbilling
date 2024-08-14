@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\App;
 
 class InvoiceController extends Controller
 {
@@ -64,12 +65,19 @@ class InvoiceController extends Controller
         if ($data['data_inv'])
             $query->where('inv_status', '=', $data['data_inv']);
 
+        //     $variable = $query->get();
+        //     foreach ($variable as $key) {
+        //         echo '<table><tr><td>'.$key->inv_nolayanan.'</td><td>'.$key->inv_nama.'</td><td>'.$key->inv_tgl_jatuh_tempo.'</td></tr></table>';
+
+        //     }
+        // dd('CILUKBA');
+
 
         $data['inv_count_all'] = $query->count();
         $data['data_invoice'] = $query->paginate(20);
         $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();
-        $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->sum('inv_total');
-        $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->sum('inv_total');
+        $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->sum('inv_total');
+        $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->sum('inv_total');
         $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
         $data['inv_count_isolir'] = Invoice::where('inv_status', '=', 'ISOLIR')->count();
         $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
@@ -83,9 +91,8 @@ class InvoiceController extends Controller
         $invoice = Invoice::where('invoices.inv_status', '=', 'PAID')
             // ->where('invoices.inv_jenis_tagihan', '!=', 'FREE')
             // ->whereMonth('invoices.inv_tgl_jatuh_tempo', '=',$month )
-            ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
+            ->orderBy('inv_tgl_bayar', 'DESC')
             ->where(function ($query) use ($data) {
-                $query->where('inv_id', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
@@ -107,8 +114,22 @@ class InvoiceController extends Controller
     public function sub_invoice($id)
     {
         $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-            ->join('users', 'users.id', '=', 'invoices.inv_admin')
+            // ->join('users', 'users.id', '=', 'invoices.inv_admin')
             ->where('inv_id', $id)->first();
+
+        if ($data['invoice']->inv_admin) {
+            if ($data['invoice']->inv_admin == 'SYSTEM') {
+                $data['nama_admin'] = '';
+            } else {
+                $admin = User::where('id', $data['invoice']->inv_admin)->first();
+                $data['nama_admin'] = $admin->name;
+            }
+        } else {
+            $data['nama_admin'] = '';
+        }
+
+        // dd($data['invoice']);sss
+
         $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
             ->where('invoices.inv_id', $id)->get();
 
@@ -124,32 +145,64 @@ class InvoiceController extends Controller
     }
     public function print_inv(Request $request, $id)
     {
+
+
+
         if ($request->cara_print == 1) {
             $admin_user = Auth::user()->id;
             $data['admin'] = Auth::user()->name;
-            $data['data'] = DB::table('invoices')
-                ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-                ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-                ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
-                ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'invoices.inv_akun')
-                ->join('users', 'users.id', '=', 'invoices.inv_admin')
-                ->where('invoices.inv_id', '=', $id)
-                ->orWhere('invoices.inv_nolayanan', '=', $id)
-                ->where('invoices.inv_status', '=', 'PAID')
-                ->first();
-            $data['sumharga'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_harga');
-            $data['sumppn'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_ppn');
-            $data['datainvoice'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->get();
-            $data['biller'] = MitraSetting::where('mts_user_id', $admin_user)->first();
-            $data['saldo'] = (new globalController)->total_mutasi($admin_user);
-            return view('Transaksi/print_thermal', $data);
-        } else {
-
             $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-                ->join('users', 'users.id', '=', 'invoices.inv_admin')
                 ->where('inv_id', $id)->first();
             $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
                 ->where('invoices.inv_id', $id)->get();
+
+
+
+            if ($data['invoice']->inv_admin) {
+                if ($data['invoice']->inv_admin == 'SYSTEM') {
+                    $data['nama_admin'] = '';
+                } else {
+                    $admin = User::where('id', $data['invoice']->inv_admin)->first();
+                    $data['nama_admin'] = $admin->name;
+                }
+            } else {
+                $data['nama_admin'] = '';
+            }
+
+
+            $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');
+            $data['sumppn'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn');
+            $data['ppnj'] = env('PPN');
+            $data['akun'] = SettingAkun::all();
+            $data['ppn'] = SettingBiaya::first();
+            // return view('Transaksi/print_thermal', $data);
+
+            $pdf = App::make('dompdf.wrapper');
+            $html = view('Transaksi/print_thermal', $data)->render();
+            $pdf->loadHTML($html);
+            // $pdf->setPaper([ 0 , 0 , 3211,02 , 3211,02 ], 'potrait');
+            // $pdf->set_option('dpi', 72);
+            $pdf->setPaper('A4', 'potrait');
+            return $pdf->download('invoice.pdf');
+        } else {
+
+            $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+                ->where('inv_id', $id)->first();
+            $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+                ->where('invoices.inv_id', $id)->get();
+
+
+
+            if ($data['invoice']->inv_admin) {
+                if ($data['invoice']->inv_admin == 'SYSTEM') {
+                    $data['nama_admin'] = '';
+                } else {
+                    $admin = User::where('id', $data['invoice']->inv_admin)->first();
+                    $data['nama_admin'] = $admin->name;
+                }
+            } else {
+                $data['nama_admin'] = '';
+            }
 
 
             $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');
@@ -288,16 +341,18 @@ class InvoiceController extends Controller
     }
 
     public function payment(Request $request, $id)
-    {
 
+    {
 
         $nama_user = Auth::user()->name; #NAMA USER
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+        $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
+        $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
+
+
         $now = Carbon::now();
         $month = $now->format('m');
         $year = $now->format('Y');
-        $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
-        $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->count();
 
         $cek_inv = Laporan::where('lap_inv', $id)->first();
         if ($cek_inv) {

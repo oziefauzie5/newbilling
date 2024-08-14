@@ -86,8 +86,7 @@ class CallbackController extends Controller
                     $month = $now->format('m');
                     $year = $now->format('Y');
                     $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
-                    $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->count();
-
+                    $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
                     #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
                     #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
 
@@ -112,6 +111,7 @@ class CallbackController extends Controller
 
                     $datas['inv_cabar'] = 'TRIPAY';
                     $datas['inv_admin'] = 'SYSTEM';
+                    $datas['inv_akun'] = '1';
                     $datas['inv_reference'] = $data->reference;
                     $datas['inv_payment_method'] = $data->payment_method;
                     $datas['inv_payment_method_code'] = $data->payment_method_code;
@@ -144,7 +144,7 @@ class CallbackController extends Controller
                     $reg['reg_status'] = 'PAID';
                     Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
 
-                    if ($count_trx == 0) {
+                    if ($count_trx == '0') {
                         $data_trx['trx_kategori'] = 'PEMASUKAN';
                         $data_trx['trx_jenis'] = 'INVOICE';
                         $data_trx['trx_admin'] = 'SYSTEM';

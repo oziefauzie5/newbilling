@@ -302,6 +302,7 @@ Invoice : 013524
 Jatuh Tempo : ' . $data_pelanggan->reg_tgl_jatuh_tempo . '
 Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama) . '*
 
+Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *https://ovallapp.com*
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *OVALL FIBER*

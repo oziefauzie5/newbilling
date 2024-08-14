@@ -51,6 +51,8 @@ class BillerController extends Controller
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_id', '=', $id)
+            ->latest('inv_tgl_jatuh_tempo')
+            ->where('inv_status', '!=', 'PAID')
             ->orWhere('inv_nolayanan', '=', $id)
             ->first();
         // return response()->json($query->inv_status);
@@ -58,7 +60,7 @@ class BillerController extends Controller
             $data['data'] = $query->inv_status;
         } else {
             $data['data'] = $query;
-            $data['biller'] = MitraSetting::first();
+            $data['biller'] = MitraSetting::where('mts_user_id', $admin_user)->first();
             $data['saldo'] = (new GlobalController)->total_mutasi($admin_user);
             $data['sumharga'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_harga');
             $data['sumppn'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_ppn');
@@ -201,8 +203,7 @@ class BillerController extends Controller
         $nama_user = Auth::user()->name; #NAMA USER
         $mitra = MitraSetting::where('mts_user_id', $admin_user)->where('mts_limit_minus', '!=', '0')->first();
         $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
-        $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->count();
-
+        $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
         $saldo_mutasi = (new GlobalController)->total_mutasi($admin_user); #Cek saldo mutasi terlebih dahulu sebelum melakukan pemabayaran
         $cek_tagihan = (new GlobalController)->data_tagihan($id); #cek data tagihan pembayaran
         $sumharga = SubInvoice::where('subinvoice_id', $cek_tagihan->inv_id)->sum('subinvoice_harga'); #hitung total harga invoice

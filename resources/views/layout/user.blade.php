@@ -279,7 +279,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 									document.getElementById("subinvoice_harga").innerHTML = new Intl.NumberFormat('id-ID', {
 																				style: 'currency',minimumFractionDigits: 0,
 																				currency: 'IDR',
-																				}).format(data['sumharga']);
+																				}).format(harga);
 									document.getElementById("subinvoice_diskon").innerHTML = new Intl.NumberFormat('id-ID', {
 																				style: 'currency',minimumFractionDigits: 0,
 																				currency: 'IDR',

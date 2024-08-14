@@ -21,7 +21,11 @@
                   {{$invoice->input_hp}}<br>
                   {{$invoice->input_email}}
                 </address>
-                <b>Counter : </b> <span ><strong> {{$invoice->name}}</strong></span><br>
+                @if($invoice->inv_admin == 'SYSTEM')
+                <b>Counter : </b> <span ><strong> SYSTEM</strong></span><br>
+                @else
+                <b>Counter : </b> <span ><strong> {{$nama_admin}}</strong></span><br>
+                @endif
               </div>
               <div class="col-sm-4">
 

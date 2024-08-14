@@ -59,37 +59,35 @@
               <thead>
                 <tr>
                   <th>INVOICE</th>
-                  <th>ID. PELANGGAN</th>
-                  <th>NO.LAYANAN</th>
-                  <th>PELANGGAN</th>
-                  <th>PROFILE</th>
-                  <th>MITRA</th>
-                  <th>KATEGORI</th>
                   <th>TGL BAYAR</th>
                   <th>ADMIN</th>
                   <th>CABAR</th>
+                  <th>NO.LAYANAN</th>
+                  <th>PELANGGAN</th>
+                  <th>PROFILE</th>
                   <th>CHANNEL</th>
-                  <th>REKENING</th>
+                  <th>MITRA</th>
                   <th>TOTAL</th>
+                  <th>KATEGORI</th>
+                  <th>REKENING</th>
                   <th>NOTE</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($data_invoice as $d)
                 <tr>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_id}}</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_idpel}}</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nolayanan}}</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nama}}</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_profile}}</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_mitra}}</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_kategori}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >INV-{{$d->inv_id}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_bayar))}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_admin}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_cabar}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nolayanan}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nama}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_profile}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_payment_method}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{number_format($d->inv_total_amount)}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_mitra}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_kategori}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >-</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_total_amount}}</td>
                       <td>{{$d->inv_note}}</td>
                     </tr>
                     @endforeach
@@ -115,4 +113,4 @@
   </div>
 </div>
 
-@endsection
+@endsections

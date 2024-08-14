@@ -181,8 +181,8 @@
                 @endif
                 <option value="">ALL DATA</option>
                 <option value="BELUM TERPASANG">BELUM TERPASANG</option>
+                <option value="FREE">FREE</option>
                 <option value="PPP">USER PPP</option>
-                <option value="DHCP">USER DHCP</option>
                 <option value="HOTSPOT">USER HOTSPOT</option>
                 <option value="USER BARU">USER BARU</option>
                 <option value="USER BULAN LALU">USER BULAN LALU</option>
