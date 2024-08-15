@@ -35,6 +35,7 @@
                 <br>
                 @if($invoice->inv_status != 'PAID')
                 <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>
+                <b>Tanggal Isolir</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_isolir))}}<br>
                 <b>Status : </b> <span class="text-danger"><strong> {{$invoice->inv_status}}</strong></span><br>
                 @else
                 <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>

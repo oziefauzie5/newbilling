@@ -269,7 +269,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 										komisi=0
 									}
 									var total = parseInt(harga)+parseInt(ppn)+parseInt(komisi)-parseInt(diskon);
-									document.getElementById("upd_pelanggan").innerHTML =data['data'].input_nama;
+									document.getElementById("upd_pelanggan").innerHTML =data['data'].inv_nama;
 									document.getElementById("hp").innerHTML =data['data'].input_hp;
 									document.getElementById("nolay").innerHTML =data['data'].inv_nolayanan;
 									document.getElementById("alamat_pasang").innerHTML =data['data'].input_alamat_pasang;

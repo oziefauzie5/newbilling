@@ -55,12 +55,15 @@ class GlobalController extends Controller
             ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('inv_status', '!=', 'PAID')
             ->where('inv_id', '=', $invoice)
             ->orWhere('inv_nolayanan', '=', $invoice)
+            ->orWhere('input_data.input_hp', '=', $invoice)
+            ->latest('inv_tgl_jatuh_tempo')
             ->first();
         return $data_tagihan;
     }
-    public function whatsapp_status()
+    public function al()
     {
         $wa_status =  SettingWhatsapp::first();
         return $wa_status;

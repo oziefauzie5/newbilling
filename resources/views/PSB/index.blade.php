@@ -82,16 +82,8 @@
             <div class="col-6 col-sm-4 col-lg-2">
               <div class="card">
                 <div class="card-body p-3 text-center">
-                  <div class="h1 m-0">{{$count_inputdata}}</div>
+                  <div class="h1 m-0">{{$count_ppp}}</div>
                   <div class="text-muted mb-3">PPP</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-2">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="h1 m-0">{{$count_registrasi}}</div>
-                  <div class="text-muted mb-3">DHCP</div>
                 </div>
               </div>
             </div>
@@ -114,7 +106,15 @@
             <div class="col-6 col-sm-4 col-lg-2">
               <div class="card">
                 <div class="card-body p-3 text-center">
-                  <div class="h1 m-0">7</div>
+                  <div class="h1 m-0">{{$count_total_inv}}</div>
+                  <div class="text-muted mb-3">Total INV</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-2">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="h1 m-0">{{$count_tiket}}</div>
                   <div class="text-muted mb-3">Tiket</div>
                 </div>
               </div>
@@ -182,6 +182,7 @@
                 <option value="">ALL DATA</option>
                 <option value="BELUM TERPASANG">BELUM TERPASANG</option>
                 <option value="FREE">FREE</option>
+                <option value="ISOLIR">ISOLIR</option>
                 <option value="PPP">USER PPP</option>
                 <option value="HOTSPOT">USER HOTSPOT</option>
                 <option value="USER BARU">USER BARU</option>

@@ -50,10 +50,11 @@ class BillerController extends Controller
             ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->where('inv_id', '=', $id)
-            ->latest('inv_tgl_jatuh_tempo')
             ->where('inv_status', '!=', 'PAID')
+            ->where('inv_id', '=', $id)
             ->orWhere('inv_nolayanan', '=', $id)
+            ->orWhere('input_data.input_hp', '=', $id)
+            ->latest('inv_tgl_jatuh_tempo')
             ->first();
         // return response()->json($query->inv_status);
         if ($query->inv_status == 'PAID') {
@@ -222,6 +223,7 @@ class BillerController extends Controller
             $biller = MitraSetting::where('mts_user_id', $admin_user)->first(); #mengambil biaya admni biller pada table mitra_setting
 
             $data_pelanggan = (new GlobalController)->data_tagihan($id);
+            // return response()->json($data_pelanggan->inv_id);
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
             #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
 
@@ -258,6 +260,7 @@ class BillerController extends Controller
             $datas['inv_amount_received'] = $data_pelanggan->inv_total;
             $datas['inv_tgl_bayar'] = $tgl_bayar;
             $datas['inv_status'] = 'PAID';
+
 
             $data_lap['lap_id'] = 0;
             $data_lap['lap_tgl'] = $tgl_bayar;
@@ -351,8 +354,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
                         Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
                     }
-                    Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
                     Laporan::create($data_lap);
+                    Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
                     Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
                     Mutasi::create($mutasi);
                     Pesan::create($pesan_group);

@@ -22,6 +22,9 @@
 <div class="content">
   <div class="page-inner">
     <div class="col-md-12">
+      <div>
+        <a href="{{route('admin.psb.index')}}"><button class="btn btn-primary btn-sm">Kembali</button></a><hr>
+      </div>
       <div class="card">
         <div class="card-body">
           @if ($errors->any())
@@ -703,14 +706,24 @@
                     <option value="1">SAMBUNG DARI TGL BAYAR</option>
                   </select>
                 </div>
-                <label class="form-check col-sm-2 col-form-label">Isolir Manual</label>
-                <div class="col-sm-2">
-                  
-                  <a href="{{route('admin.noc.isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm">Isolir Manual</button></a>
+                <label class="form-check col-sm-2 col-form-label">Status</label>
+                <div class="col-sm-4">
+                    <select name="reg_status" id="" class="form-control">
+                      @if($data->reg_status)
+                      <option value="{{$data->reg_status}}" selected>{{$data->reg_status}}</option>
+                    @endif
+                    <option value="UNPAID">UNPAID</option>
+                    <option value="ISOLIR">ISOLIR</option>
+                  </select>
                 </div>
-                <div class="col-sm-2">
+              </div>
+              <div class="form-group row">
+                  <div class="col">
+                  <a href="{{route('admin.noc.isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Isolir Manual</button></a>
+                </div>
+                <div class="col">
                   
-                  <a href="{{route('admin.noc.buka_isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm">Buka Isolir Manual</button></a>
+                  <a href="{{route('admin.noc.buka_isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Buka Isolir Manual</button></a>
                 </div>
               </div>
               <div class="card-footer">

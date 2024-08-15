@@ -13,6 +13,7 @@ use App\Models\PSB\Registrasi;
 use App\Models\Router\Paket;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
+use App\Models\Transaksi\Invoice;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -80,6 +81,8 @@ class PsbController extends Controller
             $query->whereMonth('reg_tgl_pasang', '=', $bulan_lalu);
         elseif ($data['data'] == "FREE")
             $query->where('reg_jenis_tagihan', '=', $data['data']);
+        elseif ($data['data'] == "ISOLIR")
+            $query->where('reg_status', '=', $data['data']);
 
         //          $variable = $query->get();
         //     foreach ($variable as $key) {
@@ -96,8 +99,11 @@ class PsbController extends Controller
         $data['count_registrasi'] = $query->count();
         $data['count_berlangganan'] = Registrasi::where('reg_progres', '>=', '3')->where('reg_jenis_tagihan', '!=', 'FREE')->count();
         $data['count_free_berlangganan'] = Registrasi::where('reg_progres', '>=', '3')->where('reg_jenis_tagihan', '=', 'FREE')->count();
-        $data['count_ps'] = Registrasi::where('reg_progres', 'ps')->count();
-        $data['count_pb'] = Registrasi::where('reg_progres', 'pb')->count();
+        $data['count_ps'] = Registrasi::where('reg_progres', '90')->count();
+        $data['count_pb'] = Registrasi::where('reg_progres', '100')->count();
+        $data['count_ppp'] = Registrasi::where('reg_layanan', 'PPP')->count();
+        $data['count_total_inv'] = Invoice::where('inv_status', '!=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '!=', 'PAID')->count();
+        $data['count_tiket'] = Invoice::where('inv_status', '!=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '!=', 'PAID')->count();
 
         $data['get_router'] = Router::get();
         $data['get_paket'] = Paket::get();

@@ -67,7 +67,7 @@ class InvoiceController extends Controller
 
         //     $variable = $query->get();
         //     foreach ($variable as $key) {
-        //         echo '<table><tr><td>'.$key->inv_nolayanan.'</td><td>'.$key->inv_nama.'</td><td>'.$key->inv_tgl_jatuh_tempo.'</td></tr></table>';
+        //         echo '<table><tr><td>'.$key->inv_nolayanan.'</td><td>'.$key->inv_nama.'</td><td>'.$key->inv_id.'</td></tr></table>';
 
         //     }
         // dd('CILUKBA');
@@ -90,7 +90,7 @@ class InvoiceController extends Controller
         $data['q'] = $request->query('q');
         $invoice = Invoice::where('invoices.inv_status', '=', 'PAID')
             // ->where('invoices.inv_jenis_tagihan', '!=', 'FREE')
-            // ->whereMonth('invoices.inv_tgl_jatuh_tempo', '=',$month )
+            ->whereMonth('invoices.inv_tgl_jatuh_tempo', '=', $month)
             ->orderBy('inv_tgl_bayar', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
@@ -100,7 +100,7 @@ class InvoiceController extends Controller
 
         // $export = $invoice->get();
         // foreach ($export as $value) {
-        //     echo '<table><th><td>'.$value->inv_nolayanan.'</td><td>'.$value->inv_nama.'</td><td>'.$value->inv_tgl_jatuh_tempo.'</td></th></table>';
+        //     echo '<table><th><td>'.$value->inv_nolayanan.'</td><td>'.$value->inv_nama.'</td><td>'.$value->inv_id.'</td></th></table>';
         // }
         // dd('test');
         $data['data_invoice'] = $invoice->paginate(10);
@@ -603,5 +603,49 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     }
     public function suspand_otomatis()
     {
+        // $now = Carbon::now();
+        // $month = $now->format('m');
+        // $year = $now->format('Y');
+        // $dp = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
+        //     ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
+        //     ->where('reg_nolayanan', '=', 24021232108)
+        //     ->first();
+
+        //     $swaktu = SettingWaktuTagihan::first();
+        //     $inv_id = strtotime(Carbon::now());
+        //     $hari_jt_tempo = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
+        //     $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+        //     $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+        //     $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
+        //     $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
+
+        //     Invoice::create([
+        //         'inv_id' => $inv_id,
+        //         'inv_status' => 'UNPAID',
+        //         'inv_idpel' => $dp->reg_idpel,
+        //     'inv_nolayanan' => $dp->reg_nolayanan,
+        //     'inv_nama' => $dp->input_nama,
+        //     'inv_jenis_tagihan' => $dp->reg_jenis_tagihan,
+        //     'inv_profile' => $dp->paket_nama,
+        //     'inv_mitra' => 'SYSTEM',
+        //     'inv_kategori' => 'OTOMATIS',
+        //     'inv_tgl_tagih' => $hari_tgl_tagih,
+        //     'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
+        //     'inv_tgl_isolir' => $tgl_isolir,
+        //     'inv_periode' => $periode1blan,
+        //     'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+        // ]);
+
+        // SubInvoice::create(
+        //     [
+        //         'subinvoice_id' => $inv_id,
+        //         'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
+        //         'subinvoice_harga' => $dp->reg_harga + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+        //         'subinvoice_ppn' => $dp->reg_ppn,
+        //         'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+        //         'subinvoice_qty' => 1,
+        //         'subinvoice_status' => 0,
+        //     ]
+        // );
     }
 }
