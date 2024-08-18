@@ -63,7 +63,7 @@ class GlobalController extends Controller
             ->first();
         return $data_tagihan;
     }
-    public function al()
+    public function whatsapp_status()
     {
         $wa_status =  SettingWhatsapp::first();
         return $wa_status;

@@ -172,9 +172,11 @@ class TeknisiController extends Controller
             ->join('tikets', 'tikets.tiket_idpel', '=', 'input_data.id')
             ->where('tikets.tiket_status', '=', 'PROGRES')
             ->where('teknisis.teknisi_JOB', '=', 'TIKET')
-            ->where('teknisis.teknisi_userid', '=', $teknisi_id);
+            ->where('teknisis.teknisi_userid', '=', $teknisi_id)
+            ->where('tikets.tiket_id', '=', $id);
         $data['tiket'] = $query->first();
         $data['subtiket'] = SubTiket::join('users', 'users.id', '=', 'subtiket_admin')
+            // dd($id);
             ->select('users.*', 'sub_tikets.*', 'sub_tikets.created_at as tgl_progres')
             ->where('subtiket_id', $id)->get();
         return view('Teknisi/details_tiket', $data);
@@ -765,6 +767,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
     {
         $tanggal = date('d M Y H:m:s', strtotime(Carbon::now()));
         $teknisi_id = Auth::user()->id;
+        $teknisi_nama = Auth::user()->name;
         $query = InputData::select('registrasis.*', 'teknisis.*', 'input_data.*', 'tikets.*', 'tikets.created_at as tgl_dibuat')
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'input_data.id')
@@ -772,7 +775,14 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
             ->where('tikets.tiket_id', '=', $id)
             ->where('teknisis.teknisi_userid', '=', $teknisi_id);
         $tiket = $query->first();
-        // dd($id);
+        $tindakan = 'Kendala yang terjadi dilapangan :
+' . $request->edit_kendala_lapangan . '. 
+Penanganan yang kami lakukan : 
+' . $request->edit_keterangan;
+
+
+
+
         if ($request->kode_adaptor) {
             $update_adaptor['subbarang_status'] = '1';
             $update_adaptor['subbarang_keluar'] = '1';
@@ -848,8 +858,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                 SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
             }
         }
-
-        $update['tiket_tindakan'] = $request->edit_keterangan;
+        $update['tiket_tindakan'] = $tindakan;
         $update['tiket_status'] = 'DONE';
         Tiket::where('tiket_id', $id)->update($update);
         $updates['subtiket_id'] = $id;
@@ -862,6 +871,14 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
         $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
         #NILAI TEKNISI
         $waktu_kerja = Teknisi::where('teknisi_idpel', $tiket->reg_idpel)->where('teknisi_job', 'TIKET')->where('teknisi_status', '1')->where('teknisi_userid', $teknisi_id)->first();
+
+        $startTime = Carbon::parse(date('Y-m-d H:m:s', strtotime($waktu_kerja->created_at)));
+        $endTime = Carbon::now();
+        $duration = $endTime->diffInMinutes($startTime);
+        $totalminutes = $duration;
+
+
+
 
         $awal  = $waktu_kerja->teknisi_id;
         $akhir  = $teknisi['teknisi_job_selesai'];
@@ -910,7 +927,10 @@ Terimakasih tiket sudah anda selesaikan  😊
 
 Notiket : *' . $id . '*
 Topik : ' . $tiket->tiket_judul . '
-Tindakan : *' . $request->edit_keterangan . '*
+
+' . $tindakan . '
+
+Waktu Pengerjaan : ' . date('H:i ', mktime(0, $totalminutes)) . '
 
 Teknisi : ' . $tiket->teknisi_team . '
 
@@ -918,6 +938,8 @@ Pelanggan : ' . $tiket->input_nama . '
 Alamat : ' . $tiket->input_alamat_pasang . '
 
 Tanggal Selesai : ' . $tanggal . '
+
+' . $teknisi_nama . ' Menutup tiket
 ';
 
         $pesan_pelanggan['ket'] = 'close tiket';
@@ -931,7 +953,9 @@ Saat ini gangguan telah selesai ditangani.
 
 Nomor tiket : *' . $id . '* 
 Topik : ' . $tiket->tiket_judul . '
-Tindakan : *' . $request->edit_keterangan . '*
+Teknisi : ' . $tiket->teknisi_team . '
+
+Kendala dilapangan ' . $request->edit_kendala_lapangan . '
 
 Tanggal Selesai : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
 

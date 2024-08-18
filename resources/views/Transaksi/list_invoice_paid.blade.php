@@ -46,10 +46,13 @@
         <form >
           <div class="row mb-1">
             <div class="col-sm-4">
+              <input name="tglbayar" type="date" class="form-control form-control-sm" >
+            </div>
+            <div class="col-sm-4">
               <input name="q" type="text" class="form-control form-control-sm" placeholder="Cari">
             </div>
             <div class="col-sm-2">
-              <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
+              <button type="submit" class="btn btn-block btn-dark btn-sm">Submit1
             </div>
           </div>
           </form>
@@ -60,6 +63,7 @@
                 <tr>
                   <th>INVOICE</th>
                   <th>TGL BAYAR</th>
+                  <th>TGL ISOLIR</th>
                   <th>ADMIN</th>
                   <th>CABAR</th>
                   <th>NO.LAYANAN</th>
@@ -78,6 +82,7 @@
                 <tr>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >INV-{{$d->inv_id}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_bayar))}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_isolir))}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_admin}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_cabar}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nolayanan}}</td>

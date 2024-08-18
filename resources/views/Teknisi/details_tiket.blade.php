@@ -249,6 +249,10 @@
                   </div>
               </div>
               <div class="form-row mb-2">
+                  <span>Sebutkan Kendala yang terjadi dilapangan</span>
+                    <textarea class="form-control" name="edit_kendala_lapangan" rows="5"></textarea>
+                </div>
+              <div class="form-row mb-2">
                   <span>Sebutkan alasan atau tindakan yang sudah dilakukan</span>
                     <textarea class="form-control" name="edit_keterangan" rows="5"></textarea>
                 </div>

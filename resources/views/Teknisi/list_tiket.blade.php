@@ -49,7 +49,7 @@
                                 </div>
                                 <div class="col-4 pl-0 text-right">
                                     <h3 class="fw-bold mb-1">{{$job->input_tgl}}</h3>
-                                    <div class="text-small text-uppercase fw-bold op-8">{{$job->paket_nama}}</div>
+                                    <div class="text-small text-uppercase fw-bold op-8">{{$job->tiket_id}}</div>
                                 </div>
                             </div>
                         </div>

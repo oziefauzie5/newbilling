@@ -295,6 +295,7 @@ class PsbController extends Controller
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->where('input_data.id', $id)
             ->first();
+        // dd($data['data']);
         $data['status'] = $status_inet['status'];
         $data['uptime'] = $status_inet['uptime'];
         $data['address'] = $status_inet['address'];
