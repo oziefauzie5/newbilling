@@ -251,7 +251,7 @@ class RegistrasiApiController extends Controller
         $API->debug = false;
 
 
-        if ($query->reg_jenis_tagihan == 'FREE') {
+        if ($request->reg_jenis_tagihan == 'FREE') {
             $comment = 'FREE Update-Profile-By:' . $nama_admin;
         } else {
             $comment = 'Update-Profile By: ' . $nama_admin . ' Jatuh-Tempo :' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
@@ -296,6 +296,7 @@ class RegistrasiApiController extends Controller
                                 if ($diffDays < -0) {
                                     $data['reg_status'] = 'SUSPEND';
                                     $update_inv['inv_status'] = 'SUSPEND';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $telat_periode;
                                     $update_subinv['subinvoice_deskripsi'] = $telat_periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
@@ -304,6 +305,7 @@ class RegistrasiApiController extends Controller
                                 } else {
                                     $data['reg_status'] = 'UNPAID';
                                     $update_inv['inv_status'] = 'UNPAID';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $periode;
                                     $update_subinv['subinvoice_deskripsi'] = $periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -346,7 +348,7 @@ class RegistrasiApiController extends Controller
                                 $data['reg_status'] = $cek_invid->inv_status;
                                 $update_inv['inv_status'] = $cek_invid->inv_status;
 
-
+                                $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($paid_tgl_penagihan));
                                 $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($dikurang_1_bulan));
                                 $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($paid_tgl_isolir));
@@ -383,14 +385,6 @@ class RegistrasiApiController extends Controller
                         $data['reg_dana_kas'] = $request->reg_dana_kas;
                         $data['reg_profile'] = $request->reg_profile;
                         $data['reg_inv_control'] = $request->reg_inv_control;
-                        $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
-                        $data['reg_harga'] = $request->reg_harga;
-                        $data['reg_ppn'] = $request->reg_ppn;
-                        $data['reg_dana_kerjasama'] = $request->reg_dana_kerjasama;
-                        $data['reg_kode_unik'] = $request->reg_kode_unik;
-                        $data['reg_dana_kas'] = $request->reg_dana_kas;
-                        $data['reg_profile'] = $request->reg_profile;
-                        $data['reg_inv_control'] = $request->reg_inv_control;
                         $data['reg_status'] = $request->reg_status;
                         if ($cek_invid) {
                             if ($cek_invid->inv_status != 'PAID') {
@@ -402,6 +396,7 @@ class RegistrasiApiController extends Controller
                                 if ($diffDays < -0) {
                                     $data['reg_status'] = 'SUSPEND';
                                     $update_inv['inv_status'] = 'SUSPEND';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $telat_periode;
                                     $update_subinv['subinvoice_deskripsi'] = $telat_periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
@@ -411,6 +406,7 @@ class RegistrasiApiController extends Controller
                                     $data['reg_status'] = 'UNPAID';
                                     $update_inv['inv_status'] = 'UNPAID';
                                     $update_inv['inv_periode'] = $periode;
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_subinv['subinvoice_deskripsi'] = $periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                     $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
@@ -424,30 +420,6 @@ class RegistrasiApiController extends Controller
                                 $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
-
-                                // if (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) <= $hari_ini) {
-                                //     $data['reg_status'] = 'SUSPEND';
-                                //     $update_inv['inv_status'] = 'SUSPEND';
-                                // } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
-                                //     $data['reg_status'] = 'UNPAID';
-                                //     $update_inv['inv_status'] = 'UNPAID';
-                                // }
-
-                                // $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                // $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-
-
-                                // $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                // $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                // $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
-                                // $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                // $update_inv['inv_periode'] = $periode;
-                                // $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                // $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
-                                // $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                // $update_subinv['subinvoice_deskripsi'] = $periode;
-                                // SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
-                                // Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {
                                 $data['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                 $data['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
@@ -455,7 +427,7 @@ class RegistrasiApiController extends Controller
                                 $data['reg_status'] = $cek_invid->inv_status;
                                 $update_inv['inv_status'] = $cek_invid->inv_status;
 
-
+                                $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($paid_tgl_penagihan));
                                 $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($dikurang_1_bulan));
                                 $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($paid_tgl_isolir));
@@ -515,14 +487,6 @@ class RegistrasiApiController extends Controller
                     $data['reg_dana_kas'] = $request->reg_dana_kas;
                     $data['reg_profile'] = $request->reg_profile;
                     $data['reg_inv_control'] = $request->reg_inv_control;
-                    $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
-                    $data['reg_harga'] = $request->reg_harga;
-                    $data['reg_ppn'] = $request->reg_ppn;
-                    $data['reg_dana_kerjasama'] = $request->reg_dana_kerjasama;
-                    $data['reg_kode_unik'] = $request->reg_kode_unik;
-                    $data['reg_dana_kas'] = $request->reg_dana_kas;
-                    $data['reg_profile'] = $request->reg_profile;
-                    $data['reg_inv_control'] = $request->reg_inv_control;
                     if ($cek_invid) {
                         if ($cek_invid->inv_status != 'PAID') {
 
@@ -535,6 +499,7 @@ class RegistrasiApiController extends Controller
                                 if ($diffDays < -0) {
                                     $data['reg_status'] = 'ISOLIR';
                                     $update_inv['inv_status'] = 'ISOLIR';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $telat_periode;
                                     $update_subinv['subinvoice_deskripsi'] = $telat_periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
@@ -543,6 +508,7 @@ class RegistrasiApiController extends Controller
                                 } else {
                                     $data['reg_status'] = 'SUSPEND';
                                     $update_inv['inv_status'] = 'SUSPEND';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $periode;
                                     $update_subinv['subinvoice_deskripsi'] = $periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -553,6 +519,7 @@ class RegistrasiApiController extends Controller
                                 if ($diffDays < -0) {
                                     $data['reg_status'] = 'ISOLIR';
                                     $update_inv['inv_status'] = 'ISOLIR';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $telat_periode;
                                     $update_subinv['subinvoice_deskripsi'] = $telat_periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
@@ -561,6 +528,7 @@ class RegistrasiApiController extends Controller
                                 } else {
                                     $data['reg_status'] = 'UNPAID';
                                     $update_inv['inv_status'] = 'UNPAID';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $periode;
                                     $update_subinv['subinvoice_deskripsi'] = $periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
@@ -583,7 +551,7 @@ class RegistrasiApiController extends Controller
                             $data['reg_status'] = $cek_invid->inv_status;
                             $update_inv['inv_status'] = $cek_invid->inv_status;
 
-
+                            $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                             $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($paid_tgl_penagihan));
                             $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($dikurang_1_bulan));
                             $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($paid_tgl_isolir));
@@ -662,6 +630,7 @@ class RegistrasiApiController extends Controller
                                 if ($diffDays < -0) {
                                     $data['reg_status'] = 'SUSPEND';
                                     $update_inv['inv_status'] = 'SUSPEND';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $telat_periode;
                                     $update_subinv['subinvoice_deskripsi'] = $telat_periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
@@ -671,6 +640,7 @@ class RegistrasiApiController extends Controller
                                     $data['reg_status'] = 'UNPAID';
                                     $update_inv['inv_status'] = 'UNPAID';
                                     $update_inv['inv_periode'] = $periode;
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_subinv['subinvoice_deskripsi'] = $periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                     $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
@@ -691,7 +661,7 @@ class RegistrasiApiController extends Controller
                                 $data['reg_status'] = $cek_invid->inv_status;
                                 $update_inv['inv_status'] = $cek_invid->inv_status;
 
-
+                                $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($paid_tgl_penagihan));
                                 $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($dikurang_1_bulan));
                                 $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($paid_tgl_isolir));
@@ -732,14 +702,6 @@ class RegistrasiApiController extends Controller
                         $data['reg_dana_kas'] = $request->reg_dana_kas;
                         $data['reg_profile'] = $request->reg_profile;
                         $data['reg_inv_control'] = $request->reg_inv_control;
-                        $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
-                        $data['reg_harga'] = $request->reg_harga;
-                        $data['reg_ppn'] = $request->reg_ppn;
-                        $data['reg_dana_kerjasama'] = $request->reg_dana_kerjasama;
-                        $data['reg_kode_unik'] = $request->reg_kode_unik;
-                        $data['reg_dana_kas'] = $request->reg_dana_kas;
-                        $data['reg_profile'] = $request->reg_profile;
-                        $data['reg_inv_control'] = $request->reg_inv_control;
                         // dd('ciluk1');
                         if ($cek_invid) {
                             if ($cek_invid->inv_status != 'PAID') {
@@ -751,6 +713,7 @@ class RegistrasiApiController extends Controller
                                 if ($diffDays < -0) {
                                     $data['reg_status'] = 'SUSPEND';
                                     $update_inv['inv_status'] = 'SUSPEND';
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_inv['inv_periode'] = $telat_periode;
                                     $update_subinv['subinvoice_deskripsi'] = $telat_periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
@@ -760,6 +723,7 @@ class RegistrasiApiController extends Controller
                                     $data['reg_status'] = 'UNPAID';
                                     $update_inv['inv_status'] = 'UNPAID';
                                     $update_inv['inv_periode'] = $periode;
+                                    $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                     $update_subinv['subinvoice_deskripsi'] = $periode;
                                     $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
                                     $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
@@ -780,7 +744,7 @@ class RegistrasiApiController extends Controller
                                 $data['reg_status'] = $cek_invid->inv_status;
                                 $update_inv['inv_status'] = $cek_invid->inv_status;
 
-
+                                $update_inv['inv_jenis_tagihan'] = $request->reg_jenis_tagihan;
                                 $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($paid_tgl_penagihan));
                                 $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($dikurang_1_bulan));
                                 $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($paid_tgl_isolir));

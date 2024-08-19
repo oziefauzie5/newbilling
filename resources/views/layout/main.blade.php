@@ -555,6 +555,33 @@
 						</li> --}}
 						@endrole
 						@role('admin|NOC')
+
+						<li class="nav-item {{\Route::is('admin.topologi.*') ? 'active' : ''}}">
+							<a data-toggle="collapse" href="#sidebartopologi">
+								<i class="fas fa-server"></i>
+								<p>Topologi</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="sidebartopologi">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{route('admin.topologi.clousur')}}">
+											<span class="sub-item">Clousur</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.topologi.index')}}">
+											<span class="sub-item">ODC</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.topologi.index')}}">
+											<span class="sub-item">ODP</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</li>
 						<li class="nav-item {{\Route::is('admin.noc.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#sidebarNoc">
 								<i class="fas fa-server"></i>

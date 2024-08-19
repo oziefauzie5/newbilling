@@ -42,6 +42,7 @@ class ProsesBayarPengurus implements ShouldQueue
             Pesan::create([
                 'ket' => 'pengurus',
                 'status' => '0',
+                'nama' => $d->input_nama,
                 'target' => $d->input_hp,
                 'pesan' => 'Terima kasih 🙏
 Pembayaran invoice sudah kami terima

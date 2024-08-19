@@ -234,7 +234,7 @@ class InvoiceController extends Controller
 
         // $data_laporan = Laporan::where('lap_inv',$id)->first();
         // if($data_laporan->)
-
+        $swaktu = SettingWaktuTagihan::first();
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
         $admin_user = Auth::user()->id;
         $tampil = DB::table('invoices')
@@ -251,6 +251,12 @@ class InvoiceController extends Controller
         $sumppn = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'); #hitung total ppn invoice
         $sumharga = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'); #hitung total harga invoice
         $total_debet = $sumharga + $sumppn - $diskon;
+
+        #Kembalikan tanggal jatuh tempo ke tanggal sebelumnya
+        $inv_tgl_isolir = Carbon::create($tampil->inv_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+        $inv_tgl_tagih = Carbon::create($tampil->inv_tgl_jatuh_tempo)->addDay(-$swaktu->wt_jeda_isolir_hari)->toDateString();
+
+        // dd($tampil->inv_tgl_jatuh_tempo);
 
 
         $data_lap['lap_id'] = 0;
@@ -338,11 +344,15 @@ class InvoiceController extends Controller
         $data['inv_cabar'] = '';
         $data['inv_tgl_bayar'] = '';
         $data['inv_status'] = $status;
+        $data['inv_tgl_isolir'] = $inv_tgl_isolir;
+        $data['inv_tgl_tagih'] = $inv_tgl_tagih;
+        $data['inv_tgl_jatuh_tempo'] = $tampil->inv_tgl_jatuh_tempo;
         Invoice::where('inv_id', $id)->update($data);
 
 
         Registrasi::where('reg_idpel', $tampil->inv_idpel)->update([
             'reg_status' => $status,
+            'reg_tgl_jatuh_tempo' => $tampil->inv_tgl_jatuh_tempo,
         ]);
 
         // dd($tampil->inv_idpel);

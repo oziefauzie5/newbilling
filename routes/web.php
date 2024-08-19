@@ -24,6 +24,8 @@ use App\Http\Controllers\Router\RouterController;
 use App\Http\Controllers\Sales\SalesController;
 use App\Http\Controllers\Teknisi\TeknisiController;
 use App\Http\Controllers\Tiket\TiketController;
+use App\Http\Controllers\Topologi\OdpController;
+use App\Http\Controllers\Topologi\TopologiController;
 use App\Http\Controllers\Transaksi\CallbackController;
 use App\Http\Controllers\Transaksi\GenerateInvoice;
 use App\Http\Controllers\Transaksi\InvoiceController;
@@ -102,6 +104,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/noc/{id}/Pengecekan', [NocController::class, 'pengecekan'])->name('noc.pengecekan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/{id}/Pengecekan-Done', [NocController::class, 'pengecekan_put'])->name('noc.pengecekan_put')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/noc/{id}/upload', [NocController::class, 'upload'])->name('noc.upload')->middleware(['role:admin|NOC|STAF ADMIN']);
+
+    Route::get('/topologi', [OdpController::class, 'index'])->name('topologi.index')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/topologi/clousur', [TopologiController::class, 'clousur'])->name('topologi.clousur')->middleware(['role:admin|NOC|STAF ADMIN']);
 
 
     Route::get('/hotspot', [HotspotController::class, 'index'])->name('vhc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
