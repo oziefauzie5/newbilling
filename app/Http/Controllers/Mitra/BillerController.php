@@ -54,6 +54,7 @@ class BillerController extends Controller
             ->where('inv_id', '=', $id)
             ->orWhere('inv_nolayanan', '=', $id)
             ->orWhere('input_data.input_hp', '=', $id)
+            ->orWhere('input_data.input_nama', '=', $id)
             ->latest('inv_tgl_jatuh_tempo')
             ->first();
         // return response()->json($query->inv_status);

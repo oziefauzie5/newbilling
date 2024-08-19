@@ -23,7 +23,7 @@
               </div> -->
 
               <div class="input-group mb-3">
-                <input type="number" class="form-control" id="biller_idpel" placeholder="No. Invoice/Id Pelanggan">
+                <input type="text" class="form-control" id="biller_idpel" placeholder="No. Invoice/Id Pelanggan">
                   <div class="input-group-append">
                     <button class="btn btn-primary" type="submit" id="cari_pelanggan"><i class="fas fa-search"></i> Cari</button>
                   </div>
