@@ -76,6 +76,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/setting/app-biaya', [AppController::class, 'biaya_store'])->name('app.biaya_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/setting/app-waktu', [AppController::class, 'waktu_store'])->name('app.waktu_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/setting/app-whatsapp', [AppController::class, 'whatsapp_store'])->name('app.whatsapp_store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/setting/kendaraan', [AppController::class, 'kendaraan'])->name('app.kendaraan')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/setting/add-Kendaraan', [AppController::class, 'store_kendaraan'])->name('app.store_kendaraan')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/setting/{id}/update-Kendaraan', [AppController::class, 'update_kendaraan'])->name('app.update_kendaraan')->middleware(['role:admin|STAF ADMIN']);
+    Route::delete('/setting/{id}/delete-Kendaraan', [AppController::class, 'delete_kendaraan'])->name('app.delete_kendaraan')->middleware(['role:admin|STAF ADMIN']);
 
     Route::get('/router', [RouterController::class, 'index'])->name('router.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/router/store', [RouterController::class, 'store'])->name('router.store')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -134,7 +138,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/Data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Data-Laporan', [LaporanController::class, 'data_lap_delete'])->name('inv.data_lap_delete')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('inv.laporan_print')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/Transaksi', [TransaksiController::class, 'index'])->name('inv.trx.index')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Transaksi', [TransaksiController::class, 'index'])->name('inv.trx.index')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Transaksi/jurnal', [TransaksiController::class, 'jurnal'])->name('lap.jurnal')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/Transaksi/reimbuse', [TransaksiController::class, 'store_jurnal_reimbuse'])->name('lap.store_jurnal_reimbuse')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/Transaksi/add-pendapatan', [TransaksiController::class, 'store_add_jurnal'])->name('lap.store_add_jurnal')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Transaksi/download-file/{id}', [TransaksiController::class, 'download_file'])->name('lap.download_file')->middleware(['role:admin|STAF ADMIN']);
 
     Route::get('/pelanggan/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -176,6 +184,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/barang/Hapus/{id}', [BarangController::class, 'destroy'])->name('barang.destroy')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/barang/Hapus-sub-barang/{id}', [BarangController::class, 'destroy_subbarang'])->name('barang.destroy_subbarang')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/barang/input-subbarang/{id}', [BarangController::class, 'input_subbarang'])->name('barang.input_subbarang')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/barang/update-subbarang-status/{id}', [BarangController::class, 'update_status_barang'])->name('barang.update_status_barang')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/barang/Print-Kode/{id}', [BarangController::class, 'print_kode_barang'])->name('barang.print_kode')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/barang/pilih/{id}', [BarangController::class, 'cari_barang'])->name('barang.cari_barang')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/barang/barang-keluar', [BarangController::class, 'barang_keluar'])->name('barang.barang_keluar')->middleware(['role:admin|STAF ADMIN']);
@@ -203,7 +212,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::put('/invoice/addons/{id}', [InvoiceController::class, 'addons'])->name('inv.addons')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/invoice/diskon/{id}', [InvoiceController::class, 'addDiskon'])->name('inv.addDiskon')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/invoice/addons-hapus/{id}/{inv}/{tot}', [InvoiceController::class, 'addons_delete'])->name('inv.addons_delete')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/test', [InvoiceController::class, 'suspand_otomatis'])->name('inv.suspand_otomatis')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/invoice/edit-inv/{inv_id}', [InvoiceController::class, 'update_inv'])->name('inv.update_inv')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/invoice/edit-tgl_bayar/{inv_id}', [InvoiceController::class, 'update_tgl_bayar'])->name('inv.update_tgl_bayar')->middleware(['role:admin|STAF ADMIN']);
+    Route::delete('/invoice/delete-inv/{inv_id}', [InvoiceController::class, 'delete_inv'])->name('inv.delete_inv')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/invoice/add-inv-manual', [InvoiceController::class, 'add_inv_manual'])->name('inv.add_inv_manual')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/test1', [InvoiceController::class, 'test1'])->name('inv.test1')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/test2', [InvoiceController::class, 'test2'])->name('inv.test2')->middleware(['role:admin|STAF ADMIN']);
 
     Route::get('/mitra', [MitraController::class, 'index'])->name('mitra.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/mitra/Create', [MitraController::class, 'create'])->name('mitra.create')->middleware(['role:admin|STAF ADMIN']);
@@ -243,4 +257,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
 
     Route::get('/whatsapp/pesan', [WhatsappController::class, 'index'])->name('wa.index')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/whatsapp/broadcast', [WhatsappController::class, 'broadcast'])->name('whatsapp.broadcast')->middleware(['role:admin|STAF ADMIN']);
+    Route::delete('/whatsapp/pesan-delete/{id}', [WhatsappController::class, 'delete_pesan'])->name('wa.delete_pesan')->middleware(['role:admin|STAF ADMIN']);
 })->middleware(['role:admin|STAF ADMIN']);

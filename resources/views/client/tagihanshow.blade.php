@@ -18,8 +18,20 @@
               <h5>Metode Pembayaran</h5>
               <img src="{{$tripay->order_items[0]->image_url}}" width="110px"  alt="">
               <br><br>
+              @if($tripay->payment_method == 'QRIS')
+              <img src="{{$tripay->qr_url}}" alt="">
+              @elseif($tripay->payment_method == 'QRIS2')
+              <img src="{{$tripay->qr_url}}" alt="">
+              @elseif($tripay->payment_method == 'OVO')
+              <a href="https://tripay.co.id/checkout/T2905017834241S7XWD"><button class="btn btn-sm btn-primary btn-block mb-3">Lanjutkan Pembayaran</button></a>
+              @elseif($tripay->payment_method == 'DANA')
+              <a href="https://m.dana.id/n/cashier/new/checkout?bizNo=20240828111212800110166736611610985&timestamp=1724825924006&originSourcePlatform=IPG&mid=216620000383553341323&did=216650000412588568324&sid=216660000412542653320&sign=rr2AmoY19RISIVYURyrpjL3sNTA0OFOCU4VQKLaJVUl4N%2Bt6WGVXizinPA2vZl8hvsFmTQRrX9LKMSb4P57XV9tP3F2ThrcvM%2FBIY7EtjCT2BuIkevP1OsvSI7XBaNk6ySbNwgi4lcPwKRMx4KQraBi0mPlslKSct7xg1GEo6UyYGXIJkwuo%2Bcc%2BRP3t3vcZrY25pFg%2FeHcDL0K2J41tFOgQamEWqSAkaUgcSzvKdluIIHRoUORDXmI%2B9u1e4kB%2B6b9LYkeAHgGVsLz8F3NtBILK%2Bp9tMwJYcI88c0INgu%2BXuU%2F8FpKAk1RWRiwSsgwwdjtiR0oFFL3vAdfjvCLKCQ%3D%3D&forceToH5=false"><button class="btn btn-sm btn-primary btn-block mb-3">Lanjutkan Pembayaran</button></a>
+              @elseif($tripay->payment_method == 'SHOPEEPAY')
+              <a href="https://id.shp.ee/sppay_checkout_id?type=start&mid=10290655&target_app=shopee&medium_index=Um80ZWF4Yk9xZmROEZJQaul4Ae55T4BXGBWtj9eI7YKNtl_SUHcdZq0Mf4ggyA&order_key=s0Zo5bfzNw9ygytx73mNvRrs3bR_03KCFJzXlOLzlh5odDahQvXXSNFlYXBCQvHn14piOXbUQwkmDQ&order_sn=137562694227074579&return_url=aHR0cHM6Ly90cmlwYXkuY28uaWQvcmVkaXJlY3QvZHBheT9hbW91bnQ9MTk5MDAwMDAmY2xpZW50X2lkPUR1cmlhbnBheSZvcmRlcl9yZWZfaWQ9VDI5MDUwMTc4MzQxNzJZWlVLUiZwYXltZW50X2lkPWNHRjVYekIwYzFsdGNEVTRiMnMxTkRVeiZyZWZlcmVuY2VfaWQ9cGF5XzB0c1ltcDU4b2s1NDUzJnJlc3VsdF9jb2RlPTIwMyZzaWduYXR1cmU9a0tYdV9WQzlabmdDbU9LY2dQRVNoejVjcF9uWTdOT1dXelRQSy1oSDdZSSUzRA%3D%3D&source=web&token=Um80ZWF4Yk9xZmROEZJQaul4Ae55T4BXGBWtj9eI7YKNtl_SUHcdZq0Mf4ggyA"><button class="btn btn-sm btn-primary btn-block mb-3">Lanjutkan Pembayaran</button></a>
+              @else
               <h6>Nomor Virtual Account</h6>
               <h3><strong>{{$tripay->pay_code}}</strong></h3>
+              @endif
               <br>
               <h6>SILAHKAN BAYAR SEBELUM</h6>
               <h3 class="text-danger">{{$expire}}</h3><br>

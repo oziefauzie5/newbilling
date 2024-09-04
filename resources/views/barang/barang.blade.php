@@ -223,7 +223,7 @@
       </div>
     </div>
   </div>
-{{-- ----------------------------------------------------------MODAL ADD BARANG------------------------------------------------------- --}}
+{{-- ----------------------------------------------------------MODAL KELUAR BARANG------------------------------------------------------- --}}
   <div class="modal fade" id="barang_keluar" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -249,6 +249,7 @@
                     </div>
                   </div>
                 </div>
+                <div id="text"></div>
                 <div id="div_cari_barang" style="display:none;">
                 <div class="form-row ">
                 <div class="col">
@@ -290,7 +291,7 @@
                 <div class="form-row">
                   <div class="col">
                     <label for="">Dipergunakan untuk :</label>
-                    <textarea class="form-control" name="subbarang_keterangan" rows="5"></textarea>
+                    <textarea class="form-control" name="subbarang_deskripsi" rows="5"></textarea>
                   </div>
                 </div>
             </div>
@@ -339,6 +340,9 @@
                         <option value="CLOUSUR">CLOUSUR</option>
                         <option value="BOX FAT">BOX FAT</option>
                         <option value="ADAPTOR">ADAPTOR</option>
+                        <option value="PROTECTOR">PROTECTOR</option>
+                        <option value="STEKER">STEKER</option>
+                        <option value="ADAPTOR SC/UPC">ADAPTOR SC/UPC</option>
                     </select>
                     <!-- <input type="text" class="form-control" name="nama_kategori" required> -->
                     <div class="invalid-feedback">

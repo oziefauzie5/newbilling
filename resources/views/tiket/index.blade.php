@@ -14,8 +14,8 @@
           <div class="card-body">
             <button class="btn  btn-sm ml-auto m-1 btn-primary ">
               <i class="fa fa-plus"></i> HAPUS</button>
-            <button class="btn  btn-sm ml-auto m-1 btn-primary ">
-              <i class="fa fa-plus"></i> EXPORT</button>
+            <button class="btn  btn-sm ml-auto m-1 btn-primary " >
+              <i class="fa fa-plus"></i> EXPORT PDF</button>
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addpaket">
               <i class="fa fa-plus"></i> BUAT TIKET</button>
               {{-- #MODAL BUAT TIKET --}}

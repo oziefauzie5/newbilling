@@ -49,7 +49,7 @@
                   @foreach ($datauser as $d)
                   <tr>
                    <td>{{$loop->iteration}}</td>
-                   <td><a href="{{route('admin.mitra.edit',['id'=>$d->id])}}" class="btn btn-sm btn-block"><i class="fas fa-pen"></i>1</a></td>
+                   <td><a href="{{route('admin.mitra.edit',['id'=>$d->id])}}" class="btn btn-sm btn-block"><i class="fas fa-pen"></i></a></td>
                    <td><a href="{{route('admin.mitra.data',['id'=>$d->id])}}"><strong>{{$d->nama}}</strong> </a> </td>
                    <td>{{$d->name}}</td>
                    <td>{{$d->hp}}</td>

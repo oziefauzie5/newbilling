@@ -92,6 +92,10 @@
                   <span class="form-check-sign">Ganti ONT</span>
                 </label>
                 <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" id="edit_dropcore" value="1" name="edit_dropcore">
+                  <span class="form-check-sign">Ganti Dropcore</span>
+                </label>
+                <label class="form-check-label">
                   <input class="form-check-input" type="checkbox" id="edit_lain" value="1" name="edit_lain">
                   <span class="form-check-sign">Lainnya</span>
                 </label>
@@ -121,6 +125,35 @@
                       <button type="button" class="btn btn-secondary edit_hide_pactcore">Close</button>
                       <input class="btn btn-outline-secondary edit_val_pactcore" value="Validasi"  type="button"></input>
                       <div id="buton"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Validasi adaptor -->
+              <div class="modal fade" id="edit_modal_dropcore" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE DROPCORE</h5>
+                      <button type="button" class="edit_hide_dropcore close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      
+                      <div class="form-group row" id="edit_validasi_dropcore">
+                        <label class="col-sm-4 col-form-label">Kode Dropcore</label>
+                        <div class="col-sm-8">
+                          <input type="text"  name="kode_dropcore" id="edit_kode_dropcore" class="form-control edit_kode_dropcore" >
+                          <div id="edit_notif_dropcore"></div>
+                        </div>
+                      </div>
+                      <div id="edit_note_dropcore"></div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary edit_hide_dropcore">Close</button>
+                      <input class="btn btn-outline-secondary edit_val_dropcore" value="Validasi"  type="button"></input>
+                      <div id="buton_dropcore"></div>
                     </div>
                   </div>
                 </div>
@@ -190,13 +223,6 @@
                           <div id="edit_notif_alasan"></div>
                         </div>
                       </div>
-                      <div class="form-group row" id="edit_validasi_keterangan">
-                        <label class="col-sm-4 col-form-label">Keterangan</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="keterangan" id="keterangan" class="form-control keterangan"   >
-                          <div id="edit_notif_keterangan"></div>
-                        </div>
-                      </div>
                       <div id="edit_note_ont"></div>
                     </div>
                     <div class="modal-footer">
@@ -248,13 +274,29 @@
                   <input type="text" class="form-control"  id="edit_reg_sn"  name="edit_reg_sn">
                   </div>
               </div>
+
+         <div class="form-row mb-2" id="show_dropcore"  style="display:none;">
+           <div class="col">
+             <label>Sebelum</label>
+             <input type="number" class="form-control before_dropcore" placeholder="before" id="before_dropcore" name="before_dropcore" value="{{Session::get('before_dropcore')}}"  readonly>
+           </div>
+           <div class="col">
+             <label>Sesudah</label>
+             <input type="number" class="form-control after_dropcore" placeholder="After" id="after_dropcore" name="after_dropcore" value="{{Session::get('after_dropcore')}}" >
+           </div>
+           <div class="col">
+             <label>Jumlah</label>
+             <input type="number" class="form-control total_dropcore" placeholder="Meter" id="total_dropcore" name="total_dropcore" value="{{Session::get('total_dropcore')}}"  readonly>
+           </div>
+          </div>
+
               <div class="form-row mb-2">
                   <span>Sebutkan Kendala yang terjadi dilapangan</span>
-                    <textarea class="form-control" name="edit_kendala_lapangan" rows="5"></textarea>
+                    <textarea class="form-control" name="edit_kendala_lapangan" rows="5" required></textarea>
                 </div>
               <div class="form-row mb-2">
                   <span>Sebutkan alasan atau tindakan yang sudah dilakukan</span>
-                    <textarea class="form-control" name="edit_keterangan" rows="5"></textarea>
+                    <textarea class="form-control" name="edit_keterangan" rows="5" required></textarea>
                 </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-secondary" >Lanjutkan</button>

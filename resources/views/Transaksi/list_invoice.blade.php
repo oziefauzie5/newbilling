@@ -4,31 +4,24 @@
 <div class="content">
   <div class="page-inner">
     <div class="row">
-      <div class="col-6 col-sm-4 col-lg-3">
+     
+      <div class="col-6 col-sm-3 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0 font-weight-bold text-danger">{{$inv_count_all}}</div>
-            <div class="text-muted mb-3 font-weight-bold text-danger">JUMLAH INVOICE</div>
+            <div class="h1 m-0 font-weight-bold text-info">{{$inv_count_unpaid}}</div>
+            <div class="text-muted mb-3 text-info font-weight-bold">INV UNPAID</div>
           </div>
         </div>
       </div>
-      <div class="col-6 col-sm-4 col-lg-3">
+      <div class="col-6 col-sm-3 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0 font-weight-bold text-warning">{{$inv_count_unpaid}}</div>
-            <div class="text-muted mb-3 text-warning font-weight-bold">INV UNPAID</div>
+            <div class="h1 m-0 font-weight-bold text-warning" >{{$inv_count_suspend}}</div>
+            <div class="text-muted mb-3 text-warning font-weight-bold">INV SUSPEND</div>
           </div>
         </div>
       </div>
-      <div class="col-6 col-sm-4 col-lg-3">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h1 m-0 font-weight-bold text-danger" >{{$inv_count_suspend}}</div>
-            <div class="text-muted mb-3 text-danger font-weight-bold">INV SUSPEND</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 col-lg-3">
+      <div class="col-6 col-sm-3 col-lg-2">
         <div class="card">
           <div class="card-body p-3 text-center">
             <div class="h1 m-0 font-weight-bold text-danger" >{{$inv_count_isolir}}</div>
@@ -36,10 +29,43 @@
           </div>
         </div>
       </div>
+      <div class="col-6 col-sm-3 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h1 m-0 font-weight-bold text-danger">{{$inv_count_all}}</div>
+            <div class="text-muted mb-3 font-weight-bold text-danger">BELUM TERBAYAR</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-3 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h1 m-0 font-weight-bold text-success" >{{$inv_count_lunas}}</div>
+            <div class="text-muted mb-3 text-success font-weight-bold">INV LUNAS</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-3 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h1 m-0 font-weight-bold text-primary" >{{$inv_count_belum_terbayar}}</div>
+            <div class="text-muted mb-3 text-primary font-weight-bold">TOTAL INV</div>
+          </div>
+        </div>
+      </div>
+     
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h1 m-0 font-weight-bold text-danger">{{$inv_count_total}}</div>
+            <div class="text-muted mb-3 font-weight-bold text-danger">TOTAL INVOICE BULAN INI</div>
+          </div>
+        </div>
       </div>
       @role('admin')
-      <div class="row">
-      <div class="col-6 col-sm-4 col-lg-6">
+      <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
             <div class="h1 m-0 font-weight-bold text-danger">Rp. {{number_format($inv_belum_lunas)}}</div>
@@ -47,23 +73,24 @@
           </div>
         </div>
       </div>
-      <div class="col-6 col-sm-4 col-lg-6">
+      <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
             <div class="h1 m-0 font-weight-bold text-success">Rp. {{number_format($inv_lunas)}}</div>
-            <div class="text-muted mb-3 font-weight-bold text-success">TOTAL LUNAS  {{$inv_count_lunas}}</div>
+            <div class="text-muted mb-3 font-weight-bold text-success">TOTAL LUNAS</div>
           </div>
         </div>
       </div>
+      @endrole
     </div>
-    @endrole
     <div class="row">
       
       <div class="card">
         <div class="card-body">
           <form >
             <div class="row mb-1">
-                <div class="col-sm-3">
+
+                <div class="col">
                   <select name="data_bulan" class="custom-select custom-select-sm">
                     @if($data_bulan)
                     <option value="{{$data_bulan}}" selected>{{$data_bulan}}</option>
@@ -73,8 +100,9 @@
                     <option value="2">PELANGGAN 2 BULAN</option>
                     <option value="3">PELANGGAN 3 BULAN</option>
                   </select>
-              </div>
-                <div class="col-sm-3">
+                </div>
+
+                <div class="col">
                   <select name="data_inv" class="custom-select custom-select-sm">
                     @if($data_inv)
                     <option value="{{$data_inv}}" selected>{{$data_inv}}</option>
@@ -85,19 +113,61 @@
                     <option value="ISOLIR">INVOICE ISOLIR</option>
                   </select>
                 </div>
-                <div class="col-sm-3">
-                 <input type="text" name="q" class="form-control form-control-sm" value="{{$q}}">
+                <div class="col">
+                  <input name="bulan" type="month" class="form-control form-control-sm"></input>
                 </div>
-                <div class="col-sm-1">
+                </div>
+                <div class="row mb-1">
+                <div class="col">
+                 <input type="text" name="q" class="form-control form-control-sm" value="{{$q}}" placeholder="Cari Data">
+                </div>
+                <div class="col">
                   <button type="submit" class="btn btn-block btn-dark btn-sm">Cari
                 </div>
-                @role('admin')
-                <div class="col-sm-2">
+                </form>
+                @role('admin|STAF ADMIN')
+                <div class="col">
+                  <!-- <a href=""><button type="button" class="btn btn-block btn-info btn-sm">Genearte Invoice</button></a> -->
                   <a href="{{route('admin.inv.generate_invoice')}}"><button type="button" class="btn btn-block btn-info btn-sm">Genearte Invoice</button></a>
+                </div>
+                <div class="col">
+                  <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">
+ Buat Invoice Sementara
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="form-group">
+        <form action="{{route('admin.inv.add_inv_manual')}}" method="POST">
+        @csrf
+        @method('POST')
+          <label>No. Layanan</label>
+          <input type="text" class="form-control" name="add_nolayanan"  required>
+          <label>Bulan Invoice</label>
+          <input type="month" class="form-control" name="bulan_inv" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
                 </div>
                 @endrole
               </div>
-          </form>
+          
           @if ($errors->any())
           <div class="alert alert-danger">
             <div class="alert-title"><h4>Gagal!!</h4></div>
@@ -113,6 +183,7 @@
               <thead>
                 <tr>
                   <th>STATUS</th>
+                  <th>ACTION</th>
                   <th>JTH TEMPO</th>
                   <th>ISOLIR</th>
                   <th>INVOICE</th>
@@ -124,7 +195,6 @@
                   <th>TGL TERBIT</th>
                   <th>TOTAL</th>
                   <th>NOTE</th>
-                  <th>ACTION</th>
                 </tr>
               </thead>
               <tbody>
@@ -141,9 +211,16 @@
                   @else
                   <td> <span class="badge badge-danger"></span></td>
                   @endif
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->inv_id}}" class="btn btn-link btn-danger">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_jatuh_tempo))}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_isolir))}}</td>
-                      <td>{{$d->inv_id}}</td>
+                  <td>{{$d->inv_id}}</td>
                       <td>{{$d->inv_nolayanan}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nama}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_profile}}</td>
@@ -152,16 +229,6 @@
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_tgl_tagih}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_total}}</td>
                       <td>{{$d->inv_note}}</td>
-                      <td>
-                        <div class="form-button-action">
-                          <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->inv_id}}" class="btn btn-link btn-primary btn-lg">
-                            <i class="fa fa-edit"></i>
-                          </button>
-                          <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->inv_id}}" class="btn btn-link btn-danger">
-                            <i class="fa fa-times"></i>
-                          </button>
-                        </div>
-                      </td>
                     </tr>
                       <!-- Modal Hapus -->
                       <div class="modal fade" id="modal_hapus{{$d->inv_id}}" tabindex="-1" role="dialog" aria-hidden="true">
@@ -180,7 +247,7 @@
                               <p>Apakah anda yakin, akan menghapus data {{$d->inv_nama}} ??</p>
                               </div>
                               <div class="modal-footer no-bd">
-                                <form action="{{route('admin.user.delete',['id'=>$d->inv_id])}}" method="POST">
+                                <form action="{{route('admin.inv.delete_inv',['inv_id'=>$d->inv_id])}}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-success">Hapus</button>

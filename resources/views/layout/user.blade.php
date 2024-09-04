@@ -133,7 +133,7 @@
 
 	<script>
 
-$(document).ready(function() {
+			$(document).ready(function() {
             $("#before, #after").keyup(function() {
                 var after  = $("#after").val();
                 var before = $("#before").val();
@@ -144,6 +144,20 @@ $(document).ready(function() {
                     }
                 $("#total").val(total);
             });
+
+
+            $("#before_dropcore, #after_dropcore").keyup(function() {
+				var after_dropcore  = $("#after_dropcore").val();
+                var before_dropcore = $("#before_dropcore").val();
+    
+                var total_dropcore = parseInt(before_dropcore) - parseInt(after_dropcore);
+                if (isNaN(total_dropcore)) {
+                    total_dropcore = '';
+                    }
+                $("#total_dropcore").val(total_dropcore);
+            });
+
+
             });
 			$("#fat_opm, #home_opm").keyup(function() {
                 var home_opm  = $("#home_opm").val();
@@ -417,25 +431,26 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			$("#edit_pactcore").click(function() {
 				if($(this).is(":checked")) {
 					$('#edit_modal_pactcore').modal('show')
+					$('.edit_kode_pactcore').attr('required', 'required');
 
-					//Hapus Adaptor
-					$("#edit_adaptor").prop("checked", false);
-					$("#edit_kode_adaptor").val('');
+					// //Hapus Adaptor
+					// $("#edit_adaptor").prop("checked", false);
+					// $("#edit_kode_adaptor").val('');
 					
-					//Hapus Ont
-					$("#edit_ont").prop("checked", false);
-					$('#edit_validasi_ont').removeClass("has-error has-feedback");
-					$('#edit_validasi_ont').removeClass("has-success");
-					$("#edit_kode_ont").val('');
-					$('#edit_notif_ont').html('');
-					$('#edit_note_ont').html('');
-					$('#edit_reg_mac').val('');
-					$('#edit_reg_sn').val('');
-					$('#edit_reg_mrek').val('');
-					$('#alasan').val('');
-					$('#keterangan').val('');
-					$('.edit_ont').removeAttr('required');
-					$('#show_ont').hide()
+					// //Hapus Ont
+					// $("#edit_ont").prop("checked", false);
+					// $('#edit_validasi_ont').removeClass("has-error has-feedback");
+					// $('#edit_validasi_ont').removeClass("has-success");
+					// $("#edit_kode_ont").val('');
+					// $('#edit_notif_ont').html('');
+					// $('#edit_note_ont').html('');
+					// $('#edit_reg_mac').val('');
+					// $('#edit_reg_sn').val('');
+					// $('#edit_reg_mrek').val('');
+					// $('#alasan').val('');
+					// $('#keterangan').val('');
+					// $('.edit_ont').removeAttr('required');
+					// $('#show_ont').hide()
 
 					//Hapus seting ulang
 					$("#edit_seting").prop("checked", false);
@@ -447,6 +462,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					
 				} else {
 					$('#edit_modal_pactcore').modal('hide')
+					$("#edit_kode_pactcore").val('');
 					
 				}
 			});
@@ -459,6 +475,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 				$("#edit_kode_pactcore").val('');
 				$('#edit_notif_pactcore').html('');
 				$('#edit_note_pactcore').html('');
+				// $('.kode_pactcore').removeAttr('required', 'required');
 			});
 			// ============================================ END PACTCORE ===========================================
 
@@ -466,10 +483,11 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			$("#edit_adaptor").click(function() {
 				if($(this).is(":checked")) {
 					$('#edit_modal_adaptor').modal('show')
+					$('.kode_pactcore').attr('required', 'required');
 
 					//Hapus pactcore
-					$("#edit_pactcore").prop("checked", false);
-					$("#edit_kode_pactcore").val('');
+					// $("#edit_pactcore").prop("checked", false);
+					// $("#edit_kode_pactcore").val('');
 
 					//Hapus seting ulang
 					$("#edit_seting").prop("checked", false);
@@ -495,6 +513,47 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 				$('.edit_kode_adaptor').removeAttr('required', 'required');
 			});
 			// ============================================ END ADAPTOR ===========================================
+			$("#edit_dropcore").click(function() {
+				if($(this).is(":checked")) {
+					$('#edit_modal_dropcore').modal('show')
+					$('.edit_kode_dropcore').attr('required', 'required');
+					$('.before_dropcore').attr('required', 'required');
+					$('.after_dropcore').attr('required', 'required');
+					$('.total_dropcore').attr('required', 'required');
+					
+					//Hapus seting ulang
+					$("#edit_seting").prop("checked", false);
+					$('#seting_ulang').hide()
+
+					//Hapus lainnya
+					$("#edit_lain").prop("checked", false);
+					
+				} else {
+					$('#edit_modal_dropcore').modal('hide')
+					$(".edit_kode_dropcore").val('');
+					$(".before_dropcore").val('');
+					$(".after_dropcore").val('');
+					$(".total_dropcore").val('');
+					$('.edit_kode_dropcore').removeAttr('required', 'required');
+					$('.before_dropcore').removeAttr('required', 'required');
+					$('.after_dropcore').removeAttr('required', 'required');
+					$('.total_dropcore').removeAttr('required', 'required');
+					$('#show_dropcore').hide()
+					
+				}
+			});
+			
+			$('.edit_hide_dropcore').click(function(){
+				$("#edit_modal_dropcore").modal('hide');
+				$("#edit_dropcore").prop('checked', false);
+				$('#edit_validasi_dropcore').removeClass("has-error has-feedback");
+				$('#edit_validasi_dropcore').removeClass("has-success");
+				$("#edit_kode_dropcore").val('');
+				$('#edit_notif_dropcore').html('');
+				$('#edit_note_dropcore').html('');
+				$('.edit_kode_dropcore').removeAttr('required', 'required');
+			});
+			// ============================================ END dropcore ===========================================
 
 			$("#edit_seting").click(function() {
 				if($(this).is(":checked")) {
@@ -519,7 +578,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					$('#edit_reg_sn').val('');
 					$('#edit_reg_mrek').val('');
 					$('#alasan').val('');
-					$('#keterangan').val('');
 					$('#show_ont').hide()
 
 					//Hapus lainnya
@@ -550,7 +608,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					$('#edit_reg_sn').val('');
 					$('#edit_reg_mrek').val('');
 					$('#alasan').val('');
-					$('#keterangan').val('');
+
 					$('#show_ont').hide()
 
 					//Hapus lainnya
@@ -569,11 +627,11 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					$('#edit_modal_ont').modal('show')
 					$('.edit_kode_ont').attr('required', 'required');
 					$('.alasan').attr('required', 'required');
-					$('.keterangan').attr('required', 'required');
+
 					
-					//Hapus pactcore
-					$("#edit_pactcore").prop("checked", false);
-					$("#edit_kode_pactcore").val('');
+					// //Hapus pactcore
+					// $("#edit_pactcore").prop("checked", false);
+					// $("#edit_kode_pactcore").val('');
 
 					//Hapus seting ulang
 					$("#edit_seting").prop("checked", false);
@@ -592,13 +650,11 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					$('#edit_reg_sn').val('');
 					$('#edit_reg_mrek').val('');
 					$('#alasan').val('');
-					$('#keterangan').val('');
-					
-
-					$("#edit_validasi_keterangan").removeClass("has-error has-feedback");
-								$('#edit_notif_keterangan').html('');
-								$("#edit_validasi_alasan").removeClass("has-error has-feedback");
-						$('#edit_notif_alasan').html('');
+					$('.edit_kode_ont').removeAttr('required', 'required');
+					$('.alasan').removeAttr('required', 'required');
+					$('#show_ont').hide()
+					$("#edit_validasi_alasan").removeClass("has-error has-feedback");
+					$('#edit_notif_alasan').html('');
 				}
 			});
 			$('.edit_hide_ont').click(function(){
@@ -608,8 +664,8 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 				$('#edit_validasi_ont').removeClass("has-success");
 				$("#edit_kode_ont").val('');
 				$('#alasan').val('');
-				$('#keterangan').val('');
 
+				
 				$('#edit_notif_ont').html('');
 				$('#edit_note_ont').html('');
 				$('#edit_reg_mac').val('');
@@ -618,7 +674,8 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 
 				$('.edit_kode_ont').removeAttr('required', 'required');
 				$('.alasan').removeAttr('required', 'required');
-				$('.keterangan').removeAttr('required', 'required');
+				$('#show_ont').hide()
+
 			});
 
 				$('.edit_val_ont').click(function(){
@@ -629,12 +686,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					}  else {
 						$('#edit_validasi_alasan').removeClass("has-error has-feedback");
 						$('#edit_notif_alasan').html('');
-						if($('#keterangan').val()=== ""){
-								$("#edit_validasi_keterangan").addClass("has-error has-feedback");
-								$('#edit_notif_keterangan').html('<small class="form-text text-muted text-danger">keterangan tidak boleh kosong</small>');
-							} else {
-								$('#edit_validasi_keterangan').removeClass("has-error has-feedback");
-								$('#edit_notif_keterangan').html('');
 								var kode_pact = $('#edit_kode_ont').val();
 					var url = '{{ route("admin.reg.validasi_ont", ":id") }}';
 					url = url.replace(':id', kode_pact);
@@ -676,7 +727,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 									$('#edit_reg_mrek').val('');
 							}
 						});
-							}
 						}
 					});
 
@@ -762,7 +812,106 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 						
 					}
 				});
-				// ==================================END PACTCORE ===========================================
+				// ==================================END ADAPTOR ===========================================
+
+	// 			$(".cari").click(function(){
+    //     // $("#kode").css("border-color", "yellow");
+    //     var kode_kabel =$("#kode").val();
+    //     var url = '{{ route("admin.teknisi.getBarang", ":id") }}';
+    // url = url.replace(':id', kode_kabel);
+    //                 $.ajax({
+    //                     url: url,
+    //                     type: 'GET',
+    //                     data: {
+    //                       kode_kabel: kode_kabel,
+    //                         '_token': '{{ csrf_token() }}'
+    //                     },
+    //                     dataType: 'json',
+    //                     success: function(data) {
+    //                         // 
+    //                         if (data.subbarang_stok) {
+    //                           var after  = $("#after").val();
+    //                           // var before = $("#before").val();
+    //                             $("#before").val(data.subbarang_stok);
+    //                             $("#before").css("border-color", "rgb(60, 179, 113)");
+    //                             $("#notif").html('');
+    
+    //                             var total = parseInt(data.subbarang_stok) - parseInt(after);
+    //                             if (isNaN(total)) {
+    //                                 total = '';
+    //                                 }
+    //                             $("#total").val(total);
+	// 							$("#modal_cari").modal('hide');
+    //                           } else {
+    //                             $('#before').val('');
+    //                             $("#notif").html('<div class="alert alert-danger" role="alert">Kode barang tidak ditemukan</div>');
+    //                             $("#before").css("border-color", "red");
+    //                             $("#total").val('');
+    //                           }
+    //                         },
+    //                         error: function(error){
+    //                           // or');
+    //                           $('#before').val('');
+    //                           $("#before").css("border-color", "red");
+    //                           $("#notif").html('<div class="alert alert-danger" role="alert">Kode barang tidak ditemukan</div>');
+    //                           $("#total").val('');
+    //                         }
+                        
+    //                 });
+    //   });
+
+
+
+
+					$('.edit_val_dropcore').click(function(){
+					var kode_dropcore = $('#edit_kode_dropcore').val();
+				if(kode_dropcore){
+
+					var url = '{{ route("admin.teknisi.getBarang", ":id") }}';
+					url = url.replace(':id', kode_dropcore);
+					$.ajax({
+						url: url,
+						type: 'GET',
+						data: {
+							'_token': '{{ csrf_token() }}'
+						},
+						dataType: 'json',
+						success: function(data) {
+								if(data.subbarang_stok){
+									$("#edit_modal_dropcore").modal('hide');
+									$('#show_dropcore').show()
+									$('#edit_validasi_dropcore').removeClass("has-error has-feedback");
+									$('#edit_notif_dropcore').html('');
+									$('#edit_note_dropcore').html('');
+									var after_dropcore  = $("#after_dropcore").val();
+                                $("#before_dropcore").val(data.subbarang_stok);
+                                $("#before_dropcore").css("border-color", "rgb(60, 179, 113)");
+                                $("#notif").html('');
+    
+                                var total_dropcore = parseInt(data.subbarang_stok) - parseInt(after_dropcore);
+                                if (isNaN(total_dropcore)) {
+                                    total_dropcore = '';
+                                    }
+                                $("#total_dropcore").val(total_dropcore);
+								}else{
+									$("#edit_validasi_dropcore").addClass("has-error has-feedback");
+									$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak ada atau telah digunakan</small>');
+									$('#edit_note_dropcore').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+
+								}
+							},
+							error: function(data) {
+								$("#edit_validasi_dropcore").addClass("has-error has-feedback");
+								$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak boleh kosong</small>');
+								$('#edit_note_dropcore').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+								}
+						});
+					} else{
+						$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak boleh kosong</small>');
+						
+					}
+				});
+				// ==================================END DROPCORE ===========================================
 
 
 		});

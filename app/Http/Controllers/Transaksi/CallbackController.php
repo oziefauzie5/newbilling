@@ -124,7 +124,7 @@ class CallbackController extends Controller
                     $datas['inv_status'] = $data->status;
                     Invoice::where('inv_id', $data->merchant_ref)->update($datas);
 
-                    $data_lap['lap_id'] = 0;
+                    $data_lap['lap_id'] = time();
                     $data_lap['lap_tgl'] = $tgl_bayar;
                     $data_lap['lap_inv'] = $data->merchant_ref;
                     $data_lap['lap_admin'] = 10;

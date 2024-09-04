@@ -15,23 +15,74 @@ class GenerateInvoice extends Controller
     public function generate_invoice()
     {
         $now = Carbon::now();
+
+        $last_day = $now->format('t');
         $month = $now->format('m');
         $year = $now->format('Y');
+        $th = $now->format('y');
+
+        // $test = date($year . '-' . $month . '-'.$last_day);
+
+        // dd($test);
+
+
+
         $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
             ->where('reg_progres', '>=', 2)
             ->where('reg_progres', '<=', 5)
+            // ->where('reg_nolayanan', '=', 24052791807)
             ->get();
+
         $swaktu = SettingWaktuTagihan::first();
         $i = 1;
+
+
+
+        // dd($data_pelanggan);
         foreach ($data_pelanggan as $dp) {
             if ($dp->reg_status == 'PAID') {
-                $inv_id = rand(1000, 1999) . $i++;
+                $inv_id = $month . sprintf('%04d', $i++);
+                // // echo '<table><tr><td>'.$inv_id.'</td><td>'.$dp->input_nama.'</td></tr></table>';
                 $hari_jt_tempo = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
-                $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
-                $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
-                $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
-                $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
+
+
+                $cek_hari = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
+                if ($cek_hari == 27) {
+                    $jeda_waktu = '0';
+                    $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                    $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
+                } elseif ($cek_hari == 28) {
+                    $jeda_waktu = '0';
+                    $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                    $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
+                } elseif ($cek_hari == 29) {
+                    $jeda_waktu = '0';
+                    $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                    $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date($year . '-' . $month . '-' . $last_day);
+                } elseif ($cek_hari == 30) {
+                    $jeda_waktu = '0';
+                    $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                    $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date($year . '-' . $month . '-' . $last_day);
+                } elseif ($cek_hari == 31) {
+                    $jeda_waktu = '0';
+                    $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                    $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date($year . '-' . $month . '-' . $last_day);
+                } else {
+                    $jeda_waktu = $swaktu->wt_jeda_isolir_hari;
+                    $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                    $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
+                }
+
+
+
+                $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($jeda_waktu)->toDateString();
 
 
                 Invoice::create([
@@ -68,11 +119,55 @@ class GenerateInvoice extends Controller
 
                 foreach ($data_invoice as $inv) {
                     $inv_id = $inv->inv_id;
+                    // echo '<table><tr><td>'.$inv_id.'</td><td>'.$dp->input_nama.'</td></tr></table>';
                     $hari_jt_tempo = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
-                    $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
-                    $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
-                    $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
-                    $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
+
+
+                    $cek_hari = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
+                    if ($cek_hari == 27) {
+                        $jeda_waktu = '0';
+                        $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                        $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+                        $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
+                    } elseif ($cek_hari == 28) {
+                        $jeda_waktu = '0';
+                        $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                        $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+                        $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
+                    } elseif ($cek_hari == 29) {
+                        $jeda_waktu = '0';
+                        $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                        $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->addMonth(1)->toDateString()));
+                        $tgl_jt_tempo = date($year . '-' . $month . '-' . $last_day);
+                    } elseif ($cek_hari == 30) {
+                        $jeda_waktu = '0';
+                        $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                        $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->addMonth(1)->toDateString()));
+                        $tgl_jt_tempo = date($year . '-' . $month . '-' . $last_day);
+                    } elseif ($cek_hari == 31) {
+                        $jeda_waktu = '0';
+                        $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                        $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $last_day)->addMonth(1)->toDateString()));
+                        $tgl_jt_tempo = date($year . '-' . $month . '-' . $last_day);
+                    } else {
+                        $jeda_waktu = $swaktu->wt_jeda_isolir_hari;
+                        $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_tagih));
+                        $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+                        $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
+                    }
+
+
+
+                    $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($jeda_waktu)->toDateString();
+
+                    // $test['inv_status'] = 'ISOLIR';
+                    // $test['inv_tgl_tagih'] = $hari_tgl_tagih;
+                    // $test['inv_tgl_jatuh_tempo'] = $tgl_jt_tempo;
+                    // $test['inv_tgl_isolir'] = $tgl_isolir;
+                    // $test['inv_periode'] = $periode1blan;
+                    // $test['inv_total'] = $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama;
+
+                    // dd($test);
 
                     Invoice::where('inv_id', $inv->inv_id)->update([
                         'inv_status' => 'ISOLIR',

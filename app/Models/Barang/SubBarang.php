@@ -23,6 +23,7 @@ class SubBarang extends Model
         'subbarang_status',
         'subbarang_tgl_masuk',
         'subbarang_tgl_keluar',
+        'subbarang_deskripsi',
         'subbarang_admin',
     ];
 }

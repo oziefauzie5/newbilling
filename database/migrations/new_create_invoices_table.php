@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->integer('inv_id');
+            $table->string('inv_id')->nullable();
             $table->string('inv_status')->nullable();
             $table->string('inv_idpel')->nullable();
             $table->string('inv_nolayanan')->nullable();

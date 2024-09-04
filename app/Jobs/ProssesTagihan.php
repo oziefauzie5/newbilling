@@ -96,12 +96,8 @@ Silahkan login ke aplikasi client area https://ovallapp.com
 Tagihan otomatis lunas setelah melakukan pembayaran, jika menggunakan QRIS, Virtual account, Indomaret, Alfamart dan lain lain.
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*
-"
-    
-                        ',
+*OVALL FIBER*',
                 ]);
-                $pesan_group['status'] = '10';
             }
         }
     }

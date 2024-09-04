@@ -424,6 +424,12 @@
 						</li>
 						@endrole
 						@role('admin|STAF ADMIN')
+						<li class="nav-item {{\Route::is('admin.lap.*') ? 'active' : ''}}">
+							<a href="{{route('admin.lap.jurnal')}}">
+								<i class="fas fa-ticket-alt"></i>
+								<p>Jurnal</p>
+							</a>
+						</li>
 						<li class="nav-item {{\Route::is('admin.tiket.*') ? 'active' : ''}}">
 							<a href="{{route('admin.tiket.index')}}">
 								<i class="fas fa-ticket-alt"></i>
@@ -496,6 +502,11 @@
 									<li>
 										<a href="{{route('admin.app.index')}}">
 											<span class="sub-item">Aplikasi</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.app.kendaraan')}}">
+											<span class="sub-item">Kendaraan</span>
 										</a>
 									</li>
 								</ul>
@@ -1036,7 +1047,9 @@ $('#submit_cari_kode').click(function(e) {
 							},
 							dataType: 'json',
 							success: function(data) {
-								if (data) {
+								// console.log(data['subbarang_stok'])
+								if (data['subbarang_stok']>='1') {
+									$("#text").html('');
 									// $('#myModal').modal('hide');
 									// document.getElementById('hidden_div').style.display = "block";
 									$('#div_cari_barang').show();
@@ -1055,13 +1068,14 @@ $('#submit_cari_kode').click(function(e) {
 										$('#div_ont').hide();
 
 									}
-									console.log(data)
+									
 
 									
 								}  else {
-									document.getElementById('hidden_div').style.display = "none";
+									$('#div_cari_barang').hide();
+									// document.getElementById('div_cari_barang').style.display = "block";
 									$("#progress").html('');
-									$("#text").html('<strong>No. Invoice/Id Pelanggan tidak ditemukan</strong>');
+									$("#text").html('<strong>Kode Barang tidak ditemukan</strong>');
 								}
 								
 							},
@@ -1074,7 +1088,7 @@ $('#submit_cari_kode').click(function(e) {
 					} else {
 						document.getElementById('hidden_div').style.display = "none";
 								$("#progress").html('');
-								$("#text").html('Masukan No. Invoice/Id Pelanggan terlebih dahulu');
+								$("#text").html('Masukan Barang terlebih dahulu');
 						$('#harga').empty();
 					}
 	

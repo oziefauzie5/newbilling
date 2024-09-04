@@ -63,7 +63,7 @@
                                   <div class="form-row">
                                     <input type="hidden" name="idpel" value="{{$d->reg_idpel}}">
                                     <div class="col">
-                                      <select name="bank" id="" class="form-control" required>
+                                      <select name="akun" id="" class="form-control" required>
                                         <option value="">PILIH METODE BAYAR</option>
                                       @foreach($data_bank as $bank)
                                       <option value="{{$bank->id}}">{{$bank->akun_nama}}</option>

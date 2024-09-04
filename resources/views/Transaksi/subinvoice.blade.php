@@ -31,15 +31,70 @@
 
               </div>
               <div class="col-sm-4">
-                <b>Invoice : INV-{{$invoice->inv_id}}</b><br>
+                <b >Invoice : INV- <b data-toggle="modal" data-target="#update_inv{{$invoice->inv_id}}">{{$invoice->inv_id}}</b></b><br>
+                <!-- Modal -->
+<div class="modal fade" id="update_inv{{$invoice->inv_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Invoice {{$invoice->inv_id}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="form-group">
+        <form action="{{route('admin.inv.update_inv',['inv_id'=>$invoice->inv_id])}}" method="post">
+          @csrf
+          @method('PUT')
+          <label>Tanggal Jatuh Tempo</label>
+          <input type="text" class="form-control" name="tgl_jth_tempo" value="{{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+                <!-- <b>Invoice : INV-{{$invoice->inv_id}}</b><br> -->
                 <br>
-                @if($invoice->inv_status != 'PAID')
                 <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>
+                @if($invoice->inv_status != 'PAID')
                 <b>Tanggal Isolir</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_isolir))}}<br>
                 <b>Status : </b> <span class="text-danger"><strong> {{$invoice->inv_status}}</strong></span><br>
                 @else
-                <b>Jatuh Tempo</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_jatuh_tempo))}}<br>
-                <b>Tanggal Bayar</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_bayar))}}<br>
+                <b>Tanggal Isolir</b> {{date('d-m-Y',strtotime($invoice->inv_tgl_isolir))}}<br>
+                <b>Tanggal Bayar</b><b data-toggle="modal" data-target="#update_bayar{{$invoice->inv_id}}">{{date('d-m-Y',strtotime($invoice->inv_tgl_bayar))}}</b> <br>
+                 <!-- Modal -->
+<div class="modal fade" id="update_bayar{{$invoice->inv_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Tanggal Bayar {{$invoice->inv_id}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="form-group">
+        <form action="{{route('admin.inv.update_tgl_bayar',['inv_id'=>$invoice->inv_id])}}" method="post">
+          @csrf
+          @method('PUT')
+          <label>Tanggal Bayar</label>
+          <input type="text" class="form-control" name="tgl_bayar" value="{{date('d-m-Y',strtotime($invoice->inv_tgl_bayar))}}">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
                 <b>Metode Bayar : </b> <span ><strong> {{$invoice->inv_payment_method}}</strong></span><br>
                 <b>Status : </b> <span class="text-success"><strong> {{$invoice->inv_status}}</strong></span><br>
              

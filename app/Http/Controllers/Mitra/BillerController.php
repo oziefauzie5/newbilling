@@ -263,7 +263,7 @@ class BillerController extends Controller
             $datas['inv_status'] = 'PAID';
 
 
-            $data_lap['lap_id'] = 0;
+            $data_lap['lap_id'] = time();
             $data_lap['lap_tgl'] = $tgl_bayar;
             $data_lap['lap_inv'] = $data_pelanggan->inv_id;
             $data_lap['lap_admin'] = $admin_user;

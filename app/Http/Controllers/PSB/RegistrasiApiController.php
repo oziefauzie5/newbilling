@@ -136,13 +136,14 @@ class RegistrasiApiController extends Controller
             Registrasi::where('reg_idpel', $id)->update($data);
             SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
             SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-        } else if ($request->alasan == 'Tukar') {
+        } elseif ($request->alasan == 'Tukar') {
             $data['reg_kode_ont'] = $request->kode_ont;
             $data['reg_mrek'] = $request->reg_mrek;
             $data['reg_mac'] = $request->reg_mac;
             $data['reg_sn'] = $request->reg_sn;
             $update_barang['subbarang_status'] = '1';
             $update_barang['subbarang_keluar'] = '1';
+            $update_barang['subbarang_stok'] = '0';
             $update_barang['subbarang_admin'] = $nama_admin;
             $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
@@ -153,13 +154,14 @@ class RegistrasiApiController extends Controller
             Registrasi::where('reg_idpel', $id)->update($data);
             SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
             SubBarang::where('id_subbarang', $request->kode_ont_lama)->update($update_barang_lama);
-        } else if ($request->alasan == 'Upgrade') {
+        } elseif ($request->alasan == 'Upgrade') {
             $data['reg_kode_ont'] = $request->kode_ont;
             $data['reg_mrek'] = $request->reg_mrek;
             $data['reg_mac'] = $request->reg_mac;
             $data['reg_sn'] = $request->reg_sn;
             $update_barang['subbarang_status'] = '1';
             $update_barang['subbarang_keluar'] = '1';
+            $update_barang['subbarang_stok'] = '0';
             $update_barang['subbarang_admin'] = $nama_admin;
             $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $request->kode_ont_lama . ' Pel. ' . $request->reg_nama . '. ( ' . $request->keterangan . ' )';
             $update_barang_lama['subbarang_status'] = '0';
@@ -181,12 +183,22 @@ class RegistrasiApiController extends Controller
 
     public function update_profile(Request $request, $id)
     {
+
+        // $data['reg_tgl_pasang'] = date('Y-m-d',strtotime($request->tgl_pasang));
+        // Registrasi::where('reg_idpel', $id)->update($data);
+        // $notifikasi = array(
+        //     'pesan' => 'Berhasil',
+        //     'alert' => 'success',
+        // );
+        // return redirect()->route('admin.reg.index')->with($notifikasi);
+
         $nama_admin = Auth::user()->name;
-        // $hari_ini = date('Y-m-d', strtotime(Carbon::now()));
         $hari_ini = date('Y-m-d', strtotime('2024-07-15'));
         $now = Carbon::now();
         $month = $now->format('m');
         $year = $now->format('Y');
+        $cek_hari = date('d', strtotime($request->reg_tgl_jatuh_tempo));
+
 
         $sbiaya = SettingBiaya::first();
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -195,7 +207,19 @@ class RegistrasiApiController extends Controller
             ->where('registrasis.reg_idpel', $id)
             ->first();
         $swaktu = SettingWaktuTagihan::first();
-        $tgl_isolir = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+        if ($cek_hari == 31) {
+            $jeda_waktu = '0';
+        } elseif ($cek_hari == 30) {
+            $jeda_waktu = '0';
+        } else {
+            $jeda_waktu = $swaktu->wt_jeda_isolir_hari;
+        }
+        $tgl_isolir = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay($jeda_waktu)->toDateString();
+        $telat_tgl_isolir =  Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($jeda_waktu)->toDateString();
+
+
+        // dd($tgl_isolir);
+        // dd($tgl_isolir);
         $tgl_penagihan = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay(-2)->toDateString();
         $cek_invid = Invoice::where('inv_idpel', $id)->latest('inv_tgl_jatuh_tempo')->first();
         $periode = date('d-m-Y', strtotime(Carbon::create($request->reg_tgl_jatuh_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($request->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString()));
@@ -223,7 +247,6 @@ class RegistrasiApiController extends Controller
         // dd($diffDays);
         // ------------------------
 
-        // dd($diffInDays);
         // if ($diffDays < -0) {
         //     dd($diffDays.' SUSPEND');
         // } else{
@@ -240,7 +263,7 @@ class RegistrasiApiController extends Controller
         $telat_tgl_tagih = date($year . '-' . $month . '-d', strtotime(Carbon::create($request->reg_tgl_jatuh_tempo)->addDay(-2)->toDateString()));
         $telat_periode = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
         $telat_tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($request->reg_tgl_jatuh_tempo));
-        $telat_tgl_isolir =  Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
+
 
         // dd($telat_tgl_isolir);
 
@@ -313,26 +336,6 @@ class RegistrasiApiController extends Controller
                                     $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
                                 }
 
-                                // dd($update_inv);
-                                // } elseif (date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo)) >= $hari_ini) {
-                                //     if ($diffDays < -0) {
-                                //         $data['reg_status'] = 'ISOLIR';
-                                //         $update_inv['inv_status'] = 'ISOLIR';
-                                //         $update_inv['inv_periode'] = $telat_periode;
-                                //         $update_subinv['subinvoice_deskripsi'] = $telat_periode;
-                                //         $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($telat_tgl_tagih));
-                                //         $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($telat_tgl_jt_tempo));
-                                //         $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($telat_tgl_isolir));
-                                //     } else {
-                                //         $data['reg_status'] = 'UNPAID';
-                                //         $update_inv['inv_status'] = 'UNPAID';
-                                //         $update_inv['inv_periode'] = $periode;
-                                //         $update_subinv['subinvoice_deskripsi'] = $periode;
-                                //         $update_inv['inv_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
-                                //         $update_inv['inv_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
-                                //         $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
-                                //     }
-                                // }
 
 
                                 $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;

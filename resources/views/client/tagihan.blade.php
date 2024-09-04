@@ -99,20 +99,23 @@
                                   <input type="hidden" name="inv" value="{{$layanan->inv_id}}">
                                   <input type="hidden" name="code" id="code" value="{{$ch->code}}">
                                   <div class="col-icon">
-                                    <div class="icon-big text-center bubble-shadow-small">
-                                      <img src="{{$ch->icon_url}}"  width="60px" alt="">
+                                    <div class="icon-big text-center ">
+                                      <img src="{{$ch->icon_url}}"  width="70px" alt="">
                                       {{-- <i class="flaticon-users"></i> --}}
                                     </div>
                                   </div>
-                                  <div class="col col-stats ml-3 ml-sm-0">
-                                    <div class="numbers">
-                                      <p class="card-category">{{$ch->name}}</p>
-                                      @if($ch->group=='E-Wallet')
+                                  <!-- <div class="col-12 ">
+                                    <div class="numbers"> -->
+                                      <!-- <p class="card-category">{{$ch->name}}</p> -->
+                                     
+                                    <!-- </div>
+                                  </div> -->
+                                  <div class="col">
+                                  @if($ch->group=='E-Wallet')
                                       <h4 class="card-title">ADM {{number_format($ch->total_fee->flat) }} + {{$ch->total_fee->percent}}%</h4>
                                       @else
                                       <h4 class="card-title">ADM {{number_format($ch->total_fee->flat) }}</h4>
                                       @endif
-                                    </div>
                                   </div>
                                 </div>
                               </div>

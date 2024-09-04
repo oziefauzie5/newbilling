@@ -187,6 +187,8 @@
                 <option value="HOTSPOT">USER HOTSPOT</option>
                 <option value="USER BARU">USER BARU</option>
                 <option value="USER BULAN LALU">USER BULAN LALU</option>
+                <option value="USER BULAN LALU">USER BULAN LALU</option>
+                <option value="TOTAL BULAN LALU">TOTAL BULAN LALU</option>
               </select>
           </div>
           <div class="col-sm-2">
@@ -264,6 +266,7 @@
                   <th>NO LAYANAN</th>
                   <th>PELANGGAN</th>
                   <th>TGL JT TEMPO</th>
+                  <th>TGL PASANG</th>
                   <th>TGL Registrasi</th>
                   <th>PROFILE</th>
                   <th>ROUTER</th>
@@ -302,6 +305,7 @@
                       @else
                       <td class="text-danger font-weight-bold" >Belum Terpasang</td>
                       @endif
+                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_tgl_pasang}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->input_tgl))}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>

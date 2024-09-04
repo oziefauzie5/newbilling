@@ -678,7 +678,7 @@
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Tanggal Pemasangan</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="kode_unik" name="" value="{{date('d-m-Y', strtotime($data->reg_tgl_pasang))}}" readonly >
+                  <input type="text" class="form-control" id="kode_unik" name="tgl_pasang" value="{{date('d-m-Y', strtotime($data->reg_tgl_pasang))}}"  >
                 </div>
               </div>
               <div class="form-group row">
@@ -716,6 +716,38 @@
                     <option value="ISOLIR">ISOLIR</option>
                   </select>
                 </div>
+              </div>
+              <div class="form-group row">
+                  <div class="col">
+
+                  <!-- Button trigger modal -->
+<button type="button" class="btn btn-dark btn-block btn-sm" data-toggle="modal" data-target="#ubah_tgl">
+  Rubah Tanggal Jatuh Tempo
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="ubah_tgl" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Rubah Tanggal Jatuh Tempo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+                </div>
+ 
               </div>
               <div class="form-group row">
                   <div class="col">

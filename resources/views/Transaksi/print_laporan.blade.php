@@ -103,6 +103,8 @@
             <th>TRANSAKSI TUNAI</th>
             <th>REFUND</th>
             <th>ADM</th>
+            <th>TOTAL</th>
+            <th>TOTAL TUNAI</th>
             <th>QTY</th>
         </tr>
     </thead>
@@ -112,6 +114,8 @@
             <td id="center">Rp. {{number_format($data_laporan->data_lap_tunai)}}</td>
             <td id="center">Rp. {{number_format($data_laporan->data_lap_refund)}}</td>
             <td id="center">Rp. {{number_format($data_laporan->data_lap_adm)}}</td>
+            <td id="center">Rp. {{number_format($total)}}</td>
+            <td id="center">Rp. {{number_format($total_tunai)}}</td>
             <td id="center">{{$data_laporan->data_lap_trx}}</td>
         </tr>
     </tbody>
@@ -127,18 +131,20 @@
                 <th>CABAR</th>
                 <th>METODE BAYAR</th>
                 <th>KREDIT</th>
+                <th>DEBET</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($laporan as $d)
             <tr>
                 <td id="center">{{$loop->iteration}}</td>
-                <td id="center">{{$d->lap_tgl}}</td>
+                <td id="center">{{$d->tgl_trx}}</td>
                 <td id="center">{{$d->lap_inv}}</td>
                 <td>{{$d->lap_keterangan}}</td>
                 <td>{{$d->lap_cabar}}</td>
                 <td>{{$d->akun_nama}}</td>
                 <td id="right">{{number_format($d->lap_kredit)}}</td>
+                <td id="right">{{number_format($d->lap_debet)}}</td>
             </tr>
             @endforeach
         </tbody>

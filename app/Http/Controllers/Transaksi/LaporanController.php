@@ -7,6 +7,7 @@ use App\Models\Applikasi\SettingAkun;
 use App\Models\Model_Has_Role;
 use App\Models\Transaksi\DataLaporan;
 use App\Models\Transaksi\Laporan;
+use App\Models\Transaksi\Jurnal;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -32,6 +33,7 @@ class LaporanController extends Controller
         if ($role->role_id == 1) {
             $data['admin'] = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
                 ->whereIn('model_has_roles.role_id', $ids)->get();
+
             $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
                 ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
@@ -79,7 +81,8 @@ class LaporanController extends Controller
 
     public function lap_delete($id)
     {
-        $data = Laporan::where('lap_id', $id);
+        // dd($id);
+        $data = Laporan::where('id', $id);
         if ($data) {
             $data->delete();
         }
@@ -92,6 +95,7 @@ class LaporanController extends Controller
 
     public function buat_laporan(Request $request, $id)
     {
+        $nama_admin = Auth::user()->name;
         $cek_id = DataLaporan::where('data_lap_id', $request->lap_id)->first();
         if ($cek_id) {
             $notifikasi = [
@@ -113,8 +117,20 @@ class LaporanController extends Controller
             $data['data_lap_status'] = 0;
             $update_data['lap_status'] = 1;
             $update_data['lap_id'] = $request->lap_id;
+
+            $jurnal['jurnal_id'] =  time();
+            $jurnal['jurnal_tgl'] =  $tgl;
+            $jurnal['jurnal_uraian'] =  'LAPORAN - ' . $nama_admin;
+            $jurnal['jurnal_kategori'] =  'PENDAPATAN';
+            $jurnal['jurnal_admin'] =  $id;
+            $jurnal['jurnal_kredit'] =  $request->total;
+            $jurnal['jurnal_metode_bayar'] =  2;
+            $jurnal['jurnal_status'] =  1;
             DataLaporan::create($data);
             Laporan::where('lap_status', '0')->where('lap_admin', $id)->update($update_data);
+            Jurnal::create($jurnal);
+
+
             $notifikasi = [
                 'pesan' => 'Terimakasih. Laporan anda berhasil dibuat',
                 'alert' => 'success',
@@ -214,12 +230,17 @@ class LaporanController extends Controller
         $data['admin_user'] = Auth::user()->id;
         $data['admin_name'] = Auth::user()->name;
 
-        $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
+        $query = Laporan::select('data_laporans.*', 'users.*', 'setting_akuns.*', 'laporans.*', 'laporans.created_at as tgl_trx')
+            ->orderBy('tgl_trx', 'DESC')
             ->join('data_laporans', 'data_laporans.data_lap_id', '=', 'laporans.lap_id')
             ->join('users', 'users.id', '=', 'laporans.lap_admin')
             ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
             ->where('laporans.lap_id', '=', $id);
         $data['laporan'] = $query->get();
+        $data['total'] = Laporan::where('lap_id', $id)->sum('lap_kredit') + Laporan::where('lap_id', $id)->sum('lap_adm') - Laporan::where('lap_id', $id)->sum('lap_debet');
+        $data['total_tunai'] = Laporan::where('lap_id', $id)->where('lap_akun', 2)->sum('lap_kredit') + Laporan::where('lap_id', $id)->where('lap_akun', 2)->sum('lap_adm') - Laporan::where('lap_id', $id)->where('lap_akun', 2)->sum('lap_debet');
+
+
 
         $data['data_laporan'] = DataLaporan::where('data_lap_id', $id)->first();
         return view('Transaksi/print_laporan', $data);

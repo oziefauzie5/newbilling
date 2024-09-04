@@ -78,6 +78,7 @@ class BarangController extends Controller
             $data['subbarang_status'] = '1';
             $data['subbarang_keluar'] = '1';
             $data['subbarang_keterangan'] = $request->subbarang_keterangan;
+            $data['subbarang_deskripsi'] = $request->subbarang_deskripsi;
             $data['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
             $data =  SubBarang::where('id_subbarang', $request->id_subbarang)->update($data);
             $notifikasi = [
@@ -99,10 +100,10 @@ class BarangController extends Controller
         $data['q'] = $request->query('q');
         $data['status'] = $request->query('status');
         if ($data['status'] == 'Belum Terpakai') {
-            $nilai = '<';
+            $nilai = '>=';
             $value = '1';
         } elseif ($data['status'] == 'Terpakai') {
-            $nilai = '>';
+            $nilai = '<=';
             $value = '0';
         } else {
             $nilai = '=';
@@ -118,7 +119,7 @@ class BarangController extends Controller
             });
 
         if ($data['status'])
-            $query->where('sub_barangs.subbarang_status', $nilai, $value);
+            $query->where('sub_barangs.subbarang_stok', $nilai, $value);
 
 
         $data['SubBarang'] = $query->paginate(20);
@@ -164,6 +165,29 @@ class BarangController extends Controller
         SubBarang::where('id_subbarang', $id)->update($sub);
         $notifikasi = array(
             'pesan' => 'Berhasil input data',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.barang.sub_barang', ['id' => $request->idbarang])->with($notifikasi);
+    }
+    public function update_status_barang(Request $request, $id)
+    {
+        if ($request->ket == 'Rusak') {
+            $sub['subbarang_keterangan'] = $request->ket;
+            $sub['subbarang_status'] = '10';
+            $sub['subbarang_stok'] = '0';
+            $sub['subbarang_keluar'] = '0';
+        } elseif ($request->ket == 'Dalam Pengecekan') {
+            $sub['subbarang_keterangan'] = $request->ket;
+            $sub['subbarang_status'] = '5';
+            $sub['subbarang_stok'] = '1';
+            $sub['subbarang_keluar'] = '0';
+        }
+        $sub['subbarang_deskripsi'] = $request->desk;
+
+        // dd($sub);
+        SubBarang::where('id_subbarang', $id)->update($sub);
+        $notifikasi = array(
+            'pesan' => 'Berhasil Update Status Barang',
             'alert' => 'success',
         );
         return redirect()->route('admin.barang.sub_barang', ['id' => $request->idbarang])->with($notifikasi);

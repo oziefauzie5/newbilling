@@ -81,6 +81,7 @@ class PelangganController extends Controller
     {
         // dd($refrensi);
         $tripay = (new TripayController)->detailsTransakasi($refrensi);
+        // dd($tripay );
         $cek_inv = Invoice::where('inv_id', $tripay->merchant_ref)->first();
         if ($cek_inv->inv_status != 'PAID') {
             $date = Carbon::parse($tripay->expired_time);

@@ -68,7 +68,9 @@ class PsbController extends Controller
         if ($data['paket'])
             $query->where('pakets.paket_id', '=', $data['paket']);
         if ($data['data'] == "BELUM TERPASANG")
-            $query->where('registrasis.reg_progres', '<', "2");
+            $query->where('registrasis.reg_progres', '<', $bulan_lalu);
+        if ($data['data'] == "TOTAL BULAN LALU")
+            $query->whereMonth('registrasis.reg_tgl_pasang', '<', "8");
         elseif ($data['data'] == "PPP")
             $query->where('registrasis.reg_layanan', '=', "PPP");
         elseif ($data['data'] == "DHCP")
@@ -175,6 +177,11 @@ class PsbController extends Controller
     {
         $data['data_user'] = User::all();
         $data['input_data'] = InputData::orderBy('input_tgl', 'DESC')->get();
+        //     foreach ($data['input_data'] as $key) {
+        //         echo '<table><tr><td>'.$key->input_nama.'</td><td>'.$key->input_hp.'</td><td>'.$key->password.'</td></tr></table>';
+
+        //     }
+        // dd('CILUKBA');
         return view('PSB/list_input_data', $data);
     }
     public function edit_inputdata($id)

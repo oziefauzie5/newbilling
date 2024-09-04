@@ -78,7 +78,7 @@
                     <div class="form-row m-1">
 
                       <div class="col-12">
-                        <input type="text" class="form-control" name="kode" id="kode" value="{{Session::get('kode')}}" placeholder="Masukan Kode Kabel" >
+                        <input type="text" class="form-control" name="kode" id="kode" value="{{Session::get('kode')}}" placeholder="Masukan Kode Kabel" required>
                       </div>
                       <div class="col-12 mt-1">
                         <input class="btn btn-primary btn-block cari"  value="Cari Kode">

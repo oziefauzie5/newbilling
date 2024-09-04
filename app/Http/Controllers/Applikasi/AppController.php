@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Applikasi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Global\GlobalController;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingAplikasi;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingTripay;
 use App\Models\Applikasi\SettingWaktuTagihan;
 use App\Models\Applikasi\SettingWhatsapp;
+use App\Models\Permission;
+use App\Models\Transaksi\Kendaraan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -214,15 +217,11 @@ class AppController extends Controller
     // ================================================END akun================================================
     // ================================================WHATSAPP================================================
 
-    public function whatsapp()
-    {
-    }
+    public function whatsapp() {}
     // ==============================================END WHATSAPP==============================================
     // ================================================PPN================================================
 
-    public function ppn()
-    {
-    }
+    public function ppn() {}
     // ==============================================END PPN==============================================
     // ================================================APLIKASI================================================
     public function aplikasi_store(Request $request)
@@ -400,5 +399,59 @@ class AppController extends Controller
             'alert' => 'success',
         );
         return redirect()->route('admin.app.index')->with($notifikasi);
+    }
+
+    public function kendaraan()
+    {
+        $data['kendaraan'] = (new GlobalController)->data_kendaraan()->paginate(10);
+        $data['permision'] = Permission::get();
+        return view('transportasi/kendaraan', $data);
+    }
+    public function store_kendaraan(Request $request)
+    {
+        $create['trans_user_id'] = time();
+        $create['trans_divisi_id'] = $request->trans_divisi_id;
+        $create['trans_plat_nomor'] = $request->trans_plat_nomor;
+        $create['trans_jenis_motor'] = $request->trans_jenis_motor;
+        $create['trans_bensin'] = $request->trans_bensin;
+        $create['trans_service'] = $request->trans_service;
+        $create['trans_sewa'] = $request->trans_sewa;
+        $create['trans_status'] = 'Enable';
+        Kendaraan::create($create);
+        $notifikasi = array(
+            'pesan' => 'Menambah Data Kendaraan Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.kendaraan')->with($notifikasi);
+    }
+    public function update_kendaraan(Request $request, $id)
+    {
+        // dd($id);
+        $create['trans_divisi_id'] = $request->trans_divisi_id;
+        $create['trans_plat_nomor'] = $request->trans_plat_nomor;
+        $create['trans_jenis_motor'] = $request->trans_jenis_motor;
+        $create['trans_bensin'] = $request->trans_bensin;
+        $create['trans_service'] = $request->trans_service;
+        $create['trans_sewa'] = $request->trans_sewa;
+        $create['trans_status'] = $request->trans_status;
+        Kendaraan::whereId($id)->update($create);
+        $notifikasi = array(
+            'pesan' => 'Merubah Data Kendaraan Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.kendaraan')->with($notifikasi);
+    }
+    public function delete_kendaraan($id)
+    {
+
+        $cek = Kendaraan::whereId($id);
+        if ($cek) {
+            $cek->delete();
+        }
+        $notifikasi = array(
+            'pesan' => 'Menghapus Data Kendaraan Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.kendaraan')->with($notifikasi);
     }
 }
