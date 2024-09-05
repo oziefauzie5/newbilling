@@ -53,6 +53,9 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pengeluaran">
   Pengeluaran
 </button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#kasbon">
+  Kasbon
+</button>
 <hr>
 
 <!-- Modal Reimburse-->
@@ -125,6 +128,88 @@
   </div>
 </div>
 
+<!-- Modal Kasbon-->
+<div class="modal fade" id="kasbon" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">KASBON KARYAWAN</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.lap.store_jurnal_kasbon')}}" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('POST')
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Jenis Kasbon</label>
+              <select class="form-control" name="jenis">
+                <option value="">Pilih Jenis Kasbon</option>
+                <option value="Berjangka">Berjangka</option>
+                <option value="Tidak Berjangka">Tidak Berjangka</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Uraian</label>
+              <input type="text" class="form-control" name="uraian" required>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Tempo</label>
+              <input type="number" class="form-control" value="1" max="6" name="tempo" required>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Penerima</label>
+              <select class="form-control" name="penerima" required>
+                <option value="">Pilih Penerima</option>
+                @foreach ($user as $u)
+                    <option value="{{$u->id}}">{{$u->name}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Metode Pencairan</label>
+              <select class="form-control" name="metode" required>
+                <option value="">Pilih Metode</option>
+                @foreach ($setting_akun as $a)
+                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Jumlah</label>
+            <input type="number" class="form-control" value="0" name="jumlah" required>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Upload Bukti</label>
+            <input type="file" name="file" class="form-control" required>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal Reimburse-->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -296,31 +381,36 @@
                       <td>{{$d->akun_nama}}</td>
                       <td>{{number_format($d->jurnal_kredit)}}</td>
                       <td>{{number_format($d->jurnal_debet)}}</td>
-                      <td>   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#bukti_trx">
+                      <td>   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#bukti_trx{{$d->jurnal_id}}">
                         Lihat Bukti Transfer
-                      </button></td>
+                      </button>
+                      <!-- Modal -->
+                      <div class="modal fade" id="bukti_trx{{$d->jurnal_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                       <div class="modal-dialog">
+                         <div class="modal-content">
+                           <div class="modal-header">
+                             <h5 class="modal-title" id="exampleModalLabel">Bukti Transfer</h5>
+                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                             </button>
+                           </div>
+                           <div class="modal-body">
+                           <img class="rounded mx-auto d-block" src="{{ asset('storage/bukti-transaksi/'.$d->jurnal_img) }}" width="300" alt="">
+                           </div>
+                           <div class="modal-footer">
+                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                             @if($d->jurnal_img)
+                             <a href="{{route('admin.lap.download_file',['id'=>$d->jurnal_img])}}"><button class="btn btn-secondary">Download</button></a>
+                             @else
+                             <button class="btn btn-secondary" disabled>Download</button>
+                             @endif
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                     <!-- ---end modal---- -->
+                    </td>
                     </tr>
-                     <!-- Modal -->
-                     <div class="modal fade" id="bukti_trx" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Bukti Transfer</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                          <img class="rounded mx-auto d-block" src="{{ asset('storage/bukti-transaksi/'.$d->jurnal_img) }}" width="300" alt="">
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <a href="{{route('admin.lap.download_file',['id'=>'05-09-202411.pdf'])}}"><button class="btn btn-secondary">Download</button></a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- ---end modal---- -->
                     @endforeach
               </tbody>
             </table>

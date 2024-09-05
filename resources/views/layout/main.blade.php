@@ -430,6 +430,12 @@
 								<p>Jurnal</p>
 							</a>
 						</li>
+						<li class="nav-item">
+							<a href="{{route('admin.lap.pinjaman')}}">
+								<i class="fas fa-ticket-alt"></i>
+								<p>Pinjaman</p>
+							</a>
+						</li>
 						<li class="nav-item {{\Route::is('admin.tiket.*') ? 'active' : ''}}">
 							<a href="{{route('admin.tiket.index')}}">
 								<i class="fas fa-ticket-alt"></i>

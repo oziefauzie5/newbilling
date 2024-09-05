@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Transaksi\Transaksi;
 use App\Models\Transaksi\Jurnal;
+use App\Models\Transaksi\Kasbon;
 use App\Models\Transaksi\Kendaraan;
+use App\Models\Transaksi\Pinjaman;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -37,6 +39,17 @@ class TransaksiController extends Controller
         $data['setting_akun'] = (new GlobalController)->setting_akun()->get();
         return view('Transaksi/jurnal', $data);
     }
+    public function pinjaman()
+    {
+
+        $data['kredit'] = 0;
+        $data['debet'] = 0;
+        $data['kasbon'] = Kasbon::select('kasbons.*', 'kasbons.created_at as tgl_trx', 'kasbons.id as pinjaman_id', 'users.*')
+            ->join('users', 'users.id', '=', 'kasbons.kasbon_user_id')
+            ->paginate(10);
+
+        return view('Transaksi/pinjaman', $data);
+    }
     public function store_jurnal_reimbuse(Request $request)
     {
         $tanggal = (new GlobalController)->tanggal();
@@ -62,6 +75,56 @@ class TransaksiController extends Controller
             Storage::disk('public')->put($path, file_get_contents($photo));
             $data['jurnal_img'] = $filename;
             Jurnal::create($data);
+            $notifikasi = array(
+                'pesan' => 'Reimburse ' . $request->jenis . ' Berhasil',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.lap.jurnal')->with($notifikasi);
+        } else {
+            $notifikasi = array(
+                'pesan' => 'Saldo tidak cukup',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.lap.jurnal')->with($notifikasi);
+        }
+    }
+    public function store_jurnal_kasbon(Request $request)
+    {
+        $tanggal = (new GlobalController)->tanggal();
+        $user = (new GlobalController)->user_admin();
+        $data_user = (new GlobalController)->data_user($request->penerima);
+
+        $cek_saldo = Jurnal::where('jurnal_metode_bayar', $request->metode)->sum('jurnal_kredit') - Jurnal::where('jurnal_metode_bayar', $request->metode)->sum('jurnal_debet');
+
+        if ($cek_saldo >= $request->jumlah) {
+
+            $data['jurnal_id'] = time();
+            $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+            $data['jurnal_uraian'] = 'Kasbon ' . $data_user->nama_user . ' Untuk keperluan ' . $request->uraian;
+            $data['jurnal_kategori'] = 'PINJAMAN KARYAWAN';
+            $data['jurnal_admin'] = $user['user_id'];
+            $data['jurnal_penerima'] = $request->penerima;
+            $data['jurnal_metode_bayar'] = $request->metode;
+            $data['jurnal_debet'] = $request->jumlah;
+            $data['jurnal_status'] = 1;
+            $photo = $request->file('file');
+            $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+            $path = 'bukti-transaksi/' . $filename;
+            Storage::disk('public')->put($path, file_get_contents($photo));
+            $data['jurnal_img'] = $filename;
+            Jurnal::create($data);
+
+            $kasbon['kasbon_user_id'] = $request->penerima;
+            $kasbon['kasbon_jenis'] = $request->jenis;
+            $kasbon['kasbon_tempo'] = $request->tempo;
+            $kasbon['kasbon_uraian'] = 'Kasbon ' . $data_user->nama_user . ' Untuk keperluan ' . $request->uraian;
+            $kasbon['kasbon_debet'] = $request->jumlah;
+            $kasbon['kasbon_file'] = $filename;
+            $kasbon['kasbon_status'] = 0;
+
+            Kasbon::create($kasbon);
+
+
             $notifikasi = array(
                 'pesan' => 'Reimburse ' . $request->jenis . ' Berhasil',
                 'alert' => 'success',
@@ -144,7 +207,8 @@ class TransaksiController extends Controller
     }
     public function download_file($id)
     {
-        // dd($id);
-        return response()->download(storage_path('storage/bukti-transaksi/' . $id));
+        $path = 'storage/bukti-transaksi/';
+        $pathToFile = public_path($path . $id);
+        return response()->download($pathToFile);
     }
 }

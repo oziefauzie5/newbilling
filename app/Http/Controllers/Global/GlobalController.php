@@ -42,6 +42,7 @@ class GlobalController extends Controller
             ->first();
         return $data_user;
     }
+
     public function all_user() #mennampilkan data user
     {
         $all_user =  DB::table('users')
@@ -197,8 +198,9 @@ class GlobalController extends Controller
             return $bln . '0001';
         }
 
-        // $string = preg_replace("/[^0-9\.]/", '', $latest->inv_id);        
-        return $bln . sprintf('%04d', $latest->inv_id + 1);
+        $string = substr($latest->inv_id, 2);
+        // dd($bln . sprintf('%04d', $string + 1));    
+        return $bln . sprintf('%04d', $string + 1);
     }
 
     function data_kendaraan()
