@@ -368,6 +368,7 @@
                     <option value="">ALL DATA</option>
                     <option value="PENDAPATAN">PENDAPATAN</option>
                     <option value="REIMBURSE">REIMBURSE</option>
+                    <option value="VOUCHER">VOUCHER</option>
                     <option value="PINJAMAN KARYAWAN">PINJAMAN KARYAWAN</option>
                     <option value="KOMSUMSI">KOMSUMSI</option>
                     <option value="PERLENGKAPAN">PERLENGKAPAN</option>
