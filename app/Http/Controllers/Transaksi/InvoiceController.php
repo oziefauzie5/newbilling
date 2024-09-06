@@ -179,7 +179,7 @@ class InvoiceController extends Controller
         $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');
         $data['sumppn'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn');
         $data['ppnj'] = env('PPN');
-        $data['akun'] = SettingAkun::all();
+        $data['akun'] = $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'LAPORAN')->get();
         $data['ppn'] = SettingBiaya::first();
 
 
@@ -215,7 +215,7 @@ class InvoiceController extends Controller
             $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');
             $data['sumppn'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn');
             $data['ppnj'] = env('PPN');
-            $data['akun'] = SettingAkun::all();
+            $data['akun'] = $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'LAPORAN')->get();
             $data['ppn'] = SettingBiaya::first();
             // return view('Transaksi/print_thermal', $data);
 
@@ -250,7 +250,7 @@ class InvoiceController extends Controller
             $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');
             $data['sumppn'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn');
             $data['ppnj'] = env('PPN');
-            $data['akun'] = SettingAkun::all();
+            $data['akun'] = $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'LAPORAN')->get();
             $data['ppn'] = SettingBiaya::first();
 
 

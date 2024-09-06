@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Mitra;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Global\GlobalController as GlobalGlobalController;
-use App\Models\Applikasi\SettingAkun;
+use App\Http\Controllers\Global\GlobalController;
+// use App\Models\Applikasi\SettingAkun;
 use App\Models\Global\ConvertNoHp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
+use Illuminate\Support\Facades\Storage;
 
 
 class MitraController extends Controller
@@ -203,7 +204,7 @@ class MitraController extends Controller
     public function data($id)
     {
 
-        $saldo = (new GlobalGlobalController)->total_mutasi($id);
+        $saldo = (new GlobalController)->total_mutasi($id);
 
 
         $data = array(
@@ -221,7 +222,7 @@ class MitraController extends Controller
                 ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasis.mt_mts_id')
                 ->where('mutasis.mt_mts_id', '=', $id)
                 ->get(),
-            'akun' => (new SettingAkun())->SettingAkun()->get(),
+            'akun' => (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'LAPORAN')->get(),
             'saldo' => $saldo,
         );
         return view('mitra/data', $data);
@@ -231,9 +232,10 @@ class MitraController extends Controller
     {
 
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
-        $akun = (new SettingAkun())->SettingAkun()->where('akun_id', $request->cabar)->first();
+        // $akun = (new SettingAkun())->SettingAkun()->where('akun_id', $request->cabar)->first();
+        $akun = (new GlobalController)->setting_akun()->where('akun_id', $request->cabar)->first();
         // dd($akun);
-        $invoice = (new GlobalGlobalController)->no_invoice_mitra();
+        $invoice = (new GlobalController)->no_invoice_mitra();
         $count = Mutasi::count();
         if ($count == 0) {
             $count_invoice = 1;
@@ -243,11 +245,11 @@ class MitraController extends Controller
         // dd($count_invoice);
         $invoice = sprintf("%08d", $count_invoice);
         #CEK SALDO MUTASI BILLER
-        $saldo = (new GlobalGlobalController)->total_mutasi($id); #SALDO MUTASI = DEBET - KREDIT
+        $saldo = (new GlobalController)->total_mutasi($id); #SALDO MUTASI = DEBET - KREDIT
         $total = $saldo + $request->nominal;
 
         #mennampilkan data user sesuai hak akses
-        $user = (new GlobalGlobalController)->data_user($id);
+        $user = (new GlobalController)->data_user($id);
 
         #Admin yang sedang aktif (Membuat topup)
         $admin_user = Auth::user()->id;
@@ -259,6 +261,9 @@ class MitraController extends Controller
         $data['mt_kredit'] = $request->nominal;
         $data['mt_saldo'] = $total;
         $data['mt_cabar'] = $request->cabar;
+
+
+
         Mutasi::create($data); #INSERT LAPORAN TOPUP KE TABLE MUTASI
 
         $data_lap['lap_id'] = 0;
@@ -275,7 +280,11 @@ class MitraController extends Controller
         $data_lap['lap_idpel'] = 0;
         $data_lap['lap_jenis_inv'] = "TOPUP";
         $data_lap['lap_status'] = 0;
-        $data_lap['lap_img'] = "-";
+        $photo = $request->file('file');
+        $filename = $user->nama_user . date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+        $path = 'bukti-transfer/' . $filename;
+        Storage::disk('public')->put($path, file_get_contents($photo));
+        $data['lap_img'] = $filename;
         Laporan::create($data_lap);
 
 
@@ -290,12 +299,13 @@ class MitraController extends Controller
     {
         $admin_user = Auth::user()->id;
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
-        $akun = (new SettingAkun())->SettingAkun()->where('akun_id', $request->cabar)->first();
-        $invoice = (new GlobalGlobalController)->no_invoice_mitra();
-        $saldo = (new GlobalGlobalController)->total_mutasi($id);
-        $user = (new GlobalGlobalController)->data_user($id);
+        $akun = (new GlobalController)->SettingAkun()->where('akun_id', $request->cabar)->first();
+
+        $invoice = (new GlobalController)->no_invoice_mitra();
+        $saldo = (new GlobalController)->total_mutasi($id);
+        $user = (new GlobalController)->data_user($id);
         $total = $saldo - $request->nominal_debet;
-        // $saldo_laporan_harian = (new GlobalGlobalController)->laporan_harian($admin_user);
+        // $saldo_laporan_harian = (new GlobalController)->laporan_harian($admin_user);
         // $total_laporan_harian = $saldo_laporan_harian - $request->nominal_debet;
 
         // dd($total_laporan_harian);
@@ -306,7 +316,7 @@ class MitraController extends Controller
                 'alert' => 'error',
             );
         } else {
-            $invoice = (new GlobalGlobalController)->no_invoice_mitra();
+            $invoice = (new GlobalController)->no_invoice_mitra();
 
             $data['mt_mts_id'] = $id;
             $data['mt_admin'] = $admin_user;
@@ -334,7 +344,11 @@ class MitraController extends Controller
             $data_lap['lap_idpel'] = 0;
             $data_lap['lap_jenis_inv'] = "TOPUP";
             $data_lap['lap_status'] = 0;
-            $data_lap['lap_img'] = "-";
+            $photo = $request->file('file');
+            $filename = $user->nama_user . date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+            $path = 'bukti-transfer/' . $filename;
+            Storage::disk('public')->put($path, file_get_contents($photo));
+            $data['lap_img'] = $filename;
             Laporan::create($data_lap);
             // dd($data_lap);
 

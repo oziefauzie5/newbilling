@@ -48,6 +48,14 @@
                                   <label>Nama Pemilik</label>
                                   <input type="text" class="form-control" id="akun_rekening" name="nama_pemilik" placeholder="Masukan Nama Pemilik">
                               </div>
+                              <div class="form-group">
+                                  <label>Nama Kategori</label>
+                                  <select name="akun_kategori"class="form-control"  id="">
+                                    <option value="">PILIH AKUN</option>
+                                    <option value="PEMBAYARAN">PEMBAYARAN</option>
+                                    <option value="LAPORAN">LAPORAN</option>
+                                  </select>
+                              </div>
                             </div>
 
                       </div>
@@ -78,6 +86,7 @@
                       <th>Nama Akun</th>
                       <th>Rekening</th>
                       <th>Nama Pemilik</th>
+                      <th>Kategori</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -90,6 +99,7 @@
                         <td>{{$d->akun_nama}}</td>
                         <td>{{$d->akun_rekening}}</td>
                         <td>{{$d->akun_pemilik}}</td>
+                        <td>{{$d->akun_kategori}}</td>
                         <td>{{$d->akun_status}}</td>
                         <td>
                           <div class="form-button-action">

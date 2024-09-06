@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('akun_rekening')->nullable();
             $table->string('akun_pemilik')->nullable();
             $table->string('akun_status')->nullable();
+            $table->string('akun_kategori')->nullable();
             $table->timestamps();
         });
     }

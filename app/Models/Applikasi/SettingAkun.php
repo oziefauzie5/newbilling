@@ -15,6 +15,7 @@ class SettingAkun extends Model
         'akun_rekening',
         'akun_pemilik',
         'akun_status',
+        'akun_kategori',
     ];
     public function SettingAkun()
     {

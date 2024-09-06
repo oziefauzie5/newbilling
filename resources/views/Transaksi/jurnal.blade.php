@@ -357,6 +357,38 @@
     </div>
   </div>
 </div>
+<form >
+<div class="row mb-1">
+
+                <div class="col">
+                  <select name="kategori" class="custom-select custom-select-sm">
+                    @if($kategori)
+                    <option value="{{$kategori}}" selected>{{$kategori}}</option>
+                    @endif
+                    <option value="">ALL DATA</option>
+                    <option value="PENDAPATAN">PENDAPATAN</option>
+                    <option value="REIMBURSE">REIMBURSE</option>
+                    <option value="PINJAMAN KARYAWAN">PINJAMAN KARYAWAN</option>
+                    <option value="KOMSUMSI">KOMSUMSI</option>
+                    <option value="PERLENGKAPAN">PERLENGKAPAN</option>
+                    <option value="PERALATAN KANTOR">PERALATAN KANTOR</option>
+                    <option value="ATK">ATK</option>
+                    <option value="LISTRIK">LISTRIK</option>
+                    <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
+                    <option value="LAIN-LAIN">LAIN-LAIN</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <input name="bulan" type="month" class="form-control form-control-sm"></input>
+                </div>
+                  <div class="col">
+                   <input type="text" name="q" class="form-control form-control-sm" value="{{$q}}" placeholder="Cari Data">
+                  </div>
+                  <div class="col">
+                    <button type="submit" class="btn btn-block btn-dark btn-sm">Cari
+                  </div>
+                  </form>
+                  </div>
           <div class="table-responsive">
           <table class="display table table-striped table-hover text-nowrap" >
               <thead>
@@ -414,6 +446,18 @@
                     @endforeach
               </tbody>
             </table>
+            <div class="pull-left">
+              Showing
+              {{$jurnal->firstItem()}}
+              to
+              {{$jurnal->lastItem()}}
+              of
+              {{$jurnal->total()}}
+              entries
+            </div>
+            <div class="pull-right">
+              {{ $jurnal->withQueryString()->links('pagination::bootstrap-4') }}
+            </div>
           </div>
         </div>
       </div>

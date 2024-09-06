@@ -150,11 +150,13 @@ class AppController extends Controller
             $tripay['akun_id'] = '1';
             $tripay['akun_nama'] = 'TRIPAY';
             $tripay['akun_status'] = 'Enable';
+            $tripay['akun_kategori'] = 'PEMBAYARAN';
 
             $tunai['id'] = '2';
             $tunai['akun_id'] = '2';
             $tunai['akun_nama'] = 'TUNAI';
             $tunai['akun_status'] = 'Enable';
+            $tunai['akun_kategori'] = 'PEMBAYARAN';
 
             $akun['id'] = '3';
             $akun['akun_id'] = '3';
@@ -162,6 +164,7 @@ class AppController extends Controller
             $akun['akun_rekening'] = $request->akun_rekening;
             $akun['akun_pemilik'] = $request->nama_pemilik;
             $akun['akun_status'] = 'Enable';
+            $akun['akun_kategori'] = $request->akun_kategori;
 
             SettingAkun::create($tripay);
             SettingAkun::create($tunai);
@@ -175,6 +178,7 @@ class AppController extends Controller
                     'akun_rekening' => $request->akun_rekening,
                     'akun_pemilik' => $request->nama_pemilik,
                     'akun_status' => 'Enable',
+                    'akun_kategori' => $request->akun_kategori,
                 ]
             );
         }
@@ -194,6 +198,7 @@ class AppController extends Controller
                 'akun_rekening' => $request->akun_rekening,
                 'akun_pemilik' => $request->akun_pemilik,
                 'akun_status' => 'Enable',
+                'akun_kategori' => $request->akun_kategori,
             ]
         );
         $notifikasi = array(

@@ -25,18 +25,35 @@ class TransaksiController extends Controller
         $data['sum_pengeluaran'] = $query->where('trx_kategori', 'PENGELUARAN')->sum('trx_total');
         return view('Transaksi/transaksi', $data);
     }
-    public function jurnal()
+    public function jurnal(Request $request)
     {
-        $data['bulan'] = strtoupper(date('F', strtotime(Carbon::now())));
-        $whereMonth = date('m', strtotime(Carbon::now()));
+        // $data['bulan'] = strtoupper(date('F', strtotime(Carbon::now())));
+        // $whereMonth = date('m', strtotime(Carbon::now()));
+        $data['kategori'] = $request->query('kategori');
+        $data['bulan'] = $request->query('bulan');
+        $data['q'] = $request->query('q');
         $data['kredit'] = Jurnal::sum('jurnal_kredit');
         $data['debet'] = Jurnal::sum('jurnal_debet');
-        $data['jurnal'] = Jurnal::select('jurnals.*', 'jurnals.created_at as tgl_trx', 'setting_akuns.*')
+        $query = Jurnal::select('jurnals.*', 'jurnals.created_at as tgl_trx', 'setting_akuns.*')
             ->join('setting_akuns', 'setting_akuns.id', '=', 'jurnals.jurnal_metode_bayar')
-            ->get();
+            ->where(function ($query) use ($data) {
+                $query->where('jurnal_uraian', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('jurnal_admin', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('jurnal_penerima', 'like', '%' . $data['q'] . '%');
+            });
+
+        if ($data['bulan'])
+            $query->whereMonth('jurnals.created_at', date('m', strtotime($data['bulan'])))->whereYear('jurnals.created_at', date('Y', strtotime($data['bulan'])));
+
+
+        if ($data['kategori'])
+            $query->where('jurnal_kategori', '=', $data['kategori']);
+        $data['jurnal'] = $query->paginate(20);
+
+
         $data['kendaraan'] = (new GlobalController)->data_kendaraan()->get();
         $data['user'] = (new GlobalController)->all_user()->get();
-        $data['setting_akun'] = (new GlobalController)->setting_akun()->get();
+        $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'PEMBAYARAN')->get();
         return view('Transaksi/jurnal', $data);
     }
     public function pinjaman()

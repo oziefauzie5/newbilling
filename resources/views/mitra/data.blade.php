@@ -71,6 +71,10 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label for="name">UPLOAD FILE</label>
+                                                        <input type="file" name="file" class="form-control" required>
+                                                    </div>
                                                 </div>
         
                                                 </div>
@@ -132,6 +136,10 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                    <div class="form-group">
+                                                      <label for="name">UPLOAD FILE</label>
+                                                      <input type="file" name="file" class="form-control" required>
+                                                  </div>
                                                     </div>
         
                                                   </div>
