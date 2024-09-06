@@ -32,8 +32,8 @@ class TransaksiController extends Controller
         $data['kategori'] = $request->query('kategori');
         $data['bulan'] = $request->query('bulan');
         $data['q'] = $request->query('q');
-        $data['kredit'] = Jurnal::sum('jurnal_kredit');
-        $data['debet'] = Jurnal::sum('jurnal_debet');
+        // $data['kredit'] = Jurnal::sum('jurnal_kredit');
+        // $data['debet'] = Jurnal::sum('jurnal_debet');
         $query = Jurnal::select('jurnals.*', 'jurnals.created_at as tgl_trx', 'setting_akuns.*')
             ->join('setting_akuns', 'setting_akuns.id', '=', 'jurnals.jurnal_metode_bayar')
             ->where(function ($query) use ($data) {
@@ -49,7 +49,8 @@ class TransaksiController extends Controller
         if ($data['kategori'])
             $query->where('jurnal_kategori', '=', $data['kategori']);
         $data['jurnal'] = $query->paginate(20);
-
+        $data['kredit'] = $query->sum('jurnal_kredit');
+        $data['debet'] = $query->sum('jurnal_debet');
 
         $data['kendaraan'] = (new GlobalController)->data_kendaraan()->get();
         $data['user'] = (new GlobalController)->all_user()->get();
