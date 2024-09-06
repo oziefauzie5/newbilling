@@ -22,7 +22,7 @@ class TransaksiController extends Controller
         $whereMonth = date('m', strtotime(Carbon::now()));
         $query = Transaksi::whereMonth('created_at', $whereMonth);
         $data['transaksi'] = $query->get();
-        $data['sum_pemasukan'] = $query->where('trx_kategori', 'PEMASUKAN')->sum('trx_total');
+        $data['sum_pemasukan'] = $query->where('trx_kategori', 'PENDAPATAN')->sum('trx_total');
         $data['sum_pengeluaran'] = $query->where('trx_kategori', 'PENGELUARAN')->sum('trx_total');
         return view('Transaksi/transaksi', $data);
     }
@@ -51,24 +51,44 @@ class TransaksiController extends Controller
         if ($data['akun'])
             $query->where('jurnal_metode_bayar', '=', $data['akun']);
         $data['jurnal'] = $query->paginate(20);
+        $data['kredit'] = $query->where('jurnal_kategori', '=', 'PENDAPATAN')->sum('jurnal_kredit');
+        // $data['debet'] = $query->where('jurnal_kategori', '=', 'PENGELUARAN')->sum('jurnal_debet');
 
-        $data['debet'] = $query->where('jurnal_kategori', '=', 'PENGELUARAN')->sum('jurnal_debet');
-
-
-        $queri1 = Jurnal::where('jurnal_kategori', '=', 'PENDAPATAN')
-            ->where(function ($queri1) use ($data) {
-                $queri1->where('jurnal_uraian', 'like', '%' . $data['q'] . '%');
-                $queri1->orWhere('jurnal_admin', 'like', '%' . $data['q'] . '%');
-                $queri1->orWhere('jurnal_tgl', 'like', '%' . $data['q'] . '%');
+        $query1 = Jurnal::select('jurnals.*', 'jurnals.created_at as tgl_trx', 'setting_akuns.*')
+            ->join('setting_akuns', 'setting_akuns.id', '=', 'jurnals.jurnal_metode_bayar')
+            ->where(function ($query1) use ($data) {
+                $query1->where('jurnal_uraian', 'like', '%' . $data['q'] . '%');
+                $query1->orWhere('jurnal_admin', 'like', '%' . $data['q'] . '%');
             });
-        if ($data['bulan'])
-            $queri1->whereMonth('jurnals.created_at', date('m', strtotime($data['bulan'])))->whereYear('jurnals.created_at', date('Y', strtotime($data['bulan'])));
-        if ($data['start'])
-            $query->whereDate('jurnals.created_at', '>=', date('Y-m-d', strtotime($data['start'])))->whereDate('jurnals.created_at', '<=', date('Y-m-d', strtotime($data['end'])));
 
+        if ($data['bulan'])
+            $query1->whereMonth('jurnals.created_at', date('m', strtotime($data['bulan'])))->whereYear('jurnals.created_at', date('Y', strtotime($data['bulan'])));
+        if ($data['start'])
+            $query1->whereDate('jurnals.created_at', '>=', date('Y-m-d', strtotime($data['start'])))->whereDate('jurnals.created_at', '<=', date('Y-m-d', strtotime($data['end'])));
+        if ($data['kategori'])
+            $query1->where('jurnal_kategori', '=', $data['kategori']);
         if ($data['akun'])
-            $query->where('jurnal_metode_bayar', '=', $data['akun']);
-        $data['kredit'] = $queri1->sum('jurnal_kredit');
+            $query1->where('jurnal_metode_bayar', '=', $data['akun']);
+        // $data['jurnal'] = $query1->paginate(20);
+        // $data['kredit'] = $query1->where('jurnal_kategori', '=', 'PENDAPATAN')->sum('jurnal_kredit');
+        $data['debet'] = $query1->where('jurnal_kategori', '=', 'PENGELUARAN')->sum('jurnal_debet');
+
+
+
+        // $queri1 = Jurnal::where('jurnal_kategori', '=', 'PENDAPATAN')
+        //     ->where(function ($queri1) use ($data) {
+        //         $queri1->where('jurnal_uraian', 'like', '%' . $data['q'] . '%');
+        //         $queri1->orWhere('jurnal_admin', 'like', '%' . $data['q'] . '%');
+        //         $queri1->orWhere('jurnal_tgl', 'like', '%' . $data['q'] . '%');
+        //     });
+        // if ($data['bulan'])
+        //     $queri1->whereMonth('created_at', date('m', strtotime($data['bulan'])))->whereYear('created_at', date('Y', strtotime($data['bulan'])));
+        // if ($data['start'])
+        //     $query->whereDate('created_at', '>=', date('Y-m-d', strtotime($data['start'])))->whereDate('created_at', '<=', date('Y-m-d', strtotime($data['end'])));
+        // if ($data['akun'])
+        //     $query->where('jurnal_metode_bayar', '=', $data['akun']);
+
+        // $data['kredit'] = $queri1->sum('jurnal_kredit');
 
 
 
@@ -229,7 +249,7 @@ class TransaksiController extends Controller
         $data['jurnal_id'] = time();
         $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
         $data['jurnal_uraian'] = $request->uraian;
-        $data['jurnal_kategori'] = 'PEMASUKAN';
+        $data['jurnal_kategori'] = 'PENDAPATAN';
         $data['jurnal_keterangan'] = $request->jenis;
         $data['jurnal_admin'] = $user['user_id'];
         $data['jurnal_metode_bayar'] = $request->metode;
