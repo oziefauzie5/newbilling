@@ -447,11 +447,24 @@
                   </select>
                 </div>
                 <div class="col">
+                  <select name="akun" class="custom-select custom-select-sm">
+                    @if($akun)
+                    <option value="{{$akun->id}}">{{$akun->akun_nama}}</option>
+                    @endif
+                    <option value="">PILIH AKUN</option>
+                    @foreach ($setting_akun as $a)
+                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="col">
+                  <input type="text" name="q" class="form-control form-control-sm" value="{{$q}}" placeholder="Cari Data">
+                </div>
+                </div>
+                <div class="row mb-1">
+                <div class="col">
                   <input name="bulan" type="month" class="form-control form-control-sm"></input>
                 </div>
-                  <div class="col">
-                   <input type="text" name="q" class="form-control form-control-sm" value="{{$q}}" placeholder="Cari Data">
-                  </div>
                   <div class="col">
                    <input type="date" name="start" class="form-control form-control-sm" value="{{$start}}" placeholder="Cari Data">
                   </div>

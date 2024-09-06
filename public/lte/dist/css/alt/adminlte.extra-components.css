@@ -801,12 +801,12 @@
 }
 
 .dark-mode .timeline > div > .timeline-item > .timeline-header {
-  color: #ced4da;
+  color: #212529;
   border-color: #6c757d;
 }
 
 .dark-mode .timeline > div > .timeline-item > .time {
-  color: #ced4da;
+  color: #212529;
 }
 
 .products-list {
@@ -868,7 +868,7 @@
 }
 
 .dark-mode .product-description {
-  color: #ced4da;
+  color: #212529;
 }
 
 .direct-chat .card-body {
@@ -1069,7 +1069,7 @@
 }
 
 .contacts-list-date {
-  color: #ced4da;
+  color: #212529;
   font-weight: 400;
 }
 
@@ -1677,7 +1677,7 @@
 }
 
 .dark-mode .users-list-name {
-  color: #ced4da;
+  color: #212529;
 }
 
 .dark-mode .users-list-date {
