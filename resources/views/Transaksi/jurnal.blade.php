@@ -29,6 +29,8 @@
         </div>
       </div>
     </div>
+    
+   
     <div class="row">
       
       <div class="card">
@@ -56,8 +58,71 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#kasbon">
   Kasbon
 </button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#transfer">
+  Transfer
+</button>
 <hr>
 
+<!-- Modal transfer-->
+<div class="modal fade" id="transfer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">TRANSFER</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.lap.store_jurnal_transfer')}}" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('POST')
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Dari Rekening</label>
+              <select class="form-control" name="metode1" required>
+                <option value="">Pilih Metode</option>
+                @foreach ($setting_akun as $a)
+                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Transfer ke</label>
+              <select class="form-control" name="metode2" required>
+                <option value="">Pilih Metode</option>
+                @foreach ($setting_akun as $a)
+                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Jumlah</label>
+            <input type="number" class="form-control" value="{{$kredit-$debet}}" name="jumlah" readonly required>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Upload Bukti</label>
+            <input type="file" name="file" class="form-control" required>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal Reimburse-->
 <div class="modal fade" id="pengeluaran" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -85,6 +150,8 @@
                 <option value="ATK">ATK</option>
                 <option value="LISTRIK">LISTRIK</option>
                 <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
+                <option value="PSB">PSB</option>
+                <option value="MARKETING">MARKETING</option>
               </select>
             </div>
           </div>
@@ -384,6 +451,12 @@
                 </div>
                   <div class="col">
                    <input type="text" name="q" class="form-control form-control-sm" value="{{$q}}" placeholder="Cari Data">
+                  </div>
+                  <div class="col">
+                   <input type="date" name="start" class="form-control form-control-sm" value="{{$start}}" placeholder="Cari Data">
+                  </div>
+                  <div class="col">
+                   <input type="date" name="end" class="form-control form-control-sm" value="{{$end}}" placeholder="Cari Data">
                   </div>
                   <div class="col">
                     <button type="submit" class="btn btn-block btn-dark btn-sm">Cari

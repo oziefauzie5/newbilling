@@ -145,6 +145,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/download-file/{id}', [TransaksiController::class, 'download_file'])->name('lap.download_file')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/pinjaman-karyawan', [TransaksiController::class, 'store_jurnal_kasbon'])->name('lap.store_jurnal_kasbon')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/pinjaman', [TransaksiController::class, 'pinjaman'])->name('lap.pinjaman')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/Transaksi/transfer', [TransaksiController::class, 'store_jurnal_transfer'])->name('lap.store_jurnal_transfer')->middleware(['role:admin|STAF ADMIN']);
 
     Route::get('/pelanggan/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);

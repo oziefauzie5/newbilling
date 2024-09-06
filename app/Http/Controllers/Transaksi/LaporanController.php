@@ -122,6 +122,7 @@ class LaporanController extends Controller
             $jurnal['jurnal_tgl'] =  $tgl;
             $jurnal['jurnal_uraian'] =  'LAPORAN - ' . $nama_admin;
             $jurnal['jurnal_kategori'] =  'PENDAPATAN';
+            $jurnal['jurnal_keterangan'] =  'LAPORAN';
             $jurnal['jurnal_admin'] =  $id;
             $jurnal['jurnal_kredit'] =  $request->total;
             $jurnal['jurnal_metode_bayar'] =  2;

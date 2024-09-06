@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Applikasi\SettingAkun;
 use App\Models\Transaksi\Transaksi;
 use App\Models\Transaksi\Jurnal;
 use App\Models\Transaksi\Kasbon;
@@ -27,13 +28,12 @@ class TransaksiController extends Controller
     }
     public function jurnal(Request $request)
     {
-        // $data['bulan'] = strtoupper(date('F', strtotime(Carbon::now())));
-        // $whereMonth = date('m', strtotime(Carbon::now()));
         $data['kategori'] = $request->query('kategori');
         $data['bulan'] = $request->query('bulan');
+        $data['start'] = $request->query('start');
+        $data['end'] = $request->query('end');
         $data['q'] = $request->query('q');
-        // $data['kredit'] = Jurnal::sum('jurnal_kredit');
-        // $data['debet'] = Jurnal::sum('jurnal_debet');
+
         $query = Jurnal::select('jurnals.*', 'jurnals.created_at as tgl_trx', 'setting_akuns.*')
             ->join('setting_akuns', 'setting_akuns.id', '=', 'jurnals.jurnal_metode_bayar')
             ->where(function ($query) use ($data) {
@@ -44,13 +44,26 @@ class TransaksiController extends Controller
 
         if ($data['bulan'])
             $query->whereMonth('jurnals.created_at', date('m', strtotime($data['bulan'])))->whereYear('jurnals.created_at', date('Y', strtotime($data['bulan'])));
-
-
+        if ($data['start'])
+            $query->whereDate('jurnals.created_at', '>=', date('Y-m-d', strtotime($data['start'])))->whereDate('jurnals.created_at', '<=', date('Y-m-d', strtotime($data['end'])));
         if ($data['kategori'])
             $query->where('jurnal_kategori', '=', $data['kategori']);
         $data['jurnal'] = $query->paginate(20);
-        $data['kredit'] = $query->sum('jurnal_kredit');
-        $data['debet'] = $query->sum('jurnal_debet');
+
+
+
+        $data['debet'] = $query->where('jurnal_kategori', '=', 'PENGELUARAN')->sum('jurnal_debet');
+        $queri1 = Jurnal::where('jurnal_kategori', '=', 'PENDAPATAN')
+            ->where(function ($queri1) use ($data) {
+                $queri1->where('jurnal_uraian', 'like', '%' . $data['q'] . '%');
+                $queri1->orWhere('jurnal_admin', 'like', '%' . $data['q'] . '%');
+                $queri1->orWhere('jurnal_tgl', 'like', '%' . $data['q'] . '%');
+            });
+        if ($data['bulan'])
+            $queri1->whereMonth('jurnals.created_at', date('m', strtotime($data['bulan'])))->whereYear('jurnals.created_at', date('Y', strtotime($data['bulan'])));
+        $data['kredit'] = $queri1->sum('jurnal_kredit');
+
+
 
         $data['kendaraan'] = (new GlobalController)->data_kendaraan()->get();
         $data['user'] = (new GlobalController)->all_user()->get();
@@ -81,7 +94,8 @@ class TransaksiController extends Controller
             $data['jurnal_id'] = time();
             $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
             $data['jurnal_uraian'] = 'Reimburse Biaya ' . $request->jenis . ' ( ' . $request->plat_kendaraan . ' )';
-            $data['jurnal_kategori'] = 'REIMBURSE';
+            $data['jurnal_kategori'] = 'PENGELUARAN';
+            $data['jurnal_keterangan'] = 'REIMBURSE';
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
             $data['jurnal_metode_bayar'] = $request->metode;
@@ -119,7 +133,8 @@ class TransaksiController extends Controller
             $data['jurnal_id'] = time();
             $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
             $data['jurnal_uraian'] = 'Kasbon ' . $data_user->nama_user . ' Untuk keperluan ' . $request->uraian;
-            $data['jurnal_kategori'] = 'PINJAMAN KARYAWAN';
+            $data['jurnal_kategori'] = 'PENGELUARAN';
+            $data['jurnal_keterangan'] = 'PINJAMAN KARYAWAN';
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
             $data['jurnal_metode_bayar'] = $request->metode;
@@ -169,8 +184,9 @@ class TransaksiController extends Controller
 
             $data['jurnal_id'] = time();
             $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
-            $data['jurnal_uraian'] = 'Reimburse Biaya ' . $request->jenis . ' ( ' . $request->plat_kendaraan . ' )';
-            $data['jurnal_kategori'] = 'REIMBURSE';
+            $data['jurnal_uraian'] = $request->uraian;
+            $data['jurnal_kategori'] = 'PENGELUARAN';
+            $data['jurnal_keterangan'] = $request->jenis;
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
             $data['jurnal_metode_bayar'] = $request->metode;
@@ -205,7 +221,8 @@ class TransaksiController extends Controller
         $data['jurnal_id'] = time();
         $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
         $data['jurnal_uraian'] = $request->uraian;
-        $data['jurnal_kategori'] = $request->jenis;
+        $data['jurnal_kategori'] = 'PEMASUKAN';
+        $data['jurnal_keterangan'] = $request->jenis;
         $data['jurnal_admin'] = $user['user_id'];
         $data['jurnal_metode_bayar'] = $request->metode;
         $data['jurnal_kredit'] = $request->jumlah;
@@ -219,6 +236,53 @@ class TransaksiController extends Controller
         Jurnal::create($data);
         $notifikasi = array(
             'pesan' => 'Menambah Pendapatan ' . $request->jenis . ' Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.lap.jurnal')->with($notifikasi);
+    }
+    public function store_jurnal_transfer(Request $request)
+    {
+        $metode1 = (new GlobalController)->setting_akun()->where('id', '=', $request->metode1)->first();
+        $metode2 = (new GlobalController)->setting_akun()->where('id', '=', $request->metode2)->first();
+        $tanggal = (new GlobalController)->tanggal();
+        $user = (new GlobalController)->user_admin();
+        $jurnal_id = time();
+        $data['jurnal_id'] = $jurnal_id;
+        $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+        $data['jurnal_uraian'] = 'Transfer ' . $metode1->akun_nama . ' Ke ' . $metode2->akun_nama;
+        $data['jurnal_kategori'] = 'TRANSFER';
+        $data['jurnal_keterangan'] = 'TRANSFER';
+        $data['jurnal_admin'] = $user['user_id'];
+        $data['jurnal_metode_bayar'] = $request->metode2;
+        $data['jurnal_kredit'] = $request->jumlah;
+        $data['jurnal_status'] = 1;
+
+        // dd($data);
+        $photo = $request->file('file');
+        $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+        $path = 'bukti-transaksi/' . $filename;
+        Storage::disk('public')->put($path, file_get_contents($photo));
+        $data['jurnal_img'] = $filename;
+        Jurnal::create($data);
+
+        $data2['jurnal_id'] = $jurnal_id;
+        $data2['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+        $data2['jurnal_uraian'] = 'Transfer ' . $metode1->akun_nama . ' Ke ' . $metode2->akun_nama;
+        $data2['jurnal_kategori'] = 'TRANSFER';
+        $data2['jurnal_keterangan'] = 'TRANSFER';
+        $data2['jurnal_admin'] = $user['user_id'];
+        $data2['jurnal_metode_bayar'] = $request->metode1;
+        $data2['jurnal_debet'] = $request->jumlah;
+        $data2['jurnal_status'] = 1;
+        $data2['jurnal_img'] = $filename;
+        Jurnal::create($data2);
+
+
+        $update['jurnal_status'] = 10;
+        $update['jurnal_id'] = $jurnal_id;
+        Jurnal::where('jurnal_status', '=', 1)->update($update);
+        $notifikasi = array(
+            'pesan' => 'Transfer Berhasil',
             'alert' => 'success',
         );
         return redirect()->route('admin.lap.jurnal')->with($notifikasi);
