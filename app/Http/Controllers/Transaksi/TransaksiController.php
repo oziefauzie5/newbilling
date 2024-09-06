@@ -39,7 +39,7 @@ class TransaksiController extends Controller
             ->where(function ($query) use ($data) {
                 $query->where('jurnal_uraian', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('jurnal_admin', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('jurnal_penerima', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('jurnal_tgl', 'like', '%' . $data['q'] . '%');
             });
 
         if ($data['bulan'])
