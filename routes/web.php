@@ -135,13 +135,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/laporan-harian', [LaporanController::class, 'index'])->name('inv.laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/buat-laporan', [LaporanController::class, 'buat_laporan'])->name('inv.buat_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Delete', [LaporanController::class, 'lap_delete'])->name('inv.lap_delete')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/Transaksi/Data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Transaksi/data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/Transaksi/add-pendapatan', [LaporanController::class, 'store_add_transaksi'])->name('lap.store_add_transaksi')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Data-Laporan', [LaporanController::class, 'data_lap_delete'])->name('inv.data_lap_delete')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('inv.laporan_print')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi', [TransaksiController::class, 'index'])->name('inv.trx.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/jurnal', [TransaksiController::class, 'jurnal'])->name('lap.jurnal')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/Transaksi/reimbuse', [TransaksiController::class, 'store_jurnal_reimbuse'])->name('lap.store_jurnal_reimbuse')->middleware(['role:admin|STAF ADMIN']);
-    Route::post('/Transaksi/add-pendapatan', [TransaksiController::class, 'store_add_jurnal'])->name('lap.store_add_jurnal')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/download-file/{id}', [TransaksiController::class, 'download_file'])->name('lap.download_file')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/pinjaman-karyawan', [TransaksiController::class, 'store_jurnal_kasbon'])->name('lap.store_jurnal_kasbon')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/pinjaman', [TransaksiController::class, 'pinjaman'])->name('lap.pinjaman')->middleware(['role:admin|STAF ADMIN']);

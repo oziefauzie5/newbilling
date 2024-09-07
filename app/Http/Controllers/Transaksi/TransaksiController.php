@@ -13,6 +13,7 @@ use App\Models\Transaksi\Pinjaman;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
@@ -96,6 +97,7 @@ class TransaksiController extends Controller
         $data['user'] = (new GlobalController)->all_user()->get();
         $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'PEMBAYARAN')->get();
         $data['akun'] = (new GlobalController)->setting_akun()->where('id', '=', $data['akun'])->first();
+
         return view('Transaksi/jurnal', $data);
     }
     public function pinjaman()
@@ -240,34 +242,34 @@ class TransaksiController extends Controller
             return redirect()->route('admin.lap.jurnal')->with($notifikasi);
         }
     }
-    public function store_add_jurnal(Request $request)
-    {
-        // dd($request->uraian);
-        $tanggal = (new GlobalController)->tanggal();
-        $user = (new GlobalController)->user_admin();
+    // public function store_add_jurnal(Request $request)
+    // {
+    //     // dd($request->uraian);
+    //     $tanggal = (new GlobalController)->tanggal();
+    //     $user = (new GlobalController)->user_admin();
 
-        $data['jurnal_id'] = time();
-        $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
-        $data['jurnal_uraian'] = $request->uraian;
-        $data['jurnal_kategori'] = 'PENDAPATAN';
-        $data['jurnal_keterangan'] = $request->jenis;
-        $data['jurnal_admin'] = $user['user_id'];
-        $data['jurnal_metode_bayar'] = $request->metode;
-        $data['jurnal_kredit'] = $request->jumlah;
-        $data['jurnal_status'] = 1;
-        $photo = $request->file('file');
-        $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
-        $path = 'bukti-transaksi/' . $filename;
-        Storage::disk('public')->put($path, file_get_contents($photo));
-        $data['jurnal_img'] = $filename;
+    //     $data['jurnal_id'] = time();
+    //     $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+    //     $data['jurnal_uraian'] = $request->uraian;
+    //     $data['jurnal_kategori'] = 'PENDAPATAN';
+    //     $data['jurnal_keterangan'] = $request->jenis;
+    //     $data['jurnal_admin'] = $user['user_id'];
+    //     $data['jurnal_metode_bayar'] = $request->metode;
+    //     $data['jurnal_kredit'] = $request->jumlah;
+    //     $data['jurnal_status'] = 1;
+    //     $photo = $request->file('file');
+    //     $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+    //     $path = 'bukti-transaksi/' . $filename;
+    //     Storage::disk('public')->put($path, file_get_contents($photo));
+    //     $data['jurnal_img'] = $filename;
 
-        Jurnal::create($data);
-        $notifikasi = array(
-            'pesan' => 'Menambah Pendapatan ' . $request->jenis . ' Berhasil',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.lap.jurnal')->with($notifikasi);
-    }
+    //     Jurnal::create($data);
+    //     $notifikasi = array(
+    //         'pesan' => 'Menambah Pendapatan ' . $request->jenis . ' Berhasil',
+    //         'alert' => 'success',
+    //     );
+    //     return redirect()->route('admin.lap.jurnal')->with($notifikasi);
+    // }
     public function store_jurnal_transfer(Request $request)
     {
         $metode1 = (new GlobalController)->setting_akun()->where('id', '=', $request->metode1)->first();

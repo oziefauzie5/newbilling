@@ -29,6 +29,7 @@
         </div>
       </div>
     </div>
+
     
    
     <div class="row">
@@ -49,18 +50,18 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
   Reimburse Karyawan
 </button>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pendapatan">
+{{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pendapatan">
   Tambah Pemasukan
-</button>
+</button> --}}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pengeluaran">
   Pengeluaran
 </button>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#kasbon">
   Kasbon
 </button>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#transfer">
+{{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#transfer">
   Transfer
-</button>
+</button> --}}
 <hr>
 
 <!-- Modal transfer-->
@@ -359,7 +360,7 @@
     </div>
   </div>
 </div>
-<!-- Modal pemasukan-->
+{{-- <!-- Modal pemasukan-->
 <div class="modal fade" id="pendapatan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -423,7 +424,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> --}}
 <form >
 <div class="row mb-1">
 

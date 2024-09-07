@@ -102,7 +102,76 @@
             </div>
           </div>
           {{-- end modal buat laporan --}}
+          <!-- Modal tambah transaksi-->
+<div class="modal fade" id="addtransaksi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">TAMBAH PEMASUKAN</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.lap.store_add_transaksi')}}" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('POST')
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Jenis Pemasukan</label>
+              <select class="form-control" name="jenis" required>
+                <option value="">Pilih Jenis Pemasukan</option>
+                <option value="VOUCHER">VOUCHER</option>
+                <option value="LAIN-LAIN">LAIN-LAIN</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Uraian</label>
+              <input type="text" class="form-control" value="" name="uraian" required>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Metode Pembayaran</label>
+              <select class="form-control" name="metode">
+                <option value="">Pilih Metode</option>
+                @foreach ($setting_akun as $a)
+                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Jumlah</label>
+            <input type="number" class="form-control" value="0" name="jumlah">
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Upload Bukti</label>
+            <input type="file" name="file" class="form-control" required>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
        
+            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addtransaksi">
+              <i class="fa fa-plus"></i>
+              TAMBAH TRANSAKSI
+            </button>
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#buat_laporan">
               <i class="fa fa-plus"></i>
               BUAT LAPORAN

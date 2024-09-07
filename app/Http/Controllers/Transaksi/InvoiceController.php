@@ -519,7 +519,7 @@ class InvoiceController extends Controller
             Invoice::where('inv_id', $id)->update($datas);
 
             $data_lap['lap_id'] = time();
-            $data_lap['lap_tgl'] = $tgl_bayar;
+            $data_lap['lap_tgl'] = date('Y-m-d H:m:s', strtotime($tgl_bayar));
             $data_lap['lap_inv'] = $id;
             $data_lap['lap_admin'] = $admin_user;
             $data_lap['lap_cabar'] = $request->cabar;
@@ -532,7 +532,7 @@ class InvoiceController extends Controller
             $data_lap['lap_idpel'] = $data_pelanggan->inv_idpel;
             $data_lap['lap_jenis_inv'] = "INVOICE";
             $data_lap['lap_status'] = 0;
-            $data_lap['lap_img'] = "-";
+            $data_lap['lap_img'] = $filename;
 
             Laporan::create($data_lap);
             $reg['reg_status'] = 'PAID';

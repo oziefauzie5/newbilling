@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Global\GlobalController;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Model_Has_Role;
 use App\Models\Transaksi\DataLaporan;
@@ -13,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class LaporanController extends Controller
 {
@@ -20,6 +22,7 @@ class LaporanController extends Controller
     {
         $data['admin_user'] = Auth::user()->id;
         $data['admin_name'] = Auth::user()->name;
+        $data['setting_akun'] = (new GlobalController)->setting_akun()->where('id', '=', '2')->get();
         $ids = [1, 2, 5, 10, 13, 14];
         $data['dat'] = "Laporan";
         $role = Model_Has_Role::where('model_id', $data['admin_user'])->first();
@@ -252,5 +255,38 @@ class LaporanController extends Controller
         $pdf->loadHTML($html);
         $pdf->setPaper('A4', 'potrait');
         return $pdf->download('invoice.pdf');
+    }
+
+    public function store_add_transaksi(Request $request)
+    {
+        // dd($request->uraian);
+        $tanggal = (new GlobalController)->tanggal();
+        $user = (new GlobalController)->user_admin();
+
+        $data_lap['lap_id'] = time();
+        $data_lap['lap_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+        $data_lap['lap_admin'] = $user['user_id'];
+        $data_lap['lap_cabar'] = 'TUNAI';
+        $data_lap['lap_debet'] = 0;
+        $data_lap['lap_kredit'] = $request->jumlah;
+        $data_lap['lap_adm'] = 0;
+        $data_lap['lap_jumlah_bayar'] = $request->jumlah;
+        $data_lap['lap_keterangan'] = $request->jenis;
+        $data_lap['lap_akun'] = $request->metode;
+        $data_lap['lap_jenis_inv'] = "VOUCHER";
+        $data_lap['lap_status'] = 0;
+        $photo = $request->file('file');
+        $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+        $path = 'bukti-transaksi/' . $filename;
+        Storage::disk('public')->put($path, file_get_contents($photo));
+        $data_lap['jurnal_img'] = $filename;
+
+        Laporan::create($data_lap);
+
+        $notifikasi = array(
+            'pesan' => 'Menambah Pendapatan ' . $request->jenis . ' Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.lap.jurnal')->with($notifikasi);
     }
 }
