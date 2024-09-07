@@ -68,16 +68,16 @@
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0 font-weight-bold text-danger">Rp. {{number_format($inv_belum_lunas)}}</div>
-            <div class="text-muted mb-3 font-weight-bold text-danger">TOTAL BELUM LUNAS</div>
+            <div class="h1 m-0 font-weight-bold text-danger"><span id="show1" style="display:none">Rp. {{number_format($inv_belum_lunas)}}</span></div>
+            <div class="text-muted mb-3 font-weight-bold text-danger">TOTAL BELUM LUNAS&nbsp; <i onclick="document.getElementById('show1').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
           </div>
         </div>
       </div>
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h1 m-0 font-weight-bold text-success">Rp. {{number_format($inv_lunas)}}</div>
-            <div class="text-muted mb-3 font-weight-bold text-success">TOTAL LUNAS</div>
+            <div class="h1 m-0 font-weight-bold text-success"><span id="show2" style="display:none">Rp. {{number_format($inv_lunas)}}</span></div>
+            <div class="text-muted mb-3 font-weight-bold text-success">TOTAL LUNAS&nbsp; <i onclick="document.getElementById('show2').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
           </div>
         </div>
       </div>

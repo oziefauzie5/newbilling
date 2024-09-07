@@ -7,24 +7,24 @@
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. {{number_format($kredit)}}</div>
-            <div class="text-muted mb-3">PENDAPATAN</div>
+            <div class="h2 m-0" ><span id="show1" style="display:none">Rp. {{number_format($kredit)}}</span> </div>
+            <div class="text-muted mb-3">PENDAPATAN &nbsp; <i onclick="document.getElementById('show1').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
           </div>
         </div>
       </div>
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. {{number_format($debet)}}</div>
-            <div class="text-muted mb-3">PENGELUARAN</div>
+            <div class="h2 m-0"><span id="show2" style="display:none">Rp. {{number_format($debet)}}</span></div>
+            <div class="text-muted mb-3">PENGELUARAN &nbsp; <i onclick="document.getElementById('show2').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
           </div>
         </div>
       </div>
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. {{number_format($kredit-$debet)}}</div>
-            <div class="text-muted mb-3">SALDO</div>
+            <div class="h2 m-0"><span id="show3" style="display:none">Rp. {{number_format($kredit-$debet)}}</span></div>
+            <div class="text-muted mb-3">SALDO &nbsp; <i onclick="document.getElementById('show3').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
           </div>
         </div>
       </div>
