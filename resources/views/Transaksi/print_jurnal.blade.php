@@ -176,11 +176,13 @@
             </tr>
             @endforeach
             <tr >
-                <td colspan="4" id="center">JUMLAH</td>
+                <td colspan="3" id="center">JUMLAH</td>
+                <td id="center">{{$transaksi_count}}</td>
                 <td id="right">{{number_format($transaksi_total)}}</td>
             </tr>
         </tbody>
     </table>
+    <br>
     <hr>
     <h2 id="center">INVOICE</h2>
     <table id="customers">

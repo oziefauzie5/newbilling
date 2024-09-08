@@ -131,6 +131,7 @@ class TransaksiController extends Controller
             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($sampai)));
         $data['transaksi'] = $query->get();
         $data['transaksi_total'] = $query->sum('trx_total');
+        $data['transaksi_count'] = $query->count();
 
         $query_inv = Invoice::whereDate('inv_tgl_bayar', '>=', date('Y-m-d', strtotime($dari)))
             ->whereDate('inv_tgl_bayar', '<=', date('Y-m-d', strtotime($sampai)));
