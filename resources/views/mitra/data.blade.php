@@ -47,7 +47,7 @@
                                                   </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('admin.mitra.topup',['id'=> $datauser->id]) }}" method="post">
+                                                    <form action="{{ route('admin.mitra.topup',['id'=> $datauser->id]) }}" method="post" enctype="multipart/form-data">
                                                         @csrf
                                                         <h5 class="text-danger">CATATAN</h5>
                                                             <ul>
@@ -97,7 +97,7 @@
                                                     </button>
                                                   </div>
                                                   <div class="modal-body">
-                                                      <form action="{{ route('admin.mitra.debet_saldo',['id'=> $datauser->id]) }}" method="post">
+                                                      <form action="{{ route('admin.mitra.debet_saldo',['id'=> $datauser->id]) }}" method="post" enctype="multipart/form-data">
                                                           @csrf
                                                           <h6>Debet saldo adalah proses pengurangan saldo mitra bersangkutan</h6>
                                                             <ul>

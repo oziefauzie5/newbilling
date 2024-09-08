@@ -230,7 +230,7 @@ class MitraController extends Controller
 
     public function topup(Request $request, $id)
     {
-
+        // dd($photo = $request->file('file'));
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
         // $akun = (new SettingAkun())->SettingAkun()->where('akun_id', $request->cabar)->first();
         $akun = (new GlobalController)->setting_akun()->where('akun_id', $request->cabar)->first();
