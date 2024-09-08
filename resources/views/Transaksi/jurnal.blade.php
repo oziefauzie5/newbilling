@@ -59,11 +59,60 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#kasbon">
   Kasbon
 </button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tutup_buku">
+  Tutup Buku Mingguan
+</button>
+<a href="{{route('admin.lap.data_laporan_mingguan')}}"><button type="button" class="btn btn-primary"> Data Laporan Mingguan</button></a>
+
 {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#transfer">
   Transfer
 </button> --}}
 <hr>
 
+<!-- Modal Tutup Bukui-->
+<div class="modal fade" id="tutup_buku" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">TUTUP BUKU MINGGUAN</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.lap.jurnal_tutup_buku')}}" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('POST')
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Dari tanggal</label>
+             <input type="date" class="form-control" name="startdate">
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Sampai tanggal</label>
+              <input type="date" class="form-control" name="enddate">
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Upload Bukti</label>
+            <input type="file" name="file" class="form-control" required>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal transfer-->
 <div class="modal fade" id="transfer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
