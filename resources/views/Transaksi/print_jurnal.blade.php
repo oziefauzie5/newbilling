@@ -187,7 +187,6 @@
         <thead>
             <tr>
                 <th width="25px">No</th>
-                <th width="100px">TANGGAL</th>
                 <th>DESKRIPSI</th>
                 <th width="35px">QTY</th>
                 <th width="100px">KREDIT</th>
@@ -196,7 +195,7 @@
         <tbody>
             <tr>
                 <td id="center">1</td>
-                <td id="center">{{date('d-m-Y',strtotime(2024-09-01))}}</td>
+                <td id="center">INVOICE PAID {{$periode}}</td>
                 <td>{{$invoice_count}}</td>
                 <td id="right">{{number_format($inv_total)}}</td>
             </tr>

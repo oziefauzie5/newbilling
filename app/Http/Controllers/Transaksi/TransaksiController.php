@@ -110,9 +110,10 @@ class TransaksiController extends Controller
             ->where('lap_mingguans.lm_id', '=', $id)
             ->first();
 
-        $periode = explode(" ", $data['data']->lm_periode);
-        $dari = $periode[0];
-        $sampai = $periode[2];
+        $exp = explode(" ", $data['data']->lm_periode);
+        $dari = $exp[0];
+        $sampai = $exp[2];
+        $data['periode'] = $data['data']->lm_periode;
         // dd($sampai);
 
         $data['lap_mingguan'] = Jurnal::select('jurnals.*', 'jurnals.created_at as tgl_trx', 'setting_akuns.*')
@@ -133,9 +134,9 @@ class TransaksiController extends Controller
 
         $query_inv = Invoice::whereDate('inv_tgl_bayar', '>=', date('Y-m-d', strtotime($dari)))
             ->whereDate('inv_tgl_bayar', '<=', date('Y-m-d', strtotime($sampai)));
-        $data['invoice_count'] = $query_inv->count();
+        $data['invoice_count'] = $query_inv->get();
         $data['inv_total'] = $query_inv->sum('inv_total');
-
+        // dd($data['invoice_count']);
 
 
 
