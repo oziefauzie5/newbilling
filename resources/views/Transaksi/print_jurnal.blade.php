@@ -113,7 +113,8 @@
         <div class="date">Periode Laporan : {{$data->lm_periode}}</div>
     </div>
     <br><br>
-
+    
+    <h2 id="center">JURNAL</h2>
     <table id="customers">
         <thead>
             <tr>
@@ -152,30 +153,52 @@
         </tbody>
     </table>
     <br><br>
+    <hr>
+    <h2 id="center">TRANSAKSI</h2>
     <table id="customers">
         <thead>
             <tr>
                 <th width="25px">No</th>
-                <th>TANGGAL</th>
+                <th width="100px">TANGGAL</th>
                 <th>DESKRIPSI</th>
-                <th>QTY</th>
-                <th>KREDIT</th>
+                <th width="35px">QTY</th>
+                <th width="100px">KREDIT</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($transaksi as $d)
             <tr>
                 <td id="center">{{$loop->iteration}}</td>
-                <td>{{$d->trx_created_at}}</td>
+                <td id="center">{{date('d-m-Y',strtotime($d->created_at))}}</td>
                 <td>{{$d->trx_deskripsi}}</td>
-                <td>{{$d->trx_qty}}</td>
-                <td>{{$d->trx_total}}</td>
+                <td id="center">{{$d->trx_qty}}</td>
                 <td id="right">{{number_format($d->trx_total)}}</td>
             </tr>
             @endforeach
             <tr >
                 <td colspan="4" id="center">JUMLAH</td>
-                <td id="right">{{number_format(0)}}</td>
+                <td id="right">{{number_format($transaksi_total)}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <h2 id="center">INVOICE</h2>
+    <table id="customers">
+        <thead>
+            <tr>
+                <th width="25px">No</th>
+                <th width="100px">TANGGAL</th>
+                <th>DESKRIPSI</th>
+                <th width="35px">QTY</th>
+                <th width="100px">KREDIT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="center">1</td>
+                <td id="center">{{date('d-m-Y',strtotime(2024-09-01))}}</td>
+                <td>{{$invoice_count}}</td>
+                <td id="right">{{number_format($inv_total)}}</td>
             </tr>
         </tbody>
     </table>

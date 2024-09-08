@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transaksi;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Applikasi\SettingAkun;
+use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Transaksi;
 use App\Models\Transaksi\Jurnal;
 use App\Models\Transaksi\Kasbon;
@@ -125,9 +126,15 @@ class TransaksiController extends Controller
         $data['kredit'] = Jurnal::where('jurnal_id', '=', $id)
             ->sum('jurnal_kredit');
 
-        $data['transaksi'] = Transaksi::whereDate('created_at', '>=', date('Y-m-d', strtotime($dari)))
-            ->whereDate('created_at', '<=', date('Y-m-d', strtotime($sampai)))
-            ->get();
+        $query = Transaksi::whereDate('created_at', '>=', date('Y-m-d', strtotime($dari)))
+            ->whereDate('created_at', '<=', date('Y-m-d', strtotime($sampai)));
+        $data['transaksi'] = $query->get();
+        $data['transaksi_total'] = $query->sum('trx_total');
+
+        $query_inv = Invoice::whereDate('inv_tgl_bayar', '>=', date('Y-m-d', strtotime($dari)))
+            ->whereDate('inv_tgl_bayar', '<=', date('Y-m-d', strtotime($sampai)));
+        $data['invoice_count'] = $query_inv->count();
+        $data['inv_total'] = $query_inv->sum('inv_total');
 
 
 
