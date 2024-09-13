@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Termwind\Components\Dd;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
 use App\Models\Applikasi\SettingAplikasi;
-use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {

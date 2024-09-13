@@ -103,76 +103,6 @@
 							</a>
 						</li>
 						<li class="nav-item dropdown hidden-caret">
-							<a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="fa fa-envelope"></i>
-							</a>
-							<ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
-								<li>
-									<div class="dropdown-title d-flex justify-content-between align-items-center">
-										Messages 									
-										<a href="#" class="small">Mark all as read</a>
-									</div>
-								</li>
-								<li>
-									<div class="message-notif-scroll scrollbar-outer">
-										<div class="notif-center">
-											<a href="#">
-												<div class="notif-img"> 
-													<img src="{{asset('atlantis/assets/img/jm_denis.jpg')}}" alt="Img Profile">
-												</div>
-												<div class="notif-content">
-													<span class="subject">Jimmy Denis</span>
-													<span class="block">
-														How are you ?
-													</span>
-													<span class="time">5 minutes ago</span> 
-												</div>
-											</a>
-											<a href="#">
-												<div class="notif-img"> 
-													<img src="{{asset('atlantis/assets/img/chadengle.jpg')}}" alt="Img Profile">
-												</div>
-												<div class="notif-content">
-													<span class="subject">Chad</span>
-													<span class="block">
-														Ok, Thanks !
-													</span>
-													<span class="time">12 minutes ago</span> 
-												</div>
-											</a>
-											<a href="#">
-												<div class="notif-img"> 
-													<img src="{{asset('atlantis/assets/img/mlane.jpg')}}" alt="Img Profile">
-												</div>
-												<div class="notif-content">
-													<span class="subject">Jhon Doe</span>
-													<span class="block">
-														Ready for the meeting today...
-													</span>
-													<span class="time">12 minutes ago</span> 
-												</div>
-											</a>
-											<a href="#">
-												<div class="notif-img"> 
-													<img src="{{asset('atlantis/assets/img/talha.jpg')}}" alt="Img Profile">
-												</div>
-												<div class="notif-content">
-													<span class="subject">Talha</span>
-													<span class="block">
-														Hi, Apa Kabar ?
-													</span>
-													<span class="time">17 minutes ago</span> 
-												</div>
-											</a>
-										</div>
-									</div>
-								</li>
-								<li>
-									<a class="see-all" href="javascript:void(0);">See all messages<i class="fa fa-angle-right"></i> </a>
-								</li>
-							</ul>
-						</li>
-						<li class="nav-item dropdown hidden-caret">
 							<a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i class="fa fa-bell"></i>
 								<span class="notification">4</span>
@@ -818,6 +748,9 @@
 				
 			});
 			$('#pilih_data').DataTable({
+				"pageLength": 10,
+			});
+			$('#topup_list').DataTable({
 				"pageLength": 10,
 			});
 			$('#tiket_pilih_pelanggan').DataTable({
@@ -1658,9 +1591,9 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
                         },
                         dataType: 'json',
                         success: function(data) {
-
+							
 							swal("Berhasil!", "Diskon berhasil ditambahkan", {
-						icon : "success",
+								icon : "success",
 						buttons: {        			
 							confirm: {
 								className : 'btn btn-success'
@@ -1671,36 +1604,36 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
                               style: 'currency',minimumFractionDigits: 0,
                               currency: 'IDR',
                             }).format(diskon);
-
+							
                             let jumlah = new Intl.NumberFormat('id-ID', {
-                              style: 'currency',minimumFractionDigits: 0,
+								style: 'currency',minimumFractionDigits: 0,
                               currency: 'IDR',
                             }).format(total);
 							
                             const row1 = document.getElementById('tot');
                             const ww = document.getElementById('td');
                             row1.innerHTML = `
-                          <td>`
-                            +jumlah+`
-                          </td>`;
-                          ww.innerHTML = `
+							<td>`
+								+jumlah+`
+								</td>`;
+								ww.innerHTML = `
                           <td>`
                             +rupiahFormat+`
                             </td>`;
                             table.appendChild(ww);
                             table.appendChild(row1);
-
-
+							
+							
                         }
                     });
 					
 				});
 				
   
-  
-	$('select[name=cabar]').change(function () {
-		if ($(this).val() == 'TRANSFER') {
-			$('#transfer').show();
+				
+				$('select[name=cabar]').change(function () {
+					if ($(this).val() == 'TRANSFER') {
+						$('#transfer').show();
 			$('#transfer').attr('required', 'required');;
 			$('#jb').show();
 			$('#bb').show();
@@ -1715,7 +1648,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			$('#bb').removeAttr('required');
 		}
 	});
-// #LAYANAN REGISTRASI
+	// #LAYANAN REGISTRASI
 	$('select[name=reg_layanan]').change(function () {
 		if ($(this).val() == 'HOTSPOT') {
 			$('#divip').hide();
@@ -1743,32 +1676,32 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			alert('Disable');
 		}
 	});
-		</script>
+	</script>
 		<script>
 			// BUAT TIKET
 			$(function(){ 
   var table = $('#tiket_pilih_pelanggan').DataTable(); $('#tiket_pilih_pelanggan tbody').on( 'click', 'tr', function () 
 			{  
-			var idpel = table.row( this ).id();
+				var idpel = table.row( this ).id();
   var url = '{{ route("admin.tiket.pilih_pelanggan", ":id") }}';
-url = url.replace(':id', idpel);
+  url = url.replace(':id', idpel);
   $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        '_token': '{{ csrf_token() }}'
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-						// console.log(data)
-							$("#cari_data").modal('hide');
-							$("#tiket_pelanggan").val(data['data_pelanggan']['input_nama']);
-							$("#tiket_nolayanan").val(data['data_pelanggan']['reg_nolayanan']);
-							$("#tiket_idpel").val(data['data_pelanggan']['reg_idpel']);
+	  url: url,
+	  type: 'GET',
+	  data: {
+		  '_token': '{{ csrf_token() }}'
+		},
+		dataType: 'json',
+		success: function(data) {
+			// console.log(data)
+			$("#cari_data").modal('hide');
+			$("#tiket_pelanggan").val(data['data_pelanggan']['input_nama']);
+			$("#tiket_nolayanan").val(data['data_pelanggan']['reg_nolayanan']);
+			$("#tiket_idpel").val(data['data_pelanggan']['reg_idpel']);
                     }
                 });
- });
-});
+			});
+		});
 		</script>
 		<script>
 			// DETAILS TIKET
@@ -1780,9 +1713,56 @@ url = url.replace(':id', idpel);
 				window.location=url;
 			});
 		</script>
+    <script>
+        document.getElementById('selectAllCheckbox')
+                  .addEventListener('change', function () {
+            let checkboxtopup = 
+                document.querySelectorAll('.checkboxtopup');
+            checkboxtopup.forEach(function (checkbox) {
+                checkbox.checked = this.checked;
+            }, this);
+        });
+		$('.topup').click(function(){  
+			var id=$(".id_lap").val();//getting value of input field
+			var url = '{{ route("admin.inv.lap_topup", ":id") }}';
+			url = url.replace(':id', id);
+			var checkboxtopup_value = []; 
+			$('.checkboxtopup').each(function(){  
+				//if($(this).is(":checked")) { 
+					if(this.checked) {              
+						checkboxtopup_value.push($(this).val());                                                                               
+					}  
+				});                              
+				// checkboxtopup_value = checkboxtopup_value.toString(); 
+				// alert(checkboxtopup_value)
 
+				$.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: {
+						checkboxtopup_value:checkboxtopup_value,
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+						// console.log(data.route);
+					// 	swal("Berhasil!", "Diskon berhasil ditambahkan", {
+					// 			icon : "success",
+					// 	buttons: {        			
+					// 		confirm: {
+					// 			className : 'btn btn-success'
+					// 		}
+					// 	},
+					// }); 
+					window.location.href = data+"/admin/Transaksi/laporan-harian";
+                    }
+                });
+		});  
+			
+			
+			</script>
 		
-
+		
 	
 					<script>
 		Circles.create({

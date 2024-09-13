@@ -11,7 +11,7 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="row invoice-info">
-                                <div class="col invoice-col">
+                                <div class="col invoice-col m-3" >
                                   <h3>{{ $datauser->nama }}</h3>
                                   <address>
                                       <strong>{{ $datauser->name }}</strong><br>
@@ -36,7 +36,7 @@
                               <div class="card-body">
                                 <div class="row ">
                                     <div class="col-6">
-                                        <button class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modal-AddSaldo">TAMBAH SALDO</button>
+                                        <button class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modal-AddSaldo" disabled>TAMBAH SALDO</button>
                                         <div class="modal fade" id="modal-AddSaldo">
                                             <div class="modal-dialog modal-lg">
                                               <div class="modal-content">
@@ -54,6 +54,7 @@
                                                                 <li>Proses ini akan menambah saldo mitra bersangkutan secara manual tanpa melalui proses dan request topup saldo</li>
                                                                 <li >Proses ini bisa gunakan untuk penarikan hutang (saldo yang minus dari mitra bersangkutan), isi sejumlah saldo yang minus atau yang dibayar oleh mitra sampai akhirnya saldo kembali menjadi 0</li>
                                                             </ul>
+                                                            
                                                     <hr>
                                                     <div class="m-4">
                                                     <div class="form-group">
@@ -86,7 +87,7 @@
                                               </div>
                                             </div>
                                           </div>
-                                          <button class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modal-DebetSaldo">DEBET SALDO</button>
+                                          <button class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modal-DebetSaldo" disabled>DEBET SALDO</button>
                                           <div class="modal fade" id="modal-DebetSaldo">
                                               <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
@@ -161,6 +162,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <p>Untuk melakukan topup silahkan masuk ke Laporan Harian</p>
                                 <hr>
                                 <div class="table-responsive">
                                     <table id="input_data" class="display table table-striped table-hover text-nowrap" >

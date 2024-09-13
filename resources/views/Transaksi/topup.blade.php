@@ -19,11 +19,21 @@
             </ul>
           </div>
           @endif
-          <div class="table-responsive">
-            <table id="input_data" class="display table table-striped table-hover" >
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle btn-sm"  type="button" data-toggle="dropdown" aria-expanded="false">
+              Menu
+            </button><hr>
+            <div class="dropdown-menu">
+              <button class="dropdown-item topup " type="button">Top Up</button>
+            </div>
+          </div>
+          {{-- <button class="btn btn-block btn-info btn-sm topup">Top Up</button> --}}
+          <input type="hidden" value="{{$admin}}" class="id_lap">
+          <div class="table-responsive" >
+            <table id="topup_list" class="display table table-striped table-hover" >
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th class="text-center"><input type="checkbox" id="selectAllCheckbox" ></th>
                   <th>ID</th>
                   <th>TANGGAL</th>
                   <th>ADMIN</th>
@@ -32,33 +42,30 @@
                   <th>CABAR</th>
                   <th>METODE BAYAR</th>
                   <th>KREDIT</th>
-                  <th>DEBET</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($laporan as $d)
-                <form action="{{route('admin.inv.lap_topup',['id'=>$d->lap_admin])}}" method="post">
+                {{-- <form action="{{route('admin.inv.lap_topup',['id'=>$d->lap_admin])}}" method="post">
                   @csrf
-                  @method('POST')
+                  @method('POST') --}}
                 <tr>
-                  <td class="text-center"><input type="checkbox" name="id[]" value="{{$d->id}}"></td>
-                  <td>{{$d->lap_id}}</td>
+                  <td class="text-center"><input type="checkbox" class="checkboxtopup" name="id[]" value="{{$d->laporan_id}}"></td>
+                  <td>{{$d->laporan_id}}</td>
                   <td>{{date('d-m-Y',strtotime($d->lap_tgl))}}</td>
                   <td>{{$d->name}}</td>
                   <td>{{$d->lap_inv}}</td>
                   <td>{{$d->lap_keterangan}}</td>
                   <td>{{$d->lap_cabar}}</td>
                   <td>{{$d->akun_nama}}</td>
-                  <td>{{$d->lap_kredit}}</td>
-                  <td>{{$d->lap_debet}}</td>
-                  @endforeach
-                  <tr>
-                    <td colspan="10"><button class="btn btn-block btn-info btn-sm">Top Up</button></td>
-                  </tr>
-                </form>
+                  <td >Rp. {{number_format($d->lap_kredit)}}</td>
                 </tr>
+                
+                @endforeach
               </tbody>
             </table>
+            
+            {{-- </form> --}}
           </div>
         </div>
       </div>

@@ -135,8 +135,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/laporan-harian', [LaporanController::class, 'index'])->name('inv.laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/buat-laporan', [LaporanController::class, 'buat_laporan'])->name('inv.buat_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/serah-terima', [LaporanController::class, 'serah_terima'])->name('inv.serah_terima')->middleware(['role:admin|STAF ADMIN']);
-    Route::post('/Transaksi/topup', [LaporanController::class, 'topup'])->name('inv.topup')->middleware(['role:admin|STAF ADMIN']);
-    Route::post('/Transaksi/{id}/topup', [LaporanController::class, 'lap_topup'])->name('inv.lap_topup')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/Transaksi/topup', [LaporanController::class, 'topup'])->name('inv.topup')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/Transaksi/{id}/topup', [LaporanController::class, 'lap_topup'])->name('inv.lap_topup')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Delete', [LaporanController::class, 'lap_delete'])->name('inv.lap_delete')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/add-pendapatan', [LaporanController::class, 'store_add_transaksi'])->name('lap.store_add_transaksi')->middleware(['role:admin|STAF ADMIN']);

@@ -177,7 +177,7 @@
                 <div class="modal-body">
                   <form action="{{ route('admin.inv.topup')}}" method="POST">
                         @csrf
-                        @method('POST')
+                        @method('PUT')
                         <div class="form-group">
                           <label for="formGroupExampleInput">Biller</label>
                           <select name="user_admin" class="custom-select" required>
@@ -191,7 +191,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary btn-sm" >BAYAR</button>
+                  <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
                 </div>
                 </form>
               </div>

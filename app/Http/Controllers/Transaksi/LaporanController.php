@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class LaporanController extends Controller
 {
@@ -104,63 +105,70 @@ class LaporanController extends Controller
     public function topup(Request $request)
     {
         // dd($id);
-        $data['laporan'] = Laporan::orderBy('laporans.lap_tgl', 'DESC')
-            ->where('lap_admin', $request->user_admin)
-            ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
+        $data['laporan'] = Laporan::select('laporans.id as laporan_id', 'laporans.*', 'setting_akuns.id as akun_id', 'setting_akuns.akun_nama', 'users.id as user_id', 'users.name')
+            ->orderBy('laporans.lap_tgl', 'DESC')
+            ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
             ->join('users', 'users.id', '=', 'laporans.lap_admin')
+            ->where('lap_admin', $request->user_admin)
             ->get();
         // dd($data);
         $data['setting_akun'] = (new GlobalController)->setting_akun()->where('id', '!=', '5')->get();
+        $data['admin'] = $request->user_admin;
+
+        // dd($data);
         return view('Transaksi/topup', $data);
     }
     public function lap_topup(Request $request, $id)
     {
+
         $user_admin = (new GlobalController)->user_admin();
+        // $aray = $request->checkboxtopup_value;
 
-        $query = Laporan::whereIn('id', $request->id);
-        $data['laporan'] = $query->get();
-        $data['total'] = $query->sum('lap_kredit');
+        if ($id != 10) {
+            $query = Laporan::whereIn('id', $request->checkboxtopup_value);
+            $data['laporan'] = $query->get();
+            $data['total'] = $query->sum('lap_kredit');
 
-        $invoice = (new GlobalController)->no_invoice_mitra();
-        $count = Mutasi::count();
-        if ($count == 0) {
-            $count_invoice = 1;
-        } else {
-            $count_invoice = $count + 1;
+            $invoice = (new GlobalController)->no_invoice_mitra();
+            $count = Mutasi::count();
+            if ($count == 0) {
+                $count_invoice = 1;
+            } else {
+                $count_invoice = $count + 1;
+            }
+            $invoice = sprintf("%08d", $count_invoice);
+            #CEK SALDO MUTASI BILLER
+            $saldo = (new GlobalController)->total_mutasi($id); #SALDO MUTASI = DEBET - KREDIT
+            $total = $saldo + $data['total'];
+
+            #mennampilkan data user sesuai hak akses
+            $user = (new GlobalController)->data_user($id);
+
+            #Admin yang sedang aktif (Membuat topup)
+            $admin_user = Auth::user()->id;
+
+            $data['mt_mts_id'] = $id;
+            $data['mt_admin'] = $admin_user;
+            $data['mt_kategori'] = 'TOPUP';
+            $data['mt_deskripsi'] = 'TOPUP ' . $user->nama_user . ' INVOICE-' . $invoice;
+            $data['mt_kredit'] = $data['total'];
+            $data['mt_saldo'] = $total;
+            $data['mt_cabar'] = $request->cabar;
+
+            Mutasi::create($data); #INSERT LAPORAN TOPUP KE TABLE MUTASI
         }
-        $invoice = sprintf("%08d", $count_invoice);
-        #CEK SALDO MUTASI BILLER
-        $saldo = (new GlobalController)->total_mutasi($id); #SALDO MUTASI = DEBET - KREDIT
-        $total = $saldo + $data['total'];
 
-        #mennampilkan data user sesuai hak akses
-        $user = (new GlobalController)->data_user($id);
-
-        #Admin yang sedang aktif (Membuat topup)
-        $admin_user = Auth::user()->id;
-
-        $data['mt_mts_id'] = $id;
-        $data['mt_admin'] = $admin_user;
-        $data['mt_kategori'] = 'TOPUP';
-        $data['mt_deskripsi'] = 'TOPUP ' . $user->nama_user . ' INVOICE-' . $invoice;
-        $data['mt_kredit'] = $data['total'];
-        $data['mt_saldo'] = $total;
-        $data['mt_cabar'] = $request->cabar;
-
-        Mutasi::create($data); #INSERT LAPORAN TOPUP KE TABLE MUTASI
-
-        foreach ($request->id as $d) {
+        foreach ($request->checkboxtopup_value as $d) {
             Laporan::where('lap_admin', $id)->where('id', $d)->update(
                 [
                     'lap_admin' => $user_admin['user_id'],
                 ]
             );
         }
-        $notifikasi = [
-            'pesan' => 'Berhasil Serah terima laporan',
-            'alert' => 'success',
-        ];
-        return redirect()->route('admin.inv.laporan')->with($notifikasi);
+
+        $route = URL::to('/');
+        return response()->json($route);
+        // return redirect()->route('admin.inv.laporan')->with($notifikasi);
     }
 
     public function serah_terima(Request $request, $id)
