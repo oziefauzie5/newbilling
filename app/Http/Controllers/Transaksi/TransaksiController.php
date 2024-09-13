@@ -131,14 +131,23 @@ class TransaksiController extends Controller
             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($sampai)));
         $data['transaksi'] = $query->get();
         $data['transaksi_total'] = $query->sum('trx_total');
-        $data['transaksi_count'] = $query->count();
+        $data['transaksi_count'] = $query->sum('trx_qty');
 
-        $query_inv = Invoice::whereDate('inv_tgl_bayar', '>=', date('Y-m-d', strtotime($dari)))
+        $query_inv = Invoice::where('inv_jenis_tagihan', '!=', 'FREE')
+            ->whereDate('inv_tgl_bayar', '>=', date('Y-m-d', strtotime($dari)))
             ->whereDate('inv_tgl_bayar', '<=', date('Y-m-d', strtotime($sampai)));
         $data['invoice_count'] = $query_inv->count();
         $data['inv_total'] = $query_inv->sum('inv_total');
-        // dd($data['invoice_count']);
+        $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'PEMBAYARAN');
 
+        // foreach ($data['setting_akun']->get() as $d) {
+        //     $inv_total = Invoice::where('inv_akun', '=', $d->id)->sum('inv_total');
+
+
+        //     echo '<table><tr><td>' . $d->akun_nama . '</td><td>' . $inv_total  . '</td></tr></table>';
+        //     // dd($d->akun_nama);
+        // }
+        // dd('test');
 
 
         return view('Transaksi/print_jurnal', $data);
@@ -191,13 +200,14 @@ class TransaksiController extends Controller
         $data['startdate'] = $request->startdate;
         $data['enddate'] = $request->enddate;
         $pendapatan = Jurnal::where('jurnal_status', '=', 1)
-            ->whereDate('jurnals.created_at', '>=', date('Y-m-d', strtotime($data['startdate'])))
-            ->whereDate('jurnals.created_at', '<=', date('Y-m-d', strtotime($data['enddate'])))
+            ->whereDate('created_at', '>=', date('Y-m-d', strtotime($data['startdate'])))
+            ->whereDate('created_at', '<=', date('Y-m-d', strtotime($data['enddate'])))
             ->sum('jurnal_kredit');
         $pengeluaran = Jurnal::where('jurnal_status', '=', 1)
-            ->whereDate('jurnals.created_at', '>=', date('Y-m-d', strtotime($data['startdate'])))
-            ->whereDate('jurnals.created_at', '<=', date('Y-m-d', strtotime($data['enddate'])))
+            ->whereDate('created_at', '>=', date('Y-m-d', strtotime($data['startdate'])))
+            ->whereDate('created_at', '<=', date('Y-m-d', strtotime($data['enddate'])))
             ->sum('jurnal_debet');
+
         // if ($pendapatan == 0 && $pengeluaran == 0) {
         //     dd('gagal');
         // } else {
@@ -226,7 +236,10 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
 
         $update['jurnal_status'] = 10;
         $update['jurnal_id'] = $jurnal_id;
-        Jurnal::where('jurnal_status', '=', 1)->update($update);
+        Jurnal::where('jurnal_status', '=', 1)
+            ->whereDate('created_at', '>=', date('Y-m-d', strtotime($data['startdate'])))
+            ->whereDate('created_at', '<=', date('Y-m-d', strtotime($data['enddate'])))
+            ->update($update);
         $notifikasi = array(
             'pesan' => 'Laporan Mingguan Admin Berhasil dibuat',
             'alert' => 'success',

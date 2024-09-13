@@ -79,6 +79,9 @@ class LaporanController extends Controller
         }
 
         $data['sum_tunai'] = $querysum->where('lap_status', 0)->where('lap_akun', 2)->sum('laporans.lap_kredit');
+
+        $data['users'] = (new GlobalController)->all_user()->where('model_has_roles.role_id', '=', '5')->get();
+        // dd($data['users']);
         return view('Transaksi/laporan_harian', $data);
     }
 
@@ -96,6 +99,29 @@ class LaporanController extends Controller
         return redirect()->route('admin.inv.laporan')->with($notifikasi);
     }
 
+    public function serah_terima(Request $request, $id)
+    {
+        $query = Laporan::where('lap_status', '0')->where('lap_admin', $id)->get();
+
+        $tgl = date('Y-m-d', strtotime(Carbon::now()));
+        $update_data['lap_id'] = $request->lap_id;
+        $update_data['lap_admin'] = $request->user_admin2;
+
+        Laporan::where('lap_status', '0')->where('lap_admin', $id)->update($update_data);
+
+        // $data['admin_name'] = $request->user_admin;
+        // $data['id_lap'] = $request->lap_id;
+        // $data['total'] = $request->total;
+        // $data['tgl'] = $tgl;
+        // return view('Transaksi/laporan_serah_terima_print', $query);
+
+        // dd($query);
+        $notifikasi = [
+            'pesan' => 'Terimakasih. Laporan anda berhasil diserah terima',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.inv.laporan')->with($notifikasi);
+    }
     public function buat_laporan(Request $request, $id)
     {
         $nama_admin = Auth::user()->name;

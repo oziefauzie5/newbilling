@@ -203,6 +203,28 @@
             </tr>
         </tbody>
     </table>
+    <br>
+    <hr>
+    <h2 id="center">AKUN</h2>
+    
+    <table id="customers">
+        <thead>
+            <tr>
+                <th width="25px">No</th>
+                <th>AKUN</th>
+                <th width="100px">KREDIT</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($setting_akun->get() as $item)
+            <tr>
+                <td id="center">1</td>
+                <td id="center">{{$item->akun_nama}}</td>
+                <td id="right">{{number_format(0)}}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
     <br><br><br><br>
     <table id="ttd">
         <tr>
