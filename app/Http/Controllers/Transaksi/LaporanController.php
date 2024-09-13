@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transaksi;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Applikasi\SettingAkun;
+use App\Models\Mitra\Mutasi;
 use App\Models\Model_Has_Role;
 use App\Models\Transaksi\DataLaporan;
 use App\Models\Transaksi\Laporan;
@@ -24,6 +25,7 @@ class LaporanController extends Controller
         $data['admin_name'] = Auth::user()->name;
         $data['setting_akun'] = (new GlobalController)->setting_akun()->where('id', '=', '2')->get();
         $ids = [1, 2, 5, 10, 13, 14];
+        $biller = [10, 13, 14];
         $data['dat'] = "Laporan";
         $role = Model_Has_Role::where('model_id', $data['admin_user'])->first();
 
@@ -81,6 +83,7 @@ class LaporanController extends Controller
         $data['sum_tunai'] = $querysum->where('lap_status', 0)->where('lap_akun', 2)->sum('laporans.lap_kredit');
 
         $data['users'] = (new GlobalController)->all_user()->where('model_has_roles.role_id', '=', '5')->get();
+        $data['biller'] = (new GlobalController)->all_user()->whereIn('model_has_roles.role_id', $biller)->get();
         // dd($data['users']);
         return view('Transaksi/laporan_harian', $data);
     }
@@ -98,6 +101,63 @@ class LaporanController extends Controller
         ];
         return redirect()->route('admin.inv.laporan')->with($notifikasi);
     }
+    public function topup(Request $request)
+    {
+        // dd($id);
+        $data['laporan'] = Laporan::where('lap_admin', $request->user_admin)->get();
+        // dd($data);
+        $data['setting_akun'] = (new GlobalController)->setting_akun()->where('id', '!=', '5')->get();
+        return view('Transaksi/topup', $data);
+    }
+    public function lap_topup(Request $request, $id)
+    {
+        $user_admin = (new GlobalController)->user_admin();
+
+        $query = Laporan::whereIn('id', $request->id);
+        $data['laporan'] = $query->get();
+        $data['total'] = $query->sum('lap_kredit');
+
+        $invoice = (new GlobalController)->no_invoice_mitra();
+        $count = Mutasi::count();
+        if ($count == 0) {
+            $count_invoice = 1;
+        } else {
+            $count_invoice = $count + 1;
+        }
+        $invoice = sprintf("%08d", $count_invoice);
+        #CEK SALDO MUTASI BILLER
+        $saldo = (new GlobalController)->total_mutasi($id); #SALDO MUTASI = DEBET - KREDIT
+        $total = $saldo + $data['total'];
+
+        #mennampilkan data user sesuai hak akses
+        $user = (new GlobalController)->data_user($id);
+
+        #Admin yang sedang aktif (Membuat topup)
+        $admin_user = Auth::user()->id;
+
+        $data['mt_mts_id'] = $id;
+        $data['mt_admin'] = $admin_user;
+        $data['mt_kategori'] = 'TOPUP';
+        $data['mt_deskripsi'] = 'TOPUP ' . $user->nama_user . ' INVOICE-' . $invoice;
+        $data['mt_kredit'] = $data['total'];
+        $data['mt_saldo'] = $total;
+        $data['mt_cabar'] = $request->cabar;
+
+        Mutasi::create($data); #INSERT LAPORAN TOPUP KE TABLE MUTASI
+
+        foreach ($request->id as $d) {
+            Laporan::where('lap_admin', $id)->where('id', $d)->update(
+                [
+                    'lap_admin' => $user_admin['user_id'],
+                ]
+            );
+        }
+        $notifikasi = [
+            'pesan' => 'Berhasil Serah terima laporan',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.inv.laporan')->with($notifikasi);
+    }
 
     public function serah_terima(Request $request, $id)
     {
@@ -109,13 +169,7 @@ class LaporanController extends Controller
 
         Laporan::where('lap_status', '0')->where('lap_admin', $id)->update($update_data);
 
-        // $data['admin_name'] = $request->user_admin;
-        // $data['id_lap'] = $request->lap_id;
-        // $data['total'] = $request->total;
-        // $data['tgl'] = $tgl;
-        // return view('Transaksi/laporan_serah_terima_print', $query);
 
-        // dd($query);
         $notifikasi = [
             'pesan' => 'Terimakasih. Laporan anda berhasil diserah terima',
             'alert' => 'success',

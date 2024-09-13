@@ -164,6 +164,40 @@
             </div>
           </div>
           {{-- end modal SERAH TERIMA --}}
+          <!-- Modal TopUp-->
+          <div class="modal fade" id="topup" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">TOPUP</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{ route('admin.inv.topup')}}" method="POST">
+                        @csrf
+                        @method('POST')
+                        <div class="form-group">
+                          <label for="formGroupExampleInput">Biller</label>
+                          <select name="user_admin" class="custom-select" required>
+                            <option value="">PILIH ADMIN</option>
+                            @foreach ($biller as $us)
+                            <option value="{{$us->id}}">{{$us->name}}</option>
+                            @endforeach
+                            <option value="10">TRIPAY</option>
+                          </select>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary btn-sm" >BAYAR</button>
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {{-- end modal TopUp --}}
           <!-- Modal tambah transaksi-->
 <div class="modal fade" id="addtransaksi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -237,6 +271,10 @@
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#serah_terima">
               <i class="fa fa-plus"></i>
               SERAH TERIMA
+            </button>
+            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#topup">
+              <i class="fa fa-plus"></i>
+              TOPUP
             </button>
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#buat_laporan">
               <i class="fa fa-plus"></i>
