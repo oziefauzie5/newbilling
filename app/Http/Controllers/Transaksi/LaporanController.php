@@ -104,7 +104,11 @@ class LaporanController extends Controller
     public function topup(Request $request)
     {
         // dd($id);
-        $data['laporan'] = Laporan::where('lap_admin', $request->user_admin)->get();
+        $data['laporan'] = Laporan::orderBy('laporans.lap_tgl', 'DESC')
+            ->where('lap_admin', $request->user_admin)
+            ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
+            ->join('users', 'users.id', '=', 'laporans.lap_admin')
+            ->get();
         // dd($data);
         $data['setting_akun'] = (new GlobalController)->setting_akun()->where('id', '!=', '5')->get();
         return view('Transaksi/topup', $data);

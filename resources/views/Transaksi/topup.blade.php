@@ -20,7 +20,7 @@
           </div>
           @endif
           <div class="table-responsive">
-            <table id="input_data" class="display table table-striped table-hover text-nowrap">
+            <table id="input_data" class="display table table-striped table-hover" >
               <thead>
                 <tr>
                   <th>#</th>
@@ -33,7 +33,6 @@
                   <th>METODE BAYAR</th>
                   <th>KREDIT</th>
                   <th>DEBET</th>
-                  <th>AKSI</th>
                 </tr>
               </thead>
               <tbody>
