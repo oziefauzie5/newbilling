@@ -4,6 +4,16 @@
 <div class="content">
   <div class="page-inner">
     <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h2 m-0 jt" id="customProductPricing">0</div>
+            <div class="text-muted mb-3">TRANSAKSI</div>
+          </div>
+        </div>
+      </div>
+      </div>
+    <div class="row">
 
       <div class="card">
         <div class="card-body">
@@ -29,11 +39,11 @@
           </div>
           {{-- <button class="btn btn-block btn-info btn-sm topup">Top Up</button> --}}
           <input type="hidden" value="{{$admin}}" class="id_lap">
-          <div class="table-responsive" >
+          <div class="table-responsive"  >
             <table id="topup_list" class="display table table-striped table-hover" >
               <thead>
                 <tr>
-                  <th class="text-center"><input type="checkbox" id="selectAllCheckbox" ></th>
+                  <th class="text-center"><input type="checkbox" id="selectAllCheckbox" class="checkboxtopup" disabled ></th>
                   <th>ID</th>
                   <th>TANGGAL</th>
                   <th>ADMIN</th>
@@ -50,7 +60,7 @@
                   @csrf
                   @method('POST') --}}
                 <tr>
-                  <td class="text-center"><input type="checkbox" class="checkboxtopup" name="id[]" value="{{$d->laporan_id}}"></td>
+                  <td class="text-center"><input type="checkbox" class="checkboxtopup" name="id[]" value="{{$d->laporan_id}}" data-price="{{$d->lap_kredit}}"></td>
                   <td>{{$d->laporan_id}}</td>
                   <td>{{date('d-m-Y',strtotime($d->lap_tgl))}}</td>
                   <td>{{$d->name}}</td>

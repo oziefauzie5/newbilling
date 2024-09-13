@@ -1716,12 +1716,40 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
     <script>
         document.getElementById('selectAllCheckbox')
                   .addEventListener('change', function () {
-            let checkboxtopup = 
-                document.querySelectorAll('.checkboxtopup');
+            let checkboxtopup = document.querySelectorAll('.checkboxtopup');
             checkboxtopup.forEach(function (checkbox) {
                 checkbox.checked = this.checked;
             }, this);
         });
+		
+		let addonCheckboxes = document.querySelectorAll(".checkboxtopup")
+let priceSection = document.getElementById("priceSection")
+let customProductPricing = document.getElementById("customProductPricing")
+let sum = 0
+for (let i = 0; i < addonCheckboxes.length; i++) {
+  addonCheckboxes[i].addEventListener("change", function(e) {
+
+    console.log(e.target.dataset.price)
+    
+    if (addonCheckboxes[i].checked != false) {
+      
+      sum = sum +Number(e.target.dataset.price) 
+	  
+    } else {
+      sum =  sum -Number(e.target.dataset.price) 
+    }
+	let rupiahFormat = new Intl.NumberFormat('id-ID', {
+                              style: 'currency',minimumFractionDigits: 0,
+                              currency: 'IDR',
+                            }).format(sum);
+    
+    customProductPricing.innerHTML = rupiahFormat
+    
+  })
+
+}
+
+
 		$('.topup').click(function(){  
 			var id=$(".id_lap").val();//getting value of input field
 			var url = '{{ route("admin.inv.lap_topup", ":id") }}';
@@ -1745,15 +1773,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
                     },
                     dataType: 'json',
                     success: function(data) {
-						// console.log(data.route);
-					// 	swal("Berhasil!", "Diskon berhasil ditambahkan", {
-					// 			icon : "success",
-					// 	buttons: {        			
-					// 		confirm: {
-					// 			className : 'btn btn-success'
-					// 		}
-					// 	},
-					// }); 
+
 					window.location.href = data+"/admin/Transaksi/laporan-harian";
                     }
                 });
