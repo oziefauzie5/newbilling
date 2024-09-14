@@ -31,7 +31,7 @@
            <!-- Button trigger modal -->
                       <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_pencairan">
                         Konfirmasi
-                      </button>
+                      </button><hr>
 
                       <!-- Modal -->
                       <div class="modal fade" id="modal_pencairan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -102,55 +102,7 @@
                         Print
                       </button></a>
                       @elseif($d->reg_progres == '4')
-                      <input type="checkbox" class="cb_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-price="70000">
-                      {{-- <!-- Button trigger modal -->
-                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_pencairan{{$d->reg_idpel}}">
-                        Konfirmasi
-                      </button>
-
-                      <!-- Modal -->
-                      <div class="modal fade" id="modal_pencairan{{$d->reg_idpel}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Pencairan</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <form method="post" action="{{route('admin.inv.konfirm_pencairan')}}">
-                                  @csrf
-                                  @method('POST')
-                                  <div class="form-row">
-                                    <input type="hidden" name="idpel" value="{{$d->reg_idpel}}">
-                                    <div class="col">
-                                      <select name="akun" id="" class="form-control" required>
-                                        <option value="">PILIH METODE BAYAR</option>
-                                      @foreach($data_bank as $bank)
-                                      <option value="{{$bank->id}}">{{$bank->akun_nama}}</option>
-                                      @endforeach
-                                      </select>
-                                    </div>
-                                    <div class="col">
-                                      <select name="penerima" id="" class="form-control" required>
-                                        <option value="">PILIH PENERIMA</option>
-                                      @foreach($data_user as $user)
-                                      <option value="{{$user->id}}">{{$user->name}}</option>
-                                      @endforeach
-                                      </select>
-                                    </div>
-                                  </div>
-                              
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn btn-sm btn-primary">Konfirmasi</button>
-                                </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div> --}}
+                      <input type="checkbox" class="cb_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-price="{{$data_biaya->biaya_psb+$data_biaya->biaya_sales}}">
                       @elseif($d->reg_progres == '5')
                       <a>
                         <button type="button" class="btn btn-link btn-success">

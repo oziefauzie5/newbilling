@@ -1801,9 +1801,8 @@ let total_pencairan = document.getElementById("total_pencairan")
 let sum1 = 0
 for (let i = 0; i < cb_pencairan.length; i++) {
   cb_pencairan[i].addEventListener("change", function(e) {    
-	// console.log(e.target.dataset.idpel)
-    if (cb_pencairan[i].checked != false) {
-      sum1 = sum1 +Number(e.target.dataset.price) 
+	  if (cb_pencairan[i].checked != false) {
+		  sum1 = sum1 +Number(e.target.dataset.price) 
     } else {
       sum1 =  sum1 -Number(e.target.dataset.price) 
     }
@@ -1813,17 +1812,20 @@ for (let i = 0; i < cb_pencairan.length; i++) {
                             }).format(sum1);
     
 							total_pencairan.innerHTML = rupiah_pencairan
-    
+			
   })
 
 }
+
 				
 				$('.submit_pencairan').click(function(){  
 					var akun=$(".akun").val();
 					var penerima=$(".penerima").val();
 					var idpel = []; 
 					if(idpel==''){
-						$('#notif3').html('<small class="form-text text-muted text-danger">Setidaknya memilih 1 pencairan</small>');
+						$('#notif3').html('<small class="form-text text-muted text-danger">Metode Bayar tidak boleh kosong</small>');
+					} else{
+						$('#notif3').html('');
 					}
 					if(akun==''){
 						$('#notif1').html('<small class="form-text text-muted text-danger">Metode Bayar tidak boleh kosong</small>');
@@ -1856,7 +1858,27 @@ for (let i = 0; i < cb_pencairan.length; i++) {
                     },
                     dataType: 'json',
                     success: function(data) {
-console.log(data)
+						location.reload();
+						if(data['saldo_tidak_cukup']){
+							
+							swal("Berhasil!", "Diskon berhasil ditambahkan", {
+								icon : "error",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-error'
+							}
+						},
+					});
+					}else{
+						swal("Berhasil!", "Diskon berhasil ditambahkan", {
+								icon : "success",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-success'
+							}
+						},
+					});
+					}
                     }
                 });
 		});  

@@ -339,11 +339,9 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
     {
         $tanggal = (new GlobalController)->tanggal();
         $user = (new GlobalController)->user_admin();
-        $setting_biaya = (new GlobalController)->setting_biaya();
+        $cek_saldo = (new GlobalController)->mutasi_jurnal();
 
-        $cek_saldo = Jurnal::where('jurnal_metode_bayar', $request->metode)->sum('jurnal_kredit') - Jurnal::where('jurnal_metode_bayar', $request->metode)->sum('jurnal_debet');
-
-        if ($cek_saldo >= $setting_biaya->biaya_psb + $setting_biaya->biaya_sales) {
+        if ($cek_saldo['saldo'] >= $request->jumlah) {
 
 
             $data['jurnal_id'] = time();
@@ -355,6 +353,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             $data['jurnal_penerima'] = $request->penerima;
             $data['jurnal_metode_bayar'] = $request->metode;
             $data['jurnal_debet'] = $request->jumlah;
+            $data['jurnal_saldo'] = $cek_saldo['saldo'] - $request->jumlah;
             $data['jurnal_status'] = 1;
 
             $photo = $request->file('file');
