@@ -71,13 +71,6 @@ class GlobalController extends Controller
         return $invoice;
     }
 
-
-    // public function laporan_harian($id)
-    // {
-
-
-    //     return $saldo;
-    // }
     public function total_mutasi($id)
     {
         $debet = Mutasi::where('mt_mts_id', $id)->sum('mt_debet');

@@ -10,6 +10,7 @@ use App\Models\Barang\supplier;
 use App\Models\Mitra\MitraSetting;
 use App\Models\Mitra\Mutasi;
 use App\Models\Pesan\Pesan;
+use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
@@ -152,6 +153,9 @@ class BillerController extends Controller
     public function payment()
     {
         $data['tittle'] = 'Payment';
+        $data['input_data'] = Invoice::select('input_data.*', 'input_data.id as idp', 'invoices.*')
+            ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->where('inv_status', '!=', 'PAID')->get();
         return view('biller/payment', $data);
     }
     public function paymentbytagihan($inv_id)

@@ -120,7 +120,7 @@ class InvoiceController extends Controller
 
         // $export = $invoice->get();
         // foreach ($export as $value) {
-        //     echo '<table><tr><td>'.$value->inv_nolayanan.'</td><td>'.$value->inv_nama.'</td><td>'.$value->inv_tgl_jatuh_tempo.'</td><td>https://ovallapp.com/storage/bukti-transfer/'.$value->inv_bukti_bayar.'</td></tr></table>';
+        //     echo '<table><tr><td>' . $value->inv_id . '</td><td>' . $value->inv_tgl_bayar . '</td><td>' . $value->akun_nama . '</td><td>' . $value->inv_total . '</td><td>' . $value->akun_nama . '</td></tr></table>';
         // }
         // dd('test');
         $data['data_invoice'] = $invoice->paginate(10);
@@ -829,106 +829,18 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     }
     public function test2()
     {
-        $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
-        $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->whereDate('inv_tgl_isolir', '<=', $data['now'])
-            ->where('inv_status', '!=', 'PAID')
-            ->where('inv_jenis_tagihan', '=', 'FREE')
-            ->first();
+        $jumlah_dipilih = 3000;
 
-        if ($data_pelanggan) {
-            $status = (new GlobalController)->whatsapp_status();
-            if ($status->wa_status == 'Enable') {
-                $pesan_group['status'] = '0';
-            } else {
-                $pesan_group['status'] = '10';
-            }
-
-            $pesan_group['ket'] = 'isolir otomatis';
-            $pesan_group['target'] = $data_pelanggan->input_hp;
-            $pesan_group['nama'] = $data_pelanggan->input_nama;
-            $pesan_group['pesan'] = '
-Pelanggan yang terhormat,
-Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya
-Agar dapat digunakan kembali dimohon untuk melakukan pembayaran tagihan sebagai berikut :
-
-No.Layanan : *' . $data_pelanggan->reg_nolayanan . '*
-Pelanggan : ' . $data_pelanggan->inv_nama . '
-Invoice : ' . $data_pelanggan->inv_id . '
-Jatuh Tempo : ' . $data_pelanggan->reg_tgl_jatuh_tempo . '
-Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama) . '*
-
---------------------
-Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*
-';
-            Pesan::create($pesan_group);
-
-            $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
-            $user = $data_pelanggan->router_username;
-            $pass = $data_pelanggan->router_password;
-            $API = new RouterosAPI();
-            $API->debug = false;
-            if ($data_pelanggan->reg_layanan == 'PPP') {
-                if ($API->connect($ip, $user, $pass)) {
-                    $cek_secret = $API->comm('/ppp/secret/print', [
-                        '?name' => $data_pelanggan->reg_username,
-                    ]);
-                    if ($cek_secret) {
-                        $API->comm('/ppp/secret/set', [
-                            '.id' => $cek_secret[0]['.id'],
-                            'comment' => 'ISOLIR OTOMATIS' == '' ? '' : 'ISOLIR OTOMATIS',
-                            'disabled' => 'yes',
-                        ]);
-
-                        Invoice::where('inv_id', $data_pelanggan->inv_id)->update([
-                            'inv_status' => 'ISOLIR',
-                        ]);
-                        Registrasi::where('reg_idpel', $data_pelanggan->inv_idpel)->update([
-                            'reg_status' => 'ISOLIR',
-                        ]);
-                        $cek_status = $API->comm('/ppp/active/print', [
-                            '?name' => $data_pelanggan->reg_username,
-                        ]);
-                        if ($cek_status) {
-                            $API->comm('/ppp/active/remove', [
-                                '.id' =>  $cek_status['0']['.id'],
-                            ]);
-                        }
-                    }
-                }
-            } elseif ($data_pelanggan->reg_layanan == 'HOTSPOT') {
-                if ($API->connect($ip, $user, $pass)) {
-                    $cek_secret = $API->comm('/ip/hotspot/user/print', [
-                        '?name' => $data_pelanggan->reg_username,
-                    ]);
-                    if ($cek_secret) {
-                        $API->comm('/ip/hotspot/user/set', [
-                            '.id' => $cek_secret[0]['.id'],
-                            'comment' => 'ISOLIR OTOMATIS' == '' ? '' : 'ISOLIR OTOMATIS',
-                            'disabled' => 'yes',
-                        ]);
-
-                        Invoice::where('inv_id', $data_pelanggan->inv_id)->update([
-                            'inv_status' => 'ISOLIR',
-                        ]);
-                        Registrasi::where('reg_idpel', $data_pelanggan->inv_idpel)->update([
-                            'reg_status' => 'ISOLIR',
-                        ]);
-                        $cek_status = $API->comm('/ip/hotspot/active/print', [
-                            '?name' => $data_pelanggan->reg_username,
-                        ]);
-                        if ($cek_status) {
-                            $API->comm('/ip/hotspot/active/remove', [
-                                '.id' =>  $cek_status['0']['.id'],
-                            ]);
-                        }
-                    }
-                }
-            }
-        }
+        for ($x = 0; $x < $jumlah_dipilih; $x++) {
+            echo rand(10, 99) . 'test';
+            // Invoice::create(
+            //     [
+            //         'inv_id' => time(),
+            //         'inv_status' => 'PAID',
+            //         'inv_nama' => rand(10, 99) . 'test',
+            //         'inv_nolayanan' => rand(10, 99),
+            //     ]
+            // );
+        };
     }
 }

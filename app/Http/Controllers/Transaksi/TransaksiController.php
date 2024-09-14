@@ -300,7 +300,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             $data['jurnal_keterangan'] = 'PINJAMAN KARYAWAN';
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
-            $data['jurnal_metode_bayar'] = $request->metode;
+            $data['jurnal_metode_bayar'] = 2;
             $data['jurnal_debet'] = $request->jumlah;
             $data['jurnal_saldo'] = $cek_saldo['saldo'] - $request->jumlah;
             $data['jurnal_status'] = 1;
@@ -351,7 +351,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             $data['jurnal_keterangan'] = $request->jenis;
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
-            $data['jurnal_metode_bayar'] = $request->metode;
+            $data['jurnal_metode_bayar'] = 2;
             $data['jurnal_debet'] = $request->jumlah;
             $data['jurnal_saldo'] = $cek_saldo['saldo'] - $request->jumlah;
             $data['jurnal_status'] = 1;
@@ -405,53 +405,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
         );
         return redirect()->route('admin.lap.jurnal')->with($notifikasi);
     }
-    public function store_jurnal_transfer(Request $request)
-    {
-        $metode1 = (new GlobalController)->setting_akun()->where('id', '=', $request->metode1)->first();
-        $metode2 = (new GlobalController)->setting_akun()->where('id', '=', $request->metode2)->first();
-        $tanggal = (new GlobalController)->tanggal();
-        $user = (new GlobalController)->user_admin();
-        $jurnal_id = time();
-        // $data['jurnal_id'] = $jurnal_id;
-        // $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
-        // $data['jurnal_uraian'] = 'Transfer ' . $metode1->akun_nama . ' Ke ' . $metode2->akun_nama;
-        // $data['jurnal_kategori'] = 'TRANSFER';
-        // $data['jurnal_keterangan'] = 'TRANSFER';
-        // $data['jurnal_admin'] = $user['user_id'];
-        // $data['jurnal_metode_bayar'] = $request->metode2;
-        // $data['jurnal_kredit'] = $request->jumlah;
-        // $data['jurnal_status'] = 10;
 
-        // // dd($data);
-        // $photo = $request->file('file');
-        // $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
-        // $path = 'bukti-transaksi/' . $filename;
-        // Storage::disk('public')->put($path, file_get_contents($photo));
-        // $data['jurnal_img'] = $filename;
-        // Jurnal::create($data);
-
-        // $data2['jurnal_id'] = $jurnal_id;
-        // $data2['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
-        // $data2['jurnal_uraian'] = 'Transfer ' . $metode1->akun_nama . ' Ke ' . $metode2->akun_nama;
-        // $data2['jurnal_kategori'] = 'TRANSFER';
-        // $data2['jurnal_keterangan'] = 'TRANSFER';
-        // $data2['jurnal_admin'] = $user['user_id'];
-        // $data2['jurnal_metode_bayar'] = $request->metode1;
-        // $data2['jurnal_debet'] = $request->jumlah;
-        // $data2['jurnal_status'] = 10;
-        // $data2['jurnal_img'] = $filename;
-        // Jurnal::create($data2);
-
-
-        $update['jurnal_status'] = 10;
-        $update['jurnal_id'] = $jurnal_id;
-        Jurnal::where('jurnal_status', '=', 1)->update($update);
-        $notifikasi = array(
-            'pesan' => 'Transfer Berhasil',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.lap.jurnal')->with($notifikasi);
-    }
     public function download_file($id)
     {
         $path = 'storage/bukti-transaksi/';
