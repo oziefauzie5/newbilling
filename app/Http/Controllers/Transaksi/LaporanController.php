@@ -213,18 +213,18 @@ class LaporanController extends Controller
             $update_data['lap_status'] = 1;
             $update_data['lap_id'] = $request->lap_id;
 
-            $jurnal['jurnal_id'] =  time();
-            $jurnal['jurnal_tgl'] =  $tgl;
-            $jurnal['jurnal_uraian'] =  'LAPORAN - ' . $nama_admin;
-            $jurnal['jurnal_kategori'] =  'PENDAPATAN';
-            $jurnal['jurnal_keterangan'] =  'LAPORAN';
-            $jurnal['jurnal_admin'] =  $id;
-            $jurnal['jurnal_kredit'] =  $request->total;
-            $jurnal['jurnal_metode_bayar'] =  2;
-            $jurnal['jurnal_status'] =  1;
+            // $jurnal['jurnal_id'] =  time();
+            // $jurnal['jurnal_tgl'] =  $tgl;
+            // $jurnal['jurnal_uraian'] =  'LAPORAN - ' . $nama_admin;
+            // $jurnal['jurnal_kategori'] =  'PENDAPATAN';
+            // $jurnal['jurnal_keterangan'] =  'LAPORAN';
+            // $jurnal['jurnal_admin'] =  $id;
+            // $jurnal['jurnal_kredit'] =  $request->total;
+            // $jurnal['jurnal_metode_bayar'] =  2;
+            // $jurnal['jurnal_status'] =  1;
             DataLaporan::create($data);
             Laporan::where('lap_status', '0')->where('lap_admin', $id)->update($update_data);
-            Jurnal::create($jurnal);
+            // Jurnal::create($jurnal);
 
 
             $notifikasi = [
@@ -379,6 +379,6 @@ class LaporanController extends Controller
             'pesan' => 'Menambah Pendapatan ' . $request->jenis . ' Berhasil',
             'alert' => 'success',
         );
-        return redirect()->route('admin.lap.jurnal')->with($notifikasi);
+        return redirect()->route('admin.inv.data_laporan')->with($notifikasi);
     }
 }

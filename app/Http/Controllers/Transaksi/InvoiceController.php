@@ -297,25 +297,25 @@ class InvoiceController extends Controller
         // dd($tampil->inv_tgl_jatuh_tempo);
 
 
-        $data_lap['lap_id'] = 0;
-        $data_lap['lap_tgl'] = $tgl_bayar;
+        // $data_lap['lap_id'] = 0;
+        // $data_lap['lap_tgl'] = $tgl_bayar;
 
-        $data_lap['lap_admin'] = $admin_user;
-        $data_lap['lap_cabar'] = $tampil->inv_cabar;
-        $data_lap['lap_kredit'] = 0;
-        $data_lap['lap_debet'] = $tampil->inv_total;
-        $data_lap['lap_adm'] = 0;
-        $data_lap['lap_jumlah_bayar'] = 0;
-        $data_lap['lap_keterangan'] = 'Rollback Invoice ' . $tampil->inv_id . ' ( ' . $tampil->inv_nama . ' )';
-        $data_lap['lap_akun'] = $tampil->inv_akun;
-        $data_lap['lap_idpel'] = $tampil->inv_idpel;
-        $data_lap['lap_jenis_inv'] = "PENGEMBALIAN SALDO";
-        $data_lap['lap_status'] = 0;
-        $data_lap['lap_img'] = "-";
-        Laporan::create($data_lap);
+        // $data_lap['lap_admin'] = $admin_user;
+        // $data_lap['lap_cabar'] = $tampil->inv_cabar;
+        // $data_lap['lap_kredit'] = 0;
+        // $data_lap['lap_debet'] = $tampil->inv_total;
+        // $data_lap['lap_adm'] = 0;
+        // $data_lap['lap_jumlah_bayar'] = 0;
+        // $data_lap['lap_keterangan'] = 'Rollback Invoice ' . $tampil->inv_id . ' ( ' . $tampil->inv_nama . ' )';
+        // $data_lap['lap_akun'] = $tampil->inv_akun;
+        // $data_lap['lap_idpel'] = $tampil->inv_idpel;
+        // $data_lap['lap_jenis_inv'] = "PENGEMBALIAN SALDO";
+        // $data_lap['lap_status'] = 0;
+        // $data_lap['lap_img'] = "-";
+        // Laporan::create($data_lap);
 
-        $update_lap['lap_inv'] = '';
-        Laporan::where('lap_inv', $id)->update($update_lap);
+        // $update_lap['lap_inv'] = '';
+        // Laporan::where('lap_inv', $id)->update($update_lap);
 
         $cek_role = DB::table('users')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')

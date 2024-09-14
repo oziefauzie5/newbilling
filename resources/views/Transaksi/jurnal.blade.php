@@ -8,7 +8,7 @@
         <div class="card">
           <div class="card-body p-3 text-center">
             <div class="h2 m-0" ><span id="show1" style="display:none">Rp. {{number_format($kredit)}}</span> </div>
-            <div class="text-muted mb-3">PENDAPATAN &nbsp; <i onclick="document.getElementById('show1').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
+            <div class="text-muted mb-3">PEMASUKAN &nbsp; <i onclick="document.getElementById('show1').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
           </div>
         </div>
       </div>
@@ -50,9 +50,9 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
   Reimburse Karyawan
 </button>
-{{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pendapatan">
-  Tambah Pemasukan
-</button> --}}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#TopUp">
+  TopUp
+</button>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pengeluaran">
   Pengeluaran
 </button>
@@ -293,18 +293,7 @@
                 @endforeach
               </select>
             </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Metode Pencairan</label>
-              <select class="form-control" name="metode" required>
-                <option value="">Pilih Metode</option>
-                @foreach ($setting_akun as $a)
-                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
+          </div>   
           <div class="col-sm-12">
             <div class="form-group">
               <label>Jumlah</label>
@@ -378,17 +367,6 @@
           </div>
           <div class="col-sm-12">
             <div class="form-group">
-              <label>Metode Pencairan</label>
-              <select class="form-control" name="metode" required>
-                <option value="">Pilih Metode</option>
-                @foreach ($setting_akun as $a)
-                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
               <label>Jumlah</label>
             <input type="number" class="form-control" value="0" name="jumlah" required>
             </div>
@@ -409,8 +387,8 @@
     </div>
   </div>
 </div>
-{{-- <!-- Modal pemasukan-->
-<div class="modal fade" id="pendapatan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal TopUp-->
+<div class="modal fade" id="TopUp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -420,36 +398,15 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{{route('admin.lap.store_add_jurnal')}}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('admin.lap.store_topup_jurnal')}}" method="POST" enctype="multipart/form-data">
           @csrf
           @method('POST')
         
         <div class="row">
           <div class="col-sm-12">
             <div class="form-group">
-              <label>Jenis Pemasukan</label>
-              <select class="form-control" name="jenis" required>
-                <option value="">Pilih Jenis Pemasukan</option>
-                <option value="VOUCHER">VOUCHER</option>
-                <option value="LAIN-LAIN">LAIN-LAIN</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
               <label>Uraian</label>
               <input type="text" class="form-control" value="" name="uraian" required>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Metode Pembayaran</label>
-              <select class="form-control" name="metode">
-                <option value="">Pilih Metode</option>
-                @foreach ($setting_akun as $a)
-                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
-                @endforeach
-              </select>
             </div>
           </div>
           <div class="col-sm-12">
@@ -473,7 +430,7 @@
       </div>
     </div>
   </div>
-</div> --}}
+</div>
 <form >
 <div class="row mb-1">
 
@@ -537,6 +494,7 @@
                   <th>AKUN</th>
                   <th>KREDIT</th>
                   <th>DEBET</th>
+                  <th>SALDO</th>
                   <th>BUKTI TRX</th>
                 </tr>
               </thead>
@@ -550,6 +508,7 @@
                       <td>{{$d->akun_nama}}</td>
                       <td>{{number_format($d->jurnal_kredit)}}</td>
                       <td>{{number_format($d->jurnal_debet)}}</td>
+                      <td>{{number_format($d->jurnal_saldo)}}</td>
                       <td>   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#bukti_trx{{$d->jurnal_id}}">
                         Lihat Bukti Transfer
                       </button>

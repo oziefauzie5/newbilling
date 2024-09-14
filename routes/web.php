@@ -131,7 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     // ------------PENCAIRAN PSB-----------------
     Route::get('/Transaksi/Operasional', [RegistrasiController::class, 'operasional'])->name('inv.operasional')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/Transaksi/Konfirm', [RegistrasiController::class, 'konfirm_pencairan'])->name('inv.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/Transaksi/Konfirm', [RegistrasiController::class, 'konfirm_pencairan'])->name('inv.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/Transaksi/laporan-harian', [LaporanController::class, 'index'])->name('inv.laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/buat-laporan', [LaporanController::class, 'buat_laporan'])->name('inv.buat_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/serah-terima', [LaporanController::class, 'serah_terima'])->name('inv.serah_terima')->middleware(['role:admin|STAF ADMIN']);
@@ -147,6 +147,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/Transaksi/reimbuse', [TransaksiController::class, 'store_jurnal_reimbuse'])->name('lap.store_jurnal_reimbuse')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/download-file/{id}', [TransaksiController::class, 'download_file'])->name('lap.download_file')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/pinjaman-karyawan', [TransaksiController::class, 'store_jurnal_kasbon'])->name('lap.store_jurnal_kasbon')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/Transaksi/topup-jurnal', [TransaksiController::class, 'store_topup_jurnal'])->name('lap.store_topup_jurnal')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/pinjaman', [TransaksiController::class, 'pinjaman'])->name('lap.pinjaman')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/transfer', [TransaksiController::class, 'store_jurnal_transfer'])->name('lap.store_jurnal_transfer')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/tutup-buku', [TransaksiController::class, 'jurnal_tutup_buku'])->name('lap.jurnal_tutup_buku')->middleware(['role:admin|STAF ADMIN']);

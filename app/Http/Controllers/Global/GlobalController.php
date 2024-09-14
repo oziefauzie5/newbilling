@@ -10,6 +10,7 @@ use App\Models\Mitra\Mutasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi\Invoice;
+use App\Models\Transaksi\Jurnal;
 use App\Models\Transaksi\Kendaraan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -84,6 +85,14 @@ class GlobalController extends Controller
         $saldo = $kredit - $debet;
 
         return $saldo;
+    }
+    public function mutasi_jurnal()
+    {
+        $data['debet'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_debet');
+        $data['kredit'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_kredit');
+        $data['saldo'] = $data['kredit'] - $data['debet'];
+
+        return $data;
     }
     public function data_tagihan($invoice)
     {

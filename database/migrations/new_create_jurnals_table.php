@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('jurnal_metode_bayar')->nullable();
             $table->string('jurnal_debet')->nullable();
             $table->string('jurnal_kredit')->nullable();
+            $table->integer('jurnal_saldo')->nullable();
             $table->string('jurnal_img')->nullable();
             $table->string('jurnal_status')->nullable();
             $table->timestamps();

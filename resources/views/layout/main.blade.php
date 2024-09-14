@@ -750,6 +750,9 @@
 			$('#pilih_data').DataTable({
 				"pageLength": 10,
 			});
+			$('#pencairan_list').DataTable({
+				"pageLength": 10,
+			});
 			$('#topup_list').DataTable({
 				"pageLength": 10,
 			});
@@ -1188,6 +1191,7 @@ $('#submit_cari_kode').click(function(e) {
 					$('#reg_sn').val('');
 					$('#reg_mrek').val('');
 					$('.ont').removeAttr('required');
+					
 				}
 			});
 			$('.hide_ont').click(function(){
@@ -1714,6 +1718,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			});
 		</script>
     <script>
+		//TOPUP
         document.getElementById('selectAllCheckbox')
                   .addEventListener('change', function () {
             let checkboxtopup = document.querySelectorAll('.checkboxtopup');
@@ -1775,6 +1780,83 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
                     success: function(data) {
 
 					window.location.href = data+"/admin/Transaksi/laporan-harian";
+                    }
+                });
+		});  
+			
+			
+			</script>
+    <script>
+		//pencairan
+        // document.getElementById('selectAllpencairan')
+        //           .addEventListener('change', function () {
+        //     let pencairan = document.querySelectorAll('.pencairan');
+        //     pencairan.forEach(function (checkbox) {
+        //         checkbox.checked = this.checked;
+        //     }, this);
+        // });
+		
+		let cb_pencairan = document.querySelectorAll(".cb_pencairan")
+let total_pencairan = document.getElementById("total_pencairan")
+let sum1 = 0
+for (let i = 0; i < cb_pencairan.length; i++) {
+  cb_pencairan[i].addEventListener("change", function(e) {    
+	// console.log(e.target.dataset.idpel)
+    if (cb_pencairan[i].checked != false) {
+      sum1 = sum1 +Number(e.target.dataset.price) 
+    } else {
+      sum1 =  sum1 -Number(e.target.dataset.price) 
+    }
+	let rupiah_pencairan = new Intl.NumberFormat('id-ID', {
+                              style: 'currency',minimumFractionDigits: 0,
+                              currency: 'IDR',
+                            }).format(sum1);
+    
+							total_pencairan.innerHTML = rupiah_pencairan
+    
+  })
+
+}
+				
+				$('.submit_pencairan').click(function(){  
+					var akun=$(".akun").val();
+					var penerima=$(".penerima").val();
+					var idpel = []; 
+					if(idpel==''){
+						$('#notif3').html('<small class="form-text text-muted text-danger">Setidaknya memilih 1 pencairan</small>');
+					}
+					if(akun==''){
+						$('#notif1').html('<small class="form-text text-muted text-danger">Metode Bayar tidak boleh kosong</small>');
+					} else{
+						$('#notif1').html('');
+					}
+
+					if(penerima==''){
+						$('#notif2').html('<small class="form-text text-muted text-danger">Penerima tidak boleh kosong</small>');
+					} else{
+						$('#notif2').html('');
+					}
+
+
+			var url = '{{ route("admin.inv.konfirm_pencairan") }}';
+			$('.cb_pencairan').each(function(){  
+					if(this.checked) {              
+						idpel.push($(this).val());                                                                               
+					}  
+				});                              
+
+				$.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: {
+						idpel:idpel,
+						penerima:penerima,
+						akun:akun,
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+console.log(data)
                     }
                 });
 		});  

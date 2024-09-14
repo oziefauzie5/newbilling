@@ -20,6 +20,7 @@ class Jurnal extends Model
         'jurnal_metode_bayar',
         'jurnal_debet',
         'jurnal_kredit',
+        'jurnal_saldo',
         'jurnal_img',
         'jurnal_status',
     ];
