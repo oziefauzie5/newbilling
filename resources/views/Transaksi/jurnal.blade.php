@@ -115,7 +115,7 @@
 </div>
 <!-- Modal transfer-->
 
-<!-- Modal Reimburse-->
+<!-- Modal PENGELUARAN-->
 <div class="modal fade" id="pengeluaran" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -126,7 +126,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{{route('admin.lap.store_jurnal_reimbuse')}}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('admin.lap.store_jurnal_pengeluaran')}}" method="POST" enctype="multipart/form-data">
           @csrf
           @method('POST')
         
