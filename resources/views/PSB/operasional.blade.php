@@ -29,9 +29,9 @@
           </div>
           @endif
            <!-- Button trigger modal -->
-                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_pencairan">
+                      {{-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_pencairan">
                         Konfirmasi
-                      </button><hr>
+                      </button><hr> --}}
 
                       <!-- Modal -->
                       <div class="modal fade" id="modal_pencairan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
