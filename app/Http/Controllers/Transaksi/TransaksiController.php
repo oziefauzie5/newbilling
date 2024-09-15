@@ -43,6 +43,7 @@ class TransaksiController extends Controller
 
         $query = Jurnal::select('jurnals.*', 'jurnals.created_at as tgl_trx', 'setting_akuns.*')
             ->join('setting_akuns', 'setting_akuns.id', '=', 'jurnals.jurnal_metode_bayar')
+            ->orderBy('tgl_trx', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('jurnal_uraian', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('jurnal_admin', 'like', '%' . $data['q'] . '%');

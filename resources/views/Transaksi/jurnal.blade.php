@@ -138,12 +138,13 @@
                 <option value="">Pilih Jenis Pengeluaran</option>
                 <option value="KOMSUMSI">KOMSUMSI</option>
                 <option value="PERLENGKAPAN">PERLENGKAPAN</option>
-                <option value="PERALATAN KANTOR">PERALATAN KANTOR</option>
+                <option value="PERALATAN">PERALATAN</option>
                 <option value="ATK">ATK</option>
                 <option value="LISTRIK">LISTRIK</option>
                 <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
                 <option value="PSB">PSB</option>
                 <option value="MARKETING">MARKETING</option>
+                <option value="LAIN-LAIN">LAIN-LAIN</option>
               </select>
             </div>
           </div>
