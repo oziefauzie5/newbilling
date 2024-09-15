@@ -151,6 +151,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/pinjaman', [TransaksiController::class, 'pinjaman'])->name('lap.pinjaman')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/jurnal-pencairan', [TransaksiController::class, 'store_jurnal_pencairan'])->name('lap.store_jurnal_pencairan')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/tutup-buku', [TransaksiController::class, 'jurnal_tutup_buku'])->name('lap.jurnal_tutup_buku')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/Transaksi/jurnal_pengeluaran', [TransaksiController::class, 'store_jurnal_pengeluaran'])->name('lap.store_jurnal_pengeluaran')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/data-laporan', [TransaksiController::class, 'data_laporan_mingguan'])->name('lap.data_laporan_mingguan')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/{id}/laporan-mingguan-print', [TransaksiController::class, 'jurnal_print'])->name('lap.jurnal_print')->middleware(['role:admin|STAF ADMIN']);
 

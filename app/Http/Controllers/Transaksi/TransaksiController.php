@@ -241,11 +241,11 @@ Periode : ' . date('d-m-Y', strtotime($data['startdate'])) . ' - ' . date('d-m-Y
 Pembuat Laporan : ' . $admin['user_nama'] . '
 Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
         $data['lm_status'] = 1;
-        $photo = $request->file('file');
-        $filename = $admin['user_nama'] . $photo->getClientOriginalName();
-        $path = 'bukti-transaksi/' . $filename;
-        Storage::disk('public')->put($path, file_get_contents($photo));
-        $data['lm_img'] = $filename;
+        // $photo = $request->file('file');
+        // $filename = $admin['user_nama'] . $photo->getClientOriginalName();
+        // $path = 'bukti-transaksi/' . $filename;
+        // Storage::disk('public')->put($path, file_get_contents($photo));
+        // $data['lm_img'] = $filename;
         LapMingguan::create($data);
 
         $update['jurnal_status'] = 10;

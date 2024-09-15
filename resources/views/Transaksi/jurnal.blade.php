@@ -97,12 +97,12 @@
               <input type="date" class="form-control" name="enddate">
             </div>
           </div>
-          <div class="col-sm-12">
+          {{-- <div class="col-sm-12">
             <div class="form-group">
               <label>Upload Bukti</label>
             <input type="file" name="file" class="form-control" required>
             </div>
-          </div>
+          </div> --}}
         </div>
       </div>
       <div class="modal-footer">
