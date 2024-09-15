@@ -1787,7 +1787,7 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
 			
 			</script>
     <script>
-		//pencairan
+		// pencairan
         // document.getElementById('selectAllpencairan')
         //           .addEventListener('change', function () {
         //     let pencairan = document.querySelectorAll('.pencairan');
@@ -1796,11 +1796,13 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
         //     }, this);
         // });
 		
+		////PENCAIRAN OPERASIONAL
 		let cb_pencairan = document.querySelectorAll(".cb_pencairan")
 let total_pencairan = document.getElementById("total_pencairan")
 let sum1 = 0
 for (let i = 0; i < cb_pencairan.length; i++) {
-  cb_pencairan[i].addEventListener("change", function(e) {    
+  cb_pencairan[i].addEventListener("change", function(e) {   
+	console.log(e.target.dataset.price) 
 	  if (cb_pencairan[i].checked != false) {
 		  sum1 = sum1 +Number(e.target.dataset.price) 
     } else {
@@ -1814,7 +1816,32 @@ for (let i = 0; i < cb_pencairan.length; i++) {
 							total_pencairan.innerHTML = rupiah_pencairan
 			
   })
-
+}
+		//////PENCAIRAN JURNAL
+		let jurnal_pencairan = document.querySelectorAll(".jurnal_pencairan")
+let pencairan_total = document.getElementById("pencairan_total")
+let sum2 = 0
+let result = "";
+for (let i = 0; i < jurnal_pencairan.length; i++) {
+  jurnal_pencairan[i].addEventListener("change", function(e) {   
+	  if (jurnal_pencairan[i].checked != false) {
+		//   console.log('e.target.nama : ' + JSON.stringify(e.target.dataset.nama))  
+		  result += e.target.dataset.nama
+                        + " " + ", ";
+		  sum2 = sum2 +Number(e.target.dataset.price) 
+    } else {
+      sum2 =  sum2 -Number(e.target.dataset.price) 
+    }
+	$("#uraian").val(result);
+	$("#jumlah").val(sum2);
+	let rupiah_pencairan = new Intl.NumberFormat('id-ID', {
+                              style: 'currency',minimumFractionDigits: 0,
+                              currency: 'IDR',
+                            }).format(sum2);
+							$(".pencairan_total").val();
+							pencairan_total.innerHTML = rupiah_pencairan
+			
+  })
 }
 
 				

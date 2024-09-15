@@ -1,3 +1,78 @@
+'''p;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;''''''''''''''''''''''''''''''''''''''''';]]]]]]]]]]]]][;p'cdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <?php
 
 namespace App\Http\Controllers\Transaksi;
@@ -5,6 +80,9 @@ namespace App\Http\Controllers\Transaksi;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Applikasi\SettingAkun;
+use App\Models\Pesan\Pesan;
+use App\Models\PSB\Registrasi;
+use App\Models\Teknisi\Teknisi;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Transaksi;
 use App\Models\Transaksi\Jurnal;
@@ -99,6 +177,16 @@ class TransaksiController extends Controller
         $data['user'] = (new GlobalController)->all_user()->get();
         $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'PEMBAYARAN')->get();
         $data['akun'] = (new GlobalController)->setting_akun()->where('id', '=', $data['akun'])->first();
+
+        // $data['data_user'] = (new GlobalController)->user_admin();
+        // $data['data_bank'] = (new GlobalController)->setting_akun()->where('id', '>', 1)->get();
+        $data['data_biaya'] = (new GlobalController)->setting_biaya();
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->orderBy('tgl', 'DESC')
+            ->where('registrasis.reg_progres', '=', 4);
+        $data['data_registrasi'] = $query->get();
 
         return view('Transaksi/jurnal', $data);
     }
@@ -375,6 +463,106 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             return redirect()->route('admin.lap.jurnal')->with($notifikasi);
         }
     }
+    public function store_jurnal_pencairan(Request $request)
+    {
+
+        $tanggal = (new GlobalController)->tanggal();
+        $user = (new GlobalController)->user_admin();
+        $cek_saldo = (new GlobalController)->mutasi_jurnal();
+        $biaya = (new GlobalController)->setting_biaya();
+        // dd($cek_saldo);
+
+        if ($cek_saldo['saldo'] >= $request->jumlah) {
+
+
+            $count = count($request->idpel);
+            $psb = $biaya->biaya_psb * $count;
+            $marketing = $biaya->biaya_sales * $count;
+
+            $data['jurnal_id'] = time();
+            $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+            $data['jurnal_uraian'] = 'Pencairan PSB oleh ' . $user['user_nama'] . ' Sebanyak ' . $count . ' Pelanggan';
+            $data['jurnal_kategori'] = 'PENGELUARAN';
+            $data['jurnal_keterangan'] = 'PSB';
+            $data['jurnal_admin'] = $user['user_id'];
+            $data['jurnal_penerima'] = $request->penerima;
+            $data['jurnal_metode_bayar'] = 2;
+            $data['jurnal_debet'] = $psb;
+            $data['jurnal_saldo'] = $cek_saldo['saldo'] - $psb;
+            $data['jurnal_status'] = 1;
+
+
+            $photo = $request->file('file');
+            $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+            $path = 'bukti-transaksi/' . $filename;
+            Storage::disk('public')->put($path, file_get_contents($photo));
+            $data['jurnal_img'] = $filename;
+            Jurnal::create($data);
+
+
+            $data1['jurnal_id'] = time();
+            $data1['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+            $data1['jurnal_uraian'] = 'Pencairan MARKETING oleh ' . $user['user_nama'] . ' Sebanyak ' . $count . ' Pelanggan';
+            $data1['jurnal_kategori'] = 'PENGELUARAN';
+            $data1['jurnal_keterangan'] = 'MARKETING';
+            $data1['jurnal_admin'] = $user['user_id'];
+            $data1['jurnal_penerima'] = $request->penerima;
+            $data1['jurnal_metode_bayar'] = 2;
+            $data1['jurnal_debet'] = $marketing;
+            $data1['jurnal_saldo'] = $cek_saldo['saldo'] - $marketing;
+            $data1['jurnal_status'] = 1;
+            $data1['jurnal_img'] = $filename;
+            Jurnal::create($data1);
+            Registrasi::where('reg_progres', '4')->whereIn('reg_idpel', $request->idpel)->update(['reg_progres' => '5']);
+            Teknisi::whereIn('teknisi_idpel', $request->idpel)->where('teknisi_status', '1')->where('teknisi_job', 'PSB')->update(
+                [
+                    'teknisi_keuangan_userid' => $user['user_id'],
+                    'teknisi_status' => 2,
+                ]
+            );
+
+            $status = (new GlobalController)->whatsapp_status();
+
+            if ($status->wa_status == 'Enable') {
+                $pesan_group['status'] = '0';
+            } else {
+                $pesan_group['status'] = '10';
+            }
+
+
+            $pesan_group['ket'] = 'pencairan';
+            $pesan_group['target'] = '0120363028776966861@g.us	';
+            $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
+            $pesan_group['pesan'] = '           -- PENCAIRAN DANA --
+
+Pencairan dana berhasil 😊
+
+Pelanggan : ' . $request->uraian . '
+Jumlah Pencairan : ' . $count . '
+
+Jumlah Pencairan : ' . number_format($request->jumlah) . '
+Waktu Pencairan : ' . date('Y-m-d H:m:s', strtotime($tanggal)) . '
+
+Dikeluarkan oleh: ' . $user['user_nama'] . '
+Diterima oleh: ' . $request->penerima . '
+
+    ';
+            Pesan::create($pesan_group);
+
+            $notifikasi = array(
+                'pesan' => 'Pencairan Berhasil',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.lap.jurnal')->with($notifikasi);
+        } else {
+            $notifikasi = array(
+                'pesan' => 'Saldo tidak cukup',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.lap.jurnal')->with($notifikasi);
+        }
+    }
+
     public function store_topup_jurnal(Request $request)
     {
         $cek_saldo = (new GlobalController)->mutasi_jurnal();

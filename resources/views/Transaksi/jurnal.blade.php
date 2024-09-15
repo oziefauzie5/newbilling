@@ -56,6 +56,9 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pengeluaran">
   Pengeluaran
 </button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pencairan">
+  Pencairan
+</button>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#kasbon">
   Kasbon
 </button>
@@ -64,9 +67,6 @@
 </button>
 <a href="{{route('admin.lap.data_laporan_mingguan')}}"><button type="button" class="btn btn-primary"> Data Laporan Mingguan</button></a>
 
-{{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#transfer">
-  Transfer
-</button> --}}
 <hr>
 
 <!-- Modal Tutup Bukui-->
@@ -114,65 +114,7 @@
   </div>
 </div>
 <!-- Modal transfer-->
-<div class="modal fade" id="transfer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">TRANSFER</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="{{route('admin.lap.store_jurnal_transfer')}}" method="POST" enctype="multipart/form-data">
-          @csrf
-          @method('POST')
-        
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Dari Rekening</label>
-              <select class="form-control" name="metode1" required>
-                <option value="">Pilih Metode</option>
-                @foreach ($setting_akun as $a)
-                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Transfer ke</label>
-              <select class="form-control" name="metode2" required>
-                <option value="">Pilih Metode</option>
-                @foreach ($setting_akun as $a)
-                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Jumlah</label>
-            <input type="number" class="form-control" value="{{$kredit-$debet}}" name="jumlah" readonly required>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Upload Bukti</label>
-            <input type="file" name="file" class="form-control" required>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Simpan</button>
-      </form>
-      </div>
-    </div>
-  </div>
-</div>
+
 <!-- Modal Reimburse-->
 <div class="modal fade" id="pengeluaran" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -234,6 +176,96 @@
             <input type="file" name="file" class="form-control" required>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Pencairan-->
+<div class="modal fade" id="pencairan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">PENCAIRAN OPERASIONAL</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.lap.store_jurnal_pencairan')}}" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('POST')
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  <div class="card-body p-3 text-center">
+                    <div class="h2 m-0 jt" id="pencairan_total">0</div>
+                    <div class="text-muted mb-3">JUMLAH PENCAIRAN</div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            <div class="table-responsive">
+              <table class="display table table-striped table-hover text-nowrap" >
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>No Layanan</th>
+                      <th>Nama</th>
+                      <th>Alamat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($data_registrasi as $d)
+                    <tr>
+                      <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-price="{{$data_biaya->biaya_psb+$data_biaya->biaya_sales}}"></td>
+                      <td>{{$d->reg_nolayanan}}</td>
+                      <td>{{$d->input_nama}}</td>
+                      <td>{{$d->input_alamat_pasang}}</td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+          </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Uraian</label>
+            <input type="text" class="form-control" id="uraian" value="" name="uraian" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Penerima</label>
+              <select name="penerima" id="" class="form-control penerima" required>
+                <option value="">PILIH PENERIMA</option>
+              @foreach($user as $u)
+              <option value="{{$u->id}}">{{$u->name}}</option>
+              @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Jumlah</label>
+            <input type="number" class="form-control" id="jumlah" value="0" name="jumlah" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Upload Bukti</label>
+            <input type="file" name="file" class="form-control" required>
+            </div>
+          </div>
+
         </div>
       </div>
       <div class="modal-footer">
