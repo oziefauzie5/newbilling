@@ -27,21 +27,6 @@ use Illuminate\Support\Facades\DB;
 
 class BillerController extends Controller
 {
-    // public function pembayaran()
-    // {
-
-    //     $data = array(
-    //         'tittle' => 'TRANSAKSI',
-    //         'data' => DB::table('unpaids')
-    //             ->join('registrasis', 'registrasis.id', '=', 'unpaids.upd_idpel')
-    //             ->join('pelanggans', 'pelanggans.idpel', '=', 'unpaids.upd_idpel')
-    //             ->join('pakets', 'pakets.paket_id', '=', 'pelanggans.paket')
-    //             ->where('unpaids.upd_status', '=', 'UNPAID')
-    //             ->where('unpaids.upd_status', '=', 'UNPAID')
-    //             ->get(),
-    //     );
-    //     return view('mitra/index', $data);
-    // }
 
     public function getpelanggan(Request $request, $id)
     {
@@ -70,25 +55,7 @@ class BillerController extends Controller
         }
         return response()->json($data);
     }
-    // public function getDataLunas(Request $request, $id)
-    // {
-    //     $admin_user = Auth::user()->id;
-    //     $data_bayar = array(
-    //         'data' => DB::table('unpaids')
-    //             ->join('registrasis', 'registrasis.id', '=', 'unpaids.upd_idpel')
-    //             ->join('pelanggans', 'pelanggans.idpel', '=', 'unpaids.upd_idpel')
-    //             ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'unpaids.upd_id')
-    //             ->where('unpaids.upd_status', '=', 'PAID')
-    //             ->where('unpaids.upd_id', '=', $id)
-    //             ->orWhere('unpaids.upd_nolayanan', '=', $id)
-    //             ->first(),
-    //         'sumharga' => SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'),
-    //         'sumppn' => SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'),
-    //         'biller' => MitraSetting::first(),
-    //         'saldo' => (new globalController)->total_mutasi($admin_user),
-    //     );
-    //     return response()->json($data_bayar);
-    // }
+
     public function print(Request $request, $id)
     {
         $admin_user = Auth::user()->id;
@@ -152,10 +119,16 @@ class BillerController extends Controller
     }
     public function payment()
     {
+        $tagihan_kedepan = Carbon::now()->addday(5)->format('Y-m-d');
+        $tagihan_kebelakang = Carbon::create($tagihan_kedepan)->addMonth(-1)->toDateString();
+
         $data['tittle'] = 'Payment';
         $data['input_data'] = Invoice::select('input_data.*', 'input_data.id as idp', 'invoices.*')
             ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            // ->whereDate('inv_tgl_jatuh_tempo', '>', $tagihan_kebelakang)
+            ->whereDate('inv_tgl_jatuh_tempo', '<=', $tagihan_kedepan)
             ->where('inv_status', '!=', 'PAID')->get();
+
         return view('biller/payment', $data);
     }
     public function paymentbytagihan($inv_id)
@@ -232,15 +205,37 @@ class BillerController extends Controller
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
             #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
 
+            $date1 = Carbon::createFromDate($data_pelanggan->inv_tgl_jatuh_tempo); // start date
+            $valid_date = Carbon::parse($date1)->toDateString();
+            $valid_date = date('Y.m.d\\TH:i', strtotime($valid_date));
+            $today = new \DateTime();
+            $today->setTime(0, 0, 0);
+
+            $match_date = \DateTime::createFromFormat("Y.m.d\\TH:i", $valid_date);
+            $match_date->setTime(0, 0, 0);
+
+            $diff = $today->diff($match_date);
+            $diffDays = (int)$diff->format("%R%a");
+
+
             $hari_jt_tempo = date('d', strtotime($data_pelanggan->reg_tgl_jatuh_tempo)); #new
             $hari_tgl_tagih = date('d', strtotime($data_pelanggan->reg_tgl_tagih)); #new
 
             $inv0_tagih = Carbon::create($year . '-' . $month . '-' . $hari_tgl_tagih)->addMonth(1)->toDateString(); #new
             $inv0_tagih0 = Carbon::create($inv0_tagih)->addDay(-2)->toDateString();
             $inv0_jt_tempo = Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString(); #new
-            $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
-            $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
-            $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+
+
+            if ($diffDays < -0) {
+                $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
+                $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+            } else {
+                $inv1_tagih = Carbon::create($data_pelanggan->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+                $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+            }
+
             if ($data_pelanggan->reg_inv_control == 0) {
                 $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
                 $reg['reg_tgl_tagih'] = $inv0_tagih0;
@@ -438,6 +433,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     {
         $tagihan_kedepan = Carbon::now()->addday(5)->format('Y-m-d');
         $tagihan_kebelakang = Carbon::create($tagihan_kedepan)->addMonth(-1)->toDateString();
+
 
         // dd($tagihan_kebelakang);
 

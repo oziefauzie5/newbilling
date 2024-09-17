@@ -275,12 +275,12 @@ class LaporanController extends Controller
             $query->where('users.name', '=', $data['adm']);
 
         $data['laporan'] = $query->get();
-        $data['pendapatan'] = $query->where('data_lap_status', 0)->sum('data_laporans.data_lap_pendapatan');
-        $data['refund'] = $query->where('data_lap_status', 0)->sum('data_laporans.data_lap_refund');
-        $data['biaya_adm'] = $query->where('data_lap_status', 0)->sum('data_laporans.data_lap_adm');
-        $data['sum_tunai'] = $query->where('data_lap_status', 0)->sum('data_laporans.data_lap_tunai');
-        $data['count_trx'] = $query->where('data_lap_status', 0)->sum('data_laporans.data_lap_trx');
-        $data['count_data'] = $query->where('data_lap_status', 0)->count();
+        $data['pendapatan'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_pendapatan');
+        $data['refund'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_refund');
+        $data['biaya_adm'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_adm');
+        $data['sum_tunai'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_tunai');
+        $data['count_trx'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_trx');
+        $data['count_data'] = $query->where('data_lap_status', 1)->count();
 
         return view('Transaksi/data_laporan', $data);
     }

@@ -456,8 +456,8 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             }
 
 
-            $pesan_group['ket'] = 'pencairan';
-            $pesan_group['target'] = '0120363028776966861@g.us	';
+            $pesan_group['ket'] = 'tiket';
+            $pesan_group['target'] = '120363028776966861@g.us';
             $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
             $pesan_group['pesan'] = '           -- PENCAIRAN DANA --
 

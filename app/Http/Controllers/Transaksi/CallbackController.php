@@ -90,6 +90,19 @@ class CallbackController extends Controller
                     #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
                     #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
 
+                    $date1 = Carbon::createFromDate($data_pelanggan->inv_tgl_jatuh_tempo); // start date
+                    $valid_date = Carbon::parse($date1)->toDateString();
+                    $valid_date = date('Y.m.d\\TH:i', strtotime($valid_date));
+                    $today = new \DateTime();
+                    $today->setTime(0, 0, 0);
+
+                    $match_date = \DateTime::createFromFormat("Y.m.d\\TH:i", $valid_date);
+                    $match_date->setTime(0, 0, 0);
+
+                    $diff = $today->diff($match_date);
+                    $diffDays = (int)$diff->format("%R%a");
+
+
                     $hari_jt_tempo = date('d', strtotime($data_pelanggan->reg_tgl_jatuh_tempo)); #new
                     $hari_tgl_tagih = date('d', strtotime($data_pelanggan->reg_tgl_tagih)); #new
 
@@ -98,9 +111,17 @@ class CallbackController extends Controller
                     $inv0_jt_tempo = Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString(); #new
 
 
-                    $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
-                    $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
-                    $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                    if ($diffDays < -0) {
+                        $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
+                        $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                        $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                    } else {
+                        $inv1_tagih = Carbon::create($data_pelanggan->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+                        $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                        $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                    }
+
+
                     if ($data_pelanggan->reg_inv_control == 0) {
                         $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
                         $reg['reg_tgl_tagih'] = $inv0_tagih0;
