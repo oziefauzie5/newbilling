@@ -546,11 +546,13 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     $cek_suplier = supplier::where('supplier_nama', 'ONT')->first();
                     if ($cek_subbarang) {
                         // JIKA ONT ADA 
-                        $update_barang['subbarang_status'] = '0';
+                        $update_barang['subbarang_status'] = '5';
                         $update_barang['subbarang_keluar'] = '0';
                         $update_barang['subbarang_stok'] = '1';
                         $update_barang['subbarang_mac'] = $request->reg_mac;
+                        $update_barang['subbarang_nama'] = 'ONT';
                         $update_barang['subbarang_keterangan'] = $keterangan;
+                        $update_barang['subbarang_deskripsi'] = 'Dalam Pengecekan';
                         $update_barang['subbarang_admin'] = $nama_admin;
                         SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
 
@@ -558,15 +560,16 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                             [
                                 "id_subbarang" => mt_rand(100000, 999999),
                                 "subbarang_idbarang" => '811170',
-                                "subbarang_nama" => $keterangan,
+                                "subbarang_nama" => 'ADAPTOR',
                                 "subbarang_keterangan" => $keterangan,
+                                "subbarang_deskripsi" => 'Dalam Pengecekan',
                                 "subbarang_ktg" => 'ADAPTOR',
                                 "subbarang_qty" => 1,
                                 "subbarang_keluar" => '0',
                                 "subbarang_stok" => 1,
                                 "subbarang_harga" => 0,
                                 "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '0',
+                                "subbarang_status" => '5',
                                 "subbarang_admin" => $nama_admin,
                             ]
                         );
@@ -618,15 +621,16 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                             [
                                 "id_subbarang" => mt_rand(100000, 999999),
                                 "subbarang_idbarang" => $id['subbarang_idbarang'],
-                                "subbarang_nama" => $keterangan,
+                                "subbarang_nama" => 'ONT',
                                 "subbarang_keterangan" => $keterangan,
+                                "subbarang_deskripsi" => 'Dalam Pengecekan',
                                 "subbarang_ktg" => 'ONT',
                                 "subbarang_qty" => 1,
                                 "subbarang_keluar" => '0',
                                 "subbarang_stok" => 1,
                                 "subbarang_harga" => 0,
                                 "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '0',
+                                "subbarang_status" => '5',
                                 "subbarang_mac" => $request->reg_mac,
                                 "subbarang_admin" => $nama_admin,
                             ]
@@ -636,15 +640,16 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                             [
                                 "id_subbarang" => mt_rand(100000, 999999),
                                 "subbarang_idbarang" => '811170',
-                                "subbarang_nama" => $keterangan,
+                                "subbarang_nama" => 'ADAPTOR',
                                 "subbarang_keterangan" => $keterangan,
+                                "subbarang_deskripsi" => 'Dalam Pengecekan',
                                 "subbarang_ktg" => 'ADAPTOR',
                                 "subbarang_qty" => 1,
                                 "subbarang_keluar" => '0',
                                 "subbarang_stok" => 1,
                                 "subbarang_harga" => 0,
                                 "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '0',
+                                "subbarang_status" => '5',
                                 "subbarang_admin" => $nama_admin,
                             ]
                         );

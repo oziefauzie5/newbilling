@@ -254,7 +254,6 @@
                             <option value="PUTUS LANGGANAN">PUTUS LANGGANAN</option>
                             <option value="PUTUS SEMENTARA">PUTUS SEMENTARA</option>
                           </select>
-                          {{-- <input type="text" class="form-control" name="reg_mac"  step="00.01" required maxlength="17" minlength="17" value=""> --}}
                         </div>
                       </div>
                   </div>

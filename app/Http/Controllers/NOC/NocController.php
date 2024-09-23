@@ -4,6 +4,7 @@ namespace App\Http\Controllers\NOC;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Barang\SubBarang;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
@@ -601,5 +602,39 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
             }
         }
+    }
+    public function pengecekan_barang()
+    {
+        $data['sub_barang'] = SubBarang::where('subbarang_status', 5)->get();
+        $data['count_antrian'] = SubBarang::where('subbarang_status', 5)->count();
+        return view('noc/pengecekan-barang', $data);
+    }
+    public function update_status_barang(Request $request, $id)
+    {
+        if ($request->ket == 'Rusak') {
+            $sub['subbarang_keterangan'] = $request->ket;
+            $sub['subbarang_status'] = '10';
+            $sub['subbarang_stok'] = '0';
+            $sub['subbarang_keluar'] = '0';
+        } elseif ($request->ket == 'Dalam Pengecekan') {
+            $sub['subbarang_keterangan'] = $request->ket;
+            $sub['subbarang_status'] = '5';
+            $sub['subbarang_stok'] = '1';
+            $sub['subbarang_keluar'] = '0';
+        } elseif ($request->ket == 'Barang Normal') {
+            $sub['subbarang_keterangan'] = $request->ket;
+            $sub['subbarang_status'] = '0';
+            $sub['subbarang_stok'] = '1';
+            $sub['subbarang_keluar'] = '0';
+        }
+        $sub['subbarang_deskripsi'] = $request->desk;
+
+        // dd($sub);
+        SubBarang::where('id_subbarang', $id)->update($sub);
+        $notifikasi = array(
+            'pesan' => 'Berhasil Update Status Barang',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.noc.pengecekan_barang')->with($notifikasi);
     }
 }

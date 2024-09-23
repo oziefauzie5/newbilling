@@ -106,6 +106,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
     Route::get('/noc', [NocController::class, 'index'])->name('noc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/{id}/Pengecekan', [NocController::class, 'pengecekan'])->name('noc.pengecekan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/noc/Pengecekan-barang', [NocController::class, 'pengecekan_barang'])->name('noc.pengecekan_barang')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/barang/update-subbarang-status/{id}', [NocController::class, 'update_status_barang'])->name('barang.update_status_barang')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/noc/{id}/Pengecekan-Done', [NocController::class, 'pengecekan_put'])->name('noc.pengecekan_put')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/noc/{id}/upload', [NocController::class, 'upload'])->name('noc.upload')->middleware(['role:admin|NOC|STAF ADMIN']);
 
@@ -195,7 +197,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/barang/Hapus/{id}', [BarangController::class, 'destroy'])->name('barang.destroy')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/barang/Hapus-sub-barang/{id}', [BarangController::class, 'destroy_subbarang'])->name('barang.destroy_subbarang')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/barang/input-subbarang/{id}', [BarangController::class, 'input_subbarang'])->name('barang.input_subbarang')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/barang/update-subbarang-status/{id}', [BarangController::class, 'update_status_barang'])->name('barang.update_status_barang')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/barang/Print-Kode/{id}', [BarangController::class, 'print_kode_barang'])->name('barang.print_kode')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/barang/pilih/{id}', [BarangController::class, 'cari_barang'])->name('barang.cari_barang')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/barang/barang-keluar', [BarangController::class, 'barang_keluar'])->name('barang.barang_keluar')->middleware(['role:admin|STAF ADMIN']);

@@ -187,71 +187,10 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
                 <button type="submit" class="btn btn-primary">Simpan</button>
               </form>
-              <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#status_barang{{$sub->id_subbarang}}">
-  Status Barang
-</button>
-
-
             </div>
       </div>
     </div>
   </div>
-
-  <!-- --------------------------------------------UBAH STATUS BARANG------------------------------------------ -->
-  <!-- Modal -->
-<div class="modal fade" id="status_barang{{$sub->id_subbarang}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <div class="form-row">
-      <form method="post" action="{{ route('admin.barang.update_status_barang',['id'=>$sub->id_subbarang]) }}" >
-      @csrf
-       @method('PUT')
-                 
-                  <div class="col">
-                    <label for="">ID Barang</label>
-                    <input type="text" class="form-control" name="idbarang" value="{{$sub->id_barang}}" readonly>
-                  </div>
-                  <div class="col">
-                    <label for="">Status Barang</label>
-                    <input type="text" class="form-control" value="{{$sub->subbarang_status}}" readonly>
-                  </div>
-                  <div class="col">
-                    <label for="">Stok Barang</label>
-                    <input type="text" class="form-control" value="{{$sub->subbarang_stok}}" readonly>
-                  </div>
-                  <div class="col-12">
-                    <label for="">Keterangan</label>
-                    <select name="ket" id="" class="form-control">
-                      <option value="Dalam Pengecekan">Dalam Pengecekan</option>
-                      <option value="Rusak">Rusak</option>
-                      <option value="Barang Normal">Barang Normal</option>
-                    </select>
-                  </div>
-                  <div class="col-12">
-                    <label for="">Deskripsi<strong class="text-danger">*</strong></label>
-                    <textarea type="text" class="form-control" id="desk" name="desk" value="{{$sub->subbarang_deskripsi}}" row="5" required></textarea>
-                    <div class="invalid-feedback">
-                        Keterangan tidak boleh kosong
-                    </div>
-                  </div>
-                </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
    <!-- --------------------------------------------------------------------------------HAPUS BARANG--------------------------------------------------- -->
    <div class="modal fade" id="hapus{{ $sub->id_subbarang }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

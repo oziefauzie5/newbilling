@@ -543,6 +543,11 @@
 										</a>
 									</li>
 									<li>
+										<a href="{{route('admin.noc.pengecekan_barang')}}">
+											<span class="sub-item">Pengecekan-barang</span>
+										</a>
+									</li>
+									<li>
 										<a href="{{route('admin.noc.index')}}">
 											<span class="sub-item">Remote</span>
 										</a>
