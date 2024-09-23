@@ -232,6 +232,7 @@
                     <select name="ket" id="" class="form-control">
                       <option value="Dalam Pengecekan">Dalam Pengecekan</option>
                       <option value="Rusak">Rusak</option>
+                      <option value="Barang Normal">Barang Normal</option>
                     </select>
                   </div>
                   <div class="col-12">

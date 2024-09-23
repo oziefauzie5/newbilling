@@ -192,4 +192,18 @@ Terima kasih.';
         // dd($data);
         return view('tiket/details_tiket', $data);
     }
+    public function export(Request $request)
+    {
+        $data['start_date'] = $request->query('start_date');
+        $data['end_date'] = $request->query('end_date');
+        $data['tiket'] = Tiket::select('tikets.*', 'tikets.created_at as tgl_buat')
+            ->whereDate('tikets.created_at', '>=', date('Y-m-d', strtotime($data['start_date'])))  
+            ->whereDate('tikets.created_at', '<=', date('Y-m-d', strtotime($data['end_date'])))
+            ->first();
+        // echo '<table><tr><td>' . $data['tiket']->tiket_pelanggan . '</td></tr></table>';
+        dd($data['tiket']->tiket_pelanggan);
+
+        // dd($data);
+        return view('tiket/details_tiket', $data);
+    }
 }

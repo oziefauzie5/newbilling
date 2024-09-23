@@ -14,7 +14,7 @@
           <div class="card-body">
             <button class="btn  btn-sm ml-auto m-1 btn-primary ">
               <i class="fa fa-plus"></i> HAPUS</button>
-            <button class="btn  btn-sm ml-auto m-1 btn-primary " >
+            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#export" >
               <i class="fa fa-plus"></i> EXPORT PDF</button>
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addpaket">
               <i class="fa fa-plus"></i> BUAT TIKET</button>
@@ -97,6 +97,43 @@
               </div>
             </div>
             <!-- end Modal buat tiket -->
+
+<!-- Modaln export tiket -->
+<div class="modal fade" id="export" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Export Tiket</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.tiket.export')}}" method="POST">
+          @csrf
+          @method('POST')
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label>Dari Tanggal</label>
+              <input type="date" class="form-control" name="start_date">
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group">
+              <label>Sampai Tanggal</label>
+              <input type="date" class="form-control" name="end_date">
+            </div>
+          </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Export Tiket</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
 <hr>
 
 

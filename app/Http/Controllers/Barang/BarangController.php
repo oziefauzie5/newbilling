@@ -181,6 +181,11 @@ class BarangController extends Controller
             $sub['subbarang_status'] = '5';
             $sub['subbarang_stok'] = '1';
             $sub['subbarang_keluar'] = '0';
+        } elseif ($request->ket == 'Barang Normal') {
+            $sub['subbarang_keterangan'] = $request->ket;
+            $sub['subbarang_status'] = '0';
+            $sub['subbarang_stok'] = '1';
+            $sub['subbarang_keluar'] = '0';
         }
         $sub['subbarang_deskripsi'] = $request->desk;
 

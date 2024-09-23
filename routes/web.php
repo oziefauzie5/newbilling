@@ -261,6 +261,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/tiket', [TiketController::class, 'index'])->name('tiket.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/tiket/{id}', [TiketController::class, 'details'])->name('tiket.details')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/tiket/store', [TiketController::class, 'store'])->name('tiket.store')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/tiket/export', [TiketController::class, 'export'])->name('tiket.export')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/tiket/{id}/cari', [TiketController::class, 'pilih_pelanggan'])->name('tiket.pilih_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     Route::get('/sales/index', [SalesController::class, 'index'])->name('sales.index')->middleware(['role:admin|STAF ADMIN']);
