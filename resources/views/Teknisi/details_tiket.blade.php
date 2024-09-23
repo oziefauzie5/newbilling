@@ -201,7 +201,7 @@
                       <div class="form-group row" id="validasi_ont">
                         <label class="col-sm-4 col-form-label">Kode Ont sebelumya</label>
                         <div class="col-sm-8">
-                          <input type="text"  name="kode_ont_lama" id="edit_kode_ont_lama"  value="{{ $tiket->reg_kode_ont}}" class="form-control"  >
+                          <input type="text"  name="kode_ont_lama" id="edit_kode_ont_lama"  value="{{ $tiket->reg_mac}}" class="form-control"  >
                         </div>
                       </div>
                       <div class="form-group row" id="edit_validasi_ont">
