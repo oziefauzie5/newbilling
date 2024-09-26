@@ -275,7 +275,7 @@ class BarangController extends Controller
                 "subbarang_stok" => $qty,
                 "subbarang_harga" => $request->harga,
                 "subbarang_tgl_masuk" => $request->subbarang_tgl_masuk,
-                "subbarang_status" => '0',
+                "subbarang_status" => '4',
             ];
         }
 

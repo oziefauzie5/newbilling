@@ -605,12 +605,16 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     }
     public function pengecekan_barang()
     {
-        $data['sub_barang'] = SubBarang::where('subbarang_status', 5)->get();
-        $data['count_antrian'] = SubBarang::where('subbarang_status', 5)->count();
+        $data['sub_barang'] = SubBarang::where('subbarang_status', '>=', 4)->where('subbarang_status', '<=', 5)->get();
+        $data['count_antrian'] = SubBarang::where('subbarang_status', '>=', 4)->where('subbarang_status', '<=', 5)->count();
         return view('noc/pengecekan-barang', $data);
     }
     public function update_status_barang(Request $request, $id)
     {
+        if ($request->mac) {
+            $sub['subbarang_mac'] = $request->mac;
+            $sub['subbarang_sn'] = $request->sn;
+        }
         if ($request->ket == 'Rusak') {
             $sub['subbarang_keterangan'] = $request->ket;
             $sub['subbarang_status'] = '10';
@@ -619,6 +623,11 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         } elseif ($request->ket == 'Dalam Pengecekan') {
             $sub['subbarang_keterangan'] = $request->ket;
             $sub['subbarang_status'] = '5';
+            $sub['subbarang_stok'] = '1';
+            $sub['subbarang_keluar'] = '0';
+        } elseif ($request->ket == 'QC') {
+            $sub['subbarang_keterangan'] = $request->ket;
+            $sub['subbarang_status'] = '4';
             $sub['subbarang_stok'] = '1';
             $sub['subbarang_keluar'] = '0';
         } elseif ($request->ket == 'Barang Normal') {

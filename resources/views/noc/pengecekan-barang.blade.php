@@ -33,7 +33,8 @@
                   <th>KODE BARANG</th>
                   <th>STATUS</th>
                   <th>TGL MASUK</th>
-                  <th>NAMA</th>
+                  <th>NAMA BARANG</th>
+                  <th>KATEGORI</th>
                   <th>KETERANGAN</th>
                   <th>DESKRIPSI</th>
                 </tr>
@@ -45,15 +46,17 @@
                       <td><button class="btn btn-block btn-primary btn-sm" data-toggle="modal" data-target="#status_barang{{$d->id_subbarang}}">Update</button></td>
                       <td>{{$d->subbarang_tgl_masuk}}</td>
                       <td>{{$d->subbarang_nama}}</td>
+                      <td>{{$d->subbarang_ktg}}</td>
                       <td>{{$d->subbarang_keterangan}}</td>
                       <td>{{$d->subbarang_deskripsi}}</td>
                     </tr>
+                   
                    <!-- Modal -->
 <div class="modal fade" id="status_barang{{$d->id_subbarang}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Quality Control</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -64,21 +67,31 @@
       @csrf
        @method('PUT')
                  
-                  <div class="col">
+                  <div class="col-4">
                     <label for="">ID Barang</label>
                     <input type="text" class="form-control" name="idbarang" value="{{$d->subbarang_idbarang}}" readonly>
                   </div>
-                  <div class="col">
+                  <div class="col-4">
                     <label for="">Status Barang</label>
                     <input type="text" class="form-control" value="{{$d->subbarang_status}}" readonly>
                   </div>
-                  <div class="col">
+                  <div class="col-4">
                     <label for="">Stok Barang</label>
                     <input type="text" class="form-control" value="{{$d->subbarang_stok}}" readonly>
                   </div>
+                  @if($d->subbarang_ktg == 'ONT')
+                    <div class="col-6">
+                      <label for="">Serial Number</label>
+                      <input type="text" class="form-control" name="sn" value="{{$d->subbarang_sn}}" required>
+                    </div>
+                    <div class="col-6">
+                      <label for="">Mac Address</label>
+                      <input type="text" class="form-control" name="mac" value="{{$d->subbarang_mac}}" required>
+                    </div>                      
+                  @endif
                   <div class="col-12">
                     <label for="">Keterangan</label>
-                    <select name="ket" id="" class="form-control">
+                    <select name="ket" id="" class="form-control" required>
                       <option value="Dalam Pengecekan">Dalam Pengecekan</option>
                       <option value="Rusak">Rusak</option>
                       <option value="Barang Retur">Barang Retur</option>
