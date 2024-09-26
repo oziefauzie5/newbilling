@@ -75,6 +75,12 @@
                     <div class="row">
                       <div class="col-sm-12">
                         <div class="form-group">
+                          <label>Id Pelanggan</label>
+                          <input id="id" type="text" class="form-control" name="id"value="{{ $idpela }}" readonly required>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group">
                           <label>Nama Lengkap</label>
                           <input id="input_nama" type="text" class="form-control" name="input_nama"placeholder="Nama Lengkap" value="{{ Session::get('input_nama') }}" required>
                           <input id="id" type="hidden" class="form-control" name="id"value="{{ rand(10000,99999) }}" required>

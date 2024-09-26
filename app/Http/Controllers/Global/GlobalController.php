@@ -7,6 +7,7 @@ use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWhatsapp;
 use App\Models\Mitra\Mutasi;
+use App\Models\PSB\InputData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi\Invoice;
@@ -203,6 +204,15 @@ class GlobalController extends Controller
         $string = substr($latest->inv_id, 2);
         // dd($bln . sprintf('%04d', $string + 1));    
         return $bln . sprintf('%04d', $string + 1);
+    }
+    function idpel()
+    {
+        $latest = InputData::latest()->first();
+        if (! $latest) {
+            return '0001';
+        }
+        $string = substr($latest->id, 2);
+        return sprintf('%05d', $latest->id + 1);
     }
 
     function data_kendaraan()

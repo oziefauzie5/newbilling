@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PSB;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Global\GlobalController;
 use App\Http\Controllers\NOC\NocController;
 use App\Imports\Import\InputDataImport;
 use App\Models\Applikasi\SettingBiaya;
@@ -182,6 +183,8 @@ class PsbController extends Controller
 
         //     }
         // dd('CILUKBA');
+        $data['idpela'] = (new GlobalController)->idpel();
+
         return view('PSB/list_input_data', $data);
     }
     public function edit_inputdata($id)
@@ -221,30 +224,45 @@ class PsbController extends Controller
             'input_hp.unique' => 'Nomor Whatsapp sudah terdaftar',
         ]);
         $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
-        InputData::create([
-            'input_tgl' => $data['input_tgl'],
-            'input_nama' => ucwords($request->input_nama),
-            'id' => $request->id,
-            'input_ktp' => $request->input_ktp,
-            'input_hp' => $nomorhp,
-            'input_email' => $request->input_email,
-            'input_alamat_ktp' => ucwords($request->input_alamat_ktp),
-            'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
-            'input_sales' => $request->input_sales,
-            'input_subseles' => ucwords($request->input_subseles),
-            'password' => Hash::make($request->input_hp),
-            'input_maps' => $request->input_maps,
-            'input_status' => 'INPUT DATA',
-            'input_keterangan' => $request->input_keterangan,
-        ]);
-        $notifikasi = [
-            'pesan' => 'Berhasil menambahkan Pelanggan',
-            'alert' => 'success',
-        ];
-        if ($request->input == 12) {
-            return redirect()->route('admin.sales.index')->with($notifikasi);
+
+        $cek_nohp = InputData::where('input_hp', $nomorhp)->count();
+
+        if ($cek_nohp == 0) {
+            InputData::create([
+                'input_tgl' => $data['input_tgl'],
+                'input_nama' => ucwords($request->input_nama),
+                'id' => $request->id,
+                'input_ktp' => $request->input_ktp,
+                'input_hp' => $nomorhp,
+                'input_email' => $request->input_email,
+                'input_alamat_ktp' => ucwords($request->input_alamat_ktp),
+                'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
+                'input_sales' => $request->input_sales,
+                'input_subseles' => ucwords($request->input_subseles),
+                'password' => Hash::make($request->input_hp),
+                'input_maps' => $request->input_maps,
+                'input_status' => 'INPUT DATA',
+                'input_keterangan' => $request->input_keterangan,
+            ]);
+            $notifikasi = [
+                'pesan' => 'Berhasil menambahkan Pelanggan',
+                'alert' => 'success',
+            ];
+            if ($request->input == 12) {
+                return redirect()->route('admin.sales.index')->with($notifikasi);
+            } else {
+                return redirect()->route('admin.psb.list_input')->with($notifikasi);
+            }
         } else {
-            return redirect()->route('admin.psb.list_input')->with($notifikasi);
+            $notifikasi = [
+                'pesan' => 'Nomor Hp sudah terdaftar',
+                'alert' => 'error',
+            ];
+            if ($request->input == 12) {
+                return redirect()->route('admin.sales.index')->with($notifikasi);
+            } else {
+                return redirect()->route('admin.psb.list_input')->with($notifikasi);
+            }
         }
     }
 
