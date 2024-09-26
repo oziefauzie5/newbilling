@@ -152,6 +152,7 @@
                   <th>JTH TEMPO</th>
                   <th>ISOLIR</th>
                   <th>INVOICE</th>
+                  <th>ID PEL</th>
                   <th>NO.LAYANAN</th>
                   <th>PELANGGAN</th>
                   <th>PROFILE</th>
@@ -186,6 +187,7 @@
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_jatuh_tempo))}}</td>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_isolir))}}</td>
                   <td>{{$d->inv_id}}</td>
+                      <td>{{$d->inv_idpel}}</td>
                       <td>{{$d->inv_nolayanan}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nama}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_profile}}</td>

@@ -21,6 +21,7 @@
 			}
 		});
 	</script>
+	   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
 
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="{{asset('atlantis/assets/css/bootstrap.min.css')}}">
@@ -736,6 +737,8 @@
 
 	<!-- Atlantis JS -->
 	<script src="{{asset('atlantis/assets/js/atlantis.min.js')}}"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 
 	<!-- Atlantis DEMO methods, don't include it in your project! -->
@@ -1915,6 +1918,14 @@ for (let i = 0; i < jurnal_pencairan.length; i++) {
                 });
 		});  
 			
+
+		$(function () {
+  $('.datepicker').datepicker({
+    language: "es",
+    autoclose: true,
+    format: "dd/mm/yyyy"
+  });
+});
 			
 			</script>
 		

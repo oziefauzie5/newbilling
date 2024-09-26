@@ -150,54 +150,54 @@ class BarangController extends Controller
         return $pdf->download('Rekap Barang.pdf');
     }
 
-    public function input_subbarang(Request $request, $id)
-    {
-        // dd($request->stok);
-        $sub['subbarang_stok'] = $request->stok;
-        if ($sub['subbarang_stok'] == '1') {
-            $sub['subbarang_keluar'] = '0';
-        } elseif ($sub['subbarang_stok'] == '0') {
-            $sub['subbarang_keluar'] = '1';
-        }
-        $sub['subbarang_keterangan'] = $request->ket;
-        $sub['subbarang_sn'] = $request->sn;
-        $sub['subbarang_mac'] = $request->mac;
-        SubBarang::where('id_subbarang', $id)->update($sub);
-        $notifikasi = array(
-            'pesan' => 'Berhasil input data',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.barang.sub_barang', ['id' => $request->idbarang])->with($notifikasi);
-    }
-    public function update_status_barang(Request $request, $id)
-    {
-        // if ($request->ket == 'Rusak') {
-        //     $sub['subbarang_keterangan'] = $request->ket;
-        //     $sub['subbarang_deskripsi'] = $request->ket;
-        //     $sub['subbarang_status'] = '10';
-        //     $sub['subbarang_stok'] = '0';
-        //     $sub['subbarang_keluar'] = '0';
-        // } elseif ($request->ket == 'Dalam Pengecekan') {
-        //     $sub['subbarang_keterangan'] = $request->ket;
-        //     $sub['subbarang_status'] = '5';
-        //     $sub['subbarang_stok'] = '1';
-        //     $sub['subbarang_keluar'] = '0';
-        // } elseif ($request->ket == 'Barang Normal') {
-        //     $sub['subbarang_keterangan'] = $request->ket;
-        //     $sub['subbarang_status'] = '0';
-        //     $sub['subbarang_stok'] = '1';
-        //     $sub['subbarang_keluar'] = '0';
-        // }
-        // $sub['subbarang_deskripsi'] = $request->desk;
+    // public function input_subbarang(Request $request, $id)
+    // {
+    //     // dd($request->stok);
+    //     $sub['subbarang_stok'] = $request->stok;
+    //     if ($sub['subbarang_stok'] == '1') {
+    //         $sub['subbarang_keluar'] = '0';
+    //     } elseif ($sub['subbarang_stok'] == '0') {
+    //         $sub['subbarang_keluar'] = '1';
+    //     }
+    //     $sub['subbarang_keterangan'] = $request->ket;
+    //     $sub['subbarang_sn'] = $request->sn;
+    //     $sub['subbarang_mac'] = $request->mac;
+    //     SubBarang::where('id_subbarang', $id)->update($sub);
+    //     $notifikasi = array(
+    //         'pesan' => 'Berhasil input data',
+    //         'alert' => 'success',
+    //     );
+    //     return redirect()->route('admin.barang.sub_barang', ['id' => $request->idbarang])->with($notifikasi);
+    // }
+    // public function update_status_barang(Request $request, $id)
+    // {
+    // if ($request->ket == 'Rusak') {
+    //     $sub['subbarang_keterangan'] = $request->ket;
+    //     $sub['subbarang_deskripsi'] = $request->ket;
+    //     $sub['subbarang_status'] = '10';
+    //     $sub['subbarang_stok'] = '0';
+    //     $sub['subbarang_keluar'] = '0';
+    // } elseif ($request->ket == 'Dalam Pengecekan') {
+    //     $sub['subbarang_keterangan'] = $request->ket;
+    //     $sub['subbarang_status'] = '5';
+    //     $sub['subbarang_stok'] = '1';
+    //     $sub['subbarang_keluar'] = '0';
+    // } elseif ($request->ket == 'Barang Normal') {
+    //     $sub['subbarang_keterangan'] = $request->ket;
+    //     $sub['subbarang_status'] = '0';
+    //     $sub['subbarang_stok'] = '1';
+    //     $sub['subbarang_keluar'] = '0';
+    // }
+    // $sub['subbarang_deskripsi'] = $request->desk;
 
-        // // dd($sub);
-        // SubBarang::where('id_subbarang', $id)->update($sub);
-        // $notifikasi = array(
-        //     'pesan' => 'Berhasil Update Status Barang',
-        //     'alert' => 'success',
-        // );
-        // return redirect()->route('admin.barang.sub_barang', ['id' => $request->idbarang])->with($notifikasi);
-    }
+    // // dd($sub);
+    // SubBarang::where('id_subbarang', $id)->update($sub);
+    // $notifikasi = array(
+    //     'pesan' => 'Berhasil Update Status Barang',
+    //     'alert' => 'success',
+    // );
+    // return redirect()->route('admin.barang.sub_barang', ['id' => $request->idbarang])->with($notifikasi);
+    // }
 
 
     public function store(Request $request)

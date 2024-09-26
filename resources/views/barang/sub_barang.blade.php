@@ -130,67 +130,7 @@
       </div>
     </div>
   </div>
-                    {{-- ----------------------------------------------------------MODAL BARANG KELUAR------------------------------------------------------- --}}
-  <div class="modal fade" id="input{{$sub->id_subbarang}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Input Barang Keluar</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form method="post" action="{{ route('admin.barang.input_subbarang',['id'=>$sub->id_subbarang]) }}" >
-                @csrf
-                @method('PUT')
-                <div class="form-row">
-                <div class="col-2">
-                    <label for="">ID Barang<strong class="text-danger">*</strong></label>
-                    <input type="text" class="form-control" value="{{$sub->id_barang}}" name="idbarang"  readonly>
-                  </div>
-                <div class="col-2">
-                    <label for="">Stok<strong class="text-danger">*</strong></label>
-                    <input type="number" class="form-control" value="{{$sub->subbarang_stok}}" max="1" name="stok" readonly>
-                  </div>
-                  <div class="col">
-                    <label for="">Supplier<strong class="text-danger">*</strong></label>
-                    <input type="text" class="form-control" value="{{$sub->supplier_nama}}" readonly>
-                  </div>
-                  <div class="col">
-                    <label for="">ID SubBarang<strong class="text-danger">*</strong></label>
-                    <input type="text" name="id_subbarang" class="form-control" value="{{$sub->id_subbarang}}" readonly>
-                    <div class="invalid-feedback">
-                        Kategori belum terpilih
-                    </div>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="col-4">
-                    <label for="">Serial Number</label>
-                    <input type="text" class="form-control" name="sn" value="{{$sub->subbarang_sn}}" >
-                  </div>
-                  <div class="col-4">
-                    <label for="">Mac Address</label>
-                    <input type="text" class="form-control" name="mac" value="{{$sub->subbarang_mac}}" >
-                  </div>
-                  <div class="col">
-                    <label for="">Keterangan<strong class="text-danger">*</strong></label>
-                    <input type="text" class="form-control" id="ket" name="ket" value="{{$sub->subbarang_keterangan}}" required>
-                    <div class="invalid-feedback">
-                        Keterangan tidak boleh kosong
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
-                <button type="submit" class="btn btn-primary">Simpan</button>
-              </form>
-            </div>
-      </div>
-    </div>
-  </div>
+               
 
    <!-- --------------------------------------------------------------------------------HAPUS BARANG--------------------------------------------------- -->
    <div class="modal fade" id="hapus{{ $sub->id_subbarang }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -220,7 +160,7 @@
                           <td><i class="fas fa-trash" data-toggle="modal" data-target="#hapus{{ $sub->id_subbarang }}"></i>&nbsp;&nbsp;</td>
                           @endrole
                           <td>{{$sub->subbarang_idbarang}}</td>
-                          <td class="text-bold text-primary" data-toggle="modal" data-target="#input{{$sub->id_subbarang}}">{{$sub->id_subbarang}}</td>
+                          <td >{{$sub->id_subbarang}}</td>
                           <td>{{$sub->subbarang_ktg}}</td>
                           <td>{{$sub->subbarang_mac}}</td>
                           <td>{{$sub->subbarang_keterangan}}</td>
