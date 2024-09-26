@@ -65,6 +65,7 @@
               <thead>
                 <tr>
                   <th>INVOICE</th>
+                  <th>ID PEL</th>
                   <th>ACTION</th>
                   <th>TGL JTH TEMPO</th>
                   <th>TGL BAYAR</th>
@@ -86,6 +87,7 @@
                 @foreach ($data_invoice as $d)
                 <tr>
                   <td class="href_inv" data-id="{{$d->inv_id}}" >INV-{{$d->inv_id}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id}}" >INV-{{$d->inv_idpel}}</td>
                   <td>
                     <div class="form-button-action">
                       <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->inv_id}}" class="btn btn-link btn-danger">
