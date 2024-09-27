@@ -1923,9 +1923,77 @@ for (let i = 0; i < jurnal_pencairan.length; i++) {
   $('.datepicker').datepicker({
     language: "es",
     autoclose: true,
-    format: "dd/mm/yyyy"
+    format: "dd-mm-yyyy",
   });
 });
+		$(function () {
+  $('.update_datepicker').datepicker({
+    language: "es",
+    autoclose: true,
+    format: "dd-mm-yyyy",
+	startDate: '+1d',
+	endDate: '+15d'
+  });
+});
+
+
+
+
+$("#update-tgl").change(function() {
+    var d = $(this).datepicker("getDate");
+	var date =new Date(d).toLocaleDateString("es-CL");
+	var month = d.getMonth() + 1;
+
+	var now = new Date();
+	var month_now = now.getMonth() + 1;
+    
+	
+	if(month > month_now ){
+var status = month-month_now; 
+	}
+//awal
+var id=$("#tampil_idpel").val();
+var tagihan=$("#biaya-tagihan").val();
+// console.log(id);
+var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
+    url = url.replace(':id', id);
+                $.ajax({
+                  url: url,
+                  type: 'PUT',
+                  data: {
+                    date:date,
+                    status:status,
+                          '_token': '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+
+							let rupiahFormat = new Intl.NumberFormat('id-ID', {
+								style: 'currency',minimumFractionDigits: 0,
+                              	currency: 'IDR',
+                            }).format(data['total_bayar']);
+							$("#total_biaya").html(rupiahFormat);
+							$("#rincian").html(data['rincian']);
+							$("#total_biaya_val").val(data['total_bayar']);
+							$("#biaya").val(data['biaya']);
+							$("#hari").val(data['hari']);
+							$("#update_ppn").val(data['update_ppn']);
+							$("#status").val(data['status']);//jika status 1 maka tidak ditambah addons melainkan di rubah harga
+				            }
+				});
+
+
+
+
+
+//akhir
+});
+
+// $('.update-tgl').on('click',function(){
+//                 //Run ajax fetch here
+                 
+//                 console.log("All ok");
+//             });
 			
 			</script>
 		

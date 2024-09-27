@@ -305,9 +305,12 @@ class PsbController extends Controller
         return redirect()->route('admin.psb.list_input')->with($notifikasi);
     }
 
+
+
     public function edit_pelanggan($id)
     {
-
+        $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
+        // dd($data['tgl_akhir']);
         $status_inet = (new NocController)->status_inet($id);
         // dd($status_inet['status']);
         $data['input_data'] = InputData::all();

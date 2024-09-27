@@ -178,7 +178,124 @@ class RegistrasiApiController extends Controller
         return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id]);
     }
 
+    public function get_update_tgl_tempo(Request $request, $id)
+    {
+        $sbiaya = SettingBiaya::first();
+        $date1 = Carbon::createFromDate($request->date); // start date
 
+        $valid_date = Carbon::parse($date1)->toDateString();
+        $valid_date = date('Y.m.d\\TH:i', strtotime($valid_date));
+        $today = new \DateTime();
+        $today->setTime(0, 0, 0);
+
+        $match_date = \DateTime::createFromFormat("Y.m.d\\TH:i", $valid_date);
+        $match_date->setTime(0, 0, 0);
+
+        $diff = $today->diff($match_date);
+        $diffDays = (int)$diff->format("%R%a");
+
+        $query = Registrasi::where('registrasis.reg_idpel', $id)
+            ->first();
+
+        $biaya_perhari = ($query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama) / 30;
+        $harga = $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama;
+        $addons = $diffDays * $biaya_perhari;
+        // $query->reg_kode_unik
+        if ($query->reg_ppn > 0) {
+            $ppn_addons = $sbiaya->biaya_ppn / 100 * $addons;
+            $ppn = $query->reg_ppn;
+        } else {
+            $ppn = 0;
+        }
+
+        // return response()->json($biaya_perhari);
+        if ($diffDays >= 1) {
+            if ($request->status >= 1) {
+                $data['total_bayar'] = $addons + $query->reg_ppn;
+                $data['rincian'] = number_format($biaya_perhari) . ' x ' . $diffDays . ' + PPN ' . number_format($query->reg_ppn);
+                $data['status'] = $request->status;
+                $data['hari'] = $diffDays;
+                $data['biaya'] = $biaya_perhari;
+                $data['update_ppn'] = $ppn_addons;
+                $data['update_ppn_total'] = $ppn;
+            } else {
+                $data['total_bayar'] = $harga +  $addons + $ppn_addons + $ppn;
+                $data['rincian'] = 'Rp. ' . number_format($biaya_perhari) . ' x ' . $diffDays . ' = Rp. ' . number_format($biaya_perhari * $diffDays) . ' + PPN Rp. ' . number_format($ppn_addons) . ' = Rp. ' . number_format($biaya_perhari * $diffDays + $ppn_addons);
+                $data['status'] = 0;
+                $data['hari'] = $diffDays;
+                $data['biaya'] = $biaya_perhari;
+                $data['update_ppn'] = $ppn_addons;
+                $data['update_ppn_total'] = $ppn;
+            }
+            return response()->json($data);
+        } else {
+            $data['total_bayar'] = 0;
+            $data['rincian'] = '-';
+            return response()->json($data);
+        }
+    }
+
+    public function update_tgl_jth_tempo(Request $request, $id)
+    {
+        $cek_hari = date('d', strtotime($request->reg_tgl_jatuh_tempo));
+        $swaktu = SettingWaktuTagihan::first();
+        if ($cek_hari == 31) {
+            $jeda_waktu = '0';
+        } elseif ($cek_hari == 30) {
+            $jeda_waktu = '0';
+        } else {
+            $jeda_waktu = $swaktu->wt_jeda_isolir_hari;
+        }
+        $tgl_isolir = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay($jeda_waktu)->toDateString();
+        $tgl_penagihan = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay(-2)->toDateString();
+
+        $unp = Invoice::where('inv_idpel', $id)->latest('inv_tgl_jatuh_tempo')->first();
+        if ($unp) {
+            if ($request->status == 0) {
+                // $unp = Invoice::where('inv_id', $id)->first();
+                $data['subinvoice_id'] = $unp->inv_id;
+                $data['subinvoice_deskripsi'] = 'Perubahan jatuh tempo ';
+                $data['subinvoice_qty'] = $request->hari;
+                $data['subinvoice_harga'] = $request->biaya;
+                $data['subinvoice_ppn'] = $request->update_ppn;
+                $data['subinvoice_total'] = ($request->biaya * $request->hari) + $request->update_ppn;
+                $data['subinvoice_status'] = '1';
+                SubInvoice::create($data);
+                $update_data['subinvoice_deskripsi'] = date('d-m-Y', strtotime($request->tgl_update)) . ' - ' . date('d-m-Y', strtotime(Carbon::create($request->tgl_update)->addMonth(1)->toDateString()));
+                SubInvoice::where('subinvoice_id', $unp->inv_id)->update($update_data);
+                $upd['inv_total'] =  $unp->inv_total + $request->update_ppn + ($request->biaya * $request->hari);
+                $upd['inv_tgl_jatuh_tempo'] =  date('Y-m-d', strtotime($request->tgl_update));
+                $upd['inv_tgl_isolir'] =  date('Y-m-d', strtotime($tgl_isolir));
+                $upd['inv_tgl_tagih'] =  date('Y-m-d', strtotime($tgl_penagihan));
+                Invoice::where('inv_id', $unp->inv_id)->update($upd);
+
+                $data_reg['reg_tgl_tagih'] = date('Y-m-d', strtotime($tgl_penagihan));
+                $data_reg['reg_tgl_jatuh_tempo'] = date('Y-m-d', strtotime($request->reg_tgl_jatuh_tempo));
+                Registrasi::where('reg_idpel', $id)->update($data_reg);
+                $notifikasi = array(
+                    'pesan' => 'Berhasil update tanggal ',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            } else {
+                $data['subinvoice_id'] = $unp->inv_id;
+                $data['subinvoice_deskripsi'] = 'Perubahan jatuh tempo ';
+                $data['subinvoice_qty'] = $request->hari;
+                $data['subinvoice_harga'] = $request->biaya;
+                $data['subinvoice_ppn'] = $request->update_ppn;
+                $data['subinvoice_total'] = ($request->biaya * $request->hari) + $request->update_ppn;
+                $data['subinvoice_status'] = '1';
+                $upd['inv_total'] =  $unp->inv_total + $request->update_ppn + ($request->biaya * $request->hari);
+                SubInvoice::create($data);
+                Invoice::where('inv_id', $unp->inv_id)->update($upd);
+                $notifikasi = array(
+                    'pesan' => 'Berhasil update tanggal ',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            }
+        }
+    }
 
 
     public function update_profile(Request $request, $id)
@@ -248,10 +365,10 @@ class RegistrasiApiController extends Controller
         // ------------------------
 
         // if ($diffDays < -0) {
-        //     dd($diffDays.' SUSPEND');
-        // } else{
-        //     dd($diffDays.' UNPAID');
-        // } 
+        //     dd($diffDays . ' SUSPEND');
+        // } else {
+        //     dd($diffDays . ' UNPAID');
+        // }
         // dd($diffDays);
 
         $paid_periode = date('d-m-Y', strtotime(Carbon::create($dikurang_1_bulan)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($dikurang_1_bulan)->addMonth(1)->toDateString()));
@@ -338,10 +455,10 @@ class RegistrasiApiController extends Controller
 
 
 
-                                $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                $update_inv['inv_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
+                                $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
-                                $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {
@@ -417,10 +534,10 @@ class RegistrasiApiController extends Controller
                                 }
 
 
-                                $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                $update_inv['inv_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
+                                $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
-                                $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {
@@ -541,10 +658,10 @@ class RegistrasiApiController extends Controller
                             }
 
 
-                            $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                            $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                            $update_inv['inv_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
+                            $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                             $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
-                            $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                            $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                             SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                             Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                         } else {
@@ -651,10 +768,10 @@ class RegistrasiApiController extends Controller
                                 }
 
 
-                                $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                $update_inv['inv_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
+                                $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
-                                $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {
@@ -734,10 +851,10 @@ class RegistrasiApiController extends Controller
                                 }
 
 
-                                $update_inv['inv_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
-                                $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                $update_inv['inv_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
+                                $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
-                                $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_kode_unik + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerja_sama;
+                                $update_subinv['subinvoice_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 SubInvoice::where('subinvoice_id', $cek_invid->inv_id)->update($update_subinv);
                                 Invoice::where('inv_id', $cek_invid->inv_id)->update($update_inv);
                             } else {

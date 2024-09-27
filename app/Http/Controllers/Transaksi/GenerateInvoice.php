@@ -99,16 +99,16 @@ class GenerateInvoice extends Controller
                     'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
                     'inv_tgl_isolir' => $tgl_isolir,
                     'inv_periode' => $periode1blan,
-                    'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                    'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
                 ]);
 
                 SubInvoice::create(
                     [
                         'subinvoice_id' => $inv_id,
                         'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
-                        'subinvoice_harga' => $dp->reg_harga + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                        'subinvoice_harga' => $dp->reg_harga + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
                         'subinvoice_ppn' => $dp->reg_ppn,
-                        'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                        'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
                         'subinvoice_qty' => 1,
                         'subinvoice_status' => 0,
                     ]
@@ -165,7 +165,7 @@ class GenerateInvoice extends Controller
                     // $test['inv_tgl_jatuh_tempo'] = $tgl_jt_tempo;
                     // $test['inv_tgl_isolir'] = $tgl_isolir;
                     // $test['inv_periode'] = $periode1blan;
-                    // $test['inv_total'] = $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama;
+                    // $test['inv_total'] = $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama;
 
                     // dd($test);
 
@@ -175,14 +175,14 @@ class GenerateInvoice extends Controller
                         'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
                         'inv_tgl_isolir' => $tgl_isolir,
                         'inv_periode' => $periode1blan,
-                        'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                        'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
                     ]);
                     SubInvoice::where('subinvoice_id', $inv->inv_id)->update(
                         [
                             'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
-                            'subinvoice_harga' => $dp->reg_harga + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                            'subinvoice_harga' => $dp->reg_harga + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
                             'subinvoice_ppn' => $dp->reg_ppn,
-                            'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_kode_unik + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                            'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
                             'subinvoice_qty' => 1,
                             'subinvoice_status' => 0,
                         ]

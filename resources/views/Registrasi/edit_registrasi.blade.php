@@ -717,137 +717,142 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group row">
-                  <div class="col">
-
-                  <!-- Button trigger modal -->
-<button type="button" class="btn btn-dark btn-block btn-sm" data-toggle="modal" data-target="#ubah_tgl">
-  Rubah Tanggal Jatuh Tempo
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="ubah_tgl" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Rubah Tanggal Jatuh Tempo</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label>Tanggal Jatuh Tempo</label>
-                <div class="input-group">
-                  <input type="text" class="form-control" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}">
-                  <div class="input-group-append">
-                  </div>
-                </div>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label>Update Tanggal</label>
-                <div class="datepicker date input-group">
-                  <input type="text" placeholder="Choose Date" class="form-control" id="fecha1" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}">
-                  <div class="input-group-append">
-                  </div>
-                </div>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Tagihan</label>
-                  <input type="text" class="form-control" value="{{number_format($data->reg_harga+$data->reg_kode_unik + $data->reg_ppn + $data->reg_dana_kas + $data->reg_dana_kerjasama)}}">
-                </div>
-            </div>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-                </div>
-                  <div class="col">
-
-                  <!-- Button trigger modal -->
-<button type="button" class="btn btn-info btn-block btn-sm" data-toggle="modal" data-target="#ubah_tgl">
-  Pindah Rumah
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="ubah_tgl" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Rubah Tanggal Jatuh Tempo</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label>Tanggal Jatuh Tempo</label>
-                <div class="input-group">
-                  <input type="text" class="form-control" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}">
-                  <div class="input-group-append">
-                  </div>
-                </div>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label>Update Tanggal</label>
-                <div class="datepicker date input-group">
-                  <input type="text" placeholder="Choose Date" class="form-control" id="fecha1" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}">
-                  <div class="input-group-append">
-                  </div>
-                </div>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Tagihan</label>
-                  <input type="text" class="form-control" value="{{number_format($data->reg_harga+$data->reg_kode_unik + $data->reg_ppn + $data->reg_dana_kas + $data->reg_dana_kerjasama)}}">
-                </div>
-            </div>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-                </div>
- 
-              </div>
-              <div class="form-group row">
-                  <div class="col">
-                  <a href="{{route('admin.noc.isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Isolir Manual</button></a>
-                </div>
-                <div class="col">
-                  
-                  <a href="{{route('admin.noc.buka_isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Buka Isolir Manual</button></a>
-                </div>
-              </div>
-              <div class="card-footer">
-                <button type="button" class="btn  ">Batal</button>
+              <div class="card-footer mb-3">
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
               </div>
             </form>
+              <div class="form-group row mt-5">
+              <div class="col">
+                <a href="{{route('admin.noc.isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Isolir Manual</button></a>
+              </div>
+              <div class="col">
+                
+                <a href="{{route('admin.noc.buka_isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Buka Isolir Manual</button></a>
+              </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+
+                <!-- Button trigger modal -->
+<button type="button" class="btn btn-dark btn-block btn-sm" data-toggle="modal" data-target="#ubah_tgl">
+Update Tanggal Jatuh Tempo
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="ubah_tgl" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Update Tanggal Jatuh Tempo</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal"action="{{route('admin.psb.update_tgl_jth_tempo',['id'=>$data->reg_idpel])}}" method="POST">
+        @csrf
+        @method('PUT')
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Tanggal Jatuh Tempo</label>
+              <div class="input-group">
+                <input type="text" class="form-control" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}" readonly>
+                <div class="input-group-append">
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Update Tanggal aa</label>
+              <div class="input-group">
+                <input type="text" placeholder="Choose Date" class="form-control update_datepicker" id="update-tgl" value="" name="reg_tgl_jatuh_tempo">
+                <div class="input-group-append">
+                </div>
+              </div>
+          </div>
+        </div>
+        <input type="text" id="total_biaya_val" name="total_biaya">
+        <input type="text" id="status" name="status">
+        <input type="text" id="biaya" name="biaya">
+        <input type="text" id="hari" name="hari">
+        <input type="text" id="update_ppn" name="update_ppn" value="">
+        <div class="col-sm-12">
+         <h4 class="text-center">Rincian Biaya</h4>
+         <h3 class="text-center" id="rincian"> - </h3>
+          </div>
+        <div class="col-sm-12">
+         <h3 class="text-center">TOTAL PEMBAYARAN</h3>
+         <h1 class="text-center" id="total_biaya">Rp. 0</h1>
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Save changes</button>
+    </div>
+  </form>
+  </div>
+</div>
+</div>
+
+              </div>
+                <div class="col">
+
+                <!-- Button trigger modal -->
+<button type="button" class="btn btn-info btn-block btn-sm" data-toggle="modal" data-target="#ubah_tgl">
+Pindah Rumah
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="ubah_tgl" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Rubah Tanggal Jatuh Tempo</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Tanggal Jatuh Tempo</label>
+              <div class="input-group">
+                <input type="text" class="form-control" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}">
+                <div class="input-group-append">
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Update Tanggal</label>
+                <input type="text" placeholder="Choose Date" class="form-control" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}">
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label>Tagihan</label>
+                <input type="text" class="form-control" value="{{number_format($data->reg_harga+$data->reg_kode_unik + $data->reg_ppn + $data->reg_dana_kas + $data->reg_dana_kerjasama)}}">
+              </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" id="update-tgl">Simpan</button>
+    </div>
+  </div>
+</div>
+</div>
+
+              </div>
+
+            </div>
             </div>
           </div>
         </div>
