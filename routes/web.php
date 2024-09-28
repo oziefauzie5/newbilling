@@ -107,7 +107,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/noc', [NocController::class, 'index'])->name('noc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/{id}/Pengecekan', [NocController::class, 'pengecekan'])->name('noc.pengecekan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/Pengecekan-barang', [NocController::class, 'pengecekan_barang'])->name('noc.pengecekan_barang')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/barang/update-subbarang-status/{id}', [NocController::class, 'update_status_barang'])->name('barang.update_status_barang')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/barang/update-subbarang-status/{id}', [NocController::class, 'update_status_barang'])->name('barang.update_status_barang')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/{id}/Pengecekan-Done', [NocController::class, 'pengecekan_put'])->name('noc.pengecekan_put')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/noc/{id}/upload', [NocController::class, 'upload'])->name('noc.upload')->middleware(['role:admin|NOC|STAF ADMIN']);
 
