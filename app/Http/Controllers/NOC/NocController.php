@@ -616,32 +616,32 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             $sub['subbarang_sn'] = $request->sn;
         }
         if ($request->ket == 'Rusak') {
-            $sub['subbarang_keterangan'] = $request->ket;
+            // $sub['subbarang_keterangan'] = $request->ket;
             $sub['subbarang_status'] = '10';
             $sub['subbarang_stok'] = '1';
             $sub['subbarang_keluar'] = '0';
         } elseif ($request->ket == 'Dalam Pengecekan') {
-            $sub['subbarang_keterangan'] = $request->ket;
+            // $sub['subbarang_keterangan'] = $request->ket;
             $sub['subbarang_status'] = '5';
             $sub['subbarang_stok'] = '1';
             $sub['subbarang_keluar'] = '0';
         } elseif ($request->ket == 'QC') {
-            $sub['subbarang_keterangan'] = $request->ket;
+            // $sub['subbarang_keterangan'] = $request->ket;
             $sub['subbarang_status'] = '4';
             $sub['subbarang_stok'] = '1';
             $sub['subbarang_keluar'] = '0';
         } elseif ($request->ket == 'Barang Normal') {
-            $sub['subbarang_keterangan'] = $request->ket;
+            // $sub['subbarang_keterangan'] = $request->ket;
             $sub['subbarang_status'] = '0';
             $sub['subbarang_stok'] = '1';
             $sub['subbarang_keluar'] = '0';
         } elseif ($request->ket == 'Barang Retur') {
-            $sub['subbarang_keterangan'] = $request->ket;
+            // $sub['subbarang_keterangan'] = $request->ket;
             $sub['subbarang_status'] = '6';
             $sub['subbarang_stok'] = '1';
             $sub['subbarang_keluar'] = '0';
         }
-        $sub['subbarang_deskripsi'] = $request->desk;
+        $sub['subbarang_deskripsi'] = $request->ket . ' | ' . $request->desk;
 
         // dd($sub);
         SubBarang::where('id_subbarang', $id)->update($sub);

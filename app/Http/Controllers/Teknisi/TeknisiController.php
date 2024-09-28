@@ -797,6 +797,7 @@ Penanganan yang kami lakukan :
             $update_adaptor['subbarang_stok'] = '0';
             $update_adaptor['subbarang_keterangan'] = ' Ganti Adaptor ' . $tiket->input_nama;
             $update_adaptor['subbarang_deskripsi'] = $tindakan;
+            $update_adaptor['subbarang_admin'] = $teknisi_nama;
             $update_adaptor['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
             SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
@@ -806,6 +807,7 @@ Penanganan yang kami lakukan :
             $update_pactcore['subbarang_keluar'] = '1';
             $update_pactcore['subbarang_stok'] = '0';
             $update_pactcore['subbarang_deskripsi'] = $tindakan;
+            $update_pactcore['subbarang_admin'] = $teknisi_nama;
             $update_pactcore['subbarang_keterangan'] = ' Ganti Pactcore ' . $tiket->input_nama;
             $update_pactcore['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
 
@@ -815,6 +817,7 @@ Penanganan yang kami lakukan :
             $update_dropcore['subbarang_keluar'] = $request->total_dropcore;
             $update_dropcore['subbarang_stok'] = $request->after_dropcore;
             $update_dropcore['subbarang_deskripsi'] = $tindakan;
+            $update_dropcore['subbarang_admin'] = $teknisi_nama;
 
             SubBarang::where('id_subbarang', $request->kode_dropcore)->update($update_dropcore);
         }
@@ -833,11 +836,13 @@ Penanganan yang kami lakukan :
                     $update_barang['subbarang_stok'] = '0';
                     $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' Pel. ' . $tiket->input_nama . ' Karna Rusak.';
                     $update_barang['subbarang_deskripsi'] = $tindakan;
+                    $update_barang['subbarang_admin'] = $teknisi_nama;
                     $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
                     $update_barang_lama['subbarang_keterangan'] = $request->alasan;
                     $update_barang_lama['subbarang_stok'] = '0';
                     $update_barang_lama['subbarang_status'] = '5';
                     $update_barang_lama['subbarang_keluar'] = '1';
+                    $update_barang_lama['subbarang_admin'] = $teknisi_nama;
                     Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
                     SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
@@ -852,9 +857,11 @@ Penanganan yang kami lakukan :
                     $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $cek_subbarang->id_subbarang . ' Pel. ' . $tiket->input_nama;
                     $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
                     $update_barang['subbarang_deskripsi'] = $tindakan;
+                    $update_barang['subbarang_admin'] = $teknisi_nama;
                     $update_barang_lama['subbarang_status'] = '5';
                     $update_barang_lama['subbarang_keluar'] = '0';
                     $update_barang_lama['subbarang_stok'] = '1';
+                    $update_barang_lama['subbarang_admin'] = $teknisi_nama;
                     $update_barang_lama['subbarang_keterangan'] = $request->alasan;
                     Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
                     SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
@@ -868,11 +875,13 @@ Penanganan yang kami lakukan :
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
                     $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+                    $update_barang['subbarang_admin'] = $teknisi_nama;
 
                     $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $cek_subbarang->id_subbarang . ' Pel. ' . $tiket->input_nama . '.';
                     $update_barang_lama['subbarang_status'] = '5';
                     $update_barang_lama['subbarang_keluar'] = '0';
                     $update_barang_lama['subbarang_stok'] = '1';
+                    $update_barang_lama['subbarang_admin'] = $teknisi_nama;
 
                     $update_barang_lama['subbarang_keterangan'] = $request->alasan;
                     Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
@@ -936,7 +945,7 @@ Penanganan yang kami lakukan :
                 $create['subbarang_tgl_masuk'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
                 $create['subbarang_status'] = '5';
                 $create['subbarang_mac'] = $request->reg_mac;
-                $create['subbarang_admin'] = '-s';
+                $create['subbarang_admin'] = $teknisi_nama;
                 SubBarang::create($create);
 
                 if ($request->alasan == 'Rusak') {
@@ -947,6 +956,7 @@ Penanganan yang kami lakukan :
                     $update_barang['subbarang_status'] = '1';
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
+                    $update_barang['subbarang_admin'] = $teknisi_nama;
                     $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $id_subbar . ' Pel. ' . $tiket->input_nama . ' Karna Rusak.';
                     $update_barang['subbarang_deskripsi'] = $tindakan;
                     $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
@@ -954,6 +964,7 @@ Penanganan yang kami lakukan :
                     $update_barang_lama['subbarang_stok'] = '0';
                     $update_barang_lama['subbarang_status'] = '5';
                     $update_barang_lama['subbarang_keluar'] = '1';
+                    $update_barang_lama['subbarang_admin'] = $teknisi_nama;
                     Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
                     SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
@@ -966,11 +977,13 @@ Penanganan yang kami lakukan :
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
                     $update_barang['subbarang_keterangan'] = 'Tukar ONT ' . $id_subbar . ' Pel. ' . $tiket->input_nama;
+                    $update_barang['subbarang_admin'] = $teknisi_nama;
                     $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
                     $update_barang['subbarang_deskripsi'] = $tindakan;
                     $update_barang_lama['subbarang_status'] = '5';
                     $update_barang_lama['subbarang_keluar'] = '0';
                     $update_barang_lama['subbarang_stok'] = '1';
+                    $update_barang_lama['subbarang_admin'] = $teknisi_nama;
                     $update_barang_lama['subbarang_keterangan'] = $request->alasan;
                     Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
                     SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);
@@ -984,12 +997,12 @@ Penanganan yang kami lakukan :
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
                     $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-
+                    $update_barang['subbarang_admin'] = $teknisi_nama;
                     $update_barang['subbarang_keterangan'] = 'Upgrade ONT ' . $id_subbar . ' Pel. ' . $tiket->input_nama . '.';
                     $update_barang_lama['subbarang_status'] = '5';
                     $update_barang_lama['subbarang_keluar'] = '0';
                     $update_barang_lama['subbarang_stok'] = '1';
-
+                    $update_barang_lama['subbarang_admin'] = $teknisi_nama;
                     $update_barang_lama['subbarang_keterangan'] = $request->alasan;
                     Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
                     SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);

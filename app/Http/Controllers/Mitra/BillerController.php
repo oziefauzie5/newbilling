@@ -498,10 +498,10 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             ->where('registrasis.reg_idpel', $idpel)->first();
 
         if ($request->status == 'PUTUS LANGGANAN') {
-            $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
+            $keterangan = 'PB - ' . strtoupper($query->input_nama);
             $progres = '100';
         } else {
-            $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
+            $keterangan = 'PS  - ' . strtoupper($query->input_nama);
             $progres = '90';
         }
 

@@ -52,7 +52,6 @@
                           <div class="col-sm-12">
                             <div class="form-group">
                               <label>Pilih file (EXCEL,CSV)</label>
-                              {{-- <input type="text" name="test"> --}}
                               <input type="file" class="form-control" name="file" required>
                             </div>
                           </div>

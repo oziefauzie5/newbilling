@@ -76,10 +76,12 @@ class BarangController extends Controller
     }
     public function barang_keluar(Request $request)
     {
+        $admin_nama = Auth::user()->name;
         if ($request->id_subbarang) {
             $data['subbarang_stok'] = '0';
             $data['subbarang_status'] = '1';
             $data['subbarang_keluar'] = '1';
+            $data['subbarang_admin'] = $admin_nama;
             $data['subbarang_keterangan'] = $request->subbarang_keterangan;
             $data['subbarang_deskripsi'] = $request->subbarang_deskripsi;
             $data['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
@@ -386,11 +388,12 @@ class BarangController extends Controller
     public function barang_import(Request $request)
     {
         // dd($request->test);
+        // dd('cek1');
         Excel::import(new barangimport(), $request->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        return redirect()->route('admin.barang.index')->with($notifikasi);
     }
 }
