@@ -350,6 +350,11 @@
 											<span class="sub-item">Putus Berlangganan</span>
 										</a>
 									</li>
+									<li>
+										<a href="{{route('admin.psb.listmac_bermasalah')}}">
+											<span class="sub-item">Mac Bermasalah</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</li>

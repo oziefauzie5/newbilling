@@ -119,6 +119,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
     Route::get('/pelanggan', [PsbController::class, 'index'])->name('psb.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/putus-langganan', [PsbController::class, 'listputus_langganan'])->name('psb.listputus_langganan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/pelanggan/mac_bermaslah', [PsbController::class, 'listmac_bermasalah'])->name('psb.listmac_bermasalah')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/pelanggan/update-mac_bermaslah/{idpel}', [PsbController::class, 'update_mac'])->name('psb.update_mac')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/sambung-kembali/{idpel}', [RegistrasiController::class, 'sambung_kembali'])->name('psb.sambung_kembali')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/List-Input-Data', [PsbController::class, 'list_input'])->name('psb.list_input')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/Validasi/{ktp}', [PsbController::class, 'storeValidateKtp'])->name('psb.storeValidateKtp')->middleware(['role:admin|NOC|STAF ADMIN']);

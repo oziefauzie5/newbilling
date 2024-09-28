@@ -429,7 +429,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Mac perangkat</label>
                 <div class="col-sm-4">
-                  <input type="text" name="reg_mac" id="edit_reg_mac"  class="form-control edit_ont" value="{{ $data->reg_mac}}" readonly >
+                  <input type="text" name="reg_mac" id="edit_reg_mac"  class="form-control edit_ont" minlength="17" maxlength="17"  value="{{ $data->reg_mac}}" >
                 </div>
                 <label class=" col-sm-2 col-form-label" >SN perangkat</label>
               <div class="col-sm-4">

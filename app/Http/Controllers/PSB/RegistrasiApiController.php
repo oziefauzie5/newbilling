@@ -94,6 +94,8 @@ class RegistrasiApiController extends Controller
     }
 
 
+
+
     public function update_pelanggan(Request $request, $id)
     {
         $nama_admin = Auth::user()->name;
@@ -178,182 +180,63 @@ class RegistrasiApiController extends Controller
 
         if ($request->kode_ont) {
             $cek_subbarang = SubBarang::where('subbarang_mac', $request->kode_ont_lama)->first();
-            $cek_suplier = supplier::where('supplier_nama', 'ONT')->first();
-            if ($cek_subbarang) {
-                // JIKA ONT ADA 
-                if ($request->alasan == 'Rusak') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
-                    $update_barang['subbarang_status'] = '1';
-                    $update_barang['subbarang_keluar'] = '1';
-                    $update_barang['subbarang_stok'] = '0';
-                    $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
-                    $update_barang['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
-                    $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-                    $update_barang_lama['subbarang_keterangan'] = $request->alasan;
-                    $update_barang_lama['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna Rusak.';
-                    $update_barang_lama['subbarang_stok'] = '0';
-                    $update_barang_lama['subbarang_status'] = '5';
-                    $update_barang_lama['subbarang_keluar'] = '1';
-                    Registrasi::where('reg_idpel', $id)->update($data);
-                    SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
-                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-                } elseif ($request->alasan == 'Tukar') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
-                    $update_barang['subbarang_status'] = '1';
-                    $update_barang['subbarang_keluar'] = '1';
-                    $update_barang['subbarang_stok'] = '0';
-                    $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-                    $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
-                    $update_barang['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
-                    $update_barang_lama['subbarang_status'] = '5';
-                    $update_barang_lama['subbarang_keluar'] = '0';
-                    $update_barang_lama['subbarang_stok'] = '1';
-                    $update_barang_lama['subbarang_keterangan'] = $request->alasan;
-                    Registrasi::where('reg_idpel', $id)->update($data);
-                    SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
-                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-                } elseif ($request->alasan == 'Upgrade') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
-                    $update_barang['subbarang_status'] = '1';
-                    $update_barang['subbarang_keluar'] = '1';
-                    $update_barang['subbarang_stok'] = '0';
-                    $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-                    $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
-                    $update_barang['subbarang_deskripsi'] = $nama_admin . ' Upgrade Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
-                    $update_barang_lama['subbarang_status'] = '5';
-                    $update_barang_lama['subbarang_keluar'] = '0';
-                    $update_barang_lama['subbarang_stok'] = '1';
 
-                    $update_barang_lama['subbarang_keterangan'] = $request->alasan;
-                    Registrasi::where('reg_idpel', $id)->update($data);
-                    SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
-                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-                }
-            } else {
-                // JIKA ONT TIDAK ADA
-                // BUAT DAFTAR ONT BARU
-                // BUAT DENGAN NAMA SUPLIER ONT TARIKAN
-                // CEK SUDAH ADA ATAU BELUM NAMA SUPLIER ONT TARIKAN
+            if ($request->alasan == 'Rusak') {
+                $data['reg_sn'] = $request->edit_reg_sn;
+                $data['reg_mac'] = $request->edit_reg_mac;
+                $data['reg_mrek'] = $request->edit_reg_mrek;
+                $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                $update_barang['subbarang_status'] = '1';
+                $update_barang['subbarang_keluar'] = '1';
+                $update_barang['subbarang_stok'] = '0';
+                $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
+                $update_barang['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
+                $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+                $update_barang_lama['subbarang_keterangan'] = $request->alasan;
+                $update_barang_lama['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna Rusak.';
+                $update_barang_lama['subbarang_stok'] = '0';
+                $update_barang_lama['subbarang_status'] = '5';
+                $update_barang_lama['subbarang_keluar'] = '1';
+                Registrasi::where('reg_idpel', $id)->update($data);
+                SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+            } elseif ($request->alasan == 'Tukar') {
+                $data['reg_sn'] = $request->edit_reg_sn;
+                $data['reg_mac'] = $request->edit_reg_mac;
+                $data['reg_mrek'] = $request->edit_reg_mrek;
+                $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                $update_barang['subbarang_status'] = '1';
+                $update_barang['subbarang_keluar'] = '1';
+                $update_barang['subbarang_stok'] = '0';
+                $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+                $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
+                $update_barang['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
+                $update_barang_lama['subbarang_status'] = '5';
+                $update_barang_lama['subbarang_keluar'] = '0';
+                $update_barang_lama['subbarang_stok'] = '1';
+                $update_barang_lama['subbarang_keterangan'] = $request->alasan;
+                Registrasi::where('reg_idpel', $id)->update($data);
+                SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+            } elseif ($request->alasan == 'Upgrade') {
+                $data['reg_sn'] = $request->edit_reg_sn;
+                $data['reg_mac'] = $request->edit_reg_mac;
+                $data['reg_mrek'] = $request->edit_reg_mrek;
+                $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                $update_barang['subbarang_status'] = '1';
+                $update_barang['subbarang_keluar'] = '1';
+                $update_barang['subbarang_stok'] = '0';
+                $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+                $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
+                $update_barang['subbarang_deskripsi'] = $nama_admin . ' Upgrade Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
+                $update_barang_lama['subbarang_status'] = '5';
+                $update_barang_lama['subbarang_keluar'] = '0';
+                $update_barang_lama['subbarang_stok'] = '1';
 
-
-
-                if ($cek_suplier) {
-                    // JIKA SUPLIER ADA MAKA EKSEKUSI BUAT DAFTAR BARANG
-                    $data['supplier'] = $cek_suplier->id_supplier;
-                } else {
-                    // JIKA SUPLIER TIDAK ADA MAKA EKSEKUSI BUAT SUPLIER TERLEBIH DAHULU
-                    $count = supplier::count();
-                    if ($count == 0) {
-                        $id_supplier = 1;
-                    } else {
-                        $id_supplier = $count + 1;
-                    }
-                    $id_supplier = '1' . sprintf("%03d", $id_supplier);
-
-                    supplier::create([
-                        'id_supplier' => $id_supplier,
-                        'supplier_nama' => 'ONT',
-                        'supplier_alamat' => 'Jl. Tampomas Perum. Alam Tirta Lestari Blok D5 No 06',
-                        'supplier_tlp' => '081386987015',
-                    ]);
-                    $data['supplier'] = $id_supplier;
-                }
-
-                $cek_barang = Barang::where('id_supplier', $data['supplier'])->first();
-                if ($cek_barang) {
-                    $id['subbarang_idbarang'] = $cek_barang->id_barang;
-                } else {
-
-                    $id['subbarang_idbarang'] = mt_rand(100000, 999999);
-                    Barang::create([
-                        'id_barang' => $id['subbarang_idbarang'],
-                        'id_trx' => '-',
-                        'id_supplier' => $data['supplier'],
-                        'barang_tgl_beli' => '1',
-                    ]);
-                }
-                $id_subbar = mt_rand(100000, 999999);
-                $create['id_subbarang'] = $id_subbar;
-                $create['subbarang_idbarang'] = $id['subbarang_idbarang'];
-                $create['subbarang_nama'] = 'ONT';
-                $create['subbarang_keterangan'] = $request->alasan;
-                $create['subbarang_deskripsi'] = 'Dalam Pengecekan';
-                $create['subbarang_ktg'] = 'ONT';
-                $create['subbarang_qty'] = 1;
-                $create['subbarang_keluar'] = '0';
-                $create['subbarang_stok'] = 1;
-                $create['subbarang_harga'] = 0;
-                $create['subbarang_tgl_masuk'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-                $create['subbarang_status'] = '5';
-                $create['subbarang_mac'] = $request->reg_mac;
-                $create['subbarang_admin'] = '-s';
-                SubBarang::create($create);
-
-                if ($request->alasan == 'Rusak') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
-                    $update_barang['subbarang_status'] = '1';
-                    $update_barang['subbarang_keluar'] = '1';
-                    $update_barang['subbarang_stok'] = '0';
-                    $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
-                    $update_barang['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
-                    $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-                    $update_barang_lama['subbarang_keterangan'] = $request->alasan;
-                    $update_barang_lama['subbarang_stok'] = '0';
-                    $update_barang_lama['subbarang_status'] = '5';
-                    $update_barang_lama['subbarang_keluar'] = '1';
-                    Registrasi::where('reg_idpel', $id)->update($data);
-                    SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);
-                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-                } elseif ($request->alasan == 'Tukar') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
-                    $update_barang['subbarang_status'] = '1';
-                    $update_barang['subbarang_keluar'] = '1';
-                    $update_barang['subbarang_stok'] = '0';
-                    $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-                    $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
-                    $update_barang['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
-                    $update_barang_lama['subbarang_status'] = '5';
-                    $update_barang_lama['subbarang_keluar'] = '0';
-                    $update_barang_lama['subbarang_stok'] = '1';
-                    $update_barang_lama['subbarang_keterangan'] = $request->alasan;
-                    Registrasi::where('reg_idpel', $id)->update($data);
-                    SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);
-                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-                } elseif ($request->alasan == 'Upgrade') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
-                    $update_barang['subbarang_status'] = '1';
-                    $update_barang['subbarang_keluar'] = '1';
-                    $update_barang['subbarang_stok'] = '0';
-                    $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-                    $update_barang['subbarang_keterangan'] = 'Ganti ONT ' . $cek_subbarang->id_subbarang . ' dengan ONT ' . $request->kode_ont;
-                    $update_barang['subbarang_deskripsi'] = $nama_admin . ' Mengganti Modem Pel. ' . $request->reg_nama . ' Karna ' . $request->alasan;
-                    $update_barang_lama['subbarang_status'] = '5';
-                    $update_barang_lama['subbarang_keluar'] = '0';
-                    $update_barang_lama['subbarang_stok'] = '1';
-
-                    $update_barang_lama['subbarang_keterangan'] = $request->alasan;
-                    Registrasi::where('reg_idpel', $id)->update($data);
-                    SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);
-                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
-                }
+                $update_barang_lama['subbarang_keterangan'] = $request->alasan;
+                Registrasi::where('reg_idpel', $id)->update($data);
+                SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
+                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
             }
         }
         Registrasi::where('reg_idpel', $id)->update($data);
