@@ -112,17 +112,17 @@
         <div class="form-group row">
           <label class=" col-sm-2 col-form-label" >Mrek Perangkat</label>
         <div class="col-sm-10">
-          <input type="text" name="reg_mrek" id="edit_reg_sn" class="form-control edit_ont" value="{{ $d->reg_mrek}}"  >
+          <input type="text" name="reg_mrek" class="form-control edit_ont" value="{{ $d->reg_mrek}}"  >
         </div>
         </div>
         <div class="form-group row">
           <label class="col-sm-2 col-form-label">Mac perangkat</label>
           <div class="col-sm-4">
-            <input type="text" name="reg_mac" id="edit_reg_mac"  class="form-control edit_ont" minlength="17" maxlength="17"  value="{{$d->reg_mac}}" >
+            <input type="text" name="reg_mac"  class="form-control edit_ont" minlength="17" maxlength="17"  value="{{$d->reg_mac}}" >
           </div>
           <label class=" col-sm-2 col-form-label" >SN perangkat</label>
         <div class="col-sm-4">
-          <input type="text" name="reg_sn" id="edit_reg_sn" class="form-control edit_ont" value="{{ $d->reg_sn}}"  >
+          <input type="text" name="reg_sn" class="form-control edit_ont" value="{{ $d->reg_sn}}"  >
         </div>
         </div>
       </div>

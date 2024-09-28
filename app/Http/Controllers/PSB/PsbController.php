@@ -206,10 +206,10 @@ class PsbController extends Controller
     }
     public function update_mac(Request $request, $idpel)
     {
-        // dd($idpel);
-        $data['reg_sn'] = $request->edit_reg_sn;
-        $data['reg_mac'] = $request->edit_reg_mac;
-        $data['reg_mrek'] = $request->edit_reg_mrek;
+        $data['reg_sn'] = $request->reg_sn;
+        $data['reg_mac'] = $request->reg_mac;
+        $data['reg_mrek'] = $request->reg_mrek;
+        // dd($data);
         Registrasi::where('reg_idpel', $idpel)->update($data);
         $notifikasi = array(
             'pesan' => 'Berhasil update Mac ',
