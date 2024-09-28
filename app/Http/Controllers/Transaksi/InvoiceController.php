@@ -794,39 +794,31 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             ]
         );
     }
-    public function test1()
+    public function test1(Request $request)
     {
-        $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
-        $month = Carbon::now()->addMonth(-0)->format('m');
-        $invoice = Invoice::where('invoices.inv_status', '=', 'PAID')
-            ->where('invoices.inv_jenis_tagihan', '=', 'FREE')
-            ->whereMonth('invoices.inv_tgl_bayar', '=', $month)
-            ->get();
+        $data['q'] = $request->query('q');
 
-        foreach ($invoice as $key) {
-            Invoice::where('inv_id', $key->inv_id)->update(
-                [
-                    'inv_status' => 'UNPAID',
-                ]
-            );
-            // Laporan::create([
-            //     'lap_id'=> time(),
-            //     'lap_tgl'=> $data['now'],
-            //     'lap_inv'=> $key->inv_id,
-            //     'lap_admin'=> $key->inv_admin,
-            //     'lap_cabar'=> $key->inv_cabar,
-            //     'lap_debet'=> 0,
-            //     'lap_kredit'=> $key->inv_total,
-            //     'lap_adm'=> $key->inv_total_fee,
-            //     'lap_jumlah_bayar'=> $key->inv_total_amount,
-            //     'lap_keterangan'=> $key->inv_nama,
-            //     'lap_akun'=> $key->inv_akun,
-            //     'lap_idpel'=> $key->inv_idpel,
-            //     'lap_jenis_inv'=> "INVOICE",
-            //     'lap_status'=> 0,
-            //     'lap_img'=> "-",
-            // ]);
-            echo '<table><tr><td>' . $key->inv_status . '</td><td>' . $key->inv_jenis_tagihan . '</td><td>' . $key->inv_id . '</td></tr></table>';
+
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            // ->where('reg_mac', '=', '')
+            ->orderBy('tgl', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('reg_mac', 'like', '%' . $data['q'] . '%');
+            });
+
+        $mac_bermaslah = $query->get();
+
+        foreach ($mac_bermaslah as $key) {
+            // Registrasi::where('reg_idpel', $key->reg_idpel)->update(
+            //     [
+            //         'reg_mac' => '',
+            //     ]
+            // );
+
+            echo '<table><tr><td>' . $key->reg_idpel . '</td><td>' . $key->input_nama . '</td><td>' . $key->reg_mac . '</td></tr></table>';
         }
     }
     public function test2()

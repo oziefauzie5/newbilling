@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Barang;
 
 use App\Http\Controllers\Controller;
+use App\Imports\Import\barangimport;
 use App\Models\Applikasi\SettingAplikasi;
 use App\Models\Barang\Barang;
 use App\Models\Barang\SubBarang;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Dompdf\Dompdf;
 use mPDF;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\Import\InputDataImport;
 use Illuminate\Support\Facades\App;
 
 class BarangController extends Controller
@@ -378,5 +381,16 @@ class BarangController extends Controller
         // dd($data['kode_barang']->id_subbarang);
 
         return view('barang/kode_barang', $data);
+    }
+
+    public function barang_import(Request $request)
+    {
+        // dd($request->test);
+        Excel::import(new barangimport(), $request->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.psb.list_input')->with($notifikasi);
     }
 }

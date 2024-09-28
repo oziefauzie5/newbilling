@@ -375,6 +375,7 @@ class PsbController extends Controller
     }
     public function input_data_import(Request $request)
     {
+        dd('aa');
         Excel::import(new InputDataImport(), $request->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',

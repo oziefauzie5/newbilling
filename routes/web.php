@@ -204,6 +204,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/barang/Print-Kode/{id}', [BarangController::class, 'print_kode_barang'])->name('barang.print_kode')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/barang/pilih/{id}', [BarangController::class, 'cari_barang'])->name('barang.cari_barang')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/barang/barang-keluar', [BarangController::class, 'barang_keluar'])->name('barang.barang_keluar')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/pelanggan/barang-Import', [BarangController::class, 'barang_import'])->name('barang.barang_import')->middleware(['role:admin|STAF ADMIN']);
+
 
     Route::get('/teknisi', [TeknisiController::class, 'index'])->name('teknisi.index')->middleware(['role:TEKNISI']);
     Route::post('/teknisi/job', [TeknisiController::class, 'job'])->name('teknisi.job')->middleware(['role:TEKNISI']);
