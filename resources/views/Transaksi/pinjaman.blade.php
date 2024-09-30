@@ -39,6 +39,7 @@
                   <thead>
                     <tr>
                         <th>No</th>
+                        <th>Tanggal Pinjaman</th>
                         <th>NIK Karyawan</th>
                         <th>Nama</th>
                         <th>Jenis Pinjaman</th>
@@ -52,6 +53,7 @@
                     @foreach ($kasbon as $d)
                     <tr>
                     <td>{{$loop->iteration}}</td>
+                    <td>{{$d->created_at}}</td>
                     <td>{{$d->kasbon_user_id}}</td>
                     <td>{{$d->name}}</td>
                     <td>{{$d->kasbon_jenis}}</td>

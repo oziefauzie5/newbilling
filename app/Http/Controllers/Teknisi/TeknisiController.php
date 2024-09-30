@@ -234,6 +234,11 @@ class TeknisiController extends Controller
 
             #FORMAT TANGGAL
             $tanggal = Carbon::now()->toDateString();
+            $cek_hari = date('d', strtotime($tanggal));
+            // if ($cek_hari == 27) {
+
+            // }
+
             $tag_pascabayar = Carbon::create($tanggal)->addMonth(1)->toDateString();
             $tag_free3bln = Carbon::create($tanggal)->addMonth(3)->toDateString();
             $tag_free1th = Carbon::create($tanggal)->addMonth(12)->toDateString();
@@ -273,7 +278,7 @@ class TeknisiController extends Controller
                             $inv['inv_tgl_isolir'] = $inv_tgl_isolir12blan;
                             $inv['inv_total'] = $tagihan_tanpa_ppn * 12 + ($query->reg_ppn * 12);
                             $inv['inv_tgl_tagih'] = $tanggal;
-                            $inv['inv_tgl_jatuh_tempo'] = $tag_free1th;
+                            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
                             $inv['inv_periode'] = $periode12blan;
 
                             $sub_inv['subinvoice_harga'] = $query->reg_harga;
@@ -288,7 +293,7 @@ class TeknisiController extends Controller
                             $inv['inv_tgl_isolir'] = $inv_tgl_isolir3blan;
                             $inv['inv_total'] = $tagihan_tanpa_ppn * 3 + ($query->reg_ppn * 3);
                             $inv['inv_tgl_tagih'] = $tanggal;
-                            $inv['inv_tgl_jatuh_tempo'] = $tag_free3bln;
+                            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
                             $inv['inv_periode'] = $periode3blan;
 
                             $sub_inv['subinvoice_harga'] = $query->reg_harga;
