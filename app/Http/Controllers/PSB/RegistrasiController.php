@@ -979,11 +979,12 @@ Diregistrasi Oleh : *' . $admin . '*
                     $cek_suplier = supplier::where('supplier_nama', 'ONT')->first();
                     if ($cek_subbarang) {
                         // JIKA ONT ADA 
-                        $update_barang['subbarang_status'] = '0';
+                        $update_barang['subbarang_status'] = '5';
                         $update_barang['subbarang_keluar'] = '0';
                         $update_barang['subbarang_stok'] = '1';
                         $update_barang['subbarang_mac'] = $request->reg_mac;
                         $update_barang['subbarang_keterangan'] = $keterangan;
+                        $update_barang['subbarang_deskripsi'] = $keterangan;
                         $update_barang['subbarang_admin'] = $nama_admin;
                         $update_barang['subbarang_tgl_masuk'] = $tgl;
 
@@ -1058,13 +1059,14 @@ Diregistrasi Oleh : *' . $admin . '*
                                 "subbarang_idbarang" => $id['subbarang_idbarang'],
                                 "subbarang_nama" => $keterangan,
                                 "subbarang_keterangan" => $keterangan,
+                                "subbarang_deskripsi" => $keterangan,
                                 "subbarang_ktg" => 'ONT',
                                 "subbarang_qty" => 1,
                                 "subbarang_keluar" => '0',
                                 "subbarang_stok" => 1,
                                 "subbarang_harga" => 0,
                                 "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '0',
+                                "subbarang_status" => '5',
                                 "subbarang_mac" => $request->reg_mac,
                                 "subbarang_admin" => $nama_admin,
                             ]
