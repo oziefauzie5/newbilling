@@ -55,6 +55,10 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/tagihan/show/{refrensi}', [PelangganController::class, 'show'])->name('show');
 });
 
+// Route::group(['prefix' => 'client', 'middleware' => ['auth:sales'], 'as' => 'sales.'], function () {
+//     Route::get('/home', [PelangganController::class, 'index'])->name('index');
+// });
+
 Route::post('/callback', [CallbackController::class, 'handle']);
 
 
@@ -148,12 +152,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('inv.laporan_print')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi', [TransaksiController::class, 'index'])->name('inv.trx.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/jurnal', [TransaksiController::class, 'jurnal'])->name('lap.jurnal')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Transaksi/{id}/jurnal-laporan', [TransaksiController::class, 'jurnal_laporan'])->name('lap.jurnal_laporan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/Transaksi/reimbuse', [TransaksiController::class, 'store_jurnal_reimbuse'])->name('lap.store_jurnal_reimbuse')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/download-file/{id}', [TransaksiController::class, 'download_file'])->name('lap.download_file')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/pinjaman-karyawan', [TransaksiController::class, 'store_jurnal_kasbon'])->name('lap.store_jurnal_kasbon')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/topup-jurnal', [TransaksiController::class, 'store_topup_jurnal'])->name('lap.store_topup_jurnal')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/pinjaman', [TransaksiController::class, 'pinjaman'])->name('lap.pinjaman')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/jurnal-pencairan', [TransaksiController::class, 'store_jurnal_pencairan'])->name('lap.store_jurnal_pencairan')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/Transaksi/pencairan-fee', [TransaksiController::class, 'store_jurnal_fee_sales'])->name('lap.store_jurnal_fee_sales')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/tutup-buku', [TransaksiController::class, 'jurnal_tutup_buku'])->name('lap.jurnal_tutup_buku')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/jurnal_pengeluaran', [TransaksiController::class, 'store_jurnal_pengeluaran'])->name('lap.store_jurnal_pengeluaran')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/data-laporan', [TransaksiController::class, 'data_laporan_mingguan'])->name('lap.data_laporan_mingguan')->middleware(['role:admin|STAF ADMIN']);
@@ -259,6 +265,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/biller/export/pdf', [BillerController::class, 'mutasi_pdf'])->name('biller.export.mutasi')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/print/{id}', [BillerController::class, 'print'])->name('biller.print')->middleware(['role:KOLEKTOR|BILLER']);
     Route::put('/biller/pb/{idpel}', [BillerController::class, 'biller_putus_berlanggan'])->name('biller.biller_putus_berlanggan')->middleware(['role:KOLEKTOR']);
+
+
+    Route::get('/biller/sales', [BillerController::class, 'sales'])->name('biller.sales')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::get('/biller/sales-input', [BillerController::class, 'sales_input'])->name('biller.sales_input')->middleware(['role:KOLEKTOR|BILLER']);
+    Route::post('/biller/store', [BillerController::class, 'sales_store'])->name('biller.sales_store')->middleware(['role:KOLEKTOR|BILLER']);
+
 
     // Route::get('/Kolektor/Tagihan', [KolektorController::class, 'index'])->name('kolektor.index');
     // Route::get('/Kolektor/kolektor-payment/{id}', [KolektorController::class, 'kolektor_payment'])->name('kolektor.kolektor_payment');

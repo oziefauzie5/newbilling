@@ -65,6 +65,7 @@ class AppController extends Controller
             $data['biaya_ppn'] = "0";
             $data['biaya_deposit'] = "0";
             $data['biaya_sales'] = "0";
+            $data['biaya_sales_continue'] = "0";
             $data['biaya_psb'] = "0";
             $data['biaya_pasang'] = "0";
             $data['biaya_kas'] = "0";
@@ -73,6 +74,7 @@ class AppController extends Controller
             $data['biaya_ppn'] = $SettingBiaya->biaya_ppn;
             $data['biaya_deposit'] = $SettingBiaya->biaya_deposit;
             $data['biaya_sales'] = $SettingBiaya->biaya_sales;
+            $data['biaya_sales_continue'] = $SettingBiaya->biaya_sales_continue;
             $data['biaya_psb'] = $SettingBiaya->biaya_psb;
             $data['biaya_pasang'] = $SettingBiaya->biaya_pasang;
             $data['biaya_kas'] = $SettingBiaya->biaya_kas;
@@ -320,6 +322,7 @@ class AppController extends Controller
                     'biaya_pasang' => $request->biaya_pasang,
                     'biaya_psb' => $request->biaya_psb,
                     'biaya_sales' => $request->biaya_sales,
+                    'biaya_sales_continue' => $request->biaya_sales_continue,
                     'biaya_deposit' => $request->biaya_deposit,
                     'biaya_ppn' => $request->biaya_ppn,
                     'biaya_kas' => $request->biaya_kas,
@@ -332,6 +335,7 @@ class AppController extends Controller
                     'biaya_pasang' => $request->biaya_pasang,
                     'biaya_psb' => $request->biaya_psb,
                     'biaya_sales' => $request->biaya_sales,
+                    'biaya_sales_continue' => $request->biaya_sales_continue,
                     'biaya_deposit' => $request->biaya_deposit,
                     'biaya_ppn' => $request->biaya_ppn,
                     'biaya_kas' => $request->biaya_kas,

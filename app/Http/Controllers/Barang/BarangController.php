@@ -43,18 +43,18 @@ class BarangController extends Controller
         $data['kategori'] = Kategori::all();
         $data['supplier'] = supplier::all();
         $data['q'] = $request->query('q');
-        $sub_barang = SubBarang::where('id_subbarang', $data['q'])->orWhere('subbarang_mac', $data['q'])->orWhere('subbarang_nama', $data['q'])->first();
-        if ($sub_barang) {
-            if ($data['q']) {
-                return redirect()->route('admin.barang.sub_barang', ['id' => $sub_barang->subbarang_idbarang . '?q=' . $data['q']]);
-            }
-        } else {
-            $notifikasi = [
-                'pesan' => 'Kode Barang atau Mac Address tidak ditemukan',
-                'alert' => 'error',
-            ];
-            return redirect()->route('admin.barang.index')->with($notifikasi);
-        }
+        // $sub_barang = SubBarang::where('id_subbarang', $data['q'])->orWhere('subbarang_mac', $data['q'])->orWhere('subbarang_nama', $data['q'])->first();
+        // if ($sub_barang) {
+        //     if ($data['q']) {
+        //         return redirect()->route('admin.barang.sub_barang', ['id' => $sub_barang->subbarang_idbarang . '?q=' . $data['q']]);
+        //     }
+        // } else {
+        //     $notifikasi = [
+        //         'pesan' => 'Kode Barang atau Mac Address tidak ditemukan',
+        //         'alert' => 'error',
+        //     ];
+        //     return redirect()->route('admin.barang.index')->with($notifikasi);
+        // }
 
         $data['tittle'] = 'Data Barang';
         $query = Barang::join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
@@ -240,7 +240,7 @@ class BarangController extends Controller
                 "subbarang_stok" => $qty,
                 "subbarang_harga" => $request->harga,
                 "subbarang_tgl_masuk" => $request->tgl_beli,
-                "subbarang_status" => '0',
+                "subbarang_status" => '5',
             ];
         }
 

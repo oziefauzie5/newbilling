@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('reg_ppn')->nullable();
             $table->string('reg_dana_kas')->nullable();
             $table->string('reg_dana_kerjasama')->nullable();
+            $table->integer('reg_fee')->nullable();
             $table->string('reg_username')->nullable();
             $table->string('reg_password')->nullable();
             $table->string('reg_tgl_pasang')->nullable();

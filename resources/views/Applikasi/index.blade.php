@@ -326,6 +326,10 @@
                   <input type="text" class="form-control" name="biaya_sales" value="{{$biaya_sales}}"  required>
                 </div>
                 <div class="form-group">
+                  <label >Biaya Sales Continue</label>
+                  <input type="text" class="form-control" name="biaya_sales_continue" value="{{$biaya_sales_continue}}"  required>
+                </div>
+                <div class="form-group">
                   <label >Biaya Deposit</label>
                   <input type="text" class="form-control" name="biaya_deposit" value="{{$biaya_deposit}}"  required>
                 </div>

@@ -7,24 +7,24 @@
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h2 m-0" ><span id="show1" style="display:none">Rp. {{number_format($kredit)}}</span> </div>
-            <div class="text-muted mb-3">PEMASUKAN &nbsp; <i onclick="document.getElementById('show1').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
+            <div class="h2 m-0" ><span>Rp. {{number_format($kredit)}}</span> </div>
+            <div class="text-muted mb-3">KREDIT</div>
           </div>
         </div>
       </div>
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h2 m-0"><span id="show2" style="display:none">Rp. {{number_format($debet)}}</span></div>
-            <div class="text-muted mb-3">PENGELUARAN &nbsp; <i onclick="document.getElementById('show2').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
+            <div class="h2 m-0"><span>Rp. {{number_format($debet)}}</span></div>
+            <div class="text-muted mb-3">DEBET</div>
           </div>
         </div>
       </div>
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h2 m-0"><span id="show3" style="display:none">Rp. {{number_format($kredit-$debet)}}</span></div>
-            <div class="text-muted mb-3">SALDO &nbsp; <i onclick="document.getElementById('show3').style.display='block'"class="fas fa-eye btn" aria-hidden="true"></i></div>
+            <div class="h2 m-0"><span>Rp. {{number_format($kredit-$debet)}}</span></div>
+            <div class="text-muted mb-3">SALDO</div>
           </div>
         </div>
       </div>
@@ -59,13 +59,22 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pencairan">
   Pencairan
 </button>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#kasbon">
-  Kasbon
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fee_Seles">
+Pencairan Fee
 </button>
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#kasbon">
+  Kasbon
+</button> -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tutup_buku">
   Tutup Buku Mingguan
 </button>
 <a href="{{route('admin.lap.data_laporan_mingguan')}}"><button type="button" class="btn btn-primary"> Data Laporan Mingguan</button></a>
+<hr>
+<h5 class="text-danger">CATATAN</h5>
+<ul>
+                     <li>Reimburse dilakukan Perminggu setiap hari Sabtu dan Tanggal terakhir pada akhir bulan. </li>
+                     <li >Reimburse dapat dicairkan apabila karyawan mereimburse pada bulan yang sama dengan Nota.</li>
+                 </ul>
 
 <hr>
 
@@ -138,12 +147,20 @@
                 <option value="">Pilih Jenis Pengeluaran</option>
                 <option value="KOMSUMSI">KOMSUMSI</option>
                 <option value="PERLENGKAPAN">PERLENGKAPAN</option>
+                <option value="IKLAN & PROMOSI">IKLAN & PROMOSI</option>
                 <option value="PERALATAN">PERALATAN</option>
                 <option value="ATK">ATK</option>
                 <option value="LISTRIK">LISTRIK</option>
+                <option value="DONASI">DONASI</option>
+                <option value="ENTERTIMENT">ENTERTIMENT</option>
+                <option value="PERBAIKAN & PERAWATAN">PERBAIKAN & PERAWATAN</option>
                 <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
-                <option value="PSB">PSB</option>
-                <option value="MARKETING">MARKETING</option>
+                <option value="IURAN & BERLANGGANAN">IURAN & BERLANGGANAN</option>
+                <option value="SEWA BANGUNAN">SEWA BANGUNAN</option>
+                <option value="SEWA KENDARAAN">SEWA KENDARAAN</option>
+                <option value="INFRASTRUKTUR">INFRASTRUKTUR</option>
+                <option value="PERALATAN KANTOR">PERALATAN KANTOR</option>
+                <option value="BIAYA ADMIN">BIAYA ADMIN</option>
                 <option value="LAIN-LAIN">LAIN-LAIN</option>
               </select>
             </div>
@@ -156,13 +173,8 @@
           </div>
           <div class="col-sm-12">
             <div class="form-group">
-              <label>Metode Pembayaran</label>
-              <select class="form-control" name="metode" required>
-                <option value="">Pilih Metode</option>
-                @foreach ($setting_akun as $a)
-                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
-                @endforeach
-              </select>
+              <label>Qty</label>
+              <input type="number" class="form-control" value="1" name="qty" required>
             </div>
           </div>
           <div class="col-sm-12">
@@ -187,9 +199,118 @@
     </div>
   </div>
 </div>
+<!-- Modal fee_Seles-->
+<div class="modal fade" id="fee_Seles" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">PENCAIRAN FEE SALES</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.lap.store_jurnal_fee_sales')}}" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('POST')
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  <div class="card-body p-3 text-center">
+                    <div class="h2 m-0 jt" id="pencairan_total_fee">0</div>
+                    <div class="text-muted mb-3">JUMLAH PENCAIRAN</div>
+                  </div>
+                </div>
+              </div>
+              </div>
+            <div class="table-responsive">
+              <table class="display table table-striped table-hover text-nowrap" >
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Sales</th>
+                      <th>Pelanggan</th>
+                      <th>Fee</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($data_fee_sales as $d)
+                    <tr>
+                      <td> <input type="checkbox" class="pencairan_fee" name="id[]" value="{{$d->id}}" data-sales_id="{{$d->id_user}}"data-pelanggan="{{$d->smt_deskripsi}}" data-count_fee="1" data-fee="{{$d->smt_kredit}}"></td>
+                      <td>{{$d->nama_user}}</td>
+                      <td>{{$d->smt_deskripsi}}</td>
+                      <td>{{$d->smt_kredit}}</td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+          </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Uraian</label>
+              <textarea class="form-control" name="desk" id="desk" cols="30" rows="5"></textarea>
+            {{-- <input type="text" class="form-control" id="desk" value="" name="desk" required readonly> --}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>SALES ID</label>
+            <input type="text" class="form-control" id="sales_id" value="0" name="user" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Penerima</label>
+              <select name="penerima_fee" id="" class="form-control penerima" required>
+                <option value="">PILIH PENERIMA</option>
+              @foreach($user as $u)
+              <option value="{{$u->id}}">{{$u->name}}</option>
+              @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>FEE</label>
+            <input type="number" class="form-control" id="fee" value="0" name="fee" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>QTY</label>
+            <input type="number" class="form-control" id="count_fee" value="0" name="count_fee" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>TOTAL</label>
+            <input type="number" class="form-control" id="total_komisi" value="0" name="total_komisi" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Upload Bukti</label>
+            <input type="file" name="file" class="form-control" required>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal Pencairan-->
 <div class="modal fade" id="pencairan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">PENCAIRAN OPERASIONAL</h5>
@@ -227,7 +348,7 @@
                   <tbody>
                     @foreach ($data_registrasi as $d)
                     <tr>
-                      <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-price="{{$data_biaya->biaya_psb+$data_biaya->biaya_sales}}"></td>
+                      <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-psb="{{$data_biaya->biaya_psb}}"data-cpsb="1" data-sales="@if($d->reg_fee > 0) 0 @else  {{$data_biaya->biaya_sales}} @endif"data-csales="@if($d->reg_fee > 0) 0 @else  1 @endif"></td>
                       <td>{{$d->reg_nolayanan}}</td>
                       <td>{{$d->input_nama}}</td>
                       <td>{{$d->input_alamat_pasang}}</td>
@@ -254,9 +375,33 @@
               </select>
             </div>
           </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label>PSB</label>
+            <input type="number" class="form-control" id="psb" value="0" name="psb" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group">
+              <label>QTY</label>
+            <input type="number" class="form-control" id="cpsb" value="0" name="cpsb" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label>SALES</label>
+            <input type="number" class="form-control" id="sales" value="0" name="sales" required readonly>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group">
+              <label>QTY</label>
+            <input type="number" class="form-control" id="csales" value="0" name="csales" required readonly>
+            </div>
+          </div>
           <div class="col-sm-12">
             <div class="form-group">
-              <label>Jumlah</label>
+              <label>TOTAL</label>
             <input type="number" class="form-control" id="jumlah" value="0" name="jumlah" required readonly>
             </div>
           </div>
@@ -400,6 +545,12 @@
           </div>
           <div class="col-sm-12">
             <div class="form-group">
+              <label>Qty</label>
+            <input type="number" class="form-control" value="" name="qty" required>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
               <label>Jumlah</label>
             <input type="number" class="form-control" value="0" name="jumlah" required>
             </div>
@@ -473,28 +624,24 @@
                     <option value="{{$kategori}}" selected>{{$kategori}}</option>
                     @endif
                     <option value="">ALL DATA</option>
-                    <option value="PENDAPATAN">PENDAPATAN</option>
-                    <option value="REIMBURSE">REIMBURSE</option>
-                    <option value="VOUCHER">VOUCHER</option>
-                    <option value="PINJAMAN KARYAWAN">PINJAMAN KARYAWAN</option>
-                    <option value="KOMSUMSI">KOMSUMSI</option>
-                    <option value="PERLENGKAPAN">PERLENGKAPAN</option>
-                    <option value="PERALATAN KANTOR">PERALATAN KANTOR</option>
-                    <option value="ATK">ATK</option>
-                    <option value="LISTRIK">LISTRIK</option>
-                    <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
-                    <option value="LAIN-LAIN">LAIN-LAIN</option>
-                  </select>
-                </div>
-                <div class="col">
-                  <select name="akun" class="custom-select custom-select-sm">
-                    @if($akun)
-                    <option value="{{$akun->id}}">{{$akun->akun_nama}}</option>
-                    @endif
-                    <option value="">PILIH AKUN</option>
-                    @foreach ($setting_akun as $a)
-                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
-                    @endforeach
+                <option value="PSB">PSB</option>
+                <option value="MARKETING">MARKETING</option>
+                <option value="KOMSUMSI">KOMSUMSI</option>
+                <option value="IKLAN & PROMOSI">IKLAN & PROMOSI</option>
+                <option value="PERLENGKAPAN">PERLENGKAPAN</option>
+                <option value="PERALATAN">PERALATAN</option>
+                <option value="ATK">ATK</option>
+                <option value="LISTRIK">LISTRIK</option>
+                <option value="DONASI">DONASI</option>
+                <option value="ENTERTEMENT">ENTERTEMENT</option>
+                <option value="PERBAIKAN & PERAWATAN">PERBAIKAN & PERAWATAN</option>
+                <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
+                <option value="IURAN & BERLANGGANAN">IURAN & BERLANGGANAN</option>
+                <option value="SEWA BANGUNAN">SEWA BANGUNAN</option>
+                <option value="INFRASTRUKTUR">INFRASTRUKTUR</option>
+                <option value="PERALATAN KANTOR">PERALATAN KANTOR</option>
+                <option value="BIAYA ADMIN">BIAYA ADMIN</option>
+                <!-- <option value="LAIN-LAIN">LAIN-LAIN</option> -->
                   </select>
                 </div>
                 <div class="col">
@@ -521,29 +668,25 @@
               <thead>
                 <tr>
                   <th>#</th>
+               
+                  <th>BUKTI TRX</th>
                   <th>TANGGAL</th>
                   <th>KATEGORI</th>
+                  <th>KETERANGAN</th>
                   <th>URAIAN</th>
-                  <th>AKUN</th>
+                  <th>QTY</th>
                   <th>KREDIT</th>
                   <th>DEBET</th>
                   <th>SALDO</th>
-                  <th>BUKTI TRX</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($jurnal as $d)
                 <tr>
                   <td>{{$loop->iteration}}</td>
-                      <td>{{date('d-m-Y',strtotime($d->tgl_trx))}}</td>
-                      <td>{{$d->jurnal_kategori}}</td>
-                      <td>{{$d->jurnal_uraian}}</td>
-                      <td>{{$d->akun_nama}}</td>
-                      <td>{{number_format($d->jurnal_kredit)}}</td>
-                      <td>{{number_format($d->jurnal_debet)}}</td>
-                      <td>{{number_format($d->jurnal_saldo)}}</td>
+                      
                       <td>   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#bukti_trx{{$d->jurnal_id}}">
-                        Lihat Bukti Transfer
+                       File
                       </button>
                       <!-- Modal -->
                       <div class="modal fade" id="bukti_trx{{$d->jurnal_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -571,6 +714,15 @@
                      </div>
                      <!-- ---end modal---- -->
                     </td>
+                   
+                    <td>{{date('d-m-Y H:m:s',strtotime($d->created_at))}}</td>
+                      <td>{{$d->jurnal_kategori}}</td>
+                      <td>{{$d->jurnal_keterangan}}</td>
+                      <td>{{$d->jurnal_uraian}}</td>
+                      <td>{{$d->jurnal_qty}}</td>
+                      <td>{{number_format($d->jurnal_kredit)}}</td>
+                      <td>{{number_format($d->jurnal_debet)}}</td>
+                      <td>{{number_format($d->jurnal_saldo)}}</td>
                     </tr>
                     @endforeach
               </tbody>

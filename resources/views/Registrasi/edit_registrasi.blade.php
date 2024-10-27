@@ -773,11 +773,11 @@ Update Tanggal Jatuh Tempo
               </div>
           </div>
         </div>
-        <input type="text" id="total_biaya_val" name="total_biaya">
-        <input type="text" id="status" name="status">
-        <input type="text" id="biaya" name="biaya">
-        <input type="text" id="hari" name="hari">
-        <input type="text" id="update_ppn" name="update_ppn" value="">
+        <input type="hidden" id="total_biaya_val" name="total_biaya">
+        <input type="hidden" id="status" name="status">
+        <input type="hidden" id="biaya" name="biaya">
+        <input type="hidden" id="hari" name="hari">
+        <input type="hidden" id="update_ppn" name="update_ppn" value="">
         <div class="col-sm-12">
          <h4 class="text-center">Rincian Biaya</h4>
          <h3 class="text-center" id="rincian"> - </h3>

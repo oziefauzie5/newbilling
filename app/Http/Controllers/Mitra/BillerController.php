@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Mitra;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Applikasi\SettingBiaya;
 use App\Models\Barang\Barang;
 use App\Models\Barang\SubBarang;
 use App\Models\Barang\supplier;
+use App\Models\Global\ConvertNoHp;
 use App\Models\Mitra\MitraSetting;
 use App\Models\Mitra\Mutasi;
+use App\Models\Mitra\MutasiSales;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
@@ -23,7 +26,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class BillerController extends Controller
 {
@@ -168,6 +172,91 @@ class BillerController extends Controller
 
         $data['data'] = Invoice::where('inv_status', '=', 'PAID')->where('inv_admin', $admin_user)->get();
         return view('biller/index', $data);
+    }
+    public function sales()
+    {
+        $user = (new GlobalController)->user_admin();
+        $user_id = $user['user_id'];
+        $data['komisi'] = (new globalController)->total_mutasi_sales($user_id);
+        $m = date('m', strtotime(new Carbon()));
+        $data['pencairan'] = MutasiSales::where('smt_user_id', $user_id)->whereMonth('created_at', $m)->sum('smt_debet');
+        // dd($debet);
+        $data['input_data'] = InputData::where('input_sales', $user_id)->where('input_status', 'INPUT DATA')->get();
+        $data['registrasi'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('input_data.input_sales', '=', $user_id)
+            ->where('reg_status', '<', '5')->get();
+        // dd($data['pelanggan']);
+
+        return view('biller/sales', $data);
+    }
+    public function sales_input()
+    {
+
+        $data['admin_user'] = (new GlobalController)->user_admin();
+
+        return view('biller/sales_input', $data);
+    }
+    public function sales_store(Request $request)
+    {
+
+        $user = (new GlobalController)->user_admin();
+        $id_cust = (new GlobalController)->idpel_();
+        $user_nama = $user['user_nama'];
+        $user_id = $user['user_id'];
+        $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
+        Session::flash('input_nama', ucwords($request->input_nama));
+        Session::flash('input_hp', $request->input_hp);
+        Session::flash('input_ktp', $request->input_ktp);
+        Session::flash('input_email', $request->input_email);
+        Session::flash('input_alamat_ktp', ucwords($request->input_alamat_ktp));
+        Session::flash('input_alamat_pasang', ucwords($request->input_alamat_pasang));
+        Session::flash('input_sales', ucwords($request->input_sales));
+        Session::flash('input_subseles', ucwords($request->input_subseles));
+        Session::flash('input_password', Hash::make($request->input_hp));
+        Session::flash('input_maps', $request->input_maps);
+        Session::flash('input_keterangan', ucwords($request->input_keterangan));
+
+        $request->validate([
+            'input_ktp' => 'unique:input_data',
+            'input_hp' => 'unique:input_data',
+        ], [
+            'input_ktp.unique' => 'Nomor Identitas sudah terdaftar',
+            'input_hp.unique' => 'Nomor Whatsapp sudah terdaftar',
+        ]);
+        $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
+
+        $cek_nohp = InputData::where('input_hp', $nomorhp)->count();
+
+        if ($cek_nohp == 0) {
+            $input['input_tgl'] = $data['input_tgl'];
+            $input['input_nama'] = ucwords($request->input_nama);
+            $input['id'] = $id_cust;
+            $input['input_ktp'] = $request->input_ktp;
+            $input['input_hp'] = $nomorhp;
+            $input['input_email'] = $request->input_email;
+            $input['input_alamat_ktp'] = ucwords($request->input_alamat_ktp);
+            $input['input_alamat_pasang'] = ucwords($request->input_alamat_pasang);
+            $input['input_sales'] = $user_id;
+            $input['input_subseles'] = ucwords($user_nama);
+            $input['password'] = Hash::make($nomorhp);
+            $input['input_maps'] = $request->input_maps;
+            $input['input_status'] = 'INPUT DATA';
+            $input['input_keterangan'] = $request->input_keterangan;
+            // dd($input);
+            InputData::create($input);
+            $notifikasi = [
+                'pesan' => 'Berhasil input data',
+                'alert' => 'success',
+            ];
+            return redirect()->route('admin.biller.sales')->with($notifikasi);
+        } else {
+            $notifikasi = [
+                'pesan' => 'Nomor Hp sudah terdaftar',
+                'alert' => 'error',
+            ];
+            return redirect()->route('admin.biller.sales_input')->with($notifikasi);
+        }
     }
 
     public function bayar(Request $request, $id)
@@ -354,6 +443,25 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
                         Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
                     }
+
+                    if ($data_pelanggan->reg_fee > 0) {
+                        $data_biaya = SettingBiaya::first();
+                        $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                        $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
+
+                        $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                        $mutasi_sales['smt_admin'] = $admin_user;
+                        $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                        $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                        $mutasi_sales['smt_cabar'] = '2';
+                        $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                        $mutasi_sales['smt_debet'] = 0;
+                        $mutasi_sales['smt_saldo'] = $total;
+                        $mutasi_sales['smt_biaya_adm'] = 0;
+                        $mutasi_sales['smt_status'] = 0;
+                        MutasiSales::create($mutasi_sales);
+                    }
+
                     Laporan::create($data_lap);
                     Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
                     Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
@@ -401,6 +509,24 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
                         Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
                     }
+                    if ($data_pelanggan->reg_fee > 0) {
+                        $data_biaya = SettingBiaya::first();
+                        $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                        $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
+
+                        $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                        $mutasi_sales['smt_admin'] = $admin_user;
+                        $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                        $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                        $mutasi_sales['smt_cabar'] = '2';
+                        $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                        $mutasi_sales['smt_debet'] = 0;
+                        $mutasi_sales['smt_saldo'] = $total;
+                        $mutasi_sales['smt_biaya_adm'] = 0;
+                        $mutasi_sales['smt_status'] = 0;
+                        MutasiSales::create($mutasi_sales);
+                    }
+
                     Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
                     Laporan::create($data_lap);
                     Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);

@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="page-inner mt--5">
-      <div class="h5 mt--5 text-light font-weight-bold ">COUNTER : {{$nama}}</div><br>
+      <div class="h5 mt--5 text-light font-weight-bold ">MITRA : {{$nama}}</div><br>
       <div class="row mt--1">
             <div class="col-6 col-sm-6">
               <div class="card ">
@@ -45,6 +45,12 @@
                                 <img src="{{ asset('atlantis/assets/img/payment.png') }}" class="card-img-center p-2" alt="...">
                                 </a>
                                 <div class="text-light mb-3 text-center">Payment</div>
+                              </td>
+                              <td>
+                                <a href="{{ route('admin.biller.sales') }}" class="card mb-2 card_custom1" style="width: 4rem;">
+                                <img src="{{ asset('atlantis/assets/img/add_users.png') }}" class="card-img-center p-2" alt="...">
+                                </a>
+                                <div class="text-light mb-3 text-center">Sales</div>
                               </td>
                               <td>
                                 <a href="#" onclick="comingson()" class="card mb-2 card_custom1" style="width: 4rem;">

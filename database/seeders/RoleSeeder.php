@@ -79,18 +79,7 @@ class RoleSeeder extends Seeder
                 'router_status' => 'Enable',
             ]
         );
-        Router::create(
-            [
-                'router_nama' => 'GUNUNG BATU',
-                'router_ip' => 'remote.rlradius.com',
-                'router_dns' => '49.0.0.49,49.0.0.94',
-                'router_port_api' => '3336',
-                'router_port_remote' => '3334',
-                'router_username' => 'ovallnet122',
-                'router_password' => '@Fauzi12234',
-                'router_status' => 'Enable',
-            ]
-        );
+      
 
         SettingBiaya::create(
             [

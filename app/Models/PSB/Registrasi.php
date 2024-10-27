@@ -21,6 +21,7 @@ class Registrasi extends Model
         'reg_ppn',
         'reg_dana_kas',
         'reg_dana_kerjasama',
+        'reg_fee',
         'reg_username',
         'reg_password',
         'reg_tgl_pasang',

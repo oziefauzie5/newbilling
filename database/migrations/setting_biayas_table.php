@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('biaya_ppn')->nullable();
             $table->string('biaya_psb')->nullable();
             $table->string('biaya_sales')->nullable();
+            $table->integer('biaya_sales_continue')->nullable();
             $table->string('biaya_deposit')->nullable();
             $table->string('biaya_kas')->nullable();
             $table->string('biaya_kerjasama')->nullable();

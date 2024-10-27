@@ -105,12 +105,13 @@ class LaporanController extends Controller
     public function topup(Request $request)
     {
         // dd($id);
-        $data['laporan'] = Laporan::select('laporans.id as laporan_id', 'laporans.*', 'setting_akuns.id as akun_id', 'setting_akuns.akun_nama', 'users.id as user_id', 'users.name')
+        $query = Laporan::select('laporans.id as laporan_id', 'laporans.*', 'setting_akuns.id as akun_id', 'setting_akuns.akun_nama', 'users.id as user_id', 'users.name')
             ->orderBy('laporans.lap_tgl', 'DESC')
             ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
             ->join('users', 'users.id', '=', 'laporans.lap_admin')
-            ->where('lap_admin', $request->user_admin)
-            ->get();
+            ->where('lap_admin', $request->user_admin);
+        $data['laporan'] = $query->get();
+        $data['sum'] = $query->get();
         // dd($data);
         $data['setting_akun'] = (new GlobalController)->setting_akun()->where('id', '!=', '5')->get();
         $data['admin'] = $request->user_admin;
@@ -323,8 +324,11 @@ class LaporanController extends Controller
     {
 
         // dd($id);
-        $data['admin_user'] = Auth::user()->id;
-        $data['admin_name'] = Auth::user()->name;
+        $admin_lap = Laporan::where('lap_id', $id)->first();
+        // $data['admin_user'] = Auth::user()->id;
+        $nama_admin = (new GlobalController)->data_user($admin_lap->lap_admin);
+
+        // $data['admin_name'] = Auth::user()->name;
 
         $query = Laporan::select('data_laporans.*', 'users.*', 'setting_akuns.*', 'laporans.*', 'laporans.created_at as tgl_trx')
             ->orderBy('tgl_trx', 'DESC')
@@ -335,6 +339,12 @@ class LaporanController extends Controller
         $data['laporan'] = $query->get();
         $data['total'] = Laporan::where('lap_id', $id)->sum('lap_kredit') + Laporan::where('lap_id', $id)->sum('lap_adm') - Laporan::where('lap_id', $id)->sum('lap_debet');
         $data['total_tunai'] = Laporan::where('lap_id', $id)->where('lap_akun', 2)->sum('lap_kredit') + Laporan::where('lap_id', $id)->where('lap_akun', 2)->sum('lap_adm') - Laporan::where('lap_id', $id)->where('lap_akun', 2)->sum('lap_debet');
+        $data['total_kas'] = Laporan::where('lap_id', $id)->sum('lap_fee_lingkungan');
+        $data['total_kerjasama'] = Laporan::where('lap_id', $id)->sum('lap_fee_kerja_sama');
+        $data['total_fee'] = Laporan::where('lap_id', $id)->sum('lap_fee_marketing');
+        $data['total_ppn'] = Laporan::where('lap_id', $id)->sum('lap_ppn');
+        $data['admin'] = $nama_admin->nama_user;
+        // dd($data['total_fee']);
 
 
 

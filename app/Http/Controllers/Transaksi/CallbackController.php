@@ -16,6 +16,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Applikasi\SettingBiaya;
+use App\Models\Mitra\MutasiSales;
 
 class CallbackController extends Controller
 {
@@ -112,6 +114,7 @@ class CallbackController extends Controller
 
 
                     if ($diffDays < -0) {
+
                         $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
                         $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
                         $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
@@ -152,6 +155,10 @@ class CallbackController extends Controller
                     $data_lap['lap_cabar'] = 'TRIPAY';
                     $data_lap['lap_debet'] = 0;
                     $data_lap['lap_kredit'] = $data->amount_received;
+                    $data_lap['lap_fee_lingkungan'] = $data_pelanggan->reg_dana_kas;
+                    $data_lap['lap_fee_kerja_sama'] = $data_pelanggan->reg_dana_kerjasama;
+                    $data_lap['lap_fee_marketing'] = $data_pelanggan->reg_fee;
+                    $data_lap['lap_ppn'] = $data_pelanggan->reg_ppn;
                     $data_lap['lap_adm'] = 0;
                     $data_lap['lap_jumlah_bayar'] = 0;
                     $data_lap['lap_keterangan'] = $data_pelanggan->inv_nama;
@@ -162,6 +169,27 @@ class CallbackController extends Controller
                     $data_lap['lap_img'] = "-";
 
                     Laporan::create($data_lap);
+
+
+                    if ($data_pelanggan->reg_fee > 0) {
+                        $data_biaya = SettingBiaya::first();
+                        $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                        $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
+
+                        $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                        $mutasi_sales['smt_admin'] = 10;
+                        $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                        $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                        $mutasi_sales['smt_cabar'] = '2';
+                        $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                        $mutasi_sales['smt_debet'] = 0;
+                        $mutasi_sales['smt_saldo'] = $total;
+                        $mutasi_sales['smt_biaya_adm'] = 0;
+                        $mutasi_sales['smt_status'] = 0;
+                        MutasiSales::create($mutasi_sales);
+                    }
+
+
                     $reg['reg_status'] = 'PAID';
                     Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
 

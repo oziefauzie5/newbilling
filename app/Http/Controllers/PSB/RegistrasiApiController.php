@@ -271,8 +271,10 @@ class RegistrasiApiController extends Controller
             $ppn_addons = $sbiaya->biaya_ppn / 100 * $addons;
             $ppn = $query->reg_ppn;
         } else {
+            $ppn_addons = 0;
             $ppn = 0;
         }
+        // return response()->json($ppn_addons);
 
         // return response()->json($biaya_perhari);
         if ($diffDays >= 1) {

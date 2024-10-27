@@ -3,43 +3,11 @@
 
 <div class="content">
   <div class="page-inner">
-    <div class="row">
-      <div href="{{route('admin.psb.list_input')}}" class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. </div>
-            <div class="text-muted mb-3">PENDAPATAN</div>
-          </div>
-        </div>
-      </div>
-      <div href="{{route('admin.reg.index')}}" class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. </div>
-            <div class="text-muted mb-3">PENGELUARAN</div>
-          </div>
-        </div>
-      </div>
-      <div href="{{route('admin.reg.index')}}" class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0"></div>
-            <div class="text-muted mb-3">TOTAL</div>
-          </div>
-        </div>
-      </div>
 
-    </div>
     <div class="row">
       <div class="card">
         <div class="card-body">
           <form>
-            <div class="row mb-1">
-              <div class="col-sm-3">
-                <a href="http://"><button class="btn btn-info ">PRINT</button></a>
-              </div>
-            </div>
-            <hr>
             <div class="row mb-1">
               <div class="col-sm-3">
                <input type="text" name="q" class="form-control form-control-sm">
@@ -87,11 +55,8 @@
                   <td id="center">{{$loop->iteration}}</td>
                   <td>
                     <div class="form-button-action">
-                      <a href="{{route('admin.lap.jurnal_print',['id'=>$d->lm_id])}}"><button type="button" class="btn btn-lg">
-                        <i class="fa fa-file"></i>
-                      </button></a>
-                      <a href="{{route('admin.lap.jurnal_print',['id'=>$d->lm_id])}}"><button type="button" class="btn btn-lg">
-                        <i class="fa fa-print"></i>
+                      <a href="{{route('admin.lap.jurnal_laporan',['id'=>$d->lm_id])}}"><button type="button" class="btn btn-lg">
+                        <i class="fa fa-eye"></i>
                       </button></a>
                     </div>
                   </td>

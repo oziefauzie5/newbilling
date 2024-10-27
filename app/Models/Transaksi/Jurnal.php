@@ -12,6 +12,7 @@ class Jurnal extends Model
         'jurnal_id',
         'jurnal_tgl',
         'jurnal_uraian',
+        'jurnal_qty',
         'jurnal_keterangan',
         'jurnal_kategori',
         'jurnal_admin',

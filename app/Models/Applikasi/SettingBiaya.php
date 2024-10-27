@@ -14,6 +14,7 @@ class SettingBiaya extends Model
         'biaya_ppn',
         'biaya_psb',
         'biaya_sales',
+        'biaya_sales_continue',
         'biaya_deposit',
         'biaya_kas',
         'biaya_kerjasama',

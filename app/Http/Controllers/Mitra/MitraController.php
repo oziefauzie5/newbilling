@@ -75,12 +75,14 @@ class MitraController extends Controller
         Role::updateorcreate($data_level);
         Permission::updateorcreate($data_level);
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
+        // dd($request->tgl_gabung);
         $d = date_create($request->tgl_gabung);
-        $th = date_format($d, "Y");
+        $th = date_format($d, "y");
         $bl = date_format($d, "m");
         $tg = date_format($d, "d");
         $rand = rand(100, 9999);
         $id_mitra = $th . $bl  . $rand . $tg;
+        // dd($id_mitra);
         $data['id'] = $id_mitra;
         $data['email'] = $request->email;
         $data['username'] = $request->username;
@@ -205,6 +207,7 @@ class MitraController extends Controller
     {
 
         $saldo = (new GlobalController)->total_mutasi($id);
+        $saldo_sales = (new GlobalController)->total_mutasi_sales($id);
 
 
         $data = array(
@@ -222,8 +225,15 @@ class MitraController extends Controller
                 ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasis.mt_mts_id')
                 ->where('mutasis.mt_mts_id', '=', $id)
                 ->get(),
+            'mutasi_saldo' =>  DB::table('mutasi_sales')
+                ->select('mutasi_sales.*', 'mutasi_sales.created_at as tgl_trx', 'mitra_settings.*')
+                ->orderBy('mutasi_sales.id', 'ASC')
+                ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasi_sales.smt_user_id')
+                ->where('mutasi_sales.smt_user_id', '=', $id)
+                ->get(),
             'akun' => (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'LAPORAN')->get(),
             'saldo' => $saldo,
+            'saldo_sales' => $saldo_sales,
         );
         return view('mitra/data', $data);
     }

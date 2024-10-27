@@ -108,7 +108,7 @@
                   </div>
                   <div class="col">
                     <label for="">Harga<strong class="text-danger">*</strong></label>
-                    <input type="number" class="form-control" id="harga" name="harga" value="" required>
+                    <input type="number" class="form-control" id="harga" name="harga" value="0" required>
                     <div class="invalid-feedback">
                         Harga barang tidak boleh kosong
                     </div>

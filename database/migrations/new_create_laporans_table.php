@@ -20,6 +20,10 @@ return new class extends Migration
             $table->string('lap_cabar')->nullable();
             $table->string('lap_kredit')->nullable();
             $table->string('lap_debet')->nullable();
+            $table->integer('lap_fee_lingkungan')->nullable();
+            $table->integer('lap_fee_kerja_sama')->nullable();
+            $table->integer('lap_fee_marketing')->nullable();
+            $table->integer('lap_ppn')->nullable();
             $table->string('lap_jumlah_bayar')->nullable();
             $table->string('lap_adm')->nullable();
             $table->string('lap_akun')->nullable();

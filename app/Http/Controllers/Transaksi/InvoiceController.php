@@ -10,6 +10,7 @@ use App\Models\Applikasi\SettingWaktuTagihan;
 use App\Models\Applikasi\SettingWhatsapp;
 use App\Models\Mitra\MitraSetting;
 use App\Models\Mitra\Mutasi;
+use App\Models\Mitra\MutasiSales;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
@@ -527,6 +528,10 @@ class InvoiceController extends Controller
             $data_lap['lap_cabar'] = $request->cabar;
             $data_lap['lap_debet'] = 0;
             $data_lap['lap_kredit'] = $data_pelanggan->inv_total;
+            $data_lap['lap_fee_lingkungan'] = $data_pelanggan->reg_dana_kas;
+            $data_lap['lap_fee_kerja_sama'] = $data_pelanggan->reg_dana_kerjasama;
+            $data_lap['lap_fee_marketing'] = $data_pelanggan->reg_fee;
+            $data_lap['lap_ppn'] = $data_pelanggan->reg_ppn;
             $data_lap['lap_adm'] = $biaya_adm;
             $data_lap['lap_jumlah_bayar'] = $j_bayar;
             $data_lap['lap_keterangan'] = $data_pelanggan->inv_nama;
@@ -536,6 +541,23 @@ class InvoiceController extends Controller
             $data_lap['lap_status'] = 0;
             $data_lap['lap_img'] = $filename;
 
+            if ($data_pelanggan->reg_fee > 0) {
+                $data_biaya = SettingBiaya::first();
+                $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
+
+                $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                $mutasi_sales['smt_admin'] = $admin_user;
+                $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                $mutasi_sales['smt_cabar'] = '2';
+                $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                $mutasi_sales['smt_debet'] = 0;
+                $mutasi_sales['smt_saldo'] = $total;
+                $mutasi_sales['smt_biaya_adm'] = 0;
+                $mutasi_sales['smt_status'] = 0;
+                MutasiSales::create($mutasi_sales);
+            }
             Laporan::create($data_lap);
             $reg['reg_status'] = 'PAID';
             Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);

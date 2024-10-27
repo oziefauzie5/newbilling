@@ -32,6 +32,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Mitra\MutasiSales;
 
 class RegistrasiController extends Controller
 {
@@ -45,7 +46,17 @@ class RegistrasiController extends Controller
     }
     public function store(Request $request)
     {
-        $admin = Auth::user()->name;
+        $sbiaya = SettingBiaya::first();
+        // $sbiaya->biaya_psb
+
+        // $admin = Auth::user()->name;
+        $user = (new GlobalController)->user_admin();
+        $admin = $user['user_nama'];
+        $cek_sales = (new GlobalController)->role($request->reg_sales);
+
+
+
+
         $router_nama = Router::whereId($request->reg_router)->first();
         $paket_nama = Paket::where('paket_id', $request->reg_profile)->first();
 
@@ -55,6 +66,7 @@ class RegistrasiController extends Controller
         Session::flash('reg_hp', $request->reg_hp);
         Session::flash('reg_alamat_pasang', $request->reg_alamat_pasang);
         Session::flash('reg_maps', $request->reg_maps);
+        Session::flash('reg_sales', $request->reg_sales);
         Session::flash('reg_layanan', $request->reg_layanan);
         Session::flash('reg_router', $request->reg_router);
         Session::flash('router_nama', $router_nama->router_nama);
@@ -89,6 +101,7 @@ class RegistrasiController extends Controller
             'reg_hp' => 'required',
             'reg_alamat_pasang' => 'required',
             'reg_maps' => 'required',
+            'reg_sales' => 'required',
             'reg_layanan' => 'required',
             'reg_router' => 'required',
             'reg_username' => 'required',
@@ -111,6 +124,7 @@ class RegistrasiController extends Controller
             'reg_hp.required' => 'No Whatsapp tidak boleh kosong',
             'reg_alamat_pasang.required' => 'Alamat tidak boleh kosong',
             'reg_maps.required' => 'Maps tidak boleh kosong',
+            'reg_sales.required' => 'Sales tidak boleh kosong',
             'reg_layanan.required' => 'Layanan tidak boleh kosong',
             'reg_router.required' => 'Router tidak boleh kosong',
             'reg_username.required' => 'Username tidak boleh kosong',
@@ -134,8 +148,14 @@ class RegistrasiController extends Controller
         // $tgl_aktif = date('d/m/Y', strtotime($dates));
         $tgl_pasang = Carbon::create($tanggal)->addDay(1)->toDateString();
 
+        if ($cek_sales->role_id == 10 && $cek_sales->role_id == 13) {
+            $data['reg_fee'] = $sbiaya->biaya_sales_continue;
+        } else {
+            $data['reg_fee'] = 0;
+        }
 
         $data['reg_idpel'] = $request->reg_idpel;
+        $data['reg_sales'] = $request->reg_sales;
         $data['reg_nolayanan'] = $request->reg_nolayanan;
         $data['reg_layanan'] = $request->reg_layanan;
         $data['reg_router'] = $request->reg_router;
@@ -164,7 +184,7 @@ class RegistrasiController extends Controller
         $data['reg_progres'] = '0';
         $update['input_maps'] =  $request->reg_maps;
         $update['input_status'] =  'REGIST';
-
+        // dd($data);
 
 
 
@@ -571,7 +591,10 @@ Diregistrasi Oleh : *' . $admin . '*
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
         $data['biaya_sales'] = SettingBiaya::first();
-        $data['nama_admin'] = Auth::user()->name;
+        // dd($data['biaya_sales']['biaya_sales_continue']);
+        $user = (new GlobalController)->user_admin();
+        $data['nama_admin'] = $user['user_nama'];
+        $data['id_admin'] = $user['user_id'];
         $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
         if ($teknisi) {
             $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'pakets.*', 'teknisis.*', 'teknisis.created_at as mulai',)
@@ -583,6 +606,25 @@ Diregistrasi Oleh : *' . $admin . '*
                 ->where('teknisis.teknisi_job', 'PSB')
                 ->where('teknisis.teknisi_psb', '>', '0')
                 ->first();
+
+            // if ($data['kas']->reg_fee > 0) {
+            //     $saldo = (new globalController)->total_mutasi_sales($data['id_admin']);
+            //     $total = $saldo + $data['biaya_sales']['biaya_sales_continue']; #SALDO MUTASI = DEBET - KREDIT
+
+            //     $mutasi_sales['smt_user_id'] = $data['kas']->input_sales;
+            //     $mutasi_sales['smt_admin'] = $data['id_admin'];
+            //     $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+            //     $mutasi_sales['smt_deskripsi'] = $data['kas']->input_nama;
+            //     $mutasi_sales['smt_cabar'] = '2';
+            //     $mutasi_sales['smt_kredit'] = $data['biaya_sales']['biaya_sales_continue'];
+            //     $mutasi_sales['smt_debet'] = 0;
+            //     $mutasi_sales['smt_saldo'] = $total;
+            //     $mutasi_sales['smt_biaya_adm'] = 0;
+            //     MutasiSales::create($mutasi_sales);
+            // }
+
+            // dd($mutasi_sales);
+
             $update['reg_progres'] = '4';
             Registrasi::where('reg_idpel', $id)->update($update);
 
@@ -792,7 +834,7 @@ Diregistrasi Oleh : *' . $admin . '*
                         Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
                         SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
                     } else {
-                        $inv['inv_id'] = rand(10000, 19999);
+                        $inv['inv_id'] = (new GlobalController)->no_inv();
                         $sub_inv['subinvoice_id'] = $inv['inv_id'];
                         Invoice::create($inv);
                         SubInvoice::create($sub_inv);
@@ -1005,7 +1047,7 @@ Diregistrasi Oleh : *' . $admin . '*
                                 "subbarang_stok" => 1,
                                 "subbarang_harga" => 0,
                                 "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '0',
+                                "subbarang_status" => '5',
                                 "subbarang_admin" => $nama_admin,
                             ]
                         );
@@ -1084,7 +1126,7 @@ Diregistrasi Oleh : *' . $admin . '*
                                 "subbarang_stok" => 1,
                                 "subbarang_harga" => 0,
                                 "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '0',
+                                "subbarang_status" => '5',
                                 "subbarang_admin" => $nama_admin,
                             ]
                         );

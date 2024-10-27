@@ -116,6 +116,12 @@
                     <input type="text" class="form-control" id="tampil_maps" name="reg_maps" value="{{ Session::get('reg_maps') }}" required>
                   </div>
               </div>
+              <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Sales ID</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="tampil_sales" name="reg_sales" value="{{ Session::get('reg_sales') }}" required>
+                  </div>
+              </div>
               <h3 class="mt-3 text-bolt">INTERNET & HADHWARE</h3><hr>
               
               <div class="form-group row">
@@ -399,7 +405,7 @@
               </div>
               {{-- <label class="form-check col-sm-2 col-form-label">Tanggal Penagihan</label> --}}
               {{-- <div class="col-sm-4">
-                  <input type="text" class="form-control" id="kode_unik" name="" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" readonly >
+                  <input type="text" class="form-control" id="kode_unik" name="" value="" readonly >
               </div> --}}
             </div>
             <h3 class="mt-3 text-bolt">CATATAN</h3><hr>

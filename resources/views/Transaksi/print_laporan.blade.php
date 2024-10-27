@@ -86,7 +86,7 @@
 <h2>LAPORAN HARIAN</h2>
 <hr>
         <div id="client">
-            <h3>Nama : {{ $admin_name }} </h3>
+            <h3>Nama : {{ $admin }} </h3>
             <h3 class="no">ID Laporan : {{ $data_laporan->data_lap_id }}</h3>
         </div>
         <div id="invoice">
@@ -121,6 +121,32 @@
     </tbody>
 </table>
 <br><br>
+<table id="customers">
+    <thead>
+        <tr>
+            <th colspan="6">REKAPITULASI</th>
+        </tr>
+        <tr>
+            <th>PENDAPATAN</th>
+            <th>DANA LINGKUNGAN</th>
+            <th>DANA KERJA SAMA</th>
+            <th>FEE SALES</th>
+            <th>PPN</th>
+            <th>TOTAL</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <td id="center">Rp. {{number_format($total-$total_kerjasama-$total_fee-$total_kas-$total_ppn)}}</td>
+            <td id="center">Rp. {{number_format($total_kas)}}</td>
+            <td id="center">Rp. {{number_format($total_kerjasama)}}</td>
+            <td id="center">Rp. {{number_format($total_fee)}}</td>
+            <td id="center">Rp. {{number_format($total_ppn)}}</td>
+            <td id="center">Rp. {{number_format($total)}}</td>
+        </tr>
+    </tbody>
+</table>
+<br><br>
     <table id="customers">
         <thead>
             <tr>
@@ -128,10 +154,11 @@
                 <th>TANGGAL</th>
                 <th>INVOICE</th>
                 <th>KETERANGAN</th>
-                <th>CABAR</th>
-                <th>METODE BAYAR</th>
-                <th>KREDIT</th>
-                <th>DEBET</th>
+                <th>FEE LINGKUNGAN</th>
+                <th>FEE KERJA SAMA</th>
+                <th>FEE SALES</th>
+                <th>PPN</th>
+                <th>TOTAL</th>
             </tr>
         </thead>
         <tbody>
@@ -141,10 +168,11 @@
                 <td id="center">{{$d->tgl_trx}}</td>
                 <td id="center">{{$d->lap_inv}}</td>
                 <td>{{$d->lap_keterangan}}</td>
-                <td>{{$d->lap_cabar}}</td>
-                <td>{{$d->akun_nama}}</td>
+                <td id="right">{{number_format($d->lap_fee_lingkungan)}}</td>
+                <td id="right">{{number_format($d->lap_fee_kerja_sama)}}</td>
+                <td id="right">{{number_format($d->lap_fee_marketing)}}</td>
+                <td id="right">{{number_format($d->lap_ppn)}}</td>
                 <td id="right">{{number_format($d->lap_kredit)}}</td>
-                <td id="right">{{number_format($d->lap_debet)}}</td>
             </tr>
             @endforeach
         </tbody>
@@ -156,7 +184,7 @@
             <th width="50%">Diterima Oleh</th>
         </tr>
         <tr>
-            <th width="50%" higth="20px">{{ $admin_name }}</th>
+            <th width="50%" higth="20px">{{ $admin }}</th>
             <th width="50%">...................................</th>
         </tr>
     </table>

@@ -974,6 +974,7 @@ url = url.replace(':id', idpel);
 								document.getElementById("tampil_nolay").value =data['nolay'];
 								document.getElementById("tampil_username").value =data['username'];
 								document.getElementById("tampil_maps").value =data['tampil_data']['input_maps'];
+								document.getElementById("tampil_sales").value =data['tampil_data']['input_sales'];
 								document.getElementById("tampil_tgl").value =data['tampil_data']['input_tgl'];
 								document.getElementById("tampil_subsales").value =data['tampil_data']['input_subseles'];
 								document.getElementById("tampil_keterangan").value =data['tampil_data']['input_keterangan'];
@@ -1833,26 +1834,168 @@ for (let i = 0; i < cb_pencairan.length; i++) {
 		//////PENCAIRAN JURNAL
 		let jurnal_pencairan = document.querySelectorAll(".jurnal_pencairan")
 let pencairan_total = document.getElementById("pencairan_total")
+let cpsb = 0
+let csales = 0
 let sum2 = 0
+let sum3 = 0
 let result = "";
 for (let i = 0; i < jurnal_pencairan.length; i++) {
   jurnal_pencairan[i].addEventListener("change", function(e) {   
 	  if (jurnal_pencairan[i].checked != false) {
-		//   console.log('e.target.nama : ' + JSON.stringify(e.target.dataset.nama))  
+		  //   console.log('e.target.nama : ' + JSON.stringify(e.target.dataset.nama))  
 		  result += e.target.dataset.nama
-                        + " " + ", ";
-		  sum2 = sum2 +Number(e.target.dataset.price) 
+		  + " " + ", ";
+		  console.log(i)
+		  sum2 = sum2 +Number(e.target.dataset.psb) 
+		  sum3 = sum3 +Number(e.target.dataset.sales) 
+		  cpsb = cpsb +Number(e.target.dataset.cpsb) 
+		  csales = csales +Number(e.target.dataset.csales) 
     } else {
-      sum2 =  sum2 -Number(e.target.dataset.price) 
+		cpsb = cpsb -Number(e.target.dataset.cpsb) 
+		csales = csales -Number(e.target.dataset.csales) 
+      sum2 =  sum2 -Number(e.target.dataset.psb) 
+      sum3 =  sum3 -Number(e.target.dataset.sales) 
     }
 	$("#uraian").val(result);
-	$("#jumlah").val(sum2);
+	$("#psb").val(sum2);
+	$("#sales").val(sum3);
+	$("#cpsb").val(cpsb);
+	$("#csales").val(csales);
+	$("#jumlah").val(sum2+sum3);
 	let rupiah_pencairan = new Intl.NumberFormat('id-ID', {
                               style: 'currency',minimumFractionDigits: 0,
                               currency: 'IDR',
-                            }).format(sum2);
+                            }).format(sum2+sum3);
 							$(".pencairan_total").val();
 							pencairan_total.innerHTML = rupiah_pencairan
+			
+  })
+}
+		//////PENCAIRAN JURNAL
+		let pencairan_fee = document.querySelectorAll(".pencairan_fee")
+let pencairan_total_fee = document.getElementById("pencairan_total_fee")
+let count_fee = 0
+let total_komisi = 0
+let desk = "";
+for (let i = 0; i < pencairan_fee.length; i++) {
+  pencairan_fee[i].addEventListener("change", function(e) {   
+	  if (pencairan_fee[i].checked != false) {
+		  //   console.log('e.target.nama : ' + JSON.stringify(e.target.dataset.nama))  
+		  
+		//   desk += e.target.dataset.pelanggan
+		//   + " " + ", ";
+
+		  total_komisi = total_komisi +Number(e.target.dataset.fee) 
+		  count_fee = count_fee +Number(e.target.dataset.count_fee)
+		  desk +=count_fee + ". "+ e.target.dataset.pelanggan
+		  + "\n"; 
+    } else {
+		total_komisi =  total_komisi -Number(e.target.dataset.fee) 
+		count_fee = count_fee -Number(e.target.dataset.count_fee) 
+    }
+	$("#desk").text(desk);
+	$("#fee").val(e.target.dataset.fee);
+	$("#sales_id").val(e.target.dataset.sales_id);
+	$("#total_komisi").val(total_komisi);
+	$("#count_fee").val(count_fee);
+	let rupiah_pencairan = new Intl.NumberFormat('id-ID', {
+                              style: 'currency',minimumFractionDigits: 0,
+                              currency: 'IDR',
+                            }).format(total_komisi);
+							$(".pencairan_total_fee").val();
+							pencairan_total_fee.innerHTML = rupiah_pencairan
+			
+  })
+}
+
+				
+				$('.submit_pencairan').click(function(){  
+					var akun=$(".akun").val();
+					var penerima=$(".penerima").val();
+					var idpel = []; 
+					if(idpel==''){
+						$('#notif3').html('<small class="form-text text-muted text-danger">Metode Bayar tidak boleh kosong</small>');
+					} else{
+						$('#notif3').html('');
+					}
+					if(akun==''){
+						$('#notif1').html('<small class="form-text text-muted text-danger">Metode Bayar tidak boleh kosong</small>');
+					} else{
+						$('#notif1').html('');
+					}
+
+					if(penerima==''){
+						$('#notif2').html('<small class="form-text text-muted text-danger">Penerima tidak boleh kosong</small>');
+					} else{
+						$('#notif2').html('');
+					}
+
+
+			var url = '{{ route("admin.inv.konfirm_pencairan") }}';
+			$('.cb_pencairan').each(function(){  
+					if(this.checked) {              
+						idpel.push($(this).val());                                                                               
+					}  
+				});                              
+
+				$.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: {
+						idpel:idpel,
+						penerima:penerima,
+						akun:akun,
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+						location.reload();
+						if(data['saldo_tidak_cukup']){
+							
+							swal("Berhasil!", "Diskon berhasil ditambahkan", {
+								icon : "error",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-error'
+							}
+						},
+					});
+					}else{
+						swal("Berhasil!", "Diskon berhasil ditambahkan", {
+								icon : "success",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-success'
+							}
+						},
+					});
+					}
+                    }
+                });
+		});  
+		//////AKUMULASI JURNAL
+		let jurnal_akumulasi = document.querySelectorAll(".jurnal_akumulasi")
+let akumulasi_total = document.getElementById("akumulasi_total")
+let sum_akum = 0
+let sum_count = 0;
+for (let i = 0; i < jurnal_akumulasi.length; i++) {
+  jurnal_akumulasi[i].addEventListener("change", function(e) {   
+	  if (jurnal_akumulasi[i].checked != false) {
+		//   console.log('e.target.nama : ' + JSON.stringify(e.target.dataset.count))  
+		  sum_count = sum_count +Number(e.target.dataset.count) 
+		  sum_akum = sum_akum +Number(e.target.dataset.price_akum) 
+		} else {
+		sum_count = sum_count -Number(e.target.dataset.count) 
+      sum_akum =  sum_akum -Number(e.target.dataset.price_akum) 
+    }
+	$("#jumlah_count").val(sum_count);
+	$("#jumlah_akum").val(sum_akum);
+	let rupiah_akumulasi = new Intl.NumberFormat('id-ID', {
+                              style: 'currency',minimumFractionDigits: 0,
+                              currency: 'IDR',
+                            }).format(sum_akum);
+							$(".akumulasi_total").val();
+							akumulasi_total.innerHTML = rupiah_akumulasi
 			
   })
 }
@@ -1954,16 +2097,16 @@ $("#update-tgl").change(function() {
     
 	
 	if(month > month_now ){
-var status = month-month_now; 
+		var status = month-month_now; 
 	}
-//awal
+	// console.log(status);
+	//awal
 var id=$("#tampil_idpel").val();
 var tagihan=$("#biaya-tagihan").val();
-// console.log(id);
 var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
     url = url.replace(':id', id);
-                $.ajax({
-                  url: url,
+	$.ajax({
+		url: url,
                   type: 'PUT',
                   data: {
                     date:date,
@@ -1972,6 +2115,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
                         },
                         dataType: 'json',
                         success: function(data) {
+							console.log(data);
 
 							let rupiahFormat = new Intl.NumberFormat('id-ID', {
 								style: 'currency',minimumFractionDigits: 0,

@@ -7,6 +7,7 @@ use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWhatsapp;
 use App\Models\Mitra\Mutasi;
+use App\Models\Mitra\MutasiSales;
 use App\Models\PSB\InputData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,17 +17,20 @@ use App\Models\Transaksi\Kendaraan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+
 class GlobalController extends Controller
 {
     public function tanggal() #mennampilkan data user
     {
         $tanggal = Carbon::now();
+
         return $tanggal;
     }
     public function user_admin() #mennampilkan data user
     {
         $data['user_id'] = Auth::user()->id;
         $data['user_nama'] = Auth::user()->name;
+        $data['user_hp'] = Auth::user()->hp;
         return $data;
     }
     public function setting_biaya() #mennampilkan data Setting Biaya
@@ -43,6 +47,16 @@ class GlobalController extends Controller
             ->where('users.id', '=', $iduser)
             ->first();
         return $data_user;
+    }
+    public function role($iduser) #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
+    {
+        $role =  DB::table('users')
+            ->select('users.name AS nama_user', 'roles.name', 'roles.id as role_id', 'users.hp', 'users.email', 'users.alamat_lengkap', 'users.username', 'users.password')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('users.id', '=', $iduser)
+            ->first();
+        return $role;
     }
 
     public function all_user() #mennampilkan data user
@@ -80,11 +94,29 @@ class GlobalController extends Controller
 
         return $saldo;
     }
+    public function total_mutasi_sales($id)
+    {
+        $debet = MutasiSales::where('smt_user_id', $id)->sum('smt_debet');
+        $kredit = MutasiSales::where('smt_user_id', $id)->sum('smt_kredit');
+        $saldo = $kredit - $debet;
+
+        return $saldo;
+    }
     public function mutasi_jurnal()
     {
-        $data['debet'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_debet');
-        $data['kredit'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_kredit');
+        $data['debet'] = Jurnal::sum('jurnal_debet');
+        $data['kredit'] = Jurnal::sum('jurnal_kredit');
         $data['saldo'] = $data['kredit'] - $data['debet'];
+
+        return $data;
+    }
+    public function mutasi_jurnal_reimburse($ktg, $jenis, $plat)
+    {
+        $month = date('m', strtotime(Carbon::now()));
+        // dd($ktg);
+        $data['debet'] = Jurnal::whereMonth('created_at', $month)->where('jurnal_kategori', $ktg)->where('jurnal_keterangan', $jenis)->where('jurnal_uraian', $plat)->sum('jurnal_debet');
+        $data['kredit'] = Jurnal::whereMonth('created_at', $month)->where('jurnal_kategori', $ktg)->where('jurnal_keterangan', $jenis)->where('jurnal_uraian', $plat)->sum('jurnal_kredit');
+        $data['saldo'] = $data['debet'] - $data['kredit'];
 
         return $data;
     }
@@ -197,6 +229,7 @@ class GlobalController extends Controller
 
         // dd($bulanRom);
         $latest = Invoice::latest()->first();
+        // dd($latest);
         if (! $latest) {
             return $bln . '0001';
         }
@@ -213,6 +246,23 @@ class GlobalController extends Controller
         }
         $string = substr($latest->id, 2);
         return sprintf('%05d', $latest->id + 1);
+    }
+    // test pembuatan idpelanggan otomatis
+    function idpel_()
+    {
+        $bl = date('m', strtotime(new Carbon()));
+        $count = InputData::count();
+        $latest = InputData::latest()->first();
+
+        if (! $latest) {
+            return $bl . '0001';
+        }
+        $cek_count = InputData::where('id', $count)->count();
+        if ($cek_count) {
+            return $bl . sprintf('%04d', $latest->id + 1);
+        } else {
+            return $bl . sprintf('%04d', $count + 1);
+        }
     }
 
     function data_kendaraan()

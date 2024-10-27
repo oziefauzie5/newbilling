@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('jurnal_uraian')->nullable();
             $table->string('jurnal_kategori')->nullable();
             $table->string('jurnal_keterangan')->nullable();
+            $table->integer('jurnal_qty')->nullable();
             $table->string('jurnal_admin')->nullable();
             $table->string('jurnal_penerima')->nullable();
             $table->string('jurnal_idpel')->nullable();

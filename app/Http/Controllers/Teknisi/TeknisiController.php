@@ -903,7 +903,7 @@ Penanganan yang kami lakukan :
 
                 if ($cek_suplier) {
                     // JIKA SUPLIER ADA MAKA EKSEKUSI BUAT DAFTAR BARANG
-                    $data['supplier'] = $cek_suplier->id_supplier;
+                    $supplier['supplier'] = $cek_suplier->id_supplier;
                 } else {
                     // JIKA SUPLIER TIDAK ADA MAKA EKSEKUSI BUAT SUPLIER TERLEBIH DAHULU
                     $count = supplier::count();
@@ -920,25 +920,28 @@ Penanganan yang kami lakukan :
                         'supplier_alamat' => 'Jl. Tampomas Perum. Alam Tirta Lestari Blok D5 No 06',
                         'supplier_tlp' => '081386987015',
                     ]);
-                    $data['supplier'] = $id_supplier;
+                    $supplier['supplier'] = $id_supplier;
                 }
 
-                $cek_barang = Barang::where('id_supplier', $data['supplier'])->first();
+                $cek_barang = Barang::where('id_supplier', $supplier['supplier'])->first();
+                // dd($cek_barang->id_barang);
                 if ($cek_barang) {
-                    $id['subbarang_idbarang'] = $cek_barang->id_barang;
+                    $subbarang_idbarang = $cek_barang->id_barang;
                 } else {
-
-                    $id['subbarang_idbarang'] = mt_rand(100000, 999999);
+                    $subbarang_idbarang = mt_rand(100000, 999999);
                     Barang::create([
-                        'id_barang' => $id['subbarang_idbarang'],
+                        'id_barang' => $subbarang_idbarang,
                         'id_trx' => '-',
-                        'id_supplier' => $data['supplier'],
+                        'id_supplier' => $supplier['supplier'],
                         'barang_tgl_beli' => '1',
                     ]);
                 }
+
+                // dd($subbarang_idbarang);
+
                 $id_subbar = mt_rand(100000, 999999);
                 $create['id_subbarang'] = $id_subbar;
-                $create['subbarang_idbarang'] = $id['subbarang_idbarang'];
+                $create['subbarang_idbarang'] = $subbarang_idbarang;
                 $create['subbarang_nama'] = 'ONT';
                 $create['subbarang_keterangan'] = $request->alasan;
                 $create['subbarang_deskripsi'] = 'Dalam Pengecekan';

@@ -126,6 +126,7 @@
                 <th>AKUN</th>
                 <th>KREDIT</th>
                 <th>DEBET</th>
+                <th>SALDO</th>
             </tr>
         </thead>
         <tbody>
@@ -139,70 +140,36 @@
                 <td>{{$d->akun_nama}}</td>
                 <td id="right">{{number_format($d->jurnal_kredit)}}</td>
                 <td id="right">{{number_format($d->jurnal_debet)}}</td>
+                <td id="right">{{number_format($d->jurnal_saldo)}}</td>
             </tr>
             @endforeach
-            <tr >
-                <td colspan="6" id="center">JUMLAH</td>
-                <td id="right">{{number_format($kredit)}}</td>
-                <td id="right">{{number_format($debet)}}</td>
-            </tr>
-            <tr >
-                <td colspan="6" id="center">TOTAL</td>
-                <td colspan="2" id="center">{{number_format($kredit-$debet)}}</td>
-            </tr>
+           
+    
+
         </tbody>
     </table>
     <br><br>
-    <hr>
-    <h2 id="center">TRANSAKSI</h2>
     <table id="customers">
         <thead>
             <tr>
-                <th width="25px">No</th>
-                <th width="100px">TANGGAL</th>
-                <th>DESKRIPSI</th>
-                <th width="35px">QTY</th>
-                <th width="100px">KREDIT</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($transaksi as $d)
-            <tr>
-                <td id="center">{{$loop->iteration}}</td>
-                <td id="center">{{date('d-m-Y',strtotime($d->created_at))}}</td>
-                <td>{{$d->trx_deskripsi}}</td>
-                <td id="center">{{$d->trx_qty}}</td>
-                <td id="right">{{number_format($d->trx_total)}}</td>
-            </tr>
-            @endforeach
-            <tr >
-                <td colspan="3" id="center">JUMLAH</td>
-                <td id="center">{{$transaksi_count}}</td>
-                <td id="right">{{number_format($transaksi_total)}}</td>
-            </tr>
-        </tbody>
-    </table>
-    <br>
-    <hr>
-    <h2 id="center">INVOICE</h2>
-    <table id="customers">
-        <thead>
-            <tr>
-                <th width="25px">No</th>
-                <th>DESKRIPSI</th>
-                <th width="35px">QTY</th>
-                <th width="100px">KREDIT</th>
+                <th>SALDO AWAL</th>
+                <th>TOTAL TRANSAKSI DEBET</th>
+                <th>TOTAL TRANSAKSI KREDIT</th>
+                <th>SALDO AKHIR</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td id="center">1</td>
-                <td id="center">PENDAPATAN INVOICE {{$periode}}</td>
-                <td>{{$invoice_count}}</td>
-                <td id="right">{{number_format($inv_total)}}</td>
+                <td></td>
+                <td id="right">{{number_format($kredit)}}</td>
+                <td id="right">{{number_format($debet)}}</td>
+                <td id="right">{{number_format($kredit-$debet)}}</td>
             </tr>
         </tbody>
     </table>
+
+   
+   
     
     <br><br><br><br>
     <table id="ttd">
