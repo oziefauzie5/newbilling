@@ -13,12 +13,12 @@
     <div class="page-inner mt--5">
       <div class="user mt--5">
         <div class="avatar-sm float-left mr-2">
-          <img src="@if( asset('storage/photo-user/'.Auth::user()->photo)) {{ asset('storage/photo-user/'.Auth::user()->photo) }} @else {{ asset('atlantis/assets/img/user.png') }} @endif" alt=".." class="avatar-img rounded-circle">
+          <img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }} @else {{ asset('atlantis/assets/img/user.png') }}@endif" alt=".." class="avatar-img rounded-circle"> 
         </div>
         <div class="info">
           <span> 
               <span class="user-level text-light font-weight-bold">{{strtoupper(Auth::user()->name)}}</span><br>
-              <h6 class="user-level text-light ">TEKNISI</h6>
+              <h6 class="user-level text-light ">{{$role}}</h6>
           <div class="clearfix"></div>
         </span>
         </div>

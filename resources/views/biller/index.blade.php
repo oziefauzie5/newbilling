@@ -11,7 +11,18 @@
         </div>
     </div>
     <div class="page-inner mt--5">
-      <div class="h5 mt--5 text-light font-weight-bold ">MITRA : {{$nama}}</div><br>
+      {{-- <div class="h5 mt--5 text-light font-weight-bold ">MITRA : {{$nama}}</div><br> --}}
+      <div class="user mt--5">
+        <div class="avatar-sm float-left mr-2">
+          <img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }} @else {{ asset('atlantis/assets/img/user.png') }}@endif" alt=".." class="avatar-img rounded-circle"> 
+        </div>
+        <div class="info">
+          <span> 
+              <span class="user-level text-light font-weight-bold">{{strtoupper(Auth::user()->name)}}</span><br>
+              <h6 class="user-level text-light ">{{$role}}</h6>
+          <div class="clearfix"></div>
+        </span>
+        </div>
       <div class="row mt--1">
             <div class="col-6 col-sm-6">
               <div class="card ">
@@ -33,6 +44,7 @@
                 </div>
               </div>
             </div>
+          </div>
           </div>
 
           <section class="content">

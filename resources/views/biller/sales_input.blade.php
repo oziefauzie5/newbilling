@@ -13,19 +13,19 @@
     <div class="page-inner mt--5">
       <div class="user mt--5">
         <div class="avatar-sm float-left mr-2">
-          <img src="{{ asset('storage/photo-user/'.Auth::user()->photo) }}" alt="..." class="avatar-img rounded-circle">
+          <img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }} @else {{ asset('atlantis/assets/img/user.png') }}@endif" alt=".." class="avatar-img rounded-circle"> 
         </div>
         <div class="info">
           <span> 
               <span class="user-level text-light font-weight-bold">{{strtoupper(Auth::user()->name)}}</span><br>
-              <h6 class="user-level text-light ">TEKNISI</h6>
+              <h6 class="user-level text-light ">{{$role}}</h6>
           <div class="clearfix"></div>
         </span>
         </div>
 
       {{-- <div class="h5 mt--5 text-light font-weight-bold ">TEKNISI : {{strtoupper($nama)}}</div><br> --}}
       
-        <div class="row mt-1">
+        {{-- <div class="row mt-1">
           <div class="col-6 col-sm-6">
             <div class="card">
               <div class="card-body p-3 text-center">
@@ -47,16 +47,16 @@
             </div>
           </div>
             
-          </div>
-          <section class="content mt-1">
+          </div> --}}
+          {{-- <section class="content mt-1">
 
-            <div class="page-inner">
-            <div class="row">
-              <div class="col-md-6">
+            <div class="page-inner"> --}}
+            <div class="row mt-1">
+              <div class="col-md-12">
                 <div class="card">
-                  <div class="card-header bg-primary">
+                  {{-- <div class="card-header bg-primary">
                     <h3 class="card-title">Tambah Pelanggan</h3>
-                  </div>
+                  </div> --}}
                   @if ($errors->any())
                   <div class="alert alert-danger" role="alert">
                      <ul>
@@ -78,7 +78,7 @@
                     <div class="form-group">
                       <label>Nama Lengkap</label>
                       <input id="input_nama" type="text" class="form-control" name="input_nama"placeholder="Nama Lengkap" value="{{ Session::get('input_nama') }}" required>
-                      <input id="id" type="text" class="form-control" name="id"value="{{ rand(10000,99999) }}" required>
+                      <input id="id" type="hidden" class="form-control" name="id"value="{{ rand(10000,99999) }}" required>
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -131,17 +131,18 @@
                   </div>
                   <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                  <a href="{{route('admin.biller.sales')}}"><button type="button" class="btn btn-primary">Kembali</button></a>
                   </div>
-                </form>
                 </div>
               </div>
               </div>
               </div>
               </div>
             </div>
-            </div>
+            {{-- </div>
  
-    </section>
+    </section> --}}
 
 
 

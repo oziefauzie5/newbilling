@@ -150,6 +150,10 @@ class BillerController extends Controller
 
         $admin_user = Auth::user()->id;
         $data['nama'] = Auth::user()->name;
+
+        $role = (new globalController)->data_user($admin_user);
+        $data['role'] = $role->name;
+
         $data['saldo'] = (new globalController)->total_mutasi($admin_user);
         $data['biaya_adm'] = DB::table('mutasis')->whereRaw('extract(month from created_at) = ?', [$month])->where('mt_mts_id', $admin_user)->sum('mt_biaya_adm');
 
@@ -177,6 +181,8 @@ class BillerController extends Controller
     {
         $user = (new GlobalController)->user_admin();
         $user_id = $user['user_id'];
+        $role = (new globalController)->data_user($user_id);
+        $data['role'] = $role->name;
         $data['komisi'] = (new globalController)->total_mutasi_sales($user_id);
         $m = date('m', strtotime(new Carbon()));
         $data['pencairan'] = MutasiSales::where('smt_user_id', $user_id)->whereMonth('created_at', $m)->sum('smt_debet');
@@ -192,7 +198,10 @@ class BillerController extends Controller
     }
     public function sales_input()
     {
-
+        $user = (new GlobalController)->user_admin();
+        $user_id = $user['user_id'];
+        $role = (new globalController)->data_user($user_id);
+        $data['role'] = $role->name;
         $data['admin_user'] = (new GlobalController)->user_admin();
 
         return view('biller/sales_input', $data);
