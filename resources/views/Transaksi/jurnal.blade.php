@@ -348,7 +348,11 @@ Pencairan Fee
                   <tbody>
                     @foreach ($data_registrasi as $d)
                     <tr>
-                      <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-psb="{{$data_biaya->biaya_psb}}"data-cpsb="1" data-sales="@if($d->reg_fee > 0) 0 @else  {{$data_biaya->biaya_sales}} @endif"data-csales="@if($d->reg_fee > 0) 0 @else  1 @endif"></td>
+                      {{-- Jika menggunakan sistem fee continue dari awal --}}
+                      {{-- <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-psb="{{$data_biaya->biaya_psb}}"data-cpsb="1" data-sales="@if($d->reg_fee > 0) 0 @else  {{$data_biaya->biaya_sales}} @endif"data-csales="@if($d->reg_fee > 0) 0 @else  1 @endif"></td> --}}
+                     
+                      {{-- Jika menggunakan sistem fee continue tetapi di awal dapet 50k --}}
+                      <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-psb="{{$data_biaya->biaya_psb}}"data-cpsb="1" data-sales="{{$data_biaya->biaya_sales}}" data-csales="1"></td>
                       <td>{{$d->reg_nolayanan}}</td>
                       <td>{{$d->input_nama}}</td>
                       <td>{{$d->input_alamat_pasang}}</td>

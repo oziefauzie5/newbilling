@@ -165,9 +165,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/data-laporan', [TransaksiController::class, 'data_laporan_mingguan'])->name('lap.data_laporan_mingguan')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/{id}/laporan-mingguan-print', [TransaksiController::class, 'jurnal_print'])->name('lap.jurnal_print')->middleware(['role:admin|STAF ADMIN']);
 
-    Route::get('/pelanggan/sementara_migrasi', [SementaraMigrasiController::class, 'sementara_migrasi'])->name('reg.sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/pelanggan/sementara_migrasi-Store', [SementaraMigrasiController::class, 'store_sementara_migrasi'])->name('reg.store_sementara_migrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
-
     Route::get('/pelanggan/Registrasi-cari/{id}', [RegistrasiController::class, 'pilih_pelanggan_registrasi'])->name('reg.pilih_pelanggan_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/Registrasi-Store', [RegistrasiController::class, 'store'])->name('reg.store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/Validasi1/{id}', [RegistrasiController::class, 'validasi_pachcore'])->name('reg.validasi_pachcore')->middleware(['role:admin|NOC|TEKNISI|STAF ADMIN']);

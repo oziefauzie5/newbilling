@@ -542,21 +542,37 @@ class InvoiceController extends Controller
             $data_lap['lap_img'] = $filename;
 
             if ($data_pelanggan->reg_fee > 0) {
-                $data_biaya = SettingBiaya::first();
-                $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
-                $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
 
-                $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
-                $mutasi_sales['smt_admin'] = $admin_user;
-                $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
-                $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
-                $mutasi_sales['smt_cabar'] = '2';
-                $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
-                $mutasi_sales['smt_debet'] = 0;
-                $mutasi_sales['smt_saldo'] = $total;
-                $mutasi_sales['smt_biaya_adm'] = 0;
-                $mutasi_sales['smt_status'] = 0;
-                MutasiSales::create($mutasi_sales);
+                // CEK LAMA BERLANGGANAN
+                $cek_tgl_pasang = Carbon::createFromDate($data_pelanggan->reg_tgl_pasang); // start date
+                $valid_tgl_pasang = Carbon::parse($cek_tgl_pasang)->toDateString();
+                $valid_tgl_pasang = date('Y.m.d\\TH:i', strtotime($valid_tgl_pasang));
+
+                $match_now = new \DateTime();
+                $match_now->setTime(0, 0, 0);
+                $match_tgl_pasang = \DateTime::createFromFormat("Y.m.d\\TH:i", $valid_tgl_pasang);
+                $match_tgl_pasang->setTime(0, 0, 0);
+
+                $cek_diff = $match_now->diff($match_tgl_pasang);
+                $cek_diffDays = (int)$cek_diff->format("%R%a");
+
+                if ($cek_diffDays <= -90) { #JIKA PELANGGAN BELUM 90 HARI MAKA SALES BELUM MENDAPATKAN FEE CONTINUE
+                    $data_biaya = SettingBiaya::first();
+                    $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                    $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
+
+                    $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                    $mutasi_sales['smt_admin'] = $admin_user;
+                    $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                    $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                    $mutasi_sales['smt_cabar'] = '2';
+                    $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                    $mutasi_sales['smt_debet'] = 0;
+                    $mutasi_sales['smt_saldo'] = $total;
+                    $mutasi_sales['smt_biaya_adm'] = 0;
+                    $mutasi_sales['smt_status'] = 0;
+                    MutasiSales::create($mutasi_sales);
+                }
             }
             Laporan::create($data_lap);
             $reg['reg_status'] = 'PAID';

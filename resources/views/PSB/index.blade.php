@@ -4,37 +4,24 @@
 <div class="content">
   <div class="page-inner">
     @role('admin|STAF ADMIN')
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          
           <div class="row">
-              <div class="col-6 col-sm-4 col-lg-1"  data-target="#carouselExampleControls" data-slide="prev">
-                <div class="card">
-                  <div class="card-body p-3 text-center">
-                    <div class="h1 m-0"><i class="fas fa-angle-double-left "></i></div>
-                    <div class="text-muted mb-3">Prev</div>
-                  </div>
-                </div>
-              </div>
-
-
-              <a href="{{route('admin.psb.list_input')}}" class="col-6 col-sm-4 col-lg-2">
-                <div class="card">
+            
+            <div class="col-6 col-sm-4 col-lg-2">
+              <div class="card">
                   <div class="card-body p-3 text-center">
                     <div class="h1 m-0">{{$count_inputdata}}</div>
                     <div class="text-muted mb-3">Input Data</div>
                   </div>
                 </div>
-              </a>
-              <a href="{{route('admin.reg.index')}}" class="col-6 col-sm-4 col-lg-2">
+              </div>
+              <div class="col-6 col-sm-4 col-lg-2">
                 <div class="card">
                   <div class="card-body p-3 text-center">
                     <div class="h1 m-0">{{$count_registrasi}}</div>
                     <div class="text-muted mb-3">Registrasi</div>
                   </div>
                 </div>
-              </a>
+              </div>
               <div class="col-6 col-sm-4 col-lg-2">
                 <div class="card">
                   <div class="card-body p-3 text-center">
@@ -59,86 +46,16 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6 col-sm-4 col-lg-1"  data-target="#carouselExampleControls" data-slide="next">
+              <div class="col-6 col-sm-4 col-lg-2">
                 <div class="card">
                   <div class="card-body p-3 text-center">
-                    <div class="h1 m-0"><i class="fas fa-angle-double-right "></i></div>
-                    <div class="text-muted mb-3">Next</div>
+                    <div class="h1 m-0">{{$count_free_berlangganan}}</div>
+                    <div class="text-muted mb-3">Free Berlanggan</div>
                   </div>
                 </div>
               </div>
+              
             </div>
-          </div>
-        <div class="carousel-item">
-          <div class="row">
-            <div class="col-6 col-sm-4 col-lg-1"  data-target="#carouselExampleControls" data-slide="Prev">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="h1 m-0"><i class="fas fa-angle-double-left "></i></div>
-                  <div class="text-muted mb-3">Prev</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-2">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="h1 m-0">{{$count_ppp}}</div>
-                  <div class="text-muted mb-3">PPP</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-2">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="h1 m-0">{{$count_berlangganan}}</div>
-                  <div class="text-muted mb-3">HOTSPOT</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-2">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="h1 m-0">{{$count_free_berlangganan}}</div>
-                  <div class="text-muted mb-3">Free Berlanggan</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-2">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="h1 m-0">{{$count_total_inv}}</div>
-                  <div class="text-muted mb-3">Total INV</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-2">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="h1 m-0">{{$count_tiket}}</div>
-                  <div class="text-muted mb-3">Tiket</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-lg-1"  data-target="#carouselExampleControls" data-slide="next">
-              <div class="card">
-                <div class="card-body p-3 text-center">
-                  <div class="h1 m-0"><i class="fas fa-angle-double-right "></i></div>
-                  <div class="text-muted mb-3">Next</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-     {{-- <div class="carousel-control-prev" type="button" data-target="#carouselExampleControls" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </div> --}}
-      <div class="carousel-control-next" type="button" data-target="#carouselExampleControls" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </div>
-    </div>
     @endrole
     
     <div class="row">
@@ -154,19 +71,26 @@
               </ul>
           </div> 
         @endif
+        
+        <a href="{{route('admin.psb.list_input')}}">
+          <button class="btn  btn-sm ml-auto m-1 btn-primary">
+            <i class="fa fa-plus"></i>
+            INPUT DATA
+          </button>
+        </a>
+        <a href="{{route('admin.reg.index')}}">
+          <button class="btn  btn-sm ml-auto m-1 btn-primary">
+            <i class="fa fa-plus"></i>
+            REGISTRASI
+          </button>
+        </a>
         @role('admin')
-        <a href="{{route('admin.reg.sementara_migrasi')}}">
-        <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#addRowModal">
-          <i class="fa fa-plus"></i>
-          FITUR SEMENTARA MIGRASI
-        </button>
-      </a>
       <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
         <i class="fa fa-file-import"></i> IMPORT
       </button>
       @endrole
       <a href="{{route('admin.psb.berita_acara')}}">
-        <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
+        <button class="btn  btn-sm ml-auto m-1 btn-primary">
           <i class="fa fa-plus"></i>
           BERITA ACARA
         </button>
