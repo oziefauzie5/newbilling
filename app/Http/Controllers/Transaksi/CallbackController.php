@@ -114,10 +114,18 @@ class CallbackController extends Controller
 
 
                     if ($diffDays < -0) {
-
-                        $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
-                        $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
-                        $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                        $cek_hari_bayar = date('d', strtotime($tgl_bayar));
+                        if ($cek_hari_bayar >= 25) {
+                            #Tambah 1 bulan dari tgl pembeyaran
+                            #Pembayaran di atas tanggal 25 maka akan di anggap bayar tgl 25
+                            $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
+                            $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-03', strtotime($addonemonth)))));
+                            $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-2)->toDateString();
+                        } else {
+                            $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
+                            $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                            $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                        }
                     } else {
                         $inv1_tagih = Carbon::create($data_pelanggan->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString();
                         $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();

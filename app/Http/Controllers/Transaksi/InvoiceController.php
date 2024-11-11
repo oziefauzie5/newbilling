@@ -413,6 +413,7 @@ class InvoiceController extends Controller
         $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
 
 
+
         $now = Carbon::now();
         $month = $now->format('m');
         $year = $now->format('Y');
@@ -460,11 +461,19 @@ class InvoiceController extends Controller
             // dd($inv0_tagih);
 
 
-
             if ($diffDays < -0) {
-                $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
-                $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
-                $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                $cek_hari_bayar = date('d', strtotime($tgl_bayar));
+                if ($cek_hari_bayar >= 25) {
+                    #Tambah 1 bulan dari tgl pembeyaran
+                    #Pembayaran di atas tanggal 25 maka akan di anggap bayar tgl 25
+                    $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-03', strtotime($addonemonth)))));
+                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-2)->toDateString();
+                } else {
+                    $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
+                    $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                    $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                }
             } else {
                 $inv1_tagih = Carbon::create($data_pelanggan->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString();
                 $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
@@ -542,37 +551,21 @@ class InvoiceController extends Controller
             $data_lap['lap_img'] = $filename;
 
             if ($data_pelanggan->reg_fee > 0) {
+                $data_biaya = SettingBiaya::first();
+                $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
 
-                // CEK LAMA BERLANGGANAN
-                $cek_tgl_pasang = Carbon::createFromDate($data_pelanggan->reg_tgl_pasang); // start date
-                $valid_tgl_pasang = Carbon::parse($cek_tgl_pasang)->toDateString();
-                $valid_tgl_pasang = date('Y.m.d\\TH:i', strtotime($valid_tgl_pasang));
-
-                $match_now = new \DateTime();
-                $match_now->setTime(0, 0, 0);
-                $match_tgl_pasang = \DateTime::createFromFormat("Y.m.d\\TH:i", $valid_tgl_pasang);
-                $match_tgl_pasang->setTime(0, 0, 0);
-
-                $cek_diff = $match_now->diff($match_tgl_pasang);
-                $cek_diffDays = (int)$cek_diff->format("%R%a");
-
-                if ($cek_diffDays <= -90) { #JIKA PELANGGAN BELUM 90 HARI MAKA SALES BELUM MENDAPATKAN FEE CONTINUE
-                    $data_biaya = SettingBiaya::first();
-                    $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
-                    $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
-
-                    $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
-                    $mutasi_sales['smt_admin'] = $admin_user;
-                    $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
-                    $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
-                    $mutasi_sales['smt_cabar'] = '2';
-                    $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
-                    $mutasi_sales['smt_debet'] = 0;
-                    $mutasi_sales['smt_saldo'] = $total;
-                    $mutasi_sales['smt_biaya_adm'] = 0;
-                    $mutasi_sales['smt_status'] = 0;
-                    MutasiSales::create($mutasi_sales);
-                }
+                $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                $mutasi_sales['smt_admin'] = $admin_user;
+                $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                $mutasi_sales['smt_cabar'] = '2';
+                $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                $mutasi_sales['smt_debet'] = 0;
+                $mutasi_sales['smt_saldo'] = $total;
+                $mutasi_sales['smt_biaya_adm'] = 0;
+                $mutasi_sales['smt_status'] = 0;
+                MutasiSales::create($mutasi_sales);
             }
             Laporan::create($data_lap);
             $reg['reg_status'] = 'PAID';
@@ -841,23 +834,26 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            // ->where('reg_mac', '=', '')
-            ->orderBy('tgl', 'DESC')
+            ->whereDay('reg_tgl_jatuh_tempo', '>=', '24')
+            ->whereMonth('reg_tgl_jatuh_tempo', '=', '10')
+            ->orderBy('tgl', 'ASC')
             ->where(function ($query) use ($data) {
                 $query->where('reg_mac', 'like', '%' . $data['q'] . '%');
             });
 
-        $mac_bermaslah = $query->get();
+        $rubah_tgl = $query->get();
+        $count = $query->count();
 
-        foreach ($mac_bermaslah as $key) {
+        foreach ($rubah_tgl as $key) {
             // Registrasi::where('reg_idpel', $key->reg_idpel)->update(
             //     [
-            //         'reg_mac' => '',
+            //         'reg_tgl_jatuh_tempo' => '',
             //     ]
             // );
 
-            echo '<table><tr><td>' . $key->reg_idpel . '</td><td>' . $key->input_nama . '</td><td>' . $key->reg_mac . '</td></tr></table>';
+            echo '<table><tr><td>' . $key->reg_idpel . '</td><td>' . $key->input_nama . '</td><td>' . $key->reg_tgl_jatuh_tempo . '</td></tr></table>';
         }
+        dd($count);
     }
     public function test2()
     {

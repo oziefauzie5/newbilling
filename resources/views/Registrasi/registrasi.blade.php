@@ -81,6 +81,7 @@
            <form class="form-horizontal"action="{{route('admin.reg.store')}}" method="POST">
              @csrf
 
+             <h3 class="mt-3 text-bolt text-center">FORM REGISTRASI BERLANGGANAN</h3>
              <h3 class="mt-3 text-bolt">PELANGGAN</h3><hr>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nama Pelanggan</label>

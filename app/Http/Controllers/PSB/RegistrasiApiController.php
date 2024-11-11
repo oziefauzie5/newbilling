@@ -369,14 +369,6 @@ class RegistrasiApiController extends Controller
     public function update_profile(Request $request, $id)
     {
 
-        // $data['reg_tgl_pasang'] = date('Y-m-d',strtotime($request->tgl_pasang));
-        // Registrasi::where('reg_idpel', $id)->update($data);
-        // $notifikasi = array(
-        //     'pesan' => 'Berhasil',
-        //     'alert' => 'success',
-        // );
-        // return redirect()->route('admin.reg.index')->with($notifikasi);
-
         $nama_admin = Auth::user()->name;
         $hari_ini = date('Y-m-d', strtotime('2024-07-15'));
         $now = Carbon::now();
@@ -402,9 +394,6 @@ class RegistrasiApiController extends Controller
         $tgl_isolir = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay($jeda_waktu)->toDateString();
         $telat_tgl_isolir =  Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($jeda_waktu)->toDateString();
 
-
-        // dd($tgl_isolir);
-        // dd($tgl_isolir);
         $tgl_penagihan = Carbon::create($request->reg_tgl_jatuh_tempo)->addDay(-2)->toDateString();
         $cek_invid = Invoice::where('inv_idpel', $id)->latest('inv_tgl_jatuh_tempo')->first();
         $periode = date('d-m-Y', strtotime(Carbon::create($request->reg_tgl_jatuh_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($request->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString()));

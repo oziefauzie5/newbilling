@@ -51,14 +51,13 @@ class LoginController extends Controller
             }
 
 
-
-
-
             $datas =  DB::table('users')
+                ->select('model_has_roles.model_id', 'model_has_roles.role_id', 'users.*', 'roles.name', 'roles.id', 'roles.name as nama_roles', 'roles.guard_name')
                 ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
                 ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
                 ->where('users.id', $idi)
                 ->first();
+            $request->session()->put('nama_roles', $datas->nama_roles);
 
             if ($datas->role_id != 11 & $datas->role_id != 10 & $datas->role_id != 12 & $datas->role_id != 13) {
                 return redirect()->route('admin.home');
@@ -88,6 +87,7 @@ class LoginController extends Controller
         session()->forget('app_favicon');
         session()->forget('app_link_admin');
         session()->forget('app_link_pelanggan');
+        session()->forget('nama_roles');
         Auth::logout();
         return redirect()->route('adminapp')->with('success', 'Kamu berhasil logout');
     }

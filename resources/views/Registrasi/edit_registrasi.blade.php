@@ -22,9 +22,6 @@
 <div class="content">
   <div class="page-inner">
     <div class="col-md-12">
-      <div>
-        <a href="{{route('admin.psb.index')}}"><button class="btn btn-primary btn-sm">Kembali</button></a><hr>
-      </div>
       <div class="card">
         <div class="card-body">
           @if ($errors->any())
@@ -37,6 +34,8 @@
               </ul>
           </div> 
           @endif
+          <h3 class="mt-3 text-bolt text-center">EDIT DATA BERLANGGANAN</h3>
+
           <h3 class="mt-3 text-bolt">PELANGGAN</h3><hr>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nama Pelanggan</label>
@@ -72,20 +71,6 @@
                   <input type="text" class="form-control" id="tampil_subsales" name="input_subseles" value="{{$data->input_subseles}}" readonly>
                 </div>
               </div>
-              {{-- <div class="form-group row">
-                  <label for="wilayah" class="col-sm-2 col-form-label">WILAYAH</label>
-                  <div class="col-sm-10">
-                    <select class="form-control" id="wilayah" name="wilayah" >
-                      <option value="">Pilih</option>
-                    </select>
-                  </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Kordinat</label>
-                <div class="col-sm-10">
-                <input type="text" id="kordinat" name="kordinat" class="form-control" >
-              </div>
-            </div> --}}
             <div class="form-group row">
               <label class="col-sm-2 col-form-label">Maps</label>
               <div class="col-sm-10">
@@ -279,12 +264,6 @@
                 <button type="submit" class="btn btn-primary btn-block">Simpan</button>
                  </div>
               </div>
-              {{-- <div class="card-footer">
-                @role('admin|STAF ADMIN')
-                <button type="button" class="btn  ">Batal</button>
-                <button type="submit" class="btn btn-primary float-right">Simpan</button>
-                @endrole
-              </div> --}}
             </form>
             </div>
           </div>
@@ -308,7 +287,6 @@
                     <option value="">Pilih</option>
                     <option value="PPP">PPP</option>
                     <option value="HOTSPOT">HOTSPOT</option>
-                    {{-- <option value="HOTSPOT">HOTSPOT</option> --}}
                     @endif
                   </select>
                 </div>
@@ -335,13 +313,6 @@
           </div>
              {{-- @endif --}}
               <div class="form-group row">
-                <label class="col-sm-2 col-form-label">IP address</label>
-                <div class="col-sm-10">
-                  <input type="text"  name="reg_ip_address" value="{{ $data->reg_ip_address}}" class="form-control"  >
-                  <span>Jika diisi maka ip address user ini akan di tambahkan ke address list Mikrotik (berfungsi untuk policy based routing dll)</span>
-                </div>
-              </div>
-              <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Username internet *</label>
               <div class="col-sm-4">
                 <input type="text" id="tampil_username" name="reg_username" class="form-control" value="{{ $data->reg_username}}" >
@@ -353,7 +324,7 @@
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Status Internet :</label>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                   @if($status=='CONNECTED')
                   <label class="col-sm-2 col-form-label font-weight-bold text-success" >{{ $status}}</label>
                   @else
@@ -361,22 +332,25 @@
                   @endif
                 </div>
                 <label class="col-sm-2 col-form-label">IP Address :</label>
-              <div class="col-sm-2">
+              <div class="col-sm-4">
                 <label class="col-sm-2 col-form-label font-weight-bold text-danger" >{{ $address}}</label>
               </div>
-              <div class="col-sm-1">
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Aksi</label>
+              <div class="col-sm-3 mt-1">
                 <a href="{{route('admin.noc.pengecekan',['id'=>$data->reg_idpel])}}" target="_blank">
                   <button type="button" class="btn btn-sm btn-warning btn-block">
                     Remote
                   </button></a>             
                 </div>
-              <div class="col-sm-1">
+              <div class="col-sm-3 mt-1">
                 <a href="{{route('admin.noc.kick',['id'=>$data->reg_idpel])}}">
                   <button type="button" class="btn btn-sm btn-danger btn-block">
                     Kick
                   </button></a>             
                 </div>
-              <div class="col-sm-1">
+              <div class="col-sm-3 mt-1">
                 @if($status_secret=='false')
                 <a href="{{route('admin.noc.status_secret',['id'=>$data->reg_idpel.'?stat=false'])}}">
                   <button type="button" class="btn btn-sm btn-danger btn-block">
@@ -396,7 +370,6 @@
               </div>
               @role('admin|STAF ADMIN')
               <div class="card-footer">
-                <button type="button" class="btn  ">Batal</button>
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
               </div>
               @endrole
@@ -678,18 +651,24 @@
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Tanggal Pemasangan</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="kode_unik" name="tgl_pasang" value="{{date('d-m-Y', strtotime($data->reg_tgl_pasang))}}"  >
+                  <input type="text" class="form-control" id="kode_unik" name="tgl_pasang" value="{{date('d-m-Y', strtotime($data->reg_tgl_pasang))}}" readonly >
                 </div>
               </div>
               <div class="form-group row">
                 <label class="form-check col-sm-2 col-form-label">Tanggal Penagihan</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="kode_unik" name="reg_tgl_tagih" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" readonly >
+                  <input type="text" class="form-control" id="" name="reg_tgl_tagih" value="{{date('d-m-Y', strtotime($data->reg_tgl_tagih))}}" readonly >
                 </div>
                 <label class="form-check col-sm-2 col-form-label">Tanggal Jatuh Tempo &nbsp;&nbsp;
                 </label>
+
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="kode_unik" name="reg_tgl_jatuh_tempo" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}" >
+                  @role('admin') 
+                  <input type="text" class="form-control datepicker" name="reg_tgl_jatuh_tempo" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}" >
+                  @endrole
+                  @role('STAF ADMIN') 
+                  <input type="text" class="form-control" name="reg_tgl_jatuh_tempo" value="{{date('d-m-Y', strtotime($data->reg_tgl_jatuh_tempo))}}" readonly >
+                  @endrole
                 </div>
               </div>
               <div class="form-group row">

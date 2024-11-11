@@ -30,7 +30,7 @@ class SendMessage implements ShouldQueue
         $cek_pesan = Pesan::where('status', '0')->count();
         if ($cek_pesan) {
             $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->first();
-            $pesan = Pesan::where('status', '0')->first();
+            $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
             if ($pesan->file) {
                 $data = array(
                     'target' => $pesan->target,

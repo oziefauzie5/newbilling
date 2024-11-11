@@ -19,7 +19,8 @@ class PelangganController extends Controller
         $data['nama'] = Auth::guard('pelanggan')->user()->input_nama;
 
         $data['tagihan']  = Invoice::where('invoices.inv_idpel', '=', $idpel)
-            ->paginate(3);
+            ->latest()
+            ->paginate(2);
         $data['layanan'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->where('invoices.inv_idpel', '=', $idpel)
             ->first();

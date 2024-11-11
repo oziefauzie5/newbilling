@@ -115,8 +115,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/noc/{id}/Pengecekan-Done', [NocController::class, 'pengecekan_put'])->name('noc.pengecekan_put')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/noc/{id}/upload', [NocController::class, 'upload'])->name('noc.upload')->middleware(['role:admin|NOC|STAF ADMIN']);
 
-    Route::get('/topologi', [OdpController::class, 'index'])->name('topologi.index')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/topologi/clousur', [TopologiController::class, 'clousur'])->name('topologi.clousur')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/noc', [OdpController::class, 'index'])->name('noc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/noc/clousur', [TopologiController::class, 'clousur'])->name('noc.clousur')->middleware(['role:admin|NOC|STAF ADMIN']);
 
 
     Route::get('/hotspot', [HotspotController::class, 'index'])->name('vhc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
