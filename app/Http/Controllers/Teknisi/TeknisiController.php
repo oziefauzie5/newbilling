@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Gudang\Data_Barang;
+use App\Models\Gudang\Data_BarangKeluar;
 
 class TeknisiController extends Controller
 {
@@ -197,32 +199,27 @@ class TeknisiController extends Controller
 
     public function proses_aktivasi(Request $request, $id)
     {
+
         Session::flash('before', $request->before);
         Session::flash('after', $request->after);
         Session::flash('total', $request->total);
-        Session::flash('fat', $request->fat);
-        Session::flash('fat_opm', $request->fat_opm);
-        Session::flash('home_opm', $request->home_opm);
+        // Session::flash('fat', $request->fat);
+        Session::flash('reg_out_odp', $request->reg_out_odp);
+        Session::flash('reg_in_ont', $request->reg_in_ont);
         Session::flash('los_opm', $request->los_opm);
         Session::flash('kode', $request->kode);
         Session::flash('id', $request->id);
         // Session::flash('reg_img', $request->reg_img);
 
+        // dd($inv['inv_id'] = (new GlobalController)->no_inv());
+
         $id_teknisi = Auth::user()->id;
         $teknisi_nama = Auth::user()->name;
         $swaktu = SettingWaktuTagihan::first();
         $sbiaya = SettingBiaya::first();
-        $barang = SubBarang::where('id_subbarang', $request->kode)->first();
-        $countReg = Registrasi::count();
-        $frefixid = Session::get('app_clientid');
+        $barang = Data_Barang::where('barang_id', $request->kode)->first();
 
-
-        if ($countReg = 0) {
-            $idclient = $frefixid . '1';
-        } else {
-            $idclient = $frefixid . $countReg + 1;
-        }
-        if ($barang->subbarang_stok > $request->after) {
+        if ($barang->barang_qty - $barang->barang_digunakan  > $request->after) {
 
 
             $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -233,9 +230,11 @@ class TeknisiController extends Controller
             $tagihan_tanpa_ppn = $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik;
 
             #FORMAT TANGGAL
+            $y = date('y');
+            $m = date('m');
             $tanggal = Carbon::now()->toDateString();
             $cek_hari = date('d', strtotime($tanggal));
-            // if ($cek_hari == 27) {
+            // if ($cek_hari >= 25) {
 
             // }
 
@@ -270,7 +269,7 @@ class TeknisiController extends Controller
                         $API->comm('/ppp/secret/set', [
                             '.id' => $secret[0]['.id'],
                             'comment' => 'Aktivasi-' . $teknisi_nama . '-' . $tanggal == '' ? '' : 'Aktivasi-' . $teknisi_nama . '-' . $tanggal,
-                            'disabled' => 'no',
+                            'disabled' => 'yes',
                         ]);
 
                         if ($query->reg_jenis_tagihan == 'FREE') {
@@ -351,21 +350,43 @@ class TeknisiController extends Controller
                             $pelanggan['reg_deposit'] = $inv['inv_total'];
                         }
 
-                        $update_barang['subbarang_keluar'] = $barang->subbarang_keluar + $request->total;
-                        $update_barang['subbarang_stok'] = $barang->subbarang_stok - $request->total;
-                        $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+                        $update_barang['barang_status'] =  '1';
+                        $update_barang['barang_digunakan'] =  $barang->barang_digunakan + $request->total;
+                        $update_barang['barang_nama_pengguna'] = 'Instalasi PSB';
+
+                        $create_barang['bk_id'] = $y . $m . mt_rand(1000, 9999);
+                        $create_barang['bk_jenis_laporan'] = 'Instalasi';
+                        $create_barang['bk_id_barang'] = $barang->barang_id;
+                        $create_barang['bk_id_tiket'] = '0';
+                        $create_barang['bk_kategori'] = $barang->barang_kategori;
+                        $create_barang['bk_satuan'] = $barang->barang_satuan;
+                        $create_barang['bk_nama_barang'] = $barang->barang_nama;
+                        $create_barang['bk_model'] = $barang->barang_merek;
+                        $create_barang['bk_mac'] = $barang->barang_mac;
+                        $create_barang['bk_sn'] = $barang->barang_sn;
+                        $create_barang['bk_jumlah'] = $request->total;
+                        $create_barang['bk_keperluan'] = 'Instalasi Pemasangan Baru';
+                        $create_barang['bk_foto_awal'] = '-';
+                        $create_barang['bk_foto_akhir'] = '-';
+                        $create_barang['bk_nama_penggunan'] = $query->input_nama;
+                        $create_barang['bk_waktu_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+                        $create_barang['bk_admin_input'] = $id_teknisi;
+                        $create_barang['bk_penerima'] = $teknisi_nama;
+                        $create_barang['bk_status'] = 1;
+                        $create_barang['bk_keterangan'] = $barang->barang_ket;
+
 
                         $pelanggan['reg_progres'] = '2';
-                        $pelanggan['reg_fat'] = $request->fat;
-                        $pelanggan['reg_fat_opm'] = $request->fat_opm;
-                        $pelanggan['reg_home_opm'] = $request->home_opm;
+                        // $pelanggan['reg_fat'] = $request->fat;
+                        $pelanggan['reg_out_odp'] = $request->reg_out_odp;
+                        $pelanggan['reg_in_ont'] = $request->reg_in_ont;
                         $pelanggan['reg_los_opm'] = $request->los_opm;
                         $pelanggan['reg_kode_dropcore'] = $request->kode;
                         $pelanggan['reg_before'] = $request->before;
                         $pelanggan['reg_after'] = $request->after;
                         $pelanggan['reg_penggunaan_dropcore'] = $request->total;
                         $pelanggan['reg_tgl_pasang'] = $tanggal;
-                        $pelanggan['reg_clientid'] = $idclient;
+                        // $pelanggan['reg_clientid'] = $idclient;
 
 
 
@@ -396,48 +417,56 @@ class TeknisiController extends Controller
                         $waktu_kerja = Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->first();
                         // dd($id_teknisi);
 
-                        $awal  = $waktu_kerja->teknisi_id;
-                        $akhir  = $teknisi['teknisi_job_selesai'];
+                        //                         $awal  = $waktu_kerja->teknisi_id;
+                        //                         $akhir  = $teknisi['teknisi_job_selesai'];
 
-                        $diff  = $akhir - $awal;
-                        if ($diff > 10800) {
-                            $nilai = '25';
-                            $kata = '
-"Manusia itu memiliki potensi dan kesempatan yang sama pula. Maka jangan menyerah untuk terus berusaha mendapatkan yang terbaik"';
-                        } elseif ($diff > 7200 & $diff < 10800) {
-                            $nilai = '50';
-                            $kata = '
-"Hanya karena belum ada yang berhasil melakukannya, bukan berarti kamu tidak mungkin mencapainya"';
-                        } elseif ($diff > 3600 & $diff < 7200) {
-                            $nilai = '75';
-                            $kata = '
-"Kami sangat berterima kasih atas dedikasi dan upaya Anda yang tiada henti untuk unggul dalam pekerjaan.  Kami harap Anda terus menginspirasi dan melambung lebih tinggi"';
-                        } elseif ($diff < 3600) {
-                            $nilai = '100';
-                            $kata = '
-"Kinerja luar biasa Anda di tempat kerja merupakan inspirasi bagi semua orang dan kami sangat terkesan dan bangga. Pertahankan kerja bagus Anda!"';
-                        }
+                        //                         $diff  = $akhir - $awal;
+                        //                         if ($diff > 10800) {
+                        //                             $nilai = '25';
+                        //                             $kata = '
+                        // "Manusia itu memiliki potensi dan kesempatan yang sama pula. Maka jangan menyerah untuk terus berusaha mendapatkan yang terbaik"';
+                        //                         } elseif ($diff > 7200 & $diff < 10800) {
+                        //                             $nilai = '50';
+                        //                             $kata = '
+                        // "Hanya karena belum ada yang berhasil melakukannya, bukan berarti kamu tidak mungkin mencapainya"';
+                        //                         } elseif ($diff > 3600 & $diff < 7200) {
+                        //                             $nilai = '75';
+                        //                             $kata = '
+                        // "Kami sangat berterima kasih atas dedikasi dan upaya Anda yang tiada henti untuk unggul dalam pekerjaan.  Kami harap Anda terus menginspirasi dan melambung lebih tinggi"';
+                        //                         } elseif ($diff < 3600) {
+                        //                             $nilai = '100';
+                        //                             $kata = '
+                        // "Kinerja luar biasa Anda di tempat kerja merupakan inspirasi bagi semua orang dan kami sangat terkesan dan bangga. Pertahankan kerja bagus Anda!"';
+                        //                         }
 
-                        if ($request->los_opm > 3) {
-                            $nilai2 = '25';
-                        } elseif ($request->los_opm > 1 & $request->los_opm < 2) {
-                            $nilai2 = '50';
-                        } elseif ($request->los_opm < 1) {
-                            $nilai2 = '100';
-                        } else {
-                            $nilai2 = '20';
-                        }
+                        //                         if ($request->los_opm > 3) {
+                        //                             $nilai2 = '25';
+                        //                         } elseif ($request->los_opm > 1 & $request->los_opm < 2) {
+                        //                             $nilai2 = '50';
+                        //                         } elseif ($request->los_opm < 1) {
+                        //                             $nilai2 = '100';
+                        //                         } else {
+                        //                             $nilai2 = '20';
+                        //                         }
 
-                        $startTime = Carbon::parse(date('Y-m-d H:m:s', strtotime($waktu_kerja->teknisi_id)));
-                        $endTime = Carbon::now();
-                        $duration = $endTime->diffInMinutes($startTime);
-                        $totalminutes = $duration;
+                        // $startTime = Carbon::parse(date('Y-m-d H:m:s', strtotime($waktu_kerja->teknisi_id)));
+                        // $endTime = Carbon::now();
+                        // $duration = $endTime->diffInMinutes($startTime);
+                        // $totalminutes = $duration;
 
 
-                        $teknisi['teknisi_waktu_kerja'] = date('H:i', mktime(0, $totalminutes));
-                        $teknisi['teknisi_nilai'] = $nilai;
-                        $teknisi['teknisi_nilai_instalasi'] = $nilai2;
-                        $teknisi['teknisi_note'] = $kata;
+                        // $teknisi['teknisi_waktu_kerja'] = date('H:i', mktime(0, $totalminutes));
+                        // $teknisi['teknisi_nilai'] = $nilai;
+                        // $teknisi['teknisi_nilai_instalasi'] = $nilai2;
+                        // $teknisi['teknisi_note'] = $kata;
+
+                        #-------------Update 15/01/2025----------------
+                        // $teknisi['teknisi_kode_kabel1'] = $request->kode1;
+                        // $teknisi['teknisi_kode_before1'] = $request->before1;
+                        // $teknisi['teknisi_kode_after1'] = $request->after1;
+                        // $teknisi['teknisi_kode_kabel2'] = $request->kode2;
+                        // $teknisi['teknisi_kode_before2'] = $request->before2;
+                        // $teknisi['teknisi_kode_after2'] = $request->after2;
 
                         $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
                         if ($cek_inv) {
@@ -462,7 +491,10 @@ class TeknisiController extends Controller
 
                         Registrasi::where('reg_idpel', $id)->update($pelanggan);
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
-                        SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
+
+                        Data_Barang::where('barang_id', $request->kode)->update($update_barang);
+                        Data_BarangKeluar::create($create_barang);
+                        // SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
 
 
 
@@ -480,8 +512,8 @@ Alamat : ' . $query->input_alamat_pasang . '
 
 
 Teknisi Team : ' . $waktu_kerja->teknisi_team . '
-FAT OPM : ' . $request->fat_opm . '
-Home OPM : ' . $request->home_opm . '
+FAT OPM : ' . $request->reg_out_odp . '
+Home OPM : ' . $request->reg_in_ont . '
 Los OPM : ' . $request->los_opm . '
 
 Kode Kabel : ' . $request->kode . '
@@ -490,7 +522,6 @@ after Kabel : ' . $request->after . '
 Panjang Kabel : ' . $request->total . '
 
 Waktu Selesai : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
-Waktu Pengerjaan : ' . date('H:i', mktime(0, $totalminutes)) . '
 
 Diaktivasi Oleh : ' . $teknisi_nama . '
 ';
@@ -613,15 +644,15 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
 
                         $pelanggan['reg_progres'] = '2';
                         $pelanggan['reg_fat'] = $request->fat;
-                        $pelanggan['reg_fat_opm'] = $request->fat_opm;
-                        $pelanggan['reg_home_opm'] = $request->home_opm;
+                        $pelanggan['reg_out_odp'] = $request->reg_out_odp;
+                        $pelanggan['reg_in_ont'] = $request->reg_in_ont;
                         $pelanggan['reg_los_opm'] = $request->los_opm;
                         $pelanggan['reg_kode_dropcore'] = $request->kode;
                         $pelanggan['reg_before'] = $request->before;
                         $pelanggan['reg_after'] = $request->after;
                         $pelanggan['reg_penggunaan_dropcore'] = $request->total;
                         $pelanggan['reg_tgl_pasang'] = $tanggal;
-                        $pelanggan['reg_clientid'] = $idclient;
+                        // $pelanggan['reg_clientid'] = $idclient;
 
                         $teknisi['teknisi_ket'] = $query->input_nama;
                         $teknisi['teknisi_job_selesai'] = strtotime(Carbon::now());
@@ -643,51 +674,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                         $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
                         $sub_inv['subinvoice_status'] = '0';
 
-                        #NILAI TEKNISI
-                        $waktu_kerja = Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->first();
-                        // dd($id_teknisi);
-
-                        $awal  = $waktu_kerja->teknisi_id;
-                        $akhir  = $teknisi['teknisi_job_selesai'];
-
-                        $diff  = $akhir - $awal;
-                        if ($diff > 10800) {
-                            $nilai = '25';
-                            $kata = '
-"Manusia itu memiliki potensi dan kesempatan yang sama pula. Maka jangan menyerah untuk terus berusaha mendapatkan yang terbaik"';
-                        } elseif ($diff > 7200 & $diff < 10800) {
-                            $nilai = '50';
-                            $kata = '
-"Hanya karena belum ada yang berhasil melakukannya, bukan berarti kamu tidak mungkin mencapainya"';
-                        } elseif ($diff > 3600 & $diff < 7200) {
-                            $nilai = '75';
-                            $kata = '
-"Kami sangat berterima kasih atas dedikasi dan upaya Anda yang tiada henti untuk unggul dalam pekerjaan.  Kami harap Anda terus menginspirasi dan melambung lebih tinggi"';
-                        } elseif ($diff < 3600) {
-                            $nilai = '100';
-                            $kata = '
-"Kinerja luar biasa Anda di tempat kerja merupakan inspirasi bagi semua orang dan kami sangat terkesan dan bangga. Pertahankan kerja bagus Anda!"';
-                        }
-
-                        if ($request->los_opm > 3) {
-                            $nilai2 = '25';
-                        } elseif ($request->los_opm > 1 & $request->los_opm < 2) {
-                            $nilai2 = '50';
-                        } elseif ($request->los_opm < 1) {
-                            $nilai2 = '100';
-                        } else {
-                            $nilai2 = '20';
-                        }
-                        $startTime = Carbon::parse(date('Y-m-d H:m:s', strtotime($waktu_kerja->teknisi_id)));
-                        $endTime = Carbon::now();
-                        $duration = $endTime->diffInMinutes($startTime);
-                        $totalminutes = $duration;
-
-                        $teknisi['teknisi_waktu_kerja'] = date('H:i', mktime(0, $totalminutes));
-                        $teknisi['teknisi_nilai'] = $nilai;
-                        $teknisi['teknisi_nilai_instalasi'] = $nilai2;
-                        $teknisi['teknisi_note'] = $kata;
-
+                     
                         $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
                         if ($cek_inv) {
                             $inv['inv_id'] = $cek_inv->inv_id;
@@ -701,47 +688,41 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
                             SubInvoice::create($sub_inv);
                         }
 
-                        // $photo = $request->file('reg_img');
-                        // $filename = $photo->getClientOriginalName();
-                        // $path = 'photo-rumah/' . $filename;
-                        // Storage::disk('public')->put($path, file_get_contents($photo));
-                        // // $pelanggan['reg_img'] = $filename;
-
                         Registrasi::where('reg_idpel', $id)->update($pelanggan);
                         Teknisi::where('teknisi_idpel', $id)->where('teknisi_status', '1')->where('teknisi_userid', $id_teknisi)->update($teknisi);
                         SubBarang::where('id_subbarang', $request->kode)->update($update_barang);
 
 
-                        $pesan_group['ket'] = 'aktivasi psb';
-                        $pesan_group['status'] = '0';
-                        $pesan_group['target'] = '120363028776966861@g.us';
-                        $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
-                        $pesan_group['pesan'] = '               -- PSB SELESAI --
+                        //                     $pesan_group['ket'] = 'aktivasi psb';
+                        //                     $pesan_group['status'] = '0';
+                        //                     $pesan_group['target'] = '120363028776966861@g.us';
+                        //                     $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
+                        //                     $pesan_group['pesan'] = '               -- PSB SELESAI --
 
-Pemasangan telah selesai dikerjakan  😊
-
-
-Pelanggan : ' . $query->input_nama . '
-Alamat : ' . $query->input_alamat_pasang .
-                            '
-Teknisi Team : ' . $query->teknisi_team . '
-FAT OPM : ' . $request->fat_opm . '
-Home OPM : ' . $request->home_opm . '
-Los OPM : ' . $request->los_opm . '
-
-Kode Kabel : ' . $request->kode . '
-Before Kabel : ' . $request->before . '
-after Kabel : ' . $request->after . '
-Panjang Kabel : ' . $request->total . '
-
-Waktu Selesai : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
-Waktu Pengerjaan : ' . date('H:i', mktime(0, $totalminutes)) . '
-
-Diaktivasi Oleh : ' . $teknisi_nama . '
-';
+                        // Pemasangan telah selesai dikerjakan  😊
 
 
-                        Pesan::create($pesan_group);
+                        // Pelanggan : ' . $query->input_nama . '
+                        // Alamat : ' . $query->input_alamat_pasang .
+                        //                         '
+                        // Teknisi Team : ' . $query->teknisi_team . '
+                        // FAT OPM : ' . $request->reg_out_odp . '
+                        // Home OPM : ' . $request->reg_in_ont . '
+                        // Los OPM : ' . $request->los_opm . '
+
+                        // Kode Kabel : ' . $request->kode . '
+                        // Before Kabel : ' . $request->before . '
+                        // after Kabel : ' . $request->after . '
+                        // Panjang Kabel : ' . $request->total . '
+
+                        // Waktu Selesai : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+                        // Waktu Pengerjaan : ' . date('H:i', mktime(0, $totalminutes)) . '
+
+                        // Diaktivasi Oleh : ' . $teknisi_nama . '
+                        // ';
+
+
+                        //                     Pesan::create($pesan_group);
 
                         $notifikasi = array(
                             'pesan' => 'Aktivasi Berhasil ',
@@ -767,8 +748,7 @@ Diaktivasi Oleh : ' . $teknisi_nama . '
     }
     public function getBarang(Request $request, $kode)
     {
-        $data['q'] = $request->kode_kabel;
-        $id_subbarang = SubBarang::where('id_subbarang', $kode)->first();
+        $id_subbarang = Data_Barang::where('barang_id', $kode)->first();
         return response()->json($id_subbarang);
     }
 

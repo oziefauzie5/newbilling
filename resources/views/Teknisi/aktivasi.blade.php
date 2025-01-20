@@ -20,6 +20,7 @@
              <input class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal_cari" alt="" value="Cari Kode Kabel"></input>
            </div>
          </div>
+         <div id="di"></div>
          <div class="form-row m-1">
            <div class="col">
              <label for="inputCity">Sebelum</label>
@@ -35,21 +36,21 @@
            </div>
           </div>
           <hr>
-          <div class="form-row m-1">
+          {{-- <div class="form-row m-1">
            <div class="col">
                 <label for="inputCity">Lokasi ODP</label>
                 <input type="text" class="form-control" name="fat" value="{{Session::get('fat')}}" >
                 <span style="font-size: 11px; color:red">Masukan link Share lokasi FAT pada kolom FAT. </span>
               </div>
-            </div>
+            </div> --}}
          <div class="form-row m-1">
            <div class="col-4">
-                <label for="inputCity">ODP</label>
-                <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="fat_opm" name="fat_opm" value="{{Session::get('fat_opm')}}" required maxlength="6" minlength="6">
+                <label for="inputCity">Output ODP</label>
+                <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_out_odp" name="reg_out_odp" value="{{Session::get('reg_out_odp')}}" required maxlength="6" minlength="6">
               </div>
               <div class="col-4">
-                <label for="inputCity">Home</label>
-                <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="home_opm" name="home_opm" value="{{Session::get('home_opm')}}" required maxlength="6" minlength="6">
+                <label for="inputCity">Input ONT</label>
+                <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" value="{{Session::get('reg_in_ont')}}" required maxlength="6" minlength="6">
               </div>
               <div class="col-4">
                 <label for="inputCity">Hasil</label>
@@ -57,11 +58,12 @@
               </div>
               </div>
 
-              <div class="form-group">
+              {{-- <div class="form-group">
                 <label >Upload Foto Rumah ( Tampak Depan )</label>
                 <input type="file" class="form-control-file" name="file" disabled>
-                <span class="text-danger" style="font-size: 12px">Fitur ini dalam pengembangan. Sementara kirim ke Bapak Devi Septia Maulana untuk di upload, agar bisa pencairan PSB</span>
-              </div>
+                <span class="text-danger" style="font-size: 12px">Fitur ini dalam pengembangan. Sementara kirim NOC untuk di upload, agar bisa pencairan PSB</span>
+              </div> --}}
+             
  
               
               <div class="modal fade" id="modal_cari" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -92,11 +94,14 @@
                 </div>
               </div>
             </div>
- 
+            <ul> Kirim Foto kepada NOC
+              <li>Foto ODP ( Tampak Spliter beserta pactcore saat dicolok dan beri catatan Slot yang digunakan pada Time Mark )</li> 
+              <li >Foto Rumah Tampak Depan</li>
+          </ul>
  
             <div class="form-row m-1">
               <div class="col">
-                <a href="https://wa.me/6281563437262?text=Bang%20ini%20foto%20rumah%20si%20'.$data_aktivasi->input_nama.'%20ya."><button type="button" class="btn btn-success btn-block mb-2">Kirim Photo</button></a>
+                <a href="https://wa.me/6285210845012?text=Bang%20ini%20foto%20rumah%20si%20'.$data_aktivasi->input_nama.'%20ya."><button type="button" class="btn btn-success btn-block mb-2">Kirim Photo</button></a>
                 <button type="submit" class="btn btn-primary btn-block">Proses Aktivasi</button>
                 <button type="button" class="btn btn-primary btn-block">Kembali</button>
               </div>
@@ -116,15 +121,15 @@
   <script>
     
 
-    var fat_opm = document.getElementById('fat_opm');
-    var home_opm = document.getElementById('home_opm');
-        fat_opm.addEventListener('keyup', function(e)
+    var reg_out_odp = document.getElementById('reg_out_odp');
+    var reg_in_ont = document.getElementById('reg_in_ont');
+        reg_out_odp.addEventListener('keyup', function(e)
         {
-            fat_opm.value = format_opm(this.value, '-');
+            reg_out_odp.value = format_opm(this.value, '-');
         });
-        home_opm.addEventListener('keyup', function(e)
+        reg_in_ont.addEventListener('keyup', function(e)
         {
-          home_opm.value = format_opm(this.value, '-');
+          reg_in_ont.value = format_opm(this.value, '-');
         });
         
         function format_opm(angka, prefix)

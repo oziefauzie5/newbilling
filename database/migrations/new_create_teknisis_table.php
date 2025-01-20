@@ -22,9 +22,18 @@ return new class extends Migration
             $table->string('teknisi_psb')->nullable();
             $table->string('teknisi_job_selesai')->nullable();
             $table->string('teknisi_waktu_kerja')->nullable();
-            $table->string('teknisi_nilai')->nullable();
-            $table->string('teknisi_nilai_instalasi')->nullable();
-            $table->text('teknisi_note')->nullable();
+            #-------Awal Update 15/01/2025--------
+            // $table->string('teknisi_nilai')->nullable();
+            // $table->string('teknisi_nilai_instalasi')->nullable();
+            // $table->text('teknisi_note')->nullable();
+
+            $table->integer('teknisi_kode_kabel1')->nullable();
+            $table->integer('teknisi_kode_before1')->nullable();
+            $table->integer('teknisi_kode_after1')->nullable();
+            $table->integer('teknisi_kode_kabel2')->nullable();
+            $table->integer('teknisi_kode_before2')->nullable();
+            $table->integer('teknisi_kode_after2')->nullable();
+            #-------Akhir Update 15/01/2025---------^
             $table->string('teknisi_noc_userid')->nullable();
             $table->string('teknisi_keuangan_userid')->nullable();
             $table->string('teknisi_status')->nullable();

@@ -255,6 +255,16 @@
                             </select>
                           </div>
                         </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label class="  col-form-label">Layanan</label>
+                            <select name="layanan" class="form-control" required>
+                              <option value="">PILIH LAYANAN</option>
+                              <option value="PPP">PPP</option>
+                              <option value="HOTSPOT">HOTSPOT</option>
+                            </select>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="modal-footer no-bd">

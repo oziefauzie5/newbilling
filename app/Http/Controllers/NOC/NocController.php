@@ -5,6 +5,7 @@ namespace App\Http\Controllers\NOC;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Barang\SubBarang;
+use App\Models\Gudang\Data_Barang;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
@@ -117,6 +118,13 @@ class NocController extends Controller
             dd('Router Disconnected');
         }
     }
+
+    public function detail_pelanggan($id)
+    {
+        $data = "cek";
+        return view('noc/detail_pelanggan', $data);
+    }
+
     public function pengecekan_put($id)
     {
         $noc_id = Auth::user()->id;
@@ -605,46 +613,56 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     }
     public function pengecekan_barang()
     {
-        $data['sub_barang'] = SubBarang::where('subbarang_status', '>=', 4)->where('subbarang_status', '<=', 5)->get();
-        $data['count_antrian'] = SubBarang::where('subbarang_status', '>=', 4)->where('subbarang_status', '<=', 5)->count();
+        $data['data_barang'] = Data_Barang::where('barang_status', '>=', 4)->where('barang_status', '<=', 5)->get();
+        $data['count_antrian'] = Data_Barang::where('barang_status', '>=', 4)->where('barang_status', '<=', 5)->count();
+        // $data['sub_barang'] = SubBarang::where('subbarang_status', '>=', 4)->where('subbarang_status', '<=', 5)->get();
+        // $data['count_antrian'] = SubBarang::where('subbarang_status', '>=', 4)->where('subbarang_status', '<=', 5)->count();
         return view('noc/pengecekan-barang', $data);
     }
     public function update_status_barang(Request $request, $id)
     {
-        if ($request->mac) {
-            $sub['subbarang_mac'] = $request->mac;
-            $sub['subbarang_sn'] = $request->sn;
+
+        $user = (new GlobalController)->user_admin()['user_id'];
+
+        if ($request->barang_mac) {
+            $sub['barang_mac'] = $request->barang_mac;
+            $sub['barang_sn'] = $request->barang_sn;
         }
-        if ($request->ket == 'Rusak') {
-            // $sub['subbarang_keterangan'] = $request->ket;
-            $sub['subbarang_status'] = '10';
-            $sub['subbarang_stok'] = '1';
-            $sub['subbarang_keluar'] = '0';
-        } elseif ($request->ket == 'Dalam Pengecekan') {
-            // $sub['subbarang_keterangan'] = $request->ket;
-            $sub['subbarang_status'] = '5';
-            $sub['subbarang_stok'] = '1';
-            $sub['subbarang_keluar'] = '0';
-        } elseif ($request->ket == 'QC') {
-            // $sub['subbarang_keterangan'] = $request->ket;
-            $sub['subbarang_status'] = '4';
-            $sub['subbarang_stok'] = '1';
-            $sub['subbarang_keluar'] = '0';
-        } elseif ($request->ket == 'Barang Normal') {
-            // $sub['subbarang_keterangan'] = $request->ket;
-            $sub['subbarang_status'] = '0';
-            $sub['subbarang_stok'] = '1';
-            $sub['subbarang_keluar'] = '0';
-        } elseif ($request->ket == 'Barang Retur') {
-            // $sub['subbarang_keterangan'] = $request->ket;
-            $sub['subbarang_status'] = '6';
-            $sub['subbarang_stok'] = '1';
-            $sub['subbarang_keluar'] = '0';
-        }
-        $sub['subbarang_deskripsi'] = $request->ket . ' | ' . $request->desk;
+
+        $sub['barang_status'] = $request->barang_status;
+        $sub['barang_ket'] = $request->barang_ket;
+        $sub['barang_pengecek'] = $user;
+
+        // if ($request->ket == 'Rusak') {
+        //     // $sub['subbarang_keterangan'] = $request->ket;
+        //     $sub['subbarang_status'] = '10';
+        //     $sub['subbarang_stok'] = '1';
+        //     $sub['subbarang_keluar'] = '0';
+        // } elseif ($request->ket == 'Dalam Pengecekan') {
+        //     // $sub['subbarang_keterangan'] = $request->ket;
+        //     $sub['subbarang_status'] = '5';
+        //     $sub['subbarang_stok'] = '1';
+        //     $sub['subbarang_keluar'] = '0';
+        // } elseif ($request->ket == 'QC') {
+        //     // $sub['subbarang_keterangan'] = $request->ket;
+        //     $sub['subbarang_status'] = '4';
+        //     $sub['subbarang_stok'] = '1';
+        //     $sub['subbarang_keluar'] = '0';
+        // } elseif ($request->ket == 'Barang Normal') {
+        //     // $sub['subbarang_keterangan'] = $request->ket;
+        //     $sub['subbarang_status'] = '0';
+        //     $sub['subbarang_stok'] = '1';
+        //     $sub['subbarang_keluar'] = '0';
+        // } elseif ($request->ket == 'Barang Retur') {
+        //     // $sub['subbarang_keterangan'] = $request->ket;
+        //     $sub['subbarang_status'] = '6';
+        //     $sub['subbarang_stok'] = '1';
+        //     $sub['subbarang_keluar'] = '0';
+        // }
+        // $sub['subbarang_deskripsi'] = $request->ket . ' | ' . $request->desk;
 
         // dd($sub);
-        SubBarang::where('id_subbarang', $id)->update($sub);
+        Data_Barang::where('barang_id', $id)->update($sub);
         $notifikasi = array(
             'pesan' => 'Berhasil Update Status Barang',
             'alert' => 'success',

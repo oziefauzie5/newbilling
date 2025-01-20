@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('input_nama')->nullable();
             $table->string('input_ktp')->nullable();
             $table->string('input_hp')->nullable();
+            $table->string('input_hp_2')->nullable();
             $table->string('input_email')->nullable();
             $table->string('input_alamat_ktp')->nullable();
             $table->string('input_alamat_pasang')->nullable();

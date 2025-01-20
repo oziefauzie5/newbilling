@@ -318,12 +318,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             } elseif ($request->jenis == 'Service') {
                 $cek_limit_saldo = (new GlobalController)->mutasi_jurnal_reimburse('PERBAIKAN & PERAWATAN', $request->jenis, $request->plat_kendaraan);
                 if ($request->jumlah + $cek_limit_saldo['saldo'] <= $limit_saldo->trans_service) {
-                    $notifikasi = array(
-                        'pesan' => 'Reimburse gagal. Limit ' . $request->jenis . ' Sudah melebihi batas',
-                        'alert' => 'error',
-                    );
-                    return redirect()->route('admin.lap.jurnal')->with($notifikasi);
-                } else {
+                    // dd($limit_saldo->trans_service);
                     $data['jurnal_kategori'] = 'PERBAIKAN & PERAWATAN';
                     Storage::disk('public')->put($path, file_get_contents($photo));
                     $data['jurnal_img'] = $filename;
@@ -331,6 +326,12 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
                     $notifikasi = array(
                         'pesan' => 'Reimburse ' . $request->jenis . ' Berhasil',
                         'alert' => 'success',
+                    );
+                    return redirect()->route('admin.lap.jurnal')->with($notifikasi);
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Reimburse gagal. Limit ' . $request->jenis . ' Sudah melebihi batas',
+                        'alert' => 'error',
                     );
                     return redirect()->route('admin.lap.jurnal')->with($notifikasi);
                 }

@@ -194,12 +194,7 @@
                   <th>TGL Registrasi</th>
                   <th>PROFILE</th>
                   <th>ROUTER</th>
-                  <th>KTG</th>
-                  <th>JENIS TAGIHAN</th>
                   <th>USERNAME</th>
-                  <th>IP ADDRESS</th>
-                  <th>MAC ADDRESS</th>
-                  <th>SERIAL NUMBER</th>
                   <th>ALAMAT PASANG</th>
                   <th>NOTE</th>
                 </tr>
@@ -233,12 +228,7 @@
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->input_tgl))}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_layanan}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_jenis_tagihan}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_username}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_ip_address}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_mac}}</td>
-                      <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_sn}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->input_alamat_pasang}}</td>
                       <td>{{$d->reg_catatan}}</td>
                     </tr>

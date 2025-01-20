@@ -32,7 +32,14 @@ use Maatwebsite\Excel\Facades\Excel;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Global\GlobalController;
+use App\Http\Controllers\NOC\NocController;
+use App\Models\Aplikasi\Data_Site;
 use App\Models\Mitra\MutasiSales;
+use App\Models\Gudang\Data_Barang;
+use App\Models\Gudang\Data_BarangKeluar;
+use App\Models\Teknisi\Data_Olt;
+use App\Models\Teknisi\Data_pop;
+use Illuminate\Support\Facades\Storage;
 
 class RegistrasiController extends Controller
 {
@@ -40,10 +47,13 @@ class RegistrasiController extends Controller
     {
         $data['input_data'] = InputData::where('input_status', 'INPUT DATA')->get();
         $data['data_router'] = Router::all();
+        $data['data_site'] = Data_Site::all();
+        $data['data_pop'] = Data_pop::all();
         $data['data_paket'] = Paket::all();
         $data['data_biaya'] = SettingBiaya::first();
         return view('Registrasi/registrasi', $data);
     }
+
     public function store(Request $request)
     {
         $sbiaya = SettingBiaya::first();
@@ -57,55 +67,64 @@ class RegistrasiController extends Controller
 
 
 
-        $router_nama = Router::whereId($request->reg_router)->first();
-        $paket_nama = Paket::where('paket_id', $request->reg_profile)->first();
+        // $site = Router::whereId($request->reg_router)->first();
 
-        Session::flash('reg_nama', $request->reg_nama);
-        Session::flash('reg_idpel', $request->reg_idpel);
-        Session::flash('reg_nolayanan', $request->reg_nolayanan);
-        Session::flash('reg_hp', $request->reg_hp);
-        Session::flash('reg_alamat_pasang', $request->reg_alamat_pasang);
-        Session::flash('reg_maps', $request->reg_maps);
-        Session::flash('reg_sales', $request->reg_sales);
-        Session::flash('reg_layanan', $request->reg_layanan);
-        Session::flash('reg_router', $request->reg_router);
-        Session::flash('router_nama', $router_nama->router_nama);
-        Session::flash('reg_ip_address', $request->reg_ip_address);
-        Session::flash('reg_username', $request->reg_username);
-        Session::flash('reg_stt_perangkat', $request->reg_stt_perangkat);
-        Session::flash('reg_mrek', $request->reg_mrek);
-        Session::flash('reg_mac', $request->reg_mac);
-        Session::flash('reg_sn', $request->reg_sn);
-        Session::flash('reg_slotonu', $request->reg_slotonu);
-        Session::flash('reg_odp', $request->reg_odp);
+
+        Session::flash('reg_nama', $request->reg_nama); #
+        Session::flash('reg_idpel', $request->reg_idpel); #
+        Session::flash('reg_nolayanan', $request->reg_nolayanan); #
+        Session::flash('reg_hp', $request->reg_hp); #
+        Session::flash('reg_hp2', $request->reg_hp2); #
+        Session::flash('reg_alamat_pasang', $request->reg_alamat_pasang); #
+        Session::flash('reg_maps', $request->reg_maps); #
+        Session::flash('reg_sales', $request->reg_sales); #
+        Session::flash('reg_sales_nama', $request->reg_sales_nama); #
+        Session::flash('reg_site', $request->reg_site); #
+        Session::flash('reg_pop', $request->reg_pop); #
+        Session::flash('reg_router', $request->reg_router); #
+        Session::flash('reg_layanan', $request->reg_layanan); #
+        Session::flash('reg_ip_address', $request->reg_ip_address); #
+        Session::flash('reg_username', $request->reg_username); #
+        Session::flash('reg_stt_perangkat', $request->reg_stt_perangkat); #
+        Session::flash('reg_nama_barang', $request->reg_nama_barang); #
+        Session::flash('reg_mrek', $request->reg_mrek); #
+        Session::flash('reg_mac', $request->reg_mac); #
+        Session::flash('reg_sn', $request->reg_sn); #
         Session::flash('kode_pactcore', $request->kode_pactcore);
         Session::flash('kode_adaptor', $request->kode_adaptor);
         Session::flash('kode_ont', $request->kode_ont);
-        Session::flash('reg_tgl', $request->reg_tgl);
-        Session::flash('reg_jenis_tagihan', $request->reg_jenis_tagihan);
-        Session::flash('reg_harga', $request->reg_harga);
-        Session::flash('reg_ppn', $request->reg_ppn);
-        Session::flash('reg_dana_kerjasama', $request->reg_dana_kerjasama);
-        Session::flash('input_subseles', $request->input_subseles);
-        Session::flash('reg_kode_unik', $request->reg_kode_unik);
-        Session::flash('reg_dana_kas', $request->reg_dana_kas);
+        Session::flash('reg_tgl', $request->reg_tgl); #
+        Session::flash('reg_profile', $request->reg_profile); #
+        Session::flash('reg_jenis_tagihan', $request->reg_jenis_tagihan); #
+        Session::flash('reg_harga', $request->reg_harga); #
+        Session::flash('reg_ppn', $request->reg_ppn); #
+        Session::flash('input_subseles', $request->input_subseles); #
+        Session::flash('reg_dana_kerjasama', $request->reg_dana_kerjasama); #
+        Session::flash('reg_kode_unik', $request->reg_kode_unik); #
+        Session::flash('reg_dana_kas', $request->reg_dana_kas); #
         Session::flash('reg_catatan', $request->reg_catatan);
-        Session::flash('reg_profile', $request->reg_profile);
-        Session::flash('paket_nama', $paket_nama->paket_nama);
-        Session::flash('reg_inv_control', $request->reg_inv_control);
+        Session::flash('reg_inv_control', $request->reg_inv_control); #
+        if ($request->reg_profile) {
+            $paket_nama = Paket::where('paket_id', $request->reg_profile)->first();
+            Session::flash('paket_nama', $paket_nama->paket_nama);
+        }
 
         $request->validate([
             'reg_nama' => 'required',
             'reg_idpel' => 'unique:registrasis,reg_idpel',
             'reg_nolayanan' => 'unique:registrasis,reg_nolayanan',
             'reg_hp' => 'required',
+            'reg_hp2' => 'required',
             'reg_alamat_pasang' => 'required',
             'reg_maps' => 'required',
             'reg_sales' => 'required',
-            'reg_layanan' => 'required',
+            'reg_site' => 'required',
+            'reg_pop' => 'required',
             'reg_router' => 'required',
+            'reg_layanan' => 'required',
             'reg_username' => 'required',
             'reg_stt_perangkat' => 'required',
+            'reg_nama_barang' => 'required',
             'reg_mrek' => 'required',
             'reg_mac' => 'required',
             'reg_sn' => 'required',
@@ -121,14 +140,17 @@ class RegistrasiController extends Controller
             'reg_nama.required' => 'Nama tidak boleh kosong',
             'reg_idpel.unique' => 'Id Pelanggan sudah ada, Hapus input data terlebih dahulu',
             'reg_nolayanan.unique' => 'No layanan sudah ada, Ulangi Kembali',
-            'reg_hp.required' => 'No Whatsapp tidak boleh kosong',
+            'reg_hp.required' => 'No Whatsapp 1 tidak boleh kosong',
+            'reg_hp2.required' => 'No Whatsapp 2 tidak boleh kosong',
             'reg_alamat_pasang.required' => 'Alamat tidak boleh kosong',
             'reg_maps.required' => 'Maps tidak boleh kosong',
             'reg_sales.required' => 'Sales tidak boleh kosong',
+            'reg_site.required' => 'Site tidak boleh kosong',
             'reg_layanan.required' => 'Layanan tidak boleh kosong',
             'reg_router.required' => 'Router tidak boleh kosong',
             'reg_username.required' => 'Username tidak boleh kosong',
             'reg_stt_perangkat.required' => 'Status Perangkat tidak boleh kosong',
+            'reg_nama_barang.required' => 'Nama Perangkat tidak boleh kosong',
             'reg_mrek.required' => 'Merek Perangkat tidak boleh kosong',
             'reg_mac.required' => 'Mac Address tidak boleh kosong',
             'reg_sn.required' => 'Serial Number Perangkat tidak boleh kosong',
@@ -138,6 +160,7 @@ class RegistrasiController extends Controller
             'reg_jenis_tagihan.required' => 'Jenis Tagihan tidak boleh kosong',
             'reg_harga.required' => 'Harga tidak boleh kosong',
             'input_subseles.required' => 'Sub Sales tidak boleh kosong',
+            'reg_pop.required' => 'POP tidak boleh kosong',
             'reg_profile.required' => 'Paket tidak boleh kosong',
             'reg_inv_control.required' => 'Invoice Control tidak boleh kosong',
         ]);
@@ -163,11 +186,12 @@ class RegistrasiController extends Controller
         $data['reg_username'] = $request->reg_username;
         $data['reg_password'] = $request->reg_password;
         $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+        $data['reg_nama_barang'] = $request->reg_nama_barang;
+        $data['reg_site'] = $request->reg_site;
+        $data['reg_pop'] = $request->reg_pop;
         $data['reg_mrek'] = $request->reg_mrek;
         $data['reg_mac'] = $request->reg_mac;
         $data['reg_sn'] = $request->reg_sn;
-        $data['reg_slotonu'] = $request->reg_slotonu;
-        $data['reg_odp'] = $request->reg_odp;
         $data['reg_kode_pactcore'] = $request->kode_pactcore;
         $data['reg_kode_adaptor'] = $request->kode_adaptor;
         $data['reg_kode_ont'] = $request->kode_ont;
@@ -184,11 +208,12 @@ class RegistrasiController extends Controller
         $data['reg_progres'] = '0';
         $update['input_maps'] =  $request->reg_maps;
         $update['input_status'] =  'REGIST';
-        // dd($data);
 
 
 
         $router = Router::whereId($request->reg_router)->first();
+
+        // dd($router);
         $profile = Paket::where('paket_id', $request->reg_profile)->first();
 
         $status = (new GlobalController)->whatsapp_status();
@@ -248,26 +273,23 @@ Diregistrasi Oleh : *' . $admin . '*
 
         Pesan::create($pesan_group);
 
-        $update_barang['subbarang_status'] =  '1';
-        $update_barang['subbarang_keluar'] = '1';
-        $update_barang['subbarang_stok'] = '0';
-        $update_barang['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
-        $update_barang['subbarang_admin'] = $admin;
-        $update_barang['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+        $update_barang['barang_status'] =  '1';
+        $update_barang['barang_digunakan'] =  '1';
+        $update_barang['barang_nama_pengguna'] = $request->reg_nama;
 
-        $update_pactcore['subbarang_status'] =  '1';
-        $update_pactcore['subbarang_keluar'] = '1';
-        $update_pactcore['subbarang_stok'] = '0';
-        $update_pactcore['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
-        $update_pactcore['subbarang_admin'] = $admin;
-        $update_pactcore['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+        $update_pactcore['barang_status'] =  '1';
+        $update_pactcore['barang_digunakan'] =  '1';
+        $update_pactcore['barang_nama_pengguna'] = $request->reg_nama;
 
-        $update_adaptor['subbarang_status'] =  '1';
-        $update_adaptor['subbarang_keluar'] = '1';
-        $update_adaptor['subbarang_stok'] = '0';
-        $update_adaptor['subbarang_keterangan'] = 'PSB ' . $request->reg_nama;
-        $update_adaptor['subbarang_admin'] = $admin;
-        $update_adaptor['subbarang_tgl_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
+        $update_adaptor['barang_status'] =  '1';
+        $update_adaptor['barang_digunakan'] =  '1';
+        $update_adaptor['barang_nama_pengguna'] = $request->reg_nama;
+
+
+        $y = date('y');
+        $m = date('m');
+
+        $data_barang = Data_Barang::whereIn('barang_id', [$request->kode_ont, $request->kode_adaptor, $request->kode_pactcore])->get();
 
 
 
@@ -311,11 +333,37 @@ Diregistrasi Oleh : *' . $admin . '*
                     ]);
 
                     Registrasi::create($data);
+                    // dd($data);
                     InputData::where('id', $request->reg_idpel)->update($update);
-                    SubBarang::where('id_subbarang', $request->kode_pactcore)->update($update_pactcore);
-                    SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
-                    SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+                    Data_Barang::where('barang_id', $request->kode_pactcore)->update($update_pactcore);
+                    Data_Barang::where('barang_id', $request->kode_adaptor)->update($update_adaptor);
+                    Data_Barang::where('barang_id', $request->kode_ont)->update($update_barang);
+                    foreach ($data_barang as $db) {
+                        Data_BarangKeluar::create([
 
+                            'bk_id' => $y . $m . mt_rand(1000, 9999),
+                            'bk_jenis_laporan' => 'Instalasi',
+                            'bk_id_barang' => $db->barang_id,
+                            'bk_id_tiket' => '0',
+                            'bk_kategori' => $db->barang_kategori,
+                            'bk_satuan' => $db->barang_satuan,
+                            'bk_nama_barang' => $db->barang_nama,
+                            'bk_model' => $db->barang_merek,
+                            'bk_mac' => $db->barang_mac,
+                            'bk_sn' => $db->barang_sn,
+                            'bk_jumlah' => 1,
+                            'bk_keperluan' => 'Instalasi Pemasangan Baru',
+                            'bk_foto_awal' => '-',
+                            'bk_foto_akhir' => '-',
+                            'bk_nama_penggunan' => $request->reg_nama,
+                            'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+                            'bk_admin_input' => $admin,
+                            'bk_penerima' => 'Teknisi',
+                            'bk_status' => 1,
+                            'bk_keterangan' => $db->barang_ket,
+                            'bk_harga' => $db->barang_harga,
+                        ]);
+                    }
 
 
                     $notifikasi = array(
@@ -350,9 +398,34 @@ Diregistrasi Oleh : *' . $admin . '*
                 ]);
                 // dd($request->reg_nama);
                 Registrasi::create($data);
-                SubBarang::where('id_subbarang', $request->reg_kode_pactcore)->update($update_pactcore);
-                SubBarang::where('id_subbarang', $request->kode_adaptor)->update($update_adaptor);
-                SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
+                Data_Barang::where('barang_id', $request->kode_pactcore)->update($update_pactcore);
+                Data_Barang::where('barang_id', $request->kode_adaptor)->update($update_adaptor);
+                Data_Barang::where('barang_id', $request->kode_ont)->update($update_barang);
+                foreach ($data_barang as $db) {
+                    Data_BarangKeluar::create([
+
+                        'bk_id' => $y . $m . mt_rand(1000, 9999),
+                        'bk_jenis_laporan' => 'Instalasi',
+                        'bk_id_barang' => $db->barang_id,
+                        'bk_id_tiket' => '0',
+                        'bk_kategori' => $db->barang_kategori,
+                        'bk_satuan' => $db->barang_satuan,
+                        'bk_nama_barang' => $db->barang_nama,
+                        'bk_model' => $db->barang_merek,
+                        'bk_mac' => $db->barang_mac,
+                        'bk_sn' => $db->barang_sn,
+                        'bk_jumlah' => 1,
+                        'bk_keperluan' => 'Instalasi Pemasangan Baru',
+                        'bk_foto_awal' => '-',
+                        'bk_foto_akhir' => '-',
+                        'bk_nama_penggunan' => $request->reg_nama,
+                        'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+                        'bk_admin_input' => $admin,
+                        'bk_penerima' => 'Teknisi',
+                        'bk_status' => 1,
+                        'bk_keterangan' => $db->barang_ket,
+                    ]);
+                }
 
                 $notifikasi = array(
                     'pesan' => 'Berhasil menambahkan pelanggan',
@@ -376,6 +449,7 @@ Diregistrasi Oleh : *' . $admin . '*
     public function delete_registrasi($id)
     {
 
+        $admin = (new GlobalController)->user_admin()['user_id'];
         $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
         // $router = Router::whereId($data_pelanggan->reg_router)->first();
         $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
@@ -388,17 +462,22 @@ Diregistrasi Oleh : *' . $admin . '*
 
         if ($API->connect($ip, $user, $pass)) {
             $update['input_status'] =  'INPUT DATA';
-            $update_barang['subbarang_status'] =  '0';
-            $update_barang['subbarang_keluar'] = '0';
-            $update_barang['subbarang_keterangan'] = '';
-            SubBarang::where('id_subbarang', $data_pelanggan->reg_kode_pactcore)->update($update_barang);
-            SubBarang::where('id_subbarang', $data_pelanggan->kode_adaptor)->update($update_barang);
-            SubBarang::where('id_subbarang', $data_pelanggan->kode_ont)->update($update_barang);
+            $update_barang['barang_status'] =  '0';
+            $update_barang['barang_digunakan'] = '0';
+            $update_barang['barang_penerima'] = $admin;
+            Data_Barang::where('barang_id', $data_pelanggan->reg_kode_pactcore)->update($update_barang);
+            Data_Barang::where('barang_id', $data_pelanggan->reg_kode_adaptor)->update($update_barang);
+            Data_Barang::where('barang_id', $data_pelanggan->reg_kode_ont)->update($update_barang);
+            $cek = Data_BarangKeluar::whereIn('bk_id_barang', [$data_pelanggan->reg_kode_pactcore, $data_pelanggan->reg_kode_adaptor, $data_pelanggan->reg_kode_ont])->delete();
+
+            // echo $cek;
+
             InputData::where('id', $data_pelanggan->reg_idpel)->update($update);
             $data = Registrasi::where('reg_idpel', $id);
             if ($data) {
                 $data->delete();
             }
+            // dd('drlet');
             $cek_secret = $API->comm('/ppp/secret/print', [
                 '?name' => $data_pelanggan->reg_username,
             ]);
@@ -430,7 +509,9 @@ Diregistrasi Oleh : *' . $admin . '*
 
     public function pilih_pelanggan_registrasi($id)
     {
-        $data['tampil_data'] =  InputData::whereId($id)->first();
+        $data['tampil_data'] =  InputData::select('input_data.*', 'users.id as user_id', 'users.name as user_nama')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->where('input_data.id', $id)->first();
 
         $date = date('Ym');
         $tgl = date('d');
@@ -454,25 +535,32 @@ Diregistrasi Oleh : *' . $admin . '*
     }
     public function validasi_pachcore(Request $request, $id)
     {
-        $kode_pact = SubBarang::where("id_subbarang", $id)->where("subbarang_status", '0')
-            ->where("subbarang_ktg", 'PACTCORE')->first();
+        $kode_pact = Data_Barang::where("barang_id", $id)->where("barang_status", '0')
+            ->where("barang_kategori", 'PACTCORE')->first();
 
         return response()->json($kode_pact);
     }
     public function validasi_adaptor(Request $request, $id)
     {
-        $kode_adp = SubBarang::where("id_subbarang", $id)->where("subbarang_status", '0')
-            ->where("subbarang_ktg", 'ADAPTOR')->first();
+        $kode_adp = Data_Barang::where("barang_id", $id)->where("barang_status", '0')
+            ->where("barang_kategori", 'ADAPTOR')->first();
 
         return response()->json($kode_adp);
     }
     public function validasi_ont(Request $request, $id)
     {
-        $kode_ont = SubBarang::where("id_subbarang", $id)->where("subbarang_status", '0')
-            ->where("subbarang_ktg", 'ONT')->first();
+        $kode_ont = Data_Barang::where("barang_id", $id)->where("barang_status", '0')
+            ->where("barang_kategori", 'ONT')->first();
 
         return response()->json($kode_ont);
     }
+    // public function validasi_ont(Request $request, $id)
+    // {
+    //     $kode_ont = SubBarang::where("id_subbarang", $id)->where("subbarang_status", '0')
+    //         ->where("subbarang_ktg", 'ONT')->first();
+
+    //     return response()->json($kode_ont);
+    // }
     public function print_berita_acara($id)
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
@@ -1323,6 +1411,122 @@ Diregistrasi Oleh : *' . $admin . '*
                     'alert' => 'error',
                 ];
                 return redirect()->route('admin.psb.index')->with($notifikasi);
+            }
+        }
+    }
+    public function edit_pelanggan($id)
+    {
+        $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
+        // dd($data['tgl_akhir']);
+        $status_inet = (new NocController)->status_inet($id);
+        // dd($status_inet['status']);
+        $data['input_data'] = InputData::all();
+        $data['data_router'] = Router::all();
+        $data['data_paket'] = Paket::all();
+        $data['data_biaya'] = SettingBiaya::first();
+        $data['data_teknisi'] = (new GlobalController)->getTeknisi();
+        // dd($data['data_teknisi']);
+
+        $data['data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('data__sites', 'data__sites.site_id', '=', 'registrasis.reg_site')
+            ->join('data_pops', 'data_pops.pop_id', '=', 'registrasis.reg_pop')
+            // ->join('data__olts', 'data__olts.olt_id_pop', '=', 'registrasis.reg_olt')
+            // ->join('data__odcs', 'data__odcs.odc_id', '=', 'registrasis.reg_odc')
+            // ->join('data__odps', 'data__odps.odp_id', '=', 'registrasis.reg_odp')
+            ->where('input_data.id', $id)
+            ->first();
+        // dd($data['data']);
+        // dd($data['site'])->pop_nama;
+        // $data['data_site'] = Data_Site::get();
+        $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')
+            // ->join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
+            ->get();
+        // ->where('pop_id', $data['data']->pop_id)->get();
+        // dd($data['data']->reg_pop);
+        $data['data_olt'] = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
+            ->where('pop_id', $data['data']->reg_pop)->get();
+        $data['status'] = $status_inet['status'];
+        $data['uptime'] = $status_inet['uptime'];
+        $data['address'] = $status_inet['address'];
+        $data['status_secret'] = $status_inet['status_secret'];
+        return view('Registrasi/edit_registrasi', $data);
+    }
+
+    public function proses_edit_pelanggan(Request $request, $id)
+    {
+        Session::flash('reg_site', $request->reg_site);
+        Session::flash('reg_pop', $request->reg_pop);
+        Session::flash('reg_router', $request->reg_router);
+        Session::flash('reg_olt', $request->reg_olt);
+        Session::flash('reg_odc', $request->reg_odc);
+        Session::flash('reg_odp', $request->reg_odp);
+        Session::flash('reg_mac_olt', $request->reg_mac_olt);
+        Session::flash('reg_onuid', $request->reg_onuid);
+        Session::flash('reg_slot_odp', $request->reg_slot_odp);
+        Session::flash('reg_kode_dropcore', $request->reg_kode_dropcore);
+        Session::flash('reg_before', $request->reg_before);
+        Session::flash('reg_after', $request->reg_after);
+        Session::flash('reg_penggunaan_dropcore', $request->reg_penggunaan_dropcore);
+        Session::flash('reg_koodinat_odp', $request->reg_koodinat_odp);
+        Session::flash('teknisi1', $request->teknisi1);
+        Session::flash('teknisi2', $request->teknisi2);
+        Session::flash('reg_in_ont', $request->reg_in_ont);
+        Session::flash('input_koordinat', $request->input_koordinat);
+
+        $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('registrasis.reg_idpel', $id)
+            ->first();
+
+        if ($query->reg_layanan == 'PPP') {
+            $API = (new ApiController)->aktivasi_psb_ppp($query);
+            if ($API == 0) {
+                //LANJUTAN AKTIVASI
+                (new AktivasiController)->aktivasi_psb($request, $query, $id);
+                $notifikasi = array(
+                    'pesan' => 'Aktivasi Berhasil ',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            } elseif ($API == 1) {
+                $notifikasi = array(
+                    'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            } elseif ($API == 2) {
+                $notifikasi = array(
+                    'pesan' => 'Router Discconect',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            }
+        } else {
+            $API = (new ApiController)->aktivasi_psb_hotspot($query);
+
+            if ($API == 0) {
+                //LANJUTAN AKTIVASI
+                (new AktivasiController)->aktivasi_psb($request, $query, $id);
+                $notifikasi = array(
+                    'pesan' => 'Aktivasi Berhasil ',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            } elseif ($API == 1) {
+                $notifikasi = array(
+                    'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            } elseif ($API == 2) {
+                $notifikasi = array(
+                    'pesan' => 'Router Discconect',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
             }
         }
     }

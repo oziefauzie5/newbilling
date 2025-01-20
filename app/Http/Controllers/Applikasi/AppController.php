@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Applikasi;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Aplikasi\Data_Site;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingAplikasi;
 use App\Models\Applikasi\SettingBiaya;
@@ -462,5 +463,54 @@ class AppController extends Controller
             'alert' => 'success',
         );
         return redirect()->route('admin.app.kendaraan')->with($notifikasi);
+    }
+
+    public function site()
+    {
+        // dd('t');
+        $count = Data_Site::count();
+
+        if ($count == 0) {
+            $data['site_id'] = 1;
+        } else {
+            $data['site_id'] = $count + 1;
+        }
+        // $data['site_id'] = '1' . sprintf("%03d", $idsite);
+
+        $data['data_site'] = Data_Site::get();
+
+
+        return view('Applikasi/site', $data);
+    }
+    public function site_store(Request $request)
+    {
+        $store_site['site_id'] = $request->site_id;
+        $store_site['site_nama'] = $request->site_nama;
+        $store_site['site_prefix'] = $request->site_prefix;
+        $store_site['site_brand'] = $request->site_brand;
+        $store_site['site_keterangan'] = $request->site_keterangan;
+        $store_site['site_status'] = 'Disable';
+
+        Data_Site::create($store_site);
+        $notifikasi = array(
+            'pesan' => 'Berhasil menambahkan Site',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.site')->with($notifikasi);
+    }
+    public function update_site(Request $request, $id)
+    {
+        $store_site['site_nama'] = $request->site_nama;
+        $store_site['site_prefix'] = $request->site_prefix;
+        $store_site['site_brand'] = $request->site_brand;
+        $store_site['site_keterangan'] = $request->site_keterangan;
+        $store_site['site_status'] = $request->site_status;
+
+        Data_Site::where('site_id', $id)->update($store_site);
+        $notifikasi = array(
+            'pesan' => 'Berhasil update data Site',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.site')->with($notifikasi);
     }
 }

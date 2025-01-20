@@ -14,36 +14,42 @@ return new class extends Migration
         Schema::create('registrasis', function (Blueprint $table) {
             $table->id();
             $table->string('reg_idpel')->nullable();
-            $table->string('reg_clientid')->nullable();
             $table->string('reg_nolayanan')->nullable();
             $table->string('reg_layanan')->nullable();
             $table->string('reg_profile')->nullable();
             $table->string('reg_jenis_tagihan')->nullable();
-            $table->string('reg_harga')->nullable();
-            $table->string('reg_kode_unik')->nullable();
-            $table->string('reg_deposit')->nullable();
-            $table->string('reg_ppn')->nullable();
-            $table->string('reg_dana_kas')->nullable();
-            $table->string('reg_dana_kerjasama')->nullable();
+            $table->integer('reg_harga')->nullable();
+            $table->integer('reg_kode_unik')->nullable();
+            $table->integer('reg_deposit')->nullable();
+            $table->integer('reg_ppn')->nullable();
+            $table->integer('reg_dana_kas')->nullable();
+            $table->integer('reg_dana_kerjasama')->nullable();
             $table->integer('reg_fee')->nullable();
             $table->string('reg_username')->nullable();
             $table->string('reg_password')->nullable();
             $table->string('reg_tgl_pasang')->nullable();
             $table->string('reg_tgl_tagih')->nullable();
             $table->string('reg_tgl_jatuh_tempo')->nullable();
-            $table->string('reg_wilayah')->nullable();
-            $table->string('reg_fat')->nullable();
-            $table->string('reg_fat_opm')->nullable();
-            $table->string('reg_home_opm')->nullable();
+            $table->string('reg_out_odp')->nullable();
+            $table->string('reg_in_ont')->nullable();
             $table->string('reg_los_opm')->nullable();
-            $table->string('reg_router')->nullable();
+            $table->string('reg_nama_barang')->nullable(); #baru
+            $table->integer('reg_site')->nullable(); #ganti wilayah jadi site
+            $table->integer('reg_pop')->nullable(); #baru
+            $table->integer('reg_router')->nullable();
+            $table->integer('reg_olt')->nullable(); #baru
+            $table->integer('reg_odc')->nullable(); #baru
+            $table->integer('reg_odp')->nullable(); #baru
+            $table->integer('reg_slot_odp')->nullable(); #ganti slot onu
+            $table->string('reg_mac_olt')->nullable(); #baru
+            $table->string('reg_onuid')->nullable(); #baru
             $table->string('reg_mrek')->nullable();
             $table->string('reg_mac')->nullable();
             $table->string('reg_sn')->nullable();
-            $table->string('reg_kode_pactcore')->nullable();
-            $table->string('reg_kode_ont')->nullable();
-            $table->string('reg_kode_adaptor')->nullable();
-            $table->string('reg_kode_dropcore')->nullable();
+            $table->integer('reg_kode_pactcore')->nullable();
+            $table->integer('reg_kode_ont')->nullable();
+            $table->integer('reg_kode_adaptor')->nullable();
+            $table->integer('reg_kode_dropcore')->nullable();
             $table->string('reg_before')->nullable();
             $table->string('reg_after')->nullable();
             $table->string('reg_penggunaan_dropcore')->nullable();
@@ -52,7 +58,6 @@ return new class extends Migration
             $table->string('reg_status')->nullable();
             $table->string('reg_progres')->nullable();
             $table->string('reg_stt_perangkat')->nullable();
-            $table->string('reg_slotonu')->nullable();
             $table->string('reg_teknisi_team')->nullable();
             $table->integer('reg_inv_control')->nullable();
             $table->string('reg_img')->nullable();

@@ -40,35 +40,39 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nama Pelanggan</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="tampil_nama" value="{{ $data->input_nama}}" name="reg_nama" readonly>
+                  <input type="text" class="form-control readonly" id="tampil_nama" value="{{ $data->input_nama}}" name="reg_nama">
                 </div>
               </div>
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label" >ID Pelanggan</label>
                 <div class="col-sm-4">
-                  <input type="number" id="tampil_idpel" class="form-control" name="reg_idpel" value="{{ $data->reg_idpel}}" readonly >
+                  <input type="text" id="tampil_idpel" class="form-control readonly" name="reg_idpel" value="{{ $data->reg_idpel}}"  >
                 </div>
                   <label class=" col-sm-2 col-form-label">No Layanan</label>
                 <div class="col-sm-4">
-                  <input type="text" id="tampil_nolay" name="reg_nolayanan" class="form-control" value="{{ $data->reg_nolayanan}}" readonly>
+                  <input type="text" id="tampil_nolay" name="reg_nolayanan" class="form-control readonly" value="{{ $data->reg_nolayanan}}" >
                 </div>
               </div>
               <div class="form-group row">
-                  <label for="hp" class="col-sm-2 col-form-label">No Whatsapp</label>
-                  <div class="col-sm-10">
-                    <input type="number" class="form-control" id="tampil_hp" value="{{ $data->input_hp}}" name="reg_hp" readonly>
+                  <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 1</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control readonly" id="tampil_hp" value="{{ $data->input_hp}}" name="reg_hp" >
+                  </div>
+                  <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 2</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control readonly" id="tampil_hp_2" value="{{ $data->input_hp_2}}" name="reg_hp_2" >
                   </div>
               </div>
               <div class="form-group row">
                   <label for="alamat_pasang" class="col-sm-2 col-form-label">Alamat Pasang</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="tampil_alamat_pasang" value="{{ $data->input_alamat_pasang}}" name="reg_alamat_pasang" readonly>
+                    <input type="text" class="form-control readonly" id="tampil_alamat_pasang" value="{{ $data->input_alamat_pasang}}" name="reg_alamat_pasang" >
                   </div>
               </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Sub Sales</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="tampil_subsales" name="input_subseles" value="{{$data->input_subseles}}" readonly>
+                  <input type="text" class="form-control readonly" id="tampil_subsales" name="input_subseles" value="{{$data->input_subseles}}" >
                 </div>
               </div>
             <div class="form-group row">
@@ -292,25 +296,7 @@
                 </div>
               </div>
              {{-- @if($data->reg_layanan=='PPP') --}}
-             <div class="form-group row">
-              <label for="router" class="col-sm-2 col-form-label">Router</label>
-              <div class="col-sm-10">
-                <select class="form-control" id="regrouter" name="reg_router" >
-                  @if( $data->reg_router)
-                <option value="{{ $data->reg_router}}">{{ $data->router_nama}}</option>
-                <option value="">Pilih</option>
-                @foreach($data_router as $s)
-                <option value="{{$s->id}}">{{$s->router_nama}}</option>
-                @endforeach
-                @else
-                <option value="">Pilih</option>
-                @foreach($data_router as $s)
-                <option value="{{$s->id}}">{{$s->router_nama}}</option>
-                @endforeach
-                @endif
-                </select>
-              </div>
-          </div>
+            
              {{-- @endif --}}
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Username internet *</label>
@@ -377,180 +363,345 @@
             </div>
           </div>
         </div>
+@if($data->reg_progres == 2 )
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body"> 
+      <form class="form-horizontal"action="{{route('admin.reg.proses_edit_pelanggan',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <h3 class="mt-3 text-bolt"> HADHWARE</h3><hr>
 
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">Site</label>
+        <div class="col-sm-4">
+          <select class="form-control" id="reg_site" name="reg_site" required >
+            @if($data->reg_site)
+            <option value="{{$data->site_id}}">{{$data->site_nama}}</option>
+            @endif
+          </select>
+        </div>
+        <label class=" col-sm-2 col-form-label">Status perangkat</label>
+      <div class="col-sm-4">
+        <select type="text" name="reg_stt_perangkat" class="form-control readonly" value="{{ $data->reg_stt_perangkat}}" disabled >
+          <option value="DIPINJAMKAN">DIPINJAMKAN</option>
+          <option value="MILIK PROBADI">MILIK PRIBADI</option>
+        </select>
+      </div>
+      </div>
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">POP</label>
+        <div class="col-sm-4">
+          <select name="reg_pop" id="" class="form-control" required>
+            @if ($data->pop_id)
+                <option value="{{$data->pop_id}}">{{$data->pop_nama}}</option>
+            @endif
+          </select>
+        </div>
+        <label for="router" class="col-sm-2 col-form-label">Router</label>
+        <div class="col-sm-4">
+          <select class="form-control" id="" name="reg_router" >
+            @if( $data->reg_router)
+          <option value="{{ $data->reg_router}}">{{ $data->router_nama}}</option>
+          @endif
+          @foreach ($router as $d)
+              <option value="{{$d->id}}">{{$d->router_nama}}</option>
+          @endforeach
+          </select>
+        </div>
+        </div>
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">OLT</label>
+        <div class="col-sm-4 notif">
+          <input type="text" name="reg_olt" id="validasi_olt" class="form-control readonly" autocomplete="off"   required value="{{ Session::get('reg_olt') }}">
+        </div>
+        <label class=" col-sm-2 col-form-label">ODC</label>
+        <div class="col-sm-4 notif">
+          <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly" required value="{{ Session::get('reg_odc') }}" >
+        </div>
+    </div>
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">ODP</label>
+        <div class="col-sm-4 notif">
+          <input type="text" name="reg_odp" id="validasi_odp" class="form-control" required value="{{ Session::get('reg_odp') }}" >
+          <div id="pesan"></div>
+        </div>
+    </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Merek & Type perangkat</label>
+      <div class="col-sm-4">
+        <input type="text" name="reg_mrek" id="" class="form-control edit_ont readonly" value="{{ $data->reg_mrek}}" >
+      </div>
+        <label class="col-sm-2 col-form-label">Mac perangkat</label>
+        <div class="col-sm-4">
+          <input type="text" name="reg_mac" id=""  class="form-control readonly" minlength="17" maxlength="17"  value="{{ $data->reg_mac}}" >
+        </div>
+        </div>
+        <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Mac perangkat ( OLT )</label>
+        <div class="col-sm-4">
+          <input type="text" name="reg_mac_olt" id="reg_mac_olt"  class="form-control" minlength="17" maxlength="17" required value="{{ Session::get('reg_mac_olt') }}" >
+        </div>
+        <label class=" col-sm-2 col-form-label" >SN perangkat</label>
+      <div class="col-sm-4">
+        <input type="text" name="reg_sn" class="form-control readonly" value="{{ $data->reg_sn}}" >
+      </div>
+      </div>
+     
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">ONU ID</label>
+        <div class="col-sm-4">
+          <input type="text" name="reg_onuid" class="form-control" required value="{{ Session::get('reg_onuid') }}">
+        </div>
+        <label class=" col-sm-2 col-form-label">Slot ODP</label>
+        <div class="col-sm-4">
+          <input type="text" name="reg_slot_odp" class="form-control" required value="{{ Session::get('reg_slot_odp') }}" >
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">Redaman</label>
+        <div class="col-sm-4">
+          {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}}
+          <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{ Session::get('reg_in_ont') }}" maxlength="6" minlength="6">
+        </div>
+        <label class="col-sm-2 col-form-label">Teknisi Team</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control harga readonly"value="{{$data->reg_teknisi_team}}" >
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">Kode Kabel</label>
+        <div class="col-sm-4 notif_kabel">
+          <input type="text" name="reg_kode_dropcore" id="reg_kode_dropcore" class="form-control" required value="{{ Session::get('reg_kode_dropcore') }}" >
+          <div id="pesan_kabel"></div>
+        </div>
+        <label class=" col-sm-2 col-form-label">Before</label>
+        <div class="col-sm-4 notif_kabel">
+          <input type="text" name="reg_before" id="before" class="form-control readonly" required value="{{ Session::get('reg_before') }}" >
+        </div>
+      </div>
+      <div class="form-group row">
+        
+        <label class=" col-sm-2 col-form-label">After</label>
+        <div class="col-sm-4 notif_over">
+          <input type="text" name="reg_after" id="after" class="form-control" required value="{{ Session::get('reg_after') }}" >
+          <div id="pesan_over"></div>
+        </div>
+        <label class=" col-sm-2 col-form-label">Panjang Kabel</label>
+        <div class="col-sm-4">
+          <input type="text" name="reg_penggunaan_dropcore" id="total" class="form-control" required value="{{ Session::get('reg_penggunaan_dropcore') }}" >
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">Teknisi 1</label>
+        <div class="col-sm-4">
+          <select name="teknisi1" id="" class="form-control" required value="{{ Session::get('teknisi1') }}">
+            <option value="">- Pilih Teknisi -</option>
+          @foreach ($data_teknisi as $t)
+              <option value="{{$t->user_id}}|{{$t->user_nama}}">{{$t->user_nama}}</option>
+          @endforeach
+        </select>
+        </div>
+        <label class=" col-sm-2 col-form-label">Teknisi 2</label>
+        <div class="col-sm-4">
+          <input type="text" name="teknisi2" class="form-control" required value="{{ Session::get('teknisi2') }}" >
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Koordinat Rumah</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control"  name="input_koordinat" required value="{{ Session::get('input_koordinat') }}">
+        </div>
+        <label class="col-sm-2 col-form-label">Koordinat ODP</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control"  name="reg_koodinat_odp" required value="{{ Session::get('reg_koodinat_odp') }}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Foto Rumah</label>
+        <div class="col-sm-4">
+          <input  type="file" class="form-control-file" name="reg_img" required value="{{ Session::get('reg_img') }}">
+        </div>
+        <label class="col-sm-2 col-form-label">Foto Lokasi ODP</label>
+        <div class="col-sm-4">
+          <input  type="file" class="form-control-file" name="reg_foto_odp" required value="{{ Session::get('reg_foto_odp') }}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Foto Rumah</label>
+        <div class="col-sm-4">
+          <img src="{{ asset('storage/topologi/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
+        </div>
+        <label class="col-sm-2 col-form-label">Foto Lokasi ODP </label>
+        <div class="col-sm-4">
+          <img src="{{ asset('storage/topologi/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
+        </div>
+      </div>
+
+    <div class="form-group row">
+      <label for="router" class="col-sm-2 col-form-label">Catatan</label>
+      <div class="col-sm-10">
+      <textarea class="form-control is-invalid" id="validationTextarea" name="reg_catatan">{{$data->reg_catatan}}
+      </textarea>
+      </div>
+    </div>
+    <div class="card-footer">
+    @role('admin|STAF ADMIN')
+    <button type="button" class="btn  ">Batal</button>
+    <button type="submit" class="btn btn-primary float-right">Simpan</button>
+    @endrole
+    </div>
+   </form>
+  </div>
+ </div>
+</div>
+@else
+{{-- Reg Progres = > 2 / Setelah Aktivasi --}}
         <div class="col-md-12">
           <div class="card">
             <div class="card-body"> 
-              <form class="form-horizontal"action="{{route('admin.psb.update_pelanggan',['id'=>$data->reg_idpel])}}" method="POST">
+              <form class="form-horizontal"action="{{route('admin.reg.proses_edit_pelanggan',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <h3 class="mt-3 text-bolt"> HADHWARE</h3><hr>
 
               <div class="form-group row">
+                <label class=" col-sm-2 col-form-label">Site</label>
+                <div class="col-sm-4">
+                  <select class="form-control" id="reg_site" name="reg_site" required >
+                    @if($data->reg_site)
+                    <option value="{{$data->site_id}}">{{$data->site_nama}}</option>
+                    @endif
+                  </select>
+                </div>
                 <label class=" col-sm-2 col-form-label">Status perangkat</label>
               <div class="col-sm-4">
-                <select type="text" name="reg_stt_perangkat" class="form-control" value="{{ $data->reg_stt_perangkat}}" >
-                  <option value="DIPINJAMKAN">DIPINJAMKAN</option>
-                  <option value="MILIK PROBADI">MILIK PROBADI</option>
-                </select>
-              </div>
-              <label class="col-sm-2 col-form-label">Merk perangkat</label>
-              <div class="col-sm-4">
-                <input type="text" name="reg_mrek" id="edit_reg_mrek" class="form-control edit_ont" value="{{ $data->reg_mrek}}" readonly >
+                <input type="text" name="reg_stt_perangkat" class="form-control readonly" value="{{ $data->reg_stt_perangkat}}" disabled >
               </div>
               </div>
               <div class="form-group row">
+                <label class=" col-sm-2 col-form-label">POP</label>
+                <div class="col-sm-4">
+                  <input name="reg_pop" value="{{$data->pop_nama}}" class="form-control reg_odp" required>
+                </div>
+                <label for="router" class="col-sm-2 col-form-label">Router</label>
+                <div class="col-sm-4">
+                  <input class="form-control reg_odp" value="{{$data->router_nama}}" name="reg_router" >
+                </div>
+                </div>
+              <div class="form-group row">
+                <label class=" col-sm-2 col-form-label">OLT</label>
+                <div class="col-sm-4 notif">
+                  <input type="text" name="reg_olt" class="form-control readonly" required value="{{$data->reg_olt}}">
+                </div>
+                <label class=" col-sm-2 col-form-label">ODC</label>
+                <div class="col-sm-4 notif">
+                  <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly" required value="{{ $data->reg_odc}}" >
+                </div>
+            </div>
+              <div class="form-group row">
+                <label class=" col-sm-2 col-form-label">ODP</label>
+                <div class="col-sm-4 notif">
+                  <input type="text" name="reg_odp" id="validasi_odp" class="form-control readonly" required value="{{ $data->reg_odp }}" >
+                  <div id="pesan"></div>
+                </div>
+            </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Merek & Type perangkat</label>
+              <div class="col-sm-4">
+                <input type="text" name="reg_mrek" id="" class="form-control edit_ont readonly" value="{{ $data->reg_mrek}}" >
+              </div>
                 <label class="col-sm-2 col-form-label">Mac perangkat</label>
                 <div class="col-sm-4">
-                  <input type="text" name="reg_mac" id="edit_reg_mac"  class="form-control edit_ont" minlength="17" maxlength="17"  value="{{ $data->reg_mac}}" >
+                  <input type="text" name="reg_mac" id=""  class="form-control readonly" value="{{ $data->reg_mac}}" >
+                </div>
+                </div>
+                <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Mac perangkat ( OLT )</label>
+                <div class="col-sm-4">
+                  <input type="text" name="reg_mac_olt" id="reg_mac_olt"  class="form-control readonly"required value="{{ $data->reg_mac_olt }}" >
                 </div>
                 <label class=" col-sm-2 col-form-label" >SN perangkat</label>
               <div class="col-sm-4">
-                <input type="text" name="reg_sn" id="edit_reg_sn" class="form-control edit_ont" value="{{ $data->reg_sn}}" readonly >
+                <input type="text" name="reg_sn" class="form-control readonly" value="{{ $data->reg_sn}}" >
               </div>
+              </div>
+             
+              <div class="form-group row">
+                <label class=" col-sm-2 col-form-label">ONU ID</label>
+                <div class="col-sm-4">
+                  <input type="text" name="reg_onuid" class="form-control" required value="{{ $data->reg_onuid}}">
+                </div>
+                <label class=" col-sm-2 col-form-label">Slot ODP</label>
+                <div class="col-sm-4">
+                  <input type="text" name="reg_slot_odp" class="form-control" required value="{{ $data->reg_slot_odp }}" >
+                </div>
               </div>
               <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">Slot ONU</label>
+                <label class=" col-sm-2 col-form-label">Redaman</label>
                 <div class="col-sm-4">
-                  <input type="text" name="reg_slotonu" value="{{ $data->reg_slotonu}}" class="form-control" >
+                  {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}}
+                  <input type="number" class="form-control" name="reg_in_ont" required value="{{$data->reg_in_ont}}">
                 </div>
-                <label class=" col-sm-2 col-form-label">ODP</label>
+                <label class="col-sm-2 col-form-label">Teknisi Team</label>
                 <div class="col-sm-4">
-                  <input type="text" name="reg_odp" value="{{ $data->reg_odp}}" class="form-control" >
+                  <input type="text" class="form-control harga readonly"value="{{$data->reg_teknisi_team}}" >
                 </div>
               </div>
-              @role('admin|STAF ADMIN')
               <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">Kode Barang</label>
-                <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="pactcore" value="1" name="pactcore" @if( $data->reg_kode_pactcore) checked @endif disabled>
-                  <span class="form-check-sign">Pachtcore</span>
-                </label>
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="adaptor" value="1" name="adaptor" @if( $data->reg_kode_adaptor) checked @endif disabled>
-                  <span class="form-check-sign">Adaptor</span>
-                </label>
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="edit_ont" value="1" name="edit_ont" @if( $data->reg_kode_ont) checked @endif>
-                  <span class="form-check-sign">ONT</span>
-                </label>
+                <label class=" col-sm-2 col-form-label">Kode Kabel</label>
+                <div class="col-sm-4 notif_kabel">
+                  <input type="text" name="reg_kode_dropcore"  class="form-control" required value="{{$data->reg_kode_dropcore}}" >
+                  <div id="pesan_kabel"></div>
+                </div>
+                <label class=" col-sm-2 col-form-label">Before</label>
+                <div class="col-sm-4 notif_kabel">
+                  <input type="text" name="reg_before"  class="form-control readonly" required value="{{ $data->reg_before }}" >
+                </div>
               </div>
-              @endrole
-            </div>
+              <div class="form-group row">
+                
+                <label class=" col-sm-2 col-form-label">After</label>
+                <div class="col-sm-4 notif_over">
+                  <input type="text" name="reg_after" class="form-control" required value="{{ $data->reg_after}}" >
+                  <div id="pesan_over"></div>
+                </div>
+                <label class=" col-sm-2 col-form-label">Panjang Kabel</label>
+                <div class="col-sm-4">
+                  <input type="text" name="reg_penggunaan_dropcore" class="form-control" required value="{{ $data->reg_penggunaan_dropcore }}" >
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Koordinat Rumah</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control"  name="input_koordinat" required value="{{ $data->input_koordinat }}">
+                </div>
+                <label class="col-sm-2 col-form-label">Koordinat ODP</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control"  name="reg_koodinat_odp" required value="{{ $data->reg_koodinat_odp }}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Foto Rumah</label>
+                <div class="col-sm-4">
+                  <input  type="file" class="form-control-file" name="reg_img" required value="{{ $data->reg_img }}">
+                </div>
+                <label class="col-sm-2 col-form-label">Foto Lokasi ODP</label>
+                <div class="col-sm-4">
+                  <input  type="file" class="form-control-file" name="reg_foto_odp" required value="{{ $data->reg_foto_odp }}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Foto Rumah</label>
+                <div class="col-sm-4">
+                  <img src="{{ asset('storage/topologi/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
+                </div>
+                <label class="col-sm-2 col-form-label">Foto Lokasi ODP </label>
+                <div class="col-sm-4">
+                  <img src="{{ asset('storage/topologi/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
+                </div>
+              </div>
 
-
-              <!-- Modal Validasi Pactcore -->
-              <div class="modal fade" id="modal_pactcore" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE PACTCORE</h5>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi">
-                        <label class="col-sm-4 col-form-label">Kode Pactcore</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_pactcore" id="kode_pactcore" value="{{ $data->reg_kode_pactcore}}" class="form-control"  >
-                          <div id="notif"></div>
-                        </div>
-                      </div>
-                      <div id="note"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_pachcore">Close</button>
-                      <input class="btn btn-outline-secondary val_pachcore" value="Validasi"  type="button"></input>
-                      <div id="buton"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Modal Validasi adaptor -->
-              <div class="modal fade" id="modal_adaptor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE ADAPTOR</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi_adp">
-                        <label class="col-sm-4 col-form-label">Kode Adaptor</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_adaptor" id="kode_adaptor" class="form-control" value="{{ $data->reg_kode_adaptor}}" >
-                          <div id="notif_adp"></div>
-                        </div>
-                      </div>
-                      <div id="note_adp"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_adp">Close</button>
-                      <input class="btn btn-outline-secondary val_adp" value="Validasi"  type="button"></input>
-                      <div id="buton_adp"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Modal Validasi ont -->
-              <div class="modal fade" id="edit_modal_ont" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE ONT</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi_ontlllllllll">
-                        <label class="col-sm-4 col-form-label">Mac Address</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_ont_lama" id="edit_kode_ont_lama"  value="{{ $data->reg_mac}}" class="form-control"  >
-                        </div>
-                      </div>
-                      <div class="form-group row" id="edit_validasi_ont">
-                        <label class="col-sm-4 col-form-label">Kode Ont baru</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_ont" id="edit_kode_ont"  value="{{ $data->kode_ont}}" class="form-control"  >
-                          <div id="edit_notif_ont"></div>
-                        </div>
-                      </div>
-                      <div class="form-group row" id="edit_validasi_alasan">
-                        <label class="col-sm-4 col-form-label">Alasan Ganti</label>
-                        <div class="col-sm-8">
-                          <select name="alasan" id="alasan" class="form-control">
-                            <option value="">Pilih</option>
-                            <option value="Rusak">Rusak</option>
-                            <option value="Tukar">Tukar</option>
-                            <option value="Upgrade">Upgrade</option>
-                          </select>
-                          <div id="edit_notif_alasan"></div>
-                        </div>
-                      </div>
-                      <div class="form-group row" id="edit_validasi_keterangan">
-                        <label class="col-sm-4 col-form-label">Keterangan</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="keterangan" id="keterangan" class="form-control"  >
-                          <div id="edit_notif_keterangan"></div>
-                        </div>
-                      </div>
-                      <div id="edit_note_ont"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary edit_hide_ont">Close</button>
-                      <input class="btn btn-outline-secondary edit_val_ont" value="Validasi"  type="button"></input>
-                      <div id="buton_ont"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12">
-          <!-- <div class="card">
-            <div class="card-body">  -->
-            
-              <h3 class="mt-3 text-bolt">CATATAN</h3><hr>
             <div class="form-group row">
               <label for="router" class="col-sm-2 col-form-label">Catatan</label>
               <div class="col-sm-10">
@@ -568,6 +719,7 @@
           </div>
          </div>
         </div>
+        @endif
         @role('admin|STAF ADMIN')
         
         <div class="col-md-12">
@@ -839,43 +991,6 @@ Pindah Rumah
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
-              <h3 class="mt-3">INSTALASI</h3><hr>
-              <div class="form-group row">
-                <label class=" form-check col-sm-2 col-form-label">Teknisi Team</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control harga"value="{{$data->reg_teknisi_team}}" >
-                </div>
-                <label class="form-check col-sm-2 col-form-label">Lokasi FAT</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" value="{{$data->reg_fat}}" >
-                </div>
-              </div>
-              <div class="form-group row">
-                  <label class=" form-check col-sm-2 col-form-label">FAT OPM</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control harga"value="{{$data->reg_fat_opm}} Dbm" >
-                </div>
-                <label class="form-check col-sm-2 col-form-label">HOME OPM</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" value="{{$data->reg_home_opm}} Dbm" >
-                </div>
-              </div>
-              <div class="form-group row">
-                  <label class=" form-check col-sm-2 col-form-label">Total LOSS</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control harga"value="{{$data->reg_los_opm}} Dbm" >
-                </div>
-                <label class="form-check col-sm-2 col-form-label">Panjang Kabel</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" value="{{$data->reg_penggunaan_dropcore}} Meter" >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
               <h3 class="mt-3">MATERIAL</h3><hr>
               <div class="form-group row">
                   <label class=" form-check col-sm-2 col-form-label">KODEE KABEL</label>
@@ -905,34 +1020,38 @@ Pindah Rumah
 </div>
 
 <script>
-  	$(document).ready(function() {
-		$('.checkboxppn').change(function () {
-			if ($(this).is(":checked")) {
-				var result1 = parseInt($("#ppn").val())/100 * parseInt($(".harga").val());
-				if (!isNaN(result1)) {
-					$('.biaya_ppn').val(result1);
-				}
-			} else {
-				$(".biaya_ppn").val(0);
-			}
-		});
-		$('.checkboxkas').change(function () {
-			if ($(this).is(":checked")) {
-        var kas = 50;
-				$('.biaya_kas').val({{$data_biaya->biaya_kas}});
-			} else {
-				$(".biaya_kas").val(0);
-			}
-		});
-		$('.checkboxkerjasama').change(function () {
-			if ($(this).is(":checked")) {
-				$('.kerjasama').val({{$data_biaya->biaya_kerjasama}});
-			} else {
-				$(".kerjasama").val(0);
-			}
-		});
-										
-	});
-</script>
+    
+
+  // var reg_out_odp = document.getElementById('reg_out_odp');
+  var reg_in_ont = document.getElementById('reg_in_ont');
+      // reg_out_odp.addEventListener('keyup', function(e)
+      // {
+      //     reg_out_odp.value = format_opm(this.value, '-');
+      // });
+      reg_in_ont.addEventListener('keyup', function(e)
+      {
+        reg_in_ont.value = format_opm(this.value, '-');
+      });
+      
+      function format_opm(angka, prefix)
+      {
+          var number_string = angka.replace(/[^,\d]/g, '').toString(),
+              split    = number_string.split(','),
+              sisa     = split[0].length % 2,
+              rupiah     = split[0].substr(0, sisa),
+              ribuan     = split[0].substr(sisa).match(/\d{2}/gi);
+          if (ribuan) {
+              separator = sisa ? '.' : '';
+              rupiah += separator + ribuan.join('.');
+          }
+          return prefix == undefined ? rupiah : (rupiah ? '-' + rupiah : '');
+      }
+  
+  
+      
+  
+  
+ 
+    </script>
 
 @endsection

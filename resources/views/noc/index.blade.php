@@ -128,11 +128,11 @@
                       @endif
                     </div>
                   </td>
-                  <td>{{$d->reg_tgl_pasang}}</td>
-                      <td>{{$d->reg_nolayanan}}</td>
-                      <td>{{$d->input_nama}}</td>
-                      <td>{{$d->router_nama}}</td>
-                      <td>{{$d->input_alamat_pasang}}</td>
+                  <td class="href" data-id="{{$d->reg_idpel}}">{{$d->reg_tgl_pasang}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->reg_nolayanan}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->input_nama}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->router_nama}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->input_alamat_pasang}}</td>
                     </tr>
                     @endforeach
               </tbody>

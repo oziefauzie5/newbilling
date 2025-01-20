@@ -188,34 +188,40 @@ class PaketController extends Controller
 
     public function exportPaketToMikrotik(Request $request)
     {
-        $router = Router::all();
-        $data_paket = Paket::all();
+        $router = Router::whereId($request->paket_router)->first();
+
         $API = new RouterosAPI();
         $API->debug = false;
-        foreach ($router as $d) {
-            foreach ($data_paket as $dp) {
+        if ($request->layanan == 'PPP') {
+            $data_paket = Paket::where('paket_layanan', 'PPP')->get();
+        } else {
+            $data_paket = Paket::where('paket_layanan', 'HOTSPOT')->get();
+        }
+        // foreach ($router as $d) {
+        foreach ($data_paket as $dp) {
 
-                echo $d->router_nama . $dp->paket_nama . '<br>';
+            echo $router->router_nama . '-' . $router->router_port_api . '-' . $router->router_username . '-' . $router->router_password . '-' . $dp->paket_nama . '<br>';
 
-                if ($API->connect($d->router_ip . ':' . $d->router_port_api, $d->router_username, $d->router_password)) {
-                    $API->comm('/ip/pool/add', [
-                        'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                        'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
-                    ]);
-                    $API->comm('/ppp/profile/add', [
-                        'name' =>  $dp->paket_nama == '' ? '' : $dp->paket_nama,
-                        'rate-limit' => $dp->paket_limitasi == '' ? '' : $dp->paket_limitasi,
-                        'local-address' => $request->paket_lokal == '' ? '' : $request->paket_lokal,
-                        'remote-address' => $request->pool == '' ? '' : $request->pool,
-                        'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
-                        'queue-type' => 'default-small' == '' ? '' : 'default-small',
-                        'dns-server' => $d->router_dns == '' ? '' : $d->router_dns,
-                        'disabled' => 'yes',
-                        'only-one' => 'yes',
-                    ]);
-                }
+            // if ($API->connect('103.171.83.97:5534', 'ovallnet122', '@Fauzi12234')) {
+            if ($API->connect($router->router_ip . ':' . $router->router_port_api, $router->router_username, $router->router_password)) {
+                $API->comm('/ip/pool/add', [
+                    'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
+                    'ranges' =>  '10.100.192.100-10.100.207.254' == '' ? '' : '10.100.192.100-10.100.207.254',
+                ]);
+                $API->comm('/ppp/profile/add', [
+                    'name' =>  $dp->paket_nama == '' ? '' : $dp->paket_nama,
+                    'rate-limit' => $dp->paket_limitasi == '' ? '' : $dp->paket_limitasi,
+                    'local-address' => $request->paket_lokal == '' ? '' : $request->paket_lokal,
+                    'remote-address' => $request->pool == '' ? '' : $request->pool,
+                    'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                    'queue-type' => 'default-small' == '' ? '' : 'default-small',
+                    'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
+                    // 'disabled' => 'no',
+                    'only-one' => 'yes',
+                ]);
             }
         }
+        // }
         $notifikasi = array(
             'pesan' => 'Berhasil export Paket',
             'alert' => 'success',

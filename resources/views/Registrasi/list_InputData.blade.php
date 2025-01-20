@@ -7,10 +7,10 @@
       <div class="card">
         <div class="card-header">
           <div class="d-flex align-items-center">
-            <h4 class="card-title">INPUT DATA</h4>
+            <h4 class="card-title">INPUT DATA BARU</h4>
             <button class="btn btn-primary btn-round ml-auto btn-sm" data-toggle="modal" data-target="#addRowModal">
               <i class="fa fa-plus"></i>
-              Input Data
+              Input Data Baru
             </button>
           </div>
         </div>
@@ -47,14 +47,20 @@
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
-                          <label>No Hp</label>
-                          <input id="input_hp" type="text" class="form-control" value="{{ Session::get('input_hp') }}" name="input_hp" placeholder="No. Whatsapp" required>
+                          <label>No Hp 1</label>
+                          <input id="input_hp" type="number" class="form-control" value="{{ Session::get('input_hp') }}" name="input_hp" placeholder="No. Whatsapp" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>No Hp 2</label>
+                          <input id="input_hp" type="number" class="form-control" value="{{ Session::get('input_hp2') }}" name="input_hp2" placeholder="No. Whatsapp Alternatif" required>
                         </div>
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>Email</label>
-                          <input id="input_email" type="text" class="form-control" value="{{ Session::get('input_email') }}" name="input_email" placeholder="Email">
+                          <input id="input_email" type="email" class="form-control" value="{{ Session::get('input_email') }}" name="input_email" placeholder="Email">
                         </div>
                       </div>
                       <div class="col-sm-12">

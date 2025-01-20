@@ -7,13 +7,13 @@
       <div class="card">
         <div class="card-header">
           <div class="d-flex align-items-center">
-            <h4 class="card-title">INPUT DATA</h4>
+            <h4 class="card-title">INPUT DATA BARU</h4>
           </div>
         </div>
         <div class="card-body">
           <a href="{{route('admin.psb.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary ">
             <i class="fas fa-angle-double-left "></i>
-            Kembali lagi
+            Kembali
           </button></a>
           <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addRowModal">
             <i class="fa fa-plus"></i>
@@ -94,8 +94,14 @@
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
-                          <label>No Hp</label>
-                          <input id="input_hp" type="text" class="form-control" value="{{ Session::get('input_hp') }}" name="input_hp" placeholder="No. Whatsapp" required>
+                          <label>No Hp 1</label>
+                          <input id="input_hp" type="text" class="form-control" value="{{ Session::get('input_hp') }}" name="input_hp" placeholder="No. Whatsapp 1" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>No Hp 2</label>
+                          <input id="input_hp_2" type="text" class="form-control" value="{{ Session::get('input_hp_2') }}" name="input_hp_2" placeholder="No. Whatsapp 2" required>
                         </div>
                       </div>
                       <div class="col-sm-12">
@@ -177,6 +183,7 @@ Keterangan :
                   <th>Tanggal Regist</th>
                   <th>Nama</th>
                   <th>Whatsapp</th>
+                  <th>Whatsapp Alternatif</th>
                   <th>Alamat Pasang</th>
                   <th>Status</th>
                 </tr>
@@ -188,6 +195,7 @@ Keterangan :
                       <td id="{{$d->id}}">{{ date('d-m-Y', strtotime($d->input_tgl))}}</td>
                       <td id="{{$d->id}}">{{$d->input_nama}}</td>
                       <td id="{{$d->id}}">{{$d->input_hp}}</td>
+                      <td id="{{$d->id}}">{{$d->input_hp_2}}</td>
                       <td id="{{$d->id}}">{{$d->input_alamat_pasang}}</td>
                       <td id="{{$d->id}}">{{$d->input_status}}</td>
                     </tr>
@@ -233,8 +241,14 @@ Keterangan :
                         </div>
                         <div class="col-sm-12">
                           <div class="form-group">
-                            <label>No Hp</label>
+                            <label>No Hp 1</label>
                             <input id="edit_input_hp" type="text" class="form-control" value="" name="input_hp" required>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>No Hp 2</label>
+                            <input id="edit_input_hp2" type="text" class="form-control" value="" name="nomorhp2" required>
                           </div>
                         </div>
                         <div class="col-sm-12">

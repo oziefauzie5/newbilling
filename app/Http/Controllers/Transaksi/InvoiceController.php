@@ -76,19 +76,19 @@ class InvoiceController extends Controller
             $query->where('inv_status', '=', $data['data_inv']);
         // $export = $query->get();
         //         foreach ($export as $value) {
-        //             echo '<table><tr><td>'.$value->inv_nolayanan.'</td><td>'.$value->inv_nama.'</td><td>'.$value->inv_id.'</td><td>'.$value->inv_tgl_jatuh_tempo.'</td><td>'.$value->inv_tgl_isolir.'</td></tr></table>';
+        //             echo '<table><tr><td>'.$value->inv_nolayanan.'</td><td>'.$value->inv_id.'</td><td>'.$value->inv_tgl_jatuh_tempo.'</td><td>'.$value->inv_nama.'</td></tr></table>';
         //         }
         //         dd('test');
 
 
         $data['inv_count_all'] = $query->count();
         $data['data_invoice'] = $query->paginate(20);
-        $data['inv_count_belum_terbayar'] = Invoice::where('inv_status', '!=', 'PAID')->count() + Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
+        $data['inv_count_belum_terbayar'] = Invoice::where('inv_status', '!=', 'PAID')->count() + Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->count();
         $data['inv_count_total'] = Invoice::whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
         $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();
-        $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
+        $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->count();
         $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->sum('inv_total');
-        $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->sum('inv_total');
+        $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->sum('inv_total');
         $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->count();
         $data['inv_count_isolir'] = Invoice::where('inv_status', '=', 'ISOLIR')->count();
         return view('Transaksi/list_invoice', $data);
@@ -114,16 +114,18 @@ class InvoiceController extends Controller
             });
 
         if ($data['bulan'])
-            $invoice->whereMonth('inv_tgl_jatuh_tempo', date('m', strtotime($data['bulan'])))->whereYear('inv_tgl_jatuh_tempo', date('Y', strtotime($data['bulan'])));
+            $invoice->whereMonth('inv_tgl_bayar', date('m', strtotime($data['bulan'])))->whereYear('inv_tgl_bayar', date('Y', strtotime($data['bulan'])));
 
         if ($data['tglbayar'])
             $invoice->whereDate('inv_tgl_bayar', $data['tglbayar']);
 
         // $export = $invoice->get();
         // foreach ($export as $value) {
-        //     echo '<table><tr><td>' . $value->inv_id . '</td><td>' . $value->inv_tgl_bayar . '</td><td>' . $value->akun_nama . '</td><td>' . $value->inv_total . '</td><td>' . $value->akun_nama . '</td></tr></table>';
+        //     echo '<table><tr><td>' . $value->inv_nolayanan . '</td><td>' . $value->inv_id . '</td><td>' . $value->inv_tgl_bayar . '</td><td>' . $value->inv_tgl_jatuh_tempo . '</td><td>' . $value->inv_nama . '</td><td>' . $value->inv_total . '</td><td>' . $value->akun_nama . '</td></tr></table>';
         // }
         // dd('test');
+
+
         $data['data_invoice'] = $invoice->paginate(10);
         $data['inv_count_bulan'] = $invoice->count();
         // $data['inv_bulan'] = $invoice->sum('inv_total');
@@ -467,8 +469,10 @@ class InvoiceController extends Controller
                     #Tambah 1 bulan dari tgl pembeyaran
                     #Pembayaran di atas tanggal 25 maka akan di anggap bayar tgl 25
                     $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
-                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-03', strtotime($addonemonth)))));
-                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-2)->toDateString();
+                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
+                    $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                    dd($tgl_jt_tempo);
                 } else {
                     $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
                     $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
@@ -479,7 +483,6 @@ class InvoiceController extends Controller
                 $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
                 $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
             }
-
 
             if ($data_pelanggan->reg_inv_control == 0) {
                 $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;

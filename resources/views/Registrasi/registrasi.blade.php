@@ -100,9 +100,13 @@
                 </div>
               </div>
               <div class="form-group row">
-                  <label for="hp" class="col-sm-2 col-form-label">No Whatsapp</label>
-                  <div class="col-sm-10">
+                  <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 1</label>
+                  <div class="col-sm-4">
                     <input type="number" class="form-control" id="tampil_hp" value="{{ Session::get('reg_hp') }}" name="reg_hp" readonly>
+                  </div>
+                  <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 2</label>
+                  <div class="col-sm-4">
+                    <input type="number" class="form-control" id="tampil_hp2" value="{{ Session::get('reg_hp2') }}" name="reg_hp2" readonly>
                   </div>
               </div>
               <div class="form-group row">
@@ -118,17 +122,46 @@
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Sales ID</label>
-                  <div class="col-sm-10">
+                  <label class="col-sm-2 col-form-label">Sales Id</label>
+                  <div class="col-sm-4">
                     <input type="text" class="form-control" id="tampil_sales" name="reg_sales" value="{{ Session::get('reg_sales') }}" required>
+                  </div>
+                  <label class="col-sm-2 col-form-label">Sales</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="tampil_sales_nama" name="reg_sales_nama" value="{{ Session::get('reg_sales_nama') }}" required>
                   </div>
               </div>
               <h3 class="mt-3 text-bolt">INTERNET & HADHWARE</h3><hr>
-              
+
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Site</label>
+                <div class="col-sm-4">
+                  <select class="form-control" id="site" name="reg_site"  >
+                    <option value="">PILIH SITE</option>
+                    @foreach ($data_site as $d)
+                    <option value="{{$d->site_id}}">{{$d->site_nama}}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <label class="col-sm-2 col-form-label">POP</label>
+                <div class="col-sm-4">
+                  <select class="form-control pop_router" id="pop" name="reg_pop"  >
+                    <option value="">- Pilih POP -</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="router" class="col-sm-2 col-form-label">Router</label>
+                <div class="col-sm-10">
+                  <select class="form-control" id="router" name="reg_router"  >
+                    <option value="">- Pilih Router -</option>
+                  </select>
+                </div>
+            </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Layanan</label>
                 <div class="col-sm-10">
-                  <select class="form-control" id="reg_layanan" name="reg_layanan" required >
+                  <select class="form-control" id="reg_layanan" name="reg_layanan" >
                     @if( Session::get('reg_layanan'))
                     <option value="{{ Session::get('reg_layanan') }}">{{ Session::get('reg_layanan') }}</option>
                     @else
@@ -140,25 +173,7 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group row">
-                  <label for="router" class="col-sm-2 col-form-label">Router</label>
-                  <div class="col-sm-10">
-                    <select class="form-control" id="regrouter" name="reg_router" required >
-                      @if( Session::get('reg_router'))
-                    <option value="{{ Session::get('reg_router') }}">{{ Session::get('router_nama') }}</option>
-                    <option value="">Pilih</option>
-                    @foreach($data_router as $s)
-                    <option value="{{$s->id}}">{{$s->router_nama}}</option>
-                    @endforeach
-                    @else
-                    <option value="">Pilih</option>
-                    @foreach($data_router as $s)
-                    <option value="{{$s->id}}">{{$s->router_nama}}</option>
-                    @endforeach
-                    @endif
-                    </select>
-                  </div>
-              </div>
+              
               <div id="divip" class="form-group row" >
                 <label class="col-sm-2 col-form-label">IP address</label>
                 <div class="col-sm-10">
@@ -184,30 +199,28 @@
                   <option value="MILIK PROBADI">MILIK PROBADI</option>
                 </select>
               </div>
-              <label class="col-sm-2 col-form-label">Merk perangkat</label>
+              <label class="col-sm-2 col-form-label">Nama perangkat</label>
               <div class="col-sm-4">
-                <input type="text" name="reg_mrek" id="reg_mrek" class="form-control ont" value="{{ Session::get('reg_mrek') }}" readonly >
+                <input type="text" name="reg_nama_barang" id="reg_nama_barang" class="form-control ont" value="{{ Session::get('reg_nama_barang') }}" readonly >
               </div>
               </div>
               <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Merk perangkat</label>
+              <div class="col-sm-4">
+                <input type="text" name="reg_mrek" id="reg_mrek" class="form-control ont" value="{{ Session::get('reg_mrek') }}" readonly >
+              </div>
                 <label class="col-sm-2 col-form-label">Mac perangkat</label>
                 <div class="col-sm-4">
                   <input type="text" name="reg_mac" id="reg_mac"  class="form-control ont" value="{{ Session::get('reg_mac') }}" readonly >
                 </div>
-                <label class=" col-sm-2 col-form-label" >SN perangkat</label>
-              <div class="col-sm-4">
-                <input type="text" name="reg_sn" id="reg_sn" class="form-control ont" value="{{ Session::get('reg_sn') }}" readonly >
-              </div>
               </div>
               <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">Slot ONU</label>
+                <label class=" col-sm-2 col-form-label" >SN perangkat</label>
                 <div class="col-sm-4">
-                  <input type="text" name="reg_slotonu" value="{{ Session::get('reg_slotonu') }}" class="form-control" >
+                  <input type="text" name="reg_sn" id="reg_sn" class="form-control ont" value="{{ Session::get('reg_sn') }}" readonly >
                 </div>
-                <label class=" col-sm-2 col-form-label">ODP</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_odp" value="{{ Session::get('reg_odp') }}" class="form-control" >
-                </div>
+
+          
               </div>
               <div class="form-group row">
               <label class=" col-sm-2 col-form-label">Kode Barang</label>
@@ -314,7 +327,7 @@
               <div class="form-group row">
                 <label for="paket" class="col-sm-2 col-form-label" >Tanggal registrasi*</label>
                 <div class="col-sm-10">
-                <input type="text" class="form-control" id="tampil_tgl" name="reg_tgl" value="{{Session::get('reg_tgl')}}">
+                <input type="text" class="form-control" id="tampil_tgl" name="reg_tgl" value="{{Session::get('reg_tgl')}}" readonly>
                 </div>
               </div>
               <div class="form-group row">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Http\Controllers\NOC\NocController;
 use App\Imports\Import\InputDataImport;
+use App\Models\Aplikasi\Data_Site;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Barang\SubBarang;
 use App\Models\Global\ConvertNoHp;
@@ -89,7 +90,7 @@ class PsbController extends Controller
 
         //          $variable = $query->get();
         //     foreach ($variable as $key) {
-        //         echo '<table><tr><td>'.$key->reg_nolayanan.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_tgl_jatuh_tempo.'</td></tr></table>';
+        //         echo '<table><tr><td>'.$key->reg_nolayanan.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_tgl_jatuh_tempo.'</td><td>'.$key->reg_status.'</td></tr></table>';
 
         //     }
         // dd('CILUKBA');
@@ -247,8 +248,17 @@ class PsbController extends Controller
     {
         $id_cust = (new GlobalController)->idpel_();
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
+        $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
+        if (!preg_match('/[^+0-9]/', trim($nomorhp2))) {
+            if (substr(trim($nomorhp2), 0, 3) == '+62') {
+                $nomorhp2 = trim($nomorhp2);
+            } elseif (substr($nomorhp2, 0, 1) == '0') {
+                $nomorhp2 = '' . substr($nomorhp2, 1);
+            }
+        }
         Session::flash('input_nama', ucwords($request->input_nama));
         Session::flash('input_hp', $request->input_hp);
+        Session::flash('input_hp_2', $request->input_hp_2);
         Session::flash('input_ktp', $request->input_ktp);
         Session::flash('input_email', $request->input_email);
         Session::flash('input_alamat_ktp', ucwords($request->input_alamat_ktp));
@@ -262,9 +272,11 @@ class PsbController extends Controller
         $request->validate([
             'input_ktp' => 'unique:input_data',
             'input_hp' => 'unique:input_data',
+            'input_hp_2' => 'unique:input_data',
         ], [
             'input_ktp.unique' => 'Nomor Identitas sudah terdaftar',
-            'input_hp.unique' => 'Nomor Whatsapp sudah terdaftar',
+            'input_hp.unique' => 'Nomor Whatsapp 1 sudah terdaftar',
+            'input_hp_2.unique' => 'Nomor Whatsapp 2 sudah terdaftar',
         ]);
         $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
 
@@ -277,6 +289,7 @@ class PsbController extends Controller
                 'id' => $id_cust,
                 'input_ktp' => $request->input_ktp,
                 'input_hp' => $nomorhp,
+                'input_hp_2' => $nomorhp2,
                 'input_email' => $request->input_email,
                 'input_alamat_ktp' => ucwords($request->input_alamat_ktp),
                 'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
@@ -312,11 +325,19 @@ class PsbController extends Controller
     public function input_data_update(Request $request)
     {
         // $request->edit_id;
-        // dd($request->edit_id);
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
+        $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
+        if (!preg_match('/[^+0-9]/', trim($nomorhp2))) {
+            if (substr(trim($nomorhp2), 0, 3) == '+62') {
+                $nomorhp2 = trim($nomorhp2);
+            } elseif (substr($nomorhp2, 0, 1) == '0') {
+                $nomorhp2 = '' . substr($nomorhp2, 1);
+            }
+        }
         $update['input_nama'] = $request->input_nama;
         $update['input_ktp'] = $request->input_ktp;
         $update['input_hp'] = $nomorhp;
+        $update['input_hp_2'] = $nomorhp2;
         $update['input_email'] = $request->input_email;
         $update['input_alamat_ktp'] = $request->input_alamat_ktp;
         $update['input_alamat_pasang'] = $request->input_alamat_pasang;
@@ -348,31 +369,32 @@ class PsbController extends Controller
         return redirect()->route('admin.psb.list_input')->with($notifikasi);
     }
 
+    // DIHAPUS KARNA DI PINDAH KE REGISTRTASI CONTROLLER
 
+    // public function edit_pelanggan($id)
+    // {
+    //     $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
+    //     // dd($data['tgl_akhir']);
+    //     $status_inet = (new NocController)->status_inet($id);
+    //     // dd($status_inet['status']);
+    //     $data['input_data'] = InputData::all();
+    //     $data['data_router'] = Router::all();
+    //     $data['data_paket'] = Paket::all();
+    //     $data['data_biaya'] = SettingBiaya::first();
 
-    public function edit_pelanggan($id)
-    {
-        $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
-        // dd($data['tgl_akhir']);
-        $status_inet = (new NocController)->status_inet($id);
-        // dd($status_inet['status']);
-        $data['input_data'] = InputData::all();
-        $data['data_router'] = Router::all();
-        $data['data_paket'] = Paket::all();
-        $data['data_biaya'] = SettingBiaya::first();
-
-        $data['data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('input_data.id', $id)
-            ->first();
-        // dd($data['data']);
-        $data['status'] = $status_inet['status'];
-        $data['uptime'] = $status_inet['uptime'];
-        $data['address'] = $status_inet['address'];
-        $data['status_secret'] = $status_inet['status_secret'];
-        return view('Registrasi/edit_registrasi', $data);
-    }
+    //     $data['data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+    //         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+    //         ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+    //         ->where('input_data.id', $id)
+    //         ->first();
+    //     // dd($data['data']);
+    //     $data['data_site'] = Data_Site::get();
+    //     $data['status'] = $status_inet['status'];
+    //     $data['uptime'] = $status_inet['uptime'];
+    //     $data['address'] = $status_inet['address'];
+    //     $data['status_secret'] = $status_inet['status_secret'];
+    //     return view('Registrasi/edit_registrasi', $data);
+    // }
     public function input_data_import(Request $request)
     {
         dd('aa');

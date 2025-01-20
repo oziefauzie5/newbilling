@@ -159,11 +159,11 @@
 
 
             });
-			$("#fat_opm, #home_opm").keyup(function() {
-                var home_opm  = $("#home_opm").val();
-                var fat_opm = $("#fat_opm").val();
+			$("#reg_out_odp, #reg_in_ont").keyup(function() {
+                var reg_in_ont  = $("#reg_in_ont").val();
+                var reg_out_odp = $("#reg_out_odp").val();
                 var num1 = "1";
-                var total_lost = Number((fat_opm-home_opm).toFixed(2)); // 1 instead of 1.01;
+                var total_lost = Number((reg_out_odp-reg_in_ont).toFixed(2)); // 1 instead of 1.01;
                 $("#los_opm").val(total_lost);
             });
 
@@ -171,51 +171,51 @@
 
 
 
-		$(".cari").click(function(){
-        // $("#kode").css("border-color", "yellow");
-        var kode_kabel =$("#kode").val();
-        var url = '{{ route("admin.teknisi.getBarang", ":id") }}';
-    url = url.replace(':id', kode_kabel);
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        data: {
-                          kode_kabel: kode_kabel,
-                            '_token': '{{ csrf_token() }}'
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            // 
-                            if (data.subbarang_stok) {
-                              var after  = $("#after").val();
-                              // var before = $("#before").val();
-                                $("#before").val(data.subbarang_stok);
-                                $("#before").css("border-color", "rgb(60, 179, 113)");
-                                $("#notif").html('');
+	// 	$(".cari").click(function(){
+    //     // $("#kode").css("border-color", "yellow");
+    //     var kode_kabel =$("#kode").val();
+    //     var url = '{{ route("admin.teknisi.getBarang", ":id") }}';
+    // url = url.replace(':id', kode_kabel);
+    //                 $.ajax({
+    //                     url: url,
+    //                     type: 'GET',
+    //                     data: {
+    //                       kode_kabel: kode_kabel,
+    //                         '_token': '{{ csrf_token() }}'
+    //                     },
+    //                     dataType: 'json',
+    //                     success: function(data) {
+    //                         // 
+    //                         if (data.barang_qty) {
+    //                           var after  = $("#after").val();
+    //                           // var before = $("#before").val();
+    //                             $("#before").val(data.barang_qty-data.barang_digunakan);
+    //                             $("#before").css("border-color", "rgb(60, 179, 113)");
+    //                             $("#notif").html('');
     
-                                var total = parseInt(data.subbarang_stok) - parseInt(after);
-                                if (isNaN(total)) {
-                                    total = '';
-                                    }
-                                $("#total").val(total);
-								$("#modal_cari").modal('hide');
-                              } else {
-                                $('#before').val('');
-                                $("#notif").html('<div class="alert alert-danger" role="alert">Kode barang tidak ditemukan</div>');
-                                $("#before").css("border-color", "red");
-                                $("#total").val('');
-                              }
-                            },
-                            error: function(error){
-                              // or');
-                              $('#before').val('');
-                              $("#before").css("border-color", "red");
-                              $("#notif").html('<div class="alert alert-danger" role="alert">Kode barang tidak ditemukan</div>');
-                              $("#total").val('');
-                            }
+    //                             var total = parseInt(data.barang_qty-data.barang_digunakan) - parseInt(after);
+    //                             if (isNaN(total)) {
+    //                                 total = '';
+    //                                 }
+    //                             $("#total").val(total);
+	// 							$("#modal_cari").modal('hide');
+    //                           } else {
+    //                             $('#before').val('');
+    //                             $("#notif").html('<div class="alert alert-danger" role="alert">Kode barang tidak ditemukan</div>');
+    //                             $("#before").css("border-color", "red");
+    //                             $("#total").val('');
+    //                           }
+    //                         },
+    //                         error: function(error){
+    //                           // or');
+    //                           $('#before').val('');
+    //                           $("#before").css("border-color", "red");
+    //                           $("#notif").html('<div class="alert alert-danger" role="alert">Kode barang tidak ditemukan</div>');
+    //                           $("#total").val('');
+    //                         }
                         
-                    });
-      });
+    //                 });
+    //   });
 	</script>
 	<script>
 		@if (Session::has('pesan'))
@@ -432,25 +432,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 				if($(this).is(":checked")) {
 					$('#edit_modal_pactcore').modal('show')
 					$('.edit_kode_pactcore').attr('required', 'required');
-
-					// //Hapus Adaptor
-					// $("#edit_adaptor").prop("checked", false);
-					// $("#edit_kode_adaptor").val('');
-					
-					// //Hapus Ont
-					// $("#edit_ont").prop("checked", false);
-					// $('#edit_validasi_ont').removeClass("has-error has-feedback");
-					// $('#edit_validasi_ont').removeClass("has-success");
-					// $("#edit_kode_ont").val('');
-					// $('#edit_notif_ont').html('');
-					// $('#edit_note_ont').html('');
-					// $('#edit_reg_mac').val('');
-					// $('#edit_reg_sn').val('');
-					// $('#edit_reg_mrek').val('');
-					// $('#alasan').val('');
-					// $('#keterangan').val('');
-					// $('.edit_ont').removeAttr('required');
-					// $('#show_ont').hide()
 
 					//Hapus seting ulang
 					$("#edit_seting").prop("checked", false);

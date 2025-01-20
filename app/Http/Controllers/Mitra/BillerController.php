@@ -330,8 +330,9 @@ class BillerController extends Controller
                     #Tambah 1 bulan dari tgl pembeyaran
                     #Pembayaran di atas tanggal 25 maka akan di anggap bayar tgl 25
                     $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
-                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-03', strtotime($addonemonth)))));
-                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-2)->toDateString();
+                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
+                    $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
                 } else {
                     $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
                     $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();

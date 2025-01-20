@@ -17,6 +17,7 @@ class InputData extends Model implements Authenticatable
         'input_nama',
         'input_ktp',
         'input_hp',
+        'input_hp_2',
         'input_email',
         'input_alamat_ktp',
         'input_alamat_pasang',

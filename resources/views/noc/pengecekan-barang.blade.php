@@ -36,23 +36,21 @@
                   <th>NAMA BARANG</th>
                   <th>KATEGORI</th>
                   <th>KETERANGAN</th>
-                  <th>DESKRIPSI</th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($sub_barang as $d)
+                @foreach ($data_barang as $d)
                 <tr>
-                  <td>{{$d->id_subbarang}}</td>
-                      <td><button class="btn btn-block btn-primary btn-sm" data-toggle="modal" data-target="#status_barang{{$d->id_subbarang}}">Update</button></td>
-                      <td>{{$d->subbarang_tgl_masuk}}</td>
-                      <td>{{$d->subbarang_nama}}</td>
-                      <td>{{$d->subbarang_ktg}}</td>
-                      <td>{{$d->subbarang_keterangan}}</td>
-                      <td>{{$d->subbarang_deskripsi}}</td>
+                  <td>{{$d->barang_id}}</td>
+                      <td><button class="btn btn-block btn-primary btn-sm" data-toggle="modal" data-target="#status_barang{{$d->barang_id}}">Update</button></td>
+                      <td>{{$d->barang_tglmasuk}}</td>
+                      <td>{{$d->barang_nama}}</td>
+                      <td>{{$d->barang_kategori}}</td>
+                      <td>{{$d->barang_ket}}</td>
                     </tr>
                    
                    <!-- Modal -->
-<div class="modal fade" id="status_barang{{$d->id_subbarang}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="status_barang{{$d->barang_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -63,44 +61,75 @@
       </div>
       <div class="modal-body">
       <div class="form-row">
-      <form method="post" action="{{ route('admin.barang.update_status_barang',['id'=>$d->id_subbarang]) }}" >
+      <form method="post" action="{{ route('admin.barang.update_status_barang',['id'=>$d->barang_id]) }}" >
       @csrf
        @method('PUT')
                  
-                  <div class="col-4">
+                  <div class="col-6">
                     <label for="">ID Barang</label>
-                    <input type="text" class="form-control" name="idbarang" value="{{$d->subbarang_idbarang}}" readonly>
+                    <input type="text" class="form-control" name="idbarang" value="{{$d->barang_id}}" readonly>
                   </div>
-                  <div class="col-4">
-                    <label for="">Status Barang</label>
-                    <input type="text" class="form-control" value="{{$d->subbarang_status}}" readonly>
-                  </div>
-                  <div class="col-4">
+                  <div class="col-6">
                     <label for="">Stok Barang</label>
-                    <input type="text" class="form-control" value="{{$d->subbarang_stok}}" readonly>
+                    <input type="text" class="form-control" value="{{$d->barang_qty}}" readonly>
                   </div>
-                  @if($d->subbarang_ktg == 'ONT')
+                  <div class="col-12">
+                    <label for="">Status Barang</label>
+                    <input type="text" class="form-control" value="@if($d->barang_status == 0)Bagus, normal dan bisa digunakan @elseif($d->barang_status == 4) Tidak bagus, rusak dan tidak bisa digunakan @elseif($d->barang_status == 5)Barang belum dicek @endif"  readonly>
+                  </div>
+                 
+                  @if($d->barang_kategori == 'ONT')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="sn" value="{{$d->subbarang_sn}}" required>
+                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="mac" value="{{$d->subbarang_mac}}" required>
-                    </div>                      
+                      <input type="text" class="form-control" name="barang_mac" value="{{$d->barang_mac}}" required>
+                    </div> 
+                    @elseif($d->barang_kategori == 'OLT')
+                    <div class="col-6">
+                      <label for="">Serial Number</label>
+                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
+                    </div>
+                    <div class="col-6">
+                      <label for="">Mac Address</label>
+                      <input type="text" class="form-control" name="barang_mac" value="{{$d->barang_mac}}" required>
+                    </div> 
+                    @elseif($d->barang_kategori == 'ROUTER')
+                    <div class="col-6">
+                      <label for="">Serial Number</label>
+                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
+                    </div>
+                    <div class="col-6">
+                      <label for="">Mac Address</label>
+                      <input type="text" class="form-control" name="barang_mac" value="{{$d->barang_mac}}" required>
+                    </div> 
+                    @elseif($d->barang_kategori == 'SWITCH')
+                    <div class="col-6">
+                      <label for="">Serial Number</label>
+                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
+                    </div>
+                    <div class="col-6">
+                      <label for="">Mac Address</label>
+                      <input type="text" class="form-control" name="barang_mac" value="{{$d->barang_mac}}" required>
+                    </div> 
+                    @elseif($d->barang_kategori == 'SPLICER')
+
                   @endif
                   <div class="col-12">
-                    <label for="">Keterangan</label>
-                    <select name="ket" id="" class="form-control" required>
-                      <option value="Dalam Pengecekan">Dalam Pengecekan</option>
-                      <option value="Rusak">Rusak</option>
-                      <option value="Barang Retur">Barang Retur</option>
-                      <option value="Barang Normal">Barang Normal</option>
+                    <label for="">Perbarui Status barang</label>
+                    <select name="barang_status" id="" class="form-control" required>
+                      <option value="">- Perbarui status barang -</option>
+                      <option value="0">Bagus, normal dan bisa digunakan</option>
+                      <option value="1">Barang normal dan telah digunakan</option>
+                      <option value="4">Tidak bagus, rusak dan tidak bisa digunakan</option>
+                      <option value="5">Barang belum dicek</option>
                     </select>
                   </div>
                   <div class="col-12">
-                    <label for="">Deskripsi<strong class="text-danger">*</strong></label>
-                    <textarea type="text" class="form-control" id="desk" name="desk" value="{{$d->subbarang_deskripsi}}" row="5" required></textarea>
+                    <label for="">Keterangan<strong class="text-danger">*</strong></label>
+                    <textarea type="text" class="form-control" id="" name="barang_ket" row="5" required>{{$d->barang_ket}}</textarea>
                     <div class="invalid-feedback">
                         Keterangan tidak boleh kosong
                     </div>
@@ -109,7 +138,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary">Perbarui</button>
         </form>
       </div>
     </div>

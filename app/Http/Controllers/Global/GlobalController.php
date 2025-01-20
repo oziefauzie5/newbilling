@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\Global;
 
 use App\Http\Controllers\Controller;
+use App\Models\Aplikasi\Data_Site;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWhatsapp;
+use App\Models\Gudang\Data_Barang;
 use App\Models\Mitra\Mutasi;
 use App\Models\Mitra\MutasiSales;
 use App\Models\PSB\InputData;
+use App\Models\Teknisi\Data_Odc;
+use App\Models\Teknisi\Data_Odp;
+use App\Models\Teknisi\Data_Olt;
+use App\Models\Teknisi\Data_pop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi\Invoice;
@@ -57,6 +63,16 @@ class GlobalController extends Controller
             ->where('users.id', '=', $iduser)
             ->first();
         return $role;
+    }
+    public function getTeknisi() #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
+    {
+        $teknisi =  DB::table('users')
+            ->select('users.id as user_id', 'users.name AS user_nama', 'roles.name', 'roles.id as role_id', 'users.hp', 'users.email', 'users.alamat_lengkap', 'users.username', 'users.password')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('roles.id', '=', '11')
+            ->get();
+        return $teknisi;
     }
 
     public function all_user() #mennampilkan data user
@@ -229,9 +245,9 @@ class GlobalController extends Controller
 
         // dd($bulanRom);
         $latest = Invoice::latest()->first();
-        // dd($latest);
+        // dd($latest); 
         if (! $latest) {
-            return $bln . '0001';
+            return $bln . $th . '0001';
         }
 
         $string = substr($latest->inv_id, 2);
@@ -270,5 +286,58 @@ class GlobalController extends Controller
         $data = Kendaraan::select('kendaraans.*', 'kendaraans.id as trans_id', 'permissions.*')
             ->join('permissions', 'permissions.id', '=', 'kendaraans.trans_divisi_id');
         return $data;
+    }
+
+    public function getSite($id)
+    {
+        $kode_site = Data_Site::join('data_pops', 'data_pops.pop_id_site', '=', 'data__sites.site_id')
+            ->where("site_id", $id)->where("site_status", 'Enable')->get();
+        return response()->json($kode_site);
+    }
+    public function getOlt($id)
+    {
+        $kode_olt = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
+            ->where("pop_id", $id)->where("pop_status", 'Enable')->get();
+        return response()->json($kode_olt);
+    }
+    public function getPop($id)
+    {
+        $kode_pop = Data_pop::join('routers', 'routers.router_id_pop', '=', 'data_pops.pop_id')
+            ->where("pop_id", $id)->where("pop_status", 'Enable')->get();
+        return response()->json($kode_pop);
+    }
+    public function getOdc($id)
+    {
+        // return response()->json($id . 'tes');
+        $kode_pop = Data_Olt::join('data__odcs', 'data__odcs.odc_id', '=', 'data__olts.olt_id')
+            ->where("olt_id", $id)->where("olt_status", 'Enable')->get();
+        return response()->json($kode_pop);
+    }
+    // public function getOdp($id)
+    // {
+    //     // return response()->json($id . 'tes');
+    //     $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
+    //         ->where("data__odcs.odc_id", $id)->where("data__odcs.odc_status", 'Enable')->get();
+    //     return response()->json($kode_pop);
+    // }
+    public function validasi_odp($id)
+    {
+        // return response()->json($id . 'tes');
+        $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
+            ->join('data__olts', 'data__olts.olt_id_pop', '=', 'data__odcs.odc_id_olt')
+            ->where("odp_kode", $id)->where("odp_status", 'Enable')->first();
+        return response()->json($kode_pop);
+    }
+
+    #sementara di hapus.
+    public function validasi_kode_kabel($id)
+    {
+        // $kode_kabel = Data_Barang::where("barang_id", $id)->first();
+        // return response()->json($kode_kabel);
+    }
+    public function valBarang($id)
+    {
+        $kode_barang = Data_Barang::where("barang_id", $id)->first();
+        return response()->json($kode_barang);
     }
 }
