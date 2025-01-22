@@ -152,14 +152,16 @@ Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
 Tanggal tiket : ' . $tanggal . '
 '
                 ]);
+
+
                 Pesan::create([
                     'ket' =>  'tiket',
-                    'target' =>  '120363313973139890@g.us',
+                    'target' =>  '120363028776966861@g.us',
                     'status' =>  '0',
                     'nama' =>  'GROUP TEKNISI',
                     'pesan' => '               -- TIKET GANGGUAN --
 
-Hallo Broo ' . $t->nama_teknisi . '
+Hallo Broo.....
 Ada tiket masuk ke sistem nih! 😊
 
 No. Tiket : *' . $tiket['tiket_kode'] . '*
@@ -218,11 +220,8 @@ Tanggal tiket : ' . $tanggal . '
 Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu aktif agar bisa di hubungi kembali.
 Terima kasih.';
 
-        // dd($pesan_pelanggan);
         Pesan::create($pesan_pelanggan);
-        // Pesan::create($pesan_group);
         Data_Tiket::create($tiket);
-        // dd($tiket);
         $notifikasi = [
             'pesan' => 'Berhasil Membuat Tiket',
             'alert' => 'success',
@@ -344,6 +343,9 @@ Terima kasih.';
             }
         }
         Data_Tiket::where('tiket_id', $id)->update($tiket);
+
+        $tiket_new = Data_Tiket::where('tiket_status', 'NEW')->count();
+        dd($tiket_new);
 
         $notifikasi = array(
             'pesan' => 'Tiket berhasil di update',
