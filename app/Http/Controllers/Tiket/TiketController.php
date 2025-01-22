@@ -277,7 +277,7 @@ Terima kasih.';
             ->select('data__tikets.*', 'input_data.*', 'data__tikets.created_at as tgl_buat', 'users.id', 'users.name')
             ->where('tiket_id', $id)
             ->first();
-        return view('tiket/details_tiket', $data);
+        return view('tiket/details_tiket_closed', $data);
     }
 
     public function tiket_update(Request $request, $id)
