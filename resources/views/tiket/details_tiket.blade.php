@@ -64,7 +64,6 @@
           </div>
         </div>
       </div>
-
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -98,7 +97,7 @@
                 <select name="tiket_teknisi1" class="form-control" id="tiket_teknisi1">
                   <option value="">- Pilih -</option>
                   @foreach ($teknisi as $t)
-                  <option value="{{$t->user_id}}">{{$t->user_nama}}</option>
+                  <option value="{{$t->user_id}}|{{$t->user_nama}}">{{$t->user_nama}}</option>
                   @endforeach
                 </select>
                 </div>
@@ -221,6 +220,32 @@
                 </div>
                  {{-- END VALIDASI ONT --}}
               </div>
+              <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">TIKET BELUM DIKERJAKAN</h4>
+            <hr>
+            <div class="form-group row">
+                <div class="col-sm-12">
+                <textarea name="tiket_menunggu" class="form-control readonly"cols="50" rows="15">
+Nama : {{ $tiket->input_nama }}
+No. Layanan : {{ $tiket->reg_nolayanan }}
+
+WAITING LIST {{$tiket_count}} TICKETS
+
+@foreach($tiket_menunggu as $antrian)
+{{$loop->iteration}}. {{$antrian->input_nama}}
+      Waktu Laporan : {{date('d-m-y h:m',strtotime($antrian->tgl_buat))}}
+      Keluhan       : {{$antrian->tiket_nama}}
+@endforeach
+                </textarea>
+                </div>
+              </div>
+              </div>
+          </div>
+        </div>
+    </div>
               <div class="card-footer">
                 <button type="button" class="btn  ">Batal</button>
                 <button type="submit" class="btn btn-primary float-right submit_tiket">Simpan</button>
@@ -229,10 +254,7 @@
           </div>
         </div>
       </div>
-
-
-
-
+    
   </div>
 </div>
 

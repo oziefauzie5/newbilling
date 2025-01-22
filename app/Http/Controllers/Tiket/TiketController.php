@@ -85,17 +85,7 @@ class TiketController extends Controller
         $tiket['tiket_waktu_kunjungan'] = $request->tiket_waktu_kunjungan;
         $tiket['tiket_keterangan'] = $request->tiket_keterangan;
         $tiket['tiket_status'] = 'NEW';
-        // dd($tiket);
-        // $tiket['tiket_waktu_penanganan'] = $request->tiket_waktu_penanganan;
-        // $tiket['tiket_waktu_selesai'] = $request->tiket_waktu_selesai;
-        // $tiket['tiket_foto'] = $request->tiket_foto;
-        // $tiket['tiket_kendala'] = $request->tiket_kendala;
-        // $tiket['tiket_tindakan'] = $request->tiket_tindakan;
-        // $tiket['tiket_teknisi1'] = $request->tiketiket_teknisi1t_nama;
-        // $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
-        // $tiket['tiket_barang1'] = $request->tiket_barang1;
-        // $tiket['tiket_barang2'] = $request->tiket_barang2;
-        // $tiket['tiket_barang3'] = $request->tiket_barang3;
+
 
 
 
@@ -112,14 +102,12 @@ class TiketController extends Controller
             ->get();
 
         $maps = str_replace(" ", "+", $data['data_pelanggan']->input_koordinat);
-
+        $count = Data_Tiket::where('tiket_status', 'NEW')->count();
         $status = (new GlobalController)->whatsapp_status();
         if ($status->wa_status == 'Enable') {
-            $pesan_group['status'] = '0';
-            $pesan_pelanggan['status'] = '0';
+            $status_pesan = '0';
         } else {
-            $pesan_group['status'] = '10';
-            $pesan_pelanggan['status'] = '10';
+            $status_pesan = '10';
         }
 
 
@@ -127,14 +115,12 @@ class TiketController extends Controller
 
         foreach ($users_teknisi as $t) {
 
-            if ($status->wa_status == 'Enable') {
-
-                Pesan::create([
-                    'ket' =>  'tiket',
-                    'target' =>  $t->hp,
-                    'status' =>  '0',
-                    'nama' =>  $t->nama_teknisi,
-                    'pesan' => '               -- TIKET GANGGUAN --
+            Pesan::create([
+                'ket' =>  'tiket',
+                'target' =>  $t->hp,
+                'status' =>  $status_pesan,
+                'nama' =>  $t->nama_teknisi,
+                'pesan' => '               -- TIKET GANGGUAN --
 
 Hallo Broo ' . $t->nama_teknisi . '
 Ada tiket masuk ke sistem nih! 😊
@@ -150,62 +136,15 @@ Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
 Maps : https://www.google.com/maps/place/' . $maps . '
 Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
 Tanggal tiket : ' . $tanggal . '
+
+Semangat Broooo... Sisa tiket ' . $count . '
 '
-                ]);
-
-
-                Pesan::create([
-                    'ket' =>  'tiket',
-                    'target' =>  '120363028776966861@g.us',
-                    'status' =>  '0',
-                    'nama' =>  'GROUP TEKNISI',
-                    'pesan' => '               -- TIKET GANGGUAN --
-
-Hallo Broo.....
-Ada tiket masuk ke sistem nih! 😊
-
-No. Tiket : *' . $tiket['tiket_kode'] . '*
-Topik : ' . $request->tiket_nama . '
-Keterangan : *' . $request->tiket_keterangan . '*
-Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
-
-No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
-Pelanggan : ' . $request->tiket_pelanggan . '
-Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
-Maps : https://www.google.com/maps/place/' . $maps . '
-Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
-Tanggal tiket : ' . $tanggal . '
-'
-                ]);
-            } else {
-                Pesan::create([
-                    'ket' =>  'tiket',
-                    'target' =>  $t->hp,
-                    'status' =>  '10',
-                    'nama' =>  $t->nama_teknisi,
-                    'pesan' => '               -- TIKET GANGGUAN --
-
-Hallo Broo ' . $t->nama_teknisi . '
-Ada tiket masuk ke sistem nih! 😊
-
-No. Tiket : *' . $tiket['tiket_kode'] . '*
-Topik : ' . $request->tiket_nama . '
-Keterangan : *' . $request->tiket_keterangan . '*
-Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
-
-No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
-Pelanggan : ' . $request->tiket_pelanggan . '
-Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
-Maps : https://www.google.com/maps/place/' . $maps . '
-Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
-Tanggal tiket : ' . $tanggal . '
-'
-                ]);
-            }
+            ]);
         }
 
         $pesan_pelanggan['ket'] = 'tiket';
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
+        $pesan_pelanggan['status'] = $status_pesan;
         $pesan_pelanggan['nama'] = $data['data_pelanggan']->input_nama;
         $pesan_pelanggan['pesan'] = '               -- TIKET GANGGUAN --
 
@@ -221,6 +160,35 @@ Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu 
 Terima kasih.';
 
         Pesan::create($pesan_pelanggan);
+
+
+        Pesan::create([
+            'ket' =>  'tiket',
+            'target' =>  '120363028776966861@g.us',
+            'status' =>  $status_pesan,
+            'nama' =>  'GROUP TEKNISI',
+            'pesan' => '               -- TIKET GANGGUAN --
+
+Hallo Broo.....
+Ada tiket masuk ke sistem nih! 😊
+
+No. Tiket : *' . $tiket['tiket_kode'] . '*
+Topik : ' . $request->tiket_nama . '
+Keterangan : *' . $request->tiket_keterangan . '*
+Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
+
+No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
+Pelanggan : ' . $request->tiket_pelanggan . '
+Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+Maps : https://www.google.com/maps/place/' . $maps . '
+Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
+Tanggal tiket : ' . $tanggal . '
+
+Semangat Broooo... Sisa tiket = ' . $count . '
+'
+        ]);
+
+
         Data_Tiket::create($tiket);
         $notifikasi = [
             'pesan' => 'Berhasil Membuat Tiket',
@@ -260,9 +228,15 @@ Terima kasih.';
         // $data['end_date'] = $request->query('end_date');
         $data['tiket'] = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
-            ->select('data__tikets.*', 'input_data.*', 'data__tikets.created_at as tgl_buat')
+            ->select('data__tikets.*', 'input_data.*', 'registrasis.*', 'data__tikets.created_at as tgl_buat')
             ->where('tiket_id', $id)
             ->first();
+        $query = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
+            ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
+            ->select('data__tikets.*', 'input_data.*', 'data__tikets.created_at as tgl_buat')
+            ->where('tiket_status', 'NEW');
+        $data['tiket_menunggu'] = $query->get();
+        $data['tiket_count'] = $query->count();
         return view('tiket/details_tiket', $data);
     }
     public function details_tiket_closed(Request $request, $id)
@@ -285,12 +259,18 @@ Terima kasih.';
         $y = date('y');
         $m = date('m');
         $admin_closed = Auth::user()->id;
-        $tiket['tiket_id'] = $request->tiket_id;
+        $explode = explode('|', $request->tiket_teknisi1);
+        $teknisi_id = $explode[0];
+        $teknisi_nama = $explode[1];
+        // $tiket['tiket_id'] = $request->tiket_id;
         $tiket['tiket_jenis'] = $request->tiket_jenis;
         $tiket['tiket_status'] = $request->tiket_status;
         $tiket['tiket_pending'] = $request->tiket_pending;
-        $tiket['tiket_teknisi1'] = $request->tiket_teknisi1;
+        $tiket['tiket_teknisi1'] = $teknisi_id;
         $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
+
+
+
 
         if ($request->tiket_status == 'Closed') {
             $tiket['tiket_waktu_selesai'] = $datetime;
@@ -314,7 +294,7 @@ Terima kasih.';
                     'bk_id' => $y . $m . mt_rand(1000, 9999),
                     'bk_jenis_laporan' => 'Instalasi',
                     'bk_id_barang' => $db->barang_id,
-                    'bk_id_tiket' => '0',
+                    'bk_id_tiket' => $id,
                     'bk_kategori' => $db->barang_kategori,
                     'bk_satuan' => $db->barang_satuan,
                     'bk_nama_barang' => $db->barang_nama,
@@ -341,11 +321,34 @@ Terima kasih.';
                     'barang_status' => '1',
                 ]);
             }
+
+            $status = (new GlobalController)->whatsapp_status();
+            if ($status->wa_status == 'Enable') {
+                $status_pesan = '0';
+            } else {
+                $status_pesan = '10';
+            }
+            $pesan_closed['ket'] = 'tiket';
+            $pesan_closed['status'] = $status_pesan;
+            $pesan_closed['target'] = '120363028776966861@g.us';
+            $pesan_closed['nama'] = 'Group Teknisi';
+            $pesan_closed['pesan'] = '               -- CLOSED TIKET --
+Kendala : ' . $request->tiket_kendala . '
+Tindakan : ' . $request->tiket_tindakan . '
+Waktu selesai: ' . date('d-M-y h:m') . '
+Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
+
+' . $request->tiket_menunggu . '';
+
+
+            Pesan::create($pesan_closed);
         }
+
+
+
         Data_Tiket::where('tiket_id', $id)->update($tiket);
 
-        $tiket_new = Data_Tiket::where('tiket_status', 'NEW')->count();
-        dd($tiket_new);
+
 
         $notifikasi = array(
             'pesan' => 'Tiket berhasil di update',

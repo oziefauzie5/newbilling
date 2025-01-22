@@ -7,6 +7,7 @@ use App\Http\Controllers\Global\GlobalController;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\Gudang\Data_Kategori;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -27,39 +28,17 @@ class GudangController extends Controller
         $data['id_kategori'] = '1' . sprintf("%03d", $id_kate);
         $count_barang = Data_Barang::count();
 
-        if ($count_barang == 0) {
-            $id_barang = 1;
-        } else {
-            $id_barang = $count_barang + 1;
-        }
-        $data['id_barang'] = '1' . sprintf("%03d", $id_barang);
+        // if ($count_barang == 0) {
+        //     $id_barang = 1;
+        // } else {
+        //     $id_barang = $count_barang + 1;
+        // }
+        // $data['id_barang'] = '1' . sprintf("%03d", $id_barang);
 
         $data['kategori'] = Data_Kategori::all();
-        // $data['supplier'] = supplier::all();
-        // $data['q'] = $request->query('q');
-        // // $sub_barang = SubBarang::where('id_subbarang', $data['q'])->orWhere('subbarang_mac', $data['q'])->orWhere('subbarang_nama', $data['q'])->first();
-        // // if ($sub_barang) {
-        // //     if ($data['q']) {
-        // //         return redirect()->route('admin.barang.sub_barang', ['id' => $sub_barang->subbarang_idbarang . '?q=' . $data['q']]);
-        // //     }
-        // // } else {
-        // //     $notifikasi = [
-        // //         'pesan' => 'Kode Barang atau Mac Address tidak ditemukan',
-        // //         'alert' => 'error',
-        // //     ];
-        // //     return redirect()->route('admin.barang.index')->with($notifikasi);
-        // // }
-
         $data['tittle'] = 'Data Barang';
         $query = Data_Barang::orderBy('data__barangs.created_at', 'DESC');
-        // $query = Data_Barang::join('suppliers', 'suppliers.id_supplier', '=', 'barangs.id_supplier')
-        //     ->join('sub_barangs', 'sub_barangs.subbarang_idbarang', '=', 'barangs.id_barang')
-        //     ->select('suppliers.supplier_nama', 'barangs.id_barang', 'barangs.barang_tgl_beli', 'sub_barangs.subbarang_idbarang', DB::raw('sum(subbarang_stok) as total')) #subbarang_stok
-        //     ->groupBy('barangs.id_barang', 'suppliers.supplier_nama', 'sub_barangs.subbarang_idbarang', 'barangs.barang_tgl_beli')
-        //     ->orderBy('barangs.created_at', 'DESC');
         $data['barang'] = $query->get();
-
-        // $data['sub_barang'] = SubBarang::where('subbarang_status', '0')->get();
 
         return view('gudang/data_barang', $data);
     }
@@ -172,31 +151,10 @@ class GudangController extends Controller
 
     public function stok_gudang()
     {
-
-
-        // $query = Data_Kategori::orderBy('data__kategoris.id_kategori', 'ASC')
-        //     ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__kategoris.nama_kategori')
-        //     ->join('data__barangs', 'data__barangs.barang_kategori', '=', 'data__kategoris.nama_kategori')
-        //     ->select('data__kategoris.id_kategori', 'data__kategoris.nama_kategori', 'data__barangs.barang_kategori', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barang_keluars.bk_kategori', DB::raw('sum(data__barang_keluars.bk_jumlah) as jumlah'), DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'))
-        //     ->groupBy('data__kategoris.nama_kategori', 'data__kategoris.id_kategori', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barang_keluars.bk_kategori');
-
-        // $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
-        //     ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
-        //     ->select('data__barangs.barang_kategori', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barang_keluars.bk_kategori', DB::raw('sum(data__barang_keluars.bk_jumlah) as jumlah'), DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'))
-        //     ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barang_keluars.bk_kategori');
-
         $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
             // ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
             ->select('data__barangs.barang_kategori', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'))
             ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barangs.barang_kategori');
-
-
-        // $query = Data_BarangKeluar::orderBy('data__barang_keluars.bk_kategori', 'ASC')
-        //     ->leftjoin('data__barangs', 'data__barangs.barang_kategori', '=', 'data__barang_keluars.bk_kategori')
-        //     ->select('data__barang_keluars.bk_kategori')
-        //     ->selectRaw(DB::raw('sum(data__barang_keluars.bk_jumlah) as jumlah'))
-        //     ->groupBy('data__barang_keluars.bk_kategori');
-
 
 
         $data['stok_gudang'] = $query->get();
@@ -212,5 +170,17 @@ class GudangController extends Controller
         $data['barang_keluar'] = $query->get();
         // dd($data['stok_gudang']);
         return view('gudang/barang_keluar', $data);
+    }
+    public function form_barang_keluar()
+    {
+        $data['tittle'] = 'Barang Keluar';
+
+        $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC');
+
+        $data['data_barang'] = $query->get();
+        $data['data_user'] = User::all();
+
+        // dd($data['stok_gudang']);
+        return view('gudang/form_barang_keluar', $data);
     }
 }

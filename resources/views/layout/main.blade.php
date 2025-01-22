@@ -22,6 +22,7 @@
 		});
 	</script>
 	   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
+	   {{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" /> --}}
 
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="{{asset('atlantis/assets/css/bootstrap.min.css')}}">
@@ -471,7 +472,11 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
-
+	{{-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> --}}
+	
+	
 	<!-- Atlantis DEMO methods, don't include it in your project! -->
 	{{-- <script src="{{asset('atlantis/assets/js/setting-demo.js')}}"></script>
 	<script src="{{asset('atlantis/assets/js/demo.js')}}"></script> --}}
@@ -532,7 +537,9 @@
 
 			$('#input_data').DataTable({
 				"pageLength": 10,
-				
+			});
+			$('#cari_kode_barang').DataTable({
+				"pageLength": 10,
 			});
 			$('#pilih_data').DataTable({
 				"pageLength": 10,
@@ -555,7 +562,7 @@
 			
 			var url = '{{ route("admin.psb.edit_inputdata", ":id") }}';
 			url = url.replace(':id', idpel);
-			console.log(idpel);
+			// console.log(idpel);
 			$.ajax({
                     url: url,
                     type: 'GET',
@@ -739,7 +746,7 @@ url = url.replace(':id', idpel);
                     },
                     dataType: 'json',
                     success: function(data) {
-						console.log(data)
+						// console.log(data)
 						if (data) {
 							$("#cari_data").modal('hide');
 							document.getElementById("tampil_hp").value =data['tampil_data']['input_hp'];
@@ -761,11 +768,13 @@ url = url.replace(':id', idpel);
                         }
                     }
                 });
- });
-});
+			});
+		});
+
+				
 
 
-
+			
 
 //--------DROPDONW SITE-ROUTER-POP-ODC-ODP------------------
 	$('#site').on('change', function() {
@@ -960,25 +969,29 @@ $("#reg_kode_dropcore").keyup(function(){
                         },
                         dataType: 'json',
                         success: function(data) {
-                            if (data.barang_qty) {
-                              var after  = $("#after").val();
-                              // var before = $("#before").val();
-							  $('.notif_kabel').removeClass('has-error has-feedback')
-							  $('.notif_kabel').addClass('has-success has-feedback')
-							  $('#pesan_kabel').html('')
-							  $("#before").val(data.barang_qty-data.barang_digunakan);
+							// console.log(data.barang_qty - data.barang_digunakan)
+                            if (data.barang_kategori == 'DROPCORE') {
+								if (data.barang_qty - data.barang_digunakan  > '0') {
+
+								var after  = $("#after").val();
+								// var before = $("#before").val();
+								$('.notif_kabel').removeClass('has-error has-feedback')
+								$('.notif_kabel').addClass('has-success has-feedback')
+								$('#pesan_kabel').html('')
+								$("#before").val(data.barang_qty-data.barang_digunakan);
+								}
                               } else {
                                 $('#before').val('');
                                 $("#total").val('');
 								$('.notif_kabel').addClass('has-error has-feedback')
-								$('#pesan_kabel').html('<small id="text" class="form-text text-muted text-danger">Kode Kabel tidak ditemukan</small>')
+								$('#pesan_kabel').html('<small id="text" class="form-text text-muted text-danger">Kode Kabel tidak ditemukan / tidak sesuai kategori</small>')
                               }
                             },
                             error: function(error){
 								$('#before').val('');
                                 $("#total").val('');
 								$('.notif_kabel').addClass('has-error has-feedback')
-								$('#pesan_kabel').html('<small id="text" class="form-text text-muted text-danger">Kode Kabel tidak ditemukan</small>')
+								$('#pesan_kabel').html('<small id="text" class="form-text text-muted text-danger">Kode Kabel tidak ditemukan / tidak sesuai kategori</small>')
                               }
                         
                     });
@@ -2455,6 +2468,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#deaktivasi_pernyataan1').attr('required', 'required');
 							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
 							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
+							$('#deaktivasi_tanggal_pengambilan').attr('required', 'required');
 							$('.pernyataan_1').show()
 						} else if($(this).val() == 'ONT & Adaptor') { 
 							$('.pernyataan_1').hide()
@@ -2464,6 +2478,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#deaktivasi_sn').attr('required', 'required');
 							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
 							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
+							$('#deaktivasi_tanggal_pengambilan').attr('required', 'required');
 						} else if($(this).val() == 'Hilang') { 
 							$('.pernyataan_1').hide()
 							$('.pernyataan_2').show()
@@ -2472,15 +2487,41 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#deaktivasi_pernyataan2').attr('required', 'required');
 							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
 							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
-							// $('.deaktivasi_mac').attr('required', 'required');
-							// $('#deaktivasi_sn').removeAttr('required');
-							// $('#deaktivasi_sn').removeAttr('required');
+							$('#deaktivasi_tanggal_pengambilan').attr('required', 'required');
 						}
 					});
 					});
 		
 					//--------------------END DEAKTIVASI----------------------
-			</script>
+					</script>
+					<script>
+						//--------------------START BARANG KELUAR----------------------
+					
+				$(function(){ 
+  					var table_barang = $('#cari_kode_barang').DataTable(); $('#cari_kode_barang tbody').on( 'click', 'tr', function () 
+					{  
+						var kode_barang = table_barang.row( this ).id();
+						var url = '{{ route("admin.val.valBarang", ":id") }}';
+						url = url.replace(':id', kode_barang);
+						$.ajax({
+							url: url,
+						type: 'PUT',
+						data: {
+							'_token': '{{ csrf_token() }}'
+						},
+						dataType: 'json',
+						success: function(data) {
+								$("#modal_barang").modal('hide');
+								$("#bk_id_barang").val(data.barang_id);
+								$("#bk_nama_barang").val(data.barang_nama);
+						}
+					});
+				});
+				});
+				
+				//--------------------END BARANG KELUAR----------------------
+					</script>
+			
 
 			
 </body>

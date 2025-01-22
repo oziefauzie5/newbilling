@@ -26,6 +26,7 @@ class Registrasi extends Model
         'reg_tgl_pasang',
         'reg_tgl_jatuh_tempo',
         'reg_tgl_tagih',
+        'reg_tgl_deaktivasi',
         'reg_site',
         'reg_pop',
         'reg_router',

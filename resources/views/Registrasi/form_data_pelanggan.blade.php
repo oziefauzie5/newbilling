@@ -141,7 +141,7 @@
                         <input type="text" class="form-control" value="" id="deaktivasi_sn" name="deaktivasi_sn" >
                       </div>
                     </div>
-                    <div class="form-group row div_ont" style="display:none">
+                    <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Pengambil Barang</label>
                       <div class="col-sm-4">
                         <select type="text" class="form-control" value="" id="deaktivasi_pengambil_perangkat" name="deaktivasi_pengambil_perangkat" >
@@ -150,6 +150,10 @@
                           <option value="{{$u->id}}">{{$u->name}}</option>
                           @endforeach
                         </select>
+                      </div>
+                      <label  class="col-sm-2 col-form-label">Tanggal Pengambilan</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control datepicker" value="" id="deaktivasi_tanggal_pengambilan" name="deaktivasi_tanggal_pengambilan" >
                       </div>
                     </div>
                     <div class="form-group row">

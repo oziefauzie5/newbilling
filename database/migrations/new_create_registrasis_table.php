@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('reg_tgl_pasang')->nullable();
             $table->string('reg_tgl_tagih')->nullable();
             $table->string('reg_tgl_jatuh_tempo')->nullable();
+            $table->string('reg_tgl_deaktivasi')->nullable();
             $table->string('reg_out_odp')->nullable();
             $table->string('reg_in_ont')->nullable();
             $table->string('reg_los_opm')->nullable();

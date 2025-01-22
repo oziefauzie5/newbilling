@@ -37,6 +37,7 @@ use App\Models\Aplikasi\Data_Site;
 use App\Models\Mitra\MutasiSales;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
+use App\Models\Registrasi\Data_Deaktivasi;
 use App\Models\Teknisi\Data_Olt;
 use App\Models\Teknisi\Data_pop;
 use Illuminate\Support\Facades\Storage;
@@ -1246,9 +1247,11 @@ Diregistrasi Oleh : *' . $admin . '*
     {
         $nama_admin = Auth::user()->name;
         $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
+        $tgl_ambil_perangkat = date('Y-m-d', strtotime($request->deaktivasi_tanggal_pengambilan));
+
         $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('registrasis.reg_idpel', $idpel)->first();
+            ->where('registrasis.reg_idpel', $id)->first();
 
         if ($request->status == 'PUTUS LANGGANAN') {
             $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
@@ -1287,30 +1290,33 @@ Diregistrasi Oleh : *' . $admin . '*
                 ]);
             }
 
-            $data = Invoice::where('inv_idpel', $idpel)->where('inv_status', '!=', 'PAID')->first();
+            $data = Invoice::where('inv_idpel', $id)->where('inv_status', '!=', 'PAID')->first();
             if ($data) {
                 $data->delete();
                 SubInvoice::where('subinvoice_id', $data->inv_id)->delete();
             }
 
-            Registrasi::where('reg_idpel', $idpel)->update([
+            Registrasi::where('reg_idpel', $id)->update([
                 'reg_progres' => $progres,
                 'reg_catatan' => $request->reg_catatan,
-                'reg_kode_ont' => '',
-                'reg_kode_adaptor' => '',
+                'reg_tgl_deaktivasi' => $tgl_ambil_perangkat,
+                'reg_kode_ont' => 0,
+                'reg_kode_adaptor' => 0,
                 'reg_mac' => '',
                 'reg_sn' => '',
                 'reg_mrek' => '',
             ]);
             Data_Deaktivasi::create([
-                'deaktivasi_idpel' => $request->deaktivasi_idpel,
+                'deaktivasi_idpel' => $id,
                 'deaktivasi_mac' => $request->deaktivasi_mac,
                 'deaktivasi_sn' => $request->deaktivasi_sn,
                 'deaktivasi_kelengkapan_perangkat' => $request->deaktivasi_kelengkapan_perangkat,
-                'deaktivasi_tanggal_pengambilan' => $request->deaktivasi_tanggal_pengambilan,
+                'deaktivasi_tanggal_pengambilan' => $tgl_ambil_perangkat,
                 'deaktivasi_pengambil_perangkat' => $request->deaktivasi_pengambil_perangkat,
                 'deaktivasi_admin' => $request->deaktivasi_admin,
                 'deaktivasi_alasan_deaktivasi' => $request->deaktivasi_alasan_deaktivasi,
+                'deaktivasi_pernyataan' => $request->deaktivasi_pernyataan,
+                'deaktivasi_admin' =>  $nama_admin,
             ]);
             $notifikasi = [
                 'pesan' => 'Berhasil melakukan pemutusan pelanggan',
@@ -1327,9 +1333,9 @@ Diregistrasi Oleh : *' . $admin . '*
     }
     public function data_deaktivasi()
     {
-        $month = Carbon::now()->addMonth(-0)->format('m');
-        $bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
-        $d = date('d');
+        // $month = Carbon::now()->addMonth(-0)->format('m');
+        // $bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
+        $m = date('m');
         $user = (new globalController)->user_admin();
         $data['user_nama'] = $user['user_nama'];
         $data['user_id'] = $user['user_id'];
@@ -1339,23 +1345,24 @@ Diregistrasi Oleh : *' . $admin . '*
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('reg_progres', '>=', 89)
+            ->where('reg_progres', '>=', 90)
             ->where('reg_progres', '<=', 100)
             ->orderBy('tgl', 'DESC');
 
-        $data['data_registrasi'] = $query->get(10);
+        $data['data_registrasi'] = $query->get();
 
         $data['total_deaktivasi'] = $query->count();
-        $data['deaktivasi_month'] = Registrasi::where('reg_progres', '>=', 89)
-            ->where('reg_progres', '<=', 100)
-            ->whereDate('created_at', '=', $d)
+        $data['deaktivasi_month'] = Registrasi::where('reg_progres', '>=', 90)
+            ->orWhere('reg_progres', '<=', 100)
+            ->whereMonth('reg_tgl_deaktivasi', '=', $m)
             ->count();
-        $data['pengambilan_perangkat'] = Registrasi::where('reg_progres', '=', 89)
-            ->orWhere('reg_progres', '=', 99)
-            ->count();
-        $data['verifikasi_deaktivasi'] = Registrasi::where('reg_progres', '=', 89)
-            ->orWhere('reg_progres', '=', 99)
-            ->count();
+        $count_perangkat = Data_Deaktivasi::whereMonth('deaktivasi_tanggal_pengambilan', '=', $m);
+
+        $data['ont_hilang'] = $count_perangkat->where('deaktivasi_kelengkapan_perangkat', '=', 'Hilang')->count();
+        $data['adaptor_hilang'] = $count_perangkat->where('deaktivasi_kelengkapan_perangkat', '=', 'ONT')->count();
+
+        $data['lengkap'] = Data_Deaktivasi::where('deaktivasi_kelengkapan_perangkat', '=', 'ONT & Adaptor')
+            ->whereMonth('deaktivasi_tanggal_pengambilan', '=', $m)->count();
 
         return view('Registrasi/data_deaktivasi', $data);
     }

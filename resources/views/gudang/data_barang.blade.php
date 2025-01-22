@@ -98,29 +98,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- --------------------------------------------------------------------------------HAPUS BARANG--------------------------------------------------- -->
-                <div class="modal fade" id="hapus{{ $d->barang_id }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Edit Barang</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                          <div class="modal-body">
-                              <div>Anda akan menghapus data barang {{$d->barang_nama}}</div>
-                          </div>
-                          <div class="modal-footer">
-                            <form action="" method="DELETE">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
-                              <button type="submit" class="btn btn-primary">Hapus</button>
-                              </form>
-                          </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>               
+             
                 @endforeach
                           </tbody>
                         </table>
@@ -150,7 +128,7 @@
                 <div class="form-row">
                 <div class="col-3">
                     <label for="">ID Barang</label>
-                    <input type="text" class="form-control" name="barang_id" value="{{$id_barang}}" required>
+                    <input type="text" class="form-control" name="barang_id" value="{{mt_rand(1000000,9999999)}}" required>
                   </div>
                   <div class="col">
                     <label for="">Kategori<strong class="text-danger">*</strong></label>

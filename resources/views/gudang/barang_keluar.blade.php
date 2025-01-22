@@ -12,6 +12,9 @@
             <div class="col-3">
               <a href="{{route('admin.gudang.data_barang')}}"><button class="btn btn-primary btn-sm mb-3 btn-block" type="button" >Kembali</button></a>
             </div>
+            <div class="col-3">
+              <a href="{{route('admin.gudang.form_barang_keluar')}}"><button class="btn btn-primary btn-sm mb-3 btn-block" type="button" >Tambah</button></a>
+            </div>
           </div>
             </form>
           <hr>
@@ -63,8 +66,8 @@
                           </tbody>
                         </table>
         </div>
-        </div>
       </div>
+    </div>
     </div>
   </div>
 </div>
