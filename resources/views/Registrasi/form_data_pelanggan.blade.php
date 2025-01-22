@@ -34,7 +34,7 @@
               </ul>
           </div> 
           @endif
-          <h3 class="mt-3 text-bolt text-center">EDIT DATA BERLANGGANAN</h3>
+          <h3 class="mt-3 text-bolt text-center">FORM EDIT DATA BERLANGGANAN</h3>
 
           <h3 class="mt-3 text-bolt">PELANGGAN</h3><hr>
             <div class="form-group row">
@@ -57,10 +57,6 @@
                   <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 1</label>
                   <div class="col-sm-4">
                     <input type="text" class="form-control readonly" id="tampil_hp" value="{{ $data->input_hp}}" name="reg_hp" >
-                  </div>
-                  <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 2</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control readonly" id="tampil_hp_2" value="{{ $data->input_hp_2}}" name="reg_hp_2" >
                   </div>
               </div>
               <div class="form-group row">
@@ -87,7 +83,7 @@
                 @role('admin|STAF ADMIN')
                 @if($data->reg_progres == '5')
                 <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#exampleModal">
-                  STOP BERLANGGANAN
+                Deaktivasi
                 </button>
                 @elseif($data->reg_progres >= '5')
                 <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#sambung_kembali">
@@ -97,31 +93,109 @@
                 @endrole
                
 
-                <!-- Modal -->
+                <!-- Modal Deaktivasi -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                  <form action="{{route('admin.reg.deaktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST">
+                          @csrf
+                          @method('PUT')
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Kelengkapan Barang</label>
+                        <div class="col-sm-4">
+                          <select type="text" class="form-control" name="deaktivasi_kelengkapan_perangkat" required>
+                            <option value="">- Pilih -</option>
+                            <option value="ONT & Adaptor">ONT & Adaptor</option>  
+                            <option value="ONT">ONT</option>  
+                            <option value="Hilang">hilang</option>  
+                          </select>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Pembuat Laporan</label>
+                        <div class="col-sm-4">
+                          <input type="text" class="form-control" value="{{$user_nama}}"  name="" >
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                      <label class="col-sm-2 col-form-label">Pernyataan</label>
+                      <div class="col-sm-10 pernyataan_1" style="display:none">
+                          <textarea type="text" class="form-control readonly" id="deaktivasi_pernyataan1"  name="deaktivasi_pernyataan" >Dengan ini saya {{$user_nama}} menyatakan benar, bahwa adaptor hilang. Saya siap bertanggung jawab dikemudian hari.</textarea>
+                        </div>
+                        <div class="col-sm-10 pernyataan_2" style="display:none">
+                        <textarea type="text" class="form-control readonly" id="deaktivasi_pernyataan2"  name="deaktivasi_pernyataan" >Dengan ini saya {{$user_nama}} menyatakan benar, bahwa ONT & adaptor hilang. Saya siap bertanggung jawab dikemudian hari.</textarea>
+                        </div>
+                      </div>
+                    <div class="form-group row div_ont" style="display:none">
+                    <label class="col-sm-2 col-form-label">Mac Address</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control deaktivasi_mac" value="" id="mac" name="deaktivasi_mac" >
+                      </div>
+                      <label  class="col-sm-2 col-form-label">Serial Number</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" value="" id="deaktivasi_sn" name="deaktivasi_sn" >
+                      </div>
+                    </div>
+                    <div class="form-group row div_ont" style="display:none">
+                    <label class="col-sm-2 col-form-label">Pengambil Barang</label>
+                      <div class="col-sm-4">
+                        <select type="text" class="form-control" value="" id="deaktivasi_pengambil_perangkat" name="deaktivasi_pengambil_perangkat" >
+                          <option value="">- Pilih pengambil perangkat -</option>
+                          @foreach($user as $u)
+                          <option value="{{$u->id}}">{{$u->name}}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 col-form-label">Alasan Deaktivasi</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" value="" id="deaktivasi_alasan_deaktivasi" name="deaktivasi_alasan_deaktivasi" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 col-form-label">Status Deaktivasi</label>
+                      <div class="col-sm-10">
+                        <select name="status" class="form-control" required>
+                          <option value="">- Pilih -</option>
+                          <option value="PUTUS LANGGANAN">PUTUS LANGGANAN</option>
+                          <option value="PUTUS SEMENTARA">PUTUS SEMENTARA</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+            </div>
+                <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">STOP BERLANGGANAN</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Deaktivasi</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
                       <div class="modal-body">
-                        <form action="{{route('admin.psb.putus_berlanggan',['idpel'=>$data->reg_idpel])}}" method="POST">
+                        <form action="{{route('admin.reg.deaktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST">
                           @csrf
                           @method('PUT')
-
                           <div class="col-sm-12">
                             <div class="form-group">
-                              <label for="tiket_deskripsi">Alasan Putus</label>
+                              <label for="tiket_deskripsi">Keterangan Deaktivasi</label>
                               <textarea class="form-control" name="reg_catatan" rows="5"></textarea>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="form-group">
-                              <label>Mac Address ONT</label>
-                              <input type="text" class="form-control" name="reg_mac"  step="00.01" maxlength="17" minlength="17" value="">
                             </div>
                           </div>
                           <div class="col-sm-12">
@@ -131,7 +205,6 @@
                                 <option value="PUTUS LANGGANAN">PUTUS LANGGANAN</option>
                                 <option value="PUTUS SEMENTARA">PUTUS SEMENTARA</option>
                               </select>
-                              {{-- <input type="text" class="form-control" name="reg_mac"  step="00.01" required maxlength="17" minlength="17" value=""> --}}
                             </div>
                           </div>
                       </div>
@@ -143,7 +216,7 @@
                     </div>
                   </div>
                 </div> 
-                </div>
+                </div> -->
                   
   
                   <!-- Modal -->
@@ -151,7 +224,7 @@
                     <div class="modal-dialog modal-lg">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">SAMBUNG KEMABLI</h5>
+                          <h5 class="modal-title" id="exampleModalLabel">SAMBUNG KEMBALI</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
@@ -363,7 +436,6 @@
             </div>
           </div>
         </div>
-@if($data->reg_progres == 2 )
 <div class="col-md-12">
   <div class="card">
     <div class="card-body"> 
@@ -440,7 +512,7 @@
         <div class="form-group row">
         <label class="col-sm-2 col-form-label">Mac perangkat ( OLT )</label>
         <div class="col-sm-4">
-          <input type="text" name="reg_mac_olt" id="reg_mac_olt"  class="form-control" minlength="17" maxlength="17" required value="{{ Session::get('reg_mac_olt') }}" >
+          <input type="text" name="reg_mac_olt" id="mac"  class="form-control" minlength="17" maxlength="17" required value="{{ Session::get('reg_mac_olt') }}" >
         </div>
         <label class=" col-sm-2 col-form-label" >SN perangkat</label>
       <div class="col-sm-4">
@@ -555,171 +627,6 @@
   </div>
  </div>
 </div>
-@else
-{{-- Reg Progres = > 2 / Setelah Aktivasi --}}
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body"> 
-              <form class="form-horizontal"action="{{route('admin.reg.proses_edit_pelanggan',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <h3 class="mt-3 text-bolt"> HADHWARE</h3><hr>
-
-              <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">Site</label>
-                <div class="col-sm-4">
-                  <select class="form-control" id="reg_site" name="reg_site" required >
-                    @if($data->reg_site)
-                    <option value="{{$data->site_id}}">{{$data->site_nama}}</option>
-                    @endif
-                  </select>
-                </div>
-                <label class=" col-sm-2 col-form-label">Status perangkat</label>
-              <div class="col-sm-4">
-                <input type="text" name="reg_stt_perangkat" class="form-control readonly" value="{{ $data->reg_stt_perangkat}}" disabled >
-              </div>
-              </div>
-              <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">POP</label>
-                <div class="col-sm-4">
-                  <input name="reg_pop" value="{{$data->pop_nama}}" class="form-control reg_odp" required>
-                </div>
-                <label for="router" class="col-sm-2 col-form-label">Router</label>
-                <div class="col-sm-4">
-                  <input class="form-control reg_odp" value="{{$data->router_nama}}" name="reg_router" >
-                </div>
-                </div>
-              <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">OLT</label>
-                <div class="col-sm-4 notif">
-                  <input type="text" name="reg_olt" class="form-control readonly" required value="{{$data->reg_olt}}">
-                </div>
-                <label class=" col-sm-2 col-form-label">ODC</label>
-                <div class="col-sm-4 notif">
-                  <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly" required value="{{ $data->reg_odc}}" >
-                </div>
-            </div>
-              <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">ODP</label>
-                <div class="col-sm-4 notif">
-                  <input type="text" name="reg_odp" id="validasi_odp" class="form-control readonly" required value="{{ $data->reg_odp }}" >
-                  <div id="pesan"></div>
-                </div>
-            </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Merek & Type perangkat</label>
-              <div class="col-sm-4">
-                <input type="text" name="reg_mrek" id="" class="form-control edit_ont readonly" value="{{ $data->reg_mrek}}" >
-              </div>
-                <label class="col-sm-2 col-form-label">Mac perangkat</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_mac" id=""  class="form-control readonly" value="{{ $data->reg_mac}}" >
-                </div>
-                </div>
-                <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Mac perangkat ( OLT )</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_mac_olt" id="reg_mac_olt"  class="form-control readonly"required value="{{ $data->reg_mac_olt }}" >
-                </div>
-                <label class=" col-sm-2 col-form-label" >SN perangkat</label>
-              <div class="col-sm-4">
-                <input type="text" name="reg_sn" class="form-control readonly" value="{{ $data->reg_sn}}" >
-              </div>
-              </div>
-             
-              <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">ONU ID</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_onuid" class="form-control" required value="{{ $data->reg_onuid}}">
-                </div>
-                <label class=" col-sm-2 col-form-label">Slot ODP</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_slot_odp" class="form-control" required value="{{ $data->reg_slot_odp }}" >
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">Redaman</label>
-                <div class="col-sm-4">
-                  {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}}
-                  <input type="number" class="form-control" name="reg_in_ont" required value="{{$data->reg_in_ont}}">
-                </div>
-                <label class="col-sm-2 col-form-label">Teknisi Team</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control harga readonly"value="{{$data->reg_teknisi_team}}" >
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">Kode Kabel</label>
-                <div class="col-sm-4 notif_kabel">
-                  <input type="text" name="reg_kode_dropcore"  class="form-control" required value="{{$data->reg_kode_dropcore}}" >
-                  <div id="pesan_kabel"></div>
-                </div>
-                <label class=" col-sm-2 col-form-label">Before</label>
-                <div class="col-sm-4 notif_kabel">
-                  <input type="text" name="reg_before"  class="form-control readonly" required value="{{ $data->reg_before }}" >
-                </div>
-              </div>
-              <div class="form-group row">
-                
-                <label class=" col-sm-2 col-form-label">After</label>
-                <div class="col-sm-4 notif_over">
-                  <input type="text" name="reg_after" class="form-control" required value="{{ $data->reg_after}}" >
-                  <div id="pesan_over"></div>
-                </div>
-                <label class=" col-sm-2 col-form-label">Panjang Kabel</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_penggunaan_dropcore" class="form-control" required value="{{ $data->reg_penggunaan_dropcore }}" >
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Koordinat Rumah</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control"  name="input_koordinat" required value="{{ $data->input_koordinat }}">
-                </div>
-                <label class="col-sm-2 col-form-label">Koordinat ODP</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control"  name="reg_koodinat_odp" required value="{{ $data->reg_koodinat_odp }}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Foto Rumah</label>
-                <div class="col-sm-4">
-                  <input  type="file" class="form-control-file" name="reg_img" required value="{{ $data->reg_img }}">
-                </div>
-                <label class="col-sm-2 col-form-label">Foto Lokasi ODP</label>
-                <div class="col-sm-4">
-                  <input  type="file" class="form-control-file" name="reg_foto_odp" required value="{{ $data->reg_foto_odp }}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Foto Rumah</label>
-                <div class="col-sm-4">
-                  <img src="{{ asset('storage/topologi/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
-                </div>
-                <label class="col-sm-2 col-form-label">Foto Lokasi ODP </label>
-                <div class="col-sm-4">
-                  <img src="{{ asset('storage/topologi/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
-                </div>
-              </div>
-
-            <div class="form-group row">
-              <label for="router" class="col-sm-2 col-form-label">Catatan</label>
-              <div class="col-sm-10">
-              <textarea class="form-control is-invalid" id="validationTextarea" name="reg_catatan">{{$data->reg_catatan}}
-              </textarea>
-              </div>
-            </div>
-            <div class="card-footer">
-            @role('admin|STAF ADMIN')
-            <button type="button" class="btn  ">Batal</button>
-            <button type="submit" class="btn btn-primary float-right">Simpan</button>
-            @endrole
-            </div>
-           </form>
-          </div>
-         </div>
-        </div>
-        @endif
         @role('admin|STAF ADMIN')
         
         <div class="col-md-12">
@@ -1055,3 +962,4 @@ Pindah Rumah
     </script>
 
 @endsection
+d

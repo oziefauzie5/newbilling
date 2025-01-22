@@ -211,11 +211,20 @@ class BillerController extends Controller
 
         $user = (new GlobalController)->user_admin();
         $id_cust = (new GlobalController)->idpel_();
+        $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
+        if (!preg_match('/[^+0-9]/', trim($nomorhp2))) {
+            if (substr(trim($nomorhp2), 0, 3) == '+62') {
+                $nomorhp2 = trim($nomorhp2);
+            } elseif (substr($nomorhp2, 0, 1) == '0') {
+                $nomorhp2 = '' . substr($nomorhp2, 1);
+            }
+        }
         $user_nama = $user['user_nama'];
         $user_id = $user['user_id'];
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
         Session::flash('input_nama', ucwords($request->input_nama));
         Session::flash('input_hp', $request->input_hp);
+        Session::flash('input_hp_2', $request->input_hp_2);
         Session::flash('input_ktp', $request->input_ktp);
         Session::flash('input_email', $request->input_email);
         Session::flash('input_alamat_ktp', ucwords($request->input_alamat_ktp));
@@ -229,13 +238,16 @@ class BillerController extends Controller
         $request->validate([
             'input_ktp' => 'unique:input_data',
             'input_hp' => 'unique:input_data',
+            'input_hp_2' => 'unique:input_data',
         ], [
             'input_ktp.unique' => 'Nomor Identitas sudah terdaftar',
             'input_hp.unique' => 'Nomor Whatsapp sudah terdaftar',
+            'input_hp_2.unique' => 'Nomor Whatsapp cadangan sudah terdaftar',
         ]);
         $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
 
         $cek_nohp = InputData::where('input_hp', $nomorhp)->count();
+        $cek_nohp2 = InputData::where('input_hp', $nomorhp2)->count();
 
         if ($cek_nohp == 0) {
             $input['input_tgl'] = $data['input_tgl'];
@@ -243,6 +255,7 @@ class BillerController extends Controller
             $input['id'] = $id_cust;
             $input['input_ktp'] = $request->input_ktp;
             $input['input_hp'] = $nomorhp;
+            $input['input_hp_2'] = $nomorhp2;
             $input['input_email'] = $request->input_email;
             $input['input_alamat_ktp'] = ucwords($request->input_alamat_ktp);
             $input['input_alamat_pasang'] = ucwords($request->input_alamat_pasang);

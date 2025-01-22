@@ -176,48 +176,8 @@ class PsbController extends Controller
         return view('PSB/putus_langganan', $data);
     }
 
-    public function listmac_bermasalah(Request $request)
-    {
-        $data['q'] = $request->query('q');
 
 
-        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
-            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('reg_mac', '=', '')
-            ->orderBy('tgl', 'DESC')
-            ->where(function ($query) use ($data) {
-                $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('reg_nolayanan', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('reg_username', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
-            });
-
-        $data['data_registrasi'] = $query->paginate(10);
-
-        $data['count_registrasi'] = $query->count();
-
-        $data['get_router'] = Router::get();
-        $data['get_paket'] = Paket::get();
-        // $data['get_registrasi'] = Registrasi::get();
-
-        return view('PSB/mac_bermasalah', $data);
-    }
-    public function update_mac(Request $request, $idpel)
-    {
-        $data['reg_sn'] = $request->reg_sn;
-        $data['reg_mac'] = $request->reg_mac;
-        $data['reg_mrek'] = $request->reg_mrek;
-        // dd($data);
-        Registrasi::where('reg_idpel', $idpel)->update($data);
-        $notifikasi = array(
-            'pesan' => 'Berhasil update Mac ',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.psb.listmac_bermasalah')->with($notifikasi);
-    }
     public function list_input()
     {
         $data['data_user'] = User::all();

@@ -73,15 +73,27 @@
         @endif
         
         <a href="{{route('admin.psb.list_input')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-primary">
+          <button class="btn  btn-sm ml-auto m-1 btn-success">
             <i class="fa fa-plus"></i>
             INPUT DATA
           </button>
         </a>
         <a href="{{route('admin.reg.index')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-primary">
+          <button class="btn  btn-sm ml-auto m-1 btn-info">
             <i class="fa fa-plus"></i>
             REGISTRASI
+          </button>
+        </a>
+        <a href="{{route('admin.reg.data_aktivasi_pelanggan')}}">
+          <button class="btn  btn-sm ml-auto m-1 btn-warning">
+            <i class="fa fa-plus"></i>
+            AKTIVASI
+          </button>
+        </a>
+        <a href="{{route('admin.reg.data_deaktivasi')}}">
+          <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
+            <i class="fa fa-plus"></i>
+            DEAKTIVASI
           </button>
         </a>
         @role('admin')
@@ -214,15 +226,15 @@
                   @else
                   <td>{{$d->reg_nolayanan}}</td>
                   @endif
-                      <td>{{$d->input_nama}}</td>
+                      <td class="href" data-id="{{$d->reg_idpel}}">{{$d->input_nama}}</td>
                       @if($d->reg_tgl_jatuh_tempo)
                       @if($d->reg_status != 'PAID')
-                      <td class="href text-danger font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
+                      <td data-id="{{$d->reg_idpel}}" class="href text-danger font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
                       @else
-                      <td class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}---</td>
+                      <td data-id="{{$d->reg_idpel}}" class="href font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}---</td>
                       @endif
                       @else
-                      <td class="text-danger font-weight-bold" >Belum Terpasang</td>
+                      <td  data-id="{{$d->reg_idpel}}" class="href text-danger font-weight-bold" >Belum Terpasang</td>
                       @endif
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{$d->reg_tgl_pasang}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->input_tgl))}}</td>

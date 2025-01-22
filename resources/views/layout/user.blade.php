@@ -174,7 +174,7 @@
 	// 	$(".cari").click(function(){
     //     // $("#kode").css("border-color", "yellow");
     //     var kode_kabel =$("#kode").val();
-    //     var url = '{{ route("admin.teknisi.getBarang", ":id") }}';
+    //     var url = '';
     // url = url.replace(':id', kode_kabel);
     //                 $.ajax({
     //                     url: url,
@@ -410,7 +410,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			$(document).ready(function() {
     $('#update_tiket').click(function(e) {  
 		let id   = $('#tiket_id').val();
-		var url = '{{ route("admin.teknisi.update_tiket", ":id") }}';
+		var url = '';
 			url = url.replace(':id', id);
                 $.ajax({
                   url: url,
@@ -798,7 +798,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 	// 			$(".cari").click(function(){
     //     // $("#kode").css("border-color", "yellow");
     //     var kode_kabel =$("#kode").val();
-    //     var url = '{{ route("admin.teknisi.getBarang", ":id") }}';
+    //     var url = '';
     // url = url.replace(':id', kode_kabel);
     //                 $.ajax({
     //                     url: url,
@@ -848,7 +848,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					var kode_dropcore = $('#edit_kode_dropcore').val();
 				if(kode_dropcore){
 
-					var url = '{{ route("admin.teknisi.getBarang", ":id") }}';
+					var url = '';
 					url = url.replace(':id', kode_dropcore);
 					$.ajax({
 						url: url,

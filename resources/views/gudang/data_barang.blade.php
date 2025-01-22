@@ -9,7 +9,7 @@
           
             <form >
               <div class="row">
-            @role('admin')
+            @role('admin|STAF ADMIN')
             <div class="col">
               <button class="btn btn-primary btn-sm mb-3 btn-block" type="button" data-toggle="modal" data-target="#add">Tambah Barang</button>
             </div>
@@ -229,13 +229,13 @@
               <div class="form-row">
                 <div class="col">
                   <label for="">Keterangan</label>
-                  <textarea name="barang_ket" class="form-control" cols="30" rows="3"></textarea>
+                  <textarea name="barang_ket" class="form-control" cols="30" rows="3" required></textarea>
                 </div>   
                 </div>
               <div class="form-row">           
               <div class="col">
                 <label for="">Foto Tanda Terima<strong class="text-danger">*</strong></label>
-                <input  type="file" class="form-control-file" name="barang_img">
+                <input  type="file" class="form-control-file" name="barang_img" required>
               </div>              
             </div>
             </div>

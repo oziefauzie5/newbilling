@@ -208,7 +208,7 @@ class RegistrasiController extends Controller
         $data['reg_progres'] = '0';
         $update['input_maps'] =  $request->reg_maps;
         $update['input_status'] =  'REGIST';
-
+        // dd($data);
 
 
         $router = Router::whereId($request->reg_router)->first();
@@ -503,12 +503,13 @@ Diregistrasi Oleh : *' . $admin . '*
                 'pesan' => 'Maaf..!! Router Disconnected',
                 'alert' => 'error',
             );
-            return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            return redirect()->route('admin.psb.form_data_pelanggan', ['id' => $id])->with($notifikasi);
         }
     }
 
     public function pilih_pelanggan_registrasi($id)
     {
+        // return response()->json($id);
         $data['tampil_data'] =  InputData::select('input_data.*', 'users.id as user_id', 'users.name as user_nama')
             ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('input_data.id', $id)->first();
@@ -1051,371 +1052,28 @@ Diregistrasi Oleh : *' . $admin . '*
         }
     }
 
-    public function putus_berlanggan(Request $request, $idpel)
+
+
+    public function form_data_pelanggan($id)
     {
-        $nama_admin = Auth::user()->name;
-        // dd($progres);
-        $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
-        $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('registrasis.reg_idpel', $idpel)->first();
 
-        if ($request->status == 'PUTUS LANGGANAN') {
-            $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
-            $progres = '100';
-        } else {
-            $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
-            $progres = '90';
-        }
+        // $data_barang = Registrasi::where('reg_router','17')->get();
+        // foreach ($data_barang as $key) {
+        //     echo $key->reg_site.'<br>';
+        //     Registrasi::where('reg_router','17')->update([
+        //         'reg_site'=> '1',
+        //         'reg_pop'=> '1',
+        //         // 'reg_olt'=> '1.4.1',
+        //     ]);
 
+        // }
 
-        if ($query->reg_mac) {
-            if ($query->reg_mac == $request->reg_mac) {
+        // dd('test');
+        $user = (new globalController)->user_admin();
+        $data['user_nama'] = $user['user_nama'];
+        $data['user_id'] = $user['user_id'];
+        $data['user'] = User::get();
 
-                $ip =   $query->router_ip . ':' . $query->router_port_api;
-                $user = $query->router_username;
-                $pass = $query->router_password;
-                $API = new RouterosAPI();
-                $API->debug = false;
-
-
-                // dd($query);
-                if ($API->connect($ip, $user, $pass)) {
-                    $cek_status = $API->comm('/ppp/active/print', [
-                        '?name' => $query->reg_username,
-                    ]);
-                    if ($cek_status) {
-                        $API->comm('/ppp/active/remove', [
-                            '.id' => $cek_status[0]['.id'],
-                        ]);
-                    }
-                    $cari_pel = $API->comm('/ppp/secret/print', [
-                        '?name' => $query->reg_username,
-                    ]);
-                    if ($cari_pel) {
-                        $API->comm('/ppp/secret/remove', [
-                            '.id' =>  $cari_pel['0']['.id']
-                        ]);
-                    }
-
-                    $data = Invoice::where('inv_idpel', $idpel)->where('inv_status', '!=', 'PAID')->first();
-                    if ($data) {
-                        $data->delete();
-                        SubInvoice::where('subinvoice_id', $data->inv_id)->delete();
-                    }
-
-                    // CEK BARANG 
-                    $cek_subbarang = SubBarang::where('subbarang_mac', $request->reg_mac)->first();
-                    $cek_suplier = supplier::where('supplier_nama', 'ONT')->first();
-                    if ($cek_subbarang) {
-                        // JIKA ONT ADA 
-                        $update_barang['subbarang_status'] = '5';
-                        $update_barang['subbarang_keluar'] = '0';
-                        $update_barang['subbarang_stok'] = '1';
-                        $update_barang['subbarang_mac'] = $request->reg_mac;
-                        $update_barang['subbarang_keterangan'] = $keterangan;
-                        $update_barang['subbarang_deskripsi'] = $keterangan;
-                        $update_barang['subbarang_admin'] = $nama_admin;
-                        $update_barang['subbarang_tgl_masuk'] = $tgl;
-
-
-
-                        SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
-
-
-                        SubBarang::create(
-                            [
-                                "id_subbarang" => mt_rand(100000, 999999),
-                                "subbarang_idbarang" => '811170',
-                                "subbarang_nama" => $keterangan,
-                                "subbarang_keterangan" => $keterangan,
-                                "subbarang_ktg" => 'ADAPTOR',
-                                "subbarang_qty" => 1,
-                                "subbarang_keluar" => '0',
-                                "subbarang_stok" => 1,
-                                "subbarang_harga" => 0,
-                                "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '5',
-                                "subbarang_admin" => $nama_admin,
-                            ]
-                        );
-                    } else {
-                        // JIKA ONT TIDAK ADA
-                        // BUAT DAFTAR ONT BARU
-                        // BUAT DENGAN NAMA SUPLIER ONT TARIKAN
-                        // CEK SUDAH ADA ATAU BELUM NAMA SUPLIER ONT TARIKAN
-
-
-
-                        if ($cek_suplier) {
-                            // JIKA SUPLIER ADA MAKA EKSEKUSI BUAT DAFTAR BARANG
-                            $data['supplier'] = $cek_suplier->id_supplier;
-                        } else {
-                            // JIKA SUPLIER TIDAK ADA MAKA EKSEKUSI BUAT SUPLIER TERLEBIH DAHULU
-                            $count = supplier::count();
-                            if ($count == 0) {
-                                $id_supplier = 1;
-                            } else {
-                                $id_supplier = $count + 1;
-                            }
-                            $id_supplier = '1' . sprintf("%03d", $id_supplier);
-
-                            supplier::create([
-                                'id_supplier' => $id_supplier,
-                                'supplier_nama' => 'ONT',
-                                'supplier_alamat' => 'Jl. Tampomas Perum. Alam Tirta Lestari Blok D5 No 06',
-                                'supplier_tlp' => '081386987015',
-                            ]);
-                            $data['supplier'] = $id_supplier;
-                        }
-
-                        $cek_barang = Barang::where('id_supplier', $data['supplier'])->first();
-                        if ($cek_barang) {
-                            $id['subbarang_idbarang'] = $cek_barang->id_barang;
-                        } else {
-
-                            $id['subbarang_idbarang'] = mt_rand(100000, 999999);
-                            Barang::create([
-                                'id_barang' => $id['subbarang_idbarang'],
-                                'id_trx' => '-',
-                                'id_supplier' => $data['supplier'],
-                                'barang_tgl_beli' => '1',
-                            ]);
-                        }
-
-                        SubBarang::create(
-                            [
-                                "id_subbarang" => mt_rand(100000, 999999),
-                                "subbarang_idbarang" => $id['subbarang_idbarang'],
-                                "subbarang_nama" => $keterangan,
-                                "subbarang_keterangan" => $keterangan,
-                                "subbarang_deskripsi" => $keterangan,
-                                "subbarang_ktg" => 'ONT',
-                                "subbarang_qty" => 1,
-                                "subbarang_keluar" => '0',
-                                "subbarang_stok" => 1,
-                                "subbarang_harga" => 0,
-                                "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '5',
-                                "subbarang_mac" => $request->reg_mac,
-                                "subbarang_admin" => $nama_admin,
-                            ]
-                        );
-
-                        SubBarang::create(
-                            [
-                                "id_subbarang" => mt_rand(100000, 999999),
-                                "subbarang_idbarang" => '811170',
-                                "subbarang_nama" => $keterangan,
-                                "subbarang_keterangan" => $keterangan,
-                                "subbarang_ktg" => 'ADAPTOR',
-                                "subbarang_qty" => 1,
-                                "subbarang_keluar" => '0',
-                                "subbarang_stok" => 1,
-                                "subbarang_harga" => 0,
-                                "subbarang_tgl_masuk" => $tgl,
-                                "subbarang_status" => '5',
-                                "subbarang_admin" => $nama_admin,
-                            ]
-                        );
-                    }
-
-                    Registrasi::where('reg_idpel', $idpel)->update([
-                        'reg_progres' => $progres,
-                        'reg_catatan' => $request->reg_catatan,
-                        'reg_kode_ont' => '',
-                        'reg_mac' => '',
-                        'reg_sn' => '',
-                        'reg_mrek' => '',
-                    ]);
-                    $notifikasi = [
-                        'pesan' => 'Berhasil melakukan pemutusan pelanggan',
-                        'alert' => 'success',
-                    ];
-                    // echo '<p style="font-size: 200px" >CILUK........BA</p>';
-                    return redirect()->route('admin.psb.index')->with($notifikasi);
-                } else {
-                    $notifikasi = [
-                        'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
-                        'alert' => 'error',
-                    ];
-                    return redirect()->route('admin.psb.index')->with($notifikasi);
-                }
-            } else {
-                $notifikasi = [
-                    'pesan' => 'Gagal melakukan pemutusan pelanggan. Mac Address tidak sesuai dengan yang digunakan',
-                    'alert' => 'error',
-                ];
-                return redirect()->route('admin.psb.index')->with($notifikasi);
-            }
-        } else { #JIKA MAC TIDAK ADA PADA TABLE REGISTRASI
-            $ip =   $query->router_ip . ':' . $query->router_port_api;
-            $user = $query->router_username;
-            $pass = $query->router_password;
-            $API = new RouterosAPI();
-            $API->debug = false;
-
-
-            // dd($query);
-            if ($API->connect($ip, $user, $pass)) {
-                $cek_status = $API->comm('/ppp/active/print', [
-                    '?name' => $query->reg_username,
-                ]);
-                if ($cek_status) {
-                    $API->comm('/ppp/active/remove', [
-                        '.id' => $cek_status[0]['.id'],
-                    ]);
-                }
-                $cari_pel = $API->comm('/ppp/secret/print', [
-                    '?name' => $query->reg_username,
-                ]);
-                if ($cari_pel) {
-                    $API->comm('/ppp/secret/remove', [
-                        '.id' =>  $cari_pel['0']['.id']
-                    ]);
-                }
-
-                $data = Invoice::where('inv_idpel', $idpel)->where('inv_status', '!=', 'PAID')->first();
-                if ($data) {
-                    $data->delete();
-                    SubInvoice::where('subinvoice_id', $data->inv_id)->delete();
-                }
-
-                // CEK BARANG 
-                $cek_subbarang = SubBarang::where('subbarang_mac', $request->reg_mac)->first();
-                $cek_suplier = supplier::where('supplier_nama', 'ONT')->first();
-                if ($cek_subbarang) {
-                    // JIKA ONT ADA 
-                    $update_barang['subbarang_status'] = '0';
-                    $update_barang['subbarang_keluar'] = '0';
-                    $update_barang['subbarang_stok'] = '1';
-                    $update_barang['subbarang_mac'] = $request->reg_mac;
-                    $update_barang['subbarang_keterangan'] = $keterangan;
-                    $update_barang['subbarang_admin'] = $nama_admin;
-                    $update_barang['subbarang_tgl_masuk'] = $tgl;
-                    SubBarang::where('subbarang_mac', $request->reg_mac)->update($update_barang);
-
-                    SubBarang::create(
-                        [
-                            "id_subbarang" => mt_rand(100000, 999999),
-                            "subbarang_idbarang" => '811170',
-                            "subbarang_nama" => $keterangan,
-                            "subbarang_keterangan" => $keterangan,
-                            "subbarang_ktg" => 'ADAPTOR',
-                            "subbarang_qty" => 1,
-                            "subbarang_keluar" => '0',
-                            "subbarang_stok" => 1,
-                            "subbarang_harga" => 0,
-                            "subbarang_tgl_masuk" => $tgl,
-                            "subbarang_status" => '0',
-                            "subbarang_admin" => $nama_admin,
-                        ]
-                    );
-                } else {
-                    // JIKA ONT TIDAK ADA
-                    // BUAT DAFTAR ONT BARU
-                    // BUAT DENGAN NAMA SUPLIER ONT TARIKAN
-                    // CEK SUDAH ADA ATAU BELUM NAMA SUPLIER ONT TARIKAN
-
-
-
-                    if ($cek_suplier) {
-                        // JIKA SUPLIER ADA MAKA EKSEKUSI BUAT DAFTAR BARANG
-                        $data['supplier'] = $cek_suplier->id_supplier;
-                    } else {
-                        // JIKA SUPLIER TIDAK ADA MAKA EKSEKUSI BUAT SUPLIER TERLEBIH DAHULU
-                        $count = supplier::count();
-                        if ($count == 0) {
-                            $id_supplier = 1;
-                        } else {
-                            $id_supplier = $count + 1;
-                        }
-                        $id_supplier = '1' . sprintf("%03d", $id_supplier);
-
-                        supplier::create([
-                            'id_supplier' => $id_supplier,
-                            'supplier_nama' => 'ONT',
-                            'supplier_alamat' => 'Jl. Tampomas Perum. Alam Tirta Lestari Blok D5 No 06',
-                            'supplier_tlp' => '081386987015',
-                        ]);
-                        $data['supplier'] = $id_supplier;
-                    }
-
-                    $cek_barang = Barang::where('id_supplier', $data['supplier'])->first();
-                    if ($cek_barang) {
-                        $id['subbarang_idbarang'] = $cek_barang->id_barang;
-                    } else {
-
-                        $id['subbarang_idbarang'] = mt_rand(100000, 999999);
-                        Barang::create([
-                            'id_barang' => $id['subbarang_idbarang'],
-                            'id_trx' => '-',
-                            'id_supplier' => $data['supplier'],
-                            'barang_tgl_beli' => '1',
-                        ]);
-                    }
-
-                    SubBarang::create(
-                        [
-                            "id_subbarang" => mt_rand(100000, 999999),
-                            "subbarang_idbarang" => $id['subbarang_idbarang'],
-                            "subbarang_nama" => $keterangan,
-                            "subbarang_keterangan" => $keterangan,
-                            "subbarang_ktg" => 'ONT',
-                            "subbarang_qty" => 1,
-                            "subbarang_keluar" => '0',
-                            "subbarang_stok" => 1,
-                            "subbarang_harga" => 0,
-                            "subbarang_tgl_masuk" => $tgl,
-                            "subbarang_status" => '0',
-                            "subbarang_mac" => $request->reg_mac,
-                            "subbarang_admin" => $nama_admin,
-                        ]
-                    );
-
-                    SubBarang::create(
-                        [
-                            "id_subbarang" => mt_rand(100000, 999999),
-                            "subbarang_idbarang" => '811170',
-                            "subbarang_nama" => $keterangan,
-                            "subbarang_keterangan" => $keterangan,
-                            "subbarang_ktg" => 'ADAPTOR',
-                            "subbarang_qty" => 1,
-                            "subbarang_keluar" => '0',
-                            "subbarang_stok" => 1,
-                            "subbarang_harga" => 0,
-                            "subbarang_tgl_masuk" => $tgl,
-                            "subbarang_status" => '0',
-                            "subbarang_admin" => $nama_admin,
-                        ]
-                    );
-                }
-
-                Registrasi::where('reg_idpel', $idpel)->update([
-                    'reg_progres' => $progres,
-                    'reg_catatan' => $request->reg_catatan,
-                    'reg_kode_ont' => '',
-                    'reg_mac' => '',
-                    'reg_sn' => '',
-                    'reg_mrek' => '',
-                ]);
-                $notifikasi = [
-                    'pesan' => 'Berhasil melakukan pemutusan pelanggan',
-                    'alert' => 'success',
-                ];
-                // echo '<p style="font-size: 200px" >CILUK........BA</p>';
-                return redirect()->route('admin.psb.index')->with($notifikasi);
-            } else {
-                $notifikasi = [
-                    'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
-                    'alert' => 'error',
-                ];
-                return redirect()->route('admin.psb.index')->with($notifikasi);
-            }
-        }
-    }
-    public function edit_pelanggan($id)
-    {
         $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
         // dd($data['tgl_akhir']);
         $status_inet = (new NocController)->status_inet($id);
@@ -1437,7 +1095,7 @@ Diregistrasi Oleh : *' . $admin . '*
             // ->join('data__odps', 'data__odps.odp_id', '=', 'registrasis.reg_odp')
             ->where('input_data.id', $id)
             ->first();
-        // dd($data['data']);
+        // dd($data['data']); 
         // dd($data['site'])->pop_nama;
         // $data['data_site'] = Data_Site::get();
         $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')
@@ -1451,7 +1109,7 @@ Diregistrasi Oleh : *' . $admin . '*
         $data['uptime'] = $status_inet['uptime'];
         $data['address'] = $status_inet['address'];
         $data['status_secret'] = $status_inet['status_secret'];
-        return view('Registrasi/edit_registrasi', $data);
+        return view('Registrasi/form_data_pelanggan', $data);
     }
 
     public function proses_edit_pelanggan(Request $request, $id)
@@ -1490,19 +1148,19 @@ Diregistrasi Oleh : *' . $admin . '*
                     'pesan' => 'Aktivasi Berhasil ',
                     'alert' => 'success',
                 );
-                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             } elseif ($API == 1) {
                 $notifikasi = array(
                     'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             } elseif ($API == 2) {
                 $notifikasi = array(
                     'pesan' => 'Router Discconect',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             }
         } else {
             $API = (new ApiController)->aktivasi_psb_hotspot($query);
@@ -1514,20 +1172,244 @@ Diregistrasi Oleh : *' . $admin . '*
                     'pesan' => 'Aktivasi Berhasil ',
                     'alert' => 'success',
                 );
-                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             } elseif ($API == 1) {
                 $notifikasi = array(
                     'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             } elseif ($API == 2) {
                 $notifikasi = array(
                     'pesan' => 'Router Discconect',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.reg.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             }
         }
+    }
+    public function data_aktivasi_pelanggan()
+    {
+        $month = Carbon::now()->addMonth(-0)->format('m');
+        $bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
+        $d = date('d');
+
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->where('reg_progres', '<=', 2)
+            ->orderBy('tgl', 'DESC');
+
+        $data['data_registrasi'] = $query->get(10);
+
+        $data['count_inputdata'] = InputData::count();
+        $data['count_aktivasi'] = $query->count();
+        $data['count_teraktivasi'] = Registrasi::where('reg_progres', '>=', '3')->whereDate('created_at', '=', $d)->count();
+
+        return view('Registrasi/data_aktivasi', $data);
+    }
+    public function aktivasi_pelanggan($id)
+    {
+        $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
+        // dd($data['tgl_akhir']);
+        $status_inet = (new NocController)->status_inet($id);
+        // dd($status_inet['status']);
+        $data['input_data'] = InputData::all();
+        $data['data_router'] = Router::all();
+        $data['data_paket'] = Paket::all();
+        $data['data_biaya'] = SettingBiaya::first();
+        $data['data_teknisi'] = (new GlobalController)->getTeknisi();
+
+        $data['data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('data__sites', 'data__sites.site_id', '=', 'registrasis.reg_site')
+            ->join('data_pops', 'data_pops.pop_id', '=', 'registrasis.reg_pop')
+            ->where('input_data.id', $id)
+            ->first();
+
+        $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')
+            ->get();
+
+        $data['data_olt'] = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
+            ->where('pop_id', $data['data']->reg_pop)->get();
+        $data['status'] = $status_inet['status'];
+        $data['uptime'] = $status_inet['uptime'];
+        $data['address'] = $status_inet['address'];
+        $data['status_secret'] = $status_inet['status_secret'];
+        return view('Registrasi/form_aktivasi', $data);
+    }
+
+
+    public function deaktivasi_pelanggan(Request $request, $id)
+    {
+        $nama_admin = Auth::user()->name;
+        $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
+        $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->where('registrasis.reg_idpel', $idpel)->first();
+
+        if ($request->status == 'PUTUS LANGGANAN') {
+            $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
+            $progres = '90';
+        } else {
+            $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
+            $progres = '100';
+        }
+
+
+
+
+
+        $ip =   $query->router_ip . ':' . $query->router_port_api;
+        $user = $query->router_username;
+        $pass = $query->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
+
+
+        if ($API->connect($ip, $user, $pass)) {
+            $cek_status = $API->comm('/ppp/active/print', [
+                '?name' => $query->reg_username,
+            ]);
+            if ($cek_status) {
+                $API->comm('/ppp/active/remove', [
+                    '.id' => $cek_status[0]['.id'],
+                ]);
+            }
+            $cari_pel = $API->comm('/ppp/secret/print', [
+                '?name' => $query->reg_username,
+            ]);
+            if ($cari_pel) {
+                $API->comm('/ppp/secret/remove', [
+                    '.id' =>  $cari_pel['0']['.id']
+                ]);
+            }
+
+            $data = Invoice::where('inv_idpel', $idpel)->where('inv_status', '!=', 'PAID')->first();
+            if ($data) {
+                $data->delete();
+                SubInvoice::where('subinvoice_id', $data->inv_id)->delete();
+            }
+
+            Registrasi::where('reg_idpel', $idpel)->update([
+                'reg_progres' => $progres,
+                'reg_catatan' => $request->reg_catatan,
+                'reg_kode_ont' => '',
+                'reg_kode_adaptor' => '',
+                'reg_mac' => '',
+                'reg_sn' => '',
+                'reg_mrek' => '',
+            ]);
+            Data_Deaktivasi::create([
+                'deaktivasi_idpel' => $request->deaktivasi_idpel,
+                'deaktivasi_mac' => $request->deaktivasi_mac,
+                'deaktivasi_sn' => $request->deaktivasi_sn,
+                'deaktivasi_kelengkapan_perangkat' => $request->deaktivasi_kelengkapan_perangkat,
+                'deaktivasi_tanggal_pengambilan' => $request->deaktivasi_tanggal_pengambilan,
+                'deaktivasi_pengambil_perangkat' => $request->deaktivasi_pengambil_perangkat,
+                'deaktivasi_admin' => $request->deaktivasi_admin,
+                'deaktivasi_alasan_deaktivasi' => $request->deaktivasi_alasan_deaktivasi,
+            ]);
+            $notifikasi = [
+                'pesan' => 'Berhasil melakukan pemutusan pelanggan',
+                'alert' => 'success',
+            ];
+            return redirect()->route('admin.psb.index')->with($notifikasi);
+        } else {
+            $notifikasi = [
+                'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
+                'alert' => 'error',
+            ];
+            return redirect()->route('admin.psb.index')->with($notifikasi);
+        }
+    }
+    public function data_deaktivasi()
+    {
+        $month = Carbon::now()->addMonth(-0)->format('m');
+        $bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
+        $d = date('d');
+        $user = (new globalController)->user_admin();
+        $data['user_nama'] = $user['user_nama'];
+        $data['user_id'] = $user['user_id'];
+        $data['user'] = User::get();
+
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->where('reg_progres', '>=', 89)
+            ->where('reg_progres', '<=', 100)
+            ->orderBy('tgl', 'DESC');
+
+        $data['data_registrasi'] = $query->get(10);
+
+        $data['total_deaktivasi'] = $query->count();
+        $data['deaktivasi_month'] = Registrasi::where('reg_progres', '>=', 89)
+            ->where('reg_progres', '<=', 100)
+            ->whereDate('created_at', '=', $d)
+            ->count();
+        $data['pengambilan_perangkat'] = Registrasi::where('reg_progres', '=', 89)
+            ->orWhere('reg_progres', '=', 99)
+            ->count();
+        $data['verifikasi_deaktivasi'] = Registrasi::where('reg_progres', '=', 89)
+            ->orWhere('reg_progres', '=', 99)
+            ->count();
+
+        return view('Registrasi/data_deaktivasi', $data);
+    }
+
+
+
+    // public function berita_acara_deaktivasi($id)
+    // {
+
+    //     $data['profile_perusahaan'] = SettingAplikasi::first();
+    //     $data['nama_admin'] = Auth::user()->name;
+    //     $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+    //         ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+    //         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+    //         // ->join('users', 'users.id', '=', 'input_data.input_sales')
+    //         ->where('registrasis.reg_idpel', $id)
+    //         ->first();
+    //     $seles = User::whereId($data['berita_acara']->input_sales)->first();
+    //     if ($seles) {
+    //         $data['seles'] = $seles->name;
+    //     } else {
+    //         $data['seles'] = '-';
+    //     }
+
+    //     // dd($data);
+    //     $nama = InputData::where('id', $id)->first();
+    //     if ($nama) {
+    //         $sales = $nama->input_nama;
+    //     } else {
+    //         $sales = '-';
+    //     }
+    //     // $pdf = App::make('dompdf.wrapper');
+    //     // $html = view('PSB/print_berita_acara', $data)->render();
+    //     // $pdf->loadHTML($html);
+    //     // $pdf->setPaper('A4', 'potraid');
+    //     // return $pdf->download('Berita_Acara_' . $sales . '.pdf');
+
+    //     return view('Registrasi/berita_acara_deaktivasi', $data);
+    // }
+    public function verifikasi_deaktivasi(Request $request, $id)
+    {
+
+        $data = '';
+
+        // 'deaktivasi_idpel',
+        // 'deaktivasi_mac',
+        // 'deaktivasi_sn',
+        // 'deaktivasi_kelengkapan_perangkat',
+        // 'deaktivasi_tanggal_pengambilan',
+        // 'deaktivasi_pengambil_perangkat',
+        // 'deaktivasi_admin',
+        // 'deaktivasi_alasan_deaktivasi',
+
+
+        return view('Registrasi/berita_acara_deaktivasi', $data);
     }
 }

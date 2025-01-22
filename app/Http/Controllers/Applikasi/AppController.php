@@ -254,7 +254,7 @@ class AppController extends Controller
 
             $photo = $request->file('app_logo');
             $filename1 = $photo->getClientOriginalName();
-            $path = 'img/' . $filename1;
+            $path = 'profile_perusahaan/' . $filename1;
             Storage::disk('public')->put($path, file_get_contents($photo));
         } else {
             $filename1 = '';
@@ -262,7 +262,7 @@ class AppController extends Controller
         if ($request->file('app_favicon')) {
             $app_favicon = $request->file('app_favicon');
             $filename2 = $app_favicon->getClientOriginalName();
-            $path = 'img/' . $filename2;
+            $path = 'profile_perusahaan/' . $filename2;
             Storage::disk('public')->put($path, file_get_contents($app_favicon));
         } else {
             $filename2 = '';

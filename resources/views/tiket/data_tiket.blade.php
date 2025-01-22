@@ -32,7 +32,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{{route('admin.tiket.export')}}" method="POST">
+        <form action="{{route('admin.tiket.export_tiket')}}" method="POST">
           @csrf
           @method('POST')
         <div class="row">
@@ -92,6 +92,7 @@
                   <tr>
                     <th>Status</th>
                     <th>Tanggal</th>
+                    <th>Tanggal Closed</th>
                     <th>No.Tiket</th>
                     <th>Jenis Laporan</th>
                     <th>No.Layanan</th>
@@ -105,19 +106,24 @@
                 <tbody>
                   @foreach ($tiket as $d)
                   <tr>
-                    @if($d->tiket_status == 'DONE')
-                    <td><div class="badge badge-success">{{$d->tiket_status}}</div></td>
+                    @if($d->tiket_status == 'Closed')
+                    <td><div class="badge badge-success tiket_closed" data-id="{{$d->tiket_id}}">{{$d->tiket_status}}</div></td>
                     @else
-                    <td><div class="badge badge-danger">{{$d->tiket_status}}</div></td>
+                    <td><div class="badge badge-danger tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_status}}</div></td>
                     @endif
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->created_at}}</td>
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_kode}}</td>
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_jenis}}</td>
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->reg_nolayanan}}</td>
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->input_nama}}</td>
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_nama}}</td>
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_keterangan}}</td>
-                    <td class="tiket" data-id="{{$d->tiket_id}}">{{$d->name}}</td>
+                    <td>{{date('d-m-Y h:m' , strtotime($d->tanggal))}}</td>
+                    @if($d->tiket_waktu_selesai)
+                    <td>{{date('d-m-Y h:m' , strtotime($d->tiket_waktu_selesai))}}</td>
+                    @else
+                    <td class="tiket text-danger" data-id="{{$d->tiket_id}}">Belum dikerjakan</td>
+                    @endif
+                    <td>{{$d->tiket_kode}}</td>
+                    <td>{{$d->tiket_jenis}}</td>
+                    <td>{{$d->reg_nolayanan}}</td>
+                    <td>{{$d->input_nama}}</td>
+                    <td>{{$d->tiket_nama}}</td>
+                    <td>{{$d->tiket_keterangan}}</td>
+                    <td>{{$d->name}}</td>
                     <td>
                       <div class="form-button-action">
                         <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->id}}" class="btn btn-link btn-danger">

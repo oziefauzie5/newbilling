@@ -54,7 +54,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Quality Control</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Quality Control </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -81,20 +81,20 @@
                   @if($d->barang_kategori == 'ONT')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
+                      <input type="text" class="form-control" name="barang_sn"  value="{{$d->barang_sn}}" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" value="{{$d->barang_mac}}" required>
+                      <input type="text" class="form-control" name="barang_mac" id="mac" minlength="17" maxlength="17" value="{{$d->barang_mac}}" required>
                     </div> 
                     @elseif($d->barang_kategori == 'OLT')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
+                      <input type="text" class="form-control" name="barang_sn"  value="{{$d->barang_sn}}" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" value="{{$d->barang_mac}}" required>
+                      <input type="text" class="form-control" name="barang_mac" id="mac" value="{{$d->barang_mac}}" required>
                     </div> 
                     @elseif($d->barang_kategori == 'ROUTER')
                     <div class="col-6">
@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" value="{{$d->barang_mac}}" required>
+                      <input type="text" class="form-control" name="barang_mac" id="mac" value="{{$d->barang_mac}}" required>
                     </div> 
                     @elseif($d->barang_kategori == 'SWITCH')
                     <div class="col-6">
@@ -112,7 +112,7 @@
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" value="{{$d->barang_mac}}" required>
+                      <input type="text" class="form-control" name="barang_mac" id="mac"  value="{{$d->barang_mac}}" required>
                     </div> 
                     @elseif($d->barang_kategori == 'SPLICER')
 

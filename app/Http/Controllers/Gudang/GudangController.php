@@ -100,18 +100,25 @@ class GudangController extends Controller
 
         if ($request->barang_kategori == 'DROPCORE') {
             $qty = '1000';
+            $harga = $request->barang_harga / $qty;
         } elseif ($request->barang_kategori == 'PIG8 2 CORE') {
             $qty = '1000';
+            $harga = $request->barang_harga / $qty;
         } elseif ($request->barang_kategori == 'PIG8 >2 CORE') {
             $qty = '2000';
+            $harga = $request->barang_harga / $qty;
         } elseif ($request->barang_kategori == 'ARMORE') {
             $qty = '2000';
+            $harga = $request->barang_harga / $qty;
         } elseif ($request->barang_kategori == 'MINI ADSS') {
             $qty = '2000';
+            $harga = $request->barang_harga / $qty;
         } elseif ($request->barang_kategori == 'ADSS 24 CORE') {
             $qty = '4000';
+            $harga = $request->barang_harga / $qty;
         } else {
             $qty = '1';
+            $harga = $request->barang_harga / $qty;
         }
 
         if ($request->barang_kategori == 'ONT') {
@@ -130,22 +137,11 @@ class GudangController extends Controller
             $status = '0';
         }
 
-        $count_barang = Data_Barang::count();
-
-        if ($count_barang == 0) {
-            $id_barang = 1;
-        } else {
-            $id_barang = $count_barang + 1;
-        }
-        $id = $y . $m . sprintf("%03d", $id_barang);
-
         for ($x = 0; $x < $request->barang_qty; $x++) {
-            // echo $data['id_barang']++;
-            // dd($data['id_barang']++);
-            $no_urut = $id++;
+
 
             $data[] = [
-                'barang_id' => $no_urut,
+                'barang_id' => mt_rand(10000, 99999),
                 'barang_jenis' => $request->barang_jenis,
                 'barang_lokasi' => $request->barang_lokasi,
                 'barang_kategori' => $request->barang_kategori,
@@ -154,7 +150,7 @@ class GudangController extends Controller
                 'barang_qty' => $qty,
                 'barang_satuan' => $request->barang_satuan,
                 'barang_tglmasuk' => $request->barang_tglmasuk,
-                'barang_harga' => $request->barang_harga,
+                'barang_harga' => $harga,
                 'barang_status' => $status,
                 'barang_ket' => $request->barang_ket,
                 'barang_penerima' => $penerima,

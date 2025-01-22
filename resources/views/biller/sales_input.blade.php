@@ -95,6 +95,12 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
+                      <label>No Hp 2</label>
+                      <input id="input_hp" type="text" class="form-control" value="{{ Session::get('input_hp') }}" name="input_hp_2" placeholder="No. Whatsapp" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
                       <label>Email</label>
                       <input id="input_email" type="text" class="form-control" value="{{ Session::get('input_email') }}" name="input_email" placeholder="Email">
                     </div>

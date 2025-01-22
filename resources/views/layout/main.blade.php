@@ -208,11 +208,6 @@
 											<span class="sub-item">Putus Berlangganan</span>
 										</a>
 									</li>
-									<li>
-										<a href="{{route('admin.psb.listmac_bermasalah')}}">
-											<span class="sub-item">Mac Bermasalah</span>
-										</a>
-									</li>
 								</ul>
 							</div>
 						</li>
@@ -482,11 +477,59 @@
 	<script src="{{asset('atlantis/assets/js/demo.js')}}"></script> --}}
 
 
-  {{-- JAVASCRIPT INPUT DATA REGIST PELANGGAN --}}
- <script >
+  <script >
+	//--------------------START FORMAT MAC----------------------
+	  $(document).ready(function() {
+		  //format mac adrress Aktivasi pelanggan
+		  document.getElementById("mac").addEventListener('keyup', function() { 
+			  this.value = 
+			  (this.value.toUpperCase()
+			  .replace(/[^\d|A-Z]/g, '')
+			  .match(/.{1,2}/g) || [])
+			  .join(":")
+			});
+		});
+	//--------------------END FORMAT MAC----------------------
+
+	//--------------------START INPUT READONLY----------------------
+	$(document).ready(function() {
+		$('.readonly').keydown(function(e) {
+			if (e.keyCode === 8 || e.keyCode === 46)  // Backspace & del
+			e.preventDefault();
+		}).on('keypress paste cut', function(e) {
+			e.preventDefault();
+		});
+	});
+	//--------------------END INPUT READONLY----------------------
+
+	//--------------------START TABLE CLICK EDIT DATA PELANGGAN----------------------
+	// PsbController -> index.blade.php					
+						$('.href').click(function(){
+							var id =$(this).data("id");
+							var url = '{{ route("admin.reg.form_data_pelanggan", ":id") }}';
+							url = url.replace(':id', id);
+							window.location=url;
+						});
+	//--------------------END TABLE CLICK EDIT DATA PELANGGAN----------------------
+
+	//--------------------START TABLE CLICK AKTIVASI DATA PELANGGAN----------------------
+	// RegistrasiController -> index.blade.php					
+						$('.aktivasi').click(function(){
+							var id =$(this).data("id");
+							var url = '{{ route("admin.reg.aktivasi_pelanggan", ":id") }}';
+							url = url.replace(':id', id);
+							window.location=url;
+						});
+	//--------------------END TABLE CLICK AKTIVASI DATA PELANGGAN----------------------
 		$(document).ready(function() {
 	
 			
+			$('#datatable').DataTable({
+				"pageLength": 10,
+				
+			});
+
+
 			$('#input_data').DataTable({
 				"pageLength": 10,
 				
@@ -720,39 +763,7 @@ url = url.replace(':id', idpel);
                 });
  });
 });
-//  CARI BARANG
-//---------------CARI BARANG PROJECT/TIKET-------------
-// $(function(){ 
-//   var table = $('#input_barang_tiket').DataTable(); $('#input_barang_tiket tbody').on( 'click', 'tr', function () 
-// 			{  
-// 			var idpel = table.row( this ).id();
-//   var url = '{{ route("admin.topo.pilih_barang_tiket", ":id") }}';
-// url = url.replace(':id', idpel);
-//   $.ajax({
-//                     url: url,
-//                     type: 'GET',
-//                     data: {
-//                         '_token': '{{ csrf_token() }}'
-//                     },
-//                     dataType: 'json',
-//                     success: function(data) {
-						
-// 						if (data) {
-// 							$("#cari_barang_tiket").modal('hide');
-// 							$('#barang_id').val(data['tampil_data_barang']['barang_id']);
-// 							$('#barang_nama').val(data['tampil_data_barang']['barang_nama']);
-// 							$('#barang_merek').val(data['tampil_data_barang']['barang_merek']);
-// 							$('#barang_type').val(data['tampil_data_barang']['barang_type']);
-// 							$('#barang_mac').val(data['tampil_data_barang']['barang_mac']);
-// 							$('#barang_sn').val(data['tampil_data_barang']['barang_sn']);
-//                         } else {
-							
-//                         }
-//                     }
-//                 });
-//  });
-// });
-//---------------END CARI BARANG PROJECT/TIKET-------------
+
 
 
 
@@ -761,6 +772,7 @@ url = url.replace(':id', idpel);
 	var site = $(this).val();
 	var url = '{{ route("admin.reg.getSite", ":id") }}';
 	url = url.replace(':id', site);
+	// console.log(site)
 	$.ajax({
 		url: url,
 				type: 'GET',
@@ -786,9 +798,10 @@ url = url.replace(':id', idpel);
 									//--------- start get olt-------------
 									$('#pop').on('change', function() {
 										var olt = $(this).val();
-										console.log(olt)
+										// console.log(olt)
 										var url = '{{ route("admin.reg.getOlt", ":id") }}';
 										url = url.replace(':id', olt);
+										
 										$.ajax({
 													url: url,
 													type: 'GET',
@@ -798,6 +811,8 @@ url = url.replace(':id', idpel);
 																dataType: 'json',
 																success: function(data) {
 																	if(data){
+																		console.log(olt);
+																		// console.log(data)
 																		$('#olt').empty()
 																		$('#olt').append('<option value="">- Pilih OLT -</option>')
 																		$('#odc').empty()
@@ -813,12 +828,11 @@ url = url.replace(':id', idpel);
 										$.ajax({
 													url: url,
 													type: 'GET',
-													data: {
-																	'_token': '{{ csrf_token() }}'
-																},
+													data: {'_token': '{{ csrf_token() }}'},
 																dataType: 'json',
 																success: function(data) {
 																	if(data){
+																		
 																		$('#odc').empty()
 																		$('#odc').append('<option value="">- Pilih ODC -</option>')
 																		for (let i = 0; i < data.length; i++) {
@@ -900,7 +914,7 @@ $('#validasi_odp').keyup(function() {
 var validasi_odp = $('#validasi_odp').val();
 var url = '{{ route("admin.reg.validasi_odp", ":id") }}';
 url = url.replace(':id', validasi_odp);
-console.log(validasi_odp)
+// console.log(validasi_odp)
 $.ajax({
 	url: url,
 			type: 'GET',
@@ -935,7 +949,7 @@ $.ajax({
 $("#reg_kode_dropcore").keyup(function(){
 	var kode_kabel =$("#reg_kode_dropcore").val();
 	// console.log(kode_kabel)
-        var url = '{{ route("admin.reg.validasi_kode_kabel", ":id") }}';
+        var url = '{{ route("admin.val.valBarang", ":id") }}';
     url = url.replace(':id', kode_kabel);
 	$.ajax({
 		url: url,
@@ -1000,22 +1014,7 @@ $("#reg_kode_dropcore").keyup(function(){
             });
             });
 
-			//format mac adrress Aktivasi pelanggan
-			// $("#reg_kode_dropcore").keyup(function(){
-	document.getElementById("reg_mac_olt").addEventListener('keyup', function() { 
-  this.value = 
-    (this.value.toUpperCase()
-    .replace(/[^\d|A-Z]/g, '')
-    .match(/.{1,2}/g) || [])
-    .join(":")
-});
-
-$('.readonly').keydown(function(e) {
-  if (e.keyCode === 8 || e.keyCode === 46)  // Backspace & del
-    e.preventDefault();
-}).on('keypress paste cut', function(e) {
-  e.preventDefault();
-});
+		
 
 
 
@@ -1500,16 +1499,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					});
 					//  END EDIT BARANG
 					</script>
-					<script>
-						// START EDIT HREF PSB
-						$('.href').click(function(){
-							var id =$(this).data("id");
-							var url = '{{ route("admin.reg.edit_pelanggan", ":id") }}';
-							url = url.replace(':id', id);
-							// alert(url);
-							window.location=url;
-						});
-					</script>
+				
 					<script>
 						// START DETAIL INVOICE
 						$('.href_inv').click(function(){
@@ -1955,10 +1945,19 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			}
 		});
 		//------------END GANTI ONT---------------
-		
-	}
-});
-});
+				//---------------GANTI ONT---------------
+				$("#ck_lain_lain").click(function() {
+					if($(this).is(":checked")) {
+						$('.submit_tiket').removeAttr('disabled');
+					} else {
+						$('.submit_tiket').attr('disabled','disabled');
+					}
+				});
+				//------------END GANTI ONT---------------
+				
+			}
+		});
+	});
 	// #LAYANAN REGISTRASI
 	$('select[name=reg_layanan]').change(function () {
 		if ($(this).val() == 'HOTSPOT') {
@@ -2019,6 +2018,14 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			$('.tiket').click(function(){
 				var id =$(this).data("id");
 				var url = '{{ route("admin.tiket.details_tiket", ":id") }}';
+				url = url.replace(':id', id);
+				// alert(url);
+				window.location=url;
+			});
+			// DETAILS TIKET CLOSED
+			$('.tiket_closed').click(function(){
+				var id =$(this).data("id");
+				var url = '{{ route("admin.tiket.details_tiket_closed", ":id") }}';
 				url = url.replace(':id', id);
 				// alert(url);
 				window.location=url;
@@ -2430,15 +2437,51 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 				            }
 				});
 
-
-
-
-
 //akhir
 });
-
-
-
 			</script>
+
+			<script>
+					//--------------------START DEAKTIVASI----------------------
+					$(document).ready(function() {
+					// 
+					$('select[name=deaktivasi_kelengkapan_perangkat]').change(function () {
+						if ($(this).val() == 'ONT') {
+							$('.pernyataan_1').hide()
+							$('.pernyataan_2').hide()
+							$('.div_ont').show();
+							$('.deaktivasi_mac').attr('required', 'required');
+							$('#deaktivasi_sn').attr('required', 'required');
+							$('#deaktivasi_pernyataan1').attr('required', 'required');
+							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
+							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
+							$('.pernyataan_1').show()
+						} else if($(this).val() == 'ONT & Adaptor') { 
+							$('.pernyataan_1').hide()
+							$('.pernyataan_2').hide()
+							$('.div_ont').show();
+							$('.deaktivasi_mac').attr('required', 'required');
+							$('#deaktivasi_sn').attr('required', 'required');
+							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
+							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
+						} else if($(this).val() == 'Hilang') { 
+							$('.pernyataan_1').hide()
+							$('.pernyataan_2').show()
+							$('.div_ont').hide();
+							$('#deaktivasi_pernyataan1').attr('required', 'required');
+							$('#deaktivasi_pernyataan2').attr('required', 'required');
+							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
+							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
+							// $('.deaktivasi_mac').attr('required', 'required');
+							// $('#deaktivasi_sn').removeAttr('required');
+							// $('#deaktivasi_sn').removeAttr('required');
+						}
+					});
+					});
+		
+					//--------------------END DEAKTIVASI----------------------
+			</script>
+
+			
 </body>
 </html>

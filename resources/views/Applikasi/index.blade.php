@@ -286,6 +286,9 @@
                   <label >Link Pelanggan</label>
                   <input type="text" class="form-control"  name="app_link_pelanggan" id="" value="{{$app_link_pelanggan}}">
                 </div>
+                <div class="form-group">
+                    <img src="{{ asset('storage/profile_perusahaan/'.$app_logo) }}" class="img-fluid" alt="{{'a'.$app_favicon}}">
+                </div>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroupFileAddon01">Upload Logo</span>
@@ -295,8 +298,10 @@
                       <label class="custom-file-label" for="inputGroupFile01">Pilih file</label>
                     </div>
                   </div>
+                  <div class="form-group">
+                      <img src="{{ asset('storage/profile_perusahaan/'.$app_favicon) }}" class="img-fluid" alt="{{'a'.$app_favicon}}">
+                  </div>
 
-                  <img src="{{ asset('storage/logo/'.$app_favicon) }}" class="img-fluid" alt="{{'a'.$app_favicon}}">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroupFileAddon01">Upload Favicon</span>

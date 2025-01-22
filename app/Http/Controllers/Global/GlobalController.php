@@ -75,6 +75,7 @@ class GlobalController extends Controller
         return $teknisi;
     }
 
+
     public function all_user() #mennampilkan data user
     {
         $all_user =  DB::table('users')
@@ -291,13 +292,14 @@ class GlobalController extends Controller
     public function getSite($id)
     {
         $kode_site = Data_Site::join('data_pops', 'data_pops.pop_id_site', '=', 'data__sites.site_id')
-            ->where("site_id", $id)->where("site_status", 'Enable')->get();
+            ->where("site_id", $id)->get();
         return response()->json($kode_site);
     }
     public function getOlt($id)
     {
+        // return response()->json($id);
         $kode_olt = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
-            ->where("pop_id", $id)->where("pop_status", 'Enable')->get();
+            ->where("pop_id", $id)->get();
         return response()->json($kode_olt);
     }
     public function getPop($id)
@@ -309,8 +311,10 @@ class GlobalController extends Controller
     public function getOdc($id)
     {
         // return response()->json($id . 'tes');
-        $kode_pop = Data_Olt::join('data__odcs', 'data__odcs.odc_id', '=', 'data__olts.olt_id')
-            ->where("olt_id", $id)->where("olt_status", 'Enable')->get();
+        $kode_pop = Data_Odc::join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
+            // ->get();
+            // $kode_pop = Data_Olt::join('data__odcs', 'data__odcs.odc_id', '=', 'data__olts.olt_id')
+            ->where("data__olts.olt_id", $id)->get();
         return response()->json($kode_pop);
     }
     // public function getOdp($id)
@@ -324,8 +328,8 @@ class GlobalController extends Controller
     {
         // return response()->json($id . 'tes');
         $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
-            ->join('data__olts', 'data__olts.olt_id_pop', '=', 'data__odcs.odc_id_olt')
-            ->where("odp_kode", $id)->where("odp_status", 'Enable')->first();
+            ->join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
+            ->where("odp_kode", $id)->first();
         return response()->json($kode_pop);
     }
 

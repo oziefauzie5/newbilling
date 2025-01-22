@@ -7,6 +7,7 @@ use App\Http\Controllers\Global\GlobalController;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\Pesan\Pesan;
+use App\Models\Applikasi\SettingAplikasi;
 use App\Models\PSB\InputData;
 use App\Models\Tiket\Data_SubTiket;
 use App\Models\Tiket\Data_Tiket;
@@ -17,6 +18,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Dompdf\Dompdf;
+use Illuminate\Support\Facades\App;
 
 class TiketController extends Controller
 {
@@ -26,12 +29,14 @@ class TiketController extends Controller
         $query = Data_Tiket::join('users', 'users.id', '=', 'data__tikets.tiket_pembuat')
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
-            ->orderBy('data__tikets.created_at', 'DESC', 'data__tikets.tiket_status', 'DESC')
+            ->select('users.id', 'users.name', 'registrasis.*', 'input_data.*', 'data__tikets.*', 'data__tikets.created_at as tanggal')
+            ->orderBy('tanggal', 'DESC', 'data__tikets.tiket_status', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('tiket_id', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('input_data.input_nama', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('registrasis.reg_nolayanan', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('tiket_status', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('data__tikets.created_at', 'like', '%' . $data['q'] . '%');
             });
         $data['tiket'] = $query->paginate(10);
         $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
@@ -40,18 +45,19 @@ class TiketController extends Controller
     }
     public function buat_tiket(Request $request)
     {
-        $date = date('d M Y H:m:s', strtotime(Carbon::now()));
+        $date = date('Y-m-d', strtotime(Carbon::now()));
         $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
         $count = Data_Tiket::whereDate('created_at', $date)->count();
         $y = date('y');
         $m = date('m');
         $d = date('d');
+        // $data_tiket = Data_Tiket::whereDate('created_at',$date)->count();
         if ($count == 0) {
             $string = '1';
         } else {
             $string = $count + 1;
         }
-        $data['tiket_id'] = $y . $d . $m . sprintf('%03d', $string);
+        $data['tiket_id'] = $y . $m . $d . sprintf('%03d', $string);
 
         return view('tiket/buat_tiket', $data);
     }
@@ -79,6 +85,7 @@ class TiketController extends Controller
         $tiket['tiket_waktu_kunjungan'] = $request->tiket_waktu_kunjungan;
         $tiket['tiket_keterangan'] = $request->tiket_keterangan;
         $tiket['tiket_status'] = 'NEW';
+        // dd($tiket);
         // $tiket['tiket_waktu_penanganan'] = $request->tiket_waktu_penanganan;
         // $tiket['tiket_waktu_selesai'] = $request->tiket_waktu_selesai;
         // $tiket['tiket_foto'] = $request->tiket_foto;
@@ -127,6 +134,29 @@ class TiketController extends Controller
                     'target' =>  $t->hp,
                     'status' =>  '0',
                     'nama' =>  $t->nama_teknisi,
+                    'pesan' => '               -- TIKET GANGGUAN --
+
+Hallo Broo ' . $t->nama_teknisi . '
+Ada tiket masuk ke sistem nih! 😊
+
+No. Tiket : *' . $tiket['tiket_kode'] . '*
+Topik : ' . $request->tiket_nama . '
+Keterangan : *' . $request->tiket_keterangan . '*
+Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
+
+No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
+Pelanggan : ' . $request->tiket_pelanggan . '
+Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+Maps : https://www.google.com/maps/place/' . $maps . '
+Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
+Tanggal tiket : ' . $tanggal . '
+'
+                ]);
+                Pesan::create([
+                    'ket' =>  'tiket',
+                    'target' =>  '120363313973139890@g.us',
+                    'status' =>  '0',
+                    'nama' =>  'GROUP TEKNISI',
                     'pesan' => '               -- TIKET GANGGUAN --
 
 Hallo Broo ' . $t->nama_teknisi . '
@@ -201,21 +231,30 @@ Terima kasih.';
     }
 
 
-    public function export(Request $request)
+    public function export_tiket(Request $request)
     {
-        $data['start_date'] = $request->query('start_date');
-        $data['end_date'] = $request->query('end_date');
-        $data['tiket'] = Data_Tiket::select('tikets.*', 'tikets.created_at as tgl_buat')
-            ->whereDate('tikets.created_at', '>=', date('Y-m-d', strtotime($data['start_date'])))
-            ->whereDate('tikets.created_at', '<=', date('Y-m-d', strtotime($data['end_date'])))
-            ->first();
-        // echo '<table><tr><td>' . $data['tiket']->tiket_pelanggan . '</td></tr></table>';
-        dd($data['tiket']->tiket_pelanggan);
-
-        // dd($data);
-        return view('tiket/details_tiket', $data);
+        $data['profile_perusahaan'] = SettingAplikasi::first();
+        $data['nama_admin'] = Auth::user()->name;
+        $data['start_date'] = $request->start_date;
+        $data['end_date'] = $request->end_date;
+        // dd($request->start_date);
+        $data['tiket'] = Data_Tiket::select('users.id as id_pembuat', 'users.name', 'registrasis.*', 'input_data.*', 'data__tikets.*', 'data__tikets.created_at as tanggal')
+            // ->join('users', 'users.id', '=', 'data__tikets.tiket_pembuat')
+            ->join('users', 'users.id', '=', 'data__tikets.tiket_teknisi1')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
+            ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
+            ->orderBy('tanggal', 'DESC', 'data__tikets.tiket_status', 'DESC')
+            ->whereDate('data__tikets.created_at', '>=', date('Y-m-d', strtotime($data['start_date'])))
+            ->whereDate('data__tikets.created_at', '<=', date('Y-m-d', strtotime($data['end_date'])))
+            ->get();
+        $pdf = App::make('dompdf.wrapper');
+        $html = view('tiket/print_tiket', $data)->render();
+        $pdf->loadHTML($html);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->download('Laporan Tiket ' . date('d-m-Y', strtotime($data['start_date'])) . ' - ' . date('d-m-Y', strtotime($data['end_date'])) . '.pdf');
+        return view('tiket/print_tiket', $data);
     }
-    public function details_tiket(Request $request)
+    public function details_tiket(Request $request, $id)
     {
         $data['teknisi'] = (new GlobalController)->getTeknisi();
         // $data['start_date'] = $request->query('start_date');
@@ -223,10 +262,21 @@ Terima kasih.';
         $data['tiket'] = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
             ->select('data__tikets.*', 'input_data.*', 'data__tikets.created_at as tgl_buat')
+            ->where('tiket_id', $id)
             ->first();
-
-
-        // dd($data);
+        return view('tiket/details_tiket', $data);
+    }
+    public function details_tiket_closed(Request $request, $id)
+    {
+        $data['teknisi'] = (new GlobalController)->getTeknisi();
+        // $data['start_date'] = $request->query('start_date');
+        // $data['end_date'] = $request->query('end_date');
+        $data['tiket'] = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
+            ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
+            ->join('users', 'users.id', '=', 'data__tikets.tiket_teknisi1')
+            ->select('data__tikets.*', 'input_data.*', 'data__tikets.created_at as tgl_buat', 'users.id', 'users.name')
+            ->where('tiket_id', $id)
+            ->first();
         return view('tiket/details_tiket', $data);
     }
 
@@ -250,8 +300,7 @@ Terima kasih.';
             $tiket['tiket_waktu_penanganan'] = $datetime;
             $tiket['tiket_waktu_selesai'] = $datetime;
             $tiket['tiket_barang'] = $request->tiket_nama_barang1 . ' - ' . $request->tiket_nama_barang2 . ' - Dropcore : ' . $request->tiket_total_kabel . 'M - ' . $request->tiket_nama_barang4;
-            // $barang['tiket_before'] = $request->tiket_before;
-            // $barang['tiket_after'] = $request->tiket_after;
+
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
 
             $photo = $request->file('tiket_foto');

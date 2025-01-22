@@ -23,7 +23,7 @@ use Illuminate\Http\Request;
 class RegistrasiApiController extends Controller
 {
 
-  
+
 
     public function get_update_tgl_tempo(Request $request, $id)
     {
@@ -125,7 +125,7 @@ class RegistrasiApiController extends Controller
                     'pesan' => 'Berhasil update tanggal ',
                     'alert' => 'success',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             } else {
                 $data['subinvoice_id'] = $unp->inv_id;
                 $data['subinvoice_deskripsi'] = 'Perubahan jatuh tempo ';
@@ -141,7 +141,7 @@ class RegistrasiApiController extends Controller
                     'pesan' => 'Berhasil update tanggal ',
                     'alert' => 'success',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             }
         }
     }
@@ -156,7 +156,6 @@ class RegistrasiApiController extends Controller
         $month = $now->format('m');
         $year = $now->format('Y');
         $cek_hari = date('d', strtotime($request->reg_tgl_jatuh_tempo));
-
 
         $sbiaya = SettingBiaya::first();
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -234,7 +233,9 @@ class RegistrasiApiController extends Controller
         } else {
             $comment = 'Update-Profile By: ' . $nama_admin . ' Jatuh-Tempo :' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
         }
+
         if ($query->reg_layanan == 'PPP') {
+            // dd($query->reg_layanan);
             if ($API->connect($ip, $user, $pass)) {
                 $secret = $API->comm('/ppp/profile/print', [
                     '?name' => $query->paket_nama,
@@ -249,6 +250,8 @@ class RegistrasiApiController extends Controller
                             'profile' => $query->paket_nama,
                             'comment' => $comment == '' ? '' : $comment,
                         ]);
+                        // dd($query->paket_nama);
+
                         if ($request->reg_jenis_tagihan == 'DEPOSIT') {
                             $data['reg_deposit'] = $sbiaya->biaya_deposit;
                         } else {
@@ -291,8 +294,6 @@ class RegistrasiApiController extends Controller
                                     $update_inv['inv_tgl_isolir'] = date('Y-m-d', strtotime($tgl_isolir));
                                 }
 
-
-
                                 $update_inv['inv_total'] = $request->reg_harga + $request->reg_ppn + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 $update_subinv['subinvoice_harga'] = $request->reg_harga + $request->reg_dana_kas + $request->reg_dana_kerjasama;
                                 $update_subinv['subinvoice_ppn'] = $request->reg_ppn;
@@ -325,7 +326,7 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah profile pelanggan',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
                         $API->comm('/ppp/secret/add', [
                             'name' => $query->reg_username == '' ? '' : $query->reg_username,
@@ -408,7 +409,7 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah profile pelanggan',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     }
                 } else {
 
@@ -429,7 +430,7 @@ class RegistrasiApiController extends Controller
                     $cari_pel = $API->comm('/ppp/secret/print', [
                         '?name' => $query->reg_username,
                     ]);
-                    // dd( $cari_pel );
+
 
                     $API->comm('/ppp/secret/set', [
                         '.id' => $cari_pel[0]['.id'],
@@ -534,14 +535,14 @@ class RegistrasiApiController extends Controller
                         'alert' => 'success',
                     );
                     Registrasi::where('reg_idpel', $id)->update($data);
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } else {
                 $notifikasi = array(
                     'pesan' => 'Router Disconect',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             }
         } else {
             #LAYANAN HOTSPOT
@@ -643,7 +644,7 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah profile pelanggan',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
                         $API->comm('/ip/hotspot/user/add', [
                             'name' => $query->reg_username == '' ? '' : $query->reg_username,
@@ -725,7 +726,7 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah profile pelanggan',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     }
                 } else {
 
@@ -733,14 +734,14 @@ class RegistrasiApiController extends Controller
                         'pesan' => 'Paket belum tersedia pada Router ini',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } else {
                 $notifikasi = array(
                     'pesan' => 'Router Disconect',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
             }
         }
     }
@@ -804,7 +805,7 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah data Internet',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
                         $before_API->comm('/ppp/secret/add', [
                             'name' => $request->reg_username == '' ? '' : $request->reg_username,
@@ -823,14 +824,14 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah data Internet',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     }
                 } else {
                     $notifikasi = array(
                         'pesan' => 'Router Disconect',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } elseif ($query->reg_layanan == 'HOTSPOT') {
                 if ($before_API->connect($before_ip, $before_user, $before_pass)) {
@@ -855,7 +856,7 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah data Internet',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
                         $before_API->comm('/ip/hotspot/user/add', [
                             'name' => $request->reg_username == '' ? '' : $request->reg_username,
@@ -873,14 +874,14 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah data Internet',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     }
                 } else {
                     $notifikasi = array(
                         'pesan' => 'Router Disconect',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             }
         } else {
@@ -928,7 +929,7 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah router',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
 
 
@@ -983,14 +984,14 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah router',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     }
                 } else {
                     $notifikasi = array(
                         'pesan' => 'Router Disconect',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } elseif ($query->reg_layanan == 'HOTSPOT') {
                 if ($API->connect($ip, $user, $pass)) {
@@ -1033,21 +1034,21 @@ class RegistrasiApiController extends Controller
                             'pesan' => 'Berhasil merubah router',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
 
                         $notifikasi = array(
                             'pesan' => 'Gagal edit router. Paket tidak tersedia pada router ini',
                             'alert' => 'error',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                     }
                 } else {
                     $notifikasi = array(
                         'pesan' => 'Router Disconect',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             }
         }
