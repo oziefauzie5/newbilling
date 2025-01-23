@@ -8,10 +8,12 @@ use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\Gudang\Data_Kategori;
 use App\Models\Gudang\Data_Keranjang;
+use App\Models\Tiket\Data_Tiket;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class GudangController extends Controller
@@ -185,36 +187,58 @@ class GudangController extends Controller
         // dd($data['stok_gudang']);
         return view('gudang/form_barang_keluar', $data);
     }
-    public function proses_form_barang_keluar()
+    public function proses_form_barang_keluar(Request $request)
     {
-        $data['tittle'] = 'Barang Keluar';
 
-        $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC');
+        $no_sk = (new GlobalController)->no_surat_keterang();
+        $no_tiket = (new GlobalController)->nomor_tiket();
 
-        $data['data_barang'] = $query->get();
-        $data['data_user'] = User::all();
-        $data['id_admin'] = (new GlobalController)->user_admin()['user_id'];
+        $admin = Auth::user()->id;
+        $jumlah_dipilih = count($request->bk_id_barang);
+        for ($x = 0; $x < $jumlah_dipilih; $x++) {
+            $data_barang = Data_Barang::whereIn('barang_id', [$request->bk_id_barang[$x]])->get();
 
-        // dd($data['stok_gudang']);
-        return view('gudang/form_barang_keluar', $data);
+            // echo $request->bk_id_barang[$x];
+            dd($request->bk_id_barang[$x]);
+            foreach ($data_barang as $db) {
+                Data_BarangKeluar::create([
+                    'bk_id' => $no_sk,
+                    'bk_jenis_laporan' => $request->bk_jenis_laporan,
+                    'bk_id_barang' => $request->bk_id_barang[$x],
+                    'bk_id_tiket' => $no_tiket,
+                    'bk_kategori' => $db->barang_kategori,
+                    'bk_satuan' => $db->barang_satuan,
+                    'bk_nama_barang' => $db->barang_nama,
+                    'bk_model' => $db->barang_merek,
+                    'bk_mac' => $db->barang_mac,
+                    'bk_sn' => $db->barang_sn,
+                    'bk_jumlah' => $request->bk_kauntitas[$x],
+                    'bk_keperluan' => $request->bk_keperluan,
+                    'bk_foto_awal' => '-',
+                    'bk_foto_akhir' => '-',
+                    'bk_nama_penggunan' => '',
+                    'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+                    'bk_admin_input' => $admin,
+                    'bk_penerima' => $request->bk_penerima,
+                    'bk_status' => 1,
+                    'bk_keterangan' => '',
+                    'bk_harga' => $request->bk_kauntitas[$x] * $request->bk_harga_barang[$x],
+                ]);
+            }
+            Data_Barang::whereIn('barang_id', [$request->bk_id_barang[$x]])->update(
+                [
+                    'barang_nama_pengguna' => $request->bk_jenis_laporan,
+                    'barang_digunakan' => $request->bk_kauntitas[$x],
+                    'barang_status' => '1',
+                ]
+            );
+        }
+
+        // dd('test');
+        $notifikasi = array(
+            'pesan' => 'Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.gudang.barang_keluar')->with($notifikasi);
     }
-    // public function keranjang(Request $request)
-    // {
-
-    //     $data_barang = Data_Barang::where('barang_id', $request->kode_barang)->first();
-
-    //     $keranjang = Data_Keranjang::create([
-    //         'keranjang_id_admin' => $request->id_admin,
-    //         'keranjang_id_barang' => $data_barang->barang_id,
-    //         'keranjang_nama_barang' => $data_barang->barang_nama,
-    //         'keranjang_merek_barang' => $data_barang->barang_merek,
-    //         'keranjang_stok_barang' => $data_barang->barang_qty - $data_barang->barang_digunakan,
-    //         // 'keranjang_jumlah_barang' => $data_barang->barang_nama,
-    //         'keranjang_satuan_barang' => $data_barang->barang_satuan,
-    //     ]);
-
-    //     $data_keranjang = Data_Keranjang::where('keranjang_id_admin', $request->id_admin)->get();
-
-    //     return response()->json($data_keranjang);
-    // }
 }

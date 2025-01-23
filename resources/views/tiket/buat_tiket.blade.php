@@ -71,7 +71,7 @@
             <div class="form-group row">
               <label class="col-sm-2 col-form-label">Nomor Tiket</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="tiket_id" required value="{{ $tiket_id }}">
+                <input type="text" class="form-control" name="tiket_id" required value="{{ $no_tiket }}">
               </div>
               <label class="col-sm-2 col-form-label">Jenis Laporan</label>
               <div class="col-sm-4">

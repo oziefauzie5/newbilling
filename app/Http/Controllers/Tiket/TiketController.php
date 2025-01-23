@@ -45,20 +45,8 @@ class TiketController extends Controller
     }
     public function buat_tiket(Request $request)
     {
-        $date = date('Y-m-d', strtotime(Carbon::now()));
+        $data['no_tiket'] = (new GlobalController)->nomor_tiket();
         $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
-        $count = Data_Tiket::whereDate('created_at', $date)->count();
-        $y = date('y');
-        $m = date('m');
-        $d = date('d');
-        // $data_tiket = Data_Tiket::whereDate('created_at',$date)->count();
-        if ($count == 0) {
-            $string = '1';
-        } else {
-            $string = $count + 1;
-        }
-        $data['tiket_id'] = $y . $m . $d . sprintf('%03d', $string);
-
         return view('tiket/buat_tiket', $data);
     }
 
@@ -221,11 +209,11 @@ Semangat Broooo... Sisa tiket = ' . $count . '
         return $pdf->download('Laporan Tiket ' . date('d-m-Y', strtotime($data['start_date'])) . ' - ' . date('d-m-Y', strtotime($data['end_date'])) . '.pdf');
         return view('tiket/print_tiket', $data);
     }
-    public function details_tiket(Request $request, $id)
+    public function details_tiket($id)
     {
+
+
         $data['teknisi'] = (new GlobalController)->getTeknisi();
-        // $data['start_date'] = $request->query('start_date');
-        // $data['end_date'] = $request->query('end_date');
         $data['tiket'] = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
             ->select('data__tikets.*', 'input_data.*', 'registrasis.*', 'data__tikets.created_at as tgl_buat')
@@ -234,16 +222,15 @@ Semangat Broooo... Sisa tiket = ' . $count . '
         $query = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
             ->select('data__tikets.*', 'input_data.*', 'data__tikets.created_at as tgl_buat')
-            ->where('tiket_status', 'NEW');
+            ->where('tiket_status', 'NEW')
+            ->where('tiket_id', '!=', $id);
         $data['tiket_menunggu'] = $query->get();
         $data['tiket_count'] = $query->count();
         return view('tiket/details_tiket', $data);
     }
-    public function details_tiket_closed(Request $request, $id)
+    public function details_tiket_closed($id)
     {
         $data['teknisi'] = (new GlobalController)->getTeknisi();
-        // $data['start_date'] = $request->query('start_date');
-        // $data['end_date'] = $request->query('end_date');
         $data['tiket'] = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
             ->join('users', 'users.id', '=', 'data__tikets.tiket_teknisi1')
@@ -255,14 +242,74 @@ Semangat Broooo... Sisa tiket = ' . $count . '
 
     public function tiket_update(Request $request, $id)
     {
+
+        // dd($id);
+        // dd($request->tiket_barang_id);
+        $no_sk = (new GlobalController)->no_surat_keterang();
+        $no_tiket = (new GlobalController)->nomor_tiket();
         $datetime = date('Y-m-d h:m:s', strtotime(carbon::now()));
-        $y = date('y');
-        $m = date('m');
+
         $admin_closed = Auth::user()->id;
+
         $explode = explode('|', $request->tiket_teknisi1);
         $teknisi_id = $explode[0];
         $teknisi_nama = $explode[1];
-        // $tiket['tiket_id'] = $request->tiket_id;
+
+
+
+
+        $ii = count($request->tiket_barangId);
+        for ($x = 0; $x < $ii; $x++) {
+            echo $request->tiket_barangId[$x];
+            dd($request->tiket_barangId);
+            // $data_barang = Data_Barang::whereIn('barang_id', [$request->tiket_barangId[$x]])->get();
+            // $tiket['tiket_barang'] = $request->tiket_barangId[$x] . ', ';
+            echo $ii;
+            // foreach ($data_barang as $db) {
+            //     Data_BarangKeluar::create([
+            //         'bk_id' => $no_sk,
+            //         'bk_jenis_laporan' => $request->tiket_jenis,
+            //         'bk_id_barang' => $request->tiket_barangId[$x],
+            //         'bk_id_tiket' => $no_tiket,
+            //         'bk_kategori' => $db->barang_kategori,
+            //         'bk_satuan' => $db->barang_satuan,
+            //         'bk_nama_barang' => $db->barang_nama,
+            //         'bk_model' => $db->barang_merek,
+            //         'bk_mac' => $db->barang_mac,
+            //         'bk_sn' => $db->barang_sn,
+            //         'bk_jumlah' => $request->tiket_barang_qty[$x],
+            //         'bk_keperluan' => $request->tiket_jenis,
+            //         'bk_foto_awal' => '-',
+            //         'bk_foto_akhir' => '-',
+            //         'bk_nama_penggunan' => '',
+            //         'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+            //         'bk_admin_input' => $admin_closed,
+            //         'bk_penerima' => $teknisi_nama,
+            //         'bk_status' => 1,
+            //         'bk_keterangan' => '',
+            //         'bk_harga' => $request->tiket_barang_qty[$x] * $request->tiket_barang_harga[$x],
+            //     ]);
+            // }
+            dd('test');
+            // Data_Barang::whereIn('barang_id', [$request->tiket_barangId[$x]])->update(
+            //     [
+            //         'barang_nama_pengguna' => $request->bk_jenis_laporan,
+            //         'barang_digunakan' => $request->tiket_barang_qty[$x],
+            //         'barang_status' => '1',
+            //     ]
+            // );
+        }
+
+
+
+
+
+
+
+
+
+
+
         $tiket['tiket_jenis'] = $request->tiket_jenis;
         $tiket['tiket_status'] = $request->tiket_status;
         $tiket['tiket_pending'] = $request->tiket_pending;
@@ -278,7 +325,8 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $tiket['tiket_tindakan'] = $request->tiket_tindakan;
             $tiket['tiket_waktu_penanganan'] = $datetime;
             $tiket['tiket_waktu_selesai'] = $datetime;
-            $tiket['tiket_barang'] = $request->tiket_nama_barang1 . ' - ' . $request->tiket_nama_barang2 . ' - Dropcore : ' . $request->tiket_total_kabel . 'M - ' . $request->tiket_nama_barang4;
+
+
 
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
 
@@ -288,40 +336,9 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             Storage::disk('public')->put($path, file_get_contents($photo));
             $tiket['tiket_foto'] = $filename;
 
-            $data_barang = Data_Barang::whereIn('barang_id', [$request->tiket_barang1, $request->tiket_barang2, $request->tiket_barang3, $request->tiket_barang4])->get();
-            foreach ($data_barang as $db) {
-                Data_BarangKeluar::create([
-                    'bk_id' => $y . $m . mt_rand(1000, 9999),
-                    'bk_jenis_laporan' => 'Instalasi',
-                    'bk_id_barang' => $db->barang_id,
-                    'bk_id_tiket' => $id,
-                    'bk_kategori' => $db->barang_kategori,
-                    'bk_satuan' => $db->barang_satuan,
-                    'bk_nama_barang' => $db->barang_nama,
-                    'bk_model' => $db->barang_merek,
-                    'bk_mac' => $db->barang_mac,
-                    'bk_sn' => $db->barang_sn,
-                    'bk_jumlah' => 1,
-                    'bk_keperluan' => $request->tiket_jenis,
-                    'bk_foto_awal' => '-',
-                    'bk_foto_akhir' => '-',
-                    'bk_nama_penggunan' => $request->tiket_pelanggan,
-                    'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
-                    'bk_admin_input' => $admin_closed,
-                    'bk_penerima' => 'Teknisi',
-                    'bk_status' => 1,
-                    'bk_keterangan' => $db->barang_ket,
-                    'bk_harga' => $db->barang_harga,
-                ]);
-            }
-            foreach ($data_barang as $db) {
-                Data_Barang::where('barang_id', $db->barang_id)->update([
-                    'barang_nama_pengguna' => $request->tiket_pelanggan,
-                    'barang_digunakan' => $db->barang_digunakan + $request->tiket_total_kabel,
-                    'barang_status' => '1',
-                ]);
-            }
 
+            if ($request->ganti_barang) {
+            }
             $status = (new GlobalController)->whatsapp_status();
             if ($status->wa_status == 'Enable') {
                 $status_pesan = '0';
@@ -335,6 +352,7 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $pesan_closed['pesan'] = '               -- CLOSED TIKET --
 Kendala : ' . $request->tiket_kendala . '
 Tindakan : ' . $request->tiket_tindakan . '
+
 Waktu selesai: ' . date('d-M-y h:m') . '
 Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 
@@ -342,18 +360,18 @@ Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 
 
             Pesan::create($pesan_closed);
+
+
+
+            Data_Tiket::where('tiket_id', $id)->update($tiket);
+
+
+
+            $notifikasi = array(
+                'pesan' => 'Tiket berhasil di update',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
         }
-
-
-
-        Data_Tiket::where('tiket_id', $id)->update($tiket);
-
-
-
-        $notifikasi = array(
-            'pesan' => 'Tiket berhasil di update',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
     }
 }

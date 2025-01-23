@@ -78,9 +78,11 @@
 </div>
         {{-- END MODAL CARI BARANG  --}}
 
-
+        <form class="form-horizontal"action="{{route('admin.gudang.proses_form_barang_keluar')}}" method="POST">
+          @csrf
+          @method('POST')
               <div class="form-group row">
-                  <label class="col-sm-2 col-form-label" >Keperluan</label>
+                  <label class="col-sm-2 col-form-label" >Jenis Laporan</label>
                 <div class="col-sm-4">
                     <select class="form-control" required name="bk_jenis_laporan">
                       <option value="">- Pilih -</option>
@@ -103,7 +105,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Penerima Barang</label>
                 <div class="col-sm-4">
-                  <select class="form-control" name="" id="">
+                  <select class="form-control" name="bk_penerima" id="">
                     <option value="">- Pilih -</option>
                     @foreach ($data_user as $u)
                     <option value="{{$u->id}}">{{$u->name}}</option>
@@ -119,6 +121,12 @@
                   <label for="" class="col-sm-2 col-form-label">Kode barang</label>
                   <div class="col-sm-4">
                     <input type="text" class="form-control"  data-toggle="modal" data-target="#modal_barang" id="bk_id_barang" name="">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label for="" class="col-sm-2 col-form-label">Keperluan</label>
+                  <div class="col-sm-10">
+                    <textarea name="bk_keperluan" class="form-control"  id="" cols="30" rows="5"></textarea>
                   </div>
               </div>
               <div class="form-group row">
@@ -146,7 +154,6 @@
                 <a href="{{route('admin.psb.index')}}"><button type="button" class="btn  ">Batal</button></a>
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
                 </div>
-                     
             </form>
             </div>
           </div>

@@ -8,6 +8,7 @@ use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Applikasi\SettingWhatsapp;
 use App\Models\Gudang\Data_Barang;
+use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\Mitra\Mutasi;
 use App\Models\Mitra\MutasiSales;
 use App\Models\PSB\InputData;
@@ -15,6 +16,7 @@ use App\Models\Teknisi\Data_Odc;
 use App\Models\Teknisi\Data_Odp;
 use App\Models\Teknisi\Data_Olt;
 use App\Models\Teknisi\Data_pop;
+use App\Models\Tiket\Data_Tiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi\Invoice;
@@ -343,5 +345,36 @@ class GlobalController extends Controller
     {
         $kode_barang = Data_Barang::where("barang_id", $id)->first();
         return response()->json($kode_barang);
+    }
+
+    public function no_surat_keterang()
+    {
+        $y = date('y');
+        $m = date('m');
+        $d = date('d');
+        $latest = Data_BarangKeluar::latest()->first();
+        if (! $latest) {
+            return 'SK/' . $y . $m . $d . '/BK/0001';
+        }
+        $string = substr($latest->bk_id, 15);
+        $nosk  = 'SK/' . $y . $m . $d  . '/BK/' . sprintf('%04d', $string + 1);
+        return $nosk;
+    }
+    public function nomor_tiket()
+    {
+        $date = date('Y-m-d', strtotime(Carbon::now()));
+        $y = date('y');
+        $m = date('m');
+        $d = date('d');
+        ##-Membuat Nomor Tiket sesuai tanggal
+        $latest = Data_Tiket::whereDate('created_at', $date)->latest()->first();
+        if (! $latest) {
+            return $y . $m . $d . '001';
+        }
+        $string = substr($latest->tiket_id, 6);
+        // dd($latest);
+        $no_tiket  = $y . $m . $d  . sprintf('%03d', $string + 1);
+
+        return $no_tiket;
     }
 }
