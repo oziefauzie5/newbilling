@@ -1463,29 +1463,29 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					});
 @endif
 
-	  function validasiKtp() {
-			var input_ktp =$("#input_ktp").val();
+	//   function validasiKtp() {
+	// 		var input_ktp =$("#input_ktp").val();
 
-			var url = '{{ route("admin.psb.storeValidateKtp", ":ktp") }}';
-			url = url.replace(':ktp', '1');
-			$.ajax({
-				url: url,
-				type: 'PUT',
-				data: {
-                    input_ktp:input_ktp,
-                          '_token': '{{ csrf_token() }}'
-                        },
-                        dataType: 'json',
-                        success: function(data) {
+	// 		var url = '{{ route("admin.psb.storeValidateKtp", ":ktp") }}';
+	// 		url = url.replace(':ktp', '1');
+	// 		$.ajax({
+	// 			url: url,
+	// 			type: 'PUT',
+	// 			data: {
+    //                 input_ktp:input_ktp,
+    //                       '_token': '{{ csrf_token() }}'
+    //                     },
+    //                     dataType: 'json',
+    //                     success: function(data) {
 							
-                                     },
-						error: function(response){
-							$.each( response.responseJSON.errors, function( key, value ) {
-								console.log(value);has-error
-                    });
-                }
-                    });
-				}
+    //                                  },
+	// 					error: function(response){
+	// 						$.each( response.responseJSON.errors, function( key, value ) {
+	// 							console.log(value);has-error
+    //                 });
+    //             }
+    //                 });
+	// 			}
 				
 				//  #START EDIT BARANG 
 			</script>
@@ -2496,27 +2496,35 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					</script>
 					<script>
 						//--------------------START BARANG KELUAR----------------------
-					
-				$(function(){ 
-  					var table_barang = $('#cari_kode_barang').DataTable(); $('#cari_kode_barang tbody').on( 'click', 'tr', function () 
-					{  
-						var kode_barang = table_barang.row( this ).id();
-						var url = '{{ route("admin.val.valBarang", ":id") }}';
-						url = url.replace(':id', kode_barang);
-						$.ajax({
-							url: url,
-						type: 'PUT',
-						data: {
-							'_token': '{{ csrf_token() }}'
-						},
-						dataType: 'json',
-						success: function(data) {
-								$("#modal_barang").modal('hide');
-								$("#bk_id_barang").val(data.barang_id);
-								$("#bk_nama_barang").val(data.barang_nama);
-						}
-					});
-				});
+
+						var i = 1;
+							$(document).on('click', 'button.removebutton', function () {
+								$(this).closest('tr').remove();
+								return false;
+							});
+
+
+
+						$('.pilih_barang').click(function(){
+							var kode_barang =$(this).data("id");
+							var nama_barang =$(this).data("nama");
+							var merek =$(this).data("merek");
+							var harga =$(this).data("harga");
+							var qty =$(this).data("qty");
+							// var qty =$('#qty').val()
+							$('#modal_barang').modal('hide')
+							$("#t").append('<tr>'+
+								'<td>'+ i +'</td>'+
+									'<td><input type="text" value="'+kode_barang+'" class="form-control " name="bk_id_barang[]" id="" readonly ></td>'+
+									'<td><input type="text" value="'+nama_barang+'" class="form-control " name="bk_nama_barang[]" id="" readonly ></td>'+
+									'<td><input type="text" value="'+merek+'" class="form-control" name="" id="txtTitle" readonly ></td>'+
+									'<td><input type="text" value="'+harga+'" class="form-control" name="bk_harga_barang[]" id="txtTitle" readonly ></td>'+
+									'<td width="10%"><input type="text" readonly value="'+qty+'" class="form-control"></td>'+
+									'<td width="10%"><input type="number" value="1" class="form-control"  min="1" max="'+qty+'" onkeydown="return false name="file[]" id="txtTitle" name="bk_qty"></td>'+
+									
+									'<td with><button type="button" class="removebutton btn btn-danger btn-sm" title="Remove this row">X</button></td></tr>').find("input").each(function () {
+								});
+								i++;
 				});
 				
 				//--------------------END BARANG KELUAR----------------------

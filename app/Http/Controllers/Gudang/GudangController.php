@@ -7,6 +7,7 @@ use App\Http\Controllers\Global\GlobalController;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\Gudang\Data_Kategori;
+use App\Models\Gudang\Data_Keranjang;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -179,8 +180,41 @@ class GudangController extends Controller
 
         $data['data_barang'] = $query->get();
         $data['data_user'] = User::all();
+        $data['id_admin'] = (new GlobalController)->user_admin()['user_id'];
 
         // dd($data['stok_gudang']);
         return view('gudang/form_barang_keluar', $data);
     }
+    public function proses_form_barang_keluar()
+    {
+        $data['tittle'] = 'Barang Keluar';
+
+        $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC');
+
+        $data['data_barang'] = $query->get();
+        $data['data_user'] = User::all();
+        $data['id_admin'] = (new GlobalController)->user_admin()['user_id'];
+
+        // dd($data['stok_gudang']);
+        return view('gudang/form_barang_keluar', $data);
+    }
+    // public function keranjang(Request $request)
+    // {
+
+    //     $data_barang = Data_Barang::where('barang_id', $request->kode_barang)->first();
+
+    //     $keranjang = Data_Keranjang::create([
+    //         'keranjang_id_admin' => $request->id_admin,
+    //         'keranjang_id_barang' => $data_barang->barang_id,
+    //         'keranjang_nama_barang' => $data_barang->barang_nama,
+    //         'keranjang_merek_barang' => $data_barang->barang_merek,
+    //         'keranjang_stok_barang' => $data_barang->barang_qty - $data_barang->barang_digunakan,
+    //         // 'keranjang_jumlah_barang' => $data_barang->barang_nama,
+    //         'keranjang_satuan_barang' => $data_barang->barang_satuan,
+    //     ]);
+
+    //     $data_keranjang = Data_Keranjang::where('keranjang_id_admin', $request->id_admin)->get();
+
+    //     return response()->json($data_keranjang);
+    // }
 }

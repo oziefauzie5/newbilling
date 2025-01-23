@@ -292,6 +292,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/gudang/stok-gudang', [GudangController::class, 'stok_gudang'])->name('gudang.stok_gudang')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/barang-keluar', [GudangController::class, 'barang_keluar'])->name('gudang.barang_keluar')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/form-barang-keluar', [GudangController::class, 'form_barang_keluar'])->name('gudang.form_barang_keluar')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/gudang/proses-barang-keluar', [GudangController::class, 'proses_form_barang_keluar'])->name('gudang.proses_form_barang_keluar')->middleware(['role:admin|STAF ADMIN']);
     ##--PUTUS BERLANGGAN--
     Route::put('/pelanggan/{id}/deaktivasi-pelanggan', [RegistrasiController::class, 'deaktivasi_pelanggan'])->name('reg.deaktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/data-deaktivasi', [RegistrasiController::class, 'data_deaktivasi'])->name('reg.data_deaktivasi')->middleware(['role:admin|NOC|STAF ADMIN']);

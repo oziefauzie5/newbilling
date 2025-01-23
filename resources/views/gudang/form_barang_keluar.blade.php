@@ -38,8 +38,8 @@
          
 
                {{-- MODAL CARI BARANG  --}}
-<div class="modal fade" id="modal_barang" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable">
+<div class="modal fade" id="modal_barang" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header bg-primary">
         <h5 class="modal-title" id="staticBackdropLabel">Cari Data</h5>
@@ -49,20 +49,24 @@
       </div>
       <div class="modal-body">
         <div class="table-responsive">
-          <table id="cari_kode_barang" class="display table table-striped table-hover text-center" >
+          <table id="cari_kode_barang"  class="display table table-striped table-hover text-center" >
             <thead>
               <tr>
+                <th>Aksi</th>
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
-                <th>Nama Barang</th>
+                <th>Merek</th>
+                <th>Qty</th>
               </tr>
             </thead>
             <tbody>
               @foreach($data_barang as $d)
-              <tr id="{{$d->barang_id}}">
-                <td>{{$d->barang_id}}</td>
+              <tr >
+                <td class="pilih_barang" data-id="{{$d->barang_id}}" data-nama="{{$d->barang_nama}}" data-qty="{{$d->barang_qty-$d->barang_digunakan}}" data-harga="{{$d->barang_harga}}" data-merek="{{$d->barang_merek}}"><button type="button" id="pilih_barang" name="" class="btn btn-danger">Pilih</button></td>
+                <td >{{$d->barang_id}}</td>
                 <td>{{$d->barang_nama}}</td>
-                <td>{{$d->barang_nama}}</td>
+                <td>{{$d->barang_merek}}</td>
+                <td>{{$d->barang_qty - $d->barang_digunakan}}</td>
               </tr>
               @endforeach
             </tbody>
@@ -106,18 +110,42 @@
                     @endforeach
                   </select>
                 </div>
+                <label class="col-sm-2 col-form-label">Admin Id</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control readonly" id="id_admin" value="{{$id_admin}}" name=""  >
+                </div>
               </div>
               <div class="form-group row">
                   <label for="" class="col-sm-2 col-form-label">Kode barang</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control"  data-toggle="modal" data-target="#modal_barang" id="bk_id_barang" name="bk_id_barang">
-                  </div>
-                  <label for="" class="col-sm-2 col-form-label">Nama Barang</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control readonly" id="bk_nama_barang" value="" name="bk_nama_barang" >
+                    <input type="text" class="form-control"  data-toggle="modal" data-target="#modal_barang" id="bk_id_barang" name="">
                   </div>
               </div>
-           
+              <div class="form-group row">
+                <div class="table-responsive">
+                <table id="t" class="display  table-sm table-striped table-hover text-center">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Kode Barang</th>
+                      <th>Nama Barang</th>
+                      <th>Merek</th>
+                      <th>Harga</th>
+                      <th>Stok</th>
+                      <th>Qty</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                    </tr>
+                  </tbody>
+              </table>
+              </div>
+              </div>
+              <div class="card-footer">
+                <a href="{{route('admin.psb.index')}}"><button type="button" class="btn  ">Batal</button></a>
+                <button type="submit" class="btn btn-primary float-right">Simpan</button>
+                </div>
                      
             </form>
             </div>
@@ -129,3 +157,5 @@
 
 
 @endsection
+
+
