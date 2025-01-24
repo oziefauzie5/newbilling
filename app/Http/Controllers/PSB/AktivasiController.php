@@ -28,7 +28,7 @@ class AktivasiController extends Controller
 
 
         $noc = (new GlobalController)->user_admin()['user_id'];
-
+        $no_sk = (new GlobalController)->no_surat_keterang();
         $explode1 = explode("|", $request->teknisi1);
         $team = $explode1[1] . ' & ' . ucwords($request->teknisi2);
 
@@ -148,7 +148,7 @@ class AktivasiController extends Controller
         $update_barang['barang_digunakan'] =  $barang->barang_digunakan + $request->reg_penggunaan_dropcore;
         $update_barang['barang_nama_pengguna'] = 'Instalasi PSB';
 
-        $create_barang['bk_id'] = $y . $m . mt_rand(1000, 9999);
+        $create_barang['bk_id'] = $no_sk;
         $create_barang['bk_jenis_laporan'] = 'Instalasi';
         $create_barang['bk_id_barang'] = $barang->barang_id;
         $create_barang['bk_id_tiket'] = '0';

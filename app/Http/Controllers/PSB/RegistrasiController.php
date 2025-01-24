@@ -65,7 +65,7 @@ class RegistrasiController extends Controller
         $admin = $user['user_nama'];
         $cek_sales = (new GlobalController)->role($request->reg_sales);
 
-
+        $no_sk = (new GlobalController)->no_surat_keterang();
 
 
         // $site = Router::whereId($request->reg_router)->first();
@@ -342,7 +342,7 @@ Diregistrasi Oleh : *' . $admin . '*
                     foreach ($data_barang as $db) {
                         Data_BarangKeluar::create([
 
-                            'bk_id' => $y . $m . mt_rand(1000, 9999),
+                            'bk_id' => $no_sk,
                             'bk_jenis_laporan' => 'Instalasi',
                             'bk_id_barang' => $db->barang_id,
                             'bk_id_tiket' => '0',
@@ -405,7 +405,7 @@ Diregistrasi Oleh : *' . $admin . '*
                 foreach ($data_barang as $db) {
                     Data_BarangKeluar::create([
 
-                        'bk_id' => $y . $m . mt_rand(1000, 9999),
+                        'bk_id' => $no_sk,
                         'bk_jenis_laporan' => 'Instalasi',
                         'bk_id_barang' => $db->barang_id,
                         'bk_id_tiket' => '0',
