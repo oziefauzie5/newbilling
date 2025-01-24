@@ -1666,309 +1666,309 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 	});
 
 	/////---------------------------------------------------------------UPDATE TIKET--------------------------------------------------
-	// $(document).ready(function() {
-	// 	$('.submit_tiket').attr('disabled','disabled');
-	// 	$('select[name=tiket_status]').change(function () {
-	// 		if ($(this).val() == 'Pending') {
-	// 			$('.submit_tiket').attr('disabled');
-	// 			$('.div_tiket_pending').show();
-	// 			$('.div_tiket_closed').hide();
-	// 			$('#tiket_pending').attr('required', 'required');
-	// 			$('.tiket_waktu_penanganan').hide();
-	// 			$('#tiket_waktu_penanganan').removeAttr('required');
-	// 			$('#div_tiket_kendala').removeAttr('required');
-	// 			$('#tiket_tindakan').removeAttr('required');
-	// 			$('#tiket_teknisi1').attr('required', 'required');
-	// 			$('#tiket_teknisi2').attr('required', 'required');
-	// 			$('.submit_tiket').removeAttr('disabled');
-	// 			//PACTCORE nama_ganti_adaptor
-	// 			$("#ck_ganti_pactcore").prop("checked", false);
-	// 			$('.div_ganti_pactcore').hide();
-	// 			$('#ganti_pactcore').removeAttr('required');
-	// 			$('#nama_ganti_pactcore').removeAttr('required');
-	// 			$('#ganti_pactcore').val('');
-	// 			$('#nama_ganti_pactcore').val('');
-	// 			//ADAPTOR
-	// 			$("#ck_ganti_adptor").prop("checked", false);
-	// 			$('.div_ganti_adptor').hide();
-	// 			$('#ganti_adptor').removeAttr('required');
-	// 			$('#ganti_adptor').val('');
-	// 			$('#nama_ganti_adaptor').removeAttr('required');
-	// 			$('#nama_ganti_adaptor').val('');
+	$(document).ready(function() {
+		$('.submit_tiket').attr('disabled','disabled');
+		$('select[name=tiket_status]').change(function () {
+			if ($(this).val() == 'Pending') {
+				$('.submit_tiket').attr('disabled');
+				$('.div_tiket_pending').show();
+				$('.div_tiket_closed').hide();
+				$('#tiket_pending').attr('required', 'required');
+				$('.tiket_waktu_penanganan').hide();
+				$('#tiket_waktu_penanganan').removeAttr('required');
+				$('#div_tiket_kendala').removeAttr('required');
+				$('#tiket_tindakan').removeAttr('required');
+				$('#tiket_teknisi1').attr('required', 'required');
+				$('#tiket_teknisi2').attr('required', 'required');
+				$('.submit_tiket').removeAttr('disabled');
+				//PACTCORE nama_ganti_adaptor
+				$("#ck_ganti_pactcore").prop("checked", false);
+				$('.div_ganti_pactcore').hide();
+				$('#ganti_pactcore').removeAttr('required');
+				$('#nama_ganti_pactcore').removeAttr('required');
+				$('#ganti_pactcore').val('');
+				$('#nama_ganti_pactcore').val('');
+				//ADAPTOR
+				$("#ck_ganti_adptor").prop("checked", false);
+				$('.div_ganti_adptor').hide();
+				$('#ganti_adptor').removeAttr('required');
+				$('#ganti_adptor').val('');
+				$('#nama_ganti_adaptor').removeAttr('required');
+				$('#nama_ganti_adaptor').val('');
 				
-	// 			//ONT
-	// 			$("#ck_ganti_ont").prop("checked", false);
-	// 			$('.div_ganti_ont').hide();
-	// 			$('#ganti_ont').removeAttr('required');
-	// 			$('#ganti_ont').val('');
-	// 			$('#tiket_sn').removeAttr('required');
-	// 			$('#tiket_sn').val('');
-	// 			$('#tiket_mac').removeAttr('required');
-	// 			$('#tiket_mac').val('');
-	// 			$('#tiket_nama_barang4').removeAttr('required');
-	// 			$('#tiket_nama_barang4').val('');
-	// 			//DROPCORE
-	// 			$("#ck_ganti_dropcore").prop("checked", false);
-	// 			$('.div_ganti_dropcore').hide();
-	// 			$('#ganti_dropcore').removeAttr('required');
-	// 			$('#before').removeAttr('required');
-	// 			$('#after').removeAttr('required');
-	// 			$('#total').removeAttr('required');
-	// 			$('#ganti_dropcore').val('');
-	// 			$('#before').val('')
-	// 			$('#after').val('')
-	// 			$('#total').val('')
+				//ONT
+				$("#ck_ganti_ont").prop("checked", false);
+				$('.div_ganti_ont').hide();
+				$('#ganti_ont').removeAttr('required');
+				$('#ganti_ont').val('');
+				$('#tiket_sn').removeAttr('required');
+				$('#tiket_sn').val('');
+				$('#tiket_mac').removeAttr('required');
+				$('#tiket_mac').val('');
+				$('#tiket_nama_barang4').removeAttr('required');
+				$('#tiket_nama_barang4').val('');
+				//DROPCORE
+				$("#ck_ganti_dropcore").prop("checked", false);
+				$('.div_ganti_dropcore').hide();
+				$('#ganti_dropcore').removeAttr('required');
+				$('#before').removeAttr('required');
+				$('#after').removeAttr('required');
+				$('#total').removeAttr('required');
+				$('#ganti_dropcore').val('');
+				$('#before').val('')
+				$('#after').val('')
+				$('#total').val('')
 				
 				
 				
-	// 		} else if ($(this).val() == 'Closed') {
-	// 			$('.submit_tiket').attr('disabled','disabled');
-	// 			$('.div_tiket_closed').show();
-	// 			$('.div_tiket_pending').hide();
-	// 			$('#tiket_waktu_penanganan').attr('required', 'required');
-	// 			$('#tiket_teknisi1').attr('required', 'required');
-	// 			$('#tiket_teknisi2').attr('required', 'required');
-	// 			$('#tiket_kendala').attr('required', 'required');
-	// 			$('#tiket_tindakan').attr('required', 'required');
-	// 			$('#tiket_pending').removeAttr('required');
-	// 			//---------------GANTI PACTCORE---------------
-	// 			$("#ck_ganti_pactcore").click(function() {
-	// 			$('.submit_tiket').removeAttr('disabled');
-	// 			if($(this).is(":checked")) {
-	// 				$('.div_ganti_pactcore').show();
-	// 				$('#ganti_pactcore').attr('required', 'required');
-	// 				$('#nama_ganti_pactcore').attr('required', 'required');
-	// 				// ---------------VALIDASI GANTI PACTCORE---------------
-	// 				$('#ganti_pactcore').keyup(function() {
-	// 					var ganti_pactcore = $('#ganti_pactcore').val();
-	// 					var url = '{{ route("admin.val.valBarang", ":id") }}';
-	// 					url = url.replace(':id', ganti_pactcore);
-	// 					$.ajax({
-	// 						url: url,
-	// 						type: 'get',
-	// 						data: {'_token': '{{ csrf_token() }}'
-    //                     },
-	// 						dataType: 'json',
-	// 						success: function(data) {
-	// 							if(data.barang_kategori == 'PACTCORE'){
-	// 								if(data.barang_qty - data.barang_digunakan > 0){
-	// 									$('.tiket_pesan_1').html('')
-	// 									$('.tiket_notif_1').removeClass('has-error has-feedback')
-	// 									$('.tiket_notif_1').addClass('has-success has-feedback')
-	// 									$('.submit_tiket').removeAttr('disabled');
-	// 									$('#nama_ganti_pactcore').val(data.barang_nama)
-	// 								} else{
-	// 									$('#nama_ganti_pactcore').val('')
-	// 									$('.submit_tiket').attr('disabled','disabled');
-	// 									$('.tiket_notif_1').addClass('has-error has-feedback')
-	// 									$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Stok barang ini habis</small>')
-	// 								}
-	// 							} else{
-	// 								$('#nama_ganti_pactcore').val('')
-	// 								$('.submit_tiket').attr('disabled','disabled');
-	// 								$('.tiket_notif_1').addClass('has-error has-feedback')
-	// 								$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
-	// 							}
-	// 					},
-	// 				});
-	// 			});
-	// 			// ---------------END VALIDASI GANTI PACTCORE---------------
-	// 		} else {
-	// 			$('.submit_tiket').attr('disabled','disabled');
-	// 			$('.div_ganti_pactcore').hide();
-	// 			$('#ganti_pactcore').removeAttr('required');
-	// 			$('#nama_ganti_pactcore').removeAttr('required');
-	// 			$('#ganti_pactcore').val('');
-	// 			$('#nama_ganti_pactcore').val('');
+			} else if ($(this).val() == 'Closed') {
+				$('.submit_tiket').attr('disabled','disabled');
+				$('.div_tiket_closed').show();
+				$('.div_tiket_pending').hide();
+				$('#tiket_waktu_penanganan').attr('required', 'required');
+				$('#tiket_teknisi1').attr('required', 'required');
+				$('#tiket_teknisi2').attr('required', 'required');
+				$('#tiket_kendala').attr('required', 'required');
+				$('#tiket_tindakan').attr('required', 'required');
+				$('#tiket_pending').removeAttr('required');
+				//---------------GANTI PACTCORE---------------
+				$("#ck_ganti_pactcore").click(function() {
+				$('.submit_tiket').removeAttr('disabled');
+				if($(this).is(":checked")) {
+					$('.div_ganti_pactcore').show();
+					$('#ganti_pactcore').attr('required', 'required');
+					$('#nama_ganti_pactcore').attr('required', 'required');
+					// ---------------VALIDASI GANTI PACTCORE---------------
+					$('#ganti_pactcore').keyup(function() {
+						var ganti_pactcore = $('#ganti_pactcore').val();
+						var url = '{{ route("admin.val.valBarang", ":id") }}';
+						url = url.replace(':id', ganti_pactcore);
+						$.ajax({
+							url: url,
+							type: 'get',
+							data: {'_token': '{{ csrf_token() }}'
+                        },
+							dataType: 'json',
+							success: function(data) {
+								if(data.barang_kategori == 'PACTCORE'){
+									if(data.barang_qty - data.barang_digunakan > 0){
+										$('.tiket_pesan_1').html('')
+										$('.tiket_notif_1').removeClass('has-error has-feedback')
+										$('.tiket_notif_1').addClass('has-success has-feedback')
+										$('.submit_tiket').removeAttr('disabled');
+										$('#nama_ganti_pactcore').val(data.barang_nama)
+									} else{
+										$('#nama_ganti_pactcore').val('')
+										$('.submit_tiket').attr('disabled','disabled');
+										$('.tiket_notif_1').addClass('has-error has-feedback')
+										$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Stok barang ini habis</small>')
+									}
+								} else{
+									$('#nama_ganti_pactcore').val('')
+									$('.submit_tiket').attr('disabled','disabled');
+									$('.tiket_notif_1').addClass('has-error has-feedback')
+									$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
+								}
+						},
+					});
+				});
+				// ---------------END VALIDASI GANTI PACTCORE---------------
+			} else {
+				$('.submit_tiket').attr('disabled','disabled');
+				$('.div_ganti_pactcore').hide();
+				$('#ganti_pactcore').removeAttr('required');
+				$('#nama_ganti_pactcore').removeAttr('required');
+				$('#ganti_pactcore').val('');
+				$('#nama_ganti_pactcore').val('');
 				
-	// 		}
-	// 	});
-	// 	//------------END GANTI PACTCORE---------------
-	// 			//---------------GANTI ADAPTOR---------------
-	// 			$("#ck_ganti_adaptor").click(function() {
-	// 			$('.submit_tiket').removeAttr('disabled');
-	// 			if($(this).is(":checked")) {
-	// 				$('.div_ganti_adaptor').show();
-	// 				$('#ganti_adaptor').attr('required', 'required');
-	// 				$('#nama_ganti_adaptor').attr('required', 'required');
-	// 				// ---------------VALIDASI GANTI ADAPTOR---------------
-	// 				$('#ganti_adaptor').keyup(function() {
-	// 					var ganti_adaptor = $('#ganti_adaptor').val();
-	// 					var url = '{{ route("admin.val.valBarang", ":id") }}';
-	// 					url = url.replace(':id', ganti_adaptor);
-	// 					$.ajax({
-	// 						url: url,
-	// 						type: 'get',
-	// 						data: {'_token': '{{ csrf_token() }}'},
-	// 						dataType: 'json',
-	// 						success: function(data) {
-	// 							if(data.barang_kategori == 'ADAPTOR'){
-	// 								if(data.barang_qty - data.barang_digunakan > 0){
-	// 									$('.tiket_pesan_2').html('')
-	// 									$('.tiket_notif_2').removeClass('has-error has-feedback')
-	// 									$('.tiket_notif_2').addClass('has-success has-feedback')
-	// 									$('.submit_tiket').removeAttr('disabled');
-	// 									$('#nama_ganti_adaptor').val(data.barang_nama)
-	// 								} else{
-	// 									$('#nama_ganti_adaptor').val('')
-	// 									$('.submit_tiket').attr('disabled','disabled');
-	// 									$('.tiket_notif_2').addClass('has-error has-feedback')
-	// 									$('.tiket_pesan_2').html('<small id="text" class="form-text text-muted text-danger">Kode Pactcore ditemukan / Stok habis</small>')
-	// 								}
-	// 							} else{
-	// 									$('#nama_ganti_adaptor').val('')
-	// 									$('.submit_tiket').attr('disabled','disabled');
-	// 									$('.tiket_notif_2').addClass('has-error has-feedback')
-	// 									$('.tiket_pesan_2').html('<small id="text" class="form-text text-muted text-danger">Kode Pactcore ditemukan / Stok habis</small>')
-	// 								}
-	// 					},
-	// 				});
-	// 			});
-	// 			// ---------------END VALIDASI GANTI ADAPTOR---------------
-	// 		} else {
-	// 			$('.submit_tiket').attr('disabled','disabled');
-	// 			$('.div_ganti_adaptor').hide();
-	// 			$('#ganti_adaptor').removeAttr('required');
-	// 			$('#ganti_adaptor').val('');
-	// 			$('#nama_ganti_adaptor').removeAttr('required');
-	// 			$('#nama_ganti_adaptor').val('');
+			}
+		});
+		//------------END GANTI PACTCORE---------------
+				//---------------GANTI ADAPTOR---------------
+				$("#ck_ganti_adaptor").click(function() {
+				$('.submit_tiket').removeAttr('disabled');
+				if($(this).is(":checked")) {
+					$('.div_ganti_adaptor').show();
+					$('#ganti_adaptor').attr('required', 'required');
+					$('#nama_ganti_adaptor').attr('required', 'required');
+					// ---------------VALIDASI GANTI ADAPTOR---------------
+					$('#ganti_adaptor').keyup(function() {
+						var ganti_adaptor = $('#ganti_adaptor').val();
+						var url = '{{ route("admin.val.valBarang", ":id") }}';
+						url = url.replace(':id', ganti_adaptor);
+						$.ajax({
+							url: url,
+							type: 'get',
+							data: {'_token': '{{ csrf_token() }}'},
+							dataType: 'json',
+							success: function(data) {
+								if(data.barang_kategori == 'ADAPTOR'){
+									if(data.barang_qty - data.barang_digunakan > 0){
+										$('.tiket_pesan_2').html('')
+										$('.tiket_notif_2').removeClass('has-error has-feedback')
+										$('.tiket_notif_2').addClass('has-success has-feedback')
+										$('.submit_tiket').removeAttr('disabled');
+										$('#nama_ganti_adaptor').val(data.barang_nama)
+									} else{
+										$('#nama_ganti_adaptor').val('')
+										$('.submit_tiket').attr('disabled','disabled');
+										$('.tiket_notif_2').addClass('has-error has-feedback')
+										$('.tiket_pesan_2').html('<small id="text" class="form-text text-muted text-danger">Kode Pactcore ditemukan / Stok habis</small>')
+									}
+								} else{
+										$('#nama_ganti_adaptor').val('')
+										$('.submit_tiket').attr('disabled','disabled');
+										$('.tiket_notif_2').addClass('has-error has-feedback')
+										$('.tiket_pesan_2').html('<small id="text" class="form-text text-muted text-danger">Kode Pactcore ditemukan / Stok habis</small>')
+									}
+						},
+					});
+				});
+				// ---------------END VALIDASI GANTI ADAPTOR---------------
+			} else {
+				$('.submit_tiket').attr('disabled','disabled');
+				$('.div_ganti_adaptor').hide();
+				$('#ganti_adaptor').removeAttr('required');
+				$('#ganti_adaptor').val('');
+				$('#nama_ganti_adaptor').removeAttr('required');
+				$('#nama_ganti_adaptor').val('');
 				
-	// 		}
-	// 	});
-	// 	//------------END GANTI ADAPTOR---------------
-	// 			//---------------GANTI DROPCORE---------------
-	// 			$("#ck_ganti_dropcore").click(function() {
-	// 			$('.submit_tiket').removeAttr('disabled');
-	// 			if($(this).is(":checked")) {
-	// 				$('.div_ganti_dropcore').show();
-	// 				$('#ganti_dropcore').attr('required', 'required');
-	// 				$('#before').attr('required', 'required');
-	// 				$('#after').attr('required', 'required');
-	// 				$('#total').attr('required', 'required');
-	// 				// ---------------VALIDASI GANTI DROPCORE---------------
-	// 				$('#ganti_dropcore').keyup(function() {
-	// 					var ganti_dropcore = $('#ganti_dropcore').val();
-	// 					var url = '{{ route("admin.val.valBarang", ":id") }}';
-	// 					url = url.replace(':id', ganti_dropcore);
-	// 					$.ajax({
-	// 						url: url,
-	// 						type: 'GET',
-	// 						data: {'_token': '{{ csrf_token() }}'},
-	// 						dataType: 'json',
-	// 						success: function(data) {
-	// 							if(data.barang_kategori == 'DROPCORE'){
-	// 								if(data.barang_qty - data.barang_digunakan > 0){
-	// 									$('.tiket_pesan_3').html('')
-	// 									$('.tiket_notif_3').removeClass('has-error has-feedback')
-	// 									$('.tiket_notif_3').addClass('has-success has-feedback')
-	// 									$('.submit_tiket').removeAttr('disabled');
-	// 									$('#before').val(data.barang_qty - data.barang_digunakan)
-	// 								} else{
-	// 									$('#before').val('')
-	// 									$('#after').val('')
-	// 									$('#total').val('')
-	// 									$('.submit_tiket').attr('disabled','disabled');
-	// 									$('.tiket_notif_3').addClass('has-error has-feedback')
-	// 									$('.tiket_pesan_3').html('<small id="text" class="form-text text-muted text-danger">Kode barang ini habis</small>')
-	// 								}
-	// 							} else{
-	// 								$('#before').val('')
-	// 								$('#after').val('')
-	// 								$('#total').val('')
-	// 								$('.submit_tiket').attr('disabled','disabled');
-	// 								$('.tiket_notif_3').addClass('has-error has-feedback')
-	// 								$('.tiket_pesan_3').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
-	// 							}
+			}
+		});
+		//------------END GANTI ADAPTOR---------------
+				//---------------GANTI DROPCORE---------------
+				$("#ck_ganti_dropcore").click(function() {
+				$('.submit_tiket').removeAttr('disabled');
+				if($(this).is(":checked")) {
+					$('.div_ganti_dropcore').show();
+					$('#ganti_dropcore').attr('required', 'required');
+					$('#before').attr('required', 'required');
+					$('#after').attr('required', 'required');
+					$('#total').attr('required', 'required');
+					// ---------------VALIDASI GANTI DROPCORE---------------
+					$('#ganti_dropcore').keyup(function() {
+						var ganti_dropcore = $('#ganti_dropcore').val();
+						var url = '{{ route("admin.val.valBarang", ":id") }}';
+						url = url.replace(':id', ganti_dropcore);
+						$.ajax({
+							url: url,
+							type: 'GET',
+							data: {'_token': '{{ csrf_token() }}'},
+							dataType: 'json',
+							success: function(data) {
+								if(data.barang_kategori == 'DROPCORE'){
+									if(data.barang_qty - data.barang_digunakan > 0){
+										$('.tiket_pesan_3').html('')
+										$('.tiket_notif_3').removeClass('has-error has-feedback')
+										$('.tiket_notif_3').addClass('has-success has-feedback')
+										$('.submit_tiket').removeAttr('disabled');
+										$('#before').val(data.barang_qty - data.barang_digunakan)
+									} else{
+										$('#before').val('')
+										$('#after').val('')
+										$('#total').val('')
+										$('.submit_tiket').attr('disabled','disabled');
+										$('.tiket_notif_3').addClass('has-error has-feedback')
+										$('.tiket_pesan_3').html('<small id="text" class="form-text text-muted text-danger">Kode barang ini habis</small>')
+									}
+								} else{
+									$('#before').val('')
+									$('#after').val('')
+									$('#total').val('')
+									$('.submit_tiket').attr('disabled','disabled');
+									$('.tiket_notif_3').addClass('has-error has-feedback')
+									$('.tiket_pesan_3').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
+								}
 								
-	// 					},
-	// 				});
-	// 			});
-	// 			// ---------------END VALIDASI GANTI DROPCORE---------------
-	// 		} else {
-	// 			$('.submit_tiket').attr('disabled','disabled');
-	// 			$('.div_ganti_dropcore').hide();
-	// 			$('#ganti_dropcore').removeAttr('required');
-	// 			$('#ganti_dropcore').val('')
-	// 			$('#before').val('')
-	// 			$('#after').val('')
-	// 			$('#total').val('')
-	// 		}
-	// 	});
-	// 	//------------END GANTI DROPCORE---------------
-	// 			//---------------GANTI ONT---------------
-	// 			$("#ck_ganti_ont").click(function() {
-	// 			$('.submit_tiket').removeAttr('disabled');
-	// 			if($(this).is(":checked")) {
-	// 				$('.div_ganti_ont').show();
-	// 				$('#ganti_ont').attr('required', 'required');
-	// 				$('#tiket_nama_barang4').attr('required', 'required');
-	// 				$('#tiket_mac').attr('required', 'required');
-	// 				$('#tiket_sn').attr('required', 'required');
-	// 				// ---------------VALIDASI GANTI ONT---------------
-	// 				$('#ganti_ont').keyup(function() {
-	// 					var ganti_ont = $('#ganti_ont').val();
-	// 					var url = '{{ route("admin.val.valBarang", ":id") }}';
-	// 					url = url.replace(':id', ganti_ont);
-	// 					$.ajax({
-	// 						url: url,
-	// 						type: 'GET',
-	// 						data: {'_token': '{{ csrf_token() }}'},
-	// 						dataType: 'json',
-	// 						success: function(data) {
-	// 							if(data.barang_kategori == 'ONT'){
-	// 								if(data.barang_qty - data.barang_digunakan > 0){
-	// 									$('.tiket_pesan_4').html('')
-	// 									$('.tiket_notif_4').removeClass('has-error has-feedback')
-	// 									$('.tiket_notif_4').addClass('has-success has-feedback')
-	// 									$('.submit_tiket').removeAttr('disabled');
-	// 									$('#tiket_nama_barang4').val(data.barang_nama)
-	// 									$('#tiket_mac').val(data.barang_mac)
-	// 									$('#tiket_sn').val(data.barang_sn)
-	// 								} else{
-	// 									$('#tiket_nama_barang4').val('')
-	// 									$('#tiket_mac').val('')
-	// 									$('#tiket_sn').val('')
-	// 									$('.submit_tiket').attr('disabled','disabled');
-	// 									$('.tiket_notif_4').addClass('has-error has-feedback')
-	// 									$('.tiket_pesan_4').html('<small id="text" class="form-text text-muted text-danger">Kode barang ini habis</small>')
-	// 								}
-	// 							} else{
-	// 								$('#tiket_nama_barang4').val('')
-	// 								$('#tiket_mac').val('')
-	// 								$('#tiket_sn').val('')
-	// 								$('.submit_tiket').attr('disabled','disabled');
-	// 								$('.tiket_notif_4').addClass('has-error has-feedback')
-	// 								$('.tiket_pesan_4').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
-	// 							}
+						},
+					});
+				});
+				// ---------------END VALIDASI GANTI DROPCORE---------------
+			} else {
+				$('.submit_tiket').attr('disabled','disabled');
+				$('.div_ganti_dropcore').hide();
+				$('#ganti_dropcore').removeAttr('required');
+				$('#ganti_dropcore').val('')
+				$('#before').val('')
+				$('#after').val('')
+				$('#total').val('')
+			}
+		});
+		//------------END GANTI DROPCORE---------------
+				//---------------GANTI ONT---------------
+				$("#ck_ganti_ont").click(function() {
+				$('.submit_tiket').removeAttr('disabled');
+				if($(this).is(":checked")) {
+					$('.div_ganti_ont').show();
+					$('#ganti_ont').attr('required', 'required');
+					$('#tiket_nama_barang4').attr('required', 'required');
+					$('#tiket_mac').attr('required', 'required');
+					$('#tiket_sn').attr('required', 'required');
+					// ---------------VALIDASI GANTI ONT---------------
+					$('#ganti_ont').keyup(function() {
+						var ganti_ont = $('#ganti_ont').val();
+						var url = '{{ route("admin.val.valBarang", ":id") }}';
+						url = url.replace(':id', ganti_ont);
+						$.ajax({
+							url: url,
+							type: 'GET',
+							data: {'_token': '{{ csrf_token() }}'},
+							dataType: 'json',
+							success: function(data) {
+								if(data.barang_kategori == 'ONT'){
+									if(data.barang_qty - data.barang_digunakan > 0){
+										$('.tiket_pesan_4').html('')
+										$('.tiket_notif_4').removeClass('has-error has-feedback')
+										$('.tiket_notif_4').addClass('has-success has-feedback')
+										$('.submit_tiket').removeAttr('disabled');
+										$('#tiket_nama_barang4').val(data.barang_nama)
+										$('#tiket_mac').val(data.barang_mac)
+										$('#tiket_sn').val(data.barang_sn)
+									} else{
+										$('#tiket_nama_barang4').val('')
+										$('#tiket_mac').val('')
+										$('#tiket_sn').val('')
+										$('.submit_tiket').attr('disabled','disabled');
+										$('.tiket_notif_4').addClass('has-error has-feedback')
+										$('.tiket_pesan_4').html('<small id="text" class="form-text text-muted text-danger">Kode barang ini habis</small>')
+									}
+								} else{
+									$('#tiket_nama_barang4').val('')
+									$('#tiket_mac').val('')
+									$('#tiket_sn').val('')
+									$('.submit_tiket').attr('disabled','disabled');
+									$('.tiket_notif_4').addClass('has-error has-feedback')
+									$('.tiket_pesan_4').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
+								}
 								
-	// 					},
-	// 				});
-	// 			});
-	// 			// ---------------END VALIDASI GANTI ONT---------------
-	// 		} else {
-	// 			$('.submit_tiket').attr('disabled','disabled');
-	// 			$('.div_ganti_ont').hide();
-	// 			$('#ganti_ont').removeAttr('required');
-	// 			$('#ganti_ont').val('')
-	// 			$('#tiket_nama_barang4').val('')
-	// 			$('#tiket_mac').val('')
-	// 			$('#tiket_sn').val('')
-	// 		}
-	// 	});
-	// 	//------------END GANTI ONT---------------
-	// 			//---------------GANTI ONT---------------
-	// 			$("#ck_lain_lain").click(function() {
-	// 				if($(this).is(":checked")) {
-	// 					$('.submit_tiket').removeAttr('disabled');
-	// 				} else {
-	// 					$('.submit_tiket').attr('disabled','disabled');
-	// 				}
-	// 			});
-	// 			//------------END GANTI ONT---------------
+						},
+					});
+				});
+				// ---------------END VALIDASI GANTI ONT---------------
+			} else {
+				$('.submit_tiket').attr('disabled','disabled');
+				$('.div_ganti_ont').hide();
+				$('#ganti_ont').removeAttr('required');
+				$('#ganti_ont').val('')
+				$('#tiket_nama_barang4').val('')
+				$('#tiket_mac').val('')
+				$('#tiket_sn').val('')
+			}
+		});
+		//------------END GANTI ONT---------------
+				//---------------GANTI ONT---------------
+				$("#ck_lain_lain").click(function() {
+					if($(this).is(":checked")) {
+						$('.submit_tiket').removeAttr('disabled');
+					} else {
+						$('.submit_tiket').attr('disabled','disabled');
+					}
+				});
+				//------------END GANTI ONT---------------
 				
-	// 		}
-	// 	});
-	// });
+			}
+		});
+	});
 
 	//----------------------END TIKET
 	// #LAYANAN REGISTRASI
@@ -2540,7 +2540,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 								'<td><input type="text" value="'+merek+'" class="form-control" name="" readonly ></td>'+
 								'<td><input type="text" value="'+harga+'" class="form-control" name="bk_harga_barang[]" readonly ></td>'+
 									'<td width="10%"><input type="text" readonly value="'+qty+'" class="form-control"></td>'+
-									'<td width="10%"><input type="number" value="1" class="form-control"  min="1" max="'+qty+'" onkeydown="return false name="bk_kauntitas[]"></td>'+
+									'<td width="10%"><input type="number" value="1" class="form-control"  min="1" max="'+qty+'" onkeydown="return false name="bk_qty[]"></td>'+
 									
 									'<td with><button type="button" class="removebutton btn btn-danger btn-sm" title="Remove this row">X</button></td></tr>').find("input").each(function () {
 								});
@@ -2552,116 +2552,143 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					<script>
 						//--------------------START TIKET NEW----------------------
 
-						$(document).ready(function() {
+		// 				$(document).ready(function() {
 
 						
 
 
 
 
-			$('select[name=tiket_status]').change(function () {
-			if ($(this).val() == 'Pending') {
-				$('.submit_tiket').removeAttr('disabled');
-				$('.div_tiket_pending').show();
-				$('.div_tiket_closed').hide();
-				$('#tiket_pending').attr('required', 'required');
-				$('.tiket_waktu_penanganan').hide();
-				$('#tiket_waktu_penanganan').removeAttr('required');
-				$('#div_tiket_kendala').removeAttr('required');
-				$('#tiket_tindakan').removeAttr('required');
-				$('#tiket_teknisi1').attr('required', 'required');
-				$('#tiket_teknisi2').attr('required', 'required');
-				$('.submit_tiket').removeAttr('disabled');
+		// 	$('select[name=tiket_status]').change(function () {
+		// 	if ($(this).val() == 'Pending') {
+		// 		$('.submit_tiket').removeAttr('disabled');
+		// 		$('.div_tiket_pending').show();
+		// 		$('.div_tiket_closed').hide();
+		// 		$('#tiket_pending').attr('required', 'required');
+		// 		$('.tiket_waktu_penanganan').hide();
+		// 		$('#tiket_waktu_penanganan').removeAttr('required');
+		// 		$('#div_tiket_kendala').removeAttr('required');
+		// 		$('#tiket_tindakan').removeAttr('required');
+		// 		$('#tiket_teknisi1').attr('required', 'required');
+		// 		$('#tiket_teknisi2').attr('required', 'required');
+		// 		$('.submit_tiket').removeAttr('disabled');
 
-			} else if ($(this).val() == 'Closed') {
+		// 	} else if ($(this).val() == 'Closed') {
 
-				$('.submit_tiket').attr('disabled','disabled');
-				$('.div_tiket_closed').show();
-				$('.div_tiket_pending').hide();
-				$('#tiket_waktu_penanganan').attr('required', 'required');
-				$('#tiket_teknisi1').attr('required', 'required');
-				$('#tiket_teknisi2').attr('required', 'required');
-				$('#tiket_kendala').attr('required', 'required');
-				$('#tiket_tindakan').attr('required', 'required');
-				$("#ganti_barang").click(function() {
-					if($(this).is(":checked")) {
-						$('.div_ganti_barang').show();
-						$("#ganti_lainnya").prop('checked', false);
-						$(document).on('click', 'button.tiket_pilih_barang', function () {
-							var kode_barang = $('#kode_barang').val();
-							var url = '{{ route("admin.val.valBarang", ":id") }}';
-							url = url.replace(':id', kode_barang);
-							$.ajax({
-								url: url,
-								type: 'GET',
-								data: {'_token': '{{ csrf_token() }}'},
-								dataType: 'json',
-								success: function(data) {
-									$('.submit_tiket').removeAttr('disabled');
-									if(data.barang_id){
-									if(data.barang_qty - data.barang_digunakan > 0){
-										$('#kode_barang').val('');
-										$('.tiket_notif_1').removeClass('has-error has-feedback')
-										$('.tiket_notif_1').addClass('has-success has-feedback')
-										$('.hide_tr').show()
-										$('.tiket_pesan_1').html('')
+		// 		$('.submit_tiket').attr('disabled','disabled');
+		// 		$('.div_tiket_closed').show();
+		// 		$('.div_tiket_pending').hide();
+		// 		$('#tiket_waktu_penanganan').attr('required', 'required');
+		// 		$('#tiket_teknisi1').attr('required', 'required');
+		// 		$('#tiket_teknisi2').attr('required', 'required');
+		// 		$('#tiket_kendala').attr('required', 'required');
+		// 		$('#tiket_tindakan').attr('required', 'required');
+		// 		$("#ganti_barang").click(function() {
+		// 			if($(this).is(":checked")) {
+		// 				$('.div_ganti_barang').show();
+		// 				$("#ganti_lainnya").prop('checked', false);
+		// 				$(document).on('click', 'button.tiket_pilih_barang', function () {
+		// 					var kode_barang = $('#kode_barang').val();
+		// 					var url = '{{ route("admin.val.valBarang", ":id") }}';
+		// 					url = url.replace(':id', kode_barang);
+		// 					$.ajax({
+		// 						url: url,
+		// 						type: 'GET',
+		// 						data: {'_token': '{{ csrf_token() }}'},
+		// 						dataType: 'json',
+		// 						success: function(data) {
+		// 							$('.submit_tiket').removeAttr('disabled');
+		// 							if(data.barang_id){
+		// 							if(data.barang_qty - data.barang_digunakan > 0){
+		// 								$('#kode_barang').val('');
+		// 								$('.tiket_notif_1').removeClass('has-error has-feedback')
+		// 								$('.tiket_notif_1').addClass('has-success has-feedback')
+		// 								$('.hide_tr').show()
+		// 								$('.tiket_pesan_1').html('')
 										
-											$(document).on('click', 'button.removebutton_tiket', function () {
-												$(this).closest('tr').remove();
-												return false;
-											});
+		// 									$(document).on('click', 'button.removebutton_tiket', function () {
+		// 										$(this).closest('tr').remove();
+		// 										return false;
+		// 									});
 
 											
-											var qty = parseInt(data.barang_qty) - parseInt(data.barang_digunakan)
-											$("#tiket_barang").append('<tr>'+
-											'<td><input type="text" value="'+data.barang_id+'" class="form-control " name="tiket_barangId[]"  ></td>'+
-											'<td><input type="text" value="'+data.barang_nama+'" class="form-control " name="tiket_barang_nama[]" readonly ></td>'+
-											'<td><input type="text" value="'+data.barang_merek+'" class="form-control" name="" readonly ></td>'+
-											'<td><input type="text" value="'+data.barang_harga+'" class="form-control" name="tiket_barang_harga[]" readonly ></td>'+
-											'<td width="10%"><input type="text" readonly value="'+qty+'" class="form-control"></td>'+
-											'<td width="10%"><input type="number" value="1" class="form-control"  min="1" max="'+qty+'" onkeydown="return false id="txtTitle" name="tiket_barang_qty[]"></td>'+
+		// 									var qty = parseInt(data.barang_qty) - parseInt(data.barang_digunakan)
+		// 									$("#tiket_barang").append('<tr>'+
+		// 									'<td><input type="text" value="'+data.barang_id+'" class="form-control " name="tiket_barangId[]"  ></td>'+
+		// 									'<td><input type="text" value="'+data.barang_nama+'" class="form-control " name="tiket_barang_nama[]" readonly ></td>'+
+		// 									'<td><input type="text" value="'+data.barang_merek+'" class="form-control" name="" readonly ></td>'+
+		// 									'<td><input type="text" value="'+data.barang_harga+'" class="form-control" name="tiket_barang_harga[]" readonly ></td>'+
+		// 									'<td width="10%"><input type="text" readonly value="'+qty+'" class="form-control"></td>'+
+		// 									'<td width="10%"><input type="number" value="1" class="form-control"  min="1" max="'+qty+'" onkeydown="return false id="txtTitle" name="tiket_barang_qty[]"></td>'+
 											
-											'<td with><button type="button" class="removebutton btn btn-danger btn-sm" title="Remove this row">X</button></td></tr>').find("input").each(function () {
-											});
-									} else{
-										$('.tiket_notif_1').addClass('has-error has-feedback')
-										$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Stok habis</small>')
-									}
-									} else{
-										$('.tiket_notif_1').addClass('has-error has-feedback')
-										$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Kode Barang tidak ditemukan</small>')
-									}
-								},
-								error: function(error) {
-									// console.log(error)
+		// 									'<td with><button type="button" class="removebutton btn btn-danger btn-sm" title="Remove this row">X</button></td></tr>').find("input").each(function () {
+		// 									});
+
+		// 									$("form").submit(function (event) {
+		// 										var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
+												
+		// 										url = url.replace(':id', id);
+		// 											$.ajax({
+		// 												url: url,
+		// 												type: 'PUT',
+		// 												data: {
+		// 													barang_id:data.barang_idate,
+		// 													barang_nama:data.barang_nama,
+		// 													qty:qty *data.barang_harga,
+		// 													tiket_jenis:('#tiket_jenis').val(),
+		// 													tiket_status:('#tiket_status').val(),
+		// 													tiket_pending:('#tiket_pending').val(),
+		// 													tiket_kendala:('#tiket_kendala').val(),
+		// 													tiket_tindakan:('#tiket_tindakan').val(),
+		// 													tiket_foto:('#tiket_foto').val(),
+		// 													teknisi_id:$teknisi_id,
+		// 													tiket_teknisi2:$request->tiket_teknisi2,
+		// 													'_token': '{{ csrf_token() }}'
+		// 												},
+		// 											dataType: 'json',
+		// 											success: function(data) {
+		// 												console.log(data);;
+		// 											$("#biaya").val(data['biaya']);
+		// 											}
+		// 										});
+		// 										event.preventDefault();
+
+		// 										});
+		// 							} else{
+		// 								$('.tiket_notif_1').addClass('has-error has-feedback')
+		// 								$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Stok habis</small>')
+		// 							}
+		// 							} else{
+		// 								$('.tiket_notif_1').addClass('has-error has-feedback')
+		// 								$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Kode Barang tidak ditemukan</small>')
+		// 							}
+		// 						},
+		// 						error: function(error) {
+		// 							// console.log(error)
 									
-								},
-							});
-						});
+		// 						},
+		// 					});
+		// 				});
 		
 
-					}else {
-						$('.div_ganti_barang').hide();
-					}
-				});
-				$("#ganti_lainnya").click(function() {
-					if($(this).is(":checked")) {
-						$('.div_ganti_barang').hide();
-						$("#ganti_barang").prop('checked', false);
-						$('.submit_tiket').removeAttr('disabled');
-						$('#tiket_barang').empty();
-						$('#kode_barang').val('');
-						$('.tiket_notif_1').removeClass('has-error has-feedback')
-					};
-					});
-			}
-		});
-		});
+		// 			}else {
+		// 				$('.div_ganti_barang').hide();
+		// 			}
+		// 		});
+		// 		$("#ganti_lainnya").click(function() {
+		// 			if($(this).is(":checked")) {
+		// 				$('.div_ganti_barang').hide();
+		// 				$("#ganti_barang").prop('checked', false);
+		// 				$('.submit_tiket').removeAttr('disabled');
+		// 				$('#tiket_barang').empty();
+		// 				$('#kode_barang').val('');
+		// 				$('.tiket_notif_1').removeClass('has-error has-feedback')
+		// 			};
+		// 			});
+		// 	}
+		// });
+		// });
 
-	
-						
-					
-				
 				//--------------------END TIKET_NEW----------------------
 					</script>
 			

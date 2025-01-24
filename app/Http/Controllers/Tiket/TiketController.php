@@ -255,69 +255,11 @@ Semangat Broooo... Sisa tiket = ' . $count . '
         $teknisi_id = $explode[0];
         $teknisi_nama = $explode[1];
 
-
-
-
-        $ii = count($request->tiket_barangId);
-        for ($x = 0; $x < $ii; $x++) {
-            echo $request->tiket_barangId[$x];
-            dd($request->tiket_barangId);
-            // $data_barang = Data_Barang::whereIn('barang_id', [$request->tiket_barangId[$x]])->get();
-            // $tiket['tiket_barang'] = $request->tiket_barangId[$x] . ', ';
-            echo $ii;
-            // foreach ($data_barang as $db) {
-            //     Data_BarangKeluar::create([
-            //         'bk_id' => $no_sk,
-            //         'bk_jenis_laporan' => $request->tiket_jenis,
-            //         'bk_id_barang' => $request->tiket_barangId[$x],
-            //         'bk_id_tiket' => $no_tiket,
-            //         'bk_kategori' => $db->barang_kategori,
-            //         'bk_satuan' => $db->barang_satuan,
-            //         'bk_nama_barang' => $db->barang_nama,
-            //         'bk_model' => $db->barang_merek,
-            //         'bk_mac' => $db->barang_mac,
-            //         'bk_sn' => $db->barang_sn,
-            //         'bk_jumlah' => $request->tiket_barang_qty[$x],
-            //         'bk_keperluan' => $request->tiket_jenis,
-            //         'bk_foto_awal' => '-',
-            //         'bk_foto_akhir' => '-',
-            //         'bk_nama_penggunan' => '',
-            //         'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
-            //         'bk_admin_input' => $admin_closed,
-            //         'bk_penerima' => $teknisi_nama,
-            //         'bk_status' => 1,
-            //         'bk_keterangan' => '',
-            //         'bk_harga' => $request->tiket_barang_qty[$x] * $request->tiket_barang_harga[$x],
-            //     ]);
-            // }
-            dd('test');
-            // Data_Barang::whereIn('barang_id', [$request->tiket_barangId[$x]])->update(
-            //     [
-            //         'barang_nama_pengguna' => $request->bk_jenis_laporan,
-            //         'barang_digunakan' => $request->tiket_barang_qty[$x],
-            //         'barang_status' => '1',
-            //     ]
-            // );
-        }
-
-
-
-
-
-
-
-
-
-
-
         $tiket['tiket_jenis'] = $request->tiket_jenis;
         $tiket['tiket_status'] = $request->tiket_status;
         $tiket['tiket_pending'] = $request->tiket_pending;
         $tiket['tiket_teknisi1'] = $teknisi_id;
         $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
-
-
-
 
         if ($request->tiket_status == 'Closed') {
             $tiket['tiket_waktu_selesai'] = $datetime;
@@ -325,8 +267,6 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $tiket['tiket_tindakan'] = $request->tiket_tindakan;
             $tiket['tiket_waktu_penanganan'] = $datetime;
             $tiket['tiket_waktu_selesai'] = $datetime;
-
-
 
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
 
@@ -336,9 +276,46 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             Storage::disk('public')->put($path, file_get_contents($photo));
             $tiket['tiket_foto'] = $filename;
 
+            if ($request->ganti_barang == 1) {
+                $data_barang = Data_Barang::whereIn('barang_id', [$request->tiket_barang1, $request->tiket_barang2, $request->tiket_barang3, $request->tiket_barang4])->get();
 
-            if ($request->ganti_barang) {
+
+                foreach ($data_barang as $db) {
+                    Data_BarangKeluar::create([
+                        'bk_id' => $no_sk,
+                        'bk_jenis_laporan' => $request->tiket_jenis,
+                        'bk_id_barang' => $db->barang_id,
+                        'bk_id_tiket' => $no_tiket,
+                        'bk_kategori' => $db->barang_kategori,
+                        'bk_satuan' => $db->barang_satuan,
+                        'bk_nama_barang' => $db->barang_nama,
+                        'bk_model' => $db->barang_merek,
+                        'bk_mac' => $db->barang_mac,
+                        'bk_sn' => $db->barang_sn,
+                        'bk_jumlah' => $request->barang_jumlah,
+                        'bk_keperluan' => $request->tiket_jenis,
+                        'bk_foto_awal' => '-',
+                        'bk_foto_akhir' => '-',
+                        'bk_nama_penggunan' => '',
+                        'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+                        'bk_admin_input' => $admin_closed,
+                        'bk_penerima' => $teknisi_nama,
+                        'bk_status' => 1,
+                        'bk_keterangan' => '',
+                        'bk_harga' => $request->barang_jumlah,
+                    ]);
+                    Data_Barang::whereIn('barang_id', [$request->barang_id])->update(
+                        [
+                            'barang_nama_pengguna' => $db->barang_id,
+                            'barang_digunakan' => '1',
+                            'barang_status' => '1',
+                        ]
+                    );
+                }
             }
+
+
+
             $status = (new GlobalController)->whatsapp_status();
             if ($status->wa_status == 'Enable') {
                 $status_pesan = '0';

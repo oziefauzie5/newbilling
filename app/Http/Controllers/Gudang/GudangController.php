@@ -199,7 +199,6 @@ class GudangController extends Controller
             $data_barang = Data_Barang::whereIn('barang_id', [$request->bk_id_barang[$x]])->get();
 
             // echo $request->bk_id_barang[$x];
-            dd($request->bk_id_barang[$x]);
             foreach ($data_barang as $db) {
                 Data_BarangKeluar::create([
                     'bk_id' => $no_sk,
@@ -212,7 +211,7 @@ class GudangController extends Controller
                     'bk_model' => $db->barang_merek,
                     'bk_mac' => $db->barang_mac,
                     'bk_sn' => $db->barang_sn,
-                    'bk_jumlah' => $request->bk_kauntitas[$x],
+                    'bk_jumlah' => $request->bk_qty[$x],
                     'bk_keperluan' => $request->bk_keperluan,
                     'bk_foto_awal' => '-',
                     'bk_foto_akhir' => '-',
@@ -222,13 +221,13 @@ class GudangController extends Controller
                     'bk_penerima' => $request->bk_penerima,
                     'bk_status' => 1,
                     'bk_keterangan' => '',
-                    'bk_harga' => $request->bk_kauntitas[$x] * $request->bk_harga_barang[$x],
+                    'bk_harga' => $request->bk_qty[$x] * $request->bk_harga_barang[$x],
                 ]);
             }
             Data_Barang::whereIn('barang_id', [$request->bk_id_barang[$x]])->update(
                 [
                     'barang_nama_pengguna' => $request->bk_jenis_laporan,
-                    'barang_digunakan' => $request->bk_kauntitas[$x],
+                    'barang_digunakan' => $request->bk_qty[$x],
                     'barang_status' => '1',
                 ]
             );

@@ -102,9 +102,6 @@
                 <input name="tiket_waktu_penanganan" id="tiket_waktu_penanganan" type="datetime-local" value="{{date('Y-m-d h:s')}}" class="form-control ">
                 </div>
               </div>
-              {{-- <button type="submit">test</button>
-            </form> --}}
-            
               <div class="form-group row ">
                 <label class="col-sm-2 col-form-label">Teknisi 1</label>
                 <div class="col-sm-4">
@@ -151,15 +148,15 @@
                   </label>
                 </div>
               </div>
-              <div class="form-group row div_ganti_barang " style="display:none;">
+              {{-- <div class="form-group row div_ganti_barang " style="display:none;">
                 <label for="" class="col-sm-2 col-form-label">Kode barang</label>
                 <div class="col-sm-6 tiket_notif_1">
                   <input type="text" class="form-control" id="kode_barang" placeholder="Cari kode barang" name="">
                   <div class="tiket_pesan_1"></div>                </div>
                 <div class="col-sm-4">
                   <button type="button" class="btn btn-primary btn-sm tiket_pilih_barang">Tambah Barang</button>
-                </div>
-                <div class="form-group row">
+                </div> --}}
+                {{-- <div class="form-group row">
                   <div class="table-responsive">
                   <table id="tiket_barang" class="display  table-sm table-striped table-hover text-center">
                     <thead>
@@ -178,11 +175,11 @@
                     </tbody>
                 </table>
                 </div>
-                </div>
+                </div> --}}
             </div>
 
 
-              {{-- <div class="form-group row">
+              <div class="form-group row">
                 <div class="form-check div_tiket_closed"  style="display:none;">
                   <label class="form-check-label">
                     <input class="form-check-input" type="checkbox" id="ck_ganti_pactcore" value="1" name="pactcore">
@@ -205,9 +202,9 @@
                     <span class="form-check-sign">Lainnya</span>
                   </label>
                 </div>
-              </div> --}}
+              </div>
               {{-- VALIDASI PACTCORE --}}
-              {{-- <div class="form-group row">
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label div_ganti_pactcore"  style="display:none;">Kode Pactcore</label>
                 <div class="col-sm-2 div_ganti_pactcore tiket_notif_1"  style="display:none;">
                   <input name="tiket_barang1" id="ganti_pactcore" type="text" class="form-control ">
@@ -217,10 +214,10 @@
                 <div class="col-sm-2 div_ganti_pactcore tiket_notif_1"  style="display:none;">
                   <input name="tiket_nama_barang1" id="nama_ganti_pactcore" type="text" class="form-control " readonly>
                 </div>
-                </div> --}}
+                </div>
               {{-- END VALIDASI PACTCORE --}}
               {{-- VALIDASI ADAPTOR --}}
-              {{-- <div class="form-group row">
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label div_ganti_adaptor"  style="display:none;">Kode Adaptor</label>
                 <div class="col-sm-2 div_ganti_adaptor tiket_notif_2"  style="display:none;">
                   <input name="tiket_barang2" id="ganti_adaptor" type="text" class="form-control ">
@@ -230,10 +227,10 @@
                 <div class="col-sm-2 div_ganti_adaptor tiket_notif_2"  style="display:none;">
                   <input name="tiket_nama_barang2" id="nama_ganti_adaptor" type="text" class="form-control " readonly>
                 </div>
-                </div> --}}
+                </div>
               {{-- END VALIDASI ADAPTOR --}}
               {{-- VALIDASI DROPCORE --}}
-              {{-- <div class="form-group row">
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label div_ganti_dropcore"  style="display:none;">Kode Dropcore</label>
                 <div class="col-sm-2 div_ganti_dropcore tiket_notif_3"  style="display:none;">
                   <input name="tiket_barang3" id="ganti_dropcore" type="text" class="form-control ">
@@ -243,8 +240,8 @@
                 <div class="col-sm-2 div_ganti_dropcore tiket_notif_3"  style="display:none;">
                   <input name="tiket_before" id="before" type="text" class="form-control " readonly>
                 </div>
-              </div> --}}
-              {{-- <div class="form-group row">
+              </div>
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label div_ganti_dropcore"  style="display:none;">After</label>
                 <div class="col-sm-2 div_ganti_dropcore tiket_notif_3"  style="display:none;">
                   <input name="tiket_after" id="after" type="text" class="form-control ">
@@ -254,10 +251,10 @@
                 <div class="col-sm-2 div_ganti_dropcore tiket_notif_3"  style="display:none;" >
                   <input name="tiket_total_kabel" id="total" type="text" class="form-control" readonly>
                 </div>
-                </div> --}}
+                </div>
                 {{-- END VALIDASI DROPCORE --}}
                 {{-- VALIDASI ONT --}}
-              {{-- <div class="form-group row">
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label div_ganti_ont"  style="display:none;">Kode ONT</label>
                 <div class="col-sm-2 div_ganti_ont tiket_notif_4"  style="display:none;">
                   <input name="tiket_barang4" id="ganti_ont" type="text" class="form-control " >
@@ -267,8 +264,8 @@
                 <div class="col-sm-2 div_ganti_ont tiket_notif_4"  style="display:none;">
                   <input name="tiket_nama_barang4" id="tiket_nama_barang4" type="text" class="form-control " readonly>
                 </div>
-              </div> --}}
-              {{-- <div class="form-group row">
+              </div>
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label div_ganti_ont"  style="display:none;">Mac</label>
                 <div class="col-sm-3 div_ganti_ont tiket_notif_4"  style="display:none;">
                   <input name="tiket_mac" id="tiket_mac" type="text" class="form-control " readonly>
@@ -277,11 +274,11 @@
                 <div class="col-sm-3 div_ganti_ont tiket_notif_4"  style="display:none;">
                   <input name="tiket_sn" id="tiket_sn" type="text" class="form-control" readonly>
                 </div>
-                </div> --}}
+                </div>
                  {{-- END VALIDASI ONT --}}
                  <div class="card-footer">
                   <button type="button" class="btn  ">Batal</button>
-                  <button type="submit" class="btn btn-primary float-right submit_tiket">Simpan</button>
+                  <button type="submit" class="btn btn-primary float-right submit_tiket form">Simpan</button>
                   </div>
               </div>
               <div class="row">
