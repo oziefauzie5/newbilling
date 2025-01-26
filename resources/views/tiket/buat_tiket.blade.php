@@ -69,6 +69,17 @@
               @csrf
               @method('POST')
             <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Site</label>
+              <div class="col-sm-4">
+                  <select name="tiket_site" id="" class="form-control">
+                    <option value="">- Pilih -</option>
+                    @foreach ($data_site as $site)
+                    <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
+                    @endforeach
+                  </select>
+              </div>
+              </div>
+            <div class="form-group row">
               <label class="col-sm-2 col-form-label">Nomor Tiket</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" name="tiket_id" required value="{{ $no_tiket }}">

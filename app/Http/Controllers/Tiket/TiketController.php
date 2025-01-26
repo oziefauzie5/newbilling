@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tiket;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Aplikasi\Data_Site;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\Pesan\Pesan;
@@ -23,6 +24,26 @@ use Illuminate\Support\Facades\App;
 
 class TiketController extends Controller
 {
+    public function dashboard_tiket(Request $request)
+    {
+        $date = date('Y-m-d', strtotime(carbon::now()));
+        $query_tiket = Data_Tiket::where('tiket_status', 'NEW')->where('tiket_type', 'General');
+        $data['count_tiket_general'] = $query_tiket->count();
+        $data['count_tiket_general_hari_ini'] = $query_tiket->whereDate('created_at', $date)->count();
+
+        $query_tiket_project = Data_Tiket::where('tiket_status', 'NEW')->where('tiket_type', 'Project');
+        $data['count_tiket_project'] = $query_tiket_project->count();
+        $data['count_tiket_project_hari_ini'] = $query_tiket_project->whereDate('created_at', $date)->count();
+
+        $query_tiket_closed = Data_Tiket::where('tiket_status', 'Closed')->where('tiket_type', 'General');
+        $data['count_tiket_closed'] = $query_tiket_closed->count();
+        $data['count_tiket_closed_hari_ini'] = $query_tiket_closed->whereDate('created_at', $date)->count();
+        $query_tiket_pending = Data_Tiket::where('tiket_status', 'Closed')->where('tiket_type', 'General');
+        $data['count_tiket_pending'] = $query_tiket_pending->count();
+        $data['count_tiket_pending_hari_ini'] = $query_tiket_pending->whereDate('created_at', $date)->count();
+
+        return view('tiket/dashboard_tiket', $data);
+    }
     public function data_tiket(Request $request)
     {
         $data['q'] = $request->query('q');
@@ -43,9 +64,26 @@ class TiketController extends Controller
 
         return view('tiket/data_tiket', $data);
     }
+    public function data_tiket_project(Request $request)
+    {
+        $data['q'] = $request->query('q');
+        $query = Data_Tiket::join('users', 'users.id', '=', 'data__tikets.tiket_pembuat')
+            ->select('users.id', 'users.name', 'data__tikets.*', 'data__tikets.created_at as tanggal')
+            ->orderBy('tanggal', 'DESC', 'data__tikets.tiket_status', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('tiket_id', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('tiket_status', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('data__tikets.created_at', 'like', '%' . $data['q'] . '%');
+            });
+        $data['tiket'] = $query->paginate(10);
+        $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
+
+        return view('tiket/data_tiket_project', $data);
+    }
     public function buat_tiket(Request $request)
     {
         $data['no_tiket'] = (new GlobalController)->nomor_tiket();
+        $data['data_site'] = Data_Site::all();
         $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
         return view('tiket/buat_tiket', $data);
     }
@@ -63,14 +101,17 @@ class TiketController extends Controller
     public function store(Request $request)
     {
 
+        $site = Auth::user()->site;
         $pembuat = Auth::user()->id;
         $tiket['tiket_id'] = $request->tiket_id;
         $tiket['tiket_pembuat'] = $pembuat;
         $tiket['tiket_kode'] = 'T-' . $request->tiket_id;
         $tiket['tiket_idpel'] = $request->tiket_idpel;
         $tiket['tiket_jenis'] = $request->tiket_jenis;
+        $tiket['tiket_type'] = 'General';
+        $tiket['tiket_site'] = $request->tiket_site;
         $tiket['tiket_nama'] = $request->tiket_nama;
-        $tiket['tiket_waktu_kunjungan'] = $request->tiket_waktu_kunjungan;
+        $tiket['tiket_jadwal_kunjungan'] = date('Y-m-d', strtotime($request->tiket_waktu_kunjungans));
         $tiket['tiket_keterangan'] = $request->tiket_keterangan;
         $tiket['tiket_status'] = 'NEW';
 
@@ -212,11 +253,13 @@ Semangat Broooo... Sisa tiket = ' . $count . '
     public function details_tiket($id)
     {
 
-
+        $data['data_user'] = User::all();
         $data['teknisi'] = (new GlobalController)->getTeknisi();
+        $data['user_admin'] = (new GlobalController)->user_admin();
         $data['tiket'] = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
-            ->select('data__tikets.*', 'input_data.*', 'registrasis.*', 'data__tikets.created_at as tgl_buat')
+            ->join('data__sites', 'data__sites.site_id', '=', 'data__tikets.tiket_site')
+            ->select('data__sites.site_id', 'data__sites.site_nama', 'data__tikets.*', 'input_data.*', 'registrasis.*', 'data__tikets.created_at as tgl_buat')
             ->where('tiket_id', $id)
             ->first();
         $query = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
@@ -227,6 +270,23 @@ Semangat Broooo... Sisa tiket = ' . $count . '
         $data['tiket_menunggu'] = $query->get();
         $data['tiket_count'] = $query->count();
         return view('tiket/details_tiket', $data);
+    }
+    public function details_tiket_project($id)
+    {
+        $data['teknisi'] = (new GlobalController)->getTeknisi();
+        $data['tiket'] = Data_Tiket::query()
+            ->join('data__barang_keluars', 'data__barang_keluars.bk_id_tiket', '=', 'data__tikets.tiket_id')
+            ->select('data__tikets.*', 'data__barang_keluars.*', 'data__tikets.created_at as tgl_buat')
+            ->where('tiket_id', $id)
+            ->first();
+        $query = Data_Tiket::query()
+            ->select('data__tikets.*', 'data__tikets.created_at as tgl_buat')
+            ->where('tiket_status', 'NEW')
+            ->where('tiket_type', 'Project')
+            ->where('tiket_id', '!=', $id);
+        $data['tiket_menunggu'] = $query->get();
+        $data['tiket_count'] = $query->count();
+        return view('tiket/details_tiket_project', $data);
     }
     public function details_tiket_closed($id)
     {
@@ -243,9 +303,6 @@ Semangat Broooo... Sisa tiket = ' . $count . '
     public function tiket_update(Request $request, $id)
     {
 
-        // dd($id);
-        // dd($request->tiket_barang_id);
-        $no_sk = (new GlobalController)->no_surat_keterang();
         $no_tiket = (new GlobalController)->nomor_tiket();
         $datetime = date('Y-m-d h:m:s', strtotime(carbon::now()));
 
@@ -265,7 +322,7 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $tiket['tiket_waktu_selesai'] = $datetime;
             $tiket['tiket_kendala'] = $request->tiket_kendala;
             $tiket['tiket_tindakan'] = $request->tiket_tindakan;
-            $tiket['tiket_waktu_penanganan'] = $datetime;
+            $tiket['tiket_waktu_mulai'] = $datetime;
             $tiket['tiket_waktu_selesai'] = $datetime;
 
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
@@ -275,45 +332,6 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $path = 'laporan-tiket/' . $filename;
             Storage::disk('public')->put($path, file_get_contents($photo));
             $tiket['tiket_foto'] = $filename;
-
-            if ($request->ganti_barang == 1) {
-                $data_barang = Data_Barang::whereIn('barang_id', [$request->tiket_barang1, $request->tiket_barang2, $request->tiket_barang3, $request->tiket_barang4])->get();
-
-
-                foreach ($data_barang as $db) {
-                    Data_BarangKeluar::create([
-                        'bk_id' => $no_sk,
-                        'bk_jenis_laporan' => $request->tiket_jenis,
-                        'bk_id_barang' => $db->barang_id,
-                        'bk_id_tiket' => $no_tiket,
-                        'bk_kategori' => $db->barang_kategori,
-                        'bk_satuan' => $db->barang_satuan,
-                        'bk_nama_barang' => $db->barang_nama,
-                        'bk_model' => $db->barang_merek,
-                        'bk_mac' => $db->barang_mac,
-                        'bk_sn' => $db->barang_sn,
-                        'bk_jumlah' => $request->barang_jumlah,
-                        'bk_keperluan' => $request->tiket_jenis,
-                        'bk_foto_awal' => '-',
-                        'bk_foto_akhir' => '-',
-                        'bk_nama_penggunan' => '',
-                        'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
-                        'bk_admin_input' => $admin_closed,
-                        'bk_penerima' => $teknisi_nama,
-                        'bk_status' => 1,
-                        'bk_keterangan' => '',
-                        'bk_harga' => $request->barang_jumlah,
-                    ]);
-                    Data_Barang::whereIn('barang_id', [$request->barang_id])->update(
-                        [
-                            'barang_nama_pengguna' => $db->barang_id,
-                            'barang_digunakan' => '1',
-                            'barang_status' => '1',
-                        ]
-                    );
-                }
-            }
-
 
 
             $status = (new GlobalController)->whatsapp_status();
@@ -327,13 +345,13 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $pesan_closed['target'] = '120363028776966861@g.us';
             $pesan_closed['nama'] = 'Group Teknisi';
             $pesan_closed['pesan'] = '               -- CLOSED TIKET --
-Kendala : ' . $request->tiket_kendala . '
-Tindakan : ' . $request->tiket_tindakan . '
+        Kendala : ' . $request->tiket_kendala . '
+        Tindakan : ' . $request->tiket_tindakan . '
 
-Waktu selesai: ' . date('d-M-y h:m') . '
-Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
+        Waktu selesai: ' . date('d-M-y h:m') . '
+        Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 
-' . $request->tiket_menunggu . '';
+        ' . $request->tiket_menunggu . '';
 
 
             Pesan::create($pesan_closed);

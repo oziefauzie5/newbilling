@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+use function Laravel\Prompts\select;
+
 class GudangController extends Controller
 {
     public function data_barang(Request $request)
@@ -29,18 +31,14 @@ class GudangController extends Controller
             $id_kate = $count + 1;
         }
         $data['id_kategori'] = '1' . sprintf("%03d", $id_kate);
-        $count_barang = Data_Barang::count();
-
-        // if ($count_barang == 0) {
-        //     $id_barang = 1;
-        // } else {
-        //     $id_barang = $count_barang + 1;
-        // }
-        // $data['id_barang'] = '1' . sprintf("%03d", $id_barang);
-
         $data['kategori'] = Data_Kategori::all();
         $data['tittle'] = 'Data Barang';
+
+        $data['find_kate'] = $request->query('find_kate');
+
         $query = Data_Barang::orderBy('data__barangs.created_at', 'DESC');
+        if ($data['find_kate'])
+            $query->where('barang_kategori', '=', $data['find_kate']);
         $data['barang'] = $query->get();
 
         return view('gudang/data_barang', $data);
@@ -171,15 +169,16 @@ class GudangController extends Controller
         $query = Data_BarangKeluar::orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC');
 
         $data['barang_keluar'] = $query->get();
-        // dd($data['stok_gudang']);
+
         return view('gudang/barang_keluar', $data);
     }
     public function form_barang_keluar()
     {
         $data['tittle'] = 'Barang Keluar';
 
-        $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC');
-
+        $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
+            ->select('data__barangs.*', DB::raw('sum(barang_qty) - sum(barang_digunakan) as total'))
+            ->groupBy('barang_id');
         $data['data_barang'] = $query->get();
         $data['data_user'] = User::all();
         $data['id_admin'] = (new GlobalController)->user_admin()['user_id'];
@@ -192,52 +191,108 @@ class GudangController extends Controller
 
         $no_sk = (new GlobalController)->no_surat_keterang();
         $no_tiket = (new GlobalController)->nomor_tiket();
-
+        // $barang_id = ['aple', 'manggan', 'jeruk'];
         $admin = Auth::user()->id;
-        $jumlah_dipilih = count($request->bk_id_barang);
-        for ($x = 0; $x < $jumlah_dipilih; $x++) {
-            $data_barang = Data_Barang::whereIn('barang_id', [$request->bk_id_barang[$x]])->get();
-
-            // echo $request->bk_id_barang[$x];
-            foreach ($data_barang as $db) {
-                Data_BarangKeluar::create([
-                    'bk_id' => $no_sk,
-                    'bk_jenis_laporan' => $request->bk_jenis_laporan,
-                    'bk_id_barang' => $request->bk_id_barang[$x],
-                    'bk_id_tiket' => $no_tiket,
-                    'bk_kategori' => $db->barang_kategori,
-                    'bk_satuan' => $db->barang_satuan,
-                    'bk_nama_barang' => $db->barang_nama,
-                    'bk_model' => $db->barang_merek,
-                    'bk_mac' => $db->barang_mac,
-                    'bk_sn' => $db->barang_sn,
-                    'bk_jumlah' => $request->bk_qty[$x],
-                    'bk_keperluan' => $request->bk_keperluan,
-                    'bk_foto_awal' => '-',
-                    'bk_foto_akhir' => '-',
-                    'bk_nama_penggunan' => '',
-                    'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
-                    'bk_admin_input' => $admin,
-                    'bk_penerima' => $request->bk_penerima,
-                    'bk_status' => 1,
-                    'bk_keterangan' => '',
-                    'bk_harga' => $request->bk_qty[$x] * $request->bk_harga_barang[$x],
-                ]);
-            }
-            Data_Barang::whereIn('barang_id', [$request->bk_id_barang[$x]])->update(
+        $barang_id = $request->barang_id;
+        $jumlah_harga = $request->jumlah_harga;
+        $jumlah_barang = $request->jumlah_barang;
+        $bk_penerima = $request->bk_penerima;
+        $bk_jenis_laporan = $request->bk_jenis_laporan;
+        $bk_keperluan = $request->bk_keperluan;
+        $barang_kategori = $request->barang_kategori;
+        $barang_nama = $request->barang_nama;
+        $tiket_type = $request->tiket_type;
+        $tiket_site = $request->tiket_site;
+        for ($x = 0; $x < count($barang_id); $x++) {
+            Data_BarangKeluar::create([
+                'bk_id' => $no_sk,
+                'bk_jenis_laporan' => $bk_jenis_laporan,
+                'bk_id_barang' => $barang_id[$x],
+                'bk_id_tiket' => $no_tiket,
+                'bk_kategori' => $barang_kategori[$x],
+                'bk_jumlah' => $jumlah_barang[$x],
+                'bk_keperluan' => $bk_keperluan,
+                'bk_file_bukti' => '-',
+                'bk_nama_pengguna' => '',
+                'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+                'bk_admin_input' => $admin,
+                'bk_penerima' => $bk_penerima,
+                'bk_status' => 0,
+                'bk_keterangan' => '',
+                'bk_harga' => $jumlah_harga[$x],
+            ]);
+            Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
                 [
-                    'barang_nama_pengguna' => $request->bk_jenis_laporan,
-                    'barang_digunakan' => $request->bk_qty[$x],
-                    'barang_status' => '1',
+                    'barang_nama_pengguna' => $bk_jenis_laporan,
+                    'barang_digunakan' => $jumlah_barang[$x],
+                    'barang_status' => '2',
                 ]
             );
         }
+        Data_Tiket::create([
+            'tiket_id' => $no_tiket,
+            'tiket_kode' => 'T-' . $no_tiket,
+            'tiket_site' => $tiket_site,
+            'tiket_type' => $tiket_type,
+            'tiket_jenis' => $bk_jenis_laporan,
+            'tiket_status' => 'NEW',
+            'tiket_nama' => $bk_keperluan,
+            'tiket_keterangan' => $bk_keperluan,
+            'tiket_pembuat' => $admin,
+        ]);
 
-        // dd('test');
-        $notifikasi = array(
-            'pesan' => 'Berhasil',
-            'alert' => 'success',
+        return response()->json($barang_id);
+        // }
+    }
+    public function proses_tiket_form_barang_keluar(Request $request)
+    {
+
+        $no_sk = (new GlobalController)->no_surat_keterang();
+        $admin = Auth::user()->id;
+        $barang_id = $request->barang_id;
+        $tiket_id = $request->tiket_id;
+        $jumlah_harga = $request->jumlah_harga;
+        $jumlah_barang = $request->jumlah_barang;
+        $tiket_teknisi1 = $request->tiket_teknisi1;
+        $tiket_jenis = $request->tiket_jenis;
+        $tiket_tindakan = $request->tiket_tindakan;
+        $barang_kategori = $request->barang_kategori;
+        $tiket_status = $request->tiket_status;
+        $tiket_type = $request->tiket_type;
+        $tiket_site = $request->tiket_site;
+        for ($x = 0; $x < count($barang_id); $x++) {
+            Data_BarangKeluar::create([
+                'bk_id' => $no_sk,
+                'bk_jenis_laporan' => $tiket_jenis,
+                'bk_id_barang' => $barang_id[$x],
+                'bk_id_tiket' => $tiket_id,
+                'bk_kategori' => $barang_kategori[$x],
+                'bk_jumlah' => $jumlah_barang[$x],
+                'bk_keperluan' => $tiket_tindakan,
+                'bk_file_bukti' => '-',
+                'bk_nama_pengguna' => '',
+                'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+                'bk_admin_input' => $admin,
+                'bk_penerima' => $tiket_teknisi1,
+                'bk_status' => 0,
+                'bk_keterangan' => '',
+                'bk_harga' => $jumlah_harga[$x],
+            ]);
+            Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
+                [
+                    'barang_nama_pengguna' => $tiket_jenis,
+                    'barang_digunakan' => $jumlah_barang[$x],
+                    'barang_status' => 1,
+                ]
+            );
+        }
+        Data_Tiket::where('tiket_id', $tiket_id)->update(
+            [
+                'tiket_idbarang_keluar' => $no_sk,
+            ]
         );
-        return redirect()->route('admin.gudang.barang_keluar')->with($notifikasi);
+
+        return response()->json($no_sk);
+        // }
     }
 }

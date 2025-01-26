@@ -335,15 +335,9 @@ class GlobalController extends Controller
         return response()->json($kode_pop);
     }
 
-    #sementara di hapus.
-    public function validasi_kode_kabel($id)
-    {
-        // $kode_kabel = Data_Barang::where("barang_id", $id)->first();
-        // return response()->json($kode_kabel);
-    }
     public function valBarang($id)
     {
-        $kode_barang = Data_Barang::where("barang_id", $id)->first();
+        $kode_barang = Data_Barang::where("barang_id", $id)->where("barang_lokasi", 1)->first();
         return response()->json($kode_barang);
     }
 
@@ -354,10 +348,10 @@ class GlobalController extends Controller
         $d = date('d');
         $latest = Data_BarangKeluar::latest()->first();
         if (! $latest) {
-            return 'SK/' . $y . $m . $d . '/BK/0001';
+            return 'SKB/' . $y . $m . $d . '/0001';
         }
-        $string = substr($latest->bk_id, 15);
-        $nosk  = 'SK/' . $y . $m . $d  . '/BK/' . sprintf('%04d', $string + 1);
+        $string = substr($latest->bk_id, 11);
+        $nosk  = 'SKB/' . $y . $m . $d  . '/' . sprintf('%04d', $string + 1);
         return $nosk;
     }
     public function nomor_tiket()

@@ -215,7 +215,7 @@
 						@endrole
 						@role('admin|STAF ADMIN')
 						<li class="nav-item {{\Route::is('admin.tiket.*') ? 'active' : ''}}">
-							<a href="{{route('admin.tiket.data_tiket')}}">
+							<a href="{{route('admin.tiket.dashboard_tiket')}}">
 								<i class="fas fa-ticket-alt"></i>
 								<p>Tiket</p>
 							</a>
@@ -279,7 +279,7 @@
 							</div>
 						</li>
 						<li class="nav-item {{\Route::is('admin.gudang.*') ? 'active' : ''}}">
-							<a href="{{route('admin.gudang.data_barang')}}">
+							<a href="{{route('admin.gudang.stok_gudang')}}">
 								<i class="fas fa-list-alt"></i>
 								<p>Gudang</p>
 							</a>
@@ -482,6 +482,8 @@
 	<script src="{{asset('atlantis/assets/js/demo.js')}}"></script> --}}
 
 
+
+
   <script >
 	//--------------------START FORMAT MAC----------------------
 	  $(document).ready(function() {
@@ -516,6 +518,14 @@
 							window.location=url;
 						});
 	//--------------------END TABLE CLICK EDIT DATA PELANGGAN----------------------
+	//--------------------START TABLE CLICK DATA BARANG---------------------
+						$('.href_data_barang').click(function(){
+							var kategori =$(this).data("kategori");
+							var url = '{{ route("admin.gudang.data_barang", ":find_kate") }}';
+							url = url.replace(':find_kate', 'find_kate='+kategori);
+							window.location=url;
+						});
+	//--------------------END TABLE CLICK DATA BARANG---------------------
 
 	//--------------------START TABLE CLICK AKTIVASI DATA PELANGGAN----------------------
 	// RegistrasiController -> index.blade.php					
@@ -540,6 +550,7 @@
 			});
 			$('#cari_kode_barang').DataTable({
 				"pageLength": 10,
+
 			});
 			$('#pilih_data').DataTable({
 				"pageLength": 10,
@@ -548,7 +559,7 @@
 				"pageLength": 10,
 			});
 			$('#topup_list').DataTable({
-				"pageLength": 10,
+				"pageLength": 200,
 			});
 			$('#tiket_pilih_pelanggan').DataTable({
 				"pageLength": 10,
@@ -1005,21 +1016,35 @@ $("#reg_kode_dropcore").keyup(function(){
                     hasil = '';
 					} else{
 						hasil = total;
+					
 						if(hasil<0){
-						$("#total").val('');
-						$('.notif_over').addClass('has-error has-feedback') //NOTIF UNTUK AKTIVASI
-						$('.tiket_notif_3').addClass('has-error has-feedback') //NOTIF UNTUK UPDATE TIKET
-						$('#pesan_over').html('<small id="text" class="form-text text-muted text-danger">Panjang kabel tidak cukup</small>')
-						$('#tiket_pesan_3').html('<small id="text" class="form-text text-muted text-danger">Panjang kabel tidak cukup</small>')
-						
-					}else{
-						$('#pesan_over').html('')
-						$('.notif_over').removeClass('has-error has-feedback')//NOTIF UNTUK AKTIVASI
-						$('.tiket_notif_3').removeClass('has-error has-feedback') //NOTIF UNTUK UPDATE TIKET
-						$('.notif_over').addClass('has-success has-feedback')//NOTIF UNTUK AKTIVASI
-						$('.tiket_notif_3').addClass('has-success has-feedback')//NOTIF UNTUK UPDATE TIKET
-						$("#total").val(hasil);
-                    }
+							$("#total").val('');
+							$('.notif_over').addClass('has-error has-feedback') //NOTIF UNTUK AKTIVASI
+							$('.notif_dropcore').addClass('has-error has-feedback') //NOTIF UNTUK UPDATE TIKET
+							$('#pesan_over').html('<small id="text" class="form-text text-muted text-danger">Panjang kabel tidak cukup</small>')
+							$('#pesan_dropcore').html('<small id="text" class="form-text text-muted text-danger">Panjang kabel tidak cukup</small>')
+							$(".submit_tiket").attr('disabled','disabled');//STATUS BARANG DROPCORE JIKA HABIS DISABLE TOMBOL SUMBIT
+							$("#status_dropcore").val('');//STATUS BARANG DROPCORE JIKA BELUM HABIS
+						}else{
+							if(hasil == 0){
+								$('#pesan_over').html('')
+								$('.notif_over').removeClass('has-error has-feedback')//NOTIF UNTUK AKTIVASI
+								$('.notif_dropcore').removeClass('has-error has-feedback') //NOTIF UNTUK UPDATE TIKET
+								$('.notif_over').addClass('has-success has-feedback')//NOTIF UNTUK AKTIVASI
+								$('.notif_dropcore').addClass('has-success has-feedback')//NOTIF UNTUK UPDATE TIKET
+								$("#total").val(hasil);
+								$("#status_dropcore").val('1');//STATUS BARANG DROPCORE JIKA HABIS
+							} else{
+								$('#pesan_over').html('')
+								$('.notif_over').removeClass('has-error has-feedback')//NOTIF UNTUK AKTIVASI
+								$('.notif_dropcore').removeClass('has-error has-feedback') //NOTIF UNTUK UPDATE TIKET
+								$('.notif_over').addClass('has-success has-feedback')//NOTIF UNTUK AKTIVASI
+								$('.notif_dropcore').addClass('has-success has-feedback')//NOTIF UNTUK UPDATE TIKET
+								$("#total").val(hasil);
+								$("#status_dropcore").val('0');//STATUS BARANG DROPCORE JIKA BELUM HABIS
+								$(".submit_tiket").removeAttr('disabled');//STATUS BARANG DROPCORE JIKA HABIS ENABLE TOMBOL SUMBIT
+							}
+						}
 					}
 
             });
@@ -1665,312 +1690,337 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 		}
 	});
 
-	/////---------------------------------------------------------------UPDATE TIKET--------------------------------------------------
-	$(document).ready(function() {
-		$('.submit_tiket').attr('disabled','disabled');
-		$('select[name=tiket_status]').change(function () {
-			if ($(this).val() == 'Pending') {
-				$('.submit_tiket').attr('disabled');
-				$('.div_tiket_pending').show();
-				$('.div_tiket_closed').hide();
-				$('#tiket_pending').attr('required', 'required');
-				$('.tiket_waktu_penanganan').hide();
-				$('#tiket_waktu_penanganan').removeAttr('required');
-				$('#div_tiket_kendala').removeAttr('required');
-				$('#tiket_tindakan').removeAttr('required');
-				$('#tiket_teknisi1').attr('required', 'required');
-				$('#tiket_teknisi2').attr('required', 'required');
-				$('.submit_tiket').removeAttr('disabled');
-				//PACTCORE nama_ganti_adaptor
-				$("#ck_ganti_pactcore").prop("checked", false);
-				$('.div_ganti_pactcore').hide();
-				$('#ganti_pactcore').removeAttr('required');
-				$('#nama_ganti_pactcore').removeAttr('required');
-				$('#ganti_pactcore').val('');
-				$('#nama_ganti_pactcore').val('');
-				//ADAPTOR
-				$("#ck_ganti_adptor").prop("checked", false);
-				$('.div_ganti_adptor').hide();
-				$('#ganti_adptor').removeAttr('required');
-				$('#ganti_adptor').val('');
-				$('#nama_ganti_adaptor').removeAttr('required');
-				$('#nama_ganti_adaptor').val('');
-				
-				//ONT
-				$("#ck_ganti_ont").prop("checked", false);
-				$('.div_ganti_ont').hide();
-				$('#ganti_ont').removeAttr('required');
-				$('#ganti_ont').val('');
-				$('#tiket_sn').removeAttr('required');
-				$('#tiket_sn').val('');
-				$('#tiket_mac').removeAttr('required');
-				$('#tiket_mac').val('');
-				$('#tiket_nama_barang4').removeAttr('required');
-				$('#tiket_nama_barang4').val('');
-				//DROPCORE
-				$("#ck_ganti_dropcore").prop("checked", false);
-				$('.div_ganti_dropcore').hide();
-				$('#ganti_dropcore').removeAttr('required');
-				$('#before').removeAttr('required');
-				$('#after').removeAttr('required');
-				$('#total').removeAttr('required');
-				$('#ganti_dropcore').val('');
-				$('#before').val('')
-				$('#after').val('')
-				$('#total').val('')
-				
-				
-				
-			} else if ($(this).val() == 'Closed') {
-				$('.submit_tiket').attr('disabled','disabled');
-				$('.div_tiket_closed').show();
-				$('.div_tiket_pending').hide();
-				$('#tiket_waktu_penanganan').attr('required', 'required');
-				$('#tiket_teknisi1').attr('required', 'required');
-				$('#tiket_teknisi2').attr('required', 'required');
-				$('#tiket_kendala').attr('required', 'required');
-				$('#tiket_tindakan').attr('required', 'required');
-				$('#tiket_pending').removeAttr('required');
-				//---------------GANTI PACTCORE---------------
-				$("#ck_ganti_pactcore").click(function() {
-				$('.submit_tiket').removeAttr('disabled');
-				if($(this).is(":checked")) {
-					$('.div_ganti_pactcore').show();
-					$('#ganti_pactcore').attr('required', 'required');
-					$('#nama_ganti_pactcore').attr('required', 'required');
-					// ---------------VALIDASI GANTI PACTCORE---------------
-					$('#ganti_pactcore').keyup(function() {
-						var ganti_pactcore = $('#ganti_pactcore').val();
-						var url = '{{ route("admin.val.valBarang", ":id") }}';
-						url = url.replace(':id', ganti_pactcore);
-						$.ajax({
-							url: url,
-							type: 'get',
-							data: {'_token': '{{ csrf_token() }}'
-                        },
-							dataType: 'json',
-							success: function(data) {
-								if(data.barang_kategori == 'PACTCORE'){
-									if(data.barang_qty - data.barang_digunakan > 0){
-										$('.tiket_pesan_1').html('')
-										$('.tiket_notif_1').removeClass('has-error has-feedback')
-										$('.tiket_notif_1').addClass('has-success has-feedback')
-										$('.submit_tiket').removeAttr('disabled');
-										$('#nama_ganti_pactcore').val(data.barang_nama)
-									} else{
-										$('#nama_ganti_pactcore').val('')
-										$('.submit_tiket').attr('disabled','disabled');
-										$('.tiket_notif_1').addClass('has-error has-feedback')
-										$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Stok barang ini habis</small>')
-									}
-								} else{
-									$('#nama_ganti_pactcore').val('')
-									$('.submit_tiket').attr('disabled','disabled');
-									$('.tiket_notif_1').addClass('has-error has-feedback')
-									$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
-								}
-						},
-					});
-				});
-				// ---------------END VALIDASI GANTI PACTCORE---------------
-			} else {
-				$('.submit_tiket').attr('disabled','disabled');
-				$('.div_ganti_pactcore').hide();
-				$('#ganti_pactcore').removeAttr('required');
-				$('#nama_ganti_pactcore').removeAttr('required');
-				$('#ganti_pactcore').val('');
-				$('#nama_ganti_pactcore').val('');
-				
-			}
-		});
-		//------------END GANTI PACTCORE---------------
-				//---------------GANTI ADAPTOR---------------
-				$("#ck_ganti_adaptor").click(function() {
-				$('.submit_tiket').removeAttr('disabled');
-				if($(this).is(":checked")) {
-					$('.div_ganti_adaptor').show();
-					$('#ganti_adaptor').attr('required', 'required');
-					$('#nama_ganti_adaptor').attr('required', 'required');
-					// ---------------VALIDASI GANTI ADAPTOR---------------
-					$('#ganti_adaptor').keyup(function() {
-						var ganti_adaptor = $('#ganti_adaptor').val();
-						var url = '{{ route("admin.val.valBarang", ":id") }}';
-						url = url.replace(':id', ganti_adaptor);
-						$.ajax({
-							url: url,
-							type: 'get',
-							data: {'_token': '{{ csrf_token() }}'},
-							dataType: 'json',
-							success: function(data) {
-								if(data.barang_kategori == 'ADAPTOR'){
-									if(data.barang_qty - data.barang_digunakan > 0){
-										$('.tiket_pesan_2').html('')
-										$('.tiket_notif_2').removeClass('has-error has-feedback')
-										$('.tiket_notif_2').addClass('has-success has-feedback')
-										$('.submit_tiket').removeAttr('disabled');
-										$('#nama_ganti_adaptor').val(data.barang_nama)
-									} else{
-										$('#nama_ganti_adaptor').val('')
-										$('.submit_tiket').attr('disabled','disabled');
-										$('.tiket_notif_2').addClass('has-error has-feedback')
-										$('.tiket_pesan_2').html('<small id="text" class="form-text text-muted text-danger">Kode Pactcore ditemukan / Stok habis</small>')
-									}
-								} else{
-										$('#nama_ganti_adaptor').val('')
-										$('.submit_tiket').attr('disabled','disabled');
-										$('.tiket_notif_2').addClass('has-error has-feedback')
-										$('.tiket_pesan_2').html('<small id="text" class="form-text text-muted text-danger">Kode Pactcore ditemukan / Stok habis</small>')
-									}
-						},
-					});
-				});
-				// ---------------END VALIDASI GANTI ADAPTOR---------------
-			} else {
-				$('.submit_tiket').attr('disabled','disabled');
-				$('.div_ganti_adaptor').hide();
-				$('#ganti_adaptor').removeAttr('required');
-				$('#ganti_adaptor').val('');
-				$('#nama_ganti_adaptor').removeAttr('required');
-				$('#nama_ganti_adaptor').val('');
-				
-			}
-		});
-		//------------END GANTI ADAPTOR---------------
-				//---------------GANTI DROPCORE---------------
-				$("#ck_ganti_dropcore").click(function() {
-				$('.submit_tiket').removeAttr('disabled');
-				if($(this).is(":checked")) {
-					$('.div_ganti_dropcore').show();
-					$('#ganti_dropcore').attr('required', 'required');
-					$('#before').attr('required', 'required');
-					$('#after').attr('required', 'required');
-					$('#total').attr('required', 'required');
-					// ---------------VALIDASI GANTI DROPCORE---------------
-					$('#ganti_dropcore').keyup(function() {
-						var ganti_dropcore = $('#ganti_dropcore').val();
-						var url = '{{ route("admin.val.valBarang", ":id") }}';
-						url = url.replace(':id', ganti_dropcore);
-						$.ajax({
-							url: url,
-							type: 'GET',
-							data: {'_token': '{{ csrf_token() }}'},
-							dataType: 'json',
-							success: function(data) {
-								if(data.barang_kategori == 'DROPCORE'){
-									if(data.barang_qty - data.barang_digunakan > 0){
-										$('.tiket_pesan_3').html('')
-										$('.tiket_notif_3').removeClass('has-error has-feedback')
-										$('.tiket_notif_3').addClass('has-success has-feedback')
-										$('.submit_tiket').removeAttr('disabled');
-										$('#before').val(data.barang_qty - data.barang_digunakan)
-									} else{
-										$('#before').val('')
-										$('#after').val('')
-										$('#total').val('')
-										$('.submit_tiket').attr('disabled','disabled');
-										$('.tiket_notif_3').addClass('has-error has-feedback')
-										$('.tiket_pesan_3').html('<small id="text" class="form-text text-muted text-danger">Kode barang ini habis</small>')
-									}
-								} else{
-									$('#before').val('')
-									$('#after').val('')
-									$('#total').val('')
-									$('.submit_tiket').attr('disabled','disabled');
-									$('.tiket_notif_3').addClass('has-error has-feedback')
-									$('.tiket_pesan_3').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
-								}
-								
-						},
-					});
-				});
-				// ---------------END VALIDASI GANTI DROPCORE---------------
-			} else {
-				$('.submit_tiket').attr('disabled','disabled');
-				$('.div_ganti_dropcore').hide();
-				$('#ganti_dropcore').removeAttr('required');
-				$('#ganti_dropcore').val('')
-				$('#before').val('')
-				$('#after').val('')
-				$('#total').val('')
-			}
-		});
-		//------------END GANTI DROPCORE---------------
-				//---------------GANTI ONT---------------
-				$("#ck_ganti_ont").click(function() {
-				$('.submit_tiket').removeAttr('disabled');
-				if($(this).is(":checked")) {
-					$('.div_ganti_ont').show();
-					$('#ganti_ont').attr('required', 'required');
-					$('#tiket_nama_barang4').attr('required', 'required');
-					$('#tiket_mac').attr('required', 'required');
-					$('#tiket_sn').attr('required', 'required');
-					// ---------------VALIDASI GANTI ONT---------------
-					$('#ganti_ont').keyup(function() {
-						var ganti_ont = $('#ganti_ont').val();
-						var url = '{{ route("admin.val.valBarang", ":id") }}';
-						url = url.replace(':id', ganti_ont);
-						$.ajax({
-							url: url,
-							type: 'GET',
-							data: {'_token': '{{ csrf_token() }}'},
-							dataType: 'json',
-							success: function(data) {
-								if(data.barang_kategori == 'ONT'){
-									if(data.barang_qty - data.barang_digunakan > 0){
-										$('.tiket_pesan_4').html('')
-										$('.tiket_notif_4').removeClass('has-error has-feedback')
-										$('.tiket_notif_4').addClass('has-success has-feedback')
-										$('.submit_tiket').removeAttr('disabled');
-										$('#tiket_nama_barang4').val(data.barang_nama)
-										$('#tiket_mac').val(data.barang_mac)
-										$('#tiket_sn').val(data.barang_sn)
-									} else{
-										$('#tiket_nama_barang4').val('')
-										$('#tiket_mac').val('')
-										$('#tiket_sn').val('')
-										$('.submit_tiket').attr('disabled','disabled');
-										$('.tiket_notif_4').addClass('has-error has-feedback')
-										$('.tiket_pesan_4').html('<small id="text" class="form-text text-muted text-danger">Kode barang ini habis</small>')
-									}
-								} else{
-									$('#tiket_nama_barang4').val('')
-									$('#tiket_mac').val('')
-									$('#tiket_sn').val('')
-									$('.submit_tiket').attr('disabled','disabled');
-									$('.tiket_notif_4').addClass('has-error has-feedback')
-									$('.tiket_pesan_4').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
-								}
-								
-						},
-					});
-				});
-				// ---------------END VALIDASI GANTI ONT---------------
-			} else {
-				$('.submit_tiket').attr('disabled','disabled');
-				$('.div_ganti_ont').hide();
-				$('#ganti_ont').removeAttr('required');
-				$('#ganti_ont').val('')
-				$('#tiket_nama_barang4').val('')
-				$('#tiket_mac').val('')
-				$('#tiket_sn').val('')
-			}
-		});
-		//------------END GANTI ONT---------------
-				//---------------GANTI ONT---------------
-				$("#ck_lain_lain").click(function() {
-					if($(this).is(":checked")) {
-						$('.submit_tiket').removeAttr('disabled');
-					} else {
-						$('.submit_tiket').attr('disabled','disabled');
-					}
-				});
-				//------------END GANTI ONT---------------
-				
-			}
-		});
-	});
+	// /////---------------------------------------------------------------UPDATE TIKET--------------------------------------------------
+	// $(document).ready(function() {
+	// 	// $('.submit_tiket').attr('disabled','disabled');
+		
+		
+	// 	$('select[name=tiket_status]').change(function () {
+	// 		if ($(this).val() == 'Pending') {
+	// 			$('.div_tiket_ket_pending').show();
+	// 			$('.div_tiket_closed').hide();
+	// 			$('.div_ganti_barang').hide();
 
-	//----------------------END TIKET
+	// 			$("#ganti_barang").prop("checked", false);
+	// 			$("#ganti_lainnya").prop("checked", false);
+	// 			$("#ck_ganti_pactcore").prop("checked", false);
+	// 			$("#ck_ganti_adaptor").prop("checked", false);
+	// 			$("#ck_ganti_ont").prop("checked", false);
+	// 			$("#ck_ganti_dropcore").prop("checked", false);
+
+	// 			$('#tiket_ket_pending').attr('required', 'required');
+				
+
+	// 			$('#tiket_kendala').removeAttr('required');
+	// 			$('#tiket_tindakan').removeAttr('required');
+	// 			$('#tiket_foto').removeAttr('required');
+	// 			$('#kode_pactcore').removeAttr('required');
+	// 			$('#kode_adaptor').removeAttr('required');
+	// 			$('#kode_ont').removeAttr('required');
+	// 			$('#kode_dropcore').removeAttr('required');
+	// 			$('#tiket_jumlah').removeAttr('required');
+	
+				
+	// 		} else if ($(this).val() == 'Closed') {
+	// 			$('.div_tiket_closed').show();
+	// 			$('.div_tiket_ket_pending').hide();
+	// 			$('#tiket_ket_pending').removeAttr('required');
+
+	// 			$('#tiket_waktu_penanganan').attr('required', 'required');
+
+	// 			$('#tiket_kendala').attr('required', 'required');
+	// 			$('#tiket_tindakan').attr('required', 'required');
+	// 			$('#tiket_foto').attr('required', 'required');
+	// 			$('#ganti_barang').attr('required', 'required');
+	// 			$('#ganti_lainnya').attr('required', 'required');
+				
+				
+	// 			$("#ganti_barang").click(function() {
+	// 				if($(this).is(":checked")) {
+	// 					$('#ganti_lainnya').removeAttr('required');
+	// 					$("#ganti_lainnya").prop('checked', false);
+	// 					$('.div_ganti_barang').show();
+
+	// 					$('#kode_pactcore').attr('required', 'required');
+	// 					$('#kode_adaptor').attr('required', 'required');
+	// 					$('#kode_ont').attr('required', 'required');
+	// 					$('#kode_dropcore').attr('required', 'required');
+	// 					// $('#nama_pactcore').attr('required', 'required');
+	// 					$('#nama_ont').attr('required', 'required');
+	// 					$('#nama_dropcore').attr('required', 'required');
+	// 					$('#tiket_jumlah').attr('required', 'required');
+	// 					$('#total').attr('required', 'required');
+	// 					$('#before').attr('required', 'required');
+	// 					$('#after').attr('required', 'required');
+
+	// 					//---------------GANTI PACTCORE---------------
+	// 					$("#ck_ganti_pactcore").click(function() {
+	// 						if($(this).is(":checked")) {
+	// 							$('.div_ganti_pactcore').show();
+	// 							$('#kode_pactcore').attr('required', 'required');
+	// 							$('#ktg_pactcore').attr('required', 'required');
+	// 							// ---------------VALIDASI GANTI PACTCORE---------------
+	// 							$('#kode_pactcore').keyup(function() {
+	// 									var kode_pactcore = $('#kode_pactcore').val();
+	// 									var url = '{{ route("admin.val.valBarang", ":id") }}';
+	// 									url = url.replace(':id', kode_pactcore);
+	// 									$.ajax({
+	// 										url: url,
+	// 										type: 'get',
+	// 										data: {'_token': '{{ csrf_token() }}'
+	// 									},
+	// 										dataType: 'json',
+	// 										success: function(data) {
+	// 												if(data.barang_kategori == 'PACTCORE'){
+	// 													if(data.barang_qty - data.barang_digunakan > 0){
+	// 														$('.submit_tiket').removeAttr('disabled');
+	// 														$('.pesan_pactcore').html('')
+	// 														$('.notif_pactcore').removeClass('has-error has-feedback')
+	// 														$('.notif_pactcore').addClass('has-success has-feedback')
+	// 														$('#ktg_pactcore').val(data.barang_kategori)
+	// 														$('#harga_pactcore').val(data.barang_harga)
+	// 													} else{
+	// 														$('.submit_tiket').attr('disabled','disabled');
+	// 														$('#ktg_pactcore').val('')
+	// 														$('#harga_pactcore').val('')
+	// 														$('.notif_pactcore').addClass('has-error has-feedback')
+	// 														$('.pesan_pactcore').html('<small id="text" class="form-text text-muted text-danger">Stok barang ini habis</small>')
+	// 													}
+	// 												} else{
+	// 													$('.submit_tiket').attr('disabled','disabled');
+	// 													$('#ktg_pactcore').val('')
+	// 													$('#harga_pactcore').val('')
+	// 													$('.notif_pactcore').removeClass('has-success has-feedback')
+	// 													$('.notif_pactcore').addClass('has-error has-feedback')
+	// 													$('.pesan_pactcore').html('<small id="text" class="form-text text-muted text-danger">Kode tidak ditemukan / tidak sesuai kategori</small>')
+	// 												}
+	// 									},
+	// 								});
+	// 							});
+	// 							// ---------------END VALIDASI GANTI PACTCORE---------------
+	// 						} else {
+	// 							$('.submit_tiket').removeAttr('disabled');
+	// 							$('.div_ganti_pactcore').hide();
+	// 							$('#kode_pactcore').removeAttr('required');
+	// 							$('#ktg_pactcore').removeAttr('required');
+	// 							$('#harga_pactcore').removeAttr('required');
+	// 							$('#kode_pactcore').val('');
+	// 							$('#ktg_pactcore').val('');
+	// 							$('#harga_pactcore').val('');
+								
+	// 						}
+	// 					});
+	// 					//------------END GANTI PACTCORE---------------
+	// 					//---------------GANTI ADAPTOR---------------
+	// 							$("#ck_ganti_adaptor").click(function() {
+	// 								if($(this).is(":checked")) {
+	// 									$('.div_ganti_adaptor').show();
+	// 									$('#kode_adaptor').attr('required', 'required');
+	// 									$('#nama_ganti_adaptor').attr('required', 'required');
+	// 									// ---------------VALIDASI GANTI ADAPTOR---------------
+	// 									$('#kode_adaptor').keyup(function() {
+	// 										var kode_adaptor = $('#kode_adaptor').val();
+	// 										var url = '{{ route("admin.val.valBarang", ":id") }}';
+	// 										url = url.replace(':id', kode_adaptor);
+	// 										$.ajax({
+	// 											url: url,
+	// 											type: 'get',
+	// 											data: {'_token': '{{ csrf_token() }}'},
+	// 											dataType: 'json',
+	// 											success: function(data) {
+	// 													if(data.barang_kategori == 'ADAPTOR'){
+	// 														if(data.barang_qty - data.barang_digunakan > 0){
+	// 															$('.pesan_adaptor').html('')
+	// 															$('.notif_adaptor').removeClass('has-error has-feedback')
+	// 															$('.notif_adaptor').addClass('has-success has-feedback')
+	// 															$('#ktg_adaptor').val(data.barang_kategori)
+	// 															$('#harga_adaptor').val(data.barang_harga)
+	// 															$('.submit_tiket').removeAttr('disabled');
+	// 														} else{
+	// 															$('.submit_tiket').attr('disabled','disabled');
+	// 															$('#ktg_adaptor').val('')
+	// 															$('#harga_adaptor').val('')
+	// 															$('.notif_adaptor').addClass('has-error has-feedback')
+	// 															$('.pesan_adaptor').html('<small id="text" class="form-text text-muted text-danger">Stok barang habis</small>')
+	// 														}
+	// 													} else{
+	// 															$('.submit_tiket').attr('disabled','disabled');
+	// 															$('#ktg_adaptor').val('')
+	// 															$('#harga_adaptor').val('')
+	// 															$('.notif_adaptor').addClass('has-error has-feedback')
+	// 															$('.pesan_adaptor').html('<small id="text" class="form-text text-muted text-danger">Kode tidak ditemukan / tidak sesuai kategori</small>')
+	// 													}
+	// 										},
+	// 									});
+	// 								});
+	// 								// ---------------END VALIDASI GANTI ADAPTOR---------------
+	// 								} else {
+	// 									$('.submit_tiket').removeAttr('disabled');
+	// 									$('.div_ganti_adaptor').hide();
+	// 									$('#kode_adaptor').removeAttr('required');
+	// 									$('#kode_adaptor').val('');
+	// 									$('#ktg_adaptor').removeAttr('required');
+	// 									$('#ktg_adaptor').val('');
+	// 									$('#harga_adaptor').removeAttr('required');
+	// 									$('#harga_adaptor').val('');
+										
+	// 								}
+	// 							});
+	// 							//------------END GANTI ADAPTOR---------------
+
+	// 							//---------------GANTI ONT---------------
+	// 							$("#ck_ganti_ont").click(function() {
+	// 								if($(this).is(":checked")) {
+	// 									$('.div_ganti_ont').show();
+	// 									$('#kode_ont').attr('required', 'required');
+	// 									// ---------------VALIDASI GANTI ONT---------------
+	// 									$('#kode_ont').keyup(function() {
+	// 										var kode_ont = $('#kode_ont').val();
+	// 										var url = '{{ route("admin.val.valBarang", ":id") }}';
+	// 										url = url.replace(':id', kode_ont);
+	// 										$.ajax({
+	// 											url: url,
+	// 											type: 'GET',
+	// 											data: {'_token': '{{ csrf_token() }}'},
+	// 											dataType: 'json',
+	// 											success: function(data) {
+	// 												if(data.barang_kategori == 'ONT'){
+	// 													if(data.barang_qty - data.barang_digunakan > 0){
+	// 														$('.pesan_ont').html('')
+	// 														$('.notif_ont').removeClass('has-error has-feedback')
+	// 														$('.notif_ont').addClass('has-success has-feedback')
+	// 														$('#ktg_ont').val(data.barang_kategori)
+	// 														$('#harga_ont').val(data.barang_nama)
+	// 														$('.submit_tiket').removeAttr('disabled');
+	// 													} else{
+	// 														$('.submit_tiket').attr('disabled','disabled');
+	// 														$('#ktg_ont').val('')
+	// 														$('#harga_ont').val('')
+	// 														$('.notif_ont').addClass('has-error has-feedback')
+	// 														$('.pesan_ont').html('<small id="text" class="form-text text-muted text-danger">Kode barang ini habis</small>')
+	// 													}
+	// 												} else{
+	// 													$('.submit_tiket').attr('disabled','disabled');
+	// 													$('#ktg_ont').val('')
+	// 													$('#harga_ont').val('')
+	// 													$('.notif_ont').addClass('has-error has-feedback')
+	// 													$('.pesan_ont').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
+	// 												}
+													
+	// 										},
+	// 									});
+	// 								});
+	// 								// ---------------END VALIDASI GANTI ONT---------------
+	// 								} else {
+	// 									$('.submit_tiket').removeAttr('disabled');
+	// 									$('.div_ganti_ont').hide();
+	// 									$('#kode_ont').removeAttr('required');
+	// 									$('#kode_ont').val('')
+	// 									$('#nama_ont').val('')
+	// 									$('#tiket_mac').val('')
+	// 									$('#tiket_sn').val('')
+	// 								}
+	// 							});
+	// 							//------------END GANTI ONT---------------
+	// 							//---------------GANTI ONT---------------
+	// 							$("#ck_lain_lain").click(function() {
+	// 								if($(this).is(":checked")) {
+	// 									$('.submit_tiket').removeAttr('disabled');
+	// 								} else {
+	// 									$('.submit_tiket').attr('disabled','disabled');
+	// 								}
+	// 							});
+	// 							//------------END GANTI ONT---------------
+	// 							//---------------GANTI DROPCORE---------------
+	// 							$("#ck_ganti_dropcore").click(function() {
+	// 								if($(this).is(":checked")) {
+	// 									$('.div_ganti_dropcore').show();
+										
+	// 									// ---------------VALIDASI GANTI DROPCORE---------------
+	// 									$('#kode_dropcore').keyup(function() {
+	// 										var kode_dropcore = $('#kode_dropcore').val();
+	// 										var url = '{{ route("admin.val.valBarang", ":id") }}';
+	// 										url = url.replace(':id', kode_dropcore);
+	// 										$.ajax({
+	// 											url: url,
+	// 											type: 'GET',
+	// 											data: {'_token': '{{ csrf_token() }}'},
+	// 											dataType: 'json',
+	// 											success: function(data) {
+	// 												if(data.barang_kategori == 'DROPCORE'){
+	// 													if(data.barang_qty - data.barang_digunakan > 0){
+	// 														$('.pesan_dropcore').html('')
+	// 														$('.notif_dropcore').removeClass('has-error has-feedback')
+	// 														$('.notif_dropcore').addClass('has-success has-feedback')
+	// 														$('#before').val(data.barang_qty - data.barang_digunakan)
+	// 														$('.submit_tiket').removeAttr('disabled');
+	// 													} else{
+	// 														$('.submit_tiket').attr('disabled','disabled');
+	// 														$('#before').val('')
+	// 														$('#after').val('')
+	// 														$('#total').val('')
+	// 														$('.notif_dropcore').addClass('has-error has-feedback')
+	// 														$('.pesan_dropcore').html('<small id="text" class="form-text text-muted text-danger">Kode barang ini habis</small>')
+	// 													}
+	// 												} else{
+	// 													$('.submit_tiket').attr('disabled','disabled');
+	// 													$('#before').val('')
+	// 													$('#after').val('')
+	// 													$('#total').val('')
+	// 													$('.notif_dropcore').addClass('has-error has-feedback')
+	// 													$('.pesan_dropcore').html('<small id="text" class="form-text text-muted text-danger">Kode tidak sesuai kategori</small>')
+	// 												}
+													
+	// 										},
+	// 									});
+	// 								});
+	// 								// ---------------END VALIDASI GANTI DROPCORE---------------
+	// 								} else {
+	// 									$('.submit_tiket').removeAttr('disabled');
+	// 									$('.div_ganti_dropcore').hide();
+	// 									$('#ganti_dropcore').removeAttr('required');
+	// 									$('#ganti_dropcore').val('')
+	// 									$('#before').val('')
+	// 									$('#after').val('')
+	// 									$('#total').val('')
+	// 								}
+	// 							});
+	// 							//------------END GANTI DROPCORE---------------
+
+	// 				} else{
+	// 					$('.submit_tiket').removeAttr('disabled');
+	// 					$('.div_tiket_ganti_barang').hide();
+	// 				}
+	// 			})
+
+
+
+
+
+
+				
+				
+				
+
+
+
+						
+	// 			$("#ganti_lainnya").click(function() {
+	// 				if($(this).is(":checked")) {
+	// 					$("#ganti_barang").prop('checked', false);
+	// 				}
+	// 			})
+
+
+			
+				
+				
+				
+	// 		}
+	// 	});
+	// });
+
+	// //----------------------END TIKET
 	// #LAYANAN REGISTRASI
 	$('select[name=reg_layanan]').change(function () {
 		if ($(this).val() == 'HOTSPOT') {
@@ -2031,6 +2081,14 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			$('.tiket').click(function(){
 				var id =$(this).data("id");
 				var url = '{{ route("admin.tiket.details_tiket", ":id") }}';
+				url = url.replace(':id', id);
+				// alert(url);
+				window.location=url;
+			});
+			// DETAILS TIKET PROJECT
+			$('.tiket_project').click(function(){
+				var id =$(this).data("id");
+				var url = '{{ route("admin.tiket.details_tiket_project", ":id") }}';
 				url = url.replace(':id', id);
 				// alert(url);
 				window.location=url;
@@ -2184,6 +2242,7 @@ for (let i = 0; i < jurnal_pencairan.length; i++) {
 			
   })
 }
+
 		//////PENCAIRAN JURNAL
 		let pencairan_fee = document.querySelectorAll(".pencairan_fee")
 let pencairan_total_fee = document.getElementById("pencairan_total_fee")
@@ -2495,202 +2554,326 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					//--------------------END DEAKTIVASI----------------------
 					</script>
 
-{{-- <script>
-	$(document).ready(function() {
-		$(document).on('click', 'button.removebutton_tiket', function () {
-												$(this).closest('tr').remove();
-												return false;
-											});
-
-											
-
-											$("#tiket_barang").append('<tr>'+
-								'<td>'+ i +'</td>'+
-								'<td><input name="tiket_test" id="tiket_pending" value="aaaa" type="text" class="form-control"></td>'+
-									
-									'<td with><button type="button" class="removebutton btn btn-danger btn-sm" title="Remove this row">X</button></td></tr>').find("input").each(function () {
-								});
-								i++;
-							});
-</script> --}}
-
 					<script>
 						//--------------------START BARANG KELUAR----------------------
+							$('.button_masukan').click(function(){
+								var i = 1;
+								if($('#jumlah_barang').val()==0){
+									$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah tidak boleh kosong</small>')
+									$('.notif_jumlah').addClass('has-error has-feedback')
+								} else {
+									$('.pesan_jumlah').html('')
+									$('.notif_jumlah').removeClass('has-error has-feedback')
+									var jumlah_barang = $('#jumlah_barang').val();
+									var kode_barang = $('#barang_id').val();
+									var url = '{{ route("admin.val.valBarang", ":id") }}';
+									url = url.replace(':id', kode_barang);
+									$.ajax({
+										url: url,
+											type: 'GET',
+											data: {
+												'_token': '{{ csrf_token() }}'
+											},
+											dataType: 'json',
+											success: function(data) {
+												if(data.barang_id){
+													if(data.barang_qty - data.barang_digunakan != 0){
+														if(data.barang_qty - data.barang_digunakan < $('#jumlah_barang').val()){
+														$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah barang melebih batas stok</small>')
+														$('.notif_jumlah').addClass('has-error has-feedback')
+													} else {
+														$('.notif_barang_id').removeClass('has-error has-feedback')
+														$('.pesan_barang_id').html('')
+														i = i + 1
+														var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
+															html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
+															html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
+															html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
+															html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
+															html += '<td contenteditable="true" >'+data.barang_harga+'</td>';
+															html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+															html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga * jumlah_barang+'</td>';
+															html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
+															html += '</tr>';
+			
+														$('#t').append(html)
+														$('.simpan').removeAttr('disabled');
+													}
+													} else {
+														$('.notif_barang_id').addClass('has-error has-feedback')
+														$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Stok habis</small>')
+														
+													}
+												} else {
+													$('.notif_barang_id').addClass('has-error has-feedback')
+													$('.pesan_barang_id').html('<small class="form-text text-muted text-danger">Kode barang tidak ditemukan</small>')
+	
+												}
+											}
+										});
+								}
 
-						var i = 1;
-							$(document).on('click', 'button.removebutton', function () {
-								$(this).closest('tr').remove();
-								return false;
-							});
 
-							
-
-							$('.pilih_barang').click(function(){
-								var kode_barang =$(this).data("id");
-								var nama_barang =$(this).data("nama");
-								var merek =$(this).data("merek");
-							var harga =$(this).data("harga");
-							var qty =$(this).data("qty");
-							// var qty =$('#qty').val()
-							$('#modal_barang').modal('hide')
-							$("#t").append('<tr>'+
-								'<td>'+ i +'</td>'+
-								'<td><input type="text" value="'+kode_barang+'" class="form-control " name="bk_id_barang[]" id="" readonly ></td>'+
-								'<td><input type="text" value="'+nama_barang+'" class="form-control " name="bk_nama_barang[]" id="" readonly ></td>'+
-								'<td><input type="text" value="'+merek+'" class="form-control" name="" readonly ></td>'+
-								'<td><input type="text" value="'+harga+'" class="form-control" name="bk_harga_barang[]" readonly ></td>'+
-									'<td width="10%"><input type="text" readonly value="'+qty+'" class="form-control"></td>'+
-									'<td width="10%"><input type="number" value="1" class="form-control"  min="1" max="'+qty+'" onkeydown="return false name="bk_qty[]"></td>'+
-									
-									'<td with><button type="button" class="removebutton btn btn-danger btn-sm" title="Remove this row">X</button></td></tr>').find("input").each(function () {
+								});  
+								$(document).on('click','#hapus', function(){
+								   let hapus = $(this).data('row')
+								   $('#' + hapus).remove()
 								});
-								i++;
-							});
-				
-				//--------------------END BARANG KELUAR----------------------
+
+								$(document).on('click','.simpan', function(){
+									
+
+
+									let bk_jenis_laporan =$('#bk_jenis_laporan').val()
+									let bk_penerima =$('#bk_penerima').val()
+								  	let bk_keperluan =$('#bk_keperluan').val()
+								  	let tiket_type =$('#tiket_type').val()
+								  	let tiket_site =$('#tiket_site').val()
+
+										if(bk_jenis_laporan != "" && bk_penerima != "" && bk_keperluan != "" && tiket_site != "" && tiket_type != ""){
+											$('.notif1').removeClass('has-error has-feedback')
+
+										let barang_id = []
+										let barang_nama = []
+										let jumlah_harga = []
+										let jumlah_barang = []
+										let barang_kategori = []
+										console.log(barang_id)
+										$('.barang_id').each(function(){
+											barang_id.push($(this).text())
+										})
+										$('.barang_nama').each(function(){
+											barang_nama.push($(this).text())
+										})
+										$('.jumlah_harga').each(function(){
+											jumlah_harga.push($(this).text())
+										})
+										$('.jumlah_barang').each(function(){
+											jumlah_barang.push($(this).text())
+										})
+										$('.barang_kategori').each(function(){
+											barang_kategori.push($(this).text())
+										})
+										var url = '{{ route("admin.gudang.proses_form_barang_keluar") }}';
+									$.ajax({
+									url: url,
+									type: 'POST',
+									data: {
+										barang_id:barang_id,
+										jumlah_harga:jumlah_harga,
+										jumlah_barang:jumlah_barang,
+										bk_penerima:bk_penerima,
+										barang_kategori:barang_kategori,
+										bk_jenis_laporan:bk_jenis_laporan,
+										bk_keperluan:bk_keperluan,
+										barang_nama:barang_nama,
+										tiket_type:tiket_type,
+										tiket_site:tiket_site,
+										'_token': '{{ csrf_token() }}'},
+									dataType: 'json',
+									success: function(data) {
+										$('.simpan').attr('disabled','disabled');
+
+												swal("Berhasil!", "Berhasil menyimpan data barang keluar ke database", {
+												icon : "success",
+												buttons: {        			
+													confirm: {
+														className : 'btn btn-success'
+													}
+												},
+											});
+
+										}
+									});
+
+
+										} else{
+											$('.notif1').addClass('has-error has-feedback')
+										}
+								});
+								// });
+								//--------------------END BARANG KELUAR----------------------
+			
+
 					</script>
 					<script>
-						//--------------------START TIKET NEW----------------------
+						//--------------------START TIKET BARANG KELUAR----------------------
+							$('.button_tambah_barang').click(function(){
+								var i = 1;
+								if($('#jumlah_barang').val()==0){
+									$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah tidak boleh kosong</small>')
+									$('.notif_jumlah').addClass('has-error has-feedback')
+								} else {
+									$('.pesan_jumlah').html('')
+									$('.notif_jumlah').removeClass('has-error has-feedback')
+									var jumlah_barang = $('#jumlah_barang').val();
+									var kode_barang = $('#barang_id').val();
+									var url = '{{ route("admin.val.valBarang", ":id") }}';
+									url = url.replace(':id', kode_barang);
+									$.ajax({
+										url: url,
+											type: 'GET',
+											data: {
+												'_token': '{{ csrf_token() }}'
+											},
+											dataType: 'json',
+											success: function(data) {
+												if(data.barang_id){
+													if(data.barang_qty - data.barang_digunakan != 0){
+														if(data.barang_qty - data.barang_digunakan < $('#jumlah_barang').val()){
+														$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah barang melebih batas stok</small>')
+														$('.notif_jumlah').addClass('has-error has-feedback')
+														} else {
+																// $(".minmax").prop('min',1);
+																// $(".minmax").prop('max',data.barang_qty - data.barang_digunakan);
+																$('#jumlah_barang').attr('required', 'required');
+																$('.notif_barang_id').removeClass('has-error has-feedback')
+																$('.pesan_barang_id').html('')
+																i = i + 1
+																var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
+																	html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
+																	html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
+																	html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
+																	html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
+																	html += '<td contenteditable="true" >'+data.barang_harga+'</td>';
+																	html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+																	html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga * jumlah_barang+'</td>';
+																	html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
+																	html += '</tr>';
+					
+																$('#t').append(html)
+																$('.simpan').removeAttr('disabled');
+														}
+													} else {
+														$('.notif_barang_id').addClass('has-error has-feedback')
+														$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Stok habis</small>')
+														
+													}
+												} else {
+													$('.notif_barang_id').addClass('has-error has-feedback')
+													$('.pesan_barang_id').html('<small class="form-text text-muted text-danger">Kode barang tidak ditemukan</small>')
+	
+												}
+											}
+										});
+								}
 
-		// 				$(document).ready(function() {
 
-						
+								});  
+								$(document).on('click','#hapus', function(){
+								   let hapus = $(this).data('row')
+								   $('#' + hapus).remove()
+								});
 
-
-
-
-		// 	$('select[name=tiket_status]').change(function () {
-		// 	if ($(this).val() == 'Pending') {
-		// 		$('.submit_tiket').removeAttr('disabled');
-		// 		$('.div_tiket_pending').show();
-		// 		$('.div_tiket_closed').hide();
-		// 		$('#tiket_pending').attr('required', 'required');
-		// 		$('.tiket_waktu_penanganan').hide();
-		// 		$('#tiket_waktu_penanganan').removeAttr('required');
-		// 		$('#div_tiket_kendala').removeAttr('required');
-		// 		$('#tiket_tindakan').removeAttr('required');
-		// 		$('#tiket_teknisi1').attr('required', 'required');
-		// 		$('#tiket_teknisi2').attr('required', 'required');
-		// 		$('.submit_tiket').removeAttr('disabled');
-
-		// 	} else if ($(this).val() == 'Closed') {
-
-		// 		$('.submit_tiket').attr('disabled','disabled');
-		// 		$('.div_tiket_closed').show();
-		// 		$('.div_tiket_pending').hide();
-		// 		$('#tiket_waktu_penanganan').attr('required', 'required');
-		// 		$('#tiket_teknisi1').attr('required', 'required');
-		// 		$('#tiket_teknisi2').attr('required', 'required');
-		// 		$('#tiket_kendala').attr('required', 'required');
-		// 		$('#tiket_tindakan').attr('required', 'required');
-		// 		$("#ganti_barang").click(function() {
-		// 			if($(this).is(":checked")) {
-		// 				$('.div_ganti_barang').show();
-		// 				$("#ganti_lainnya").prop('checked', false);
-		// 				$(document).on('click', 'button.tiket_pilih_barang', function () {
-		// 					var kode_barang = $('#kode_barang').val();
-		// 					var url = '{{ route("admin.val.valBarang", ":id") }}';
-		// 					url = url.replace(':id', kode_barang);
-		// 					$.ajax({
-		// 						url: url,
-		// 						type: 'GET',
-		// 						data: {'_token': '{{ csrf_token() }}'},
-		// 						dataType: 'json',
-		// 						success: function(data) {
-		// 							$('.submit_tiket').removeAttr('disabled');
-		// 							if(data.barang_id){
-		// 							if(data.barang_qty - data.barang_digunakan > 0){
-		// 								$('#kode_barang').val('');
-		// 								$('.tiket_notif_1').removeClass('has-error has-feedback')
-		// 								$('.tiket_notif_1').addClass('has-success has-feedback')
-		// 								$('.hide_tr').show()
-		// 								$('.tiket_pesan_1').html('')
-										
-		// 									$(document).on('click', 'button.removebutton_tiket', function () {
-		// 										$(this).closest('tr').remove();
-		// 										return false;
-		// 									});
-
-											
-		// 									var qty = parseInt(data.barang_qty) - parseInt(data.barang_digunakan)
-		// 									$("#tiket_barang").append('<tr>'+
-		// 									'<td><input type="text" value="'+data.barang_id+'" class="form-control " name="tiket_barangId[]"  ></td>'+
-		// 									'<td><input type="text" value="'+data.barang_nama+'" class="form-control " name="tiket_barang_nama[]" readonly ></td>'+
-		// 									'<td><input type="text" value="'+data.barang_merek+'" class="form-control" name="" readonly ></td>'+
-		// 									'<td><input type="text" value="'+data.barang_harga+'" class="form-control" name="tiket_barang_harga[]" readonly ></td>'+
-		// 									'<td width="10%"><input type="text" readonly value="'+qty+'" class="form-control"></td>'+
-		// 									'<td width="10%"><input type="number" value="1" class="form-control"  min="1" max="'+qty+'" onkeydown="return false id="txtTitle" name="tiket_barang_qty[]"></td>'+
-											
-		// 									'<td with><button type="button" class="removebutton btn btn-danger btn-sm" title="Remove this row">X</button></td></tr>').find("input").each(function () {
-		// 									});
-
-		// 									$("form").submit(function (event) {
-		// 										var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
-												
-		// 										url = url.replace(':id', id);
-		// 											$.ajax({
-		// 												url: url,
-		// 												type: 'PUT',
-		// 												data: {
-		// 													barang_id:data.barang_idate,
-		// 													barang_nama:data.barang_nama,
-		// 													qty:qty *data.barang_harga,
-		// 													tiket_jenis:('#tiket_jenis').val(),
-		// 													tiket_status:('#tiket_status').val(),
-		// 													tiket_pending:('#tiket_pending').val(),
-		// 													tiket_kendala:('#tiket_kendala').val(),
-		// 													tiket_tindakan:('#tiket_tindakan').val(),
-		// 													tiket_foto:('#tiket_foto').val(),
-		// 													teknisi_id:$teknisi_id,
-		// 													tiket_teknisi2:$request->tiket_teknisi2,
-		// 													'_token': '{{ csrf_token() }}'
-		// 												},
-		// 											dataType: 'json',
-		// 											success: function(data) {
-		// 												console.log(data);;
-		// 											$("#biaya").val(data['biaya']);
-		// 											}
-		// 										});
-		// 										event.preventDefault();
-
-		// 										});
-		// 							} else{
-		// 								$('.tiket_notif_1').addClass('has-error has-feedback')
-		// 								$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Stok habis</small>')
-		// 							}
-		// 							} else{
-		// 								$('.tiket_notif_1').addClass('has-error has-feedback')
-		// 								$('.tiket_pesan_1').html('<small id="text" class="form-text text-muted text-danger">Kode Barang tidak ditemukan</small>')
-		// 							}
-		// 						},
-		// 						error: function(error) {
-		// 							// console.log(error)
+								$(document).on('click','.simpan_barang_tiket', function(){
 									
-		// 						},
-		// 					});
-		// 				});
-		
+									
+									let tiket_jenis =$('#tiket_jenis').val()
+									let tiket_teknisi1 =$('#tiket_teknisi1').val()
+								  	let tiket_tindakan =$('#tiket_tindakan').val()
+								  	let tiket_type =$('#tiket_type').val()
+								  	let tiket_site =$('#tiket_site').val()
+								  	let tiket_id =$('#tiket_id').val()
+									  
+							
+										let barang_id = []
+										let barang_nama = []
+										let jumlah_harga = []
+										let jumlah_barang = []
+										let barang_kategori = []
+										console.log(barang_id)
+										$('.barang_id').each(function(){
+											barang_id.push($(this).text())
+										})
+										$('.barang_nama').each(function(){
+											barang_nama.push($(this).text())
+										})
+										$('.jumlah_harga').each(function(){
+											jumlah_harga.push($(this).text())
+										})
+										$('.jumlah_barang').each(function(){
+											jumlah_barang.push($(this).text())
+										})
+										$('.barang_kategori').each(function(){
+											barang_kategori.push($(this).text())
+										})
+										var url = '{{ route("admin.gudang.proses_tiket_form_barang_keluar") }}';
+									$.ajax({
+									url: url,
+									type: 'POST',
+									data: {
+										barang_id:barang_id,
+										jumlah_harga:jumlah_harga,
+										jumlah_barang:jumlah_barang,
+										tiket_teknisi1:tiket_teknisi1,
+										barang_kategori:barang_kategori,
+										tiket_jenis:tiket_jenis,
+										tiket_tindakan:tiket_tindakan,
+										barang_nama:barang_nama,
+										tiket_type:tiket_type,
+										tiket_site:tiket_site,
+										tiket_id:tiket_id,
+										'_token': '{{ csrf_token() }}'},
+									dataType: 'json',
+									success: function(data) {
+										$('#jumlah_barang').removeAttr('required');
+										$('.simpan_barang_tiket').attr('disabled','disabled');
+										$('.tiket_noskb').attr('required','required');
+										$('#modal_tambah_barang').modal('hide');
+										$('#tiket_noskb').val(data);
+										}
+									});
+								});
+								// });
+								//--------------------END TIKET BARANG KELUAR----------------------
+			
 
-		// 			}else {
-		// 				$('.div_ganti_barang').hide();
-		// 			}
-		// 		});
-		// 		$("#ganti_lainnya").click(function() {
-		// 			if($(this).is(":checked")) {
-		// 				$('.div_ganti_barang').hide();
-		// 				$("#ganti_barang").prop('checked', false);
-		// 				$('.submit_tiket').removeAttr('disabled');
-		// 				$('#tiket_barang').empty();
-		// 				$('#kode_barang').val('');
-		// 				$('.tiket_notif_1').removeClass('has-error has-feedback')
-		// 			};
-		// 			});
-		// 	}
-		// });
-		// });
-
-				//--------------------END TIKET_NEW----------------------
 					</script>
+
+					<script>
+						//-----------------------START CLOSED TIKET NEW ---------------------------
+							$('select[name=tiket_status]').change(function () {
+								if ($(this).val() == 'Pending') {
+									$('.div_tiket_ket_pending').show();
+									$('#tiket_ket_pending').attr('required', 'required');
+									$('#tiket_teknisi1').attr('required', 'required');
+									$('#tiket_teknisi2').attr('required', 'required');
+									$('#tiket_kendala').removeAttr('required');
+									$('#tiket_tindakan').removeAttr('required');
+									$('#tiket_foto').removeAttr('required');
+									$('#tiket_noskb').removeAttr('required');
+									
+
+									
+								} else if ($(this).val() == 'Closed') {
+									$('.div_tiket_closed').show();
+									$('.div_tiket_ket_pending').hide();
+									$('#tiket_ket_pending').removeAttr('required');
+									$('#tiket_waktu_penanganan').attr('required', 'required');
+									$('#tiket_teknisi1').attr('required', 'required');
+									$('#tiket_teknisi2').attr('required', 'required');
+									$('#tiket_foto').attr('required', 'required');
+									$('#tiket_kendala').attr('required', 'required');
+									$('#tiket_tindakan').attr('required', 'required');
+
+									$('.button_modal_barang').click(function(){
+											
+											if($('#tiket_teknisi1').val() != "" && $('#tiket_teknisi2').val() != "" && $('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""){
+												$('#modal_tambah_barang').modal('show');
+											} else {
+												$('.notif').addClass('has-error has-feedback')
+												$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
+														
+											}
+									})
+
+								};
+							});
+						//-----------------------END CLOSED TIKET NEW -----------------------------
+					</script>
+
+				
+					
 			
 
 			

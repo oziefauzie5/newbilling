@@ -7,47 +7,32 @@
       <div class="card">
           <div class="card-body">
           
-            <form >
               <div class="row">
-            @role('admin|STAF ADMIN')
-            <div class="col">
-              <button class="btn btn-primary btn-sm mb-3 btn-block" type="button" data-toggle="modal" data-target="#add">Tambah Barang</button>
+            <div class="col-3">
+              <a href="{{route('admin.gudang.stok_gudang')}}"><button class="btn btn-primary btn-sm mb-3 btn-block" type="button" >Kembali</button></a>
             </div>
             <div class="col">
-              <button class="btn btn-primary btn-sm mb-3 btn-block" type="button" data-toggle="modal" data-target="#addkategori">Buat Kategori</button>            
-            </div>
-            @endrole
-            <div class="col">
-              <a href="{{route('admin.gudang.stok_gudang')}}"><button class="btn btn-primary btn-sm mb-3 btn-block" type="button" >Stok Barang</button></a>
-              
+              <button class="btn btn-dark btn-sm mb-3 btn-block" type="button" data-toggle="modal" data-target="#add">Tambah Barang</button>
             </div>
             <div class="col">
-              <a href="{{route('admin.gudang.barang_keluar')}}"><button class="btn btn-primary btn-sm mb-3 btn-block" type="button" >Barang Keluar</button></a>
-              
+              <button class="btn btn-info btn-sm mb-3 btn-block" type="button" data-toggle="modal" data-target="#addkategori">Buat Kategori</button>            
             </div>
-          </div>
-            </form>
           <hr>
            <div class="table-responsive">
-            <table id="input_data" class="display table table-striped table-hover text-nowrap" >                          
+            <table id="input_data" class="display table table-striped table-hover" >                          
               <thead>
             <tr class="text-center">
               {{-- <th>#</th> --}}
               <th>ID</th>
               <th>Kategori</th>
+              <th>Tanggal Masuk</th>
               <th>Nama</th>
               <th>Merek</th>
               <th>Stok Awal</th>
+              <th>Stok Akhir</th>
               <th>Satuan</th>
-              <th>SN</th>
-              <th>Mac Address</th>
               <th>Keterangan</th>
               <th>Status</th>
-              <th>Nama Pengguna Perangkat</th>
-              <th>Tanggal Terima</th>
-              <th>Penerima</th>
-              <th>Data diperbarui oleh</th>
-              <th>Tanggal data diperbarui</th>
             </tr>
             </thead>
             <tbody>
@@ -60,23 +45,65 @@
                   {{-- <i class="fas fa-edit" data-toggle="modal" data-target="#edit{{ $d->barang_id }}"></i> --}}
                   {{-- <a href="{{ route('admin.barang.rekap_barang',['id'=>$d->barang_id])}}" class="btn"><i class="fas fa-print"></i></a> --}}
                {{-- </td> --}}
-               <td>{{ $d->barang_id }}</td>
-               <td>{{ $d->barang_kategori }}</td>
-               <td>{{ $d->barang_nama }}</td>
-               <td>{{ $d->barang_merek }}</td>
-               <td>{{ $d->barang_qty }}</td>
-               <td>{{ $d->barang_satuan }}</td>
-               <td>{{ $d->barang_sn }}</td>
-               <td>{{ $d->barang_mac }}</td>
-               <td>{{ $d->barang_ket }}</td>
-               <td>@if($d->barang_status == 0)Bagus, normal dan bisa digunakan @elseif($d->barang_status == 1) Barang Normal dan telah digunakan @elseif($d->barang_status == 4) Tidak bagus, rusak dan tidak bisa digunakan @elseif($d->barang_status == 5)Barang belum dicek @endif</td>
-               <td>{{ $d->barang_nama_pengguna }}</td>
-               <td>{{  date('d-m-Y', strtotime($d->barang_tglmasuk)); }}</td>
-               <td>{{ $d->barang_penerima }}</td>
-               <td>{{ $d->barang_admin_update }}</td>
-               <td>{{  date('d-m-Y H:m:s', strtotime($d->updated_at)); }}</td>
+               <td >{{ $d->barang_id }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">{{ $d->barang_kategori }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">{{  date('d-m-Y', strtotime($d->barang_tglmasuk)); }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">{{ $d->barang_nama }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">{{ $d->barang_merek }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">{{ $d->barang_qty }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">{{ $d->barang_qty - $d->barang_digunakan }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">{{ $d->barang_satuan }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">{{ $d->barang_ket }}</td>
+               <td data-toggle="modal" data-target="#detail_barang{{ $d->barang_id }}">@if($d->barang_status == 0)Bagus, normal dan bisa digunakan @elseif($d->barang_status == 1) Barang Normal dan telah digunakan @elseif($d->barang_status == 2) Barang dalam status tiket @elseif($d->barang_status == 4) Tidak bagus, rusak dan tidak bisa digunakan @elseif($d->barang_status == 5)Barang belum dicek @endif</td>
+            
             </tr>
+
+            {{-- -----------------------------------------------------------START DETAIL_BARANG--------------------------------------------------------------- --}}
+            <!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="detail_barang{{ $d->barang_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        {{-- <div class="row"> --}}
+          <div class="col-4">
+            <h5 class="modal-title" id="exampleModalLabel">KODE BARANG : {{ $d->barang_id }}</h5>
+          </div>
+          <div class="col-4">
+            <h5 class="modal-title" id="exampleModalLabel">KATEGORI  :{{ $d->barang_kategori }}</h5>
+          </div>
+          <div class="col-4">
+            <h5 class="modal-title" id="exampleModalLabel">TANGGAL MASUK  :{{  date('d-m-Y', strtotime($d->barang_tglmasuk)); }}</h5>
+          </div>
+        {{-- </div> --}}
         
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li> Nama Barang : {{ $d->barang_nama }}</li>
+          <li> Merek : {{ $d->barang_merek }}</li>
+          <li> Stok Awal : {{ $d->barang_qty }}</li>
+          <li> Stok Akhir : {{ $d->barang_qty - $d->barang_digunakan }}</li>
+          <li> Satuan : {{ $d->barang_satuan }}</li>
+          <li> Keterangan : {{ $d->barang_ket }}</li>
+          <li> Status Barang : @if($d->barang_status == 0)Bagus, normal dan bisa digunakan @elseif($d->barang_status == 1) Barang Normal dan telah digunakan @elseif($d->barang_status == 2) Barang dalam lis tiket @elseif($d->barang_status == 4) Tidak bagus, rusak dan tidak bisa digunakan @elseif($d->barang_status == 5)Barang belum dicek @endif</li>
+          <li> Serial Number : {{ $d->barang_sn }}</li>
+          <li> Mac Address : {{ $d->barang_mac }}</li>
+          <li> Digunakan oleh :{{ $d->barang_nama_pengguna }}</li>
+          <li> Penerima Barang {{ $d->barang_penerima }}</li>
+          <li> Di update oleh :{{ $d->barang_admin_update }}</li>
+          <li> Tanggal terakhir Update : {{  date('d-m-Y H:m:s', strtotime($d->updated_at)); }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+            {{-- -----------------------------------------------------------END DETAIL_BARANG--------------------------------------------------------------- --}}
+            
             {{-- -----------------------------------------------------------EDIT BARANG--------------------------------------------------------------- --}}
                 <div class="modal fade" id="edit{{ $d->barang_id }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                   <div class="modal-dialog modal-lg">

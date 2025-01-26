@@ -275,11 +275,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/whatsapp/broadcast', [WhatsappController::class, 'broadcast'])->name('whatsapp.broadcast')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/whatsapp/pesan-delete/{id}', [WhatsappController::class, 'delete_pesan'])->name('wa.delete_pesan')->middleware(['role:admin|STAF ADMIN']);
     ##--TIKET
-    Route::get('/tiket', [TiketController::class, 'data_tiket'])->name('tiket.data_tiket')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/tiket', [TiketController::class, 'dashboard_tiket'])->name('tiket.dashboard_tiket')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/tiket/data-tiket', [TiketController::class, 'data_tiket'])->name('tiket.data_tiket')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/tiket/data-tiket-project', [TiketController::class, 'data_tiket_project'])->name('tiket.data_tiket_project')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/tiket/buat-tiket', [TiketController::class, 'buat_tiket'])->name('tiket.buat_tiket')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/tiket/{id}/tiket-update', [TiketController::class, 'tiket_update'])->name('tiket.tiket_update')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/tiket/{id}', [TiketController::class, 'details_tiket'])->name('tiket.details_tiket')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/tiket/{id}/tiket-closed', [TiketController::class, 'details_tiket_closed'])->name('tiket.details_tiket_closed')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/tiket/{id}/tiket-project', [TiketController::class, 'details_tiket_project'])->name('tiket.details_tiket_project')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/tiket/store', [TiketController::class, 'store'])->name('tiket.store')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/tiket/export', [TiketController::class, 'export_tiket'])->name('tiket.export_tiket')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/tiket/{id}/cari', [TiketController::class, 'pilih_pelanggan'])->name('tiket.pilih_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -293,6 +296,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/gudang/barang-keluar', [GudangController::class, 'barang_keluar'])->name('gudang.barang_keluar')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/form-barang-keluar', [GudangController::class, 'form_barang_keluar'])->name('gudang.form_barang_keluar')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/gudang/proses-barang-keluar', [GudangController::class, 'proses_form_barang_keluar'])->name('gudang.proses_form_barang_keluar')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/gudang/proses-tiket-barang-keluar', [GudangController::class, 'proses_tiket_form_barang_keluar'])->name('gudang.proses_tiket_form_barang_keluar')->middleware(['role:admin|STAF ADMIN']);
     ##--PUTUS BERLANGGAN--
     Route::put('/pelanggan/{id}/deaktivasi-pelanggan', [RegistrasiController::class, 'deaktivasi_pelanggan'])->name('reg.deaktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/data-deaktivasi', [RegistrasiController::class, 'data_deaktivasi'])->name('reg.data_deaktivasi')->middleware(['role:admin|NOC|STAF ADMIN']);

@@ -143,8 +143,10 @@ class AktivasiController extends Controller
             $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
             $pelanggan['reg_deposit'] = $inv['inv_total'];
         }
-
-        $update_barang['barang_status'] =  '1';
+        if ($barang->barang_digunakan + $request->reg_penggunaan_dropcore == 0) {
+            $barang_status = 1;
+        }
+        $update_barang['barang_status'] =  $barang_status;
         $update_barang['barang_digunakan'] =  $barang->barang_digunakan + $request->reg_penggunaan_dropcore;
         $update_barang['barang_nama_pengguna'] = 'Instalasi PSB';
 

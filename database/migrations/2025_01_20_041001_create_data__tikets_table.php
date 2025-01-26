@@ -17,10 +17,12 @@ return new class extends Migration
             $table->string('tiket_pending')->nullable();
             $table->string('tiket_pembuat')->nullable();
             $table->integer('tiket_idpel')->nullable();
+            $table->string('tiket_site')->nullable();
+            $table->string('tiket_type')->nullable();
             $table->string('tiket_jenis')->nullable();
             $table->string('tiket_nama')->nullable();
-            $table->string('tiket_waktu_kunjungan')->nullable();
-            $table->string('tiket_waktu_penanganan')->nullable();
+            $table->string('tiket_jadwal_kunjungan')->nullable();
+            $table->string('tiket_waktu_mulai')->nullable();
             $table->string('tiket_waktu_selesai')->nullable();
             $table->string('tiket_foto')->nullable();
             $table->text('tiket_deskripsi')->nullable();

@@ -9,9 +9,19 @@
           
             <form >
               <div class="row">
-            <div class="col-3">
-              <a href="{{route('admin.gudang.data_barang')}}"><button class="btn btn-primary btn-sm mb-3 btn-block" type="button" >Kembali</button></a>
-            </div>
+                
+                <div class="col">
+                  <a href="{{route('admin.gudang.data_barang')}}"><button class="btn btn-warning btn-sm mb-3 btn-block" type="button" >Data Barang</button></a>
+                  
+                </div>
+                <div class="col">
+                  <a href="{{route('admin.gudang.barang_keluar')}}"><button class="btn btn-primary btn-sm mb-3 btn-block" type="button" >Barang Keluar</button></a>
+                </div>
+                <div class="col">
+                  <a href="{{route('admin.gudang.form_barang_keluar')}}"><button class="btn btn-danger btn-sm mb-3 btn-block" type="button" >Form Barang Keluar</button></a>
+                </div>
+              </div>
+            
           </div>
             </form>
           <hr>
@@ -34,7 +44,7 @@
             <tbody>
             @foreach ($stok_gudang as $d)
             <tr>
-               <td>{{ $d->barang_kategori }}</td>
+               <td class="href_data_barang" data-kategori="{{ $d->barang_kategori }}" >{{ $d->barang_kategori }}</td>
                <td>{{ $d->barang_jenis }}</td>
                <td>{{ $d->barang_satuan }}</td>
                <td>Rp. {{ number_format($d->total_harga) }}</td>

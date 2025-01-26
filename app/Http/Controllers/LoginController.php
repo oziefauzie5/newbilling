@@ -38,6 +38,7 @@ class LoginController extends Controller
                 $request->session()->put('app_alamat', $app->app_alamat);
                 $request->session()->put('app_link_admin', $app->app_link_admin);
                 $request->session()->put('app_link_pelanggan', $app->app_link_pelanggan);
+                $request->session()->put('data_site', '1');
             } else {
                 $request->session()->put('app_brand', 'APPBILL');
                 $request->session()->put('app_nama', 'APPBILL');
@@ -48,6 +49,7 @@ class LoginController extends Controller
                 $request->session()->put('app_alamat', 'Jl. Raya Bogor');
                 $request->session()->put('app_link_admin', '-');
                 $request->session()->put('app_link_pelanggan', '-');
+                $request->session()->put('data_site', '1');
             }
 
 
@@ -88,6 +90,7 @@ class LoginController extends Controller
         session()->forget('app_link_admin');
         session()->forget('app_link_pelanggan');
         session()->forget('nama_roles');
+        session()->forget('data_site');
         Auth::logout();
         return redirect()->route('adminapp')->with('success', 'Kamu berhasil logout');
     }
