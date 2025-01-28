@@ -443,7 +443,7 @@
 <div class="col-md-12">
   <div class="card">
     <div class="card-body"> 
-      <form class="form-horizontal"action="{{route('admin.reg.proses_edit_pelanggan',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
+      <form class="form-horizontal"action="" method="POST"  enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <h3 class="mt-3 text-bolt"> HADHWARE</h3><hr>

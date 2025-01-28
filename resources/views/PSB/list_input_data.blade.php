@@ -76,7 +76,7 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>Id Pelanggan</label>
-                          <input id="id" type="text" class="form-control" name="id"value="{{ $idpela }}" readonly required>
+                          <input  type="text" class="form-control" name="idpel"value="{{ $idpela }}" readonly required>
                         </div>
                       </div>
                       <div class="col-sm-12">

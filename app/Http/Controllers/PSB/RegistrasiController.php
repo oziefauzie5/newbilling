@@ -64,7 +64,7 @@ class RegistrasiController extends Controller
         $user = (new GlobalController)->user_admin();
         $admin = $user['user_nama'];
         $cek_sales = (new GlobalController)->role($request->reg_sales);
-
+        $no_tiket = (new GlobalController)->nomor_tiket();
         $no_sk = (new GlobalController)->no_surat_keterang();
 
 
@@ -86,10 +86,10 @@ class RegistrasiController extends Controller
         Session::flash('reg_layanan', $request->reg_layanan); #
         Session::flash('reg_ip_address', $request->reg_ip_address); #
         Session::flash('reg_username', $request->reg_username); #
-        Session::flash('reg_stt_perangkat', $request->reg_stt_perangkat); #
         Session::flash('reg_nama_barang', $request->reg_nama_barang); #
         Session::flash('reg_mrek', $request->reg_mrek); #
         Session::flash('reg_mac', $request->reg_mac); #
+        Session::flash('reg_mac_olt', $request->reg_mac); #
         Session::flash('reg_sn', $request->reg_sn); #
         Session::flash('kode_pactcore', $request->kode_pactcore);
         Session::flash('kode_adaptor', $request->kode_adaptor);
@@ -124,10 +124,10 @@ class RegistrasiController extends Controller
             'reg_router' => 'required',
             'reg_layanan' => 'required',
             'reg_username' => 'required',
-            'reg_stt_perangkat' => 'required',
             'reg_nama_barang' => 'required',
             'reg_mrek' => 'required',
             'reg_mac' => 'required',
+            'reg_mac_olt' => 'required',
             'reg_sn' => 'required',
             'kode_pactcore' => 'required',
             'kode_adaptor' => 'required',
@@ -150,10 +150,10 @@ class RegistrasiController extends Controller
             'reg_layanan.required' => 'Layanan tidak boleh kosong',
             'reg_router.required' => 'Router tidak boleh kosong',
             'reg_username.required' => 'Username tidak boleh kosong',
-            'reg_stt_perangkat.required' => 'Status Perangkat tidak boleh kosong',
             'reg_nama_barang.required' => 'Nama Perangkat tidak boleh kosong',
             'reg_mrek.required' => 'Merek Perangkat tidak boleh kosong',
             'reg_mac.required' => 'Mac Address tidak boleh kosong',
+            'reg_mac_olt.required' => 'Mac Address OLT tidak boleh kosong',
             'reg_sn.required' => 'Serial Number Perangkat tidak boleh kosong',
             'kode_pactcore.required' => 'Kode Pactcore tidak boleh kosong',
             'kode_adaptor.required' => 'Kode Adaptor tidak boleh kosong',
@@ -186,16 +186,14 @@ class RegistrasiController extends Controller
         $data['reg_ip_address'] = $request->reg_ip_address;
         $data['reg_username'] = $request->reg_username;
         $data['reg_password'] = $request->reg_password;
-        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
         $data['reg_nama_barang'] = $request->reg_nama_barang;
         $data['reg_site'] = $request->reg_site;
         $data['reg_pop'] = $request->reg_pop;
         $data['reg_mrek'] = $request->reg_mrek;
         $data['reg_mac'] = $request->reg_mac;
+        $data['reg_mac_olt'] = $request->reg_mac_olt;
         $data['reg_sn'] = $request->reg_sn;
-        $data['reg_kode_pactcore'] = $request->kode_pactcore;
-        $data['reg_kode_adaptor'] = $request->kode_adaptor;
-        $data['reg_kode_ont'] = $request->kode_ont;
+        $data['reg_skb'] = $no_sk;
         $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
         $data['reg_harga'] = $request->reg_harga;
         $data['reg_ppn'] = $request->reg_ppn;
@@ -271,29 +269,18 @@ Tanggal Pasang : ' . date('d-m-Y', strtotime($tgl_pasang)) . '
 Diregistrasi Oleh : *' . $admin . '*
 ';
 
-
         Pesan::create($pesan_group);
 
-        $update_barang['barang_status'] =  '1';
         $update_barang['barang_digunakan'] =  '1';
         $update_barang['barang_nama_pengguna'] = $request->reg_nama;
 
-        $update_pactcore['barang_status'] =  '1';
         $update_pactcore['barang_digunakan'] =  '1';
         $update_pactcore['barang_nama_pengguna'] = $request->reg_nama;
 
-        $update_adaptor['barang_status'] =  '1';
         $update_adaptor['barang_digunakan'] =  '1';
         $update_adaptor['barang_nama_pengguna'] = $request->reg_nama;
 
-
-        $y = date('y');
-        $m = date('m');
-
         $data_barang = Data_Barang::whereIn('barang_id', [$request->kode_ont, $request->kode_adaptor, $request->kode_pactcore])->get();
-
-
-
 
         $ip =   $router->router_ip . ':' . $router->router_port_api;
         $user = $router->router_username;
@@ -334,7 +321,6 @@ Diregistrasi Oleh : *' . $admin . '*
                     ]);
 
                     Registrasi::create($data);
-                    // dd($data);
                     InputData::where('id', $request->reg_idpel)->update($update);
                     Data_Barang::where('barang_id', $request->kode_pactcore)->update($update_pactcore);
                     Data_Barang::where('barang_id', $request->kode_adaptor)->update($update_adaptor);
@@ -343,26 +329,19 @@ Diregistrasi Oleh : *' . $admin . '*
                         Data_BarangKeluar::create([
 
                             'bk_id' => $no_sk,
-                            'bk_jenis_laporan' => 'Instalasi',
+                            'bk_jenis_laporan' => 'Instalasi PSB',
                             'bk_id_barang' => $db->barang_id,
-                            'bk_id_tiket' => '0',
+                            'bk_id_tiket' => 0,
                             'bk_kategori' => $db->barang_kategori,
-                            'bk_satuan' => $db->barang_satuan,
-                            'bk_nama_barang' => $db->barang_nama,
-                            'bk_model' => $db->barang_merek,
-                            'bk_mac' => $db->barang_mac,
-                            'bk_sn' => $db->barang_sn,
                             'bk_jumlah' => 1,
-                            'bk_keperluan' => 'Instalasi Pemasangan Baru',
-                            'bk_foto_awal' => '-',
-                            'bk_foto_akhir' => '-',
+                            'bk_keperluan' => 'PSB ' . $request->reg_nama,
                             'bk_nama_penggunan' => $request->reg_nama,
                             'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
                             'bk_admin_input' => $admin,
                             'bk_penerima' => 'Teknisi',
                             'bk_status' => 1,
                             'bk_keterangan' => $db->barang_ket,
-                            'bk_harga' => $db->barang_harga,
+
                         ]);
                     }
 
@@ -402,29 +381,24 @@ Diregistrasi Oleh : *' . $admin . '*
                 Data_Barang::where('barang_id', $request->kode_pactcore)->update($update_pactcore);
                 Data_Barang::where('barang_id', $request->kode_adaptor)->update($update_adaptor);
                 Data_Barang::where('barang_id', $request->kode_ont)->update($update_barang);
+
                 foreach ($data_barang as $db) {
                     Data_BarangKeluar::create([
 
                         'bk_id' => $no_sk,
                         'bk_jenis_laporan' => 'Instalasi',
                         'bk_id_barang' => $db->barang_id,
-                        'bk_id_tiket' => '0',
+                        'bk_id_tiket' => 0,
                         'bk_kategori' => $db->barang_kategori,
-                        'bk_satuan' => $db->barang_satuan,
-                        'bk_nama_barang' => $db->barang_nama,
-                        'bk_model' => $db->barang_merek,
-                        'bk_mac' => $db->barang_mac,
-                        'bk_sn' => $db->barang_sn,
                         'bk_jumlah' => 1,
-                        'bk_keperluan' => 'Instalasi Pemasangan Baru',
-                        'bk_foto_awal' => '-',
-                        'bk_foto_akhir' => '-',
+                        'bk_keperluan' => $request->reg_nama,
                         'bk_nama_penggunan' => $request->reg_nama,
                         'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
                         'bk_admin_input' => $admin,
                         'bk_penerima' => 'Teknisi',
                         'bk_status' => 1,
                         'bk_keterangan' => $db->barang_ket,
+
                     ]);
                 }
 
@@ -537,21 +511,21 @@ Diregistrasi Oleh : *' . $admin . '*
     }
     public function validasi_pachcore(Request $request, $id)
     {
-        $kode_pact = Data_Barang::where("barang_id", $id)->where("barang_status", '0')
+        $kode_pact = Data_Barang::where("barang_id", $id)
             ->where("barang_kategori", 'PACTCORE')->first();
 
         return response()->json($kode_pact);
     }
     public function validasi_adaptor(Request $request, $id)
     {
-        $kode_adp = Data_Barang::where("barang_id", $id)->where("barang_status", '0')
+        $kode_adp = Data_Barang::where("barang_id", $id)
             ->where("barang_kategori", 'ADAPTOR')->first();
 
         return response()->json($kode_adp);
     }
     public function validasi_ont(Request $request, $id)
     {
-        $kode_ont = Data_Barang::where("barang_id", $id)->where("barang_status", '0')
+        $kode_ont = Data_Barang::where("barang_id", $id)
             ->where("barang_kategori", 'ONT')->first();
 
         return response()->json($kode_ont);
@@ -587,11 +561,12 @@ Diregistrasi Oleh : *' . $admin . '*
         } else {
             $sales = '-';
         }
-        $pdf = App::make('dompdf.wrapper');
-        $html = view('PSB/print_berita_acara', $data)->render();
-        $pdf->loadHTML($html);
-        $pdf->setPaper('A4', 'potraid');
-        return $pdf->download('Berita_Acara_' . $sales . '.pdf');
+        // $pdf = App::make('dompdf.wrapper');
+        // $html = view('PSB/print_berita_acara', $data)->render();
+        // $pdf->loadHTML($html);
+        // $pdf->setPaper('A4', 'potraid');
+        // return $pdf->download('Berita_Acara_' . $sales . '.pdf');
+        return view('PSB/print_berita_acara', $data);
     }
 
     public function berita_acara()
@@ -940,7 +915,6 @@ Diregistrasi Oleh : *' . $admin . '*
                     $pelanggan['reg_kode_ont'] = $request->kode_ont;
 
                     $pelanggan['reg_mrek'] = $request->sam_mrek;
-                    $pelanggan['reg_stt_perangkat'] = $request->sam_stt_perangkat;
                     $pelanggan['reg_mac'] = $request->sam_mac;
                     $pelanggan['reg_sn'] = $request->sam_sn;
                     Registrasi::where('reg_idpel', $idpel)->update($pelanggan);
@@ -1113,7 +1087,7 @@ Diregistrasi Oleh : *' . $admin . '*
         return view('Registrasi/form_data_pelanggan', $data);
     }
 
-    public function proses_edit_pelanggan(Request $request, $id)
+    public function proses_aktivasi_pelanggan(Request $request, $id)
     {
         Session::flash('reg_site', $request->reg_site);
         Session::flash('reg_pop', $request->reg_pop);
@@ -1149,7 +1123,7 @@ Diregistrasi Oleh : *' . $admin . '*
                     'pesan' => 'Aktivasi Berhasil ',
                     'alert' => 'success',
                 );
-                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.data_aktivasi_pelanggan', ['id' => $id])->with($notifikasi);
             } elseif ($API == 1) {
                 $notifikasi = array(
                     'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,

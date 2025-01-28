@@ -10,6 +10,7 @@ class Data_Tiket extends Model
     use HasFactory;
     protected $fillable = [
         'tiket_id',
+        'barang_id_group',
         'tiket_pending',
         'tiket_pembuat',
         'tiket_kode',

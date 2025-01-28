@@ -60,6 +60,7 @@
                       <option value="">- Pilih -</option>
                       <option value="Gangguan / Komplain">Gangguan / Komplain</option>
                       <option value="Edukasi">Edukasi</option>
+                      <option value="Instalasi">Instalasi</option>
                       <option value="Instalasi Hotspot">Instalasi Hotspot</option>
                       <option value="Aktivasi">Aktivasi</option>
                       <option value="Upgrade">Upgrade</option>
@@ -71,7 +72,7 @@
                 </div>
                   <label class=" col-sm-2 col-form-label">Tanggal Keluar</label>
                 <div class="col-sm-4 ">
-                  <input type="text" id="" name="bk_waktu_keluar" class="form-control readonly" value="{{date('Y-m-d h:s')}}" >
+                  <input type="text" id="bk_waktu_keluar" name="bk_waktu_keluar" class="form-control " value="{{date('Y-m-d h:s')}}" >
                 </div>
               </div>
               <div class="form-group row ">
@@ -136,8 +137,7 @@
               </div>
               
               <div class="card-footer">
-                <a href="{{route('admin.psb.index')}}"><button type="button" class="btn  ">Batal</button></a>
-                {{-- <button type="submit" class="btn btn-primary float-right">Simpan</button> --}}
+                <a href="{{route('admin.gudang.stok_gudang')}}"><button type="button" class="btn  ">Batal</button></a>
                 <button type="button" class="btn btn-primary float-right simpan">Simpan</button>
                 </div>
             </form>

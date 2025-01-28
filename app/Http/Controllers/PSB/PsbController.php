@@ -187,7 +187,7 @@ class PsbController extends Controller
 
         //     }
         // dd('CILUKBA');
-        $data['idpela'] = (new GlobalController)->idpel();
+        $data['idpela'] = (new GlobalController)->idpel_();
 
         return view('PSB/list_input_data', $data);
     }
@@ -246,7 +246,7 @@ class PsbController extends Controller
             InputData::create([
                 'input_tgl' => $data['input_tgl'],
                 'input_nama' => ucwords($request->input_nama),
-                'id' => $id_cust,
+                'id' => $request->idpel,
                 'input_ktp' => $request->input_ktp,
                 'input_hp' => $nomorhp,
                 'input_hp_2' => $nomorhp2,

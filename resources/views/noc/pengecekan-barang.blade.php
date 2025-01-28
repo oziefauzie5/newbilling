@@ -26,8 +26,18 @@
               </ul>
           </div> 
         @endif
+        <form>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <input name="q" type="text" class="form-control form-control-sm" placeholder="Cari">
+            </div>
+            <div class="col-sm-2">
+              <button type="submit" class="btn btn-block btn-dark btn-sm">Submit
+            </div>
+          </div>
+        </form>
           <div class="table-responsive">
-            <table id="input_data" class="display table table-striped table-hover text-nowrap" >
+            <table id="" class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
                   <th>KODE BARANG</th>
@@ -81,50 +91,54 @@
                   @if($d->barang_kategori == 'ONT')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn"  value="{{$d->barang_sn}}" required>
+                      <input type="text" class="form-control" name="barang_sn"  value="" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" id="mac" minlength="17" maxlength="17" value="{{$d->barang_mac}}" required>
+                      <input type="text" class="form-control" name="barang_mac" id="mac" minlength="17" maxlength="17" value="" required>
+                    </div> 
+                    <div class="col-6">
+                      <label for="">Mac Address OLT</label>
+                      <input type="text" class="form-control" name="barang_mac_olt" id="mac1" minlength="17" maxlength="17" value="" required>
                     </div> 
                     @elseif($d->barang_kategori == 'OLT')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn"  value="{{$d->barang_sn}}" required>
+                      <input type="text" class="form-control" name="barang_sn"  value="" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" id="mac" value="{{$d->barang_mac}}" required>
+                      <input type="text" class="form-control" name="barang_mac" id="" value="" required>
                     </div> 
                     @elseif($d->barang_kategori == 'ROUTER')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
+                      <input type="text" class="form-control" name="barang_sn" value="" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" id="mac" value="{{$d->barang_mac}}" required>
+                      <input type="text" class="form-control" name="barang_mac" id="" value="" required>
                     </div> 
                     @elseif($d->barang_kategori == 'SWITCH')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
+                      <input type="text" class="form-control" name="barang_sn" value="" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" id="mac"  value="{{$d->barang_mac}}" required>
+                      <input type="text" class="form-control" name="barang_mac" id=""  value="" required>
                     </div> 
                     @elseif($d->barang_kategori == 'SPLICER')
 
                   @endif
                   <div class="col-12">
-                    <label for="">Perbarui Status barang</label>
+                    <label for="">Status Barang</label>
                     <select name="barang_status" id="" class="form-control" required>
-                      <option value="">- Perbarui status barang -</option>
-                      <option value="0">Bagus, normal dan bisa digunakan</option>
-                      <option value="1">Barang normal dan telah digunakan</option>
-                      <option value="4">Tidak bagus, rusak dan tidak bisa digunakan</option>
-                      <option value="5">Barang belum dicek</option>
+                      <option value="">- PILIH -</option>
+                      <option value="Normal">Normal</option>
+                      <option value="Rusak">Rusak</option>
+                      {{-- <option value="1">Barang normal dan telah digunakan</option> --}}
+                      {{-- <option value="5">Barang belum dicek</option> --}}
                     </select>
                   </div>
                   <div class="col-12">
@@ -147,6 +161,18 @@
                     @endforeach
               </tbody>
             </table>
+            <div class="pull-left">
+              Showing
+              {{$data_barang->firstItem()}}
+              to
+              {{$data_barang->lastItem()}}
+              of
+              {{$data_barang->total()}}
+              entries
+            </div>
+            <div class="pull-right">
+              {{ $data_barang->withQueryString()->links('pagination::bootstrap-4') }}
+            </div>
           </div>
         </div>
       </div>

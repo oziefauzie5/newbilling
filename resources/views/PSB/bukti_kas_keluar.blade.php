@@ -200,24 +200,8 @@
             <td></td>
             <td></td>
         </tr>
-        <tr>
-            <td style="text-align: center;">3</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td style="text-align: center;">4</td>
-            <td></td>
-            <td></td>
-        </tr>
     </table>
     <table id="kas">
-        <tr>
-            <td width="50%"></td>
-            <td id="kas_invoice" width="15%">JUMLAH</td>
-            <td>:</td>
-            <td id="kas_invoice">Rp. {{number_format($kas->teknisi_psb)}}</td>
-        </tr>
         <tr>
             <td width="50%"></td>
             <td id="kas_invoice" width="15%">TOTAL</td>
@@ -286,23 +270,8 @@
             <td></td>
         </tr>
         <tr>
-            <td style="text-align: center;">3</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td style="text-align: center;">4</td>
-            <td></td>
-            <td></td>
-        </tr>
     </table>
     <table id="kas">
-        <tr>
-            <td width="50%"></td>
-            <td id="kas_invoice" width="15%">JUMLAH</td>
-            <td>:</td>
-            <td id="kas_invoice">Rp. {{number_format($biaya_sales->biaya_sales)}}</td>
-        </tr>
         <tr>
             <td width="50%"></td>
             <td id="kas_invoice" width="15%">TOTAL</td>

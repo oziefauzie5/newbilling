@@ -149,7 +149,7 @@
 <div class="col-md-12">
   <div class="card">
     <div class="card-body"> 
-      <form class="form-horizontal"action="{{route('admin.reg.proses_edit_pelanggan',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
+      <form class="form-horizontal"action="{{route('admin.reg.proses_aktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <h3 class="mt-3 text-bolt"> HADHWARE</h3><hr>
@@ -204,7 +204,7 @@
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">ODP</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odp" id="validasi_odp" class="form-control" required value="{{ Session::get('reg_odp') }}" >
+          <input type="text" name="reg_odp" id="validasi_odp" class="form-control " required value="{{ Session::get('reg_odp') }}" >
           <div id="pesan"></div>
         </div>
     </div>
@@ -245,7 +245,7 @@
         <div class="form-group row">
         <label class="col-sm-2 col-form-label">Mac perangkat ( OLT )</label>
         <div class="col-sm-4">
-          <input type="text" name="reg_mac_olt" id="mac"  class="form-control" minlength="17" maxlength="17" required value="{{ Session::get('reg_mac_olt') }}" >
+          <input type="text" name="reg_mac_olt" id="mac"  class="form-control readonly" required value="{{ $data->reg_mac_olt}}" >
         </div>
         <label class=" col-sm-2 col-form-label" >SN perangkat</label>
       <div class="col-sm-4">
@@ -269,9 +269,9 @@
           {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}}
           <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{ Session::get('reg_in_ont') }}" maxlength="6" minlength="6">
         </div>
-        <label class="col-sm-2 col-form-label">Teknisi Team</label>
+        <label class="col-sm-2 col-form-label">SKB</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control harga readonly"value="{{$data->reg_teknisi_team}}" >
+          <input type="text" class="form-control harga readonly" name="reg_skb" value="{{$data->reg_skb}}" >
         </div>
       </div>
       <div class="form-group row">
@@ -352,33 +352,6 @@
   </div>
  </div>
 </div>
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
-              <h3 class="mt-3">MATERIAL</h3><hr>
-              <div class="form-group row">
-                  <label class=" form-check col-sm-2 col-form-label">KODEE KABEL</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control readonly" value="{{$data->reg_kode_dropcore}}" >
-                </div>
-                <label class="form-check col-sm-2 col-form-label">KODE ONT</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control readonly" value="{{$data->reg_kode_ont}}" >
-                </div>
-              </div>
-              <div class="form-group row">
-                  <label class=" form-check col-sm-2 col-form-label">KODE ADAPTOR</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control readonly"value="{{$data->reg_kode_adaptor}} " >
-                </div>
-                <label class="form-check col-sm-2 col-form-label">KODE PACTCORE</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control readonly" value="{{$data->reg_kode_pactcore}} " >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
   
   </div>
 </div>

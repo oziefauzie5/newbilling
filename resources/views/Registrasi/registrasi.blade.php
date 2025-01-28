@@ -192,26 +192,23 @@
               </div>
               </div>
               <div class="form-group row">
-                <label class=" col-sm-2 col-form-label">Status perangkat</label>
-              <div class="col-sm-4">
-                <select type="text" name="reg_stt_perangkat" class="form-control" value="{{ Session::get('reg_stt_perangkat') }}" >
-                  <option value="DIPINJAMKAN">DIPINJAMKAN</option>
-                  <option value="MILIK PROBADI">MILIK PROBADI</option>
-                </select>
-              </div>
               <label class="col-sm-2 col-form-label">Nama perangkat</label>
               <div class="col-sm-4">
                 <input type="text" name="reg_nama_barang" id="reg_nama_barang" class="form-control ont" value="{{ Session::get('reg_nama_barang') }}" readonly >
               </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Merk perangkat</label>
+              <label class="col-sm-2 col-form-label">Merk perangkat</label>
               <div class="col-sm-4">
                 <input type="text" name="reg_mrek" id="reg_mrek" class="form-control ont" value="{{ Session::get('reg_mrek') }}" readonly >
               </div>
+              </div>
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Mac perangkat</label>
                 <div class="col-sm-4">
                   <input type="text" name="reg_mac" id="reg_mac"  class="form-control ont" value="{{ Session::get('reg_mac') }}" readonly >
+                </div>
+                <label class=" col-sm-2 col-form-label" >Mac Address OLT</label>
+                <div class="col-sm-4">
+                  <input type="text" name="reg_mac_olt" id="reg_mac_olt" class="form-control ont" value="{{ Session::get('reg_mac_olt') }}" readonly >
                 </div>
               </div>
               <div class="form-group row">
@@ -219,8 +216,6 @@
                 <div class="col-sm-4">
                   <input type="text" name="reg_sn" id="reg_sn" class="form-control ont" value="{{ Session::get('reg_sn') }}" readonly >
                 </div>
-
-          
               </div>
               <div class="form-group row">
               <label class=" col-sm-2 col-form-label">Kode Barang</label>

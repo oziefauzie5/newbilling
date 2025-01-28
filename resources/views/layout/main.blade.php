@@ -496,6 +496,16 @@
 			  .join(":")
 			});
 		});
+	  $(document).ready(function() {
+		  //format mac adrress Aktivasi pelanggan
+		  document.getElementById("mac1").addEventListener('keyup', function() { 
+			  this.value = 
+			  (this.value.toUpperCase()
+			  .replace(/[^\d|A-Z]/g, '')
+			  .match(/.{1,2}/g) || [])
+			  .join(":")
+			});
+		});
 	//--------------------END FORMAT MAC----------------------
 
 	//--------------------START INPUT READONLY----------------------
@@ -831,7 +841,7 @@ url = url.replace(':id', idpel);
 																dataType: 'json',
 																success: function(data) {
 																	if(data){
-																		console.log(olt);
+																		// console.log(olt);
 																		// console.log(data)
 																		$('#olt').empty()
 																		$('#olt').append('<option value="">- Pilih OLT -</option>')
@@ -941,7 +951,7 @@ $.ajax({
 			data: {'_token': '{{ csrf_token() }}'},
 						dataType: 'json',
 						success: function(data) {
-							console.log(data.odp_kode)
+							// console.log(data.odp_kode)
 							if(data.odp_kode){
 								$('#validasi_olt').val(data.olt_kode)
 								$('#validasi_odc').val(data.odc_kode)
@@ -957,7 +967,7 @@ $.ajax({
 								}
 						},
 						error: function(error) {
-							console.log(error)
+							// console.log(error)
 
 						},
 					});
@@ -1059,7 +1069,7 @@ $("#reg_kode_dropcore").keyup(function(){
 										var pop_kode = $(this).val();
 										var url = '{{ route("admin.reg.getKodeSite", ":id") }}';
 										url = url.replace(':id', pop_kode);
-										console.log(pop_kode)
+										// console.log(pop_kode)
 										$.ajax({
 													url: url,
 													type: 'GET',
@@ -1068,7 +1078,7 @@ $("#reg_kode_dropcore").keyup(function(){
 																},
 																dataType: 'json',
 																success: function(data) {
-																	console.log(data)
+																	// console.log(data)
 																	if(data){
 																		$('#aktivasi_odc').empty()
 																		$('#aktivasi_odc').append('<option value="">- Pilih ODC -</option>')
@@ -1142,11 +1152,18 @@ $("#reg_kode_dropcore").keyup(function(){
 							dataType: 'json',
 							success: function(data) {
 								if(data.barang_id){
-									$('#validasi').removeClass("has-error has-feedback");
-									$("#validasi").addClass("has-success");
-									$('#notif').html('');
-									$("#modal_pactcore").modal('hide');
-									$('#note').html('');
+										let stok_barang = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(data.barang_dijual) - parseInt(data.barang_rusak) - parseInt(data.barang_dicek);
+										if( stok_barang == 0){
+										$("#validasi").addClass("has-error has-feedback");
+										$('#notif').html('<small class="form-text text-muted text-danger">Kode Pactcore tidak ada atau telah digunakan</small>');
+										$('#note').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+										} else{
+											$('#validasi').removeClass("has-error has-feedback");
+											$("#validasi").addClass("has-success");
+											$('#notif').html('');
+											$("#modal_pactcore").modal('hide');
+											$('#note').html('');
+										}
 								}else{
 									$("#validasi").addClass("has-error has-feedback");
 									$('#notif').html('<small class="form-text text-muted text-danger">Kode Pactcore tidak ada atau telah digunakan</small>');
@@ -1202,12 +1219,18 @@ $("#reg_kode_dropcore").keyup(function(){
                     success: function(data) {
 						// console.log(data)
 						if(data.barang_id){
-							$('#validasi_adp').removeClass("has-error has-feedback");
-							$("#validasi_adp").addClass("has-success");
-							$('#notif_adp').html('');
-							$("#modal_adaptor").modal('hide');
-							$('#note_adp').html('');
-
+							let stok_barang = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(data.barang_dijual) - parseInt(data.barang_rusak) - parseInt(data.barang_dicek);
+							if( stok_barang == 0){
+								$("#validasi_adp").addClass("has-error has-feedback");
+								$('#notif_adp').html('<small class="form-text text-muted text-danger">Kode adaptor tidak ada atau telah digunakan</small>');
+								$('#note_adp').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan barang sudah dicek</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+							} else{
+								$('#validasi_adp').removeClass("has-error has-feedback");
+								$("#validasi_adp").addClass("has-success");
+								$('#notif_adp').html('');
+								$("#modal_adaptor").modal('hide');
+								$('#note_adp').html('');
+							}
 						}else{
 							$("#validasi_adp").addClass("has-error has-feedback");
 							$('#notif_adp').html('<small class="form-text text-muted text-danger">Kode adaptor tidak ada atau telah digunakan</small>');
@@ -1239,6 +1262,7 @@ $("#reg_kode_dropcore").keyup(function(){
 					$('#notif_ont').html('');
 					$('#note_ont').html('');
 					$('#reg_mac').val('');
+					$('#reg_mac_olt').val('');
 					$('#reg_sn').val('');
 					$('#reg_mrek').val('');
 					$('.ont').removeAttr('required');
@@ -1254,9 +1278,10 @@ $("#reg_kode_dropcore").keyup(function(){
 				$('#notif_ont').html('');
 				$('#note_ont').html('');
 				$('#reg_mac').val('');
-									$('#reg_sn').val('');
-									$('#reg_mrek').val('');
-									$('#reg_nama_barang').val('');
+				$('#reg_mac_olt').val('');
+				$('#reg_sn').val('');
+				$('#reg_mrek').val('');
+				$('#reg_nama_barang').val('');
 			});
 
 				$('.val_ont').click(function(){
@@ -1273,21 +1298,49 @@ $("#reg_kode_dropcore").keyup(function(){
 							success: function(data) {
 								// console.log(data)
 								if(data.barang_id){
+									let stok_barang = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(data.barang_dijual) - parseInt(data.barang_rusak) - parseInt(data.barang_dicek);
+									if( stok_barang == 0){
+										// alert('aaa')
+										$("#validasi_ont").addClass("has-error has-feedback");
+										$('#notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak ada atau telah digunakan</small>');
+										$('#note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Pastikan stok barang tersedia</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+										$('#reg_mac').val('');
+										$('#reg_mac_olt').val('');
+										$('#reg_sn').val('');
+										$('#reg_mrek').val('');
+										$('#reg_nama_barang').val('');
+									}else {
+										if(data.barang_mac == null && data.barang_mac_olt == null && data.barang_sn == null ){
+											$("#validasi_ont").addClass("has-error has-feedback");
+											$('#notif_ont').html('<small class="form-text text-muted text-danger">Mac address / Mac address OLT / Sn  belum di update </small>');
+											$('#note_ont').html('<ul><li>barang belum di cek</li></ul>');
+											$('#reg_mac').val('');
+											$('#reg_mac_olt').val('');
+											$('#reg_sn').val('');
+											$('#reg_mrek').val('');
+											$('#reg_nama_barang').val('');
+										} else {
+											$('#validasi_ont').removeClass("has-error has-feedback");
+											$("#validasi_ont").addClass("has-success");
+											$('#notif_ont').html('');
+											$("#modal_ont").modal('hide');
+											$('#note_ont').html('');
+											$('#reg_mac').val(data.barang_mac);
+											$('#reg_mac_olt').val(data.barang_mac_olt);
+											$('#reg_sn').val(data.barang_sn);
+											$('#reg_mrek').val(data.barang_merek);
+											$('#reg_nama_barang').val(data.barang_nama);
+										
+									}
+
+								}
 									
-									$('#validasi_ont').removeClass("has-error has-feedback");
-									$("#validasi_ont").addClass("has-success");
-									$('#notif_ont').html('');
-									$("#modal_ont").modal('hide');
-									$('#note_ont').html('');
-									$('#reg_mac').val(data.barang_mac);
-									$('#reg_sn').val(data.barang_sn);
-									$('#reg_mrek').val(data.barang_merek);
-									$('#reg_nama_barang').val(data.barang_nama);
 								}else{
 									$("#validasi_ont").addClass("has-error has-feedback");
 									$('#notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak ada atau telah digunakan</small>');
 									$('#note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
 									$('#reg_mac').val('');
+									$('#reg_mac_olt').val('');
 									$('#reg_sn').val('');
 									$('#reg_mrek').val('');
 									$('#reg_nama_barang').val('');
@@ -1298,6 +1351,7 @@ $("#reg_kode_dropcore").keyup(function(){
 								$('#notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak boleh kosong</small>');
 								$('#note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
 								$('#reg_mac').val('');
+								$('#reg_mac_olt').val('');
 									$('#reg_sn').val('');
 									$('#reg_mrek').val('');
 									$('#reg_nama_barang').val('');
@@ -2119,7 +2173,7 @@ let sum = 0
 for (let i = 0; i < addonCheckboxes.length; i++) {
   addonCheckboxes[i].addEventListener("change", function(e) {
 
-    console.log(e.target.dataset.price)
+    // console.log(e.target.dataset.price)
     
     if (addonCheckboxes[i].checked != false) {
       
@@ -2187,7 +2241,7 @@ let total_pencairan = document.getElementById("total_pencairan")
 let sum1 = 0
 for (let i = 0; i < cb_pencairan.length; i++) {
   cb_pencairan[i].addEventListener("change", function(e) {   
-	console.log(e.target.dataset.price) 
+	// console.log(e.target.dataset.price) 
 	  if (cb_pencairan[i].checked != false) {
 		  sum1 = sum1 +Number(e.target.dataset.price) 
     } else {
@@ -2493,7 +2547,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
                         },
                         dataType: 'json',
                         success: function(data) {
-							console.log(data);
+							// console.log(data);
 
 							let rupiahFormat = new Intl.NumberFormat('id-ID', {
 								style: 'currency',minimumFractionDigits: 0,
@@ -2556,7 +2610,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 
 					<script>
 						//--------------------START BARANG KELUAR----------------------
-							$('.button_masukan').click(function(){
+						$('.button_masukan').click(function(){
 								var i = 1;
 								if($('#jumlah_barang').val()==0){
 									$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah tidak boleh kosong</small>')
@@ -2577,31 +2631,57 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											dataType: 'json',
 											success: function(data) {
 												if(data.barang_id){
-													if(data.barang_qty - data.barang_digunakan != 0){
+													let stok_barang = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(data.barang_dijual) - parseInt(data.barang_rusak) - parseInt(data.barang_dicek);
+														if( stok_barang != 0){
+													// if(data.barang_qty - data.barang_digunakan != 0){
 														if(data.barang_qty - data.barang_digunakan < $('#jumlah_barang').val()){
 														$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah barang melebih batas stok</small>')
 														$('.notif_jumlah').addClass('has-error has-feedback')
 													} else {
-														$('.notif_barang_id').removeClass('has-error has-feedback')
-														$('.pesan_barang_id').html('')
-														i = i + 1
-														var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
-															html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
-															html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
-															html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
-															html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
-															html += '<td contenteditable="true" >'+data.barang_harga+'</td>';
-															html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
-															html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga * jumlah_barang+'</td>';
-															html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
-															html += '</tr>';
-			
-														$('#t').append(html)
-														$('.simpan').removeAttr('disabled');
+														if(data.barang_kategori == 'ONT'){
+															if(data.barang_mac == null && data.barang_mac_olt == null && data.barang_sn == null ){
+																$('.notif_barang_id').addClass('has-error has-feedback')
+																$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Mac Address / Mac Address OLT/ Serial Number belum di update </small>')
+															} else {
+															$('.notif_barang_id').removeClass('has-error has-feedback')
+															$('.pesan_barang_id').html('')
+															i = i + 1
+															var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
+																html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
+																html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
+																html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
+																html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
+																html += '<td contenteditable="true" >'+data.barang_harga_satuan+'</td>';
+																html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+																html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga_satuan * jumlah_barang+'</td>';
+																html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
+																html += '</tr>';
+				
+															$('#t').append(html)
+															$('.simpan').removeAttr('disabled');
+															}
+														} else {
+															$('.notif_barang_id').removeClass('has-error has-feedback')
+															$('.pesan_barang_id').html('')
+															i = i + 1
+															var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
+																html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
+																html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
+																html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
+																html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
+																html += '<td contenteditable="true" >'+data.barang_harga_satuan+'</td>';
+																html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+																html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga_satuan * jumlah_barang+'</td>';
+																html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
+																html += '</tr>';
+				
+															$('#t').append(html)
+															$('.simpan').removeAttr('disabled');
+														}
 													}
 													} else {
 														$('.notif_barang_id').addClass('has-error has-feedback')
-														$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Stok habis</small>')
+														$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Stok habis atau barang belum dicek</small>')
 														
 													}
 												} else {
@@ -2622,13 +2702,14 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 
 								$(document).on('click','.simpan', function(){
 									
-
-
+									
 									let bk_jenis_laporan =$('#bk_jenis_laporan').val()
 									let bk_penerima =$('#bk_penerima').val()
-								  	let bk_keperluan =$('#bk_keperluan').val()
-								  	let tiket_type =$('#tiket_type').val()
-								  	let tiket_site =$('#tiket_site').val()
+									let bk_keperluan =$('#bk_keperluan').val()
+									let tiket_type =$('#tiket_type').val()
+									let tiket_site =$('#tiket_site').val()
+									let bk_waktu_keluar =$('#bk_waktu_keluar').val()
+									
 
 										if(bk_jenis_laporan != "" && bk_penerima != "" && bk_keperluan != "" && tiket_site != "" && tiket_type != ""){
 											$('.notif1').removeClass('has-error has-feedback')
@@ -2638,7 +2719,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										let jumlah_harga = []
 										let jumlah_barang = []
 										let barang_kategori = []
-										console.log(barang_id)
+										// console.log(barang_id)
 										$('.barang_id').each(function(){
 											barang_id.push($(this).text())
 										})
@@ -2669,6 +2750,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										barang_nama:barang_nama,
 										tiket_type:tiket_type,
 										tiket_site:tiket_site,
+										bk_waktu_keluar:bk_waktu_keluar,
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
@@ -2719,30 +2801,35 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											dataType: 'json',
 											success: function(data) {
 												if(data.barang_id){
-													if(data.barang_qty - data.barang_digunakan != 0){
+													// if(data.barang_qty - data.barang_digunakan != 0){
+														let stok_barang = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(data.barang_dijual) - parseInt(data.barang_rusak) - parseInt(data.barang_dicek);
+														if( stok_barang != 0){
 														if(data.barang_qty - data.barang_digunakan < $('#jumlah_barang').val()){
 														$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah barang melebih batas stok</small>')
 														$('.notif_jumlah').addClass('has-error has-feedback')
 														} else {
-																// $(".minmax").prop('min',1);
-																// $(".minmax").prop('max',data.barang_qty - data.barang_digunakan);
-																$('#jumlah_barang').attr('required', 'required');
-																$('.notif_barang_id').removeClass('has-error has-feedback')
-																$('.pesan_barang_id').html('')
-																i = i + 1
-																var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
-																	html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
-																	html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
-																	html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
-																	html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
-																	html += '<td contenteditable="true" >'+data.barang_harga+'</td>';
-																	html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
-																	html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga * jumlah_barang+'</td>';
-																	html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
-																	html += '</tr>';
-					
-																$('#t').append(html)
-																$('.simpan').removeAttr('disabled');
+															if(data.barang_mac == null && data.barang_mac_olt == null && data.barang_sn == null ){
+																$('.notif_barang_id').addClass('has-error has-feedback')
+																$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Mac Address / Mac Address OLT/ Serial Number belum di update </small>')
+															} else {
+																	$('#jumlah_barang').attr('required', 'required');
+																	$('.notif_barang_id').removeClass('has-error has-feedback')
+																	$('.pesan_barang_id').html('')
+																	i = i + 1
+																	var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
+																		html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
+																		html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
+																		html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
+																		html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
+																		html += '<td contenteditable="true" >'+data.barang_harga+'</td>';
+																		html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+																		html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga_satuan * jumlah_barang+'</td>';
+																		html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
+																		html += '</tr>';
+						
+																	$('#t').append(html)
+																	$('.simpan').removeAttr('disabled');
+															}
 														}
 													} else {
 														$('.notif_barang_id').addClass('has-error has-feedback')
@@ -2781,7 +2868,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										let jumlah_harga = []
 										let jumlah_barang = []
 										let barang_kategori = []
-										console.log(barang_id)
+										// console.log(barang_id)
 										$('.barang_id').each(function(){
 											barang_id.push($(this).text())
 										})

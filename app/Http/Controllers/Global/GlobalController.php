@@ -161,126 +161,36 @@ class GlobalController extends Controller
         return $wa_status;
     }
 
-    function getRomawi($bln)
-    {
-
-        switch ($bln) {
-
-            case 1:
-
-                return "I";
-
-                break;
-
-            case 2:
-
-                return "II";
-
-                break;
-
-            case 3:
-
-                return "III";
-
-                break;
-
-            case 4:
-
-                return "IV";
-
-                break;
-
-            case 5:
-
-                return "V";
-
-                break;
-
-            case 6:
-
-                return "VI";
-
-                break;
-
-            case 7:
-
-                return "VII";
-
-                break;
-
-            case 8:
-
-                return "VIII";
-
-                break;
-
-            case 9:
-
-                return "IX";
-
-                break;
-
-            case 10:
-
-                return "X";
-
-                break;
-
-            case 11:
-
-                return "XI";
-
-                break;
-
-            case 12:
-
-                return "XII";
-
-                break;
-        }
-    }
     function no_inv()
     {
         $inv_tgl = Carbon::now();
         $bln = $inv_tgl->format('m');
         $th = $inv_tgl->format('y');
-
-
-        // dd($bulanRom);
         $latest = Invoice::latest()->first();
-        // dd($latest); 
         if (! $latest) {
             return $bln . $th . '0001';
         }
 
         $string = substr($latest->inv_id, 2);
-        // dd($bln . sprintf('%04d', $string + 1));    
         return $bln . sprintf('%04d', $string + 1);
     }
-    function idpel()
-    {
-        $latest = InputData::latest()->first();
-        if (! $latest) {
-            return '0001';
-        }
-        $string = substr($latest->id, 2);
-        return sprintf('%05d', $latest->id + 1);
-    }
-    // test pembuatan idpelanggan otomatis
+    // function idpel()
+    // {
+    //     $latest = InputData::latest()->first();
+    //     if (! $latest) {
+    //         return '0001';
+    //     }
+    //     $string = substr($latest->id, 2);
+    //     return sprintf('%05d', $latest->id + 1);
+    // }
     function idpel_()
     {
         $bl = date('m', strtotime(new Carbon()));
-        $count = InputData::count();
         $latest = InputData::latest()->first();
-
-        if (! $latest) {
-            return $bl . '0001';
-        }
-        $cek_count = InputData::where('id', $count)->count();
-        if ($cek_count) {
-            return $bl . sprintf('%04d', $latest->id + 1);
+        if (! $latest->id) {
+            return  '0001';
         } else {
-            return $bl . sprintf('%04d', $count + 1);
+            return sprintf('%04d', $latest->id + 1);
         }
     }
 
@@ -299,7 +209,6 @@ class GlobalController extends Controller
     }
     public function getOlt($id)
     {
-        // return response()->json($id);
         $kode_olt = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
             ->where("pop_id", $id)->get();
         return response()->json($kode_olt);
@@ -312,23 +221,13 @@ class GlobalController extends Controller
     }
     public function getOdc($id)
     {
-        // return response()->json($id . 'tes');
         $kode_pop = Data_Odc::join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
-            // ->get();
-            // $kode_pop = Data_Olt::join('data__odcs', 'data__odcs.odc_id', '=', 'data__olts.olt_id')
             ->where("data__olts.olt_id", $id)->get();
         return response()->json($kode_pop);
     }
-    // public function getOdp($id)
-    // {
-    //     // return response()->json($id . 'tes');
-    //     $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
-    //         ->where("data__odcs.odc_id", $id)->where("data__odcs.odc_status", 'Enable')->get();
-    //     return response()->json($kode_pop);
-    // }
+
     public function validasi_odp($id)
     {
-        // return response()->json($id . 'tes');
         $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
             ->join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
             ->where("odp_kode", $id)->first();
@@ -363,11 +262,10 @@ class GlobalController extends Controller
         ##-Membuat Nomor Tiket sesuai tanggal
         $latest = Data_Tiket::whereDate('created_at', $date)->latest()->first();
         if (! $latest) {
-            return $y . $m . $d . '001';
+            return $y . $m . $d . '0001';
         }
         $string = substr($latest->tiket_id, 6);
-        // dd($latest);
-        $no_tiket  = $y . $m . $d  . sprintf('%03d', $string + 1);
+        $no_tiket  = $y . $m . $d  . sprintf('%04d', $string + 1);
 
         return $no_tiket;
     }

@@ -611,10 +611,16 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             }
         }
     }
-    public function pengecekan_barang()
+    public function pengecekan_barang(Request $request)
     {
-        $data['data_barang'] = Data_Barang::where('barang_status', '>=', 4)->where('barang_status', '<=', 5)->get();
-        $data['count_antrian'] = Data_Barang::where('barang_status', '>=', 4)->where('barang_status', '<=', 5)->count();
+        $data['q'] = $request->query('q');
+        $query = Data_Barang::orderBy('data__barangs.created_at', 'DESC')->where('barang_dicek', '>', 0)
+            ->where(function ($query) use ($data) {
+                $query->where('barang_id', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('barang_kategori', 'like', '%' . $data['q'] . '%');
+            });
+        $data['data_barang'] = $query->paginate(10);
+        $data['count_antrian'] = Data_Barang::where('barang_dicek', '>', 0)->count();
         // $data['sub_barang'] = SubBarang::where('subbarang_status', '>=', 4)->where('subbarang_status', '<=', 5)->get();
         // $data['count_antrian'] = SubBarang::where('subbarang_status', '>=', 4)->where('subbarang_status', '<=', 5)->count();
         return view('noc/pengecekan-barang', $data);
@@ -624,49 +630,64 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
         $user = (new GlobalController)->user_admin()['user_id'];
 
-        if ($request->barang_mac) {
-            $sub['barang_mac'] = $request->barang_mac;
-            $sub['barang_sn'] = $request->barang_sn;
+        if ($request->barang_status == 'Normal') {
+            $barang_dicek = 0;
+            $barang_rusak = 0;
+        } else {
+            $barang_dicek = 0;
+            $barang_rusak = 1;
         }
 
-        $sub['barang_status'] = $request->barang_status;
-        $sub['barang_ket'] = $request->barang_ket;
-        $sub['barang_pengecek'] = $user;
+        if ($request->barang_mac) {
+            $cek_barang = Data_Barang::where('barang_mac', $request->barang_mac)->first();
+            $cek_sn = Data_Barang::where('barang_sn', $request->barang_sn)->first();
+            // dd($cek_sn);
+            if ($cek_barang) {
+                $notifikasi = array(
+                    'pesan' => 'Gagal, Mac Address sudah terdaftar',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.noc.pengecekan_barang')->with($notifikasi);
+            } else {
+                if ($cek_sn) {
+                    $notifikasi = array(
+                        'pesan' => 'Gagal, Serial Number sudah terdaftar',
+                        'alert' => 'error',
+                    );
+                    return redirect()->route('admin.noc.pengecekan_barang')->with($notifikasi);
+                } else {
+                    $sub['barang_mac'] = $request->barang_mac;
+                    $sub['barang_mac_olt'] = $request->barang_mac_olt;
+                    $sub['barang_sn'] = $request->barang_sn;
+                    $sub['barang_status'] = $request->barang_status;
+                    $sub['barang_ket'] = $request->barang_ket;
+                    $sub['barang_pengecek'] = $user;
+                    $sub['barang_dicek'] = $barang_dicek;
+                    $sub['barang_rusak'] = $barang_rusak;
 
-        // if ($request->ket == 'Rusak') {
-        //     // $sub['subbarang_keterangan'] = $request->ket;
-        //     $sub['subbarang_status'] = '10';
-        //     $sub['subbarang_stok'] = '1';
-        //     $sub['subbarang_keluar'] = '0';
-        // } elseif ($request->ket == 'Dalam Pengecekan') {
-        //     // $sub['subbarang_keterangan'] = $request->ket;
-        //     $sub['subbarang_status'] = '5';
-        //     $sub['subbarang_stok'] = '1';
-        //     $sub['subbarang_keluar'] = '0';
-        // } elseif ($request->ket == 'QC') {
-        //     // $sub['subbarang_keterangan'] = $request->ket;
-        //     $sub['subbarang_status'] = '4';
-        //     $sub['subbarang_stok'] = '1';
-        //     $sub['subbarang_keluar'] = '0';
-        // } elseif ($request->ket == 'Barang Normal') {
-        //     // $sub['subbarang_keterangan'] = $request->ket;
-        //     $sub['subbarang_status'] = '0';
-        //     $sub['subbarang_stok'] = '1';
-        //     $sub['subbarang_keluar'] = '0';
-        // } elseif ($request->ket == 'Barang Retur') {
-        //     // $sub['subbarang_keterangan'] = $request->ket;
-        //     $sub['subbarang_status'] = '6';
-        //     $sub['subbarang_stok'] = '1';
-        //     $sub['subbarang_keluar'] = '0';
-        // }
-        // $sub['subbarang_deskripsi'] = $request->ket . ' | ' . $request->desk;
 
-        // dd($sub);
-        Data_Barang::where('barang_id', $id)->update($sub);
-        $notifikasi = array(
-            'pesan' => 'Berhasil Update Status Barang',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.noc.pengecekan_barang')->with($notifikasi);
+                    Data_Barang::where('barang_id', $id)->update($sub);
+                    $notifikasi = array(
+                        'pesan' => 'Berhasil Update Status Barang',
+                        'alert' => 'success',
+                    );
+                    return redirect()->route('admin.noc.pengecekan_barang')->with($notifikasi);
+                }
+            }
+        } else {
+            $sub['barang_dicek'] = $barang_dicek;
+            $sub['barang_rusak'] = $barang_rusak;
+            $sub['barang_status'] = $request->barang_status;
+            $sub['barang_ket'] = $request->barang_ket;
+            $sub['barang_pengecek'] = $user;
+
+
+            Data_Barang::where('barang_id', $id)->update($sub);
+            $notifikasi = array(
+                'pesan' => 'Berhasil Update Status Barang',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.noc.pengecekan_barang')->with($notifikasi);
+        }
     }
 }
