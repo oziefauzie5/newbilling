@@ -156,31 +156,42 @@
 
     <table id="kas_kop">
         <tr>
-            <th width="60%" style=" text-align: left;"><img src="{{ asset('atlantis/assets/img/'.$profile_perusahaan->app_logo)}}" alt=""></th>
+            <th width="60%" style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo)}}" width="20%" alt=""></th>
             <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
         </tr>
     </table>
     <br>
     <hr>
-    <table id="kas">
-        <br>
-        <tr>
-            <th colspan="3" style="text-align: center; font-size: 12pt;">BUKTI PENGELUARAN KAS</th>
+    <table id="customers">
+        <tr >
+            <th  style="text-align: center; font-size: 12pt;">BUKTI PENGELUARAN KAS</th>
+            <td></td>
         </tr>
+    </table>
+    <table id="kas">
+
         <tr>
             <td width="15%">No</td>
             <td>:</td>
-            <td width="85%">................</td>
+            <td width="40%">................</td>
         </tr>
         <tr>
             <td>Tanggal</td>
             <td>:</td>
             <td>{{ date('d-m-Y', strtotime( $kas->reg_tgl_pasang)) }}</td>
-        </tr>
-        <tr>
             <td>Dibayarkan kepada</td>
             <td>:</td>
             <td>{{$kas->teknisi_team}}</td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+            <td>Pelanggan</td>
+            <td>:</td>
+            <td>{{$kas->input_nama}}</td>
+            <td>No. Layanan</td>
+            <td>:</td>
+            <td>{{$kas->reg_nolayanan}}</td>
         </tr>
        
     </table>
@@ -218,38 +229,54 @@
         </tr>
         <tr>
             <th width="25%" higth="20px">{{ strtoupper($nama_admin )}}</th>
-            <th width="25%">{{strtoupper($noc->name)}}</th>
+            <th width="25%">...................................</th>
             <th width="25%">...................................</th>
             <th width="25%">...................................</th>
         </tr>
     </table>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <br>
     <table id="kas_kop">
         <tr>
-            <th width="60%" style=" text-align: left;"><img src="{{ asset('atlantis/assets/img/'.$profile_perusahaan->app_logo)}}" alt=""></th>
+            <th width="60%" style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo)}}" width="20%" alt=""></th>
             <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
         </tr>
     </table>
     <br>
     <hr>
-    <table id="kas">
-        <br>
-        <tr>
-            <th colspan="3" style="text-align: center; font-size: 12pt;">BUKTI PENGELUARAN KAS</th>
+    <table id="customers">
+        <tr >
+            <th  style="text-align: center; font-size: 12pt;">BUKTI PENGELUARAN KAS</th>
+            <td></td>
         </tr>
+    </table>
+    <table id="kas">
+
         <tr>
             <td width="15%">No</td>
             <td>:</td>
-            <td width="85%">................</td>
+            <td width="40%">................</td>
         </tr>
         <tr>
-            <td>Tanggal Pasang</td>
+            <td>Tanggal</td>
             <td>:</td>
             <td>{{ date('d-m-Y', strtotime( $kas->reg_tgl_pasang)) }}</td>
-        </tr>
-        <tr>
             <td>Dibayarkan kepada</td>
             <td>:</td>
             <td>{{$seles->name}}</td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+            <td>Pelanggan</td>
+            <td>:</td>
+            <td>{{$kas->input_nama}}</td>
+            <td>No. Layanan</td>
+            <td>:</td>
+            <td>{{$kas->reg_nolayanan}}</td>
         </tr>
        
     </table>
@@ -288,184 +315,87 @@
         </tr>
         <tr>
             <th width="25%" higth="20px">{{ strtoupper($nama_admin )}}</th>
-            <th width="25%">{{strtoupper($noc->name)}}</th>
+            <th width="25%">...................................</th>
             <th width="25%">...................................</th>
             <th width="25%">...................................</th>
         </tr>
     </table>
     <table id="kas_kop">
         <tr>
-            <th width="60%"  style=" text-align: left;"><img src="{{ asset('atlantis/assets/img/'.$profile_perusahaan->app_logo)}}" alt=""></th>
+            <th width="60%" style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo)}}" width="20%" alt=""></th>
             <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
         </tr>
     </table>
     <br>
- <hr>
-    <table id="customers">
+    <hr>
+    <table id="kas">
         <br>
         <tr>
-            <th colspan="3" style="text-align: center; font-size: 12pt;">LAPORAN KERJA TEKNISI</th>
+            <th colspan="3" style="text-align: center; font-size: 12pt;">INVOICE</th>
         </tr>
-            <tr>
-                <td width="15%">Id Pelanggan</td>
-                <td>:</td>
-                <td width="85%">{{$berita_acara->reg_idpel}}</td>
-            </tr>
-            <tr>
-                <td>No. Layanan</td>
-                <td>:</td>
-                <td>{{$berita_acara->reg_nolayanan}}</td>
-            </tr>
-            <tr>
-                <td>Nama</td>
-                <td>:</td>
-                <td>{{$berita_acara->input_nama}}</td>
-            </tr>
-            <tr>
-                <td>Whatsapp</td>
-                <td>:</td>
-                <td>{{$berita_acara->input_hp}}</td>
-            </tr>
-            <tr>
-                <td>Paket Internet</td>
-                <td>:</td>
-                <td>{{$berita_acara->paket_nama}}</td>
-            </tr>
-            <tr>
-                <td>Jenis Billing</td>
-                <td>:</td>
-                <td>{{$berita_acara->reg_jenis_tagihan}}</td>
-            </tr>
-            <tr>
-                <td>Tagihan</td>
-                <td>:</td>
-                @if($berita_acara->reg_jenis_tagihan=='DEPOSIT')
-                <td>Rp. {{number_format($berita_acara->reg_deposit)}}</td>
-                @else
-                <td>Rp. {{number_format( $berita_acara->reg_harga + $berita_acara->reg_dana_kas + $berita_acara->reg_dana_kerjasama + $berita_acara->reg_kode_unik  + $berita_acara->reg_ppn)}}</td>
-                @endif
-            </tr>
-            <tr>
-                <td>Sales</td>
-                <td>:</td>
-                <td>{{$seles->name}}</td>
-            </tr>
-            <tr>
-                <td>Sub Sales</td>
-                <td>:</td>
-                <td>{{$berita_acara->input_subseles}}</td>
-            </tr>
-            
-            <tr>
-                <td>Alamat KTP</td>
-                <td>:</td>
-                <td>{{$berita_acara->input_alamat_ktp}}</td>
-            </tr>
-            <tr>
-                <td>Alamat Pasang</td>
-                <td>:</td>
-                <td>{{$berita_acara->input_alamat_pasang}}</td>
-            </tr>
-    </table >
-    <br>
-    <hr>
-    <table id="customers">
-            <tr>
-                <td width="15%">Tanggal Registrasi</td>
-                <td>:</td>
-                @if($berita_acara->input_tgl<"2020-01-01")
-                <td width="85%">-</td>
-                @else
-                <td width="85%">{{ date('d-m-Y', strtotime( $berita_acara->input_tgl)) }}</td>
-                @endif
-            </tr>
-            <tr>
-                <td>Tanggal Pemasangan</td>
-                <td>:</td>
-                @if($berita_acara->reg_tgl_pasang)
-                <td>{{ date('d-m-Y', strtotime( $berita_acara->reg_tgl_pasang)) }}</td>
-                @else
-                <td></td>
-                @endif
-            </tr>
-    </table>
-    <br>
-    <hr>
+        <tr>
+            <td width="15%">No</td>
+            <td>:</td>
+            <td width="40%">{{$data->bk_id}}</td>
+        </tr>
+        <tr>
+            <td>Tanggal Cetak</td>
+            <td>:</td>
+            <td>{{date('d-M-Y h:m')}}</td>
+            <td>Tanggal Barang Keluar</td>
+            <td>:</td>
+            <td>{{date('d-M-Y', strtotime($data->bk_waktu_keluar))}}</td>
+                </tr>
+                <tr>
+                    <td>Jenis Laporan</td>
+                    <td>:</td>
+                    <td>{{$data->bk_jenis_laporan}}</td>
+                    <td>Keterangan</td>
+                    <td>:</td>
+                    <td>{{$data->bk_keperluan}}</td>
+                </tr>
 
-    <table id="customers">
-        <br>
+       
+    </table>
+    <table id="kas_rincian">
         <tr>
-        <td width="15%">Kode Pactcore</td>
-        <td>:</td>
-        <td id="box" >{{$berita_acara->reg_kode_pactcore}}</td>
-        <td></td>
-        <td width="15%">Kode Adaptor</td>
-        <td>:</td>
-        <td id="box">{{$berita_acara->reg_kode_adaptor}}</td>
-    </tr>
-    <tr>
-        <td width="15%">Kode ONT</td>
-        <td>:</td>
-        <td id="box">{{$berita_acara->reg_kode_ont}}</td>
-        <td></td>
-        <td width="15%">Kode Kabel</td>
-        <td>:</td>
-        <td id="box">{{$berita_acara->reg_kode_dropcore}}</td>
-    </tr>
-    <tr>
-        <td>Before</td>
-        <td>:</td>
-        <td id="box">{{$berita_acara->reg_before}}</td>
-        <td></td>
-        <td>After</td>
-        <td>:</td>
-        <td id="box">{{$berita_acara->reg_after}}</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Losis</td>
-        <td>:</td>
-        <td id="box">{{$berita_acara->reg_los_opm}} dbm</td>
-        <td></td>
-        <td>Kabel</td>
-        <td>:</td>
-        <td id="box">{{$berita_acara->reg_penggunaan_dropcore}} Meter</td>
-        <td></td>
-    </tr>
+                <th>#</th>
+                <th>Jenis Barang</th>
+                <th>Kategori</th>
+                <th>Nama Barang</th>
+                <th>Qty</th>
+                <th>Satuan</th>
+                <th>Harga</th>
+                <th>Jumlah</th>
+        </tr>
+        @foreach($print_skb as $skb )
         <tr>
-        <td>Status Perangkat</td>
-        <td>:</td>
-        <td>Dipinjamkan</td>
-        <td></td>
-        <td>Mac Address</td>
-        <td>:</td>
-        <td id="box">{{$berita_acara->reg_mac}}</td>
+            <td>{{$loop->iteration}}</td>
+            <td>{{ $skb->barang_jenis }}</td>
+            <td >{{ $skb->barang_kategori }}</td>
+            <td>{{ ucfirst($skb->barang_nama) .'  '. ucfirst($skb->barang_merek) .'  '.strtolower($skb->barang_sn) .'  '. strtolower($skb->barang_mac)}}</td>
+            <td style="text-align: center">{{ $skb->bk_jumlah }}</td>
+            <td style="text-align: center">{{ $skb->barang_satuan }}</td>
+            <td style="text-align: right">{{ number_format($skb->barang_harga_satuan) }}</td>
+            <td style="text-align: right">{{ number_format($skb->barang_harga_satuan * $skb->bk_jumlah) }}</td>
+            @endforeach
+        </tr>
+        <tr>
+        <td colspan="7" style="text-align: right">Total</td>
+        <td colspan="1" style="text-align: right">{{ number_format($total) }}</td>
         </tr>
     </table>
     <br>
-    <hr>
-    <table id="customers">
-            <tr>
-                <td width="15%">Jeni Layanan</td>
-                <td>:</td>
-                <td width="85%">{{$berita_acara->reg_layanan}}</td>
-            </tr>
-            <tr>
-                <td width="15%">Username</td>
-                <td>:</td>
-                <td width="85%">{{$berita_acara->reg_username}}</td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td>:</td>
-                <td>{{$berita_acara->reg_password}}</td>
-            </tr>
+    <table id="kas_ttd">
+        <tr>
+            <th width="50%" higth="20px">Admin</th>
+            <th width="50%">Penerima Barang</th>
+        </tr>
+        <tr>
+            <th width="50%" higth="20px">{{ strtoupper($nama_admin )}}</th>
+            <th width="50%">( ........................................... )</th>
+        </tr>
     </table>
-    <br><hr><br>
-    <div> Hallo {{strtoupper($berita_acara->reg_teknisi_team)}}. Terimakasih telah menyelesaikan tugas anda. Anda mulai mengerjakan Pukul {{ date('H:m:s', strtotime( $kas->mulai)) }} dan selesai Pukul {{ date('H:m:s', strtotime( $kas->teknisi_job_selesai)) }}, dengan waktu {{ $kas->teknisi_waktu_kerja }}</div><br>
-
-    <div>Nilai untuk anda : {{$kas->teknisi_nilai}}</div>
-    <div>Pesan untuk anda : {{$kas->teknisi_note}}</div>
  
  
 

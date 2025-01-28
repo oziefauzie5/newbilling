@@ -660,60 +660,68 @@ Diregistrasi Oleh : *' . $admin . '*
         $user = (new GlobalController)->user_admin();
         $data['nama_admin'] = $user['user_nama'];
         $data['id_admin'] = $user['user_id'];
-        $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
-        if ($teknisi) {
-            $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'pakets.*', 'teknisis.*', 'teknisis.created_at as mulai',)
-                ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-                ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-                ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
-                ->where('registrasis.reg_idpel', $id)
-                ->where('teknisis.teknisi_job', 'PSB')
-                ->where('teknisis.teknisi_psb', '>', '0')
-                ->first();
+        // $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
+        // if ($teknisi) {
+        $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'pakets.*',)
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            // ->join('data__barang_keluars', 'data__barang_keluars.bk_id', '=', 'registrasis.reg_skb')
+            ->where('registrasis.reg_idpel', $id)
+            // ->where('teknisis.teknisi_job', 'PSB')
+            // ->where('teknisis.teknisi_psb', '>', '0')
+            ->first();
 
-            // if ($data['kas']->reg_fee > 0) {
-            //     $saldo = (new globalController)->total_mutasi_sales($data['id_admin']);
-            //     $total = $saldo + $data['biaya_sales']['biaya_sales_continue']; #SALDO MUTASI = DEBET - KREDIT
+        $query = Data_BarangKeluar::join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
+            ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
+            ->where('bk_id', $data['kas']->reg_skb);
+        $data['print_skb'] = $query->get();
+        $query1 = Data_BarangKeluar::where('bk_id', $data['kas']->reg_skb);
+        $data['data'] = $query1->first();
+        $data['total'] = $query1->sum('bk_harga');
 
-            //     $mutasi_sales['smt_user_id'] = $data['kas']->input_sales;
-            //     $mutasi_sales['smt_admin'] = $data['id_admin'];
-            //     $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
-            //     $mutasi_sales['smt_deskripsi'] = $data['kas']->input_nama;
-            //     $mutasi_sales['smt_cabar'] = '2';
-            //     $mutasi_sales['smt_kredit'] = $data['biaya_sales']['biaya_sales_continue'];
-            //     $mutasi_sales['smt_debet'] = 0;
-            //     $mutasi_sales['smt_saldo'] = $total;
-            //     $mutasi_sales['smt_biaya_adm'] = 0;
-            //     MutasiSales::create($mutasi_sales);
-            // }
+        // if ($data['kas']->reg_fee > 0) {
+        //     $saldo = (new globalController)->total_mutasi_sales($data['id_admin']);
+        //     $total = $saldo + $data['biaya_sales']['biaya_sales_continue']; #SALDO MUTASI = DEBET - KREDIT
 
-            // dd($mutasi_sales);
+        //     $mutasi_sales['smt_user_id'] = $data['kas']->input_sales;
+        //     $mutasi_sales['smt_admin'] = $data['id_admin'];
+        //     $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+        //     $mutasi_sales['smt_deskripsi'] = $data['kas']->input_nama;
+        //     $mutasi_sales['smt_cabar'] = '2';
+        //     $mutasi_sales['smt_kredit'] = $data['biaya_sales']['biaya_sales_continue'];
+        //     $mutasi_sales['smt_debet'] = 0;
+        //     $mutasi_sales['smt_saldo'] = $total;
+        //     $mutasi_sales['smt_biaya_adm'] = 0;
+        //     MutasiSales::create($mutasi_sales);
+        // }
 
-            $update['reg_progres'] = '4';
-            Registrasi::where('reg_idpel', $id)->update($update);
+        // dd($mutasi_sales);
 
-            $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-                ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-                ->where('registrasis.reg_idpel', $id)
-                ->first();
-            $data['noc'] = User::whereId($data['kas']->teknisi_noc_userid)->first();
+        $update['reg_progres'] = '4';
+        Registrasi::where('reg_idpel', $id)->update($update);
+
+        $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('registrasis.reg_idpel', $id)
+            ->first();
+        $data['noc'] = User::whereId($data['kas']->teknisi_noc_userid)->first();
 
 
-            if ($data['kas']->input_sales) {
-                $data['seles'] = User::whereId($data['kas']->input_sales)->first();
-            } else {
-                dd('jonk');
-            }
-            return view('PSB/bukti_kas_keluar', $data);
+        if ($data['kas']->input_sales) {
+            $data['seles'] = User::whereId($data['kas']->input_sales)->first();
         } else {
-            $notifikasi = [
-                'pesan' => 'Teknisi tidak ditemukan',
-                'alert' => 'error',
-            ];
-            return redirect()->route('admin.psb.index')->with($notifikasi);
+            dd('jonk');
         }
+        return view('PSB/bukti_kas_keluar', $data);
+        // } else {
+        //     $notifikasi = [
+        //         'pesan' => 'Teknisi tidak ditemukan',
+        //         'alert' => 'error',
+        //     ];
+        //     return redirect()->route('admin.psb.index')->with($notifikasi);
+        // }
 
         $nama = InputData::where('id', $id)->first();
         if ($nama) {
