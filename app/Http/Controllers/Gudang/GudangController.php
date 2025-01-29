@@ -25,19 +25,6 @@ class GudangController extends Controller
 {
     public function data_barang(Request $request)
     {
-        // $i  = 1;
-        // $ambil_id = Data_BarangKeluar::get();
-        // foreach ($ambil_id as $key ) {
-        //     echo $i++ .'<br>' ;
-        //     Data_BarangKeluar::where('bk_kategori','ADAPTOR')->update([
-        //         'bk_harga' => '17000',
-        //         // 'barang_harga' => '680000',
-        //     ]);
-        // }
-
-        // dd($ambil_id);
-
-
 
 
         $data['tittle'] = 'Data Barang';
@@ -182,7 +169,7 @@ class GudangController extends Controller
 
     public function print_kode($id)
     {
-        $data['data_kode_group'] = Data_Barang::where('barang_id_group', $id)->get();
+        $data['data_kode_group'] = Data_Barang::where('barang_id_group', $id)->where('barang_digunakan', '0')->get();
         $data['kode_group'] = Data_Barang::where('barang_id_group', $id)->first();
         return view('gudang/print_kode_barang', $data);
     }

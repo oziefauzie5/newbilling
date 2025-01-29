@@ -653,7 +653,7 @@
           </table>
         </div>
       </div>
-     @if($data->reg_skb)
+     @if($data->reg_skb == "")
     <div class="card-footer">
     <button type="button" class="btn  ">Batal</button>
     <button type="submit" class="btn btn-primary float-right">Simpan</button>

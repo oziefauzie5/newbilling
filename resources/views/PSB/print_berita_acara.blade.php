@@ -187,6 +187,11 @@
     </table>
     <table id="customers">
         <tr>
+            <td width="15%">Perangkat</td>
+        <td>:</td>
+        <td colspan="7"  >Dipinjamkan</td>
+        </tr>
+        <tr>
         <td width="15%">Serial Number</td>
         <td>:</td>
         <td colspan="7"  >{{$berita_acara->reg_sn}}</td>
