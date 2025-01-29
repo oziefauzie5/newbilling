@@ -18,16 +18,12 @@ return new class extends Migration
             $table->string('bk_id_tiket')->nullable();
             $table->integer('bk_id_barang')->nullable();
             $table->string('bk_kategori')->nullable();
-            $table->string('bk_satuan')->nullable();
             $table->string('bk_harga')->nullable();
-            $table->string('bk_nama_barang')->nullable();
-            $table->string('bk_model')->nullable();
-            $table->string('bk_mac')->nullable();
-            $table->string('bk_sn')->nullable();
+            $table->string('bk_before')->nullable();
+            $table->string('bk_after')->nullable();
             $table->string('bk_jumlah')->nullable();
             $table->string('bk_keperluan')->nullable();
-            $table->string('bk_foto_awal')->nullable();
-            $table->string('bk_foto_akhir')->nullable();
+            $table->string('bk_file_bukti')->nullable();
             $table->string('bk_nama_penggunan')->nullable();
             $table->string('bk_waktu_keluar')->nullable();
             $table->string('bk_admin_input')->nullable();
@@ -37,7 +33,6 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */

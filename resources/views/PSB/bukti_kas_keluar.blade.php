@@ -595,7 +595,7 @@
     <table id="kas_rincian">
         <tr>
                 <th>#</th>
-                <th>Jenis Barang</th>
+                <th>Id Barang</th>
                 <th>Kategori</th>
                 <th>Nama Barang</th>
                 <th>Qty</th>
@@ -606,7 +606,7 @@
         @foreach($print_skb as $skb )
         <tr>
             <td>{{$loop->iteration}}</td>
-            <td>{{ $skb->barang_jenis }}</td>
+            <td>{{ $skb->barang_id }}</td>
             <td >{{ $skb->barang_kategori }}</td>
             <td>{{ ucfirst($skb->barang_nama) .'  '. ucfirst($skb->barang_merek) .'  '.strtolower($skb->barang_sn) .'  '. strtolower($skb->barang_mac)}}</td>
             <td style="text-align: center">{{ $skb->bk_jumlah }}</td>

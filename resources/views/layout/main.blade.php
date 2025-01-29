@@ -213,13 +213,15 @@
 							</div>
 						</li>
 						@endrole
-						@role('admin|STAF ADMIN')
+						@role('admin|NOC|STAF ADMIN')
 						<li class="nav-item {{\Route::is('admin.tiket.*') ? 'active' : ''}}">
 							<a href="{{route('admin.tiket.dashboard_tiket')}}">
 								<i class="fas fa-ticket-alt"></i>
 								<p>Tiket</p>
 							</a>
 						</li>
+						@endrole
+						@role('admin|STAF ADMIN')
 						
 						<li class="nav-item {{\Route::is('admin.lap.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#keuangan">
@@ -290,7 +292,7 @@
 								<p>whatsapp</p>
 							</a>
 						</li>
-						@role('admin')
+						@role('admin|STAF ADMIN')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#charts">
 								<i class="fas fa-cog"></i>

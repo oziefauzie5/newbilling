@@ -183,173 +183,8 @@
               </div>
             </div>
             </div>
-                <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Deaktivasi</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <form action="{{route('admin.reg.deaktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST">
-                          @csrf
-                          @method('PUT')
-                          <div class="col-sm-12">
-                            <div class="form-group">
-                              <label for="tiket_deskripsi">Keterangan Deaktivasi</label>
-                              <textarea class="form-control" name="reg_catatan" rows="5"></textarea>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="form-group">
-                              <label>Status</label>
-                              <select name="status" class="form-control" required>
-                                <option value="PUTUS LANGGANAN">PUTUS LANGGANAN</option>
-                                <option value="PUTUS SEMENTARA">PUTUS SEMENTARA</option>
-                              </select>
-                            </div>
-                          </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
-                          <button type="submit" class="btn btn-primary">Simpan</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div> 
-                </div> -->
                   
   
-                  <!-- Modal -->
-                  <div class="modal fade" id="sambung_kembali" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">SAMBUNG KEMBALI</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <form action="{{route('admin.psb.sambung_kembali',['idpel'=>$data->reg_idpel])}}" method="POST">
-                            @csrf
-                            @method('PUT')
-  
-                            <div class="form-group row">
-                              <label class=" col-sm-2 col-form-label">Status perangkat</label>
-                            <div class="col-sm-4">
-                              <select type="text" name="sam_stt_perangkat" class="form-control" value="{{ Session::get('reg_stt_perangkat') }}" >
-                                <option value="DIPINJAMKAN">DIPINJAMKAN</option>
-                                <option value="MILIK PROBADI">MILIK PRIBADI</option>
-                              </select>
-                            </div>
-                            <label class="col-sm-2 col-form-label">Merk perangkat</label>
-                            <div class="col-sm-4">
-                              <input type="text" name="sam_mrek" id="reg_mrek" class="form-control ont" value="{{ Session::get('reg_mrek') }}" readonly >
-                            </div>
-                            </div>
-                            <div class="form-group row">
-                              <label class="col-sm-2 col-form-label">Mac perangkat</label>
-                              <div class="col-sm-4">
-                                <input type="text" name="sam_mac" id="reg_mac"  class="form-control ont" value="{{ Session::get('reg_mac') }}" readonly >
-                              </div>
-                              <label class=" col-sm-2 col-form-label" >SN perangkat</label>
-                            <div class="col-sm-4">
-                              <input type="text" name="sam_sn" id="reg_sn" class="form-control ont" value="{{ Session::get('reg_sn') }}" readonly >
-                            </div>
-                            </div>
-                            <div class="form-group row">
-                            <label class=" col-sm-2 col-form-label">Kode Barang</label>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" id="adaptor" value="1" name="adaptor" @if( Session::get('kode_adaptor')) checked @endif>
-                                <span class="form-check-sign">Adaptor</span>
-                              </label>
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" id="ont" value="1" name="ont" @if( Session::get('kode_ont')) checked @endif>
-                                <span class="form-check-sign">ONT</span>
-                              </label>
-                            </div>
-                            </div>
-                            
-              <!-- Modal Validasi adaptor -->
-              <div class="modal fade" id="modal_adaptor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE ADAPTOR</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi_adp">
-                        <label class="col-sm-4 col-form-label">Kode Adaptor</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_adaptor" id="kode_adaptor" class="form-control" value="{{ Session::get('kode_adaptor') }}" >
-                          <div id="notif_adp"></div>
-                        </div>
-                      </div>
-                      <div id="note_adp"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_adp">Close</button>
-                      <input class="btn btn-outline-secondary val_adp" value="Validasi"  type="button"></input>
-                      <div id="buton_adp"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Modal Validasi ont -->
-              <div class="modal fade" id="modal_ont" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE ONT</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi_ont">
-                        <label class="col-sm-4 col-form-label">Kode Ont</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_ont" id="kode_ont"  value="{{ Session::get('kode_ont') }}" class="form-control"  >
-                          <div id="notif_ont"></div>
-                        </div>
-                      </div>
-                      <div id="note_ont"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_ont">Close</button>
-                      <input class="btn btn-outline-secondary val_ont" value="Validasi"  type="button"></input>
-                      <div id="buton_ont"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div> 
-                <div class="col-sm-6">
-                <button type="submit" class="btn btn-primary btn-block">Simpan</button>
-                 </div>
-              </div>
-            </form>
-            </div>
-          </div>
-        </div>
-
 
         <div class="col-md-12">
           <div class="card">
@@ -621,6 +456,13 @@
         <div class="col-sm-4 notif">
           <input type="text" name="reg_skb"  class="form-control" required value="{{$data->reg_skb}}" >
           <div id="pesan"></div>
+        </div>
+        <div class="col-sm-4">
+          <a href="{{route('admin.gudang.print_skb')}}?skb={{$data->reg_skb}}"><button type="button" class="btn  btn-info ">Print SKB</button></a>
+        </div>
+        <div class="col-sm-4">
+          <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$data->reg_idpel])}}" target="_blank">
+            <button type="button" class="btn btn-dark">Print</button></a>
         </div>
       </div>
       <div class="form-group row">
@@ -931,33 +773,6 @@ Pindah Rumah
           </div>
         </div>
         @endrole 
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
-              <h3 class="mt-3">MATERIAL</h3><hr>
-              <div class="form-group row">
-                  <label class=" form-check col-sm-2 col-form-label">KODEE KABEL</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control harga"value="{{$data->reg_kode_dropcore}}" >
-                </div>
-                <label class="form-check col-sm-2 col-form-label">KODE ONT</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" value="{{$data->reg_kode_ont}}" >
-                </div>
-              </div>
-              <div class="form-group row">
-                  <label class=" form-check col-sm-2 col-form-label">KODE ADAPTOR</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control harga"value="{{$data->reg_kode_adaptor}} " >
-                </div>
-                <label class="form-check col-sm-2 col-form-label">KODE PACTCORE</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" value="{{$data->reg_kode_pactcore}} " >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
   
   </div>
 </div>
@@ -998,4 +813,3 @@ Pindah Rumah
     </script>
 
 @endsection
-d

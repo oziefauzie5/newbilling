@@ -62,8 +62,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
 
     Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN']);
     ##CRUD DATA USER
-    Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware(['role:admin']);
-    Route::post('/user/store', [UserController::class, 'store'])->name('user.store')->middleware(['role:admin']);
+    Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/user/store', [UserController::class, 'store'])->name('user.store')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit')->middleware(['role:admin']);
     Route::delete('/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete')->middleware(['role:admin']);
 

@@ -170,6 +170,8 @@ class AktivasiController extends Controller
         $create_barang['bk_id_barang'] = $barang->barang_id;
         $create_barang['bk_id_tiket'] = '0';
         $create_barang['bk_kategori'] = $barang->barang_kategori;
+        $create_barang['bk_before'] = $request->reg_before;
+        $create_barang['bk_after'] = $request->reg_after;
         $create_barang['bk_jumlah'] = $request->reg_penggunaan_dropcore;
         $create_barang['bk_keperluan'] = 'PSB ' . $query->input_nama;
         $create_barang['bk_file_bukti'] = $bk_name;
