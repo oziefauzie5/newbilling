@@ -72,7 +72,7 @@
 
     <table id="kop">
         <tr>
-            <th width="60%"  style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo) }}" alt=""></th>
+            <th width="60%"  style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo) }}" width="20%"></th>
             <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
         </tr>
     </table>

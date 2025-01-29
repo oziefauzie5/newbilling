@@ -229,15 +229,13 @@
         </tr>
         <tr>
             <th width="25%" higth="20px">{{ strtoupper($nama_admin )}}</th>
-            <th width="25%">...................................</th>
+            <th width="25%">{{$noc->name}}</th>
             <th width="25%">...................................</th>
             <th width="25%">...................................</th>
         </tr>
     </table>
     <br>
-    <br>
     <hr>
-    <br>
     <br>
     <table id="kas_kop">
         <tr>
@@ -267,8 +265,6 @@
             <td>Dibayarkan kepada</td>
             <td>:</td>
             <td>{{$seles->name}}</td>
-        </tr>
-        <tr>
         </tr>
         <tr>
             <td>Pelanggan</td>
@@ -315,7 +311,7 @@
         </tr>
         <tr>
             <th width="25%" higth="20px">{{ strtoupper($nama_admin )}}</th>
-            <th width="25%">...................................</th>
+            <th width="25%">{{$noc->name}}</th>
             <th width="25%">...................................</th>
             <th width="25%">...................................</th>
         </tr>
@@ -377,7 +373,7 @@
             <td style="text-align: center">{{ $skb->bk_jumlah }}</td>
             <td style="text-align: center">{{ $skb->barang_satuan }}</td>
             <td style="text-align: right">{{ number_format($skb->barang_harga_satuan) }}</td>
-            <td style="text-align: right">{{ number_format($skb->barang_harga_satuan * $skb->bk_jumlah) }}</td>
+            <td style="text-align: right">{{ number_format($skb->bk_harga) }}</td>
             @endforeach
         </tr>
         <tr>
@@ -394,6 +390,16 @@
         <tr>
             <th width="50%" higth="20px">{{ strtoupper($nama_admin )}}</th>
             <th width="50%">( ........................................... )</th>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td ><img src="{{ asset('storage/rumah_pelanggan/'.$kas->reg_img) }}"  height="420" alt="" title=""></img></td>
+            @if($kas->reg_foto_odp)
+            <td ><img src="{{ asset('storage/odp_pelanggan/'.$kas->reg_foto_odp) }}"  height="420" alt="" title=""></img></td>
+            @endif
+            
         </tr>
     </table>
  

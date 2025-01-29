@@ -523,7 +523,7 @@
 	// PsbController -> index.blade.php					
 						$('.href').click(function(){
 							var id =$(this).data("id");
-							var url = '{{ route("admin.reg.form_data_pelanggan", ":id") }}';
+							var url = '{{ route("admin.reg.form_update_pelanggan", ":id") }}';
 							url = url.replace(':id', id);
 							window.location=url;
 						});

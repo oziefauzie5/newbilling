@@ -205,7 +205,7 @@ class AktivasiController extends Controller
         $pelanggan['reg_img'] = $filename;
 
         $photo_2 = $request->file('reg_foto_odp');
-        $filename_2 = $query->reg_odp . '.jpg';
+        $filename_2 = 'ODP' . $query->input_nama . '.jpg';
         // $filename_2 = $photo_2->getClientOriginalName();
         $path_2 = 'odp_pelanggan/' . $filename_2;
         Storage::disk('public')->put($path_2, file_get_contents($photo_2));

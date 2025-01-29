@@ -25,12 +25,13 @@ class GudangController extends Controller
 {
     public function data_barang(Request $request)
     {
-        $i  = 49;
-        $ambil_id = Data_Barang::latest()->first();
+        // $i  = 1;
+        // $ambil_id = Data_BarangKeluar::get();
         // foreach ($ambil_id as $key ) {
         //     echo $i++ .'<br>' ;
-        //     Data_Barang::where('barang_id_group','2501270002')->update([
-        //         'barang_pengembalian' => 0,
+        //     Data_BarangKeluar::where('bk_kategori','ADAPTOR')->update([
+        //         'bk_harga' => '17000',
+        //         // 'barang_harga' => '680000',
         //     ]);
         // }
 

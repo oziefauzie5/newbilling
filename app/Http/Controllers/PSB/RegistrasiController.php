@@ -662,17 +662,19 @@ Diregistrasi Oleh : *' . $admin . '*
         $data['id_admin'] = $user['user_id'];
         // $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
         // if ($teknisi) {
-        $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'pakets.*',)
+        $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'teknisis.*', 'pakets.*',)
+            ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             // ->join('data__barang_keluars', 'data__barang_keluars.bk_id', '=', 'registrasis.reg_skb')
             ->where('registrasis.reg_idpel', $id)
-            // ->where('teknisis.teknisi_job', 'PSB')
-            // ->where('teknisis.teknisi_psb', '>', '0')
+            ->where('teknisis.teknisi_job', 'PSB')
+            ->where('teknisis.teknisi_psb', '>', '0')
             ->first();
 
-        $query = Data_BarangKeluar::join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
+        $query = Data_BarangKeluar::select('data__barangs.*', 'data__barang_keluars.*')
+            ->join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
             ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
             ->where('bk_id', $data['kas']->reg_skb);
         $data['print_skb'] = $query->get();
@@ -714,7 +716,7 @@ Diregistrasi Oleh : *' . $admin . '*
         } else {
             dd('jonk');
         }
-        return view('PSB/bukti_kas_keluar', $data);
+        // return view('PSB/bukti_kas_keluar', $data);
         // } else {
         //     $notifikasi = [
         //         'pesan' => 'Teknisi tidak ditemukan',
@@ -1037,7 +1039,7 @@ Diregistrasi Oleh : *' . $admin . '*
 
 
 
-    public function form_data_pelanggan($id)
+    public function form_update_pelanggan($id)
     {
 
         // $data_barang = Registrasi::where('reg_router','17')->get();
@@ -1088,13 +1090,36 @@ Diregistrasi Oleh : *' . $admin . '*
         // dd($data['data']->reg_pop);
         $data['data_olt'] = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
             ->where('pop_id', $data['data']->reg_pop)->get();
+
+        $query = Data_BarangKeluar::join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
+            ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
+            ->where('bk_id', $data['data']->reg_skb);
+        $data['print_skb'] = $query->get();
+
+
         $data['status'] = $status_inet['status'];
         $data['uptime'] = $status_inet['uptime'];
         $data['address'] = $status_inet['address'];
         $data['status_secret'] = $status_inet['status_secret'];
-        return view('Registrasi/form_data_pelanggan', $data);
+        return view('Registrasi/form_update_pelanggan', $data);
     }
 
+    public function proses_update_noskb(Request $request, $id) ##Update No SKB Pada Form Update data pelanggan
+    {
+        Session::flash('reg_skb', $request->reg_skb);
+        $request->validate([
+            'reg_skb' => 'required',
+        ], [
+            'reg_skb.required' => 'Nomor SKB tidak boleh kosong',
+        ]);
+        $data['reg_skb'] = $request->reg_skb;
+        Registrasi::where('reg_idpel', $id)->update($data);
+        $notifikasi = array(
+            'pesan' => 'Update Nomor SKB Berhasil ',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+    }
     public function proses_aktivasi_pelanggan(Request $request, $id)
     {
         Session::flash('reg_site', $request->reg_site);

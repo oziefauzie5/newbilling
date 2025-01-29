@@ -489,17 +489,17 @@
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">OLT</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_olt" id="validasi_olt" class="form-control readonly" autocomplete="off"   required value="{{ Session::get('reg_olt') }}">
+          <input type="text" name="reg_olt" id="validasi_olt" class="form-control readonly" autocomplete="off"   required value="{{$data->reg_olt}}">
         </div>
         <label class=" col-sm-2 col-form-label">ODC</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly" required value="{{ Session::get('reg_odc') }}" >
+          <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly" required value="{{$data->reg_odc}}" >
         </div>
     </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">ODP</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odp" id="validasi_odp" class="form-control" required value="{{ Session::get('reg_odp') }}" >
+          <input type="text" name="reg_odp" id="validasi_odp" class="form-control" required value="{{$data->reg_odp}}" >
           <div id="pesan"></div>
         </div>
     </div>
@@ -516,7 +516,7 @@
         <div class="form-group row">
         <label class="col-sm-2 col-form-label">Mac perangkat ( OLT )</label>
         <div class="col-sm-4">
-          <input type="text" name="reg_mac_olt" id="mac"  class="form-control" minlength="17" maxlength="17" required value="{{ Session::get('reg_mac_olt') }}" >
+          <input type="text" name="reg_mac_olt" id="mac"  class="form-control" minlength="17" maxlength="17" required value="{{$data->reg_mac_olt}}" >
         </div>
         <label class=" col-sm-2 col-form-label" >SN perangkat</label>
       <div class="col-sm-4">
@@ -527,18 +527,18 @@
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">ONU ID</label>
         <div class="col-sm-4">
-          <input type="text" name="reg_onuid" class="form-control" required value="{{ Session::get('reg_onuid') }}">
+          <input type="text" name="reg_onuid" class="form-control" required value="{{$data->reg_onuid}}">
         </div>
         <label class=" col-sm-2 col-form-label">Slot ODP</label>
         <div class="col-sm-4">
-          <input type="text" name="reg_slot_odp" class="form-control" required value="{{ Session::get('reg_slot_odp') }}" >
+          <input type="text" name="reg_slot_odp" class="form-control" required value="{{$data->reg_slot_odp}}" >
         </div>
       </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Redaman</label>
         <div class="col-sm-4">
           {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}}
-          <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{ Session::get('reg_in_ont') }}" maxlength="6" minlength="6">
+          <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{$data->reg_in_ont}}" maxlength="6" minlength="6">
         </div>
         <label class="col-sm-2 col-form-label">Teknisi Team</label>
         <div class="col-sm-4">
@@ -546,33 +546,11 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">Kode Kabel</label>
-        <div class="col-sm-4 notif_kabel">
-          <input type="text" name="reg_kode_dropcore" id="reg_kode_dropcore" class="form-control" required value="{{ Session::get('reg_kode_dropcore') }}" >
-          <div id="pesan_kabel"></div>
-        </div>
-        <label class=" col-sm-2 col-form-label">Before</label>
-        <div class="col-sm-4 notif_kabel">
-          <input type="text" name="reg_before" id="before" class="form-control readonly" required value="{{ Session::get('reg_before') }}" >
-        </div>
-      </div>
-      <div class="form-group row">
-        
-        <label class=" col-sm-2 col-form-label">After</label>
-        <div class="col-sm-4 notif_over">
-          <input type="text" name="reg_after" id="after" class="form-control" required value="{{ Session::get('reg_after') }}" >
-          <div id="pesan_over"></div>
-        </div>
-        <label class=" col-sm-2 col-form-label">Panjang Kabel</label>
-        <div class="col-sm-4">
-          <input type="text" name="reg_penggunaan_dropcore" id="total" class="form-control" required value="{{ Session::get('reg_penggunaan_dropcore') }}" >
-        </div>
-      </div>
-      <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Teknisi 1</label>
         <div class="col-sm-4">
-          <select name="teknisi1" id="" class="form-control" required value="{{ Session::get('teknisi1') }}">
+          <select name="teknisi1" id="" class="form-control" required>
             <option value="">- Pilih Teknisi -</option>
+            <option value="">{{$data->reg_teknisi}}</option>
           @foreach ($data_teknisi as $t)
               <option value="{{$t->user_id}}|{{$t->user_nama}}">{{$t->user_nama}}</option>
           @endforeach
@@ -586,11 +564,11 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Koordinat Rumah</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control"  name="input_koordinat" required value="{{ Session::get('input_koordinat') }}">
+          <input type="text" class="form-control"  name="input_koordinat" required value="{{$data->input_koordinat}}">
         </div>
         <label class="col-sm-2 col-form-label">Koordinat ODP</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control"  name="reg_koodinat_odp" required value="{{ Session::get('reg_koodinat_odp') }}">
+          <input type="text" class="form-control"  name="reg_koodinat_odp" required value="{{$data->reg_koordinat_odp}}">
         </div>
       </div>
       <div class="form-group row">
@@ -627,6 +605,60 @@
     <button type="submit" class="btn btn-primary float-right">Simpan</button>
     @endrole
     </div>
+   </form>
+  </div>
+ </div>
+</div>
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body"> 
+      <form class="form-horizontal"action="{{route('admin.reg.proses_update_noskb',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <h3 class="mt-3 text-bolt"> DATA BARANG</h3><hr>
+      <div class="form-group row">
+        <label class=" col-sm-2 col-form-label">No SKB</label>
+        <div class="col-sm-4 notif">
+          <input type="text" name="reg_skb"  class="form-control" required value="{{$data->reg_skb}}" >
+          <div id="pesan"></div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="table-responsive">
+          <table id="" class="display table table-striped table-hover text-nowrap" >
+            <thead>
+                <th>#</th>
+                <th>Jenis Barang</th>
+                <th>Kategori</th>
+                <th>Nama Barang</th>
+                <th>Qty</th>
+                <th>Satuan</th>
+                <th>Harga</th>
+                <th>Jumlah</th>
+            </thead>
+            <tbody>
+              @foreach($print_skb as $skb )
+              <tr>
+                  <td>{{$loop->iteration}}</td>
+                  <td>{{ $skb->barang_jenis }}</td>
+                  <td >{{ $skb->barang_kategori }}</td>
+                  <td>{{ ucfirst($skb->barang_nama) .'  '. ucfirst($skb->barang_merek) .'  '.strtolower($skb->barang_sn) .'  '. strtolower($skb->barang_mac)}}</td>
+                  <td style="text-align: center">{{ $skb->bk_jumlah }}</td>
+                  <td style="text-align: center">{{ $skb->barang_satuan }}</td>
+                  <td style="text-align: right">{{ number_format($skb->barang_harga_satuan) }}</td>
+                  <td style="text-align: right">{{ number_format($skb->barang_harga_satuan * $skb->bk_jumlah) }}</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+     @if($data->reg_skb)
+    <div class="card-footer">
+    <button type="button" class="btn  ">Batal</button>
+    <button type="submit" class="btn btn-primary float-right">Simpan</button>
+    </div>
+    @endif
    </form>
   </div>
  </div>

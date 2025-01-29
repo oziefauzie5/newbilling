@@ -215,8 +215,8 @@
             <td style="text-align: center">{{ $skb->barang_satuan }}</td>
             <td style="text-align: right">{{ number_format($skb->barang_harga_satuan) }}</td>
             <td style="text-align: right">{{ number_format($skb->barang_harga_satuan * $skb->bk_jumlah) }}</td>
-            @endforeach
         </tr>
+        @endforeach
         <tr>
         <td colspan="7" style="text-align: right">Total</td>
         <td colspan="1" style="text-align: right">{{ number_format($total) }}</td>

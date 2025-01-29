@@ -307,7 +307,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/pelanggan/data-deaktivasi', [RegistrasiController::class, 'data_deaktivasi'])->name('reg.data_deaktivasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/berita-acara-deaktivasi', [RegistrasiController::class, 'berita_acara_deaktivasi'])->name('reg.berita_acara_deaktivasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     ##--REGISTRASI/EDIT/AKTIVASI--
-    Route::get('/pelanggan/{id}/form-pelanggan', [RegistrasiController::class, 'form_data_pelanggan'])->name('reg.form_data_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/pelanggan/{id}/form-pelanggan', [RegistrasiController::class, 'form_update_pelanggan'])->name('reg.form_update_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/pelanggan/{id}/form-update-pelanggan/no-skb', [RegistrasiController::class, 'proses_update_noskb'])->name('reg.proses_update_noskb')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/data-aktivasi-pelanggan', [RegistrasiController::class, 'data_aktivasi_pelanggan'])->name('reg.data_aktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/aktivasi_pelanggan', [RegistrasiController::class, 'aktivasi_pelanggan'])->name('reg.aktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     ##--VALIDASI--
