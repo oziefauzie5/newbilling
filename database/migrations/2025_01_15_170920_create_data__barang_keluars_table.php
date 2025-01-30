@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('bk_harga')->nullable();
             $table->string('bk_before')->nullable();
             $table->string('bk_after')->nullable();
+            $table->string('bk_terpakai')->nullable();
             $table->string('bk_jumlah')->nullable();
             $table->string('bk_keperluan')->nullable();
             $table->string('bk_file_bukti')->nullable();

@@ -123,7 +123,10 @@
                       <th>Nama Barang</th>
                       <th>Merek</th>
                       <th>Harga</th>
-                      <th>Qty</th>
+                      <th>Stok Awal</th>
+                      <th>Digunakan</th>
+                      <th>Stok Akhir</th>
+                      <th>Terpakai Sebelumnya</th>
                       <th>jumlah</th>
                       <th>Aksi</th>
                     </tr>

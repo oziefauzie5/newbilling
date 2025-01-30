@@ -284,6 +284,9 @@ class GudangController extends Controller
         $barang_nama = $request->barang_nama;
         $tiket_type = $request->tiket_type;
         $tiket_site = $request->tiket_site;
+        $before = $request->before;
+        $after = $request->after;
+        $terpakai = $request->terpakai;
         $bk_waktu_keluar = $request->bk_waktu_keluar;
         // return response()->json($$request->all());
         for ($x = 0; $x < count($barang_id); $x++) {
@@ -294,6 +297,9 @@ class GudangController extends Controller
                 'bk_id_tiket' => $no_tiket,
                 'bk_kategori' => $barang_kategori[$x],
                 'bk_jumlah' => $jumlah_barang[$x],
+                'bk_before' => $before[$x],
+                'bk_after' => $after[$x],
+                'bk_terpakai' => $terpakai[$x],
                 'bk_keperluan' => $bk_keperluan,
                 'bk_waktu_keluar' => date('Y-m-d', strtotime($bk_waktu_keluar)),
                 'bk_admin_input' => $admin,
@@ -305,7 +311,7 @@ class GudangController extends Controller
             Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
                 [
                     'barang_nama_pengguna' => $bk_jenis_laporan,
-                    'barang_digunakan' => $jumlah_barang[$x],
+                    'barang_digunakan' => $terpakai[$x] + $jumlah_barang[$x],
                     'barang_status' => '1',
                 ]
             );
@@ -341,6 +347,9 @@ class GudangController extends Controller
         $tiket_status = $request->tiket_status;
         $tiket_type = $request->tiket_type;
         $tiket_site = $request->tiket_site;
+        $before = $request->before;
+        $after = $request->after;
+        $terpakai = $request->terpakai;
         for ($x = 0; $x < count($barang_id); $x++) {
             Data_BarangKeluar::create([
                 'bk_id' => $no_sk,
@@ -349,6 +358,9 @@ class GudangController extends Controller
                 'bk_id_tiket' => $tiket_id,
                 'bk_kategori' => $barang_kategori[$x],
                 'bk_jumlah' => $jumlah_barang[$x],
+                'bk_before' => $before[$x],
+                'bk_after' => $after[$x],
+                'bk_terpakai' => $terpakai[$x],
                 'bk_keperluan' => $tiket_tindakan,
                 'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
                 'bk_admin_input' => $admin,
@@ -359,7 +371,7 @@ class GudangController extends Controller
             Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
                 [
                     'barang_nama_pengguna' => $tiket_jenis,
-                    'barang_digunakan' => $jumlah_barang[$x],
+                    'barang_digunakan' => $terpakai[$x] + $jumlah_barang[$x],
                     'barang_status' => 1,
                 ]
             );

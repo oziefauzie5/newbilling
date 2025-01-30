@@ -16,6 +16,7 @@ class Data_BarangKeluar extends Model
         'bk_kategori',
         'bk_before',
         'bk_after',
+        'bk_terpakai',
         'bk_harga',
         'bk_jumlah',
         'bk_keperluan',

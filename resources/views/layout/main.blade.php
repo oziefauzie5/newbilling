@@ -993,7 +993,6 @@ $("#reg_kode_dropcore").keyup(function(){
 							// console.log(data.barang_qty - data.barang_digunakan)
                             if (data.barang_kategori == 'DROPCORE') {
 								if (data.barang_qty - data.barang_digunakan  > '0') {
-
 								var after  = $("#after").val();
 								// var before = $("#before").val();
 								$('.notif_kabel').removeClass('has-error has-feedback')
@@ -2640,29 +2639,36 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 														$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah barang melebih batas stok</small>')
 														$('.notif_jumlah').addClass('has-error has-feedback')
 													} else {
+														let before = parseInt(data.barang_qty) - parseInt(data.barang_digunakan);
+														let after = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(jumlah_barang) ;
+														let terpakai = parseInt(data.barang_digunakan) ;
 														if(data.barang_kategori == 'ONT'){
 															if(data.barang_mac == null && data.barang_mac_olt == null && data.barang_sn == null ){
 																$('.notif_barang_id').addClass('has-error has-feedback')
 																$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Mac Address / Mac Address OLT/ Serial Number belum di update </small>')
 															} else {
-															$('.notif_barang_id').removeClass('has-error has-feedback')
-															$('.pesan_barang_id').html('')
-															i = i + 1
-															var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
-																html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
-																html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
-																html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
-																html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
-																html += '<td contenteditable="true" >'+data.barang_harga_satuan+'</td>';
-																html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
-																html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga_satuan * jumlah_barang+'</td>';
-																html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
-																html += '</tr>';
-				
-															$('#t').append(html)
-															$('.simpan').removeAttr('disabled');
+																
+																$('.notif_barang_id').removeClass('has-error has-feedback')
+																$('.pesan_barang_id').html('')
+																i = i + 1
+																var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
+																	html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
+																	html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
+																	html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
+																	html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
+																	html += '<td contenteditable="true" >'+data.barang_harga_satuan+'</td>';
+																	html += '<td contenteditable="true" class="before">'+before+'</td>';
+																	html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+																	html += '<td contenteditable="true" class="after">'+after+'</td>';
+																	html += '<td contenteditable="true" class="terpakai">'+terpakai+'</td>';
+																	html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga_satuan * jumlah_barang+'</td>';
+																	html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
+																	html += '</tr>';
+					
+																$('#t').append(html)
+																$('.simpan').removeAttr('disabled');
 															}
-														} else {
+														} else{
 															$('.notif_barang_id').removeClass('has-error has-feedback')
 															$('.pesan_barang_id').html('')
 															i = i + 1
@@ -2672,7 +2678,10 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 																html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
 																html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
 																html += '<td contenteditable="true" >'+data.barang_harga_satuan+'</td>';
+																html += '<td contenteditable="true" class="before">'+before+'</td>';
 																html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+																html += '<td contenteditable="true" class="after">'+after+'</td>';
+																html += '<td contenteditable="true" class="terpakai">'+terpakai+'</td>';
 																html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga_satuan * jumlah_barang+'</td>';
 																html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
 																html += '</tr>';
@@ -2721,6 +2730,9 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										let jumlah_harga = []
 										let jumlah_barang = []
 										let barang_kategori = []
+										let before = []
+										let after = []
+										let terpakai = []
 										// console.log(barang_id)
 										$('.barang_id').each(function(){
 											barang_id.push($(this).text())
@@ -2736,6 +2748,15 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										})
 										$('.barang_kategori').each(function(){
 											barang_kategori.push($(this).text())
+										})
+										$('.before').each(function(){
+											before.push($(this).text())
+										})
+										$('.after').each(function(){
+											after.push($(this).text())
+										})
+										$('.terpakai').each(function(){
+											terpakai.push($(this).text())
 										})
 										var url = '{{ route("admin.gudang.proses_form_barang_keluar") }}';
 									$.ajax({
@@ -2753,6 +2774,9 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										tiket_type:tiket_type,
 										tiket_site:tiket_site,
 										bk_waktu_keluar:bk_waktu_keluar,
+										before:before,
+										after:after,
+										terpakai:terpakai,
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
@@ -2810,11 +2834,15 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 														$('.pesan_jumlah').html('<small id="text" class="form-text text-muted text-danger">Jumlah barang melebih batas stok</small>')
 														$('.notif_jumlah').addClass('has-error has-feedback')
 														} else {
-															if(data.barang_mac == null && data.barang_mac_olt == null && data.barang_sn == null ){
-																$('.notif_barang_id').addClass('has-error has-feedback')
-																$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Mac Address / Mac Address OLT/ Serial Number belum di update </small>')
-															} else {
-																	$('#jumlah_barang').attr('required', 'required');
+															let before = parseInt(data.barang_qty) - parseInt(data.barang_digunakan);
+															let after = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(jumlah_barang) ;
+															let terpakai = parseInt(data.barang_digunakan) ;
+															if(data.barang_kategori == 'ONT'){
+																if(data.barang_mac == null && data.barang_mac_olt == null && data.barang_sn == null ){
+																	$('.notif_barang_id').addClass('has-error has-feedback')
+																	$('.pesan_barang_id').html('<small id="text" class="form-text text-muted text-danger">Mac Address / Mac Address OLT/ Serial Number belum di update </small>')
+																} else {
+																	
 																	$('.notif_barang_id').removeClass('has-error has-feedback')
 																	$('.pesan_barang_id').html('')
 																	i = i + 1
@@ -2823,14 +2851,38 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 																		html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
 																		html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
 																		html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
-																		html += '<td contenteditable="true" >'+data.barang_harga+'</td>';
+																		html += '<td contenteditable="true" >'+data.barang_harga_satuan+'</td>';
+																		html += '<td contenteditable="true" class="before">'+before+'</td>';
 																		html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+																		html += '<td contenteditable="true" class="after">'+after+'</td>';
+																		html += '<td contenteditable="true" class="terpakai">'+terpakai+'</td>';
 																		html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga_satuan * jumlah_barang+'</td>';
 																		html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
 																		html += '</tr>';
 						
 																	$('#t').append(html)
 																	$('.simpan').removeAttr('disabled');
+																}
+															} else{
+																$('.notif_barang_id').removeClass('has-error has-feedback')
+																$('.pesan_barang_id').html('')
+																i = i + 1
+																var html ='<tr id="'+data.barang_id+'" '+data.barang_id+' >';
+																	html += '<td contenteditable="true" class="barang_id">'+data.barang_id+'</td>';
+																	html += '<td contenteditable="true" class="barang_kategori">'+data.barang_kategori+'</td>';
+																	html += '<td contenteditable="true" class="barang_nama">'+data.barang_nama+'</td>';
+																	html += '<td contenteditable="true" >'+data.barang_merek+'</td>';
+																	html += '<td contenteditable="true" >'+data.barang_harga_satuan+'</td>';
+																	html += '<td contenteditable="true" class="before">'+before+'</td>';
+																	html += '<td contenteditable="true" class="jumlah_barang">'+jumlah_barang+'</td>';
+																	html += '<td contenteditable="true" class="after">'+after+'</td>';
+																	html += '<td contenteditable="true" class="terpakai">'+terpakai+'</td>';
+																	html += '<td contenteditable="true" class="jumlah_harga">'+data.barang_harga_satuan * jumlah_barang+'</td>';
+																	html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.barang_id+'" '+data.barang_id+' id="hapus"> Hapus</button></td>';
+																	html += '</tr>';
+					
+																$('#t').append(html)
+																$('.simpan').removeAttr('disabled');
 															}
 														}
 													} else {
@@ -2870,6 +2922,10 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										let jumlah_harga = []
 										let jumlah_barang = []
 										let barang_kategori = []
+										let before = []
+										let after = []
+										let terpakai = []
+										
 										// console.log(barang_id)
 										$('.barang_id').each(function(){
 											barang_id.push($(this).text())
@@ -2885,6 +2941,15 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										})
 										$('.barang_kategori').each(function(){
 											barang_kategori.push($(this).text())
+										})
+										$('.before').each(function(){
+											before.push($(this).text())
+										})
+										$('.after').each(function(){
+											after.push($(this).text())
+										})
+										$('.terpakai').each(function(){
+											terpakai.push($(this).text())
 										})
 										var url = '{{ route("admin.gudang.proses_tiket_form_barang_keluar") }}';
 									$.ajax({
@@ -2902,6 +2967,9 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										tiket_type:tiket_type,
 										tiket_site:tiket_site,
 										tiket_id:tiket_id,
+										before:before,
+										after:after,
+										terpakai:terpakai,
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
