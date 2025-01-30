@@ -999,6 +999,7 @@ $("#reg_kode_dropcore").keyup(function(){
 								$('.notif_kabel').addClass('has-success has-feedback')
 								$('#pesan_kabel').html('')
 								$("#before").val(data.barang_qty-data.barang_digunakan);
+								$("#terpakai").val(data.barang_digunakan);
 								}
                               } else {
                                 $('#before').val('');

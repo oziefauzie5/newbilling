@@ -157,7 +157,7 @@ class AktivasiController extends Controller
 
 
         $update_barang['barang_status'] =  $barang_status;
-        $update_barang['barang_digunakan'] =  $barang->barang_digunakan + $request->reg_penggunaan_dropcore;
+        $update_barang['barang_digunakan'] =  $request->reg_terpakai + $request->reg_penggunaan_dropcore;
         $update_barang['barang_nama_pengguna'] = 'PSB ' . $query->input_nama;
 
         $photo = $request->file('reg_img');
@@ -172,6 +172,7 @@ class AktivasiController extends Controller
         $create_barang['bk_kategori'] = $barang->barang_kategori;
         $create_barang['bk_before'] = $request->reg_before;
         $create_barang['bk_after'] = $request->reg_after;
+        $create_barang['bk_terpakai'] = $request->reg_terpakai + $request->reg_penggunaan_dropcore;
         $create_barang['bk_jumlah'] = $request->reg_penggunaan_dropcore;
         $create_barang['bk_keperluan'] = 'PSB ' . $query->input_nama;
         $create_barang['bk_file_bukti'] = $bk_name;
@@ -183,7 +184,7 @@ class AktivasiController extends Controller
         $create_barang['bk_keterangan'] = $barang->barang_ket;
         $create_barang['bk_harga'] = $barang->barang_harga_satuan * $barang->barang_qty;
 
-        // dd($create_barang);
+        // dd($update_barang);
         $pelanggan['reg_progres'] = '3';
 
 

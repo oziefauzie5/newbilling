@@ -171,7 +171,7 @@
       </div>
       </div>
       <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">POP</label>
+        <label class=" col-sm-2 col-form-label">POP <span>(Auto)</span></label>
         <div class="col-sm-4">
           <select name="reg_pop" id="" class="form-control" required>
             @if ($data->pop_id)
@@ -192,11 +192,11 @@
         </div>
         </div>
       <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">OLT</label>
+        <label class=" col-sm-2 col-form-label">OLT <span>(Auto)</span></label>
         <div class="col-sm-4 notif">
           <input type="text" name="reg_olt" id="validasi_olt" class="form-control readonly" autocomplete="off"   required value="{{ Session::get('reg_olt') }}">
         </div>
-        <label class=" col-sm-2 col-form-label">ODC</label>
+        <label class=" col-sm-2 col-form-label">ODC <span>(Auto)</span></label>
         <div class="col-sm-4 notif">
           <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly" required value="{{ Session::get('reg_odc') }}" >
         </div>
@@ -209,7 +209,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Layanan</label>
+        <label class="col-sm-2 col-form-label">Layanan <span>(Auto)</span></label>
         <div class="col-sm-10">
           <select class="form-control" id="layanan" name="reg_layanan"  >
             @if( $data->reg_layanan)
@@ -223,27 +223,27 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Username internet *</label>
+        <label class="col-sm-2 col-form-label">Username internet <span>(Auto)</span></label>
       <div class="col-sm-4">
-        <input type="text" id="tampil_username" name="reg_username" class="form-control" value="{{ $data->reg_username}}" >
+        <input type="text" id="tampil_username" name="reg_username" class="form-control readonly" value="{{ $data->reg_username}}" >
       </div>
-        <label class=" col-sm-2 col-form-label">Passwd internet *</label>
+        <label class=" col-sm-2 col-form-label">Passwd internet <span>(Auto)</span></label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="reg_password" value="{{ $data->reg_password}}" >
+        <input type="text" class="form-control readonly" name="reg_password" value="{{ $data->reg_password}}" >
       </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Merek & Type perangkat</label>
+        <label class="col-sm-2 col-form-label">Merek & Type <span>(Auto)</span></label>
       <div class="col-sm-4">
         <input type="text" name="reg_mrek" id="" class="form-control edit_ont readonly" value="{{ $data->reg_mrek}}" >
       </div>
-        <label class="col-sm-2 col-form-label">Mac perangkat</label>
+        <label class="col-sm-2 col-form-label">Mac Ont <span>(Auto)</span></label>
         <div class="col-sm-4">
           <input type="text" name="reg_mac" id=""  class="form-control readonly" minlength="17" maxlength="17"  value="{{ $data->reg_mac}}" >
         </div>
         </div>
         <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Mac perangkat ( OLT )</label>
+        <label class="col-sm-2 col-form-label">Mac Ont OLT <span>(Auto)</span></label>
         <div class="col-sm-4">
           <input type="text" name="reg_mac_olt" id="mac"  class="form-control readonly" required value="{{ $data->reg_mac_olt}}" >
         </div>
@@ -269,7 +269,7 @@
           {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}}
           <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{ Session::get('reg_in_ont') }}" maxlength="6" minlength="6">
         </div>
-        <label class="col-sm-2 col-form-label">SKB</label>
+        <label class="col-sm-2 col-form-label">SKB <span>(Auto)</span></label>
         <div class="col-sm-4">
           <input type="text" class="form-control harga readonly" name="reg_skb" value="{{$data->reg_skb}}" >
         </div>
@@ -280,7 +280,7 @@
           <input type="text" name="reg_kode_dropcore" id="reg_kode_dropcore" class="form-control" required value="{{ Session::get('reg_kode_dropcore') }}" >
           <div id="pesan_kabel"></div>
         </div>
-        <label class=" col-sm-2 col-form-label">Before</label>
+        <label class=" col-sm-2 col-form-label">Before <span>(Auto)</span></label>
         <div class="col-sm-4 notif_kabel">
           <input type="text" name="reg_before" id="before" class="form-control readonly" required value="{{ Session::get('reg_before') }}" >
         </div>
@@ -296,6 +296,15 @@
         <div class="col-sm-4">
           <input type="text" name="reg_penggunaan_dropcore" id="total" class="form-control" required value="{{ Session::get('reg_penggunaan_dropcore') }}" >
         </div>
+      </div>
+      <div class="form-group row">
+        
+        <label class=" col-sm-2 col-form-label">Digunakan Sebelumnya</label>
+        <div class="col-sm-4 notif_over">
+          <input type="text" name="reg_terpakai" id="terpakai" class="form-control readonly" required value="{{ Session::get('reg_terpakai') }}" >
+          <div id="pesan_over"></div>
+        </div>
+        <span class=" col-sm-6 col-form-label">Kabel yang telah digunakan sebelumnya <span>(Auto)</span></span>
       </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Teknisi 1</label>
