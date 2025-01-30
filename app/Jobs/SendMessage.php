@@ -31,10 +31,11 @@ class SendMessage implements ShouldQueue
         if ($cek_pesan) {
             $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
             if ($pesan->layanan == 'CS') {
-                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_layanan', 'CS')->first();
+                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'CS')->first();
             } else {
-                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_layanan', 'NOC')->first();
+                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOC')->first();
             }
+
             if ($pesan->file) {
                 $data = array(
                     'target' => $pesan->target,
@@ -76,6 +77,7 @@ class SendMessage implements ShouldQueue
                 echo $response;
                 $mesage['status'] = 'Done';
             }
+            // $mesage['status'] = 'test';
             Pesan::where('id', $pesan->id)->update($mesage);
         }
     }

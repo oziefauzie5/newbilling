@@ -45,6 +45,8 @@ class ProssesTagihan implements ShouldQueue
             if ($status->wa_status == 'Enable') {
 
                 Pesan::create([
+                    'pesan_id_site' => '1',
+                    'layanan' => 'CS',
                     'ket' => 'tagihan',
                     'status' => '0',
                     'target' => $key->input_hp,
@@ -75,6 +77,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             } else {
 
                 Pesan::create([
+                    'pesan_id_site' => '1',
+                    'layanan' => 'CS',
                     'ket' => 'tagihan',
                     'status' => '10',
                     'target' => $key->input_hp,

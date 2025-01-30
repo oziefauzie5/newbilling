@@ -142,40 +142,40 @@ class TiketController extends Controller
 
 
 
-        foreach ($users_teknisi as $t) {
+        // foreach ($users_teknisi as $t) {
 
-            //             Pesan::create([
-            //                 'layanan' =>  'NOC',
-            //                 'pesan_id_site' =>  $request->tiket_site,
-            //                 'ket' =>  'tiket',
-            //                 'target' =>  $t->hp,
-            //                 'status' =>  $status_pesan,
-            //                 'nama' =>  $t->nama_teknisi,
-            //                 'pesan' => '               -- TIKET GANGGUAN --
+        //             Pesan::create([
+        //                 'layanan' =>  'NOC',
+        //                 'pesan_id_site' =>  $request->tiket_site,
+        //                 'ket' =>  'tiket',
+        //                 'target' =>  $t->hp,
+        //                 'status' =>  $status_pesan,
+        //                 'nama' =>  $t->nama_teknisi,
+        //                 'pesan' => '               -- TIKET GANGGUAN --
 
-            // Hallo Broo ' . $t->nama_teknisi . '
-            // Ada tiket masuk ke sistem nih! 😊
+        // Hallo Broo ' . $t->nama_teknisi . '
+        // Ada tiket masuk ke sistem nih! 😊
 
-            // No. Tiket : *' . $tiket['tiket_kode'] . '*
-            // Topik : ' . $request->tiket_nama . '
-            // Keterangan : *' . $request->tiket_keterangan . '*
-            // Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
+        // No. Tiket : *' . $tiket['tiket_kode'] . '*
+        // Topik : ' . $request->tiket_nama . '
+        // Keterangan : *' . $request->tiket_keterangan . '*
+        // Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
 
-            // No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
-            // Pelanggan : ' . $request->tiket_pelanggan . '
-            // Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
-            // Maps : https://www.google.com/maps/place/' . $maps . '
-            // Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
-            // Tanggal tiket : ' . $tanggal . '
+        // No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
+        // Pelanggan : ' . $request->tiket_pelanggan . '
+        // Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+        // Maps : https://www.google.com/maps/place/' . $maps . '
+        // Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
+        // Tanggal tiket : ' . $tanggal . '
 
-            // Semangat Broooo... Sisa tiket ' . $count . '
-            // '
-            //             ]);
-        }
+        // Semangat Broooo... Sisa tiket ' . $count . '
+        // '
+        //             ]);
+        // }
 
         $pesan_pelanggan['layanan'] = 'NOC';
         $pesan_pelanggan['ket'] = 'tiket';
-        $pesan_pelanggan['pesan_site'] = $data['data_pelanggan']->reg_site;
+        $pesan_pelanggan['pesan_id_site'] = $request->tiket_site;
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
         $pesan_pelanggan['status'] = $status_pesan;
         $pesan_pelanggan['nama'] = $data['data_pelanggan']->input_nama;
@@ -346,18 +346,20 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             } else {
                 $status_pesan = '10';
             }
+            $pesan_closed['layanan'] = 'NOC';
             $pesan_closed['ket'] = 'tiket';
+            $pesan_closed['pesan_id_site'] = $request->tiket_site;
             $pesan_closed['status'] = $status_pesan;
             $pesan_closed['target'] = '120363028776966861@g.us';
             $pesan_closed['nama'] = 'Group Teknisi';
             $pesan_closed['pesan'] = '               -- CLOSED TIKET --
-        Kendala : ' . $request->tiket_kendala . '
-        Tindakan : ' . $request->tiket_tindakan . '
+Kendala : ' . $request->tiket_kendala . '
+Tindakan : ' . $request->tiket_tindakan . '
 
-        Waktu selesai: ' . date('d-M-y h:m') . '
-        Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
+Waktu selesai: ' . date('d-M-y h:m') . '
+Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 
-        ' . $request->tiket_menunggu . '';
+' . $request->tiket_menunggu . '';
 
 
             Pesan::create($pesan_closed);

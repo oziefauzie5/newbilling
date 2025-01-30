@@ -226,6 +226,8 @@ class RegistrasiController extends Controller
         }
 
 
+        $pesan_pelanggan['layanan'] = 'CS';
+        $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
         $pesan_pelanggan['ket'] = 'registrasi';
         $pesan_pelanggan['target'] = $request->reg_hp;
         $pesan_pelanggan['nama'] = $request->reg_nama;
@@ -249,7 +251,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
         Pesan::create($pesan_pelanggan);
 
-
+        $pesan_group['layanan'] = 'CS';
+        $pesan_group['pesan_id_site'] = $request->reg_site;
         $pesan_group['ket'] = 'registrasi';
         $pesan_group['target'] = '120363262623415382@g.us';
         $pesan_group['nama'] = $request->reg_nama;

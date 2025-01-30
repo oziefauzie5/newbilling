@@ -47,6 +47,8 @@ class ProssesIsolir implements ShouldQueue
                 $pesan_group['status'] = '10';
             }
 
+            $pesan_group['pesan_id_site'] = '1';
+            $pesan_group['layanan'] = 'CS';
             $pesan_group['ket'] = 'isolir otomatis';
             $pesan_group['target'] = $data_pelanggan->input_hp;
             $pesan_group['nama'] = $data_pelanggan->input_nama;

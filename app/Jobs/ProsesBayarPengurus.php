@@ -40,8 +40,11 @@ class ProsesBayarPengurus implements ShouldQueue
 
         foreach ($unp as $d) {
             Pesan::create([
+
                 'ket' => 'pengurus',
                 'status' => '0',
+                'layanan' => 'CS',
+                'pesan_id_site' => '1',
                 'nama' => $d->input_nama,
                 'target' => $d->input_hp,
                 'pesan' => 'Terima kasih 🙏
