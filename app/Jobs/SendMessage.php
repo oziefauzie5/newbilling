@@ -29,8 +29,12 @@ class SendMessage implements ShouldQueue
     {
         $cek_pesan = Pesan::where('status', '0')->count();
         if ($cek_pesan) {
-            $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->first();
             $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
+            if ($pesan->layanan == 'CS') {
+                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_layanan', 'CS')->first();
+            } else {
+                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_layanan', 'NOC')->first();
+            }
             if ($pesan->file) {
                 $data = array(
                     'target' => $pesan->target,

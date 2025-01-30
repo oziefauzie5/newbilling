@@ -199,9 +199,6 @@
                 <li class="nav-item">
                   <a class="nav-link" id="pills-waktu-tab" data-toggle="pill" href="#pills-waktu" role="tab" aria-controls="pills-waktu" aria-selected="false">Jeda Waktu</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="pills-whatsapp-tab" data-toggle="pill" href="#pills-whatsapp" role="tab" aria-controls="pills-whatsapp" aria-selected="false">Whatsapp</a>
-                </li>
               </ul>
             </div>
             {{-- AWAL --}}
@@ -375,30 +372,7 @@
                 <button type="submit" class="btn btn-block btn-primary">Simpan</button>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="pills-whatsapp" role="tabpanel" aria-labelledby="pills-whatsapp-tab">
-                  <form action="{{route('admin.app.whatsapp_store')}}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                <div class="form-group">
-                  <label >Whatsapp Nama</label>
-                  <input type="text" class="form-control" name="wa_nama" value="{{$wa_nama}}"  required>
-                </div>
-                <div class="form-group">
-                  <label >Whatsapp Api</label>
-                  <input type="text" class="form-control" name="wa_key" value="{{$wa_key}}"  required>
-                </div>
-                <div class="form-group">
-                  <label >Whatsapp URL</label>
-                  <input type="text" class="form-control" name="wa_url" value="{{$wa_url}}"  required>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input whatsapp" type="checkbox" name="wa_status" value="{{$wa_status}}" @if( $wa_status) checked @endif>
-                    <span class="form-check-sign" id="wa" >@if($wa_status=='Enable') Enable @else Disable @endif</span>
-                  </label>
-                </div>
-                <button type="submit" class="btn btn-block btn-primary">Simpan</button>
-                    </form>
-                </div>
+                
             </div>
           </div>
             {{-- AKHIR --}}

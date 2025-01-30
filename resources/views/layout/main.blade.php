@@ -317,6 +317,11 @@
 										</a>
 									</li>
 									<li>
+										<a href="{{route('admin.app.wa_getewai')}}">
+											<span class="sub-item">Whatsapp Getewai</span>
+										</a>
+									</li>
+									<li>
 										<a href="{{route('admin.app.kendaraan')}}">
 											<span class="sub-item">Kendaraan</span>
 										</a>

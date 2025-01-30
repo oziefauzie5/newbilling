@@ -79,6 +79,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/setting/app-biaya', [AppController::class, 'biaya_store'])->name('app.biaya_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/setting/app-waktu', [AppController::class, 'waktu_store'])->name('app.waktu_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/setting/app-whatsapp', [AppController::class, 'whatsapp_store'])->name('app.whatsapp_store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/setting/wa-getewai', [AppController::class, 'wa_getewai'])->name('app.wa_getewai')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/setting/wa-getewai-store', [AppController::class, 'store_wa_getewai'])->name('app.store_wa_getewai')->middleware(['role:admin|STAF ADMIN']);
+    Route::put('/setting/{id}/wa-getewai-update', [AppController::class, 'update_wa_getewai'])->name('app.update_wa_getewai')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/setting/kendaraan', [AppController::class, 'kendaraan'])->name('app.kendaraan')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/setting/add-Kendaraan', [AppController::class, 'store_kendaraan'])->name('app.store_kendaraan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/setting/{id}/update-Kendaraan', [AppController::class, 'update_kendaraan'])->name('app.update_kendaraan')->middleware(['role:admin|STAF ADMIN']);

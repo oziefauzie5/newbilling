@@ -9,6 +9,8 @@ class Pesan extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'pesan_id_site',
+        'layanan',
         'target',
         'nama',
         'schedule',

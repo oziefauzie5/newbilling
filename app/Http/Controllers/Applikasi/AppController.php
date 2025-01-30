@@ -91,18 +91,7 @@ class AppController extends Controller
             $data['wt_jeda_tagihan_pertama'] = $SettingBiaya->wt_jeda_tagihan_pertama;
         }
 
-        $SettingWhatsapp = SettingWhatsapp::first();
-        if (isset($SettingWhatsapp) == NULL) {
-            $data['wa_nama'] = " ";
-            $data['wa_key'] = " ";
-            $data['wa_url'] = " ";
-            $data['wa_status'] = "";
-        } else {
-            $data['wa_nama'] = $SettingWhatsapp->wa_nama;
-            $data['wa_key'] = $SettingWhatsapp->wa_key;
-            $data['wa_url'] = $SettingWhatsapp->wa_url;
-            $data['wa_status'] = $SettingWhatsapp->wa_status;
-        }
+
         $data['SettingAkun'] =  (new SettingAkun())->SettingAkun()->get();
         // dd($data['SettingAkun']);
         $count = SettingAkun::count();
@@ -223,15 +212,7 @@ class AppController extends Controller
         return redirect()->route('admin.app.index')->with($notifikasi);
     }
     // ================================================END akun================================================
-    // ================================================WHATSAPP================================================
 
-    public function whatsapp() {}
-    // ==============================================END WHATSAPP==============================================
-    // ================================================PPN================================================
-
-    public function ppn() {}
-    // ==============================================END PPN==============================================
-    // ================================================APLIKASI================================================
     public function aplikasi_store(Request $request)
     {
         // Session::flash('app_nama', $request->app_nama);
@@ -379,38 +360,44 @@ class AppController extends Controller
         );
         return redirect()->route('admin.app.index')->with($notifikasi);
     }
-    public function whatsapp_store(Request $request)
+
+
+    public function wa_getewai()
     {
-        // dd($request->wa_status);
-        $cek = SettingWhatsapp::count();
-        if ($cek == 0) {
-            SettingWhatsapp::create(
-                [
-                    'id' => '1',
-                    'wa_nama' => $request->wa_nama,
-                    'wa_key' => $request->wa_key,
-                    'wa_url' => $request->wa_url,
-                    'wa_status' => $request->wa_status,
-                ]
-            );
-        } else {
-            SettingWhatsapp::whereId('1')->update(
-                [
-                    'wa_nama' => $request->wa_nama,
-                    'wa_key' => $request->wa_key,
-                    'wa_key' => $request->wa_key,
-                    'wa_url' => $request->wa_url,
-                    'wa_status' => $request->wa_status,
-                ]
-            );
-        }
+        // $data['kendaraan'] = (new GlobalController)->data_kendaraan()->paginate(10);
+        $data['data_whatsapp'] = SettingWhatsapp::join('data__sites', 'data__sites.site_id', '=', 'setting_whatsapps.wa_site')
+            ->get();
+        $data['data_site'] = Data_Site::get();
+        return view('Applikasi/wa_getewai', $data);
+    }
+    public function store_wa_getewai(Request $request)
+    {
+        $create['wa_site'] = $request->wa_site;
+        $create['wa_nama'] = $request->wa_nama;
+        $create['wa_key'] = $request->wa_key;
+        $create['wa_url'] = $request->wa_url;
+        $create['wa_status'] = $request->wa_status;
+        SettingWhatsapp::create($create);
         $notifikasi = array(
-            'pesan' => 'Menambah Akun Berhasil',
+            'pesan' => 'Menambah Data Whatsapp Getewai Berhasil',
             'alert' => 'success',
         );
-        return redirect()->route('admin.app.index')->with($notifikasi);
+        return redirect()->route('admin.app.wa_getewai')->with($notifikasi);
     }
-
+    public function update_wa_getewai(Request $request, $id)
+    {
+        $update['wa_site'] = $request->wa_site;
+        $update['wa_nama'] = $request->wa_nama;
+        $update['wa_key'] = $request->wa_key;
+        $update['wa_url'] = $request->wa_url;
+        $update['wa_status'] = $request->wa_status;
+        SettingWhatsapp::whereId($id)->update($update);
+        $notifikasi = array(
+            'pesan' => 'Menambah Data Whatsapp Getewai Berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.wa_getewai')->with($notifikasi);
+    }
     public function kendaraan()
     {
         $data['kendaraan'] = (new GlobalController)->data_kendaraan()->paginate(10);

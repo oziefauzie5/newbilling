@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('pesans', function (Blueprint $table) {
             $table->id();
+            $table->integer('pesan_id_site')->nullable();
+            $table->string('layanan')->nullable();
             $table->string('target')->nullable();
             $table->string('nama')->nullable();
             $table->string('schedule')->nullable();
