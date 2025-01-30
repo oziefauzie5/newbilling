@@ -195,6 +195,7 @@ class AktivasiController extends Controller
         $pelanggan['reg_odc'] = $request->reg_odc;
         $pelanggan['reg_odp'] = $request->reg_odp;
         $pelanggan['reg_mac_olt'] = $request->reg_mac_olt;
+        $pelanggan['reg_in_ont'] = $request->reg_in_ont;
         $pelanggan['reg_onuid'] = $request->reg_onuid;
         $pelanggan['reg_slot_odp'] = $request->reg_slot_odp;
         $pelanggan['reg_koodinat_odp'] = $request->reg_koodinat_odp;

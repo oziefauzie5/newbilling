@@ -965,11 +965,14 @@ $.ajax({
 								$('.read').readOnly = true
 								$('.notif').removeClass('has-error has-feedback')
 								$('.notif').addClass('has-success has-feedback')
+								$('.notif_valtiket').removeClass('has-error has-feedback')
+								$('.notif_valtiket').addClass('has-success has-feedback')
 								$('#pesan').html('')
 							} else{
 								$('#validasi_odc').val('')
 								$('#validasi_olt').val('')
 								$('.notif').addClass('has-error has-feedback')
+								$('.notif_valtiket').addClass('has-error has-feedback')
 								$('#pesan').html('<small id="text" class="form-text text-muted text-danger">Kode ODP tidak ditemukan</small>')
 								}
 						},
@@ -2786,17 +2789,27 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
-										$('.simpan').attr('disabled','disabled');
+											if(data == 'failed'){
+												swal("Gagal!", "No Skb sudah ada. Silahkan coba klik simpan kembali.", {
+													icon : "error",
+													buttons: {        			
+														confirm: {
+															className : 'btn btn-error'
+														}
+													},
+												});
+											} else {
+											$('.simpan').attr('disabled','disabled');
+													swal("Berhasil!", "Berhasil menyimpan data barang keluar ke database", {
+													icon : "success",
+													buttons: {        			
+														confirm: {
+															className : 'btn btn-success'
+														}
+													},
+												});
 
-												swal("Berhasil!", "Berhasil menyimpan data barang keluar ke database", {
-												icon : "success",
-												buttons: {        			
-													confirm: {
-														className : 'btn btn-success'
-													}
-												},
-											});
-
+											}
 										}
 									});
 
@@ -2811,6 +2824,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 
 					</script>
 					<script>
+						
 						//--------------------START TIKET BARANG KELUAR----------------------
 							$('.button_tambah_barang').click(function(){
 								var i = 1;
@@ -2921,6 +2935,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 								  	let tiket_type =$('#tiket_type').val()
 								  	let tiket_site =$('#tiket_site').val()
 								  	let tiket_id =$('#tiket_id').val()
+								  	let tiket_idpel =$('#tiket_idpel').val()
 									  
 							
 										let barang_id = []
@@ -2973,17 +2988,29 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										tiket_type:tiket_type,
 										tiket_site:tiket_site,
 										tiket_id:tiket_id,
+										tiket_idpel:tiket_idpel,
 										before:before,
 										after:after,
 										terpakai:terpakai,
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
-										$('#jumlah_barang').removeAttr('required');
-										$('.simpan_barang_tiket').attr('disabled','disabled');
-										$('.tiket_noskb').attr('required','required');
-										$('#modal_tambah_barang').modal('hide');
-										$('#tiket_noskb').val(data);
+										if(data == 'failed'){
+												swal("Gagal!", "No Skb sudah ada. Silahkan coba klik simpan kembali.", {
+													icon : "error",
+													buttons: {        			
+														confirm: {
+															className : 'btn btn-error'
+														}
+													},
+												});
+											} else {
+											$('#jumlah_barang').removeAttr('required');
+											$('.simpan_barang_tiket').attr('disabled','disabled');
+											$('.tiket_noskb').attr('required','required');
+											$('#modal_tambah_barang').modal('hide');
+											$('#tiket_noskb').val(data);
+											}
 										}
 									});
 								});
@@ -3029,6 +3056,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 														
 											}
 									})
+									
 
 								};
 							});

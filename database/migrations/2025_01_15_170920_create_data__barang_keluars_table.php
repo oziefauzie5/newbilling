@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('bk_jenis_laporan')->nullable();
             $table->string('bk_id_tiket')->nullable();
             $table->integer('bk_id_barang')->nullable();
+            $table->integer('bk_idpel')->nullable();
             $table->string('bk_kategori')->nullable();
             $table->string('bk_harga')->nullable();
             $table->string('bk_before')->nullable();

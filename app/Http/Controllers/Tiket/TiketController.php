@@ -10,6 +10,7 @@ use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\Pesan\Pesan;
 use App\Models\Applikasi\SettingAplikasi;
 use App\Models\PSB\InputData;
+use App\Models\PSB\Registrasi;
 use App\Models\Tiket\Data_SubTiket;
 use App\Models\Tiket\Data_Tiket;
 use App\Models\Tiket\SubTiket;
@@ -331,6 +332,11 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $tiket['tiket_waktu_mulai'] = $datetime;
             $tiket['tiket_waktu_selesai'] = $datetime;
 
+            $reg['reg_pop'] = $request->tiket_pop;
+            $reg['reg_olt'] = $request->tiket_olt;
+            $reg['reg_odc'] = $request->tiket_odc;
+            $reg['reg_odp'] = $request->tiket_odp;
+
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
 
             $photo = $request->file('tiket_foto');
@@ -362,11 +368,13 @@ Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 ' . $request->tiket_menunggu . '';
 
 
-            Pesan::create($pesan_closed);
 
 
 
+            Registrasi::where('reg_nolayanan', $request->tiket_nolayanan)->update($reg);
+            // dd($reg);
             Data_Tiket::where('tiket_id', $id)->update($tiket);
+            Pesan::create($pesan_closed);
 
 
 

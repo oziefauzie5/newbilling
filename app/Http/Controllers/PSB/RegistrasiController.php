@@ -178,6 +178,8 @@ class RegistrasiController extends Controller
             $data['reg_fee'] = 0;
         }
 
+
+
         $data['reg_idpel'] = $request->reg_idpel;
         $data['reg_sales'] = $request->reg_sales;
         $data['reg_nolayanan'] = $request->reg_nolayanan;
@@ -249,7 +251,6 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 *OVALL FIBER*
 ';
 
-        Pesan::create($pesan_pelanggan);
 
         $pesan_group['layanan'] = 'CS';
         $pesan_group['pesan_id_site'] = $request->reg_site;
@@ -272,7 +273,7 @@ Tanggal Pasang : ' . date('d-m-Y', strtotime($tgl_pasang)) . '
 Diregistrasi Oleh : *' . $admin . '*
 ';
 
-        Pesan::create($pesan_group);
+
 
         $update_barang['barang_digunakan'] =  '1';
         $update_barang['barang_nama_pengguna'] = $request->reg_nama;
@@ -291,53 +292,121 @@ Diregistrasi Oleh : *' . $admin . '*
         $API = new RouterosAPI();
         $API->debug = false;
 
-        if ($request->reg_layanan == 'PPP') {
+        $data_barang_keluar = Data_BarangKeluar::where('bk_id', $no_sk)->first();
 
-            if ($API->connect($ip, $user, $pass)) {
-                $API->comm('/ip/pool/add', [
-                    'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                    'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
-                ]);
-                $API->comm('/ppp/profile/add', [
-                    'name' =>  $profile->paket_nama == '' ? '' : $profile->paket_nama,
-                    'rate-limit' => $profile->paket_nama == '' ? '' : $profile->paket_nama,
-                    'local-address' => $profile->paket_lokal == '' ? '' : $profile->paket_lokal,
-                    'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
-                    'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
-                    'queue-type' => 'default-small' == '' ? '' : 'default-small',
-                    'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
-                    'disabled' => 'yes',
-                    'only-one' => 'yes',
-                ]);
+        if ($data_barang_keluar) {
+            $notifikasi = array(
+                'pesan' => 'Gagal. No Skb sudah ada. Silahkan coba kembali',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.reg.index')->with($notifikasi);
+        } else {
 
-                $profile = $API->comm('/ppp/profile/print', [
-                    '?name' => $profile->paket_nama,
-                ]);
-                if ($profile) {
-                    $API->comm('/ppp/secret/add', [
-                        'name' => $request->reg_username == '' ? '' : $request->reg_username,
-                        'password' => $request->reg_password  == '' ? '' : $request->reg_password,
-                        'service' => 'pppoe',
-                        'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
-                        'comment' => 'REGIST-' . $dates == '' ? '' : 'REGIST-' . $dates,
+            if ($request->reg_layanan == 'PPP') {
+
+                if ($API->connect($ip, $user, $pass)) {
+                    $API->comm('/ip/pool/add', [
+                        'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
+                        'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
+                    ]);
+                    $API->comm('/ppp/profile/add', [
+                        'name' =>  $profile->paket_nama == '' ? '' : $profile->paket_nama,
+                        'rate-limit' => $profile->paket_nama == '' ? '' : $profile->paket_nama,
+                        'local-address' => $profile->paket_lokal == '' ? '' : $profile->paket_lokal,
+                        'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
+                        'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                        'queue-type' => 'default-small' == '' ? '' : 'default-small',
+                        'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
                         'disabled' => 'yes',
+                        'only-one' => 'yes',
                     ]);
 
+                    $profile = $API->comm('/ppp/profile/print', [
+                        '?name' => $profile->paket_nama,
+                    ]);
+                    if ($profile) {
+                        $API->comm('/ppp/secret/add', [
+                            'name' => $request->reg_username == '' ? '' : $request->reg_username,
+                            'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                            'service' => 'pppoe',
+                            'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
+                            'comment' => 'REGIST-' . $dates == '' ? '' : 'REGIST-' . $dates,
+                            'disabled' => 'yes',
+                        ]);
+                        Pesan::create($pesan_pelanggan);
+                        Pesan::create($pesan_group);
+                        Registrasi::create($data);
+                        InputData::where('id', $request->reg_idpel)->update($update);
+                        Data_Barang::where('barang_id', $request->kode_pactcore)->update($update_pactcore);
+                        Data_Barang::where('barang_id', $request->kode_adaptor)->update($update_adaptor);
+                        Data_Barang::where('barang_id', $request->kode_ont)->update($update_barang);
+                        foreach ($data_barang as $db) {
+                            Data_BarangKeluar::create([
+
+                                'bk_id' => $no_sk,
+                                'bk_jenis_laporan' => 'Instalasi PSB',
+                                'bk_id_barang' => $db->barang_id,
+                                'bk_id_tiket' => 0,
+                                'bk_kategori' => $db->barang_kategori,
+                                'bk_jumlah' => 1,
+                                'bk_keperluan' => 'PSB ' . $request->reg_nama,
+                                'bk_nama_penggunan' => $request->reg_nama,
+                                'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+                                'bk_admin_input' => $admin,
+                                'bk_penerima' => 'Teknisi',
+                                'bk_status' => 1,
+                                'bk_keterangan' => $db->barang_ket,
+
+                            ]);
+                        }
+
+
+                        $notifikasi = array(
+                            'pesan' => 'Berhasil menambahkan pelanggan',
+                            'alert' => 'success',
+                        );
+                        return redirect()->route('admin.psb.index')->with($notifikasi);
+                    } else {
+                        $notifikasi = array(
+                            'pesan' => 'Gagal menambah pelanggan..Paket Tidak tersedia pada router',
+                            'alert' => 'error',
+                        );
+                        return redirect()->route('admin.psb.index')->with($notifikasi);
+                    }
+                } else {
+                    $notifikasi = array(
+                        'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
+                        'alert' => 'error',
+                    );
+                    return redirect()->route('admin.reg.index')->with($notifikasi);
+                }
+            } elseif ($request->reg_layanan == 'HOTSPOT') {
+
+
+                if ($API->connect($ip, $user, $pass)) {
+                    $API->comm('/ip/hotspot/user/add', [
+                        'name' => $request->reg_username == '' ? '' : $request->reg_username,
+                        'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+                        'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
+                        'comment' => $request->reg_nama  == '' ? '' : $request->reg_nama,
+                        'disabled' => 'yes',
+                    ]);
+                    // dd($request->reg_nama);
                     Registrasi::create($data);
-                    InputData::where('id', $request->reg_idpel)->update($update);
                     Data_Barang::where('barang_id', $request->kode_pactcore)->update($update_pactcore);
                     Data_Barang::where('barang_id', $request->kode_adaptor)->update($update_adaptor);
                     Data_Barang::where('barang_id', $request->kode_ont)->update($update_barang);
+
                     foreach ($data_barang as $db) {
                         Data_BarangKeluar::create([
 
                             'bk_id' => $no_sk,
-                            'bk_jenis_laporan' => 'Instalasi PSB',
+                            'bk_jenis_laporan' => 'Instalasi',
                             'bk_id_barang' => $db->barang_id,
                             'bk_id_tiket' => 0,
                             'bk_kategori' => $db->barang_kategori,
                             'bk_jumlah' => 1,
-                            'bk_keperluan' => 'PSB ' . $request->reg_nama,
+                            'bk_keperluan' => $request->reg_nama,
                             'bk_nama_penggunan' => $request->reg_nama,
                             'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
                             'bk_admin_input' => $admin,
@@ -348,7 +417,6 @@ Diregistrasi Oleh : *' . $admin . '*
                         ]);
                     }
 
-
                     $notifikasi = array(
                         'pesan' => 'Berhasil menambahkan pelanggan',
                         'alert' => 'success',
@@ -356,66 +424,11 @@ Diregistrasi Oleh : *' . $admin . '*
                     return redirect()->route('admin.psb.index')->with($notifikasi);
                 } else {
                     $notifikasi = array(
-                        'pesan' => 'Gagal menambah pelanggan..Paket Tidak tersedia pada router',
+                        'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.index')->with($notifikasi);
+                    return redirect()->route('admin.reg.index')->with($notifikasi);
                 }
-            } else {
-                $notifikasi = array(
-                    'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
-                    'alert' => 'error',
-                );
-                return redirect()->route('admin.reg.index')->with($notifikasi);
-            }
-        } elseif ($request->reg_layanan == 'HOTSPOT') {
-
-
-            if ($API->connect($ip, $user, $pass)) {
-                $API->comm('/ip/hotspot/user/add', [
-                    'name' => $request->reg_username == '' ? '' : $request->reg_username,
-                    'password' => $request->reg_password  == '' ? '' : $request->reg_password,
-                    'profile' => $paket_nama->paket_nama  == '' ? 'default' : $paket_nama->paket_nama,
-                    'comment' => $request->reg_nama  == '' ? '' : $request->reg_nama,
-                    'disabled' => 'yes',
-                ]);
-                // dd($request->reg_nama);
-                Registrasi::create($data);
-                Data_Barang::where('barang_id', $request->kode_pactcore)->update($update_pactcore);
-                Data_Barang::where('barang_id', $request->kode_adaptor)->update($update_adaptor);
-                Data_Barang::where('barang_id', $request->kode_ont)->update($update_barang);
-
-                foreach ($data_barang as $db) {
-                    Data_BarangKeluar::create([
-
-                        'bk_id' => $no_sk,
-                        'bk_jenis_laporan' => 'Instalasi',
-                        'bk_id_barang' => $db->barang_id,
-                        'bk_id_tiket' => 0,
-                        'bk_kategori' => $db->barang_kategori,
-                        'bk_jumlah' => 1,
-                        'bk_keperluan' => $request->reg_nama,
-                        'bk_nama_penggunan' => $request->reg_nama,
-                        'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
-                        'bk_admin_input' => $admin,
-                        'bk_penerima' => 'Teknisi',
-                        'bk_status' => 1,
-                        'bk_keterangan' => $db->barang_ket,
-
-                    ]);
-                }
-
-                $notifikasi = array(
-                    'pesan' => 'Berhasil menambahkan pelanggan',
-                    'alert' => 'success',
-                );
-                return redirect()->route('admin.psb.index')->with($notifikasi);
-            } else {
-                $notifikasi = array(
-                    'pesan' => 'Gagal menambahkan pelanggan. Router Dissconnected',
-                    'alert' => 'error',
-                );
-                return redirect()->route('admin.reg.index')->with($notifikasi);
             }
         }
 
@@ -1045,18 +1058,6 @@ Diregistrasi Oleh : *' . $admin . '*
     public function form_update_pelanggan($id)
     {
 
-        // $data_barang = Registrasi::where('reg_router','17')->get();
-        // foreach ($data_barang as $key) {
-        //     echo $key->reg_site.'<br>';
-        //     Registrasi::where('reg_router','17')->update([
-        //         'reg_site'=> '1',
-        //         'reg_pop'=> '1',
-        //         // 'reg_olt'=> '1.4.1',
-        //     ]);
-
-        // }
-
-        // dd('test');
         $user = (new globalController)->user_admin();
         $data['user_nama'] = $user['user_nama'];
         $data['user_id'] = $user['user_id'];
@@ -1096,8 +1097,9 @@ Diregistrasi Oleh : *' . $admin . '*
 
         $query = Data_BarangKeluar::join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
             ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
-            ->where('bk_id', $data['data']->reg_skb);
+            ->where('bk_idpel', $data['data']->reg_idpel);
         $data['print_skb'] = $query->get();
+        // dd($data);
 
 
         $data['status'] = $status_inet['status'];
@@ -1131,18 +1133,71 @@ Diregistrasi Oleh : *' . $admin . '*
         Session::flash('reg_olt', $request->reg_olt);
         Session::flash('reg_odc', $request->reg_odc);
         Session::flash('reg_odp', $request->reg_odp);
-        Session::flash('reg_mac_olt', $request->reg_mac_olt);
+        Session::flash('reg_in_ont', $request->reg_odp);
         Session::flash('reg_onuid', $request->reg_onuid);
         Session::flash('reg_slot_odp', $request->reg_slot_odp);
         Session::flash('reg_kode_dropcore', $request->reg_kode_dropcore);
         Session::flash('reg_before', $request->reg_before);
         Session::flash('reg_after', $request->reg_after);
         Session::flash('reg_penggunaan_dropcore', $request->reg_penggunaan_dropcore);
-        Session::flash('reg_koodinat_odp', $request->reg_koodinat_odp);
+        Session::flash('reg_terpakai', $request->reg_terpakai);
         Session::flash('teknisi1', $request->teknisi1);
         Session::flash('teknisi2', $request->teknisi2);
-        Session::flash('reg_in_ont', $request->reg_in_ont);
         Session::flash('input_koordinat', $request->input_koordinat);
+        Session::flash('reg_koodinat_odp', $request->reg_koodinat_odp);
+        Session::flash('reg_img', $request->reg_koodinat_odp);
+        Session::flash('reg_foto_odp', $request->reg_koodinat_odp);
+
+
+        $request->validate([
+            'reg_site' => 'required',
+            'reg_pop' => 'required',
+            'reg_router' => 'required',
+            'reg_olt' => 'required',
+            'reg_odc' => 'required',
+            'reg_odp' => 'required',
+            'reg_mac_olt' => 'required',
+            'reg_in_ont' => 'required',
+            'reg_onuid' => 'required',
+            'reg_slot_odp' => 'required',
+            'reg_kode_dropcore' => 'required',
+            'reg_before' => 'required',
+            'reg_after' => 'required',
+            'reg_penggunaan_dropcore' => 'required',
+            'reg_terpakai' => 'required',
+            'teknisi1' => 'required',
+            'teknisi2' => 'required',
+            'input_koordinat' => 'required',
+            'reg_koodinat_odp' => 'required',
+            'reg_img' => 'required|max:20000|mimes:jpg',
+            'reg_foto_odp' => 'required',
+        ], [
+            'reg_site.required' => 'Site tidak boleh kosong',
+            'reg_pop.required' => 'POP tidak boleh kosong',
+            'reg_router.required' => 'Router tidak boleh kosong',
+            'reg_olt.required' => 'OLT tidak boleh kosong',
+            'reg_odc.required' => 'ODC tidak boleh kosong',
+            'reg_odp.required' => 'ODP tidak boleh kosong',
+            'reg_mac_olt.required' => 'Mac Address OLT tidak boleh kosong',
+            'reg_in_ont.required' => 'Redaman tidak boleh kosong',
+            'reg_onuid.required' => 'Onu Id tidak boleh kosong',
+            'reg_slot_odp.required' => 'Slot Odp tidak boleh kosong',
+            'reg_kode_dropcore.required' => 'Kode Kabel tidak boleh kosong',
+            'reg_before.required' => 'Before Kabel tidak boleh kosong',
+            'reg_after.required' => 'After Kabel tidak boleh kosong',
+            'reg_penggunaan_dropcore.required' => 'Panjang Kabel tidak boleh kosong',
+            'reg_terpakai.required' => 'Kabel Terpakai tidak boleh kosong',
+            'teknisi1.required' => 'Teknisi 1 tidak boleh kosong',
+            'teknisi2.required' => 'Teknisi 2 tidak boleh kosong',
+            'input_koordinat.required' => 'Koordinat Rumah pelanggan tidak boleh kosong',
+            'reg_koodinat_odp.required' => 'Koordinat ODP tidak boleh kosong',
+            'reg_img.required' => 'Foto rumah tidak boleh kosong',
+            'reg_img.max' => 'Ukuran foto terlalu besar',
+            'reg_img.mimes' => 'Format hanya bisa jpg',
+            'reg_foto_odp.required' => 'Foto ODP tidak boleh kosong',
+        ]);
+
+
 
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')

@@ -271,118 +271,133 @@ class GudangController extends Controller
     {
 
         $no_sk = (new GlobalController)->no_surat_keterang();
-        $no_tiket = (new GlobalController)->nomor_tiket();
-        // $barang_id = ['aple', 'manggan', 'jeruk'];
-        $admin = Auth::user()->id;
-        $barang_id = $request->barang_id;
-        $jumlah_harga = $request->jumlah_harga;
-        $jumlah_barang = $request->jumlah_barang;
-        $bk_penerima = $request->bk_penerima;
-        $bk_jenis_laporan = $request->bk_jenis_laporan;
-        $bk_keperluan = $request->bk_keperluan;
-        $barang_kategori = $request->barang_kategori;
-        $barang_nama = $request->barang_nama;
-        $tiket_type = $request->tiket_type;
-        $tiket_site = $request->tiket_site;
-        $before = $request->before;
-        $after = $request->after;
-        $terpakai = $request->terpakai;
-        $bk_waktu_keluar = $request->bk_waktu_keluar;
-        // return response()->json($$request->all());
-        for ($x = 0; $x < count($barang_id); $x++) {
-            Data_BarangKeluar::create([
-                'bk_id' => $no_sk,
-                'bk_jenis_laporan' => $bk_jenis_laporan,
-                'bk_id_barang' => $barang_id[$x],
-                'bk_id_tiket' => $no_tiket,
-                'bk_kategori' => $barang_kategori[$x],
-                'bk_jumlah' => $jumlah_barang[$x],
-                'bk_before' => $before[$x],
-                'bk_after' => $after[$x],
-                'bk_terpakai' => $terpakai[$x] + $jumlah_barang[$x],
-                'bk_keperluan' => $bk_keperluan,
-                'bk_waktu_keluar' => date('Y-m-d', strtotime($bk_waktu_keluar)),
-                'bk_admin_input' => $admin,
-                'bk_penerima' => $bk_penerima,
-                'bk_status' => 0,
-                'bk_keterangan' => '',
-                'bk_harga' => $jumlah_harga[$x],
-            ]);
-            Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
-                [
-                    'barang_nama_pengguna' => $bk_jenis_laporan,
-                    'barang_digunakan' => $terpakai[$x] + $jumlah_barang[$x],
-                    'barang_status' => '1',
-                ]
-            );
-        }
-        // Data_Tiket::create([
-        //     'tiket_id' => $no_tiket,
-        //     'tiket_kode' => 'T-' . $no_tiket,
-        //     'tiket_site' => $tiket_site,
-        //     'tiket_type' => $tiket_type,
-        //     'tiket_jenis' => $bk_jenis_laporan,
-        //     'tiket_status' => 'NEW',
-        //     'tiket_nama' => $bk_keperluan,
-        //     'tiket_keterangan' => $bk_keperluan,
-        //     'tiket_pembuat' => $admin,
-        // ]);
+        // $no_sk = 'SKB/250130/0005';
+        $data_barang_keluar = Data_BarangKeluar::where('bk_id', $no_sk)->first();
 
-        return response()->json($barang_id);
-        // }
+        if ($data_barang_keluar) {
+            return response()->json('failed');
+        } else {
+            $no_tiket = (new GlobalController)->nomor_tiket();
+            // $barang_id = ['aple', 'manggan', 'jeruk'];
+            $admin = Auth::user()->id;
+            $barang_id = $request->barang_id;
+            $jumlah_harga = $request->jumlah_harga;
+            $jumlah_barang = $request->jumlah_barang;
+            $bk_penerima = $request->bk_penerima;
+            $bk_jenis_laporan = $request->bk_jenis_laporan;
+            $bk_keperluan = $request->bk_keperluan;
+            $barang_kategori = $request->barang_kategori;
+            $barang_nama = $request->barang_nama;
+            $tiket_type = $request->tiket_type;
+            $tiket_site = $request->tiket_site;
+            $before = $request->before;
+            $after = $request->after;
+            $terpakai = $request->terpakai;
+            $bk_waktu_keluar = $request->bk_waktu_keluar;
+            // return response()->json($$request->all());
+            for ($x = 0; $x < count($barang_id); $x++) {
+                Data_BarangKeluar::create([
+                    'bk_id' => $no_sk,
+                    'bk_jenis_laporan' => $bk_jenis_laporan,
+                    'bk_id_barang' => $barang_id[$x],
+                    'bk_id_tiket' => $no_tiket,
+                    'bk_kategori' => $barang_kategori[$x],
+                    'bk_jumlah' => $jumlah_barang[$x],
+                    'bk_before' => $before[$x],
+                    'bk_after' => $after[$x],
+                    'bk_terpakai' => $terpakai[$x] + $jumlah_barang[$x],
+                    'bk_keperluan' => $bk_keperluan,
+                    'bk_waktu_keluar' => date('Y-m-d', strtotime($bk_waktu_keluar)),
+                    'bk_admin_input' => $admin,
+                    'bk_penerima' => $bk_penerima,
+                    'bk_status' => 0,
+                    'bk_keterangan' => '',
+                    'bk_harga' => $jumlah_harga[$x],
+                ]);
+                Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
+                    [
+                        'barang_nama_pengguna' => $bk_jenis_laporan,
+                        'barang_digunakan' => $terpakai[$x] + $jumlah_barang[$x],
+                        'barang_status' => '1',
+                    ]
+                );
+            }
+            // Data_Tiket::create([
+            //     'tiket_id' => $no_tiket,
+            //     'tiket_kode' => 'T-' . $no_tiket,
+            //     'tiket_site' => $tiket_site,
+            //     'tiket_type' => $tiket_type,
+            //     'tiket_jenis' => $bk_jenis_laporan,
+            //     'tiket_status' => 'NEW',
+            //     'tiket_nama' => $bk_keperluan,
+            //     'tiket_keterangan' => $bk_keperluan,
+            //     'tiket_pembuat' => $admin,
+            // ]);
+
+            return response()->json('success');
+            // }
+        }
+        // $no_sk = 
     }
     public function proses_tiket_form_barang_keluar(Request $request)
     {
 
         $no_sk = (new GlobalController)->no_surat_keterang();
-        $admin = Auth::user()->id;
-        $barang_id = $request->barang_id;
-        $tiket_id = $request->tiket_id;
-        $jumlah_harga = $request->jumlah_harga;
-        $jumlah_barang = $request->jumlah_barang;
-        $tiket_teknisi1 = $request->tiket_teknisi1;
-        $tiket_jenis = $request->tiket_jenis;
-        $tiket_tindakan = $request->tiket_tindakan;
-        $barang_kategori = $request->barang_kategori;
-        $tiket_status = $request->tiket_status;
-        $tiket_type = $request->tiket_type;
-        $tiket_site = $request->tiket_site;
-        $before = $request->before;
-        $after = $request->after;
-        $terpakai = $request->terpakai;
-        for ($x = 0; $x < count($barang_id); $x++) {
-            Data_BarangKeluar::create([
-                'bk_id' => $no_sk,
-                'bk_jenis_laporan' => $tiket_jenis,
-                'bk_id_barang' => $barang_id[$x],
-                'bk_id_tiket' => $tiket_id,
-                'bk_kategori' => $barang_kategori[$x],
-                'bk_jumlah' => $jumlah_barang[$x],
-                'bk_before' => $before[$x],
-                'bk_after' => $after[$x],
-                'bk_terpakai' => $terpakai[$x] + $jumlah_barang[$x],
-                'bk_keperluan' => $tiket_tindakan,
-                'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
-                'bk_admin_input' => $admin,
-                'bk_penerima' => $tiket_teknisi1,
-                'bk_status' => 0,
-                'bk_harga' => $jumlah_harga[$x],
-            ]);
-            Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
+        $data_barang_keluar = Data_BarangKeluar::where('bk_id', $no_sk)->first();
+
+        if ($data_barang_keluar) {
+            return response()->json('failed');
+        } else {
+            $admin = Auth::user()->id;
+            $barang_id = $request->barang_id;
+            $tiket_id = $request->tiket_id;
+            $jumlah_harga = $request->jumlah_harga;
+            $jumlah_barang = $request->jumlah_barang;
+            $tiket_teknisi1 = $request->tiket_teknisi1;
+            $tiket_jenis = $request->tiket_jenis;
+            $tiket_tindakan = $request->tiket_tindakan;
+            $barang_kategori = $request->barang_kategori;
+            $tiket_status = $request->tiket_status;
+            $tiket_type = $request->tiket_type;
+            $tiket_site = $request->tiket_site;
+            $before = $request->before;
+            $after = $request->after;
+            $terpakai = $request->terpakai;
+            $tiket_idpel = $request->tiket_idpel;
+            for ($x = 0; $x < count($barang_id); $x++) {
+                Data_BarangKeluar::create([
+                    'bk_id' => $no_sk,
+                    'bk_jenis_laporan' => $tiket_jenis,
+                    'bk_id_barang' => $barang_id[$x],
+                    'bk_id_tiket' => $tiket_id,
+                    'bk_idpel' => $tiket_idpel,
+                    'bk_kategori' => $barang_kategori[$x],
+                    'bk_jumlah' => $jumlah_barang[$x],
+                    'bk_before' => $before[$x],
+                    'bk_after' => $after[$x],
+                    'bk_terpakai' => $terpakai[$x] + $jumlah_barang[$x],
+                    'bk_keperluan' => $tiket_tindakan,
+                    'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
+                    'bk_admin_input' => $admin,
+                    'bk_penerima' => $tiket_teknisi1,
+                    'bk_status' => 0,
+                    'bk_harga' => $jumlah_harga[$x],
+                ]);
+                Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
+                    [
+                        'barang_nama_pengguna' => $tiket_jenis,
+                        'barang_digunakan' => $terpakai[$x] + $jumlah_barang[$x],
+                        'barang_status' => 1,
+                    ]
+                );
+            }
+            Data_Tiket::where('tiket_id', $tiket_id)->update(
                 [
-                    'barang_nama_pengguna' => $tiket_jenis,
-                    'barang_digunakan' => $terpakai[$x] + $jumlah_barang[$x],
-                    'barang_status' => 1,
+                    'tiket_idbarang_keluar' => $no_sk,
                 ]
             );
-        }
-        Data_Tiket::where('tiket_id', $tiket_id)->update(
-            [
-                'tiket_idbarang_keluar' => $no_sk,
-            ]
-        );
 
-        return response()->json($no_sk);
-        // }
+            return response()->json($no_sk);
+        }
     }
 }

@@ -40,6 +40,16 @@
                 </div>
                 </div>
               <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Id Pel</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="tiket_idpel" name="tiket_idpel" required value="{{ $tiket->tiket_idpel }}">
+                </div>
+                <label class="col-sm-2 col-form-label">No Layanan</label>
+                <div class="col-sm-4">
+                  <input class="form-control readonly" id="tiket_nolayanan" name="tiket_nolayanan" value="{{ $tiket->reg_nolayanan }}">
+                </div>
+                </div>
+              <div class="form-group row">
               <label class="col-sm-2 col-form-label">Nama Pelanggan</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control readonly"  value="{{ $tiket->input_nama }}" name="tiket_pelanggan">
@@ -132,6 +142,29 @@
                 <textarea name="tiket_tindakan" id="tiket_tindakan" class="form-control"cols="30" rows="5"></textarea>
                 </div>
               </div>
+
+              <div class="form-group row div_tiket_closed"  style="display:none;" >
+                <label class="col-sm-2 col-form-label">POP</label>
+                <div class="col-sm-4 notif">
+                <input name="tiket_pop" id="validasi_pop" class="form-control readonly" value="{{$tiket->reg_pop}}">
+              </div>
+              <label class="col-sm-2 col-form-label">OLT</label>
+              <div class="col-sm-4 notif">
+                  <input name="tiket_olt" id="validasi_olt" class="form-control readonly" value="{{$tiket->reg_odp}}">
+                </div>
+              </div>
+
+              <div class="form-group row div_tiket_closed"  style="display:none;" >
+                <label class="col-sm-2 col-form-label">ODC</label>
+                <div class="col-sm-4 notif">
+                <input name="tiket_odc" id="tiket_odc" class="form-control readonly" value="{{$tiket->reg_odc}}">
+              </div>
+              <label class="col-sm-2 col-form-label">ODP</label>
+              <div class="col-sm-4 notif_valtiket">
+                  <input name="tiket_odp" id="validasi_odp" class="form-control" value="{{$tiket->reg_odp}}">
+                  <div id="pesan"></div>
+                </div>
+              </div>
               <div class="form-group row div_tiket_closed"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">Foto Laporan Kerja</label>
                 <div class="col-sm-4 notif">
@@ -166,6 +199,16 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Id Pel</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" id="tiket_idpel" name="tiket_idpel" required value="{{ $tiket->tiket_idpel }}">
+          </div>
+          <label class="col-sm-2 col-form-label">No Layanan</label>
+          <div class="col-sm-3">
+            <input class="form-control readonly" id="tiket_nolayanan" name="tiket_nolayanan" value="{{ $tiket->reg_nolayanan }}">
+          </div>
+          </div>
       <div class="form-group row">
           <label for="" class="col-sm-2 col-form-label">Kode barang</label>
           <div class="col-sm-3 notif_barang_id">

@@ -162,13 +162,6 @@
             @endif
           </select>
         </div>
-        <label class=" col-sm-2 col-form-label">Status perangkat</label>
-      <div class="col-sm-4">
-        <select type="text" name="reg_stt_perangkat" class="form-control readonly" value="{{ $data->reg_stt_perangkat}}" disabled >
-          <option value="DIPINJAMKAN">DIPINJAMKAN</option>
-          <option value="MILIK PROBADI">MILIK PRIBADI</option>
-        </select>
-      </div>
       </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">POP <span>(Auto)</span></label>

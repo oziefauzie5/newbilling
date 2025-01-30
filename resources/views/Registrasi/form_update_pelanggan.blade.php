@@ -373,27 +373,11 @@
         <label class=" col-sm-2 col-form-label">Redaman</label>
         <div class="col-sm-4">
           {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}}
-          <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{$data->reg_in_ont}}" maxlength="6" minlength="6">
+          <input type="number" class="form-control" name="reg_in_ont" required value="{{$data->reg_in_ont}}">
         </div>
         <label class="col-sm-2 col-form-label">Teknisi Team</label>
         <div class="col-sm-4">
           <input type="text" class="form-control harga readonly"value="{{$data->reg_teknisi_team}}" >
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">Teknisi 1</label>
-        <div class="col-sm-4">
-          <select name="teknisi1" id="" class="form-control" required>
-            <option value="">- Pilih Teknisi -</option>
-            <option value="">{{$data->reg_teknisi}}</option>
-          @foreach ($data_teknisi as $t)
-              <option value="{{$t->user_id}}|{{$t->user_nama}}">{{$t->user_nama}}</option>
-          @endforeach
-        </select>
-        </div>
-        <label class=" col-sm-2 col-form-label">Teknisi 2</label>
-        <div class="col-sm-4">
-          <input type="text" name="teknisi2" class="form-control" required value="{{ Session::get('teknisi2') }}" >
         </div>
       </div>
       <div class="form-group row">
@@ -470,7 +454,8 @@
           <table id="" class="display table table-striped table-hover text-nowrap" >
             <thead>
                 <th>#</th>
-                <th>Jenis Barang</th>
+                <th>No SKB</th>
+                <th>Tanggal Keluar</th>
                 <th>Kategori</th>
                 <th>Nama Barang</th>
                 <th>Qty</th>
@@ -482,7 +467,8 @@
               @foreach($print_skb as $skb )
               <tr>
                   <td>{{$loop->iteration}}</td>
-                  <td>{{ $skb->barang_jenis }}</td>
+                  <td>{{ $skb->bk_id }}</td>
+                  <td>{{ date('d-m-Y h:s', strtotime($skb->bk_waktu_keluar ))}}</td>
                   <td >{{ $skb->barang_kategori }}</td>
                   <td>{{ ucfirst($skb->barang_nama) .'  '. ucfirst($skb->barang_merek) .'  '.strtolower($skb->barang_sn) .'  '. strtolower($skb->barang_mac)}}</td>
                   <td style="text-align: center">{{ $skb->bk_jumlah }}</td>
