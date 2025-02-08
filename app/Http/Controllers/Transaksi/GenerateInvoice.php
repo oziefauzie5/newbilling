@@ -28,23 +28,23 @@ class GenerateInvoice extends Controller
 
 
 
+
         $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
-            ->where('reg_progres', '>=', 2)
+            ->where('reg_progres', '>=', 3)
             ->where('reg_progres', '<=', 5)
-            ->where('reg_nolayanan', '=', 24069551902)
+            // ->where('reg_nolayanan', '=', 25021200701)
             ->get();
 
         $swaktu = SettingWaktuTagihan::first();
         $i = 1;
-
+        // dd($data_pelanggan);
         $no_iv = (new GlobalController)->no_inv();
 
         foreach ($data_pelanggan as $dp) {
-
             if ($dp->reg_status == 'PAID') {
+                // dd($dp->input_nama);
                 $inv_id = $month . $th . sprintf('%04d', $i++);
-                echo '<table><tr><td>' . $no_iv . '</td><td>' . $dp->input_nama . '</td></tr></table>';
                 $hari_jt_tempo = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
 
 
@@ -65,48 +65,48 @@ class GenerateInvoice extends Controller
                     $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
                     $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
                 }
+                echo '<table><tr><td>' . $dp->reg_idpel . '</td><td>' . $dp->input_nama . '</td><td>' . $tgl_jt_tempo . '</td></tr></table>';
 
 
 
-                $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($jeda_waktu)->toDateString();
-                Invoice::create([
-                    // 'inv_id' => $inv_id,#generate
-                    'inv_id' => $no_iv, #add invoice
-                    'inv_status' => 'UNPAID',
-                    'inv_idpel' => $dp->reg_idpel,
-                    'inv_nolayanan' => $dp->reg_nolayanan,
-                    'inv_nama' => $dp->input_nama,
-                    'inv_jenis_tagihan' => $dp->reg_jenis_tagihan,
-                    'inv_profile' => $dp->paket_nama,
-                    'inv_mitra' => 'SYSTEM',
-                    'inv_kategori' => 'OTOMATIS',
-                    'inv_tgl_tagih' => $hari_tgl_tagih,
-                    'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
-                    'inv_tgl_isolir' => $tgl_isolir,
-                    'inv_periode' => $periode1blan,
-                    'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
-                ]);
+                // $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($jeda_waktu)->toDateString();
+                // Invoice::create([
+                //     // 'inv_id' => $inv_id,#generate
+                //     'inv_id' => $no_iv, #add invoice
+                //     'inv_status' => 'UNPAID',
+                //     'inv_idpel' => $dp->reg_idpel,
+                //     'inv_nolayanan' => $dp->reg_nolayanan,
+                //     'inv_nama' => $dp->input_nama,
+                //     'inv_jenis_tagihan' => $dp->reg_jenis_tagihan,
+                //     'inv_profile' => $dp->paket_nama,
+                //     'inv_mitra' => 'SYSTEM',
+                //     'inv_kategori' => 'OTOMATIS',
+                //     'inv_tgl_tagih' => $hari_tgl_tagih,
+                //     'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
+                //     'inv_tgl_isolir' => $tgl_isolir,
+                //     'inv_periode' => $periode1blan,
+                //     'inv_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                // ]);
 
-                SubInvoice::create(
-                    [
-                        // 'subinvoice_id' => $inv_id, #generate
-                        'subinvoice_id' => $no_iv, #add invoice
-                        'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
-                        'subinvoice_harga' => $dp->reg_harga + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
-                        'subinvoice_ppn' => $dp->reg_ppn,
-                        'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
-                        'subinvoice_qty' => 1,
-                        'subinvoice_status' => 0,
-                    ]
-                );
-                dd('test');
+                // SubInvoice::create(
+                //     [
+                //         // 'subinvoice_id' => $inv_id, #generate
+                //         'subinvoice_id' => $no_iv, #add invoice
+                //         'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
+                //         'subinvoice_harga' => $dp->reg_harga + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                //         'subinvoice_ppn' => $dp->reg_ppn,
+                //         'subinvoice_total' => $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
+                //         'subinvoice_qty' => 1,
+                //         'subinvoice_status' => 0,
+                //     ]
+                // );
+                // dd('test');
             } else {
-
+                // dd($dp->reg_status);
                 $data_invoice = Invoice::where('inv_idpel', $dp->reg_idpel)->where('inv_status', '!=', 'PAID')->get();
 
                 foreach ($data_invoice as $inv) {
                     $inv_id = $inv->inv_id;
-                    // echo '<table><tr><td>'.$inv_id.'</td><td>'.$dp->input_nama.'</td></tr></table>';
                     $hari_jt_tempo = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
 
 
@@ -138,8 +138,9 @@ class GenerateInvoice extends Controller
                     $test['inv_tgl_isolir'] = $tgl_isolir;
                     $test['inv_periode'] = $periode1blan;
                     $test['inv_total'] = $dp->reg_harga + $dp->reg_ppn + $dp->reg_dana_kas + $dp->reg_dana_kerjasama;
-
+                    // echo '<table><tr><td>' . $inv->inv_id . '</td><td>' . $inv->inv_nama . '</td></tr></table>';
                     // dd($test);
+                    echo '<table><tr><td>' . $inv->inv_idpel . '</td><td>' . $dp->input_nama . '</td><td>' . $tgl_jt_tempo . '</td></tr></table>';
 
                     // Invoice::where('inv_id', $inv->inv_id)->update([
                     //     'inv_status' => 'ISOLIR',

@@ -94,7 +94,7 @@
                   <option value="Aktivasi">Aktivasi</option>
                   <option value="Upgrade">Upgrade</option>
                   <option value="Maintenance">Maintenance</option>
-                  <option value="Realtivasi">Realtivasi</option>
+                  <option value="Realtivasi">Reaktivasi</option>
                   <option value="Downgrade">Downgrade</option>
                   <option value="Setup Wifi">Setup Wifi</option>
                   <option value="Setup Ip Cam">Setup Ip Cam</option>
@@ -136,10 +136,8 @@
               </div>
             </div>
             <div class="card-footer">
-              @role('admin|STAF ADMIN')
               <a href="{{route('admin.tiket.data_tiket')}}"><button type="button" class="btn ">Batal</button></a>
               <button type="submit" class="btn btn-primary float-right">Simpan</button>
-              @endrole
               </div>
             </form>
           </div>

@@ -301,37 +301,6 @@
     <hr>
     <table id="berita_acara">
         <tr >
-            <th width="40%" style="text-align:left; font-size: 11pt; background-color: #0071bc"> Data Perangkat - Device Data</th>
-            <td></td>
-        </tr>
-    </table>
-    <table id="berita_acara">
-        <tr>
-        <td width="15%">Serial Number</td>
-        <td>:</td>
-        <td width="85%">{{$berita_acara->reg_sn}}</td>
-        </tr>
-        <tr>
-        <td>Mac Address</td>
-        <td>:</td>
-        <td >{{$berita_acara->reg_mac}}</td>
-        </tr>
-        <tr>
-        <td>Merek dan Tipe</td>
-        <td>:</td>
-        <td>{{$berita_acara->reg_mrek}}</td>
-        </tr>
-        <tr>
-        <td>Mac Address OLT</td>
-        <td>:</td>
-        <td >{{$berita_acara->reg_mac_olt}}</td>
-        </tr>
-       
-    </table>
-    <br>
-    <hr>
-    <table id="berita_acara">
-        <tr >
             <th width="40%" style="text-align:left; font-size: 11pt; background-color: #0071bc"> Data Instalasi - Instalation Data</th>
             <td></td>
         </tr>
@@ -392,6 +361,12 @@
             <td>{{$berita_acara->reg_koodinat_odp}}</td>
             </tr>
     </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <br>
 
     <table id="kas_kop">
@@ -598,6 +573,7 @@
                 <th>Id Barang</th>
                 <th>Kategori</th>
                 <th>Nama Barang</th>
+                <th>Mac OLT</th>
                 <th>Qty</th>
                 <th>Satuan</th>
                 <th>Harga</th>
@@ -609,6 +585,7 @@
             <td>{{ $skb->barang_id }}</td>
             <td >{{ $skb->barang_kategori }}</td>
             <td>{{ ucfirst($skb->barang_nama) .'  '. ucfirst($skb->barang_merek) .'  '.strtolower($skb->barang_sn) .'  '. strtolower($skb->barang_mac)}}</td>
+            <td>{{ strtolower($skb->barang_mac_olt)}}</td>
             <td style="text-align: center">{{ $skb->bk_jumlah }}</td>
             <td style="text-align: center">{{ $skb->barang_satuan }}</td>
             <td style="text-align: right">{{ number_format($skb->barang_harga_satuan) }}</td>
@@ -616,7 +593,7 @@
             @endforeach
         </tr>
         <tr>
-        <td colspan="7" style="text-align: right">Total</td>
+        <td colspan="8" style="text-align: right">Total</td>
         <td colspan="1" style="text-align: right">{{ number_format($total) }}</td>
         </tr>
     </table>

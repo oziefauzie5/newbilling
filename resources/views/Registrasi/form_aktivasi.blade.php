@@ -225,7 +225,7 @@
         <input type="text" class="form-control readonly" name="reg_password" value="{{ $data->reg_password}}" >
       </div>
       </div>
-      <div class="form-group row">
+      <!-- <div class="form-group row">
         <label class="col-sm-2 col-form-label">Merek & Type <span>(Auto)</span></label>
       <div class="col-sm-4">
         <input type="text" name="reg_mrek" id="" class="form-control edit_ont readonly" value="{{ $data->reg_mrek}}" >
@@ -234,8 +234,8 @@
         <div class="col-sm-4">
           <input type="text" name="reg_mac" id=""  class="form-control readonly" minlength="17" maxlength="17"  value="{{ $data->reg_mac}}" >
         </div>
-        </div>
-        <div class="form-group row">
+        </div> -->
+        <!-- <div class="form-group row">
         <label class="col-sm-2 col-form-label">Mac Ont OLT <span>(Auto)</span></label>
         <div class="col-sm-4">
           <input type="text" name="reg_mac_olt" id="mac"  class="form-control readonly" required value="{{ $data->reg_mac_olt}}" >
@@ -243,8 +243,8 @@
         <label class=" col-sm-2 col-form-label" >SN perangkat</label>
       <div class="col-sm-4">
         <input type="text" name="reg_sn" class="form-control readonly" value="{{ $data->reg_sn}}" >
-      </div>
-      </div>
+      </div> -->
+      <!-- </div> -->
      
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">ONU ID</label>
@@ -259,15 +259,15 @@
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Redaman</label>
         <div class="col-sm-4">
-          {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}}
+          <!-- {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}} -->
           <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{ Session::get('reg_in_ont') }}" maxlength="6" minlength="6">
         </div>
-        <label class="col-sm-2 col-form-label">SKB <span>(Auto)</span></label>
+        <!-- <label class="col-sm-2 col-form-label">SKB <span>(Auto)</span></label>
         <div class="col-sm-4">
           <input type="text" class="form-control harga readonly" name="reg_skb" value="{{$data->reg_skb}}" >
-        </div>
+        </div> -->
       </div>
-      <div class="form-group row">
+      <!-- <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Kode Kabel</label>
         <div class="col-sm-4 notif_kabel">
           <input type="text" name="reg_kode_dropcore" id="reg_kode_dropcore" class="form-control" required value="{{ Session::get('reg_kode_dropcore') }}" >
@@ -277,8 +277,8 @@
         <div class="col-sm-4 notif_kabel">
           <input type="text" name="reg_before" id="before" class="form-control readonly" required value="{{ Session::get('reg_before') }}" >
         </div>
-      </div>
-      <div class="form-group row">
+      </div> -->
+      <!-- <div class="form-group row">
         
         <label class=" col-sm-2 col-form-label">After</label>
         <div class="col-sm-4 notif_over">
@@ -289,8 +289,8 @@
         <div class="col-sm-4">
           <input type="text" name="reg_penggunaan_dropcore" id="total" class="form-control" required value="{{ Session::get('reg_penggunaan_dropcore') }}" >
         </div>
-      </div>
-      <div class="form-group row">
+      </div> -->
+      <!-- <div class="form-group row">
         
         <label class=" col-sm-2 col-form-label">Digunakan Sebelumnya</label>
         <div class="col-sm-4 notif_over">
@@ -298,7 +298,7 @@
           <div id="pesan_over"></div>
         </div>
         <span class=" col-sm-6 col-form-label">Kabel yang telah digunakan sebelumnya <span>(Auto)</span></span>
-      </div>
+      </div> -->
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Teknisi 1</label>
         <div class="col-sm-4">

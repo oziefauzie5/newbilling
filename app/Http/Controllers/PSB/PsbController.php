@@ -90,7 +90,7 @@ class PsbController extends Controller
 
         //          $variable = $query->get();
         //     foreach ($variable as $key) {
-        //         echo '<table><tr><td>'.$key->reg_nolayanan.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_tgl_jatuh_tempo.'</td><td>'.$key->reg_status.'</td></tr></table>';
+        //         echo '<table><tr><td>'.$key->reg_idpel.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_tgl_jatuh_tempo.'</td><td>'.$key->reg_status.'</td></tr></table>';
 
         //     }
         // dd('CILUKBA');

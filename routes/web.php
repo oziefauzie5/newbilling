@@ -30,6 +30,7 @@ use App\Http\Controllers\Transaksi\TransaksiController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Whatsapp\WhatsappApi;
 use App\Http\Controllers\Whatsapp\WhatsappController;
+use App\Http\Controllers\Telegram\TelegramController;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Transaksi;
 use Illuminate\Support\Facades\Route;
@@ -78,7 +79,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/setting/applikasi', [AppController::class, 'aplikasi_store'])->name('app.aplikasi_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/setting/app-biaya', [AppController::class, 'biaya_store'])->name('app.biaya_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/setting/app-waktu', [AppController::class, 'waktu_store'])->name('app.waktu_store')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/setting/app-whatsapp', [AppController::class, 'whatsapp_store'])->name('app.whatsapp_store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/setting/app-whatsapp', [AppController::class, 'whatsapp_store'])->name('wa.whatsapp_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/setting/wa-getewai', [AppController::class, 'wa_getewai'])->name('app.wa_getewai')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/setting/wa-getewai-store', [AppController::class, 'store_wa_getewai'])->name('app.store_wa_getewai')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/setting/{id}/wa-getewai-update', [AppController::class, 'update_wa_getewai'])->name('app.update_wa_getewai')->middleware(['role:admin|STAF ADMIN']);
@@ -273,6 +274,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/sales/index', [SalesController::class, 'index'])->name('sales.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/sales/list', [SalesController::class, 'list_registrasi'])->name('sales.list_registrasi')->middleware(['role:admin|STAF ADMIN']);
 
+    Route::put('/whatsapp/{id}/app-whatsapp-manual', [WhatsappController::class, 'kirim_pesan_manual'])->name('wa.kirim_pesan_manual')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     Route::get('/whatsapp/pesan', [WhatsappController::class, 'index'])->name('wa.index')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/whatsapp/broadcast', [WhatsappController::class, 'broadcast'])->name('whatsapp.broadcast')->middleware(['role:admin|STAF ADMIN']);
@@ -303,6 +305,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/gudang/data-kode-group', [GudangController::class, 'data_kode_group'])->name('gudang.data_kode_group')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/{id}/print-kode', [GudangController::class, 'print_kode'])->name('gudang.print_kode')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/print-stok-gudang', [GudangController::class, 'print_stok_gudang'])->name('gudang.print_stok_gudang')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/gudang/print-barang_masuk', [GudangController::class, 'print_barang_masuk'])->name('gudang.print_barang_masuk')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/data-group-barang-keluar', [GudangController::class, 'data_group_barang_keluar'])->name('gudang.data_group_barang_keluar')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/print-skb', [GudangController::class, 'print_skb'])->name('gudang.print_skb')->middleware(['role:admin|STAF ADMIN']);
     ##--PUTUS BERLANGGAN--
@@ -316,4 +319,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/pelanggan/{id}/aktivasi_pelanggan', [RegistrasiController::class, 'aktivasi_pelanggan'])->name('reg.aktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     ##--VALIDASI--
     Route::get('/validasi/barang/{id}', [GlobalController::class, 'valBarang'])->name('val.valBarang')->middleware(['role:admin|NOC|STAF ADMIN']);
+    ##--TELEGRAM--
+    Route::get('/tele/store', [TelegramController::class, 'sendMessage'])->name('tel.sendMessage')->middleware(['role:admin|NOC|STAF ADMIN']);
 })->middleware(['role:admin|STAF ADMIN']);

@@ -32,7 +32,7 @@ class SendMessage implements ShouldQueue
             $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
             if ($pesan->layanan == 'CS') {
                 $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'CS')->first();
-            } else {
+            } elseif ($pesan->layanan == 'NOC') {
                 $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOC')->first();
             }
 

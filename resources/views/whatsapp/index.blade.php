@@ -85,6 +85,7 @@
                 <table class="display table table-striped table-hover text-nowrap" >
                   <thead>
                     <tr>
+                      <th>Aksi</th>
                       <th>Status</th>
                       <th>Tujuan</th>
                       <th>Nama</th>
@@ -94,6 +95,11 @@
                   <tbody>
                     @foreach ($whatsapp as $d)
                     <tr>
+                    @if($d->status == 'Done')
+                      <td><button type="button" class="btn btn-success">Kirim Manual</button></td>
+                      @else
+                      <td class="pesan_manual" data-id="{{$d->id}}" data-url="https://wa.me/+62{{$d->target}}?text={{urlencode($d->pesan)}}"><button type="button" class="btn btn-danger">Kirim Manual</button></td>
+                      @endif
                     <td>
                     <div class="form-button-action">
                       <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->id}}" class="btn btn-link btn-danger">
@@ -108,7 +114,7 @@
                       @endif
                       <td>0{{$d->target}}</td>
                       <td >{{$d->nama}}</td>
-                      <td data-toggle="modal" data-target="#exampleModal{{$d->id}}">{{$d->pesan}}</td>
+                      <td data-toggle="modal" data-target="#exampleModal{{$d->id}}">{{urlencode($d->pesan)}}</td>
                     </tr>
                     <!-- Modal -->
 <div class="modal fade" id="exampleModal{{$d->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -121,6 +127,8 @@
         </button>
       </div>
       <div class="modal-body">
+        
+        
         <div class="col-mb-3">
           <label class="col-lg-12 col-form-label" >Tujuan</label>
           <div class="col-lg-12">
@@ -137,8 +145,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary">Kirim Manual</button>
       </div>
+      
     </div>
   </div>
 </div>

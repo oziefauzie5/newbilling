@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\App;
+use Telegram\Bot\Api;
 
 class TiketController extends Controller
 {
@@ -115,9 +116,6 @@ class TiketController extends Controller
         $tiket['tiket_jadwal_kunjungan'] = date('Y-m-d', strtotime($request->tiket_waktu_kunjungans));
         $tiket['tiket_keterangan'] = $request->tiket_keterangan;
         $tiket['tiket_status'] = 'NEW';
-
-
-
 
         $tanggal = date('d M Y H:m:s', strtotime(Carbon::now()));
         $data['data_pelanggan'] =  InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
@@ -223,6 +221,39 @@ Tanggal tiket : ' . $tanggal . '
 Semangat Broooo... Sisa tiket = ' . $count . '
 '
         ]);
+
+
+        $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+        $chatId = '-4626560578';
+        $message = '               -- TIKET GANGGUAN --
+
+Hallo Broo.....
+Ada tiket masuk ke sistem nih! 😊
+
+No. Tiket : *' . $tiket['tiket_kode'] . '*
+Topik : ' . $request->tiket_nama . '
+Keterangan : *' . $request->tiket_keterangan . '*
+Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
+
+No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
+Pelanggan : ' . $request->tiket_pelanggan . '
+Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+
+Maps : https://www.google.com/maps/place/' . $maps . '
+
+Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
+
+Tanggal tiket : ' . $tanggal . '
+
+Semangat Broooo... Sisa tiket = ' . $count . '
+';
+
+        $reponse = $telegram->sendMessage([
+            'chat_id' => $chatId,
+            'text' => $message,
+        ]);
+
+
 
 
         Data_Tiket::create($tiket);
@@ -336,6 +367,9 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $reg['reg_olt'] = $request->tiket_olt;
             $reg['reg_odc'] = $request->tiket_odc;
             $reg['reg_odp'] = $request->tiket_odp;
+            if ($request->tiket_jenis == 'Reaktivasi') {
+                $reg['reg_progres'] = 2;
+            }
 
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
 
@@ -368,6 +402,23 @@ Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 ' . $request->tiket_menunggu . '';
 
 
+
+
+            $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+            $chatId = '-4626560578';
+            $message = '               -- CLOSED TIKET --
+Kendala : ' . $request->tiket_kendala . '
+Tindakan : ' . $request->tiket_tindakan . '
+
+Waktu selesai: ' . date('d-M-y h:m') . '
+Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
+
+' . $request->tiket_menunggu . '';
+
+            $reponse = $telegram->sendMessage([
+                'chat_id' => $chatId,
+                'text' => $message,
+            ]);
 
 
 

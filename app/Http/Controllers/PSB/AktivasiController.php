@@ -148,43 +148,11 @@ class AktivasiController extends Controller
             $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
             $pelanggan['reg_deposit'] = $inv['inv_total'];
         }
-        // dd($barang->barang_digunakan + $request->reg_penggunaan_dropcore);
-        if ($barang->barang_digunakan + $request->reg_penggunaan_dropcore == 0) {
-            $barang_status = 1;
-        } else {
-            $barang_status = 0;
-        }
-
-
-        $update_barang['barang_status'] =  $barang_status;
-        $update_barang['barang_digunakan'] =  $request->reg_terpakai + $request->reg_penggunaan_dropcore;
-        $update_barang['barang_nama_pengguna'] = 'PSB ' . $query->input_nama;
 
         $photo = $request->file('reg_img');
         $bk_name = $query->input_nama . '.jpg';
         $path = 'barang_keluar/' . $bk_name;
         Storage::disk('public')->put($path, file_get_contents($photo));
-
-        $create_barang['bk_id'] = $request->reg_skb;
-        $create_barang['bk_jenis_laporan'] = 'Instalasi PSB';
-        $create_barang['bk_id_barang'] = $barang->barang_id;
-        $create_barang['bk_id_tiket'] = '0';
-        $create_barang['bk_kategori'] = $barang->barang_kategori;
-        $create_barang['bk_before'] = $request->reg_before;
-        $create_barang['bk_after'] = $request->reg_after;
-        $create_barang['bk_terpakai'] = $request->reg_terpakai + $request->reg_penggunaan_dropcore;
-        $create_barang['bk_jumlah'] = $request->reg_penggunaan_dropcore;
-        $create_barang['bk_keperluan'] = 'PSB ' . $query->input_nama;
-        $create_barang['bk_file_bukti'] = $bk_name;
-        $create_barang['bk_nama_penggunan'] = $query->input_nama;
-        $create_barang['bk_waktu_keluar'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
-        $create_barang['bk_admin_input'] = $noc_nama;
-        $create_barang['bk_penerima'] = $teknisi_nama;
-        $create_barang['bk_status'] = 1;
-        $create_barang['bk_keterangan'] = $barang->barang_ket;
-        $create_barang['bk_harga'] = $barang->barang_harga_satuan * $barang->barang_qty;
-
-        // dd($update_barang);
         $pelanggan['reg_progres'] = '3';
 
 
@@ -201,8 +169,6 @@ class AktivasiController extends Controller
         $pelanggan['reg_koodinat_odp'] = $request->reg_koodinat_odp;
         $pelanggan['reg_teknisi_team'] = $team;
         $pelanggan['reg_tgl_pasang'] = $tanggal;
-        // $photo = $request->file('reg_img');
-        // $filename = $photo->getClientOriginalName();
         $filename = $query->input_nama . '.jpg';
         $path = 'rumah_pelanggan/' . $filename;
         Storage::disk('public')->put($path, file_get_contents($photo));
@@ -210,7 +176,6 @@ class AktivasiController extends Controller
 
         $photo_2 = $request->file('reg_foto_odp');
         $filename_2 = 'ODP' . $query->input_nama . '.jpg';
-        // $filename_2 = $photo_2->getClientOriginalName();
         $path_2 = 'odp_pelanggan/' . $filename_2;
         Storage::disk('public')->put($path_2, file_get_contents($photo_2));
         $pelanggan['reg_foto_odp'] = $filename_2;
@@ -258,8 +223,5 @@ class AktivasiController extends Controller
         Registrasi::where('reg_idpel', $id)->update($pelanggan);
         InputData::where('id', $id)->update($update_input);
         Teknisi::where('teknisi_idpel', $id)->where('teknisi_userid', $id_teknisi)->create($teknisi);
-
-        Data_Barang::where('barang_id', $barang->barang_id)->update($update_barang);
-        Data_BarangKeluar::create($create_barang);
     }
 }

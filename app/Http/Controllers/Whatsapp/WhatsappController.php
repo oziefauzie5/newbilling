@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Whatsapp;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Pesan\Pesan;
+use App\Models\PSB\InputData;
 use App\Models\Router\Router;
 use App\Models\PSB\Registrasi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class WhatsappController extends Controller
 {
@@ -31,6 +33,13 @@ class WhatsappController extends Controller
         return view('whatsapp/index', $data);
     }
 
+    public function kirim_pesan_manual($id)
+    {
+        Pesan::whereId($id)->update([
+            'status' => 'Done',
+        ]);
+        return response()->json('berhasil');
+    }
     public function delete_pesan($id)
     {
         // dd($id);

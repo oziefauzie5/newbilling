@@ -191,7 +191,7 @@
                 <input type="text" class="form-control pwhotspot" name="reg_password" value="1234567" required >
               </div>
               </div>
-              <div class="form-group row">
+              <!-- <div class="form-group row">
               <label class="col-sm-2 col-form-label">Nama perangkat</label>
               <div class="col-sm-4">
                 <input type="text" name="reg_nama_barang" id="reg_nama_barang" class="form-control ont" value="{{ Session::get('reg_nama_barang') }}" readonly >
@@ -216,8 +216,8 @@
                 <div class="col-sm-4">
                   <input type="text" name="reg_sn" id="reg_sn" class="form-control ont" value="{{ Session::get('reg_sn') }}" readonly >
                 </div>
-              </div>
-              <div class="form-group row">
+              </div> -->
+              <!-- <div class="form-group row">
               <label class=" col-sm-2 col-form-label">Kode Barang</label>
               <div class="form-check">
                 <label class="form-check-label">
@@ -233,11 +233,11 @@
                   <span class="form-check-sign">ONT</span>
                 </label>
               </div>
-              </div>
+              </div> -->
 
 
               <!-- Modal Validasi Pactcore -->
-              <div class="modal fade" id="modal_pactcore" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <!-- <div class="modal fade" id="modal_pactcore" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -260,9 +260,9 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- Modal Validasi adaptor -->
-              <div class="modal fade" id="modal_adaptor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <!-- <div class="modal fade" id="modal_adaptor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -288,9 +288,9 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- Modal Validasi ont -->
-              <div class="modal fade" id="modal_ont" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <!-- <div class="modal fade" id="modal_ont" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -316,7 +316,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
 
               <h3 class="mt-3">BILLING</h3><hr>
               <div class="form-group row">

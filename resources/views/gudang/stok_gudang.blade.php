@@ -26,7 +26,10 @@
                   <a href="{{route('admin.gudang.form_barang_keluar')}}"><button class="btn btn-danger btn-sm mb-3 btn-block" type="button" >Form Barang Keluar</button></a>
                 </div>
                 <div class="col">
-                  <a href="{{route('admin.gudang.print_stok_gudang')}}"><button class="btn btn-info btn-sm mb-3 btn-block" type="button" >Print Stok Barang</button></a>
+                  <a href="{{route('admin.gudang.print_stok_gudang')}}"><button class="btn btn-danger btn-sm mb-3 btn-block" type="button" >Print Stok Barang</button></a>
+                </div>
+                <div class="col">
+                 <button class="btn btn-info btn-sm mb-3 btn-block"  data-toggle="modal" data-target="#print_stok" type="button" >Print Barang Masuk</button>
                 </div>
                 <div class="col">
                   <a href="{{route('admin.gudang.data_kode_group')}}"><button class="btn btn-success btn-sm mb-3 btn-block" type="button" >Print kode Barang</button></a>
@@ -38,6 +41,44 @@
             
           </div>
             </form>
+            <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" >
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="print_stok" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{route('admin.gudang.print_barang_masuk')}}" method="post" >
+        <div class="form-row">
+            @csrf
+            @method('POST')
+          <div class="col">
+            <label for="">Dari Tanggal</label>
+            <input type="text" class="form-control datepicker" name="start_date" value="" required>
+          </div>
+          <div class="col">
+            <label for="">Sampai Tanggal</label>
+            <input type="text" class="form-control datepicker" name="end_date" value="" required>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Print</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
           <hr>
            <div class="table-responsive">
             <table id="input_data" class="display table table-striped table-hover" >                          

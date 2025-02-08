@@ -85,7 +85,7 @@
                 <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#exampleModal">
                 Deaktivasi
                 </button>
-                @elseif($data->reg_progres >= '5')
+                @elseif($data->reg_progres > '5')
                 <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#sambung_kembali">
                   SAMBUNG KEMBALI
                 </button>
@@ -93,6 +93,96 @@
                 @endrole
                
 
+                <!-- Modal sambung kembali -->
+                <div class="modal fade" id="sambung_kembali" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                  <form action="{{route('admin.reg.deaktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST">
+                          @csrf
+                          @method('PUT')
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Kelengkapan Barang</label>
+                        <div class="col-sm-4">
+                          <select type="text" class="form-control" name="deaktivasi_kelengkapan_perangkat" required>
+                            <option value="">- Pilih -</option>
+                            <option value="ONT & Adaptor">ONT & Adaptor</option>  
+                            <option value="ONT">ONT</option>  
+                            <option value="Hilang">hilang</option>  
+                          </select>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Pembuat Laporan</label>
+                        <div class="col-sm-4">
+                          <input type="text" class="form-control" value="{{$user_nama}}"  name="" >
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                      <label class="col-sm-2 col-form-label">Pernyataan</label>
+                      <div class="col-sm-10 pernyataan_1" style="display:none">
+                          <textarea type="text" class="form-control readonly" id="deaktivasi_pernyataan1"  name="deaktivasi_pernyataan" >Dengan ini saya {{$user_nama}} menyatakan benar, bahwa adaptor hilang. Saya siap bertanggung jawab dikemudian hari.</textarea>
+                        </div>
+                        <div class="col-sm-10 pernyataan_2" style="display:none">
+                        <textarea type="text" class="form-control readonly" id="deaktivasi_pernyataan2"  name="deaktivasi_pernyataan" >Dengan ini saya {{$user_nama}} menyatakan benar, bahwa ONT & adaptor hilang. Saya siap bertanggung jawab dikemudian hari.</textarea>
+                        </div>
+                      </div>
+                    <div class="form-group row div_ont" style="display:none">
+                    <label class="col-sm-2 col-form-label">Mac Address</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control deaktivasi_mac" value="" id="mac" name="deaktivasi_mac" >
+                      </div>
+                      <label  class="col-sm-2 col-form-label">Serial Number</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control" value="" id="deaktivasi_sn" name="deaktivasi_sn" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Pengambil Barang</label>
+                      <div class="col-sm-4">
+                        <select type="text" class="form-control" value="" id="deaktivasi_pengambil_perangkat" name="deaktivasi_pengambil_perangkat" >
+                          <option value="">- Pilih pengambil perangkat -</option>
+                          @foreach($user as $u)
+                          <option value="{{$u->id}}">{{$u->name}}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <label  class="col-sm-2 col-form-label">Tanggal Pengambilan</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control datepicker" value="" id="deaktivasi_tanggal_pengambilan" name="deaktivasi_tanggal_pengambilan" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 col-form-label">Alasan Deaktivasi</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" value="" id="deaktivasi_alasan_deaktivasi" name="deaktivasi_alasan_deaktivasi" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 col-form-label">Status Deaktivasi</label>
+                      <div class="col-sm-10">
+                        <select name="status" class="form-control" required>
+                          <option value="">- Pilih -</option>
+                          <option value="PUTUS LANGGANAN">PUTUS LANGGANAN</option>
+                          <option value="PUTUS SEMENTARA">PUTUS SEMENTARA</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+            </div>
                 <!-- Modal Deaktivasi -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
@@ -442,7 +532,7 @@
           <div id="pesan"></div>
         </div>
         <div class="col-sm-4">
-          <a href="{{route('admin.gudang.print_skb')}}?skb={{$data->reg_skb}}"><button type="button" class="btn  btn-info ">Print SKB</button></a>
+          <a href="{{route('admin.gudang.print_skb')}}?idpel={{$data->reg_idpel}}"><button type="button" class="btn  btn-info ">Print SKB</button></a>
         </div>
         <div class="col-sm-4">
           <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$data->reg_idpel])}}" target="_blank">
@@ -470,7 +560,7 @@
                   <td>{{ $skb->bk_id }}</td>
                   <td>{{ date('d-m-Y h:s', strtotime($skb->bk_waktu_keluar ))}}</td>
                   <td >{{ $skb->barang_kategori }}</td>
-                  <td>{{ ucfirst($skb->barang_nama) .'  '. ucfirst($skb->barang_merek) .'  '.strtolower($skb->barang_sn) .'  '. strtolower($skb->barang_mac)}}</td>
+                  <td>{{ ucfirst($skb->barang_nama) .' | '. ucfirst($skb->barang_merek) .' | '.strtolower($skb->barang_sn) .' | '. strtolower($skb->barang_mac).' | '. strtolower($skb->barang_mac_olt)}}</td>
                   <td style="text-align: center">{{ $skb->bk_jumlah }}</td>
                   <td style="text-align: center">{{ $skb->barang_satuan }}</td>
                   <td style="text-align: right">{{ number_format($skb->barang_harga_satuan) }}</td>

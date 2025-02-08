@@ -175,6 +175,11 @@ class GudangController extends Controller
     }
     public function stok_gudang()
     {
+
+        //         Data_Barang::where('barang_tglmasuk','27-01-2025')->update([
+        //             'barang_tglmasuk' => '2025-01-27',
+        //         ]);
+        // dd('test');
         $count = Data_Kategori::count();
 
         if ($count == 0) {
@@ -182,6 +187,7 @@ class GudangController extends Controller
         } else {
             $id_kate = $count + 1;
         }
+
         $data['id_kategori'] = '1' . sprintf("%03d", $id_kate);
         $data['kategori'] = Data_Kategori::all();
         $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
@@ -198,17 +204,37 @@ class GudangController extends Controller
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
         $data['nama_admin'] = Auth::user()->name;
-        // $data['start_date'] = $request->start_date;
-        // $data['end_date'] = $request->end_date;
+        // dd(date('Y-m-d',strtotime($data['start_date'])));
         $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
-            // ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
             ->select('data__barangs.barang_kategori', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'))
             ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barangs.barang_kategori');
-
 
         $data['stok_gudang'] = $query->get();
         // dd($data['stok_gudang']);
         return view('gudang/print_stok_gudang', $data);
+    }
+    public function print_barang_masuk(Request $request)
+    {
+        $data['profile_perusahaan'] = SettingAplikasi::first();
+        $data['nama_admin'] = Auth::user()->name;
+        $data['start_date'] = $request->start_date;
+        $data['end_date'] = $request->end_date;
+        // dd(date('Y-m-d',strtotime($data['start_date'])));
+        $query = Data_Barang::orderBy('data__barangs.barang_tglmasuk', 'ASC')
+            // ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
+            ->select('data__barangs.barang_kategori', 'data__barangs.barang_tglmasuk', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'))
+            ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barangs.barang_kategori', 'data__barangs.barang_tglmasuk')
+            ->whereDate('data__barangs.barang_tglmasuk', '>=', date('Y-m-d', strtotime($data['start_date'])))
+            ->whereDate('data__barangs.barang_tglmasuk', '<=', date('Y-m-d', strtotime($data['end_date'])));
+
+
+        $data['stok_gudang'] = $query->get();
+        $data['total_harga'] = Data_Barang::whereDate('data__barangs.barang_tglmasuk', '>=', date('Y-m-d', strtotime($data['start_date'])))
+            ->whereDate('data__barangs.barang_tglmasuk', '<=', date('Y-m-d', strtotime($data['end_date'])))
+            ->sum('data__barangs.barang_harga');
+        // dd($data['total_harga']);
+        // dd($data['stok_gudang']);
+        return view('gudang/print_barang_masuk', $data);
     }
     public function barang_keluar()
     {
@@ -236,12 +262,12 @@ class GudangController extends Controller
     {
         $data['profile_perusahaan'] = SettingAplikasi::first();
         $data['nama_admin'] = Auth::user()->name;
-        $data['skb'] = $request->query('skb');
+        $data['idpel'] = $request->query('idpel');
         $query = Data_BarangKeluar::join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
             ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
-            ->where('bk_id', $data['skb']);
+            ->where('bk_idpel', $data['idpel']);
         $data['print_skb'] = $query->get();
-        $query1 = Data_BarangKeluar::where('bk_id', $data['skb']);
+        $query1 = Data_BarangKeluar::where('bk_idpel', $data['idpel']);
         $data['data'] = $query1->first();
         $data['total'] = $query1->sum('bk_harga');
         // dd($data['print_skb']);
@@ -270,13 +296,14 @@ class GudangController extends Controller
     public function proses_form_barang_keluar(Request $request)
     {
 
+        // $no_sk = 'SKB/250206/0118';
         $no_sk = (new GlobalController)->no_surat_keterang();
-        // $no_sk = 'SKB/250130/0005';
         $data_barang_keluar = Data_BarangKeluar::where('bk_id', $no_sk)->first();
 
         if ($data_barang_keluar) {
             return response()->json('failed');
         } else {
+
             $no_tiket = (new GlobalController)->nomor_tiket();
             // $barang_id = ['aple', 'manggan', 'jeruk'];
             $admin = Auth::user()->id;
@@ -322,17 +349,17 @@ class GudangController extends Controller
                     ]
                 );
             }
-            // Data_Tiket::create([
-            //     'tiket_id' => $no_tiket,
-            //     'tiket_kode' => 'T-' . $no_tiket,
-            //     'tiket_site' => $tiket_site,
-            //     'tiket_type' => $tiket_type,
-            //     'tiket_jenis' => $bk_jenis_laporan,
-            //     'tiket_status' => 'NEW',
-            //     'tiket_nama' => $bk_keperluan,
-            //     'tiket_keterangan' => $bk_keperluan,
-            //     'tiket_pembuat' => $admin,
-            // ]);
+            Data_Tiket::create([
+                'tiket_id' => $no_tiket,
+                'tiket_kode' => 'T-' . $no_tiket,
+                'tiket_site' => $tiket_site,
+                'tiket_type' => $tiket_type,
+                'tiket_jenis' => $bk_jenis_laporan,
+                'tiket_status' => 'NEW',
+                'tiket_nama' => $bk_keperluan,
+                'tiket_keterangan' => $bk_keperluan,
+                'tiket_pembuat' => $admin,
+            ]);
 
             return response()->json('success');
             // }

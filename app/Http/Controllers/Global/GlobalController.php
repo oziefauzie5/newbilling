@@ -170,7 +170,6 @@ class GlobalController extends Controller
         if (! $latest) {
             return $bln . $th . '0001';
         }
-
         $string = substr($latest->inv_id, 2);
         return $bln . sprintf('%04d', $string + 1);
     }
@@ -187,10 +186,19 @@ class GlobalController extends Controller
     {
         $bl = date('m', strtotime(new Carbon()));
         $latest = InputData::latest()->first();
-        if (! $latest->id) {
-            return  '0001';
+        $cek_idpel = InputData::whereId($latest->id)->count();
+        if ($cek_idpel > 1) {
+            if (! $latest->id) {
+                return  '0001';
+            } else {
+                return sprintf('%04d', $latest->id + 2);
+            }
         } else {
-            return sprintf('%04d', $latest->id + 1);
+            if (! $latest->id) {
+                return  '0001';
+            } else {
+                return sprintf('%04d', $latest->id + 1);
+            }
         }
     }
 
@@ -246,12 +254,23 @@ class GlobalController extends Controller
         $m = date('m');
         $d = date('d');
         $latest = Data_BarangKeluar::latest()->first();
-        if (! $latest) {
-            return 'SKB/' . $y . $m . $d . '/0001';
+
+        $cek_noskb = Data_BarangKeluar::where('bk_id', $latest->bk_id)->count();
+        if ($cek_noskb > 1) {
+            if (! $latest) {
+                return 'SKB/' . $y . $m . $d . '/0001';
+            }
+            $string = substr($latest->bk_id, 11);
+            $nosk  = 'SKB/' . $y . $m . $d  . '/' . sprintf('%04d', $string + 2);
+            return $nosk;
+        } else {
+            if (! $latest) {
+                return 'SKB/' . $y . $m . $d . '/0001';
+            }
+            $string = substr($latest->bk_id, 11);
+            $nosk  = 'SKB/' . $y . $m . $d  . '/' . sprintf('%04d', $string + 1);
+            return $nosk;
         }
-        $string = substr($latest->bk_id, 11);
-        $nosk  = 'SKB/' . $y . $m . $d  . '/' . sprintf('%04d', $string + 1);
-        return $nosk;
     }
     public function nomor_tiket()
     {

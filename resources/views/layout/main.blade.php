@@ -3061,6 +3061,32 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 								};
 							});
 						//-----------------------END CLOSED TIKET NEW -----------------------------
+						</script>
+
+					<script>
+						//-----------------------START KIRIM WHATSAPP MANUAL-----------------------------
+						$('.pesan_manual').click(function(){
+							var id =$(this).data("id");
+							var pesan =$(this).data("url");
+							var url = '{{ route("admin.wa.kirim_pesan_manual", ":id") }}';
+							url = url.replace(':id', id);
+
+							$.ajax({
+									url: url,
+									type: 'PUT',
+									data: {
+										'_token': '{{ csrf_token() }}'},
+									dataType: 'json',
+									success: function(data) {
+										if(data == 'berhasil'){
+											window.location=open(pesan, '_blank');
+											location.reload();
+										}
+									}
+								})
+						});
+						//-----------------------END KIRIM WHATSAPP MANUAL-----------------------------
+
 					</script>
 
 				
