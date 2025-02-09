@@ -320,5 +320,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     ##--VALIDASI--
     Route::get('/validasi/barang/{id}', [GlobalController::class, 'valBarang'])->name('val.valBarang')->middleware(['role:admin|NOC|STAF ADMIN']);
     ##--TELEGRAM--
-    Route::get('/tele/store', [TelegramController::class, 'sendMessage'])->name('tel.sendMessage')->middleware(['role:admin|NOC|STAF ADMIN']);
+    // Route::get('/tele/store', [TelegramController::class, 'sendMessage'])->name('tel.sendMessage')->middleware(['role:admin|NOC|STAF ADMIN']);
 })->middleware(['role:admin|STAF ADMIN']);

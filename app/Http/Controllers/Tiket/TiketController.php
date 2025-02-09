@@ -223,35 +223,35 @@ Semangat Broooo... Sisa tiket = ' . $count . '
         ]);
 
 
-        $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-        $chatId = '-4626560578';
-        $message = '               -- TIKET GANGGUAN --
+        //         $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+        //         $chatId = '-4626560578';
+        //         $message = '               -- TIKET GANGGUAN --
 
-Hallo Broo.....
-Ada tiket masuk ke sistem nih! 😊
+        // Hallo Broo.....
+        // Ada tiket masuk ke sistem nih! 😊
 
-No. Tiket : *' . $tiket['tiket_kode'] . '*
-Topik : ' . $request->tiket_nama . '
-Keterangan : *' . $request->tiket_keterangan . '*
-Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
+        // No. Tiket : *' . $tiket['tiket_kode'] . '*
+        // Topik : ' . $request->tiket_nama . '
+        // Keterangan : *' . $request->tiket_keterangan . '*
+        // Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
 
-No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
-Pelanggan : ' . $request->tiket_pelanggan . '
-Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
+        // No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
+        // Pelanggan : ' . $request->tiket_pelanggan . '
+        // Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
 
-Maps : https://www.google.com/maps/place/' . $maps . '
+        // Maps : https://www.google.com/maps/place/' . $maps . '
 
-Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
+        // Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
 
-Tanggal tiket : ' . $tanggal . '
+        // Tanggal tiket : ' . $tanggal . '
 
-Semangat Broooo... Sisa tiket = ' . $count . '
-';
+        // Semangat Broooo... Sisa tiket = ' . $count . '
+        // ';
 
-        $reponse = $telegram->sendMessage([
-            'chat_id' => $chatId,
-            'text' => $message,
-        ]);
+        //         $reponse = $telegram->sendMessage([
+        //             'chat_id' => $chatId,
+        //             'text' => $message,
+        //         ]);
 
 
 
@@ -404,21 +404,21 @@ Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 
 
 
-            $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-            $chatId = '-4626560578';
-            $message = '               -- CLOSED TIKET --
-Kendala : ' . $request->tiket_kendala . '
-Tindakan : ' . $request->tiket_tindakan . '
+            //             $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+            //             $chatId = '-4626560578';
+            //             $message = '               -- CLOSED TIKET --
+            // Kendala : ' . $request->tiket_kendala . '
+            // Tindakan : ' . $request->tiket_tindakan . '
 
-Waktu selesai: ' . date('d-M-y h:m') . '
-Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
+            // Waktu selesai: ' . date('d-M-y h:m') . '
+            // Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 
-' . $request->tiket_menunggu . '';
+            // ' . $request->tiket_menunggu . '';
 
-            $reponse = $telegram->sendMessage([
-                'chat_id' => $chatId,
-                'text' => $message,
-            ]);
+            //             $reponse = $telegram->sendMessage([
+            //                 'chat_id' => $chatId,
+            //                 'text' => $message,
+            //             ]);
 
 
 
