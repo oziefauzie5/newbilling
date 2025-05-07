@@ -18,12 +18,14 @@ return new class extends Migration
             $table->string('barang_lokasi')->nullable();
             $table->string('barang_kategori')->nullable();
             $table->string('barang_jenis')->nullable();
+            $table->string('barang_jenis_jurnal')->nullable();
             $table->string('barang_nama')->nullable();
             $table->string('barang_merek')->nullable();
             $table->integer('barang_qty')->nullable();
             $table->integer('barang_digunakan')->nullable();
             $table->integer('barang_dijual')->nullable();
             $table->integer('barang_rusak')->nullable();
+            $table->integer('barang_hilang')->nullable();
             $table->integer('barang_pengembalian')->nullable();
             $table->string('barang_satuan')->nullable();
             $table->string('barang_sn')->nullable();

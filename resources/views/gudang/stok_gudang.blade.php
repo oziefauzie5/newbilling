@@ -32,19 +32,21 @@
                  <button class="btn btn-info btn-sm mb-3 btn-block"  data-toggle="modal" data-target="#print_stok" type="button" >Print Barang Masuk</button>
                 </div>
                 <div class="col">
+                 <a href="{{route('admin.gudang.print_request_barang')}}"><button class="btn btn-success btn-sm mb-3 btn-block" type="button" >Print Request Barang</button></a>
+                </div>
+                <div class="col">
                   <a href="{{route('admin.gudang.data_kode_group')}}"><button class="btn btn-success btn-sm mb-3 btn-block" type="button" >Print kode Barang</button></a>
                 </div>
                 <div class="col">
                   <a href="{{route('admin.gudang.data_group_barang_keluar')}}"><button class="btn btn-success btn-sm mb-3 btn-block" type="button" >No SKB</button></a>
                 </div>
+                <div class="col">
+                <button class="btn btn-info btn-sm mb-3 btn-block"  data-toggle="modal" data-target="#print_stok" type="button" >Update Barang</button>
+                </div>
               </div>
             
           </div>
             </form>
-            <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" >
-  Launch demo modal
-</button>
 
 <!-- Modal -->
 <div class="modal fade" id="print_stok" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -94,6 +96,7 @@
               <th>Barang Digunakan</th>
               <th>Barang dijual</th>
               <th>Barang rusak</th>
+              <th>Barang hilang</th>
               <th>Pengembalian</th>
             </tr>
             </thead>
@@ -105,11 +108,12 @@
                <td>{{ $d->barang_satuan }}</td>
                <td>Rp. {{ number_format($d->total_harga) }}</td>
                <td>{{ $d->total }}</td>
-               <td>{{ $d->total-$d->digunakan-$d->dijual-$d->rusak+$d->kembali }}</td>
+               <td>{{ $d->total-$d->digunakan-$d->dijual-$d->rusak-$d->hilang+$d->kembali }}</td>
                <td>{{ $d->dicek }}</td>
                <td>{{ $d->digunakan }}</td>
                <td>{{ $d->dijual }}</td>
                <td>{{ $d->rusak }}</td>
+               <td>{{ $d->hilang }}</td>
                <td>{{ $d->kembali}}</td>
             </tr>         
                 @endforeach
@@ -177,7 +181,7 @@
                     <label for="">Jumlah Barang<strong class="text-danger">*</strong></label>
                     <input type="number" class="form-control" id="" name="barang_qty" value="1" required>
                   </div>
-                  <div class="col">
+                  <!-- <div class="col">
                     <label for="">Satuan<strong class="text-danger">*</strong></label>
                     <select name="barang_satuan" id="" class="form-control" required>
                       <option value="">- Satuan -</option>
@@ -187,7 +191,7 @@
                       <option value="Meter">Meter</option>
                       <option value="Kg">Kg</option>
                     </select>
-                  </div>
+                  </div> -->
                   </div>
               <div class="form-row">
                 <div class="col-4">
@@ -250,7 +254,7 @@
                   <select name="nama_kategori" id="" class="form-control" required>
                     <option value="">Pilih</option>
                     <option value="ONT">ONT</option>
-                      <option value="DROPCORE">DROPCORE</option>
+                      <option value="DROPCORE">DROPCORE</option> 
                       <option value="PACTCORE">PACTCORE</option>
                       <option value="PIGTAIL">PIGTAIL</option>
                       <option value="SPLICER">SPLICER</option>
@@ -281,12 +285,38 @@
                       <option value="ADAPTOR">ADAPTOR</option>
                       <option value="PROTECTOR">PROTECTOR</option>
                       <option value="STEKER">STEKER</option>
+                      <option value="CONVERTER">CONVERTER</option>
+                      <option value="SFP">SFP</option>
                       <option value="ADAPTOR SC/UPC">ADAPTOR SC/UPC</option>
+                      <option value="STABILIZER LISTRIK">STABILIZER LISTRIK</option>
+                      <option value="BAUT RAK SERVER">BAUT RAK SERVER</option>
+                      <option value="KABEL DISPLAY">KABEL DISPLAY</option>
+                      <option value="PC">PC</option>
+                      <option value="SFF CARD">SFF CARD</option>
+                      <option value="DAC">DAC</option>
                   </select>
                   <!-- <input type="text" class="form-control" name="nama_kategori" required> -->
                   <div class="invalid-feedback">
                     Nama kategori tidak boleh kosong
                   </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="">Satuan<strong class="text-danger">*</strong></label>
+                  <select name="kategori_satuan" id="" class="form-control" required>
+                    <option value="">- Satuan -</option>
+                    <option value="Pcs">Pcs</option>
+                    <option value="Roll">Roll</option>
+                    <option value="Pack">Pack</option>
+                    <option value="Meter">Meter</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="">Jenis Jurnal<strong class="text-danger">*</strong></label>
+                  <select name="jenis_jurnal" id="" class="form-control" required>
+                    <option value="">- Jenis Jurnal -</option>
+                    <option value="Perlengkapan">Perlengkapan</option>
+                    <option value="Aset Tetap - Mesin & Peralatan">Aset Tetap - Mesin & Peralatan</option>
+                  </select>
                 </div>
               </div>
       </div>

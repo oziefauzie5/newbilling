@@ -172,13 +172,8 @@
 							<div class="collapse" id="vhc">
 								<ul class="nav nav-collapse">
 									<li>
-										<a href="{{route('admin.vhc.index')}}">
-											<span class="sub-item">Profile Voucher</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.vhc.index')}}">
-											<span class="sub-item">Stok Voucher</span>
+										<a href="{{route('admin.vhc.data_voucher')}}">
+											<span class="sub-item">Data Voucher</span>
 										</a>
 									</li>
 									<li>
@@ -535,6 +530,7 @@
 							window.location=url;
 						});
 	//--------------------END TABLE CLICK EDIT DATA PELANGGAN----------------------
+
 	//--------------------START TABLE CLICK DATA BARANG---------------------
 						$('.href_data_barang').click(function(){
 							var kategori =$(this).data("kategori");
@@ -744,6 +740,85 @@ $('#paket').on('change', function() {
         });
       
 // END AMBIL HARGA PAKET #REGISTRASI
+		// START AMBIL HARGA PAKET #HOTSPOT
+
+
+$('#paket_hotspot').on('change', function() {
+					$('#vhc_hpp').empty();
+                    $('#vhc_hjk').empty();
+                    $('#vhc_komisi').empty();
+                var kode_paket = $(this).val();
+                var url = '{{ route("admin.vhc.getPaketHotspot", ":id") }}';
+				url = url.replace(':id', kode_paket);
+                if (kode_paket) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            '_token': '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            console.log(data)
+                            if (data) {
+                                $('#vhc_hpp').empty();
+                                $('#vhc_hjk').empty();
+                                $('#vhc_komisi').empty();
+								var komisi = data['data_paket'][0]['paket_komisi'];
+								var hpp = data['data_paket'][0]['paket_harga'];
+								var vhc_jumlah = $('#vhc_jumlah').val();
+								var total = parseInt(hpp) + parseInt(komisi);
+								if (isNaN(total)) {
+									total = '0';
+								}
+								var total_komisi = parseInt(komisi) * parseInt(vhc_jumlah);
+							  		if (isNaN(total_komisi)) {
+										total_komisi = '0';
+									}
+								var vhc_total_hpp = parseInt(hpp) * parseInt(vhc_jumlah);
+							  		if (isNaN(vhc_total_hpp)) {
+										vhc_total_hpp = '0';
+									}
+                                $('#vhc_hpp').val(hpp);
+                                $('#vhc_hjk').val(total);
+                                $('#vhc_komisi').val(komisi);
+                                $('#total_komisi').val(total_komisi);
+                                $('#vhc_total_hpp').val(vhc_total_hpp);
+                            } else {
+								$('#vhc_hpp').empty();
+                                $('#vhc_hjk').empty();
+                                $('#vhc_komisi').empty();
+                            }
+                        }
+                    });
+                } else {
+					$('#vhc_hpp').empty();
+                  $('#vhc_hjk').empty();
+                  $('#vhc_komisi').empty();
+                }
+        });
+
+		$(document).ready(function() {
+			$("#vhc_jumlah").keyup(function() {
+				var keyup_hpp = $('#vhc_hpp').val();
+                var vhc_jumlah = $('#vhc_jumlah').val();
+                var keyup_komisi = $('#vhc_komisi').val();
+				var total_komisi = parseInt(keyup_komisi) * parseInt(vhc_jumlah);
+				if (isNaN(total_komisi)) {
+					total_komisi = '0';
+				}
+				var vhc_total_hpp = parseInt(keyup_hpp) * parseInt(vhc_jumlah);
+				if (isNaN(vhc_total_hpp)) {
+					vhc_total_hpp = '0';
+				}
+				$('#total_komisi').val(total_komisi);
+				$('#vhc_total_hpp').val(vhc_total_hpp);
+			});
+		});
+      
+// END AMBIL HARGA PAKET #HOTSPOT
+
+
 
 var totalPrice = 0;
 $("#ppn").html(0);
@@ -1119,7 +1194,7 @@ $("#reg_kode_dropcore").keyup(function(){
 
 		
 
-{{-- START VALISASI KODE BARANG REGISTRASI --}}
+<!-- {{-- START VALISASI KODE BARANG REGISTRASI --}}
 
 		<script>
 
@@ -1487,7 +1562,7 @@ $("#reg_kode_dropcore").keyup(function(){
 		});
 			
 				</script> --}}
-{{-- END VALISASI KODE BARANG REGISTRASI=EDIT --}}
+{{-- END VALISASI KODE BARANG REGISTRASI=EDIT --}} -->
 
 
 		{{-- TAMBAH PAKET --}}
@@ -2581,38 +2656,173 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					//--------------------START DEAKTIVASI----------------------
 					$(document).ready(function() {
 					// 
-					$('select[name=deaktivasi_kelengkapan_perangkat]').change(function () {
+					$('.simpan_deaktivasi').attr('disabled','disabled');
+					$('select[name=kelengkapan]').change(function () {
 						if ($(this).val() == 'ONT') {
 							$('.pernyataan_1').hide()
 							$('.pernyataan_2').hide()
-							$('.div_ont').show();
-							$('.deaktivasi_mac').attr('required', 'required');
+							$('.cek_id').hide()
+							$('.cek_mac').show()
+							$('.div_pernyataan').show();
+							$('#deaktivasi_mac').attr('required', 'required');
 							$('#deaktivasi_sn').attr('required', 'required');
+							$('#kode_barang_ont').attr('required', 'required');
+							$('#kode_barang_adp').attr('required', 'required');
 							$('#deaktivasi_pernyataan1').attr('required', 'required');
 							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
 							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
 							$('#deaktivasi_tanggal_pengambilan').attr('required', 'required');
 							$('.pernyataan_1').show()
+							$('.simpan_deaktivasi').attr('disabled','disabled');
 						} else if($(this).val() == 'ONT & Adaptor') { 
 							$('.pernyataan_1').hide()
 							$('.pernyataan_2').hide()
-							$('.div_ont').show();
-							$('.deaktivasi_mac').attr('required', 'required');
+							$('.div_pernyataan').hide()
+							$('.cek_id').hide()
+							$('.cek_mac').show();
+							$('#deaktivasi_mac').attr('required', 'required');
 							$('#deaktivasi_sn').attr('required', 'required');
+							$('#kode_barang_ont').attr('required', 'required');
+							$('#kode_barang_adp').attr('required', 'required');
 							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
 							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
 							$('#deaktivasi_tanggal_pengambilan').attr('required', 'required');
+							$('.simpan_deaktivasi').attr('disabled','disabled');
 						} else if($(this).val() == 'Hilang') { 
+							$('#kode_barang_ont').attr('required', 'required');
+							$('#kode_barang_adp').attr('required', 'required');
 							$('.pernyataan_1').hide()
 							$('.pernyataan_2').show()
-							$('.div_ont').hide();
+							$('.div_pernyataan').show()
+							$('#deaktivasi_mac').attr('required', 'required');
+							$('#deaktivasi_sn').attr('required', 'required');
+							$('.cek_mac').hide();
+							$('.cek_id').show()
+							// $('.div_ont').hide();
+							// $('.div_adp').hide();
 							$('#deaktivasi_pernyataan1').attr('required', 'required');
 							$('#deaktivasi_pernyataan2').attr('required', 'required');
 							$('#deaktivasi_pengambil_perangkat').attr('required', 'required');
 							$('#deaktivasi_alasan_deaktivasi').attr('required', 'required');
 							$('#deaktivasi_tanggal_pengambilan').attr('required', 'required');
+							$('.simpan_deaktivasi').removeAttr('disabled');
+						
 						}
 					});
+					});
+
+					$('#cek_perangkat').click(function(){
+						var mac = $('#deaktivasi_mac').val()
+						var idpel = $('#tampil_idpel').val()
+						var kelengkapan = $('#kelengkapan').val()
+						var url = '{{ route("admin.reg.cek_perangkat", ":id") }}';
+									url = url.replace(':id', idpel);
+									$.ajax({
+										url: url,
+											type: 'POST',
+											data: {
+												mac:mac,
+												kelengkapan:kelengkapan,
+												'_token': '{{ csrf_token() }}'
+											},
+											dataType: 'json',
+											success: function(data) {
+												if(data){
+													if(data == 0){
+														// barang digunkan oleh pelanggan lain
+														$('.simpan_deaktivasi').attr('disabled','disabled');
+														swal("Gagal!", "barang digunkan oleh pelanggan lain.", {
+															icon : "error",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+													} else if(data == 1){
+														// barang belum digunakan
+														$('.simpan_deaktivasi').attr('disabled','disabled');
+														swal("Gagal!", "Barang belum digunakan.", {
+															icon : "error",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+													} else if(data == 2){
+														swal("Gagal!", "Mac tidak ditemukan.", {
+															icon : "error",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+														$('.simpan_deaktivasi').attr('disabled','disabled');
+													} else {
+														$('#deaktivasi_sn').val(data['barang_sn'])
+														$('#kode_barang_ont').val(data['barang_id_ont'])
+														$('#kode_barang_adp').val(data['barang_id_adp'])
+														$('.simpan_deaktivasi').removeAttr('disabled');
+														
+														console.log(data);
+													}
+												}
+											}
+										});
+					});
+					$('#cek_id').click(function(){
+						// var mac = $('#mac').val()
+						var idpel = $('#tampil_idpel').val()
+						// alert(idpel)
+						var kelengkapan = $('#kelengkapan').val()
+						var url = '{{ route("admin.reg.cek_perangkat_hilang", ":id") }}';
+									url = url.replace(':id', idpel);
+									$.ajax({
+										url: url,
+											type: 'GET',
+											data: {
+												kelengkapan:kelengkapan,
+												'_token': '{{ csrf_token() }}'
+											},
+											dataType: 'json',
+											success: function(data) {
+												if(data){
+													if(data == 0){
+														// barang digunkan oleh pelanggan lain
+														$('.simpan_deaktivasi').attr('disabled','disabled');
+														swal("Gagal!", "barang digunkan oleh pelanggan lain.", {
+															icon : "error",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+													} else if(data == 1){
+														// barang belum digunakan
+														$('.simpan_deaktivasi').attr('disabled','disabled');
+														swal("Gagal!", "Barang belum digunakan.", {
+															icon : "error",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+													}  else {
+														$('#deaktivasi_mac').val(data['barang_mac'])
+														$('#deaktivasi_sn').val(data['barang_sn'])
+														$('#kode_barang_ont').val(data['barang_id_ont'])
+														$('#kode_barang_adp').val(data['barang_id_adp'])
+														$('.simpan_deaktivasi').removeAttr('disabled');
+														
+														console.log(data);
+													}
+												}
+											}
+										});
 					});
 		
 					//--------------------END DEAKTIVASI----------------------
@@ -2995,6 +3205,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
+										
 										if(data == 'failed'){
 												swal("Gagal!", "No Skb sudah ada. Silahkan coba klik simpan kembali.", {
 													icon : "error",
@@ -3087,6 +3298,246 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 						});
 						//-----------------------END KIRIM WHATSAPP MANUAL-----------------------------
 
+					</script>
+
+					<script>
+				//START BUAT PESANAN VOUCHER
+					$('#vhc_site').on('change', function() {
+					$('#vhc_mitra').empty();
+                    $('#vhc_outlet').empty();
+                    
+							var idsite = $(this).val();
+							var url = '{{ route("admin.glb.getMitraSite", ":id") }}';
+							url = url.replace(':id', idsite);
+							// console.log(idsite) 
+							if (idsite) {
+								$.ajax({
+									url: url,
+									type: 'GET',
+									data: {
+										'_token': '{{ csrf_token() }}'
+									},
+									dataType: 'json',
+									success: function(data) {
+										// console.log(data)
+										if (data) {
+											$("#vhc_mitra").append('<option>---Pilih Mitra---</option>');
+											// $("#desa").append('<option>---Pilih Desa---</option>');
+											$.each(data,function(key,dd){
+												$("#vhc_mitra").append('<option value="'+dd.id+'">'+dd.name+'</option>');
+											});
+										} else {
+											$('#vhc_mitra').empty();
+											$('#vhc_outlet').empty();
+											
+										}
+									}
+								});
+							} else {
+								$('#vhc_mitra').empty();
+								$('#vhc_outlet').empty();
+								
+							}
+					});
+					$('#vhc_mitra').on('change', function() {
+                    $('#vhc_outlet').empty();
+							var id_mitra = $(this).val();
+							var url = '{{ route("admin.glb.getOutlet", ":id") }}';
+							url = url.replace(':id', id_mitra);
+							// console.log(id_mitra) 
+							if (id_mitra) {
+								$.ajax({
+									url: url,
+									type: 'GET',
+									data: {
+										'_token': '{{ csrf_token() }}'
+									},
+									dataType: 'json',
+									success: function(data) {
+										if (data) {
+											$("#vhc_outlet").append('<option>---Pilih Outlet---</option>');
+											$.each(data,function(key,dd){
+												$("#vhc_outlet").append('<option value="'+dd.outlet_id+'">'+dd.outlet_nama+'</option>');
+											});
+										} else {
+											$('#vhc_outlet').empty();
+											
+										}
+									}
+								});
+							} else {
+								$('#vhc_outlet').empty();
+								
+							}
+					});
+
+					$('.button_add_voucher').click(function(){
+								var i = 1;
+								var jumlah_voucher = $('#jumlah_voucher').val();
+								var paket_id = $('#paket_id').val();
+								var url = '{{ route("admin.glb.getPaket", ":id") }}';
+								url = url.replace(':id', paket_id);
+								$.ajax({
+									url: url,
+									type: 'GET',
+									data: {
+										'_token': '{{ csrf_token() }}'
+									},
+									dataType: 'json',
+									success: function(data) {
+										if(data){
+											$('.pesan_error').html('')
+											i = i + 1
+											var html ='<tr id="'+data.paket_id+'" '+data.paket_id+' >';
+											html += '<td contenteditable="true" class="paket_id">'+data.paket_id+'</td>';
+											html += '<td contenteditable="true" class="paket_nama">'+data.paket_nama+'</td>';
+											html += '<td contenteditable="true" class="jumlah_voucher">'+jumlah_voucher+'</td>';
+											html += '<td contenteditable="true" class="paket_harga">'+data.paket_harga+'</td>';
+											html += '<td contenteditable="true" class="total_hpp">'+data.paket_harga * jumlah_voucher+'</td>';
+											html += '<td contenteditable="true" class="paket_komisi">'+data.paket_komisi+'</td>';
+											html += '<td contenteditable="true" class="total_komisi">'+data.paket_komisi * jumlah_voucher+'</td>';
+											html += '<td><button type="button" class="btn btn-sm btn-danger" data-row="'+data.paket_id+'" '+data.paket_id+' id="hapus_voucher"> Hapus Voucher</button></td>';
+											html += '</tr>';
+											
+											$('#tv').append(html)
+											$('.simpan').removeAttr('disabled');
+										} else {
+											$('.pesan_error').html('<small class="form-text text-muted text-danger">Kode barang tidak ditemukan</small>')
+										}
+									}
+								});
+								
+								
+								
+							});  
+							$(document).on('click','#hapus_voucher', function(){
+								   let hapus_voucher = $(this).data('row')
+								   $('#' + hapus_voucher).remove()
+								});
+
+								$(document).on('click','.simpan_pesanan_voucher', function(){
+									
+									
+									let pesanan_site =$('#vhc_site').val()
+									let pesanan_mitra =$('#vhc_mitra').val()
+									let pesanan_outlet =$('#vhc_outlet').val()
+									let pesanan_router =$('#vhc_router').val()
+									let pesanan_adminid =$('#vhc_admin_id').val()
+							
+										let paket_id = []
+										let jumlah_voucher = []
+										let paket_harga = []
+										let total_hpp = []
+										let paket_komisi = []
+										let total_komisi = []
+
+										$('.paket_id').each(function(){
+											paket_id.push($(this).text())
+										})
+										$('.jumlah_voucher').each(function(){
+											jumlah_voucher.push($(this).text())
+										})
+										$('.paket_harga').each(function(){
+											paket_harga.push($(this).text())
+										})
+										$('.total_hpp').each(function(){
+											total_hpp.push($(this).text())
+										})
+										$('.paket_komisi').each(function(){
+											paket_komisi.push($(this).text())
+										})
+										$('.total_komisi').each(function(){
+											total_komisi.push($(this).text())
+										})
+										
+										
+										var url = '{{ route("admin.vhc.store_pesanan") }}';
+									$.ajax({
+									url: url,
+									type: 'POST',
+									data: {
+										pesanan_site:pesanan_site,
+										pesanan_mitra:pesanan_mitra,
+										pesanan_outlet:pesanan_outlet,
+										pesanan_router:pesanan_router,
+										pesanan_adminid:pesanan_adminid,
+										pesanan_paketid:paket_id,
+										pesanan_jumlah:jumlah_voucher,
+										pesanan_harga:paket_harga,
+										pesanan_total_hpp:total_hpp,
+										pesanan_komisi:paket_komisi,
+										pesanan_total_komisi:total_komisi,
+										'_token': '{{ csrf_token() }}'},
+									dataType: 'json',
+									success: function(data) {
+										if(data == 'failed'){
+												swal("Gagal!", "Nomor Pesanan Duplikat.", {
+													icon : "error",
+													buttons: {        			
+														confirm: {
+															className : 'btn btn-error'
+														}
+													},
+												});
+											} else {
+												window.location.href = "{{route('admin.vhc.data_pesanan')}}";
+											}
+										}
+									});
+								});
+
+						// START DETAIL PESANAN
+						$('.href_pesanan').click(function(){
+							var id =$(this).data("id");
+							var url = '{{ route("admin.vhc.rincian_pesanan", ":id") }}';
+							url = url.replace(':id', id);
+							window.location=url;
+						});
+							
+
+				//END BUAT PESANAN VOUCHER
+					</script>
+
+					<script>
+							//--------------------START TABLE CLICK LIHAT VOUCHER TERJUAL----------------------
+							$('.href_voucher_terjual').click(function(){
+							var id =$(this).data("id");
+							// var timeStart = new Date($('#vhc_exp').val());
+             				// var timeEnd = new Date();
+							// var hourDiff = timeEnd - timeStart;    
+							// var ms = hourDiff % 1000;
+							// var ss = Math.floor(hourDiff / 1000) % 60;
+							// var mm = Math.floor(hourDiff / 1000 / 60) % 60;
+							// var hh = Math.floor(hourDiff / 1000 / 60 / 60);
+							
+							// $("#sisa_waktu").val( hh+":"+mm+":"+ss ) 
+							$('#detail_voucher').modal('show')
+							var url = '{{ route("admin.vhc.detail_voucher_terjual", ":id") }}';
+							url = url.replace(':id', id);
+							// console.log(url);
+							$.ajax({
+									url: url,
+									type: 'GET',
+									data: {
+										'_token': '{{ csrf_token() }}'
+									},
+									dataType: 'json',
+									success: function(data) {
+										console.log(data);
+										$('#uptime').val(data['user'][0]['uptime'])
+										if(data['active']){
+											$('#address').val(data['active'][0]['address'])
+											$('#status').html('<span class="badge badge-success">Sedang Digunakan</span>')
+										} else {
+											$('#status').html('<span class="badge badge-danger">Tidak Aktif</span>')
+										}
+										
+									}
+								});
+
+							
+							});
+							//--------------------END TABLE CLICK LIHAT VOUCHER TERJUAL----------------------
 					</script>
 
 				

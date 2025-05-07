@@ -12,6 +12,8 @@ class MutasiSales extends Model
         'id',
         'smt_user_id',
         'smt_admin',
+        'smt_idpel',
+        'smt_tgl_transaksi',
         'smt_kategori',
         'smt_deskripsi',
         'smt_cabar',

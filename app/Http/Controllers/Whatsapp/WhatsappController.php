@@ -16,6 +16,8 @@ class WhatsappController extends Controller
     public function index(Request $request)
     {
         $data['q'] = $request->query('q');
+        $data['ket'] = $request->query('ket');
+        $data['status'] = $request->query('status');
         $query = Pesan::orderBy('created_at', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('nama', 'like', '%' . $data['q'] . '%');
@@ -24,9 +26,22 @@ class WhatsappController extends Controller
                 $query->orWhere('status', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('ket', 'like', '%' . $data['q'] . '%');
             });
+            if($data['status'])
+            $query->where('status','!=','Done');
+
+        if($data['ket'] == 'payment')
+            $query->where('ket','=','payment');
+        elseif($data['ket'] == 'tiket')
+            $query->where('ket','=','tiket');
+        elseif($data['ket'] == 'tagihan')
+            $query->where('ket','=','tagihan');
+
+        
 
         $data['whatsapp'] = $query->paginate(15);
-
+        $data['belum_terkirim'] = Pesan::where('status', '0')->count();
+        $data['terkirim'] = Pesan::where('status', 'Done')->count();
+        $data['gagalbo'] = Pesan::where('status', 'Gagal')->count();
         $data['router'] = Router::get();
         // dd($data['router']);
 

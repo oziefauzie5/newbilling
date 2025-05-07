@@ -34,7 +34,6 @@ return new class extends Migration
             $table->string('reg_out_odp')->nullable();
             $table->string('reg_in_ont')->nullable();
             $table->string('reg_los_opm')->nullable();
-            $table->string('reg_nama_barang')->nullable(); #baru
             $table->integer('reg_site')->nullable(); #ganti wilayah jadi site
             $table->integer('reg_pop')->nullable(); #baru
             $table->integer('reg_router')->nullable();
@@ -42,11 +41,7 @@ return new class extends Migration
             $table->integer('reg_odc')->nullable(); #baru
             $table->integer('reg_odp')->nullable(); #baru
             $table->integer('reg_slot_odp')->nullable(); #ganti slot onu
-            $table->string('reg_mac_olt')->nullable(); #baru
             $table->string('reg_onuid')->nullable(); #baru
-            $table->string('reg_mrek')->nullable();
-            $table->string('reg_mac')->nullable();
-            $table->string('reg_sn')->nullable();
             $table->string('reg_skb')->nullable();
             $table->string('reg_ip_address')->nullable();
             $table->string('reg_catatan')->nullable();

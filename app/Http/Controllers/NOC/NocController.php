@@ -330,13 +330,13 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         'pesan' => 'ISOLIR Pelanggan berhasil',
                         'alert' => 'success',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 } else {
                     $notifikasi = array(
                         'pesan' => 'Pelanggan Disconnected',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } else {
                 $API->comm('/ppp/secret/add', [
@@ -361,13 +361,13 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         'pesan' => 'ISOLIR Pelanggan berhasil',
                         'alert' => 'success',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 } else {
                     $notifikasi = array(
                         'pesan' => 'Secret tidak ditemukan pada Router',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             }
         } else {
@@ -375,7 +375,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 'pesan' => 'Maaf..!! Router Disconnected',
                 'alert' => 'error',
             );
-            return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
         }
     }
     #EDIT DATA PELANGGAN
@@ -413,13 +413,13 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         'pesan' => 'Buka ISOLIR Pelanggan berhasil',
                         'alert' => 'success',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 } else {
                     $notifikasi = array(
                         'pesan' => 'Pelanggan Disconnected',
                         'alert' => 'error',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } else {
                 $API->comm('/ppp/secret/add', [
@@ -435,20 +435,18 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     'pesan' => 'Berhasil buka isolir manual ( Secret ditambahkan pada Router )',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             }
         } else {
             $notifikasi = array(
                 'pesan' => 'Maaf..!! Router Disconnected',
                 'alert' => 'error',
             );
-            return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+            return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
         }
     }
     public function status_secret(Request $request, $id)
     {
-
-
         $admin = Auth::user()->name;
         $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
         $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
@@ -488,13 +486,13 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                             'pesan' => 'Disable Pelanggan berhasil',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
                         $notifikasi = array(
                             'pesan' => 'Disable Pelanggan berhasil. Pelanggan Sedang Disconnected',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                     }
                 }
             } else {
@@ -502,7 +500,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     'pesan' => 'Maaf..!! Router Disconnected',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             }
         } else {
             if ($API->connect($ip, $user, $pass)) {
@@ -528,13 +526,13 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                             'pesan' => 'Disable Pelanggan berhasil',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                     } else {
                         $notifikasi = array(
                             'pesan' => 'Disable Pelanggan berhasil. Pelanggan Sedang Disconnected',
                             'alert' => 'success',
                         );
-                        return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                     }
                 }
             } else {
@@ -542,7 +540,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     'pesan' => 'Maaf..!! Router Disconnected',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             }
         }
     }
@@ -572,14 +570,14 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         'pesan' => 'Pelanggan Sedang Disconnected',
                         'alert' => 'success',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } else {
                 $notifikasi = array(
                     'pesan' => 'Maaf..!! Router Disconnected',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             }
         } else {
             if ($API->connect($ip, $user, $pass)) {
@@ -594,20 +592,20 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         'pesan' => 'Kick Pelanggan berhasil.',
                         'alert' => 'success',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 } else {
                     $notifikasi = array(
                         'pesan' => 'Kick Pelanggan berhasil. Pelanggan sudah Disconnected',
                         'alert' => 'success',
                     );
-                    return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 }
             } else {
                 $notifikasi = array(
                     'pesan' => 'Maaf..!! Router Disconnected',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.psb.edit_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             }
         }
     }

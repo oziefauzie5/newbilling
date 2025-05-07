@@ -13,7 +13,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6 col-sm-4 col-lg-2">
+              <div class="col-6 col-sm-4 col-lg-4">
                 <div class="card">
                   <div class="card-body p-3 text-center">
                     <div class="h1 m-0">{{$deaktivasi_month}}</div>
@@ -62,11 +62,48 @@
           </div> 
         @endif
         <a href="{{route('admin.psb.index')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-info">
+          <button class="btn  btn-sm ml-auto m-1 btn-primary">
             <i class="fa fa-plus"></i>
             KEMBALI
           </button>
         </a>
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#print-data">
+        <i class="fa fa-print"></i> PRINT DATA
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="print-data" tabindex="-1" aria-labelledby="print-dataLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="print-dataLabel">Periode Deaktivasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+              <form action="{{route('admin.reg.print_list_deaktivasi')}}" method="post" >
+                <div class="form-row">
+                    @csrf
+                    @method('POST')
+                  <div class="col">
+                    <label for="">Dari Tanggal</label>
+                    <input type="text" class="form-control datepicker" name="start_date" value="" required>
+                  </div>
+                  <div class="col">
+                    <label for="">Sampai Tanggal</label>
+                    <input type="text" class="form-control datepicker" name="end_date" value="" required>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Print</button>
+              </div>
+                </form>
+            </div>
+          </div>
+        </div>
         <hr>
           <div class="table-responsive">
             <table id="datatable" class="display table table-striped table-hover text-nowrap" >
@@ -85,7 +122,8 @@
               <tbody>
                 @foreach ($data_registrasi as $d)
                 <tr>
-                      <td><button  class="btn  btn-sm ml-auto m-1 btn-success">Print</button></td>
+                      <td> <a href="{{route('admin.reg.berita_acara_deaktivasi', ['id'=>$d->reg_idpel])}}"><button  class="btn  btn-sm ml-auto m-1 btn-success">Print</button></a> 
+                       <a href="{{route('admin.reg.berita_acara_deaktivasi', ['id'=>$d->reg_idpel])}}"><button  class="btn  btn-sm ml-auto m-1 btn-success">Print Note</button></a> </td>
                       <td class="href" data-id="{{$d->reg_idpel}}">{{$d->reg_nolayanan}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}">{{$d->input_nama}}</td>
                       <td class="href" data-id="{{$d->reg_idpel}}">{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>

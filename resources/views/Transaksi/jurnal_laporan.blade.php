@@ -68,7 +68,7 @@
                 <option value="ATK">ATK</option>
                 <option value="LISTRIK">LISTRIK</option>
                 <option value="ENTERTEMENT">ENTERTEMENT</option>
-                <option value="PERBAIKAN & PERAWATAN">PERBAIKAN & PERAWATAN</option>
+                <option value="PERBAIKAN & PERAWATAN KANTOR">PERBAIKAN & PERAWATAN KANTOR</option>
                 <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
                 <option value="IURAN & BERLANGGANAN">IURAN & BERLANGGANAN</option>
                 <option value="SEWA BANGUNAN">SEWA BANGUNAN</option>

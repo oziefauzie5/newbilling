@@ -65,6 +65,17 @@
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
+                          <label>Site</label>
+                          <select name="user_site" class="form-control" id="">
+                          <option value="">--Pilih Site--</option>
+                          @foreach ($data_site as $site)
+                              <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
+                          @endforeach
+                        </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group">
                           <label>Username</label>
                           <input id="username" type="text" class="form-control" value="{{ old('username') }}" name="username" placeholder="Username">
                         </div>
@@ -120,6 +131,7 @@
                   <th>Nama</th>
                   <th>Level</th>
                   <th>Whatsapp</th>
+                  <th>Site</th>
                   <th width="250%">Alamat Lengkap</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -132,6 +144,7 @@
                   <th>Nama</th>
                   <th>Level</th>
                   <th>Whatsapp</th>
+                  <th>Site</th>
                   <th width="250px">Alamat Lengkap</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -145,6 +158,7 @@
                       <td>{{$d->name}}</td>
                       <td>{{$d->level}}</td>
                       <td>{{$d->hp}}</td>
+                      <td>{{$d->site_nama}}</td>
                       <td width="250px">{{$d->alamat_lengkap}}</td>
                       <td>{{$d->status_user}}</td>
                       <td>
@@ -208,6 +222,20 @@
                                   </div>
                                   <div class="col-sm-12">
                                     <div class="form-group">
+                                      <label>Site</label>
+                                      <select name="user_site" class="form-control" id="">
+                                        @if ($d->user_site)
+                                            <option value="{{ $d->user_site }}">{{ $d->site_nama }}</option>
+                                        @endif
+                                      <option value="">--Pilih Site--</option>
+                                      @foreach ($data_site as $site)
+                                          <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
+                                      @endforeach
+                                    </select>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12">
+                                    <div class="form-group">
                                       <label>Username</label>
                                       <input id="username" type="text" class="form-control" value="{{$d->username}}" name="username" placeholder="Username">
                                     </div>
@@ -234,6 +262,16 @@
                                         @foreach ($role as $r)
                                         <option value="{{$r->id}}|{{$r->name}}">{{$r->name}}</option>
                                         @endforeach
+                                        </select>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12">
+                                    <div class="form-group">
+                                      <label for="" >Status</label>
+                                      <select name="status_user" id="" class="form-control" required>
+                                        <option value="{{$d->status_user}}">{{$d->status_user}}</option>
+                                        <option value="Enable">Enable</option>
+                                        <option value="Disable">Disable</option>
                                         </select>
                                     </div>
                                   </div>

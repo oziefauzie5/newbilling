@@ -32,6 +32,8 @@ class SendMessage implements ShouldQueue
             $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
             if ($pesan->layanan == 'CS') {
                 $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'CS')->first();
+            } elseif ($pesan->layanan == 'CS1') {
+                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'CS1')->first();
             } elseif ($pesan->layanan == 'NOC') {
                 $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOC')->first();
             }
@@ -72,7 +74,7 @@ class SendMessage implements ShouldQueue
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
-                $mesage['status'] = '0';
+                $mesage['status'] = 'Gagal';
             } else {
                 echo $response;
                 $mesage['status'] = 'Done';

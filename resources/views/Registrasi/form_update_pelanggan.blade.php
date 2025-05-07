@@ -34,7 +34,7 @@
               </ul>
           </div> 
           @endif
-          <h3 class="mt-3 text-bolt text-center">FORM EDIT DATA BERLANGGANAN</h3>
+          <h3 class="mt-3 text-bolt text-center">FORM EDIT DATA BERLANGGANAN </h3>
 
           <h3 class="mt-3 text-bolt">PELANGGAN</h3><hr>
             <div class="form-group row">
@@ -57,6 +57,10 @@
                   <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 1</label>
                   <div class="col-sm-4">
                     <input type="text" class="form-control readonly" id="tampil_hp" value="{{ $data->input_hp}}" name="reg_hp" >
+                  </div>
+                  <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 2</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control readonly" id="tampil_hp" value="{{ $data->input_hp_2}}" name="reg_hp" >
                   </div>
               </div>
               <div class="form-group row">
@@ -98,80 +102,51 @@
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">REAKTIVASI PELANGGAN</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                  <form action="{{route('admin.reg.deaktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST">
+                  <form action="{{route('admin.tiket.store')}}" method="POST">
                           @csrf
-                          @method('PUT')
-                      <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Kelengkapan Barang</label>
-                        <div class="col-sm-4">
-                          <select type="text" class="form-control" name="deaktivasi_kelengkapan_perangkat" required>
-                            <option value="">- Pilih -</option>
-                            <option value="ONT & Adaptor">ONT & Adaptor</option>  
-                            <option value="ONT">ONT</option>  
-                            <option value="Hilang">hilang</option>  
-                          </select>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Pembuat Laporan</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" value="{{$user_nama}}"  name="" >
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                      <label class="col-sm-2 col-form-label">Pernyataan</label>
-                      <div class="col-sm-10 pernyataan_1" style="display:none">
-                          <textarea type="text" class="form-control readonly" id="deaktivasi_pernyataan1"  name="deaktivasi_pernyataan" >Dengan ini saya {{$user_nama}} menyatakan benar, bahwa adaptor hilang. Saya siap bertanggung jawab dikemudian hari.</textarea>
-                        </div>
-                        <div class="col-sm-10 pernyataan_2" style="display:none">
-                        <textarea type="text" class="form-control readonly" id="deaktivasi_pernyataan2"  name="deaktivasi_pernyataan" >Dengan ini saya {{$user_nama}} menyatakan benar, bahwa ONT & adaptor hilang. Saya siap bertanggung jawab dikemudian hari.</textarea>
-                        </div>
-                      </div>
-                    <div class="form-group row div_ont" style="display:none">
-                    <label class="col-sm-2 col-form-label">Mac Address</label>
-                      <div class="col-sm-4">
-                        <input type="text" class="form-control deaktivasi_mac" value="" id="mac" name="deaktivasi_mac" >
-                      </div>
-                      <label  class="col-sm-2 col-form-label">Serial Number</label>
-                      <div class="col-sm-4">
-                        <input type="text" class="form-control" value="" id="deaktivasi_sn" name="deaktivasi_sn" >
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Pengambil Barang</label>
-                      <div class="col-sm-4">
-                        <select type="text" class="form-control" value="" id="deaktivasi_pengambil_perangkat" name="deaktivasi_pengambil_perangkat" >
-                          <option value="">- Pilih pengambil perangkat -</option>
-                          @foreach($user as $u)
-                          <option value="{{$u->id}}">{{$u->name}}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                      <label  class="col-sm-2 col-form-label">Tanggal Pengambilan</label>
-                      <div class="col-sm-4">
-                        <input type="text" class="form-control datepicker" value="" id="deaktivasi_tanggal_pengambilan" name="deaktivasi_tanggal_pengambilan" >
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label  class="col-sm-2 col-form-label">Alasan Deaktivasi</label>
-                      <div class="col-sm-10">
-                        <input type="text" class="form-control" value="" id="deaktivasi_alasan_deaktivasi" name="deaktivasi_alasan_deaktivasi" >
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label  class="col-sm-2 col-form-label">Status Deaktivasi</label>
-                      <div class="col-sm-10">
-                        <select name="status" class="form-control" required>
-                          <option value="">- Pilih -</option>
-                          <option value="PUTUS LANGGANAN">PUTUS LANGGANAN</option>
-                          <option value="PUTUS SEMENTARA">PUTUS SEMENTARA</option>
-                        </select>
-                      </div>
-                    </div>
+                          @method('POST')
+                          <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Jenis Laporan</label>
+              <div class="col-sm-4">
+                <select class="form-control" required name="tiket_jenis">
+                  <option value="Reaktivasi">Reaktivasi</option>
+                </select>
+              </div>
+              </div>
+              <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Nama Pelanggan</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control readonly" required value="{{ $data->input_nama}}" name="tiket_pelanggan" >
+              </div>
+              <label class="col-sm-2 col-form-label">Id Pelanggan</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control readonly" required  value="{{ $data->reg_idpel}}" name="tiket_idpel">
+              </div>
+              </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Nama Laporan</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control readonly" required id="1ssss" value="Reaktivasi layanan" name="tiket_nama">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Waktu Kunjungan</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control datepicker" id="1ssss" value="" name="tiket_waktu_kunjungan">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Keterangan Komplain</label>
+              <div class="col-sm-10">
+                <textarea type="text" class="form-control" required id="1ssss" name="tiket_keterangan" rows="5">Penyambungan ulang perangkat modem</textarea>
+              </div>
+            </div>
                     
                   </div>
                   <div class="modal-footer">
@@ -188,7 +163,7 @@
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">DEAKTIVASI PELANGGAN</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -200,7 +175,7 @@
                       <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Kelengkapan Barang</label>
                         <div class="col-sm-4">
-                          <select type="text" class="form-control" name="deaktivasi_kelengkapan_perangkat" required>
+                          <select type="text" class="form-control" id="kelengkapan" name="kelengkapan" required>
                             <option value="">- Pilih -</option>
                             <option value="ONT & Adaptor">ONT & Adaptor</option>  
                             <option value="ONT">ONT</option>  
@@ -212,7 +187,7 @@
                           <input type="text" class="form-control" value="{{$user_nama}}"  name="" >
                         </div>
                       </div>
-                      <div class="form-group row">
+                      <div class="form-group row div_pernyataan" style="display:none">
                       <label class="col-sm-2 col-form-label">Pernyataan</label>
                       <div class="col-sm-10 pernyataan_1" style="display:none">
                           <textarea type="text" class="form-control readonly" id="deaktivasi_pernyataan1"  name="deaktivasi_pernyataan" >Dengan ini saya {{$user_nama}} menyatakan benar, bahwa adaptor hilang. Saya siap bertanggung jawab dikemudian hari.</textarea>
@@ -221,16 +196,35 @@
                         <textarea type="text" class="form-control readonly" id="deaktivasi_pernyataan2"  name="deaktivasi_pernyataan" >Dengan ini saya {{$user_nama}} menyatakan benar, bahwa ONT & adaptor hilang. Saya siap bertanggung jawab dikemudian hari.</textarea>
                         </div>
                       </div>
-                    <div class="form-group row div_ont" style="display:none">
-                    <label class="col-sm-2 col-form-label">Mac Address</label>
+                    <div class="form-group row div_ont">
+                      <label class="col-sm-2 col-form-label">Mac Address</label>
                       <div class="col-sm-4">
-                        <input type="text" class="form-control deaktivasi_mac" value="" id="mac" name="deaktivasi_mac" >
+                        <input type="text" class="form-control " value="" id="deaktivasi_mac" name="deaktivasi_mac" >
                       </div>
+                      <label class="col-sm-2 col-form-label">Kode Barang</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control readonly " value="" id="kode_barang_ont" name="kode_barang_ont" >
+                      </div>
+                      </div>
+                      <div class="form-group row div_ont">
                       <label  class="col-sm-2 col-form-label">Serial Number</label>
                       <div class="col-sm-4">
-                        <input type="text" class="form-control" value="" id="deaktivasi_sn" name="deaktivasi_sn" >
+                        <input type="text" class="form-control readonly" value="" id="deaktivasi_sn" name="deaktivasi_sn" >
+                      </div>
+                      <div class="col-sm-4 cek_mac" style="display:none">
+                        <button type="button" class="btn btn-sm btn-primary " id="cek_perangkat">Cek Perangkat</button>
+                      </div>
+
+                      <div class="col-sm-4 cek_id" style="display:none">
+                        <button type="button" class="btn btn-sm btn-primary " id="cek_id">Data Perangakat</button>
                       </div>
                     </div>
+                    <div class="form-group row div_adp">
+                      <label  class="col-sm-2 col-form-label">Kode Adaptor</label>
+                      <div class="col-sm-4">
+                        <input type="text" class="form-control readonly" value="" id="kode_barang_adp" name="kode_barang_adp" >
+                      </div>
+                      </div>
                     <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Pengambil Barang</label>
                       <div class="col-sm-4">
@@ -266,7 +260,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary simpan_deaktivasi">Simpan</button>
                   </div>
                 </form>
                 </div>
@@ -276,9 +270,9 @@
                   
   
 
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
+        <!-- <div class="col-md-12"> -->
+          <!-- <div class="card">
+            <div class="card-body"> -->
               <form class="form-horizontal"action="{{route('admin.psb.update_router',['id'=>$data->reg_idpel])}}" method="POST">
             @csrf
             @method('PUT')
@@ -310,6 +304,7 @@
                 <input type="text" class="form-control" name="reg_password" value="{{ $data->reg_password}}" >
               </div>
               </div>
+              @if($data->reg_progres>=3)
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Status Internet :</label>
                 <div class="col-sm-4">
@@ -361,13 +356,14 @@
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
               </div>
               @endrole
+             @endif
             </form>
-            </div>
-          </div>
-        </div>
-<div class="col-md-12">
+            <!-- </div> -->
+          <!-- </div>
+        </div> -->
+<!-- <div class="col-md-12">
   <div class="card">
-    <div class="card-body"> 
+    <div class="card-body">  -->
       <form class="form-horizontal"action="" method="POST"  enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -411,6 +407,7 @@
           </select>
         </div>
         </div>
+        @if($data->reg_progres>=3)
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">OLT</label>
         <div class="col-sm-4 notif">
@@ -428,26 +425,6 @@
           <div id="pesan"></div>
         </div>
     </div>
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Merek & Type perangkat</label>
-      <div class="col-sm-4">
-        <input type="text" name="reg_mrek" id="" class="form-control edit_ont readonly" value="{{ $data->reg_mrek}}" >
-      </div>
-        <label class="col-sm-2 col-form-label">Mac perangkat</label>
-        <div class="col-sm-4">
-          <input type="text" name="reg_mac" id=""  class="form-control readonly" minlength="17" maxlength="17"  value="{{ $data->reg_mac}}" >
-        </div>
-        </div>
-        <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Mac perangkat ( OLT )</label>
-        <div class="col-sm-4">
-          <input type="text" name="reg_mac_olt" id="mac"  class="form-control" minlength="17" maxlength="17" required value="{{$data->reg_mac_olt}}" >
-        </div>
-        <label class=" col-sm-2 col-form-label" >SN perangkat</label>
-      <div class="col-sm-4">
-        <input type="text" name="reg_sn" class="form-control readonly" value="{{ $data->reg_sn}}" >
-      </div>
-      </div>
      
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">ONU ID</label>
@@ -493,11 +470,11 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
-          <img src="{{ asset('storage/topologi/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
+          <img src="{{ asset('storage/rumah_pelanggan/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
         </div>
         <label class="col-sm-2 col-form-label">Foto Lokasi ODP </label>
         <div class="col-sm-4">
-          <img src="{{ asset('storage/topologi/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
+          <img src="{{ asset('storage/odp_pelanggan/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
         </div>
       </div>
 
@@ -515,12 +492,8 @@
     @endrole
     </div>
    </form>
-  </div>
- </div>
-</div>
-<div class="col-md-12">
-  <div class="card">
-    <div class="card-body"> 
+   @endif
+
       <form class="form-horizontal"action="{{route('admin.reg.proses_update_noskb',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -534,10 +507,12 @@
         <div class="col-sm-4">
           <a href="{{route('admin.gudang.print_skb')}}?idpel={{$data->reg_idpel}}"><button type="button" class="btn  btn-info ">Print SKB</button></a>
         </div>
+        @if($data->reg_progres>=3)
         <div class="col-sm-4">
           <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$data->reg_idpel])}}" target="_blank">
             <button type="button" class="btn btn-dark">Print</button></a>
-        </div>
+          </div>
+          @endif
       </div>
       <div class="form-group row">
         <div class="table-responsive">
@@ -578,14 +553,8 @@
     </div>
     @endif
    </form>
-  </div>
- </div>
-</div>
+   @if($data->reg_progres>=3)
         @role('admin|STAF ADMIN')
-        
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
               <h3 class="mt-3">BILLING</h3><hr>
               <form class="form-horizontal"action="{{route('admin.psb.update_profile',['id'=>$data->reg_idpel])}}" method="POST">
                 @csrf
@@ -788,6 +757,7 @@ Update Tanggal Jatuh Tempo
   </div>
 </div>
 </div>
+@endif
 
               </div>
                 <div class="col">
@@ -845,9 +815,6 @@ Pindah Rumah
               </div>
 
             </div>
-            </div>
-          </div>
-        </div>
         @endrole 
   
   </div>

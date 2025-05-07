@@ -7,24 +7,50 @@
         <div href="{{route('admin.psb.list_input')}}" class="col">
           <div class="card">
             <div class="card-body p-3 text-center">
-              <div class="h2 m-0">Rp. {{number_format($sum_pemasukan)}}</div>
-              <div class="text-muted mb-3">PEMASUKAN {{$bulan}}</div>
+              <div class="h2 m-0">Rp. {{number_format($in_mount)}}</div>
+              <div class="text-muted mb-3">Pendapatan Bulan ini</div>
             </div>
           </div>
         </div>
         <div href="{{route('admin.reg.index')}}" class="col">
           <div class="card">
             <div class="card-body p-3 text-center">
-              <div class="h2 m-0">Rp. {{number_format($sum_pengeluaran)}}</div>
-              <div class="text-muted mb-3">PENGELUARAN {{$bulan}}</div>
+              <div class="h2 m-0">Rp. {{number_format($out_mount)}}</div>
+              <div class="text-muted mb-3">Laporan Admin Bulan ini</div>
             </div>
           </div>
         </div>
         <div href="{{route('admin.reg.index')}}" class="col">
           <div class="card">
             <div class="card-body p-3 text-center">
-              <div class="h2 m-0">Rp. {{number_format($sum_pemasukan-$sum_pengeluaran)}}</div>
-              <div class="text-muted mb-3">TOTAL {{$bulan}}</div>
+              <div class="h2 m-0">Rp. {{number_format($in_mount - $out_mount)}}</div>
+              <div class="text-muted mb-3">Total Bulan ini</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="row">
+        <div href="{{route('admin.psb.list_input')}}" class="col">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h2 m-0">Rp. {{number_format($in_day)}}</div>
+              <div class="text-muted mb-3">Pendapatan Hari ini {{$count_in}}</div>
+            </div>
+          </div>
+        </div>
+        <div href="{{route('admin.reg.index')}}" class="col">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h2 m-0">Rp. {{number_format($out_day)}}</div>
+              <div class="text-muted mb-3">Laporan Admin Hari ini {{$count_out}}</div>
+            </div>
+          </div>
+        </div>
+        <div href="{{route('admin.reg.index')}}" class="col">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h2 m-0">Rp. {{number_format($in_day - $out_day)}}</div>
+              <div class="text-muted mb-3">Total Hari ini {{$count_in - $count_out}}</div>
             </div>
           </div>
         </div>
@@ -48,6 +74,8 @@
               <i class="fas fa-file-export"></i> EXPORT</button>        
             <button class="btn  btn-sm ml-auto m-1 btn-danger ">
               <i class="fas fa-broom"></i> KOSONGKAN</button>        
+            <a href="{{route('admin.inv.trx.voucher')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary ">
+              <i class="fas fa-broom"></i> TRANSAKSI VOUCHER</button></a>        
             </div>
             
             @if ($errors->any())
@@ -71,19 +99,21 @@
                     <th>Admin</th>
                     <th>Deskripsi</th>
                     <th>Qty</th>
-                    <th>Total</th>
+                    <th>Debet</th>
+                    <th>Kredit</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach ($transaksi as $d)
                   <tr>
-                    <td>{{$d->created_at}}</td>
+                    <td>{{date('d-m-Y',strtotime($d->created_at))}}</td>
                     <td>{{$d->trx_kategori}}</td>
                     <td>{{$d->trx_jenis}}</td>
                     <td>{{$d->trx_admin}}</td>
                     <td>{{$d->trx_deskripsi}}</td>
                     <td>{{$d->trx_qty}}</td>
-                    <td>Rp. {{number_format($d->trx_total)}}</td>
+                    <td>Rp. {{number_format($d->trx_debet)}}</td>
+                    <td>Rp. {{number_format($d->trx_kredit)}}</td>
                   </tr>
                   @endforeach
                 </tbody>

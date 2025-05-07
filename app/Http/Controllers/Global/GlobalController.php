@@ -22,7 +22,13 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Jurnal;
 use App\Models\Transaksi\Kendaraan;
+use App\Models\Hotspot\Data_Outlet;
+use App\Models\Hotspot\Data_Pesanan;
+use App\Models\Hotspot\Data_Bagihasil;
+use App\Models\Hotspot\Data_Voucher;
+use App\Models\Router\Paket;
 use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -117,14 +123,15 @@ class GlobalController extends Controller
     {
         $debet = MutasiSales::where('smt_user_id', $id)->sum('smt_debet');
         $kredit = MutasiSales::where('smt_user_id', $id)->sum('smt_kredit');
+        // dd($kredit);
         $saldo = $kredit - $debet;
 
         return $saldo;
     }
     public function mutasi_jurnal()
     {
-        $data['debet'] = Jurnal::sum('jurnal_debet');
-        $data['kredit'] = Jurnal::sum('jurnal_kredit');
+        $data['debet'] = Jurnal::where('jurnal_status',1)->sum('jurnal_debet');
+        $data['kredit'] = Jurnal::where('jurnal_status',1)->sum('jurnal_kredit');
         $data['saldo'] = $data['kredit'] - $data['debet'];
 
         return $data;
@@ -166,26 +173,23 @@ class GlobalController extends Controller
         $inv_tgl = Carbon::now();
         $bln = $inv_tgl->format('m');
         $th = $inv_tgl->format('y');
-        $latest = Invoice::latest()->first();
-        if (! $latest) {
+        // $latest = Invoice::orderBy('created_at', 'DESC')->latest()->first();
+        // if (! $latest) {
+        //     return $bln . $th . '0001';
+        // }
+        // $string = substr($latest->inv_id, 2);
+        // return $bln . sprintf('%04d', $string + 1);
+        $latest = Invoice::whereMonth('inv_tgl_isolir','=', $bln)->count();
+        if ($latest == 0) {
             return $bln . $th . '0001';
         }
-        $string = substr($latest->inv_id, 2);
-        return $bln . sprintf('%04d', $string + 1);
+            return $bln.$th . $latest + 1;
     }
-    // function idpel()
-    // {
-    //     $latest = InputData::latest()->first();
-    //     if (! $latest) {
-    //         return '0001';
-    //     }
-    //     $string = substr($latest->id, 2);
-    //     return sprintf('%05d', $latest->id + 1);
-    // }
+
     function idpel_()
     {
         $bl = date('m', strtotime(new Carbon()));
-        $latest = InputData::latest()->first();
+        $latest = InputData::orderBy('created_at', 'DESC')->latest()->first();
         $cek_idpel = InputData::whereId($latest->id)->count();
         if ($cek_idpel > 1) {
             if (! $latest->id) {
@@ -201,6 +205,26 @@ class GlobalController extends Controller
             }
         }
     }
+    function id_outlet()
+    {
+        $bln = date('ym', strtotime(new Carbon()));
+        $latest = Data_Outlet::orderBy('created_at', 'DESC')->latest()->first();
+        if (! $latest) {
+            return $bln . '0001';
+        }
+        $string = substr($latest->outlet_id, 4);
+        return $bln . sprintf('%04d', $string + 1);
+    }
+    function id_vhc()
+    {
+        $bln = date('ym', strtotime(new Carbon()));
+        $latest = Data_Voucher::orderBy('created_at', 'DESC')->latest()->first();
+        if (! $latest) {
+            return '01';
+        }
+        $string = substr($latest->vhc_id, 4);
+        return sprintf('%02d', $string + 1);
+    }
 
     function data_kendaraan()
     {
@@ -214,6 +238,29 @@ class GlobalController extends Controller
         $kode_site = Data_Site::join('data_pops', 'data_pops.pop_id_site', '=', 'data__sites.site_id')
             ->where("site_id", $id)->get();
         return response()->json($kode_site);
+    }
+    public function getMitraSite($id) #Layanan Hotspot
+    {
+        $kode_site = User::join('data__sites', 'data__sites.site_id', '=', 'users.site')
+        ->join('model_has_roles','model_has_roles.model_id','=','users.id')
+        ->where('model_has_roles.role_id','14')
+        ->where('users.status_user','Enable')
+        ->where("data__sites.site_id", $id)
+        ->get();
+        return response()->json($kode_site);
+    }
+    public function getOutlet($id) #Layanan Hotspot
+    {
+        $get_outlet = Data_Outlet::where("outlet_mitra", $id)
+        ->get();
+        return response()->json($get_outlet);
+    }
+    public function getPaket($id) #Layanan Hotspot
+    {
+        // return response()->json($id);
+        $getPaket = Paket::where('paket_id', $id)
+        ->first();
+        return response()->json($getPaket);
     }
     public function getOlt($id)
     {
@@ -253,7 +300,7 @@ class GlobalController extends Controller
         $y = date('y');
         $m = date('m');
         $d = date('d');
-        $latest = Data_BarangKeluar::latest()->first();
+        $latest = Data_BarangKeluar::orderBy('bk_id', 'DESC')->latest()->first();
 
         $cek_noskb = Data_BarangKeluar::where('bk_id', $latest->bk_id)->count();
         if ($cek_noskb > 1) {
@@ -287,5 +334,27 @@ class GlobalController extends Controller
         $no_tiket  = $y . $m . $d  . sprintf('%04d', $string + 1);
 
         return $no_tiket;
+    }
+    public function nomor_pesanan() #layanan Voucher
+    {
+        $bln = date('ym', strtotime(new Carbon()));
+        $latest = Data_Pesanan::orderBy('created_at', 'DESC')->latest()->first();
+        // return $latest;
+        if (! $latest) {
+            return $bln . '0001';
+        }
+        $string = substr($latest->pesanan_id, 4);
+        return $bln . sprintf('%04d', $string + 1);
+    }
+    public function nomor_bagihasil() #layanan Voucher
+    {
+        $bln = date('ym', strtotime(new Carbon()));
+        $latest = Data_Bagihasil::orderBy('created_at', 'DESC')->latest()->first();
+        // return $latest;
+        if (! $latest) {
+            return $bln . '0001';
+        }
+        $string = substr($latest->bh_id, 4);
+        return $bln . sprintf('%04d', $string + 1);
     }
 }

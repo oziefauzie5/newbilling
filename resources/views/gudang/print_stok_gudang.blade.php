@@ -189,6 +189,7 @@
         <tr>
                 <th>#</th>
                 <th>Kategori</th>
+                <th>Nama Barang</th>
               <th>Jenis Barang</th>
               <th>Satuan</th>
               <th>Nominal Rupiah</th>
@@ -197,6 +198,7 @@
               <th width="5%">Total Barang Digunakan</th>
               <th width="5%">Total Barang dijual</th>
               <th width="5%">Total Barang rusak</th>
+              <th width="5%">Total Barang hilang</th>
               <th width="5%">Total Pengembalian</th>
               <th width="10%">Status</th>
         </tr>
@@ -204,14 +206,16 @@
         <tr>
             <td>{{$loop->iteration}}</td>
             <td >{{ $sg->barang_kategori }}</td>
+            <td >{{ $sg->barang_nama }}</td>
                <td>{{ $sg->barang_jenis }}</td>
                <td>{{ $sg->barang_satuan }}</td>
                <td style="text-align: right">Rp. {{ number_format($sg->total_harga) }}</td>
                <td style="text-align: center">{{ $sg->total }}</td>
-               <td style="text-align: center">{{ $sg->total-$sg->digunakan-$sg->dijual-$sg->rusak+$sg->kembali }}</td>
+               <td style="text-align: center">{{ $sg->total-$sg->digunakan-$sg->dijual-$sg->rusak-$sg->hilang+$sg->kembali }}</td>
                <td style="text-align: center">{{ $sg->digunakan }}</td>
                <td style="text-align: center">{{ $sg->dijual }}</td>
                <td style="text-align: center">{{ $sg->rusak }}</td>
+               <td style="text-align: center">{{ $sg->hilang }}</td>
                <td style="text-align: center">{{ $sg->kembali }}</td>
                <td style="text-align: center"></td>
         </tr>

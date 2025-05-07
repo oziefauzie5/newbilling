@@ -47,14 +47,19 @@ class AktivasiController extends Controller
         $tagihan_tanpa_ppn = $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik;
 
         #FORMAT TANGGAL
-        $y = date('y');
-        $m = date('m');
         $tanggal = Carbon::now()->toDateString();
-        $cek_hari = date('d', strtotime($tanggal));
-        // if ($cek_hari >= 25) {
+        $now = Carbon::now();
+        $m = $now->format('m');
+        $y = $now->format('Y');
 
+        // $cek_hari_pasang = date('d', strtotime($tanggal));
+        // if ($cek_hari_pasang >= 25) {
+        //     $tanggal_pasang = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->addMonth(1)->toDateString()));
+        //     $tanggal_pasang_free = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->addMonth(1)->toDateString()));
+        // } else {
+        //     $tanggal_pasang = $tanggal;
+        //     $tanggal_pasang_free = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->toDateString()));
         // }
-
         $tag_pascabayar = Carbon::create($tanggal)->addMonth(1)->toDateString();
         $tag_free3bln = Carbon::create($tanggal)->addMonth(3)->toDateString();
         $tag_free1th = Carbon::create($tanggal)->addMonth(12)->toDateString();
@@ -69,7 +74,7 @@ class AktivasiController extends Controller
         $periode12blan = Carbon::create($tanggal)->toDateString() . ' - ' . Carbon::create($tanggal)->addMonth(12)->toDateString();
         $periode1blan = Carbon::create($tanggal)->toDateString() . ' - ' . Carbon::create($tanggal)->addMonth(1)->toDateString();
 
-
+        
 
         if ($query->reg_jenis_tagihan == 'FREE') {
             $teknisi['teknisi_psb'] = '0';
@@ -135,8 +140,8 @@ class AktivasiController extends Controller
             $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
             $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
             $inv['inv_total'] = $query->reg_deposit;
-            $inv['inv_tgl_tagih'] = $tanggal;
-            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
+            $inv['inv_tgl_tagih'] = $tanggal_pasang;
+            $inv['inv_tgl_jatuh_tempo'] = $tanggal_pasang;
             $inv['inv_periode'] = $periode1blan;
 
             $sub_inv['subinvoice_harga'] = $inv['inv_total'];
@@ -149,10 +154,10 @@ class AktivasiController extends Controller
             $pelanggan['reg_deposit'] = $inv['inv_total'];
         }
 
-        $photo = $request->file('reg_img');
-        $bk_name = $query->input_nama . '.jpg';
-        $path = 'barang_keluar/' . $bk_name;
-        Storage::disk('public')->put($path, file_get_contents($photo));
+        // $photo = $request->file('reg_img');
+        // $bk_name = $query->input_nama . '.jpg';
+        // $path = 'barang_keluar/' . $bk_name;
+        // Storage::disk('public')->put($path, file_get_contents($photo));
         $pelanggan['reg_progres'] = '3';
 
 
@@ -162,17 +167,16 @@ class AktivasiController extends Controller
         $pelanggan['reg_olt'] = $request->reg_olt;
         $pelanggan['reg_odc'] = $request->reg_odc;
         $pelanggan['reg_odp'] = $request->reg_odp;
-        $pelanggan['reg_mac_olt'] = $request->reg_mac_olt;
         $pelanggan['reg_in_ont'] = $request->reg_in_ont;
         $pelanggan['reg_onuid'] = $request->reg_onuid;
         $pelanggan['reg_slot_odp'] = $request->reg_slot_odp;
         $pelanggan['reg_koodinat_odp'] = $request->reg_koodinat_odp;
         $pelanggan['reg_teknisi_team'] = $team;
-        $pelanggan['reg_tgl_pasang'] = $tanggal;
-        $filename = $query->input_nama . '.jpg';
-        $path = 'rumah_pelanggan/' . $filename;
-        Storage::disk('public')->put($path, file_get_contents($photo));
-        $pelanggan['reg_img'] = $filename;
+        $pelanggan['reg_tgl_pasang'] = Carbon::now()->toDateString();
+        // $filename = $query->input_nama . '.jpg';
+        // $path = 'rumah_pelanggan/' . $filename;
+        // Storage::disk('public')->put($path, file_get_contents($photo));
+        // $pelanggan['reg_img'] = $filename;
 
         $photo_2 = $request->file('reg_foto_odp');
         $filename_2 = 'ODP' . $query->input_nama . '.jpg';
@@ -190,7 +194,7 @@ class AktivasiController extends Controller
         $teknisi['teknisi_status'] =  1;
         $update_input['input_koordinat'] = $request->input_koordinat;
 
-        $inv['inv_tgl_pasang'] = $tanggal;
+        $inv['inv_tgl_pasang'] = Carbon::now()->toDateString();
         $inv['inv_status'] = 'UNPAID';
         $inv['inv_idpel'] = $query->reg_idpel;
         $inv['inv_nolayanan'] = $query->reg_nolayanan;
@@ -206,18 +210,22 @@ class AktivasiController extends Controller
         $sub_inv['subinvoice_status'] = '0';
 
 
-        $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
-        if ($cek_inv) {
-            $inv['inv_id'] = $cek_inv->inv_id;
-            $sub_inv['subinvoice_id'] = $inv['inv_id'];
-            Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
-            SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
-        } else {
-            $inv['inv_id'] = (new GlobalController)->no_inv();
-            $sub_inv['subinvoice_id'] = $inv['inv_id'];
-            Invoice::create($inv);
-            SubInvoice::create($sub_inv);
-        }
+        // if ($cek_hari_pasang < 25) {
+            $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
+            if ($cek_inv) {
+                $inv['inv_id'] = $cek_inv->inv_id;
+                $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
+                SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
+            } else {
+                $inv['inv_id'] = (new GlobalController)->no_inv();
+                $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                Invoice::create($inv);
+                SubInvoice::create($sub_inv);
+            }        
+        // } 
+
+       
 
 
         Registrasi::where('reg_idpel', $id)->update($pelanggan);

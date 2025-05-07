@@ -83,7 +83,7 @@
         </style>
 </head>
 <body>
-<h2>LAPORAN HARIAN</h2>
+<h2>LAPORAN HARIAN ADMIN</h2>
 <hr>
         <div id="client">
             <h3>Nama : {{ $admin }} </h3>
@@ -99,23 +99,19 @@
 <table id="customers">
     <thead>
         <tr>
-            <th>TRANSAKSI</th>
+            <th>TOTAL TRANSAKSI</th>
             <th>TRANSAKSI TUNAI</th>
             <th>REFUND</th>
-            <th>ADM</th>
             <th>TOTAL</th>
-            <th>TOTAL TUNAI</th>
             <th>QTY</th>
         </tr>
     </thead>
     <tbody>
         <tr >
             <td id="center">Rp. {{number_format($data_laporan->data_lap_pendapatan)}}</td>
-            <td id="center">Rp. {{number_format($data_laporan->data_lap_tunai)}}</td>
-            <td id="center">Rp. {{number_format($data_laporan->data_lap_refund)}}</td>
-            <td id="center">Rp. {{number_format($data_laporan->data_lap_adm)}}</td>
-            <td id="center">Rp. {{number_format($total)}}</td>
             <td id="center">Rp. {{number_format($total_tunai)}}</td>
+            <td id="center">Rp. {{number_format($data_laporan->data_lap_refund)}}</td>
+            <td id="center">Rp. {{number_format($total)}}</td>
             <td id="center">{{$data_laporan->data_lap_trx}}</td>
         </tr>
     </tbody>
@@ -124,10 +120,11 @@
 <table id="customers">
     <thead>
         <tr>
-            <th colspan="6">REKAPITULASI</th>
+            <th colspan="7">REKAPITULASI</th>
         </tr>
         <tr>
             <th>PENDAPATAN</th>
+            <th>REFUND</th>
             <th>DANA LINGKUNGAN</th>
             <th>DANA KERJA SAMA</th>
             <th>FEE SALES</th>
@@ -138,11 +135,12 @@
     <tbody>
         <tr >
             <td id="center">Rp. {{number_format($total-$total_kerjasama-$total_fee-$total_kas-$total_ppn)}}</td>
+            <td id="center">Rp. {{number_format($data_laporan->data_lap_refund)}}</td>
             <td id="center">Rp. {{number_format($total_kas)}}</td>
             <td id="center">Rp. {{number_format($total_kerjasama)}}</td>
             <td id="center">Rp. {{number_format($total_fee)}}</td>
             <td id="center">Rp. {{number_format($total_ppn)}}</td>
-            <td id="center">Rp. {{number_format($total)}}</td>
+            <td id="center">Rp. {{number_format($total-$data_laporan->data_lap_refund)}}</td>
         </tr>
     </tbody>
 </table>
@@ -177,6 +175,39 @@
             @endforeach
         </tbody>
     </table>
+    <br><br>
+    <h2>LAPORAN HARIAN TRANSAKSI</h2>
+    <hr>
+    <br><br>
+    <table id="customers">
+    <thead>
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>Kategori</th>
+                    <th>Jenis</th>
+                    <th>Admin</th>
+                    <th>Deskripsi</th>
+                    <th>Qty</th>
+                    <th>Debet</th>
+                    <th>Kredit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($transaksi as $d)
+                  <tr>
+                    <td>{{date('d-m-Y',strtotime($d->created_at))}}</td>
+                    <td>{{$d->trx_kategori}}</td>
+                    <td>{{$d->trx_jenis}}</td>
+                    <td>{{$d->trx_admin}}</td>
+                    <td>{{$d->trx_deskripsi}}</td>
+                    <td>{{$d->trx_qty}}</td>
+                    <td>Rp. {{number_format($d->trx_debet)}}</td>
+                    <td>Rp. {{number_format($d->trx_kredit)}}</td>
+                  </tr>
+                  @endforeach
+                </tbody>
+</table>
+<br><br>
     <br><br><br><br>
     <table id="ttd">
         <tr>

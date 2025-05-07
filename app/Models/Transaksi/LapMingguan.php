@@ -13,6 +13,7 @@ class LapMingguan extends Model
         'lm_admin',
         'lm_debet',
         'lm_kredit',
+        'lm_saldo_akhir',
         'lm_adm',
         'lm_akun',
         'lm_keterangan',

@@ -426,7 +426,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			});
 		
 	</script>
-	<script>
+	<!-- <script>
 		$(document).ready(function() {
 			$("#edit_pactcore").click(function() {
 				if($(this).is(":checked")) {
@@ -792,7 +792,8 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 						$('#edit_notif_adaptor').html('<small class="form-text text-muted text-danger">Kode Adaptor tidak boleh kosong</small>');
 						
 					}
-				});
+				}); -->
+				<script>
 				// ==================================END ADAPTOR ===========================================
 
 	// 			$(".cari").click(function(){
@@ -844,58 +845,58 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 
 
 
-					$('.edit_val_dropcore').click(function(){
-					var kode_dropcore = $('#edit_kode_dropcore').val();
-				if(kode_dropcore){
+		// 			$('.edit_val_dropcore').click(function(){
+		// 			var kode_dropcore = $('#edit_kode_dropcore').val();
+		// 		if(kode_dropcore){
 
-					var url = '';
-					url = url.replace(':id', kode_dropcore);
-					$.ajax({
-						url: url,
-						type: 'GET',
-						data: {
-							'_token': '{{ csrf_token() }}'
-						},
-						dataType: 'json',
-						success: function(data) {
-								if(data.subbarang_stok){
-									$("#edit_modal_dropcore").modal('hide');
-									$('#show_dropcore').show()
-									$('#edit_validasi_dropcore').removeClass("has-error has-feedback");
-									$('#edit_notif_dropcore').html('');
-									$('#edit_note_dropcore').html('');
-									var after_dropcore  = $("#after_dropcore").val();
-                                $("#before_dropcore").val(data.subbarang_stok);
-                                $("#before_dropcore").css("border-color", "rgb(60, 179, 113)");
-                                $("#notif").html('');
+		// 			var url = '';
+		// 			url = url.replace(':id', kode_dropcore);
+		// 			$.ajax({
+		// 				url: url,
+		// 				type: 'GET',
+		// 				data: {
+		// 					'_token': '{{ csrf_token() }}'
+		// 				},
+		// 				dataType: 'json',
+		// 				success: function(data) {
+		// 						if(data.subbarang_stok){
+		// 							$("#edit_modal_dropcore").modal('hide');
+		// 							$('#show_dropcore').show()
+		// 							$('#edit_validasi_dropcore').removeClass("has-error has-feedback");
+		// 							$('#edit_notif_dropcore').html('');
+		// 							$('#edit_note_dropcore').html('');
+		// 							var after_dropcore  = $("#after_dropcore").val();
+        //                         $("#before_dropcore").val(data.subbarang_stok);
+        //                         $("#before_dropcore").css("border-color", "rgb(60, 179, 113)");
+        //                         $("#notif").html('');
     
-                                var total_dropcore = parseInt(data.subbarang_stok) - parseInt(after_dropcore);
-                                if (isNaN(total_dropcore)) {
-                                    total_dropcore = '';
-                                    }
-                                $("#total_dropcore").val(total_dropcore);
-								}else{
-									$("#edit_validasi_dropcore").addClass("has-error has-feedback");
-									$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak ada atau telah digunakan</small>');
-									$('#edit_note_dropcore').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+        //                         var total_dropcore = parseInt(data.subbarang_stok) - parseInt(after_dropcore);
+        //                         if (isNaN(total_dropcore)) {
+        //                             total_dropcore = '';
+        //                             }
+        //                         $("#total_dropcore").val(total_dropcore);
+		// 						}else{
+		// 							$("#edit_validasi_dropcore").addClass("has-error has-feedback");
+		// 							$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak ada atau telah digunakan</small>');
+		// 							$('#edit_note_dropcore').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
 
-								}
-							},
-							error: function(data) {
-								$("#edit_validasi_dropcore").addClass("has-error has-feedback");
-								$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak boleh kosong</small>');
-								$('#edit_note_dropcore').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-								}
-						});
-					} else{
-						$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak boleh kosong</small>');
+		// 						}
+		// 					},
+		// 					error: function(data) {
+		// 						$("#edit_validasi_dropcore").addClass("has-error has-feedback");
+		// 						$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak boleh kosong</small>');
+		// 						$('#edit_note_dropcore').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
+		// 						}
+		// 				});
+		// 			} else{
+		// 				$('#edit_notif_dropcore').html('<small class="form-text text-muted text-danger">Kode dropcore tidak boleh kosong</small>');
 						
-					}
-				});
-				// ==================================END DROPCORE ===========================================
+		// 			}
+		// 		});
+		// 		// ==================================END DROPCORE ===========================================
 
 
-		});
+		// });
 
 		//  Cari Invoice
 $(function(){ 

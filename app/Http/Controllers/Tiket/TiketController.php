@@ -84,7 +84,7 @@ class TiketController extends Controller
     }
     public function buat_tiket(Request $request)
     {
-        $data['no_tiket'] = (new GlobalController)->nomor_tiket();
+        // $data['no_tiket'] = (new GlobalController)->nomor_tiket();
         $data['data_site'] = Data_Site::all();
         $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
         return view('tiket/buat_tiket', $data);
@@ -105,9 +105,10 @@ class TiketController extends Controller
 
         $site = Auth::user()->site;
         $pembuat = Auth::user()->id;
-        $tiket['tiket_id'] = $request->tiket_id;
+        $tiket_id = (new GlobalController)->nomor_tiket();
+        $tiket['tiket_id'] = $tiket_id;
         $tiket['tiket_pembuat'] = $pembuat;
-        $tiket['tiket_kode'] = 'T-' . $request->tiket_id;
+        $tiket['tiket_kode'] = 'T-' . $tiket_id;
         $tiket['tiket_idpel'] = $request->tiket_idpel;
         $tiket['tiket_jenis'] = $request->tiket_jenis;
         $tiket['tiket_type'] = 'General';
@@ -138,39 +139,6 @@ class TiketController extends Controller
             $status_pesan = '10';
         }
 
-
-
-
-        // foreach ($users_teknisi as $t) {
-
-        //             Pesan::create([
-        //                 'layanan' =>  'NOC',
-        //                 'pesan_id_site' =>  $request->tiket_site,
-        //                 'ket' =>  'tiket',
-        //                 'target' =>  $t->hp,
-        //                 'status' =>  $status_pesan,
-        //                 'nama' =>  $t->nama_teknisi,
-        //                 'pesan' => '               -- TIKET GANGGUAN --
-
-        // Hallo Broo ' . $t->nama_teknisi . '
-        // Ada tiket masuk ke sistem nih! 😊
-
-        // No. Tiket : *' . $tiket['tiket_kode'] . '*
-        // Topik : ' . $request->tiket_nama . '
-        // Keterangan : *' . $request->tiket_keterangan . '*
-        // Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
-
-        // No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
-        // Pelanggan : ' . $request->tiket_pelanggan . '
-        // Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
-        // Maps : https://www.google.com/maps/place/' . $maps . '
-        // Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
-        // Tanggal tiket : ' . $tanggal . '
-
-        // Semangat Broooo... Sisa tiket ' . $count . '
-        // '
-        //             ]);
-        // }
 
         $pesan_pelanggan['layanan'] = 'NOC';
         $pesan_pelanggan['ket'] = 'tiket';
@@ -223,45 +191,25 @@ Semangat Broooo... Sisa tiket = ' . $count . '
         ]);
 
 
-        //         $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-        //         $chatId = '-4626560578';
-        //         $message = '               -- TIKET GANGGUAN --
-
-        // Hallo Broo.....
-        // Ada tiket masuk ke sistem nih! 😊
-
-        // No. Tiket : *' . $tiket['tiket_kode'] . '*
-        // Topik : ' . $request->tiket_nama . '
-        // Keterangan : *' . $request->tiket_keterangan . '*
-        // Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
-
-        // No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
-        // Pelanggan : ' . $request->tiket_pelanggan . '
-        // Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
-
-        // Maps : https://www.google.com/maps/place/' . $maps . '
-
-        // Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
-
-        // Tanggal tiket : ' . $tanggal . '
-
-        // Semangat Broooo... Sisa tiket = ' . $count . '
-        // ';
-
-        //         $reponse = $telegram->sendMessage([
-        //             'chat_id' => $chatId,
-        //             'text' => $message,
-        //         ]);
-
-
-
-
         Data_Tiket::create($tiket);
-        $notifikasi = [
-            'pesan' => 'Berhasil Membuat Tiket',
-            'alert' => 'success',
-        ];
-        return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
+
+        if($request->tiket_jenis == 'Reaktivasi'){
+            Registrasi::where('reg_idpel',$request->tiket_idpel)->update([
+                'reg_status' => 2,
+            ]);
+            $notifikasi = [
+                'pesan' => 'Berhasil Membuat Tiket Deaktivasi',
+                'alert' => 'success',
+            ];
+            return redirect()->route('admin.psb.index')->with($notifikasi);
+        } else {
+            $notifikasi = [
+                'pesan' => 'Berhasil Membuat Tiket',
+                'alert' => 'success',
+            ];
+            return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
+        }
+
     }
 
 
@@ -340,28 +288,40 @@ Semangat Broooo... Sisa tiket = ' . $count . '
 
     public function tiket_update(Request $request, $id)
     {
-
         $no_tiket = (new GlobalController)->nomor_tiket();
         $datetime = date('Y-m-d h:m:s', strtotime(carbon::now()));
-
+        
         $admin_closed = Auth::user()->id;
-
+        
         $explode = explode('|', $request->tiket_teknisi1);
         $teknisi_id = $explode[0];
         $teknisi_nama = $explode[1];
-
+        
         $tiket['tiket_jenis'] = $request->tiket_jenis;
         $tiket['tiket_status'] = $request->tiket_status;
         $tiket['tiket_pending'] = $request->tiket_pending;
         $tiket['tiket_teknisi1'] = $teknisi_id;
         $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
-
+        
         if ($request->tiket_status == 'Closed') {
             $tiket['tiket_waktu_selesai'] = $datetime;
             $tiket['tiket_kendala'] = $request->tiket_kendala;
             $tiket['tiket_tindakan'] = $request->tiket_tindakan;
             $tiket['tiket_waktu_mulai'] = $datetime;
             $tiket['tiket_waktu_selesai'] = $datetime;
+
+            
+            
+            
+            
+            $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
+            
+            $photo = $request->file('tiket_foto');
+            $filename = $photo->getClientOriginalName();
+            $path = 'laporan-tiket/' . $filename;
+            Storage::disk('public')->put($path, file_get_contents($photo));
+            $tiket['tiket_foto'] = $filename;
+            
 
             $reg['reg_pop'] = $request->tiket_pop;
             $reg['reg_olt'] = $request->tiket_olt;
@@ -370,14 +330,20 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             if ($request->tiket_jenis == 'Reaktivasi') {
                 $reg['reg_progres'] = 2;
             }
+            
+            // dd($request->tiket_nama);
+            if($request->tiket_nama == 'Instalasi PSB'){
+                // dd('test');
+                $photo_rumah = $request->file('tiket_foto');
+                $filename_rumah = $photo_rumah->getClientOriginalName();
+                $path_rumah = 'rumah_pelanggan/' . $filename_rumah;
+                Storage::disk('public')->put($path_rumah, file_get_contents($photo_rumah));
+                $reg['reg_teknisi_team'] = $teknisi_nama .' & '. $request->tiket_teknisi2;
+                $reg['reg_img'] = $filename_rumah;
+            }
 
-            $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
+            // dd($reg);
 
-            $photo = $request->file('tiket_foto');
-            $filename = $photo->getClientOriginalName();
-            $path = 'laporan-tiket/' . $filename;
-            Storage::disk('public')->put($path, file_get_contents($photo));
-            $tiket['tiket_foto'] = $filename;
 
 
             $status = (new GlobalController)->whatsapp_status();
@@ -400,27 +366,6 @@ Waktu selesai: ' . date('d-M-y h:m') . '
 Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 
 ' . $request->tiket_menunggu . '';
-
-
-
-
-            //             $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-            //             $chatId = '-4626560578';
-            //             $message = '               -- CLOSED TIKET --
-            // Kendala : ' . $request->tiket_kendala . '
-            // Tindakan : ' . $request->tiket_tindakan . '
-
-            // Waktu selesai: ' . date('d-M-y h:m') . '
-            // Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
-
-            // ' . $request->tiket_menunggu . '';
-
-            //             $reponse = $telegram->sendMessage([
-            //                 'chat_id' => $chatId,
-            //                 'text' => $message,
-            //             ]);
-
-
 
             Registrasi::where('reg_nolayanan', $request->tiket_nolayanan)->update($reg);
             // dd($reg);

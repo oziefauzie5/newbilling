@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('lm_admin')->nullable();
             $table->integer('lm_debet')->nullable();
             $table->integer('lm_kredit')->nullable();
+            $table->integer('lm_saldo_akhir')->nullable();
             $table->integer('lm_adm')->nullable();
             $table->integer('lm_akun')->nullable();
             $table->text('lm_keterangan')->nullable();

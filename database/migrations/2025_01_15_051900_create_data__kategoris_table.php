@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('data__kategoris', function (Blueprint $table) {
             $table->id('id_kategori');
             $table->string('nama_kategori')->nullable();
+            $table->string('jenis_jurnal_kategori')->nullable();
+            $table->string('kategori_satuan')->nullable();
             $table->string('status_kategori')->nullable();
             $table->timestamps();
         });

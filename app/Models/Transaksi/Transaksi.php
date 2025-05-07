@@ -14,6 +14,8 @@ class Transaksi extends Model
         'trx_admin',
         'trx_deskripsi',
         'trx_qty',
-        'trx_total',
+        'trx_kredit',
+        'trx_debet',
+        'trx_saldo',
     ];
 }

@@ -80,10 +80,10 @@
               </div>
               </div>
             <div class="form-group row">
-              <label class="col-sm-2 col-form-label">Nomor Tiket</label>
+              <!-- <label class="col-sm-2 col-form-label">Nomor Tiket</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" name="tiket_id" required value="{{ $no_tiket }}">
-              </div>
+                <input type="text" class="form-control" name="tiket_id" required value="">
+              </div> -->
               <label class="col-sm-2 col-form-label">Jenis Laporan</label>
               <div class="col-sm-4">
                 <select class="form-control" required name="tiket_jenis">
@@ -94,7 +94,7 @@
                   <option value="Aktivasi">Aktivasi</option>
                   <option value="Upgrade">Upgrade</option>
                   <option value="Maintenance">Maintenance</option>
-                  <option value="Realtivasi">Reaktivasi</option>
+                  <!-- <option value="Realtivasi">Reaktivasi</option> -->
                   <option value="Downgrade">Downgrade</option>
                   <option value="Setup Wifi">Setup Wifi</option>
                   <option value="Setup Ip Cam">Setup Ip Cam</option>

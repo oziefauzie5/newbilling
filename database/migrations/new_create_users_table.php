@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('ktp')->nullable();
             $table->string('hp')->nullable();
             $table->string('photo')->nullable();
+            $table->string('user_site')->nullable();
             $table->string('alamat_lengkap')->nullable();
             $table->string('status_user')->nullable();
             $table->rememberToken();

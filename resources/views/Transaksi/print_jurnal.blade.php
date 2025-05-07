@@ -123,7 +123,6 @@
                 <th>KATEGORI</th>
                 <th>KETERANGAN</th>
                 <th>DESKRIPSI</th>
-                <th>AKUN</th>
                 <th>KREDIT</th>
                 <th>DEBET</th>
                 <th>SALDO</th>
@@ -133,13 +132,12 @@
             @foreach ($lap_mingguan as $d)
             <tr>
                 <td id="center">{{$loop->iteration}}</td>
-                <td>{{$d->tgl_trx}}</td>
+                <td>{{date('d-m-Y h:t:s', strtotime($d->created_at))}}</td>
                 <td>{{$d->jurnal_kategori}}</td>
-                <td>{{$d->jurnal_keterangan}}</td>
-                <td>{{$d->jurnal_uraian}}</td>
-                <td>{{$d->akun_nama}}</td>
+                <td>{{ucfirst(strtolower($d->jurnal_keterangan))}}</td>
+                <td>{{ucfirst(strtolower($d->jurnal_uraian))}}</td>
                 <td id="right">{{number_format($d->jurnal_kredit)}}</td>
-                <td id="right">{{number_format($d->jurnal_debet)}}</td>
+                <td id="right">{{$d->jurnal_debet}}</td>
                 <td id="right">{{number_format($d->jurnal_saldo)}}</td>
             </tr>
             @endforeach
@@ -160,13 +158,47 @@
         </thead>
         <tbody>
             <tr>
-                <td></td>
+                <td id="right">{{number_format($saldo_awal)}}</td>
                 <td id="right">{{number_format($kredit)}}</td>
                 <td id="right">{{number_format($debet)}}</td>
                 <td id="right">{{number_format($kredit-$debet)}}</td>
             </tr>
         </tbody>
     </table>
+    <br><br>
+    <h2 id="center">AKUMULASI</h2>
+    <table id="customers">
+    <!-- <table id=""> -->
+        <!-- <thead>
+            <tr>
+                <th>KATEGORI</th>
+                <th>DEBET</th>
+                <th>DEBET</th>
+                <th>KETERANGAN</th>
+            </tr>
+        </thead> -->
+        <tbody>
+            @foreach ($lap_mingguan_akum as $d)
+            <tr>
+                <!-- <td>{{date('Y-m-d H:i:s.u', strtotime($d->created_at))}}</td> -->
+                <td>{{$d->jurnal_kategori}}</td>
+                <td id="right">{{$d->debet}}</td>
+                <td id="right">0</td>
+                <td>Terlampir Pdf</td>
+            </tr>
+            <tr>
+                <td>Bank Mandiri ( Admin )</td>
+                <td id="right">0</td>
+                <td id="right">{{$d->debet}}</td>
+                <td></td>
+            </tr>
+            @endforeach
+           
+    
+
+        </tbody>
+    </table>
+   
 
    
    

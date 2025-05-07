@@ -72,8 +72,8 @@
 
     <table id="kop">
         <tr>
-            <th width="60%"  style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo) }}" width="20%"></th>
-            <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
+            <th width="60%"  style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.Session::get('app_logo')) }}" width="20%"></th>
+            <td width="40%"><strong>{{Session::get('app_nama')}}</strong> <br><span>{{Session::get('app_brand')}}</span><br><span>{{Session::get('app_alamat')}}</span></td>
         </tr>
     </table>
     <br>
@@ -125,7 +125,7 @@
                 <td>0{{$berita_acara->input_hp}}</td>
                 <td width="10%">No. HP Alternatif</td>
                 <td>:</td>
-                <td>0{{$berita_acara->input_hp2}}</td>
+                <td>0{{$berita_acara->input_hp_2}}</td>
             </tr>
             <tr>
                 <td>Sales</td>

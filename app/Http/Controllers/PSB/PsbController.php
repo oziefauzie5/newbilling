@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\App;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Applikasi\SettingWaktuTagihan;
+use App\Models\Transaksi\SubInvoice;
 
 class PsbController extends Controller
 {
@@ -59,8 +61,9 @@ class PsbController extends Controller
                 $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('reg_nolayanan', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('reg_username', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_hp', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_hp_2', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('reg_mac', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('reg_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
             });
 
@@ -90,9 +93,24 @@ class PsbController extends Controller
 
         //          $variable = $query->get();
         //     foreach ($variable as $key) {
-        //         echo '<table><tr><td>'.$key->reg_idpel.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_tgl_jatuh_tempo.'</td><td>'.$key->reg_status.'</td></tr></table>';
+
+        //         // InputData::where('id',)
+        //         // echo '<table><tr><td>'.$key->reg_nolayanan.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_username.'</td><td>'.$key->paket_nama.'</td></tr></table>';
+        //         echo '<table><tr><td>'.$key->reg_nolayanan.'</td><td>'.$key->input_nama.'</td><td>'.date('d-m-Y',strtotime($key->reg_tgl_jatuh_tempo)).'</td><td>'.$key->reg_status.'</td></tr></table>';
+        //         // echo '<table><tr><td>'.$key->input_nama.'</td><td>'.$key->reg_idpel.'</td><td>0'.$key->input_sales.'</td><td>0'.$key->reg_tgl_pasang.'</td><td>'.$key->input_alamat_pasang.'</td></tr></table>';
 
         //     }
+        //     // $array = [12132,12006,12002,121925,111871,26019,11078,3261000,3260861,905029,10515,3261327,3261310,3260971,951063,937694,912742,884086,872146,837432,808595,785647,785168,696201,657817,529412,465101,455044,3260819,341020,308922,298400,264939,228042,202857,3260791,3260785,109606,3261060,3261057,3261041,3261004,247262,60662,33483,39556,75853,62842,17116,15804,12947,11227,18092];
+        //     // InputData::whereIn('id',$array)->update(
+        //     //     [
+        //     //         'input_sales' => 2203910401,
+        //     //     ]
+        //     //     );
+        //     // Registrasi::where('reg_nolayanan', 241111185720)->update(
+        //     //     [
+        //     //         'reg_fee' => 15000,
+        //     //     ]
+        //     //     );
         // dd('CILUKBA');
 
 
@@ -207,6 +225,7 @@ class PsbController extends Controller
     public function store(Request $request)
     {
         $id_cust = (new GlobalController)->idpel_();
+        // $id_cust = '12154';
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
         $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
         if (!preg_match('/[^+0-9]/', trim($nomorhp2))) {
@@ -246,7 +265,7 @@ class PsbController extends Controller
             InputData::create([
                 'input_tgl' => $data['input_tgl'],
                 'input_nama' => ucwords($request->input_nama),
-                'id' => $request->idpel,
+                'id' => $id_cust,
                 'input_ktp' => $request->input_ktp,
                 'input_hp' => $nomorhp,
                 'input_hp_2' => $nomorhp2,
@@ -255,7 +274,7 @@ class PsbController extends Controller
                 'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
                 'input_sales' => $request->input_sales,
                 'input_subseles' => ucwords($request->input_subseles),
-                'password' => Hash::make($request->input_hp),
+                'password' => Hash::make($nomorhp),
                 'input_maps' => $request->input_maps,
                 'input_status' => 'INPUT DATA',
                 'input_keterangan' => $request->input_keterangan,
@@ -364,5 +383,9 @@ class PsbController extends Controller
             'alert' => 'success',
         ];
         return redirect()->route('admin.psb.list_input')->with($notifikasi);
+    }
+
+    public function export_excel(){
+        
     }
 }

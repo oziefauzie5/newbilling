@@ -142,48 +142,68 @@ class PaketController extends Controller
     {
 
 
-        $sbiaya = SettingBiaya::first();
-        $data['paket_nama'] = $request->paket_nama;
-        $data['paket_komisi'] = $request->paket_komisi;
-        $data['paket_limitasi'] = $request->paket_limitasi;
-        $data['paket_shared'] = $request->paket_shared;
-        $data['paket_masa_aktif'] = $request->paket_masa_aktif;
-        $data['paket_harga'] = $request->paket_harga;
-        $data['paket_status'] = 'Enable';
+        if($request->paket_layanan == 'PPP'){
 
-        $update['reg_harga'] = $request->paket_harga;
-        $update['reg_ppn'] = $sbiaya->biaya_ppn / 100 * $request->paket_harga;
-        Registrasi::where('reg_profile', $id)->update($update);
-        Paket::where('paket_id', $id)->update($data);
-
-        $router = Router::all();
-        $data_paket = Paket::where('paket_id', $id)->get();
-        $API = new RouterosAPI();
-        $API->debug = false;
-
-
-
-        foreach ($router as $d) {
-            if ($API->connect($d->router_ip . ':' . $d->router_port_api, $d->router_username, $d->router_password)) {
-                $cek = $API->comm('/ppp/profile/print', [
-                    '?comment' => 'default by appbill ( jangan diubah )',
-                ]);
-                foreach ($cek as $c) {
-                    $API->comm('/ppp/profile/set', [
-                        '.id' =>  $c['.id'],
-                        'name' =>  $request->paket_nama == '' ? '' : $request->paket_nama,
-                        'rate-limit' => $request->paket_limitasi == '' ? '' : $request->paket_limitasi,
+            $sbiaya = SettingBiaya::first();
+            $data['paket_nama'] = $request->paket_nama;
+            $data['paket_komisi'] = $request->paket_komisi;
+            $data['paket_limitasi'] = $request->paket_limitasi;
+            $data['paket_shared'] = $request->paket_shared;
+            $data['paket_masa_aktif'] = $request->paket_masa_aktif;
+            $data['paket_harga'] = $request->paket_harga;
+            $data['paket_status'] = 'Enable';
+    
+            $update['reg_harga'] = $request->paket_harga;
+            $update['reg_ppn'] = $sbiaya->biaya_ppn / 100 * $request->paket_harga;
+            Registrasi::where('reg_profile', $id)->update($update);
+            Paket::where('paket_id', $id)->update($data);
+    
+            $router = Router::all();
+            $data_paket = Paket::where('paket_id', $id)->get();
+            $API = new RouterosAPI();
+            $API->debug = false;
+    
+    
+    
+            foreach ($router as $d) {
+                if ($API->connect($d->router_ip . ':' . $d->router_port_api, $d->router_username, $d->router_password)) {
+                    $cek = $API->comm('/ppp/profile/print', [
+                        '?comment' => 'default by appbill ( jangan diubah )',
                     ]);
+                    foreach ($cek as $c) {
+                        $API->comm('/ppp/profile/set', [
+                            '.id' =>  $c['.id'],
+                            'name' =>  $request->paket_nama == '' ? '' : $request->paket_nama,
+                            'rate-limit' => $request->paket_limitasi == '' ? '' : $request->paket_limitasi,
+                        ]);
+                    }
                 }
             }
+    
+    
+            $notifikasi = array(
+                'pesan' => 'Berhasil merubah paket',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.router.paket.index')->with($notifikasi);
+        } elseif ($request->paket_layanan == 'HOTSPOT'){
+            dd('belum bisa update paket layanan hotspot');
+        } elseif ($request->paket_layanan == 'VOUCHER'){
+            $data = (new PaketVoucherController)->update_paket_voucher($request,$id);
+            if($data == 'success'){
+                $notifikasi = array(
+                    'pesan' => 'Berhasil merubah paket',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.router.paket.index')->with($notifikasi);
+            } else {
+                $notifikasi = array(
+                    'pesan' => 'Rubah paket tidak berhasil, Router Discconnect',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.router.paket.index')->with($notifikasi);
+            }
         }
-
-
-        $notifikasi = array(
-            'pesan' => 'Berhasil merubah paket',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.router.paket.index')->with($notifikasi);
     }
 
     public function exportPaketToMikrotik(Request $request)

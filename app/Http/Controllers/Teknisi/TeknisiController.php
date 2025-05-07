@@ -812,10 +812,7 @@ Penanganan yang kami lakukan :
             if ($cek_subbarang) {
                 // JIKA ONT ADA 
                 if ($request->alasan == 'Rusak') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                    
                     $update_barang['subbarang_status'] = '1';
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
@@ -832,10 +829,7 @@ Penanganan yang kami lakukan :
                     SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
                 } elseif ($request->alasan == 'Tukar') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                    
                     $update_barang['subbarang_status'] = '1';
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
@@ -852,10 +846,7 @@ Penanganan yang kami lakukan :
                     SubBarang::where('id_subbarang', $cek_subbarang->id_subbarang)->update($update_barang_lama);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
                 } elseif ($request->alasan == 'Upgrade') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                    
                     $update_barang['subbarang_status'] = '1';
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
@@ -932,15 +923,11 @@ Penanganan yang kami lakukan :
                 $create['subbarang_harga'] = 0;
                 $create['subbarang_tgl_masuk'] = date('Y-m-d H:m:s', strtotime(Carbon::now()));
                 $create['subbarang_status'] = '5';
-                $create['subbarang_mac'] = $request->reg_mac;
                 $create['subbarang_admin'] = $teknisi_nama;
                 SubBarang::create($create);
 
                 if ($request->alasan == 'Rusak') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                   
                     $update_barang['subbarang_status'] = '1';
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
@@ -953,14 +940,10 @@ Penanganan yang kami lakukan :
                     $update_barang_lama['subbarang_status'] = '5';
                     $update_barang_lama['subbarang_keluar'] = '1';
                     $update_barang_lama['subbarang_admin'] = $teknisi_nama;
-                    Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
                     SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
                 } elseif ($request->alasan == 'Tukar') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
+                    
                     $update_barang['subbarang_status'] = '1';
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
@@ -974,13 +957,8 @@ Penanganan yang kami lakukan :
                     $update_barang_lama['subbarang_admin'] = $teknisi_nama;
                     $update_barang_lama['subbarang_keterangan'] = $request->alasan;
                     Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
-                    SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
                 } elseif ($request->alasan == 'Upgrade') {
-                    $data['reg_sn'] = $request->edit_reg_sn;
-                    $data['reg_mac'] = $request->edit_reg_mac;
-                    $data['reg_mrek'] = $request->edit_reg_mrek;
-                    $data['reg_kode_ont'] = $request->edit_reg_kode_ont;
                     $update_barang['subbarang_status'] = '1';
                     $update_barang['subbarang_keluar'] = '1';
                     $update_barang['subbarang_stok'] = '0';
@@ -992,7 +970,6 @@ Penanganan yang kami lakukan :
                     $update_barang_lama['subbarang_stok'] = '1';
                     $update_barang_lama['subbarang_admin'] = $teknisi_nama;
                     $update_barang_lama['subbarang_keterangan'] = $request->alasan;
-                    Registrasi::where('reg_idpel', $tiket->reg_idpel)->update($data);
                     SubBarang::where('id_subbarang', $id_subbar)->update($update_barang_lama);
                     SubBarang::where('id_subbarang', $request->kode_ont)->update($update_barang);
                 }

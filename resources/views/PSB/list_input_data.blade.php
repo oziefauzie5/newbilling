@@ -248,7 +248,7 @@ Keterangan :
                         <div class="col-sm-12">
                           <div class="form-group">
                             <label>No Hp 2</label>
-                            <input id="edit_input_hp2" type="text" class="form-control" value="" name="nomorhp2" required>
+                            <input id="edit_input_hp2" type="text" class="form-control" value="" name="input_hp_2" required>
                           </div>
                         </div>
                         <div class="col-sm-12">

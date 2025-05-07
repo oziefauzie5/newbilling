@@ -113,6 +113,14 @@
                               Pilih Level terlebih dahulu
                           </div>
                             </div>
+                      <div class="form-group">
+                          <label >Status</label>
+                          <select name="status_user" id="status_user" class="form-control" required >
+                              <option value="">-PILIH-</option>
+                              <option value="Enable">Enable</option>
+                              <option value="Disable">Disable</option>
+                            </select>
+                            </div>
                                 </div>
                         <div class="card-footer">
                           <button type="submit" class="btn btn-primary">Submit</button>

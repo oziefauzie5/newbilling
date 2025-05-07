@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Aplikasi\Data_Site;
 use App\Models\Global\ConvertNoHp;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -27,11 +28,14 @@ class UserController extends Controller
     public function index()
     {
 
-        $data['data_user'] = User::select('users.*', 'roles.name as level', 'roles.id as role_id')
+        $data['data_user'] = User::select('users.*', 'data__sites.*', 'roles.name as level', 'roles.id as role_id')
+            ->join('data__sites', 'data__sites.site_id', '=', 'users.user_site')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->get();
+        // dd($data['data_user']);
         $data['role'] = Role::get();
+        $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
         return view('User/index', $data);
     }
 
@@ -40,12 +44,26 @@ class UserController extends Controller
         $validator = FacadesValidator::make(
             $request->all(),
             [
-                'username' => 'unique:users',
+                'name' => 'required',
+                'ktp' => 'required',
                 'hp' => 'required|unique:users',
+                'email' => 'required',
+                'alamat_lengkap' => 'required',
+                'user_site' => 'required',
+                'username' => 'unique:users',
+                'password' => 'required',
+                'level' => 'required',
             ],
             [
-                'username.unique' => 'Username sudah digunakan.',
+                'name' => 'Nama tidak boleh kosong.',
+                'name' => 'Nomor Ktp tidak boleh kosong.',
                 'hp.unique' => 'Nomor Hp sudah terdaftar.',
+                'email' => 'Email tidak boleh kosong',
+                'alamat_lengkap' => 'Alamat tidak boleh kosong',
+                'user_site' => 'Site tidak boleh kosong',
+                'username.unique' => 'Username sudah digunakan.',
+                'password' => 'Password tidak boleh kosong',
+                'level' => 'Level tidak boleh kosong',
             ]
         );
         if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
@@ -70,12 +88,14 @@ class UserController extends Controller
         }
 
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
-        $d = date_create($request->tgl_gabung);
-        $th = date_format($d, "Y");
-        $bl = date_format($d, "m");
-        $tg = date_format($d, "d");
+        $tgl_gabung = date('ym', strtotime($request->tgl_gabung));
+        // $d = date_create($request->tgl_gabung);
+        // $th = date_format($d, "y");
+        // $bl = date_format($d, "m");
+        // $tg = date_format($d, "d");
+        // $nik_karyawan = $th . $bl . $countuser . $level_id . $tg;
         $countuser = User::get()->count();
-        $nik_karyawan = $th . $bl . $countuser . $level_id . $tg;
+        $nik_karyawan = $tgl_gabung . $countuser . $level_id;
         $data['id'] = $nik_karyawan;
         $data['email'] = $request->email;
         $data['username'] = $request->username;
@@ -84,6 +104,9 @@ class UserController extends Controller
         $data['alamat_lengkap'] = ucwords($request->alamat_lengkap);
         $data['name'] = ucwords($request->name);
         $data['password'] = Hash::make($request->password);
+        $data['user_site'] = $request->user_site;
+        $data['photo'] = 'user.png';
+        $data['user_status'] = 'Enable';
 
         $datarole['role_id'] = $level_id;
         $datarole['model_type'] = 'App\Models\User';
@@ -132,17 +155,21 @@ class UserController extends Controller
         $datarole['role_id'] = $level_id;
 
         $photo = $request->file('file');
-        $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
-        $path = 'photo-user/' . $filename;
-        Storage::disk('public')->put($path, file_get_contents($photo));
+        if ($photo) {
+            $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+            $path = 'photo-user/' . $filename;
+            Storage::disk('public')->put($path, file_get_contents($photo));
+            $data['photo'] = $filename;
+        }
 
         $data['email'] = $request->email;
         $data['ktp'] = $request->ktp;
         $data['hp'] = $nomorhp;
-        $data['photo'] = $filename;
         $data['alamat_lengkap'] = ucwords($request->alamat_lengkap);
         $data['name'] = ucwords($request->name);
         $data['username'] = $request->username;
+        $data['user_site'] = $request->user_site;
+        $data['status_user'] = $request->status_user;
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }

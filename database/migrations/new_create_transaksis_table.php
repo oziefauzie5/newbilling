@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('trx_admin')->nullable();
             $table->string('trx_deskripsi')->nullable();
             $table->integer('trx_qty')->nullable();
-            $table->integer('trx_total')->nullable();
+            $table->integer('trx_kredit')->nullable();
+            $table->integer('trx_debet')->nullable();
+            $table->integer('trx_saldo')->nullable();
             $table->timestamps();
         });
     }

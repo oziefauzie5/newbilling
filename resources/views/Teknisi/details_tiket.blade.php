@@ -201,7 +201,7 @@
                       <div class="form-group row" id="validasi_ont">
                         <label class="col-sm-4 col-form-label">Kode Ont sebelumya</label>
                         <div class="col-sm-8">
-                          <input type="text"  name="kode_ont_lama" id="edit_kode_ont_lama"  value="{{ $tiket->reg_mac}}" class="form-control"  >
+                          <input type="text"  name="kode_ont_lama" id="edit_kode_ont_lama"  value="" class="form-control"  >
                         </div>
                       </div>
                       <div class="form-group row" id="edit_validasi_ont">
@@ -256,24 +256,7 @@
             </div>
           
             
-              <div  class="form-row mb-2" id="show_ont" style="display:none;" >
-                <label class="col-sm-4 col-form-label">Kode ONT</label>
-                  <div class="col-12">
-                  <input type="text" class="form-control"  id="edit_reg_kode_ont" name="edit_reg_kode_ont">
-                  </div>
-                <label class="col-sm-4 col-form-label">Mrek ONT</label>
-                  <div class="col-12">
-                  <input type="text" class="form-control"  id="edit_reg_mrek" name="edit_reg_mrek">
-                  </div>
-                <label class="col-sm-4 col-form-label">Mac Address</label>
-                  <div class="col-12">
-                  <input type="text" class="form-control"  id="edit_reg_mac"  name="edit_reg_mac">
-                  </div>
-                <label class="col-sm-4 col-form-label">Serial Number</label>
-                  <div class="col-12">
-                  <input type="text" class="form-control"  id="edit_reg_sn"  name="edit_reg_sn">
-                  </div>
-              </div>
+             
 
          <div class="form-row mb-2" id="show_dropcore"  style="display:none;">
            <div class="col">

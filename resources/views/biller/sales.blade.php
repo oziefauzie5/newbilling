@@ -67,13 +67,13 @@
                           <div class="text-light mb-3 text-center">Input</div>
                         </td>
                         <td>
-                          <a href="#" onclick="comingson()" class="card mb-2 card_custom1" style="width: 4rem;">
+                          <a href="{{ route('admin.biller.biller_pelanggan') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                           <img src="{{ asset('atlantis/assets/img/users.png') }}" class="card-img-center p-2" alt="...">
                           </a>
                           <div class="text-light mb-3 text-center">Pelanggan</div>
                         </td>
                         <td>
-                          <a href="{{route('admin.biller.mutasi') }}" class="card mb-2 card_custom1" style="width: 4rem;">
+                          <a href="{{route('admin.biller.biller_mutasi_sales') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                           <img src="{{ asset('atlantis/assets/img/mutasi.png') }}" class="card-img-center p-2" alt="...">
                           </a>
                           <div class="text-light mb-3 text-center">Mutasi</div>

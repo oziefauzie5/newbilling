@@ -30,7 +30,8 @@ class ProssesTagihan implements ShouldQueue
     public function handle(): void
     {
 
-        $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
+        // $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
+        $data['now'] = date('Y-m-d', strtotime(2025-04-01));
         $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             // ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
@@ -46,7 +47,7 @@ class ProssesTagihan implements ShouldQueue
 
                 Pesan::create([
                     'pesan_id_site' => '1',
-                    'layanan' => 'CS',
+                    'layanan' => 'CS2',
                     'ket' => 'tagihan',
                     'status' => '0',
                     'target' => $key->input_hp,
@@ -78,7 +79,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
                 Pesan::create([
                     'pesan_id_site' => '1',
-                    'layanan' => 'CS',
+                    'layanan' => 'CS2',
                     'ket' => 'tagihan',
                     'status' => '10',
                     'target' => $key->input_hp,

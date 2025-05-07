@@ -48,10 +48,10 @@ class RegistrasiController extends Controller
     public function index()
     {
         $data['input_data'] = InputData::where('input_status', 'INPUT DATA')->get();
-        $data['data_router'] = Router::all();
         $data['data_site'] = Data_Site::all();
         $data['data_pop'] = Data_pop::all();
         $data['data_paket'] = Paket::all();
+        $data['data_router'] = Router::all();
         $data['data_biaya'] = SettingBiaya::first();
         return view('Registrasi/registrasi', $data);
     }
@@ -150,7 +150,11 @@ class RegistrasiController extends Controller
         $tgl_pasang = Carbon::create($tanggal)->addDay(1)->toDateString();
 
         if ($cek_sales->role_id == 10 && $cek_sales->role_id == 13) {
+            if($request->reg_jenis_tagihan == 'FREE'){
+                $data['reg_fee'] = 0;
+            } else {
             $data['reg_fee'] = $sbiaya->biaya_sales_continue;
+            }
         } else {
             $data['reg_fee'] = 0;
         }
@@ -187,9 +191,9 @@ class RegistrasiController extends Controller
         $tiket['tiket_jenis'] = 'Instalasi';
         $tiket['tiket_type'] = 'General';
         $tiket['tiket_site'] = $site->pop_id_site;
-        $tiket['tiket_nama'] = 'Insatalasi PSB';
+        $tiket['tiket_nama'] = 'Instalasi PSB';
         // $tiket['tiket_jadwal_kunjungan'] = date('Y-m-d', strtotime(Carbon::now()));
-        $tiket['tiket_keterangan'] = 'Insatalasi PSB';
+        $tiket['tiket_keterangan'] = 'Instalasi PSB';
         $tiket['tiket_status'] = 'NEW';
 
 
@@ -271,6 +275,7 @@ No. Layanan : ' . $request->reg_nolayanan . '
 Pelanggan : ' . $request->reg_nama . '
 Alamat : ' . $request->reg_alamat_pasang . '
 Whatsapp : 0' . $request->reg_hp . '
+Whatsapp Alternatif: 0' . $request->reg_hp2 . '
 Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 '
         ]);
@@ -294,11 +299,16 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
         $admin = (new GlobalController)->user_admin()['user_id'];
         $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
-        $update['input_status'] =  'INPUT DATA';
+        $update['input_status'] =  'PENDING';
         InputData::where('id', $data_pelanggan->reg_idpel)->update($update);
         $data = Registrasi::where('reg_idpel', $id);
         if ($data) {
             $data->delete();
+        }
+
+        $data_tiket = Data_Tiket::where('tiket_idpel',$id)->where('tiket_jenis','Instalasi');
+        if ($data_tiket) {
+            $data_tiket->delete();
         }
         $notifikasi = array(
             'pesan' => 'Hapus Data Registrasi Berhasil berhasil',
@@ -663,7 +673,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         Session::flash('teknisi2', $request->teknisi2);
         Session::flash('input_koordinat', $request->input_koordinat);
         Session::flash('reg_koodinat_odp', $request->reg_koodinat_odp);
-        Session::flash('reg_img', $request->reg_koodinat_odp);
+        // Session::flash('reg_img', $request->reg_koodinat_odp);
         Session::flash('reg_foto_odp', $request->reg_koodinat_odp);
 
 
@@ -681,7 +691,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             'teknisi2' => 'required',
             'input_koordinat' => 'required',
             'reg_koodinat_odp' => 'required',
-            'reg_img' => 'required|max:20000|mimes:jpg',
+            // 'reg_img' => 'required|max:20000|mimes:jpg',
             'reg_foto_odp' => 'required',
         ], [
             'reg_site.required' => 'Site tidak boleh kosong',
@@ -690,7 +700,6 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             'reg_olt.required' => 'OLT tidak boleh kosong',
             'reg_odc.required' => 'ODC tidak boleh kosong',
             'reg_odp.required' => 'ODP tidak boleh kosong',
-            'reg_mac_olt.required' => 'Mac Address OLT tidak boleh kosong',
             'reg_in_ont.required' => 'Redaman tidak boleh kosong',
             'reg_onuid.required' => 'Onu Id tidak boleh kosong',
             'reg_slot_odp.required' => 'Slot Odp tidak boleh kosong',
@@ -698,9 +707,9 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             'teknisi2.required' => 'Teknisi 2 tidak boleh kosong',
             'input_koordinat.required' => 'Koordinat Rumah pelanggan tidak boleh kosong',
             'reg_koodinat_odp.required' => 'Koordinat ODP tidak boleh kosong',
-            'reg_img.required' => 'Foto rumah tidak boleh kosong',
-            'reg_img.max' => 'Ukuran foto terlalu besar',
-            'reg_img.mimes' => 'Format hanya bisa jpg',
+            // 'reg_img.required' => 'Foto rumah tidak boleh kosong',
+            // 'reg_img.max' => 'Ukuran foto terlalu besar',
+            // 'reg_img.mimes' => 'Format hanya bisa jpg',
             'reg_foto_odp.required' => 'Foto ODP tidak boleh kosong',
         ]);
 
@@ -831,6 +840,33 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
     public function deaktivasi_pelanggan(Request $request, $id)
     {
+        dd('sementara dimatiin ya. hub ka ozi aja');
+
+        if($request->kelengkapan == 'ONT & Adaptor'){
+            $kode_barang = [$request->kode_barang_ont,$request->kode_barang_adp];
+            $barang_keluar = Data_BarangKeluar::whereIn('bk_id_barang',$kode_barang)->delete();
+            $barang=  Data_Barang::whereIn('barang_id',$kode_barang)->update([
+                'barang_digunakan' => 0,
+                'barang_dicek' => 1,
+            ]);
+        } elseif($request->kelengkapan == 'ONT') {
+            $kode_barang = $request->kode_barang_ont;
+            $barang_keluar = Data_BarangKeluar::where('bk_id_barang',$kode_barang)->delete();
+            $barang=  Data_Barang::where('barang_id',$kode_barang)->update([
+                'barang_digunakan' => 0,
+                'barang_dicek' => 1,
+            ]);
+        } elseif($request->kelengkapan == 'Hilang') {
+            $kode_barang = [$request->kode_barang_ont,$request->kode_barang_adp];
+            $barang_keluar = Data_BarangKeluar::whereIn('bk_id_barang',$kode_barang)->delete();
+            $barang=  Data_Barang::whereIn('barang_id',$kode_barang)->update([
+                'barang_digunakan' => 0,
+                'barang_hilang' => 1,
+            ]);
+        }
+        
+        
+        dd('test');
         $nama_admin = Auth::user()->name;
         $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
         $tgl_ambil_perangkat = date('Y-m-d', strtotime($request->deaktivasi_tanggal_pengambilan));
@@ -846,9 +882,6 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
             $progres = '100';
         }
-
-
-
 
 
         $ip =   $query->router_ip . ':' . $query->router_port_api;
@@ -886,15 +919,12 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 'reg_progres' => $progres,
                 'reg_catatan' => $request->reg_catatan,
                 'reg_tgl_deaktivasi' => $tgl_ambil_perangkat,
-                'reg_mac' => '',
-                'reg_sn' => '',
-                'reg_mrek' => '',
             ]);
             Data_Deaktivasi::create([
                 'deaktivasi_idpel' => $id,
                 'deaktivasi_mac' => $request->deaktivasi_mac,
                 'deaktivasi_sn' => $request->deaktivasi_sn,
-                'deaktivasi_kelengkapan_perangkat' => $request->deaktivasi_kelengkapan_perangkat,
+                'deaktivasi_kelengkapan_perangkat' => $request->kelengkapan,
                 'deaktivasi_tanggal_pengambilan' => $tgl_ambil_perangkat,
                 'deaktivasi_pengambil_perangkat' => $request->deaktivasi_pengambil_perangkat,
                 'deaktivasi_admin' => $request->deaktivasi_admin,
@@ -902,6 +932,13 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 'deaktivasi_pernyataan' => $request->deaktivasi_pernyataan,
                 'deaktivasi_admin' =>  $nama_admin,
             ]);
+
+            // if($request->kelengkapan == 'ONT & Adaptor'){
+            //     // Data_Barang::wherei
+            //     $kode_barang = $request->kode_barang_ont.', '.$request->kode_barang_ont;
+            //     Data_BarangKeluar::whereIn('bk_id_barang',$request)
+            // }
+
             $notifikasi = [
                 'pesan' => 'Berhasil melakukan pemutusan pelanggan',
                 'alert' => 'success',
@@ -951,41 +988,43 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         return view('Registrasi/data_deaktivasi', $data);
     }
 
+    // public function berita_acara_deaktivasi
 
 
-    // public function berita_acara_deaktivasi($id)
-    // {
 
-    //     $data['profile_perusahaan'] = SettingAplikasi::first();
-    //     $data['nama_admin'] = Auth::user()->name;
-    //     $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-    //         ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-    //         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-    //         // ->join('users', 'users.id', '=', 'input_data.input_sales')
-    //         ->where('registrasis.reg_idpel', $id)
-    //         ->first();
-    //     $seles = User::whereId($data['berita_acara']->input_sales)->first();
-    //     if ($seles) {
-    //         $data['seles'] = $seles->name;
-    //     } else {
-    //         $data['seles'] = '-';
-    //     }
+    public function berita_acara_deaktivasi($id)
+    {
 
-    //     // dd($data);
-    //     $nama = InputData::where('id', $id)->first();
-    //     if ($nama) {
-    //         $sales = $nama->input_nama;
-    //     } else {
-    //         $sales = '-';
-    //     }
-    //     // $pdf = App::make('dompdf.wrapper');
-    //     // $html = view('PSB/print_berita_acara', $data)->render();
-    //     // $pdf->loadHTML($html);
-    //     // $pdf->setPaper('A4', 'potraid');
-    //     // return $pdf->download('Berita_Acara_' . $sales . '.pdf');
+        $data['profile_perusahaan'] = SettingAplikasi::first();
+        $data['nama_admin'] = Auth::user()->name;
+        $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            // ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->where('registrasis.reg_idpel', $id)
+            ->first();
+        $seles = User::whereId($data['berita_acara']->input_sales)->first();
+        if ($seles) {
+            $data['seles'] = $seles->name;
+        } else {
+            $data['seles'] = '-';
+        }
 
-    //     return view('Registrasi/berita_acara_deaktivasi', $data);
-    // }
+        // dd($data);
+        $nama = InputData::where('id', $id)->first();
+        if ($nama) {
+            $sales = $nama->input_nama;
+        } else {
+            $sales = '-';
+        }
+        // $pdf = App::make('dompdf.wrapper');
+        // $html = view('PSB/print_berita_acara', $data)->render();
+        // $pdf->loadHTML($html);
+        // $pdf->setPaper('A4', 'potraid');
+        // return $pdf->download('Berita_Acara_' . $sales . '.pdf');
+
+        return view('Registrasi/print_berita_acara_deaktivasi', $data);
+    }
     public function verifikasi_deaktivasi(Request $request, $id)
     {
 
@@ -1002,5 +1041,105 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
 
         return view('Registrasi/berita_acara_deaktivasi', $data);
+    }
+
+    public function print_list_deaktivasi(Request $request)
+    {
+        $user = (new GlobalController)->user_admin();
+        $data['admin'] = $user['user_nama'];
+        $data['start_date'] = date('Y-m-d', strtotime($request->start_date));
+        $data['end_date'] = date('Y-m-d', strtotime($request->end_date));
+        // dd($data);
+        $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+        ->join('data__deaktivasis', 'data__deaktivasis.deaktivasi_idpel', '=', 'registrasis.reg_idpel')
+        ->whereDate('data__deaktivasis.created_at', '>=', $data['start_date'])
+        ->whereDate('data__deaktivasis.created_at', '<=', $data['end_date'])
+        ->orderBy('data__deaktivasis.created_at', 'ASC');
+
+        $data['list_deaktivasi'] = $query->get();
+        $pdf = App::make('dompdf.wrapper');
+        $html = view('Registrasi/print_list_deaktivasi', $data)->render();
+        $pdf->loadHTML($html);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->download('Data Deaktivasi Periode ' . $data['start_date'] . ' - ' .$data['end_date'] . '.pdf');
+        // return view('Registrasi/print_list_deaktivasi', $data);
+    }
+    public function followup()
+    {
+        $tanggal = date('Y-m-d',strtotime(Carbon::now()));
+        $tagihan_kebelakang = Carbon::create($tanggal)->addMonth(-1)->toDateString();
+        $user = (new GlobalController)->user_admin();
+        $data['admin'] = $user['user_nama'];
+        // dd($tagihan_kebelakang);
+        $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->where('reg_progres', '=', '5')
+            ->where('reg_status', '!=', 'PAID')
+            ->whereDate('reg_tgl_jatuh_tempo', '<', $tagihan_kebelakang)
+            ->orderBy('reg_tgl_jatuh_tempo', 'ASC');
+        $data['list_followup'] = $query->get();
+        return view('Registrasi/list_followup', $data);
+    }
+
+    public function cek_perangkat(Request $request,$id)
+    {
+        if($request->kelengkapan == 'Hilang'){
+            $data_barang_keluar = Data_BarangKeluar::where('bk_idpel',$id)->where('bk_kategori','ONT')->orWhere('bk_kategori','ADAPTOR')->get();
+            return response()->json($data_barang_keluar);
+            if($data_barang_keluar) {
+                if( $data_barang_keluar->bk_idpel == $id){
+                        $dbk_adp = Data_BarangKeluar::where('bk_idpel',$id)->where('bk_kategori','ADAPTOR')->first();
+                        $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
+                        $data['barang_id_ont'] = $data_barang_keluar->bk_id_barang;
+                        $data['barang_sn'] = $cek_mac->barang_sn;
+                    return response()->json($data);
+                } else {
+                    return response()->json('0');
+                }
+            } else {
+                return response()->json('1');
+            }
+        } else {
+            $cek_mac = Data_Barang::where('barang_mac',$request->mac)->where('barang_kategori','ONT')->first();
+            if($cek_mac){
+                $data_barang_keluar = Data_BarangKeluar::where('bk_id_barang',$cek_mac->barang_id)->first();
+                if($data_barang_keluar) {
+                    if( $data_barang_keluar->bk_idpel == $id){
+                            $dbk_adp = Data_BarangKeluar::where('bk_idpel',$id)->where('bk_kategori','ADAPTOR')->first();
+                            $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
+                            $data['barang_id_ont'] = $data_barang_keluar->bk_id_barang;
+                            $data['barang_sn'] = $cek_mac->barang_sn;
+                        return response()->json($data);
+                    } else {
+                        return response()->json('0');
+                    }
+                } else {
+                    return response()->json('1');
+                }
+            } else {
+                return response()->json('2');
+            }
+        }
+    }
+    public function cek_perangkat_hilang($id)
+    {
+        // $cek_mac = Data_Barang::where('barang_mac',$request->mac)->where('barang_kategori','ONT')->first();
+        // if($cek_mac){
+            $data_barang_keluar = Data_BarangKeluar::Join('data__barangs','data__barangs.barang_id','=','data__barang_keluars.bk_id_barang')
+            ->where('bk_idpel',$id)->where('bk_kategori','ONT')->first();
+            // return response()->json($data_barang_keluar);
+            if($data_barang_keluar) {
+                        $dbk_adp = Data_BarangKeluar::where('bk_idpel',$id)->where('bk_kategori','ADAPTOR')->first();
+                        $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
+                        $data['barang_id_ont'] = $data_barang_keluar->barang_id;
+                        $data['barang_sn'] = $data_barang_keluar->barang_sn;
+                        $data['barang_mac'] = $data_barang_keluar->barang_mac;
+                    return response()->json($data);
+            } else {
+                return response()->json('1');
+            }
+        // } else {
+        //     return response()->json('2');
+        // }
     }
 }

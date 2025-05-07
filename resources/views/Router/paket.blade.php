@@ -342,6 +342,7 @@
                     <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_limitasi}}</td>
                     <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_shared}}</td>
                     <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_masa_aktif}}</td>
+                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_layanan}}</td>
                     <td>{{$d->paket_status}}</td>
                     <td>
                       <div class="form-button-action">
@@ -373,6 +374,23 @@
                                   <div class="row">
                                     <div class="col-sm-12">
                                       <div class="form-group">
+                                        <label>Router</label>
+                                        <select name="router" id="" class="form-control" required>
+                                          <option value="">-- Pilih Router --</option>
+                                          @foreach($data_router as $dr)
+                                          <option value="{{$dr->id}}">{{$dr->router_nama}}</option>
+                                          @endforeach
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                      <div class="form-group">
+                                        <label>Layanan</label>
+                                        <input type="text" class="form-control readonly" name="paket_layanan" value="{{ $d->paket_layanan }}" required>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                      <div class="form-group">
                                         <label>Nama Paket</label>
                                         <input type="text" class="form-control" name="paket_nama" value="{{ $d->paket_nama }}" required>
                                       </div>
@@ -389,12 +407,38 @@
                                         <input type="number" class="form-control" value="{{ $d->paket_shared }}" name="paket_shared" required>
                                       </div>
                                     </div>
+                                  @if($d->paket_layanan == 'VOUCHER')
+                                  <div class="col-sm-6">
+                                      <div class="form-group">
+                                        <label>Mode Masa Berlaku</label>
+                                        <select class="form-control" id="expmode" name="paket_mode" required="1">
+                                          @if( $d->paket_mode == '0')
+                                          <option value="{{ $d->paket_mode}}">Tidak ada masa berlaku</option>
+                                          @elseif( $d->paket_mode == 'rem')
+                                          <option value="{{ $d->paket_mode}}">Remove</option>
+                                          @elseif( $d->paket_mode == 'ntf')
+                                          <option value="{{ $d->paket_mode}}">Notice</option>
+                                          @elseif( $d->paket_mode == 'remc')
+                                          <option value="{{ $d->paket_mode}}">Remove & Record</option>
+                                          @elseif( $d->paket_mode == 'ntfc')
+                                          <option value="{{ $d->paket_mode}}">Notice & Record</option>
+                                          @endif
+                                          <option value="0">Tidak ada masa berlaku</option>
+                                          <option value="rem">Remove</option>
+                                          <option value="ntf">Notice</option>
+                                          <option value="remc">Remove & Record</option>
+                                          <option value="ntfc">Notice & Record</option>
+                                      </select>
+                                      </div>
+                                    </div>
+                                  @endif
                                     <div class="col-sm-6">
                                       <div class="form-group">
                                         <label>Masa Aktif (Hari)</label>
-                                        <input type="number" class="form-control" value="{{ $d->paket_masa_aktif }}" name="paket_masa_aktif" required>
+                                        <input type="text" class="form-control" value="{{ $d->paket_masa_aktif }}" name="paket_masa_aktif" required>
                                       </div>
                                     </div>
+                                   
                                     <div class="col-sm-6">
                                       <div class="form-group">
                                         <label>Harga</label>

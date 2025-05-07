@@ -261,12 +261,6 @@
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
-                          <label>Mac Address ONT</label>
-                          <input type="text" class="form-control" name="reg_mac"  step="00.01" maxlength="17" minlength="17" value="">
-                        </div>
-                      </div>
-                      <div class="col-sm-12">
-                        <div class="form-group">
                           <label>Status</label>
                           <select name="status" class="form-control" required>
                             <option value="PUTUS LANGGANAN">PUTUS LANGGANAN</option>

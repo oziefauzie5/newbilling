@@ -4,6 +4,32 @@
 <div class="content">
   <div class="page-inner">
     <div class="row">
+      <div class="col-6 col-sm-4 col-lg-4">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h1 m-0">{{$terkirim}}</div>
+            <div class="text-muted mb-3">Pesan Terkirim</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-lg-4">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h1 m-0">{{$belum_terkirim}}</div>
+            <div class="text-muted mb-3">Pesan belum Terkirim</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-lg-4">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h1 m-0">{{$gagal}}</div>
+            <div class="text-muted mb-3">Pesan Gagal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-primary">
@@ -72,7 +98,21 @@
             <hr>
             <form >
               <div class="row mb-1">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
+                  <select name="ket" type="text" class="form-control form-control-sm">
+                    <option value="">All Data</option>
+                    <option value="tiket">Tiket</option>
+                    <option value="payment">Payment</option>
+                    <option value="tagihan">Tagihan</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select name="status" type="text" class="form-control form-control-sm">
+                    <option value="">All Status</option>
+                    <option value="Proses">Proses</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
                   <input name="q" type="text" class="form-control form-control-sm" placeholder="Cari">
                 </div>
                 <div class="col-sm-2">
@@ -84,8 +124,8 @@
               <div class="table-responsive">
                 <table class="display table table-striped table-hover text-nowrap" >
                   <thead>
-                    <tr>
-                      <th>Aksi</th>
+                    <tr class="text-center">
+                      <th colspan="2">Aksi</th>
                       <th>Status</th>
                       <th>Tujuan</th>
                       <th>Nama</th>
@@ -95,18 +135,18 @@
                   <tbody>
                     @foreach ($whatsapp as $d)
                     <tr>
+                      <td>
+                      <div class="form-button-action">
+                        <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->id}}" class="btn btn-link btn-danger">
+                          <i class="fa fa-times"></i>
+                        </button>
+                      </div>
+                    </td>
                     @if($d->status == 'Done')
-                      <td><button type="button" class="btn btn-success">Kirim Manual</button></td>
+                      <td><button type="button" class="btn btn-sm btn-success">Terkirim</button></td>
                       @else
-                      <td class="pesan_manual" data-id="{{$d->id}}" data-url="https://wa.me/+62{{$d->target}}?text={{urlencode($d->pesan)}}"><button type="button" class="btn btn-danger">Kirim Manual</button></td>
+                      <td class="pesan_manual" data-id="{{$d->id}}" data-url="https://wa.me/+62{{$d->target}}?text={{urlencode($d->pesan)}}"><button type="button" class="btn btn-sm btn-danger">Kirim Manual</button></td>
                       @endif
-                    <td>
-                    <div class="form-button-action">
-                      <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->id}}" class="btn btn-link btn-danger">
-                        <i class="fa fa-times"></i>
-                      </button>
-                    </div>
-                  </td>
                       @if($d->status == 'Done')
                       <td><div class="badge badge-success">{{$d->status}}</div></td>
                       @else

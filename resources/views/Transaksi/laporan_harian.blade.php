@@ -65,31 +65,31 @@
                         @method('PUT')
                         <div class="form-group">
                           <label for="formGroupExampleInput">Laporan Id</label>
-                          <input type="text" class="form-control" name="lap_id" value="{{rand(10000, 59999)}}">
+                          <input type="text" class="form-control" name="lap_id" value="{{rand(10000, 59999)}}" readonly>
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Staf Admin</label>
-                          <input type="text" class="form-control" name="user_admin" value="{{$admin_name}}">
+                          <input type="text" class="form-control" name="user_admin" value="{{$admin_name}}" readonly>
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan</label>
-                          <input type="text" class="form-control" name="total" value="{{$buat_laporan}}">
+                          <input type="text" class="form-control" name="total" value="{{$buat_laporan}}" readonly>
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan Tunai</label>
-                          <input type="text" class="form-control" name="tunai" value="{{$sum_tunai}}">
+                          <input type="text" class="form-control" name="tunai" value="{{$sum_tunai}}" readonly>
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Refund</label>
-                          <input type="text" class="form-control" name="refund" value="{{$refund}}">
+                          <input type="text" class="form-control" name="refund" value="{{$refund}}" readonly>
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan Adm</label>
-                          <input type="text" class="form-control" name="adm" value="{{$biaya_adm}}">
+                          <input type="text" class="form-control" name="adm" value="{{$biaya_adm}}" readonly>
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Transaksi</label>
-                          <input type="text" class="form-control" name="count_trx" value="{{$count_trx}}">
+                          <input type="text" class="form-control" name="count_trx" value="{{$count_trx}}" readonly>
                         </div>
 
                 </div>

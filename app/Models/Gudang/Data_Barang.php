@@ -14,6 +14,7 @@ class Data_Barang extends Model
         'barang_lokasi',
         'barang_kategori',
         'barang_jenis',
+        'barang_jenis_jurnal',
         'barang_nama',
         'barang_merek',
         'barang_qty',
@@ -21,6 +22,7 @@ class Data_Barang extends Model
         'barang_dijual',
         'barang_rusak',
         'barang_pengembalian',
+        'barang_hilang',
         'barang_satuan',
         'barang_sn',
         'barang_mac',
@@ -35,6 +37,7 @@ class Data_Barang extends Model
         'barang_admin_update',
         'barang_penerima',
         'barang_pengecek',
+        'barang_status_print',
         'created_at',
     ];
 }

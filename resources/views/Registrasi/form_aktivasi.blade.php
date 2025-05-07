@@ -225,26 +225,7 @@
         <input type="text" class="form-control readonly" name="reg_password" value="{{ $data->reg_password}}" >
       </div>
       </div>
-      <!-- <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Merek & Type <span>(Auto)</span></label>
-      <div class="col-sm-4">
-        <input type="text" name="reg_mrek" id="" class="form-control edit_ont readonly" value="{{ $data->reg_mrek}}" >
-      </div>
-        <label class="col-sm-2 col-form-label">Mac Ont <span>(Auto)</span></label>
-        <div class="col-sm-4">
-          <input type="text" name="reg_mac" id=""  class="form-control readonly" minlength="17" maxlength="17"  value="{{ $data->reg_mac}}" >
-        </div>
-        </div> -->
-        <!-- <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Mac Ont OLT <span>(Auto)</span></label>
-        <div class="col-sm-4">
-          <input type="text" name="reg_mac_olt" id="mac"  class="form-control readonly" required value="{{ $data->reg_mac_olt}}" >
-        </div>
-        <label class=" col-sm-2 col-form-label" >SN perangkat</label>
-      <div class="col-sm-4">
-        <input type="text" name="reg_sn" class="form-control readonly" value="{{ $data->reg_sn}}" >
-      </div> -->
-      <!-- </div> -->
+      <!-- #</div> hilang terhapus -->
      
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">ONU ID</label>
@@ -327,7 +308,7 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
-          <input  type="file" class="form-control-file" name="reg_img" required value="{{ Session::get('reg_img') }}">
+          <!-- <input  type="file" class="form-control-file" name="reg_img" required value="{{ Session::get('reg_img') }}"> -->
         </div>
         <label class="col-sm-2 col-form-label">Foto Lokasi ODP</label>
         <div class="col-sm-4">
@@ -337,11 +318,11 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
-          <img src="{{ asset('storage/topologi/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
+          <img src="{{ asset('storage/rumah_pelanggan/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
         </div>
         <label class="col-sm-2 col-form-label">Foto Lokasi ODP </label>
         <div class="col-sm-4">
-          <img src="{{ asset('storage/topologi/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
+          <img src="{{ asset('storage/odp_pelanggan/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
         </div>
       </div>
     <div class="card-footer">

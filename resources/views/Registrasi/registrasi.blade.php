@@ -80,7 +80,7 @@
           @endif
            <form class="form-horizontal"action="{{route('admin.reg.store')}}" method="POST">
              @csrf
-
+            @method('POST')
              <h3 class="mt-3 text-bolt text-center">FORM REGISTRASI BERLANGGANAN</h3>
              <h3 class="mt-3 text-bolt">PELANGGAN</h3><hr>
               <div class="form-group row">
@@ -191,132 +191,6 @@
                 <input type="text" class="form-control pwhotspot" name="reg_password" value="1234567" required >
               </div>
               </div>
-              <!-- <div class="form-group row">
-              <label class="col-sm-2 col-form-label">Nama perangkat</label>
-              <div class="col-sm-4">
-                <input type="text" name="reg_nama_barang" id="reg_nama_barang" class="form-control ont" value="{{ Session::get('reg_nama_barang') }}" readonly >
-              </div>
-              <label class="col-sm-2 col-form-label">Merk perangkat</label>
-              <div class="col-sm-4">
-                <input type="text" name="reg_mrek" id="reg_mrek" class="form-control ont" value="{{ Session::get('reg_mrek') }}" readonly >
-              </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Mac perangkat</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_mac" id="reg_mac"  class="form-control ont" value="{{ Session::get('reg_mac') }}" readonly >
-                </div>
-                <label class=" col-sm-2 col-form-label" >Mac Address OLT</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_mac_olt" id="reg_mac_olt" class="form-control ont" value="{{ Session::get('reg_mac_olt') }}" readonly >
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class=" col-sm-2 col-form-label" >SN perangkat</label>
-                <div class="col-sm-4">
-                  <input type="text" name="reg_sn" id="reg_sn" class="form-control ont" value="{{ Session::get('reg_sn') }}" readonly >
-                </div>
-              </div> -->
-              <!-- <div class="form-group row">
-              <label class=" col-sm-2 col-form-label">Kode Barang</label>
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="pactcore" value="1" name="pactcore" @if( Session::get('kode_pactcore')) checked @endif >
-                  <span class="form-check-sign">Pachtcore</span>
-                </label>
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="adaptor" value="1" name="adaptor" @if( Session::get('kode_adaptor')) checked @endif>
-                  <span class="form-check-sign">Adaptor</span>
-                </label>
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" id="ont" value="1" name="ont" @if( Session::get('kode_ont')) checked @endif>
-                  <span class="form-check-sign">ONT</span>
-                </label>
-              </div>
-              </div> -->
-
-
-              <!-- Modal Validasi Pactcore -->
-              <!-- <div class="modal fade" id="modal_pactcore" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE PACTCORE</h5>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi">
-                        <label class="col-sm-4 col-form-label">Kode Pactcore</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_pactcore" id="kode_pactcore" value="{{ Session::get('kode_pactcore') }}" class="form-control"  >
-                          <div id="notif"></div>
-                        </div>
-                      </div>
-                      <div id="note"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_pachcore">Close</button>
-                      <input class="btn btn-outline-secondary val_pachcore" value="Validasi"  type="button"></input>
-                      <div id="buton"></div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-              <!-- Modal Validasi adaptor -->
-              <!-- <div class="modal fade" id="modal_adaptor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE ADAPTOR</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi_adp">
-                        <label class="col-sm-4 col-form-label">Kode Adaptor</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_adaptor" id="kode_adaptor" class="form-control" value="{{ Session::get('kode_adaptor') }}" >
-                          <div id="notif_adp"></div>
-                        </div>
-                      </div>
-                      <div id="note_adp"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_adp">Close</button>
-                      <input class="btn btn-outline-secondary val_adp" value="Validasi"  type="button"></input>
-                      <div id="buton_adp"></div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-              <!-- Modal Validasi ont -->
-              <!-- <div class="modal fade" id="modal_ont" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">VALIDASI KODE ONT</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group row" id="validasi_ont">
-                        <label class="col-sm-4 col-form-label">Kode Ont</label>
-                        <div class="col-sm-8">
-                          <input type="text"  name="kode_ont" id="kode_ont"  value="{{ Session::get('kode_ont') }}" class="form-control"  >
-                          <div id="notif_ont"></div>
-                        </div>
-                      </div>
-                      <div id="note_ont"></div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary hide_ont">Close</button>
-                      <input class="btn btn-outline-secondary val_ont" value="Validasi"  type="button"></input>
-                      <div id="buton_ont"></div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
 
               <h3 class="mt-3">BILLING</h3><hr>
               <div class="form-group row">
@@ -406,11 +280,13 @@
             <div class="form-group row">
               <label class="form-check col-sm-2 col-form-label">Invoice Suspand &nbsp;&nbsp;
               </label>
-              <div class="col-sm-4">
+              <div class="col-sm-10">
                 <select name="reg_inv_control" id="" class="form-control">
-                  <option value="0" selected>SAMBUNG DARI TGL ISOLIR</option>
-                  <option value="1">SAMBUNG DARI TGL BAYAR</option>
+                  <option value="0">SAMBUNG DARI TGL ISOLIR</option>
+                  <option value="1" selected>SAMBUNG DARI TGL BAYAR</option>
                 </select>
+                <span>Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice</span><br>
+                <span>Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran</span>
               </div>
               {{-- <label class="form-check col-sm-2 col-form-label">Tanggal Penagihan</label> --}}
               {{-- <div class="col-sm-4">

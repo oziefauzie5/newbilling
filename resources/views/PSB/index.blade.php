@@ -10,7 +10,7 @@
               <div class="card">
                   <div class="card-body p-3 text-center">
                     <div class="h1 m-0">{{$count_inputdata}}</div>
-                    <div class="text-muted mb-3">Input Data</div>
+                    <div class="text-muted mb-3">Input Data </div>
                   </div>
                 </div>
               </div>
@@ -75,7 +75,7 @@
         <a href="{{route('admin.psb.list_input')}}">
           <button class="btn  btn-sm ml-auto m-1 btn-success">
             <i class="fa fa-plus"></i>
-            INPUT DATA
+            INPUT DATA 
           </button>
         </a>
         <a href="{{route('admin.reg.index')}}">
@@ -96,6 +96,12 @@
             DEAKTIVASI
           </button>
         </a>
+        <a href="{{route('admin.reg.export_excel')}}">
+          <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
+            <i class="fa fa-plus"></i>
+            EXPORT EXCEL
+          </button>
+        </a>
         @role('admin')
       <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
         <i class="fa fa-file-import"></i> IMPORT
@@ -105,6 +111,12 @@
         <button class="btn  btn-sm ml-auto m-1 btn-primary">
           <i class="fa fa-plus"></i>
           BERITA ACARA
+        </button>
+      </a>
+      <a href="{{route('admin.reg.followup')}}">
+        <button class="btn  btn-sm ml-auto m-1 btn-primary">
+          <i class="fa fa-plus"></i>
+          FOLLOW UP
         </button>
       </a>
         <hr>

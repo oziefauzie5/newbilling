@@ -87,9 +87,65 @@
       
       <div class="card">
         <div class="card-body">
+          
+          <!-- -------------------------------------------- MODAL EXPORT -------------------------------------------- -->
+
+
+
+            <div class="row mb-1">
+              <div class="col">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#export_excel">
+                  Export Excel
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="export_excel" tabindex="-1" aria-labelledby="export_excelLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="export_excelLabel">Export Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="{{route('admin.inv.export_invoice')}}" method="post">
+                          @csrf
+                          @method('POST')
+                          <div class="row">
+                            <div class="col">
+                              <select name="data_inv" class="custom-select custom-select-sm">
+                                <option value="" selected>ALL INVOICE</option>
+                                <option value="PAID">INVOICE PAID</option>
+                                <option value="UNPAID">INVOICE UNPAID</option>
+                                <option value="SUSPEND">INVOICE SUSPEND</option>
+                                <option value="ISOLIR">INVOICE ISOLIR</option>
+                              </select>
+                            </div>
+                            <div class="col">
+                              <input name="bulan" type="month" class="form-control form-control-sm"></input>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Export</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+          <!-- -------------------------------------------- MODAL EXPORT -------------------------------------------- -->
+
+
           <form >
             <div class="row mb-1">
-
+              
                 <div class="col">
                   <select name="data_bulan" class="custom-select custom-select-sm">
                     @if($data_bulan)

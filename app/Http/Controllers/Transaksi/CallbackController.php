@@ -83,12 +83,19 @@ class CallbackController extends Controller
                         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
                         ->where('inv_id', $data->merchant_ref)
                         ->first();
+
+
+
+
                     $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+
                     $now = Carbon::now();
                     $month = $now->format('m');
                     $year = $now->format('Y');
-                    $sum_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_total');
-                    $count_trx = Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
+
+
+                    $sum_trx = Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_debet');
+                    $count_trx = Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
                     #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
                     #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
 
@@ -113,27 +120,52 @@ class CallbackController extends Controller
                     $inv0_jt_tempo = Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString(); #new
 
 
-                    if ($diffDays < -0) {
-                        $cek_hari_bayar = date('d', strtotime($tgl_bayar));
-                        if ($cek_hari_bayar >= 25) {
-                            #Tambah 1 bulan dari tgl pembeyaran
-                            #Pembayaran di atas tanggal 25 maka akan di anggap bayar tgl 25
-                            $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
-                            $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
-                            $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
-                            $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
-                        } else {
-                            $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
-                            $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
-                            $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
-                        }
-                    } else {
-                        $inv1_tagih = Carbon::create($data_pelanggan->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString();
-                        $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
-                        $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
-                    }
+                     # diffDays < -0 artinya jika pelanggan melakukan pembayaran sebelum jatuh tempo.
+            #Jika pelanggan melakukan pembayaran sebelum jatuh tempo, maka tanggal jatuh tempo tidak berubah.
+            # diffDays > -0 artinya jika pelanggan melakukan pembayaran setelah jatuh tempo.
+            # Jika pelanggan melakukan pembayaran lewat dari jatuh tempo, maka tanggal jatuh tempo akan berubah ke tanggal pelanggan melakukan pembayaran.
+            $cek_hari_bayar = date('d', strtotime($tgl_bayar));
+            if ($diffDays < -0) { 
+                # Cek tanggal pembayaran.
+                # Jika Pelanggan melakukan pembayaran di atas tanggal 24 maka, tanggal jatuh tempo akan berubah ketanggal 1 bulan berikutnya 
+                if ($cek_hari_bayar >= 25) {
+                    #Tambah 1 bulan dari tgl pembeyaran
+                    #Pembayaran di atas tanggal 24 maka akan di anggap bayar tgl 25 dan ditambah 1 bulan 
+                    // dd('Bayar di atas tgl 25');
+                    $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
+                    $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                    $if_tgl_bayar = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-01'))->addMonth(1)->toDateString()));
+                } else {
+                    $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
+                    $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                    $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                    $if_tgl_bayar = $tgl_bayar;
+                    // dd('Bayar di bawah tgl 25');
+                }
+            } else {
+                if ($cek_hari_bayar >= 25) {
+                    #Tambah 1 bulan dari tgl pembeyaran
+                    #Pembayaran di atas tanggal 24 maka akan di anggap bayar tgl 25 dan ditambah 1 bulan 
+                    $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
+                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
+                    $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                    $if_tgl_bayar = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-01'))->addMonth(1)->toDateString()));
+                    // dd('Bayar tepat waktu namun di atas tgl 25');
+                } else {
+                    $inv1_tagih = Carbon::create($data_pelanggan->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+                    $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                    $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                    $if_tgl_bayar = $tgl_bayar;
+                    // dd('pembayaran tepat waktu dibawah tgl 25');
+                }
+            }
 
-
+            #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
+            #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
+            
                     if ($data_pelanggan->reg_inv_control == 0) {
                         $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
                         $reg['reg_tgl_tagih'] = $inv0_tagih0;
@@ -153,12 +185,12 @@ class CallbackController extends Controller
                     $datas['inv_fee_customer'] = $data->fee_customer;
                     $datas['inv_total_fee'] = $data->total_fee;
                     $datas['inv_amount_received'] = $data->amount_received;
-                    $datas['inv_tgl_bayar'] = $tgl_bayar;
+                    $datas['inv_tgl_bayar'] = $if_tgl_bayar;
                     $datas['inv_status'] = $data->status;
                     Invoice::where('inv_id', $data->merchant_ref)->update($datas);
 
                     $data_lap['lap_id'] = time();
-                    $data_lap['lap_tgl'] = $tgl_bayar;
+                    $data_lap['lap_tgl'] = $if_tgl_bayar;
                     $data_lap['lap_inv'] = $data->merchant_ref;
                     $data_lap['lap_admin'] = 10;
                     $data_lap['lap_cabar'] = 'TRIPAY';
@@ -179,7 +211,10 @@ class CallbackController extends Controller
 
                     Laporan::create($data_lap);
 
-
+                     #CEK BULAN PEMASANGAN
+                $bulan_pasang = date('Y-m',strtotime($data_pelanggan->reg_tgl_pasang));
+                $bulan_bayar = date('Y-m',strtotime($if_tgl_bayar));
+                if($bulan_pasang != $bulan_bayar){
                     if ($data_pelanggan->reg_fee > 0) {
                         $data_biaya = SettingBiaya::first();
                         $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
@@ -187,6 +222,8 @@ class CallbackController extends Controller
 
                         $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
                         $mutasi_sales['smt_admin'] = 10;
+                        $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
+                        $mutasi_sales['smt_tgl_transaksi'] = $if_tgl_bayar;
                         $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
                         $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
                         $mutasi_sales['smt_cabar'] = '2';
@@ -197,25 +234,26 @@ class CallbackController extends Controller
                         $mutasi_sales['smt_status'] = 0;
                         MutasiSales::create($mutasi_sales);
                     }
+                }
 
 
                     $reg['reg_status'] = 'PAID';
                     Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
 
                     if ($count_trx == '0') {
-                        $data_trx['trx_kategori'] = 'PEMASUKAN';
-                        $data_trx['trx_jenis'] = 'INVOICE';
-                        $data_trx['trx_admin'] = 'SYSTEM';
+                        $data_trx['trx_kategori'] = 'Pendapatan';
+                        $data_trx['trx_jenis'] = 'Invoice';
+                        $data_trx['trx_admin'] = 'System';
                         $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
                         $data_trx['trx_qty'] = 1;
-                        $data_trx['trx_total'] = $data_pelanggan->inv_total;
-                        Transaksi::where('trx_jenis', 'INVOICE')->create($data_trx);
+                        $data_trx['trx_debet'] = $data_pelanggan->inv_total;
+                        Transaksi::where('trx_jenis', 'Invoice')->create($data_trx);
                     } else {
 
                         $i = '1';
                         $data_trx['trx_qty'] = $count_trx + $i;
-                        $data_trx['trx_total'] = $sum_trx + $data_pelanggan->inv_total;
-                        Transaksi::where('trx_jenis', 'INVOICE')->whereDate('created_at', $tgl_bayar)->update($data_trx);
+                        $data_trx['trx_debet'] = $sum_trx + $data_pelanggan->inv_total;
+                        Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
                     }
 
                     $status = (new GlobalController)->whatsapp_status();
@@ -226,7 +264,9 @@ class CallbackController extends Controller
                         $pesan_group['status'] = '10';
                     }
 
-                    $pesan_group['ket'] = 'payment tripay';
+                    $pesan_group['pesan_id_site'] = '1';
+                    $pesan_group['layanan'] = 'CS';
+                    $pesan_group['ket'] = 'payment';
                     $pesan_group['target'] = $data_pelanggan->input_hp;
                     $pesan_group['nama'] = $data_pelanggan->input_nama;
                     $pesan_group['pesan'] = '

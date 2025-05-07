@@ -96,6 +96,18 @@
                 @endforeach
               </tbody>
             </table>
+            <div class="pull-left">
+              Showing
+              {{$laporan_mingguan->firstItem()}}
+              to
+              {{$laporan_mingguan->lastItem()}}
+              of
+              {{$laporan_mingguan->total()}}
+              entries
+            </div>
+            <div class="pull-right">
+              {{ $laporan_mingguan->withQueryString()->links('pagination::bootstrap-4') }}
+            </div>
           </div>
         </div>
       </div>

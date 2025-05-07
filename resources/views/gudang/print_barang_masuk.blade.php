@@ -189,6 +189,8 @@
         <tr>
               <th>#</th>
               <th>Kategori</th>
+              <th>Jenis Jurnal</th>
+              <th>Nama Barang</th>
               <th>Tanggal Masuk</th>
               <th>Satuan</th>
               <th width="15%">Total Stok Awal</th>
@@ -197,7 +199,9 @@
         @foreach($stok_gudang as $sg )
         <tr>
             <td style="text-align: center">{{$loop->iteration}}</td>
-            <td style="text-align: center">{{ $sg->barang_kategori }}</td>
+            <td style="text-align: center">{{ $sg->barang_kategori }}</td> 
+            <td style="text-align: center">{{ $sg->barang_jenis_jurnal }}</td> 
+            <td style="text-align: left">{{ $sg->barang_nama }}</td> 
                <td style="text-align: center">{{ date('d-m-Y',strtotime($sg->barang_tglmasuk)) }}</td>
                <td style="text-align: center">{{ $sg->barang_satuan }}</td>
                <td style="text-align: center">{{ $sg->total }}</td>
@@ -205,7 +209,7 @@
         </tr>
            @endforeach
            <tr>
-            <td colspan="5">TOTAL</td>
+            <td colspan="7">TOTAL</td>
             <td style="text-align: right;font-weight: bold;">Rp. {{number_format($total_harga)}}</td>
            </tr>
     </table>
@@ -221,10 +225,19 @@
             <th width="30%" higth="20px">{{ strtoupper($nama_admin )}}</th>
             <th width="30%">( ........................................... )</th>
         </tr>
+    </table> <br><br>
+    <table id="kas_rincian">
+        @foreach($stok_gudang_akum as $sg )
+        <tr>
+            <td style="text-align: center">{{$loop->iteration}}</td>
+            <td style="text-align: center">{{ $sg->barang_jenis_jurnal }}</td> 
+               <td style="text-align: right">Rp. {{ number_format($sg->total_harga) }}</td>
+        </tr>
+           @endforeach
     </table>
- 
- 
-
+    
+    
+    
 </body>
 
 </html>

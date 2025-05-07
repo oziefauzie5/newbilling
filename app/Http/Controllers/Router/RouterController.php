@@ -20,6 +20,7 @@ class RouterController extends Controller
     {
 
         $data['router_nama'] = $request->router_nama;
+        $data['router_id_pop'] = 1;
         $data['router_ip'] = $request->router_ip;
         $data['router_dns'] = $request->router_dns;
         $data['router_port_api'] = $request->router_port_api;

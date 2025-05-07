@@ -83,7 +83,7 @@ Pencairan Fee
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">TUTUP BUKU MINGGUAN</h5>
+        <h5 class="modal-title" id="exampleModalLabel">TUTUP BUKU PETTY CASH</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -94,24 +94,24 @@ Pencairan Fee
           @method('POST')
         
         <div class="row">
-          <div class="col-sm-12">
+          <!-- <div class="col-sm-12">
             <div class="form-group">
               <label>Dari tanggal</label>
              <input type="date" class="form-control" name="startdate">
             </div>
+          </div> -->
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Tanggal</label>
+              <input type="text" class="form-control readonly" name="enddate" value="{{date('Y-m-d',strtotime($tanggal))}}" >
+            </div>
           </div>
           <div class="col-sm-12">
             <div class="form-group">
-              <label>Sampai tanggal</label>
-              <input type="date" class="form-control" name="enddate">
+              <label>Saldo Akhir Rp. {{number_format($kredit-$debet)}}</label>
+              <input type="text" class="form-control readonly" name="saldo_akhir" value="{{$kredit-$debet}}" >
             </div>
           </div>
-          {{-- <div class="col-sm-12">
-            <div class="form-group">
-              <label>Upload Bukti</label>
-            <input type="file" name="file" class="form-control" required>
-            </div>
-          </div> --}}
         </div>
       </div>
       <div class="modal-footer">
@@ -145,23 +145,40 @@ Pencairan Fee
               <label>Jenis Pengeluaran</label>
               <select class="form-control" name="jenis">
                 <option value="">Pilih Jenis Pengeluaran</option>
-                <option value="KOMSUMSI">KOMSUMSI</option>
-                <option value="PERLENGKAPAN">PERLENGKAPAN</option>
-                <option value="IKLAN & PROMOSI">IKLAN & PROMOSI</option>
-                <option value="PERALATAN">PERALATAN</option>
-                <option value="ATK">ATK</option>
-                <option value="LISTRIK">LISTRIK</option>
-                <option value="DONASI">DONASI</option>
-                <option value="ENTERTIMENT">ENTERTIMENT</option>
-                <option value="PERBAIKAN & PERAWATAN">PERBAIKAN & PERAWATAN</option>
-                <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
-                <option value="IURAN & BERLANGGANAN">IURAN & BERLANGGANAN</option>
-                <option value="SEWA BANGUNAN">SEWA BANGUNAN</option>
-                <option value="SEWA KENDARAAN">SEWA KENDARAAN</option>
-                <option value="INFRASTRUKTUR">INFRASTRUKTUR</option>
-                <option value="PERALATAN KANTOR">PERALATAN KANTOR</option>
-                <option value="BIAYA ADMIN">BIAYA ADMIN</option>
-                <option value="LAIN-LAIN">LAIN-LAIN</option>
+                <option value="Aset Tetap - Bangunan">Aset Tetap - Bangunan</option>
+                <option value="Aset Tetap - Pengembangan Bangunan">Aset Tetap - Pengembangan Bangunan</option>
+                <option value="Aset Tetap - Kendaraan">Aset Tetap - Kendaraan</option>
+                <option value="Aset Tetap - Mesin & Peralatan">Aset Tetap - Mesin & Peralatan</option>
+                <option value="Aset Tetap - Peralatan Kantor">Aset Tetap - Peralatan Kantor</option>
+                <option value="Bandwith">Bandwith</option>
+                <option value="Iklan & Promosi">Iklan & Promosi</option>
+                <option value="Listrik">Listrik</option>
+                <option value="Entertement">Entertement</option>
+                <option value="Pemasaran Lainnya">Pemasaran Lainnya</option>
+                <option value="Biaya Umum & Administratif">Biaya Umum & Administratif</option>
+                <option value="Donasi">Donasi</option>
+                <option value="Hiburan">Hiburan</option>
+                <option value="Bensin - Toll - dan Parkir - Umum">Bensin - Toll - dan Parkir - Umum</option>
+                <option value="Perbaikan dan Perawatan">Perbaikan dan Perawatan</option>
+                <option value="Perjalanan (Travelling) - Umum">Perjalanan (Travelling) - Umum</option>
+                <option value="Konsumsi">Konsumsi</option>
+                <option value="Komunikasi - Umum">Komunikasi - Umum</option>
+                <option value="Iuran & Berlangganan">Iuran & Berlangganan</option>
+                <option value="Biaya Hukum & Professional">Biaya Hukum & Professional</option>
+                <option value="Biaya Lainnya">Biaya Lainnya</option>
+                <option value="Sarana Kantor">Sarana Kantor</option>
+                <option value="Pelatihan & Pengembangan">Pelatihan & Pengembangan</option>
+                <option value="Pajak & Lisensi">Pajak & Lisensi</option>
+                <option value="Pengeluaran Barang Rusak">Pengeluaran Barang Rusak</option>
+                <option value="Denda">Denda</option>
+                <option value="ATK & Print">ATK & Print</option>
+                <option value="Materai">Materai</option>
+                <option value="Keamanan & Kebersihan">Keamanan & Kebersihan</option>
+                <option value="Beban Sewa - Bangunan">Beban Sewa - Bangunan</option>
+                <option value="Beban Sewa - Kendaraan">Beban Sewa - Kendaraan</option>
+                <option value="Beban Sewa - Sewa Operasional">Beban Sewa - Sewa Operasional</option>
+                <option value="Beban Sewa - Lainnya">Beban Sewa - Lainnya</option>
+                <option value="Bank Mandiri ( Utama )">Bank Mandiri ( Utama )</option>
               </select>
             </div>
           </div>
@@ -231,6 +248,7 @@ Pencairan Fee
                   <thead>
                     <tr>
                       <th>#</th>
+                      <th>Tanggal Pembayaran</th>
                       <th>Sales</th>
                       <th>Pelanggan</th>
                       <th>Fee</th>
@@ -240,6 +258,7 @@ Pencairan Fee
                     @foreach ($data_fee_sales as $d)
                     <tr>
                       <td> <input type="checkbox" class="pencairan_fee" name="id[]" value="{{$d->id}}" data-sales_id="{{$d->id_user}}"data-pelanggan="{{$d->smt_deskripsi}}" data-count_fee="1" data-fee="{{$d->smt_kredit}}"></td>
+                      <td>{{date('d-m-Y',strtotime($d->smt_tgl_transaksi))}}</td>
                       <td>{{$d->nama_user}}</td>
                       <td>{{$d->smt_deskripsi}}</td>
                       <td>{{$d->smt_kredit}}</td>
@@ -593,22 +612,16 @@ Pencairan Fee
         <div class="row">
           <div class="col-sm-12">
             <div class="form-group">
-              <label>Uraian</label>
-              <input type="text" class="form-control" value="" name="uraian" required>
+              <label>Jumlah Topup Rp. {{number_format(2000000-($kredit-$debet))}}</label>
+            <input type="text" class="form-control readonly" value="{{2000000-($kredit-$debet)}}" name="jumlah">
             </div>
           </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Jumlah</label>
-            <input type="number" class="form-control" value="0" name="jumlah">
-            </div>
-          </div>
-          <div class="col-sm-12">
+          <!-- <div class="col-sm-12">
             <div class="form-group">
               <label>Upload Bukti</label>
             <input type="file" name="file" class="form-control" required>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="modal-footer">
@@ -622,46 +635,10 @@ Pencairan Fee
 <form >
 <div class="row mb-1">
 
-                <div class="col">
-                  <select name="kategori" class="custom-select custom-select-sm">
-                    @if($kategori)
-                    <option value="{{$kategori}}" selected>{{$kategori}}</option>
-                    @endif
-                    <option value="">ALL DATA</option>
-                <option value="PSB">PSB</option>
-                <option value="MARKETING">MARKETING</option>
-                <option value="KOMSUMSI">KOMSUMSI</option>
-                <option value="IKLAN & PROMOSI">IKLAN & PROMOSI</option>
-                <option value="PERLENGKAPAN">PERLENGKAPAN</option>
-                <option value="PERALATAN">PERALATAN</option>
-                <option value="ATK">ATK</option>
-                <option value="LISTRIK">LISTRIK</option>
-                <option value="DONASI">DONASI</option>
-                <option value="ENTERTEMENT">ENTERTEMENT</option>
-                <option value="PERBAIKAN & PERAWATAN">PERBAIKAN & PERAWATAN</option>
-                <option value="KEAMANAN DAN KEBERSIHAN">KEAMANAN DAN KEBERSIHAN</option>
-                <option value="IURAN & BERLANGGANAN">IURAN & BERLANGGANAN</option>
-                <option value="SEWA BANGUNAN">SEWA BANGUNAN</option>
-                <option value="INFRASTRUKTUR">INFRASTRUKTUR</option>
-                <option value="PERALATAN KANTOR">PERALATAN KANTOR</option>
-                <option value="BIAYA ADMIN">BIAYA ADMIN</option>
-                <!-- <option value="LAIN-LAIN">LAIN-LAIN</option> -->
-                  </select>
-                </div>
+         
                 <div class="col">
                   <input type="text" name="q" class="form-control form-control-sm" value="{{$q}}" placeholder="Cari Data">
                 </div>
-                </div>
-                <div class="row mb-1">
-                <div class="col">
-                  <input name="bulan" type="month" class="form-control form-control-sm"></input>
-                </div>
-                  <div class="col">
-                   <input type="date" name="start" class="form-control form-control-sm" value="{{$start}}" placeholder="Cari Data">
-                  </div>
-                  <div class="col">
-                   <input type="date" name="end" class="form-control form-control-sm" value="{{$end}}" placeholder="Cari Data">
-                  </div>
                   <div class="col">
                     <button type="submit" class="btn btn-block btn-dark btn-sm">Cari
                   </div>
@@ -719,7 +696,7 @@ Pencairan Fee
                      <!-- ---end modal---- -->
                     </td>
                    
-                    <td>{{date('d-m-Y H:m:s',strtotime($d->created_at))}}</td>
+                    <td>{{date('d-m-Y H:m:s',strtotime($d->jurnal_tgl))}}</td>
                       <td>{{$d->jurnal_kategori}}</td>
                       <td>{{$d->jurnal_keterangan}}</td>
                       <td>{{$d->jurnal_uraian}}</td>

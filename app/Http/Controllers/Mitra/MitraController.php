@@ -91,6 +91,7 @@ class MitraController extends Controller
         $data['alamat_lengkap'] = strtoupper($request->alamat_lengkap);
         $data['name'] = strtoupper($request->name);
         $data['password'] = Hash::make($request->password);
+        $data['status_user'] = $request->status_user;
 
         $datarole['role_id'] = $level_id;
         $datarole['model_type'] = 'App\Models\User';
