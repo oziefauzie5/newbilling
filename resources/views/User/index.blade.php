@@ -42,13 +42,13 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>No Identitas</label>
-                          <input id="ktp" type="text" class="form-control" value="{{ old('ktp') }}" name="ktp" onkeyup="validasiKtp()" placeholder="No. Identitas" required>
+                          <input id="ktp" type="number" class="form-control" value="{{ old('ktp') }}" name="ktp" onkeyup="validasiKtp()" placeholder="No. Identitas" required>
                         </div>
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>No Hp</label>
-                          <input id="hp" type="text" class="form-control" value="{{ old('hp') }}" name="hp" placeholder="No. Whatsapp" required>
+                          <input id="hp" type="number" class="form-control" value="{{ old('hp') }}" name="hp" placeholder="No. Whatsapp" required>
                         </div>
                       </div>
                       <div class="col-sm-12">

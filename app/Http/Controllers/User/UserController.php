@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator as FacadesValidator;
 use App\Models\Permission;
 use App\Models\Pesan;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -27,7 +28,7 @@ class UserController extends Controller
 
     public function index()
     {
-
+        // dd(Auth::user()->photo);
         $data['data_user'] = User::select('users.*', 'data__sites.*', 'roles.name as level', 'roles.id as role_id')
             ->join('data__sites', 'data__sites.site_id', '=', 'users.user_site')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
@@ -106,7 +107,7 @@ class UserController extends Controller
         $data['password'] = Hash::make($request->password);
         $data['user_site'] = $request->user_site;
         $data['photo'] = 'user.png';
-        $data['user_status'] = 'Enable';
+        $data['status_user'] = 'Enable';
 
         $datarole['role_id'] = $level_id;
         $datarole['model_type'] = 'App\Models\User';

@@ -24,6 +24,7 @@ class RoleSeeder extends Seeder
 
     {
 
+
         SettingAplikasi::create(
             [
                 'app_nama' => 'PT OVALL SOLUSINDO MANDIRI',
@@ -79,7 +80,7 @@ class RoleSeeder extends Seeder
                 'router_status' => 'Enable',
             ]
         );
-      
+
 
         SettingBiaya::create(
             [
@@ -92,6 +93,23 @@ class RoleSeeder extends Seeder
                 'biaya_kerjasama' => '10000',
             ]
         );
+        Router::create(
+            [
+                'site_id' => '1',
+                'site_nama' => 'Bekasi',
+                'site_prefix' => 'BKS',
+                'site_alamat' => 'Bekasi',
+                'site_koordinat' => '-',
+                'site_brand' => 'NETON',
+                'site_keterangan' => '-',
+                'site_status' => 'Enable',
+                'router_port_api' => '5532',
+                'router_port_remote' => '8889',
+                'router_username' => 'ovallnet122',
+                'router_password' => '@Fauzi12234',
+                'router_status' => 'Enable',
+            ]
+        );
 
 
         User::create([
@@ -102,7 +120,8 @@ class RoleSeeder extends Seeder
             'ktp' => '320122947928334',
             'hp' => '085770273898',
             'alamat_lengkap' => 'Kp. Cibinong RT02/01 Sukaharja, Ciomas, Bogor',
-            'status_user' => 'Aktif',
+            'status_user' => 'Enable',
+            'user_site' => '1',
             'password' => Hash::make('1234'),
         ]);
         User::create([

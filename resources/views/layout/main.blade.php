@@ -137,7 +137,12 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="@if(asset('storage/photo-user/'.Auth::user()->photo))" {{ asset('storage/photo-user/'.Auth::user()->photo) }} @else {{ asset('storage/photo-user/user.png') }} @endif alt="..." class="avatar-img rounded-circle">
+							<img src="" {{ asset('storage/photo-user/07-05-2025user.png') }}  alt="..." class="avatar-img rounded-circle">
+							{{-- @if(asset('storage/photo-user/'.Auth::user()->photo))
+							@else
+							<img src="" {{ asset('storage/photo-user/user.png') }}  alt="..." class="avatar-img rounded-circle">
+							
+							@endif --}}
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
