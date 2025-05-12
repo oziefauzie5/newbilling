@@ -37,7 +37,7 @@
   border: 5px solid #f3f3f3;
   /* position: fixed; */
   border-radius: 50%;
-  border-top: 5px solid #5d69be;
+  border-top: 5px solid #0d2a38;
   margin-bottom: 30px;
   width: 50px;
   height: 50px;
@@ -67,6 +67,12 @@
   border-radius: 15px;
   font-weight: bold;
 }
+
+  .navbar-bg {
+          background-image: url('atlantis/assets/img/baground_navbar.jpeg');
+          background-size: cover;
+          /* Tambahkan properti lain seperti background-position, background-attachment, dll. */
+      }
 	</style>
 
 </head>
@@ -75,9 +81,10 @@
 		<div class="main-header">
 			<!-- Logo Header -->
 			<div class="logo-header" data-background-color="blue" >
-				
+
 				<a href="index.html" class="logo">
-					{{-- <img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" alt="navbar brand" class="navbar-brand"> --}}
+					<!-- <img src="{{ asset('storage/img/LOGO.svg')}}" alt="{{Session::get('app_logo')}}" class="navbar-brand rounded float-left" >  -->
+					<!-- <img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" alt="{{Session::get('app_logo')}}" class="navbar-brand rounded float-left" >  -->
 					<h3 class="navbar-brand text-light"><strong> {{Session::get('app_brand')}}</strong></h3>
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +102,7 @@
 			<!-- End Logo Header -->
 
 			<!-- Navbar Header -->
-			<nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2">
+			<nav class="navbar navbar-header navbar-expand-lg"  data-background-color="blue2">
 				
 				<div class="container-fluid">
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
@@ -103,14 +110,14 @@
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 								<div class="avatar-sm">
-									<img src="@if(asset('storage/photo-user/'.Auth::user()->photo))" {{ asset('storage/photo-user/'.Auth::user()->photo) }} @else {{ asset('storage/photo-user/user.png') }} @endif alt="..." class="avatar-img rounded-circle">
+									<img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
 								</div>
 							</a>
 							<ul class="dropdown-menu dropdown-user animated fadeIn">
 								<div class="dropdown-user-scroll scrollbar-outer">
 									<li>
 										<div class="user-box">
-											<div class="avatar-lg"><img src="@if(asset('storage/photo-user/'.Auth::user()->photo))" {{ asset('storage/photo-user/'.Auth::user()->photo) }} @else {{ asset('storage/photo-user/user.png') }} @endif alt="..." class="avatar-img rounded-circle">
+											<div class="avatar-lg"><img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
 											</div>
 											
 											<div class="u-text">
@@ -132,17 +139,13 @@
 		</div>
 
 		<!-- Sidebar -->
-		<div class="sidebar sidebar-style-2">			
+		<div class="sidebar sidebar-style-2 " style="position: fixed; background-image: url({{asset('atlantis/assets/img/bg-sidebar.png')}}) ">			
+		<!-- <div class="sidebar sidebar-style-2 " style="background-color: green">			 -->
 			<div class="sidebar-wrapper scrollbar scrollbar-inner">
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="" {{ asset('storage/photo-user/07-05-2025user.png') }}  alt="..." class="avatar-img rounded-circle">
-							{{-- @if(asset('storage/photo-user/'.Auth::user()->photo))
-							@else
-							<img src="" {{ asset('storage/photo-user/user.png') }}  alt="..." class="avatar-img rounded-circle">
-							
-							@endif --}}
+							<img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
@@ -2664,6 +2667,10 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					$('.simpan_deaktivasi').attr('disabled','disabled');
 					$('select[name=kelengkapan]').change(function () {
 						if ($(this).val() == 'ONT') {
+							$('#deaktivasi_mac').val('');
+							$('#deaktivasi_sn').val('');
+							$('#kode_barang_ont').val('');
+							$('#kode_barang_adp').val('');
 							$('.pernyataan_1').hide()
 							$('.pernyataan_2').hide()
 							$('.cek_id').hide()
@@ -2680,6 +2687,10 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('.pernyataan_1').show()
 							$('.simpan_deaktivasi').attr('disabled','disabled');
 						} else if($(this).val() == 'ONT & Adaptor') { 
+							$('#deaktivasi_mac').val('');
+							$('#deaktivasi_sn').val('');
+							$('#kode_barang_ont').val('');
+							$('#kode_barang_adp').val('');
 							$('.pernyataan_1').hide()
 							$('.pernyataan_2').hide()
 							$('.div_pernyataan').hide()
@@ -2694,6 +2705,10 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#deaktivasi_tanggal_pengambilan').attr('required', 'required');
 							$('.simpan_deaktivasi').attr('disabled','disabled');
 						} else if($(this).val() == 'Hilang') { 
+							$('#deaktivasi_mac').val('');
+							$('#deaktivasi_sn').val('');
+							$('#kode_barang_ont').val('');
+							$('#kode_barang_adp').val('');
 							$('#kode_barang_ont').attr('required', 'required');
 							$('#kode_barang_adp').attr('required', 'required');
 							$('.pernyataan_1').hide()
@@ -2797,8 +2812,8 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 													if(data == 0){
 														// barang digunkan oleh pelanggan lain
 														$('.simpan_deaktivasi').attr('disabled','disabled');
-														swal("Gagal!", "barang digunkan oleh pelanggan lain.", {
-															icon : "error",
+														swal("barang digunkan oleh pelanggan lain.", {
+															icon : "warning",
 															buttons: {        			
 																confirm: {
 																	className : 'btn btn-error'
@@ -2808,7 +2823,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 													} else if(data == 1){
 														// barang belum digunakan
 														$('.simpan_deaktivasi').attr('disabled','disabled');
-														swal("Gagal!", "Barang belum digunakan.", {
+														swal("Barang tidak ditemukan.", {
 															icon : "error",
 															buttons: {        			
 																confirm: {
@@ -2832,6 +2847,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 		
 					//--------------------END DEAKTIVASI----------------------
 					</script>
+					
 
 					<script>
 						//--------------------START BARANG KELUAR----------------------
@@ -3226,6 +3242,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											$('.tiket_noskb').attr('required','required');
 											$('#modal_tambah_barang').modal('hide');
 											$('#tiket_noskb').val(data);
+											$('.submit_tiket').removeAttr('disabled');
 											}
 										}
 									});
@@ -3234,6 +3251,187 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 								//--------------------END TIKET BARANG KELUAR----------------------
 			
 
+					</script>
+
+<script>
+					//--------------------START TIKET CLOSE GANTI BARANG----------------------
+					$(document).ready(function() {
+					// 
+					$('.submit_tiket').attr('disabled','disabled');
+					$('select[name=kate_tindakan]').change(function () {
+						if ($(this).val() == 'Ganti ONT') {
+							$('#ganti_mac').val('');
+							$('#ganti_sn').val('');
+							$('#kode_barang_ont').val('');
+							$('#kode_barang_adp').val('');
+							$('.div_adp').hide()
+							$('.div_ont').show()
+							$('#ganti_mac').attr('required', 'required');
+							$('#ganti_sn').attr('required', 'required');
+							$('#kode_barang_ont').attr('required', 'required');
+							$('#kode_barang_adp').removeAttr('required');
+							$('#button_modal_barang').click(function(){
+								if($('#ganti_mac').val() != "" && $('#ganti_sn').val() != "" && $('#kode_barang_ont').val()!= ""){
+									$('#modal_tambah_barang').modal('show');
+									$('.notif_ganti').removeClass('has-error has-feedback')
+								} else {
+									$('.notif_ganti').addClass('has-error has-feedback')
+									$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
+								}
+
+							})
+						} else if($(this).val() == 'Ganti Adaptor') { 
+							$('#modal_tambah_barang').modal('hide');
+							$('.notif_ganti').removeClass('has-error has-feedback')
+							$('#ganti_mac').val('');
+							$('#ganti_sn').val('');
+							$('#kode_barang_ont').val('');
+							$('#kode_barang_adp').val('');
+							$('.div_adp').show()
+							$('.div_ont').hide()
+							$('#ganti_mac').removeAttr('required');
+							$('#ganti_sn').removeAttr('required');
+							$('#kode_barang_ont').removeAttr('required');
+							$('#kode_barang_adp').attr('required', 'required');
+							$('#button_modal_barang').click(function(){
+								if($('#kode_barang_adp').val() != ""){
+									$('#modal_tambah_barang').modal('show');
+									$('.notif_ganti').removeClass('has-error has-feedback')
+								} else {
+									$('.notif_ganti').addClass('has-error has-feedback')
+									$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
+								}
+							})
+						} else if($(this).val() == 'Lainnya') { 
+							$('.notif_ganti').removeClass('has-error has-feedback')
+							$('#ganti_mac').val('');
+							$('#ganti_sn').val('');
+							$('#kode_barang_ont').val('');
+							$('#kode_barang_adp').val('');
+							$('.div_adp').hide()
+							$('.div_ont').hide()
+							$('#ganti_mac').removeAttr('required');
+							$('#ganti_sn').removeAttr('required');
+							$('#kode_barang_ont').removeAttr('required');
+							$('#kode_barang_adp').removeAttr('required');
+							$('.submit_tiket').removeAttr('disabled');
+							$('#button_modal_barang').click(function(){
+									$('#modal_tambah_barang').modal('show');
+									$('.notif_ganti').removeClass('has-error has-feedback')
+							})
+						}
+					});
+					});
+
+					$('#tiket_cek_ont').click(function(){
+						var mac = $('#ganti_mac').val()
+						var idpel = $('#tiket_idpel').val()
+						// console.log(idpel );
+						var url = '{{ route("admin.tiket.tiket_cek_ont", ":id") }}';
+						url = url.replace(':id', idpel);
+						// console.log(idpel)
+									$.ajax({
+										url: url,
+											type: 'POST',
+											data: {
+												mac:mac,
+												'_token': '{{ csrf_token() }}'
+											},
+											dataType: 'json',
+											success: function(data) {
+												console.log(data)
+												if(data){
+													if(data == 0){
+														// barang digunkan oleh pelanggan lain
+														$('.submit_tiket').attr('disabled','disabled');
+														swal("barang belum digunakan atau digunakan oleh pelanggan lain.", {
+															icon : "warning",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+													} else if(data == 1){
+														// barang belum digunakan
+														$('.submit_tiket').attr('disabled','disabled');
+														swal("Tidak ada barang yang digunakan oleh pelanggan ini.", {
+															icon : "warning",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+													} else if(data == 2){
+														swal("Mac tidak ditemukan.", {
+															icon : "warning",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+														$('.submit_tiket').attr('disabled','disabled');
+													} else {
+														$('#ganti_sn').val(data['barang_sn'])
+														$('#kode_barang_ont').val(data['barang_id'])
+														$('.submit_tiket').removeAttr('disabled');
+														
+														
+														// console.log(data);
+													}
+												}
+											}
+										});
+					});
+					$('#tiket_cek_id').click(function(){
+						// var mac = $('#mac').val()
+						var idpel = $('#tiket_idpel').val()
+						// alert(idpel)
+						var url = '{{ route("admin.tiket.tiket_cek_adp", ":id") }}';
+									url = url.replace(':id', idpel);
+									$.ajax({
+										url: url,
+											type: 'GET',
+											data: {
+												'_token': '{{ csrf_token() }}'
+											},
+											dataType: 'json',
+											success: function(data) {
+												// console.log(data);
+												if(data){
+													if(data == 0){
+														// barang digunkan oleh pelanggan lain
+														$('.submit_tiket').attr('disabled','disabled');
+														swal("barang belum digunakan atau barang digunakan oleh pelanggan lain.", {
+															icon : "warning",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+													} else if(data == 1){
+														// barang belum digunakan
+														$('.submit_tiket').attr('disabled','disabled');
+														swal( "Tidak ada barang yang digunakan oleh pelanggan ini.", {
+															icon : "warning",
+															buttons: {        			
+																confirm: {
+																	className : 'btn btn-error'
+																}
+															},
+														});
+													}  else {
+														$('#kode_barang_adp').val(data['barang_id_adp'])
+													}
+												}
+											}
+										});
+					});
+		
+					//--------------------END TIKET CLOSE GANTI BARANG----------------------
 					</script>
 
 					<script>
@@ -3245,6 +3443,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 									$('#tiket_teknisi1').attr('required', 'required');
 									$('#tiket_teknisi2').attr('required', 'required');
 									$('#tiket_kendala').removeAttr('required');
+									$('#kate_tindakan').removeAttr('required');
 									$('#tiket_tindakan').removeAttr('required');
 									$('#tiket_foto').removeAttr('required');
 									$('#tiket_noskb').removeAttr('required');
@@ -3258,18 +3457,18 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 									$('#tiket_waktu_penanganan').attr('required', 'required');
 									$('#tiket_teknisi1').attr('required', 'required');
 									$('#tiket_teknisi2').attr('required', 'required');
+									$('#kate_tindakan').attr('required', 'required');
 									$('#tiket_foto').attr('required', 'required');
 									$('#tiket_kendala').attr('required', 'required');
 									$('#tiket_tindakan').attr('required', 'required');
 
 									$('.button_modal_barang').click(function(){
-											
-											if($('#tiket_teknisi1').val() != "" && $('#tiket_teknisi2').val() != "" && $('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""){
-												$('#modal_tambah_barang').modal('show');
+											if($('#tiket_teknisi1').val() != "" && $('#tiket_teknisi2').val() != "" && $('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
+												// $('#modal_tambah_barang').modal('show');
+												$('.notif').removeClass('has-error has-feedback')
 											} else {
 												$('.notif').addClass('has-error has-feedback')
 												$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
-														
 											}
 									})
 									

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('routers', function (Blueprint $table) {
             $table->id();
             $table->string('router_nama')->nullable();
+            $table->integer('router_id_pop')->nullable();
             $table->string('router_ip')->nullable();
             $table->string('router_dns')->nullable();
             $table->string('router_port_api')->nullable();

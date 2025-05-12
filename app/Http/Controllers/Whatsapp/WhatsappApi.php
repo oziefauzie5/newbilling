@@ -47,7 +47,7 @@ class WhatsappApi extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => array(
-                'target' => '120363028776966861@g.us',
+                'target' => env('GROUP_TEKNISI'),
                 'message' => 'test message to {name} as {var1}',
                 // 'url' => 'https://md.fonnte.com/images/wa-logo.png',
                 // 'filename' => 'filename',

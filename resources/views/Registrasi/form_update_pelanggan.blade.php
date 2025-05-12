@@ -169,6 +169,10 @@
                     </button>
                   </div>
                   <div class="modal-body">
+                    <label class="col-sm-2 col-form-label">Site</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control readonly" required value="{{ $data->reg_site}}" name="tiket_site" >
+              </div>
                   <form action="{{route('admin.reg.deaktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST">
                           @csrf
                           @method('PUT')
@@ -200,6 +204,7 @@
                       <label class="col-sm-2 col-form-label">Mac Address</label>
                       <div class="col-sm-4">
                         <input type="text" class="form-control " value="" id="deaktivasi_mac" name="deaktivasi_mac" >
+                        <span>Kesalahan input mac, dapat mengakibatkan pelanggan aktif menjadi non aktif jika mac digunakan oleh pelanggan yang berbeda</span>
                       </div>
                       <label class="col-sm-2 col-form-label">Kode Barang</label>
                       <div class="col-sm-4">

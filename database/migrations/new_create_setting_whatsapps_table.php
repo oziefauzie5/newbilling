@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('setting_whatsapps', function (Blueprint $table) {
             $table->id();
             $table->string('wa_nama')->nullable();
+            $table->string('wa_site')->nullable();
             $table->string('wa_key')->nullable();
             $table->string('wa_url')->nullable();
             $table->string('wa_status')->nullable();

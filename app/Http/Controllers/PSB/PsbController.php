@@ -127,8 +127,8 @@ class PsbController extends Controller
         $data['count_total_inv'] = Invoice::where('inv_status', '!=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '!=', 'PAID')->count();
         $data['count_tiket'] = Invoice::where('inv_status', '!=', 'PAID')->whereMonth('inv_tgl_jatuh_tempo', '!=', 'PAID')->count();
 
-        $data['get_router'] = Router::get();
-        $data['get_paket'] = Paket::get();
+        $data['get_router'] = Router::where('router_status', 'Enable')->get();
+        $data['get_paket'] = Paket::where('paket_status', 'Enable')->get();
         // $data['get_registrasi'] = Registrasi::get();
 
         return view('PSB/index', $data);
@@ -198,7 +198,12 @@ class PsbController extends Controller
 
     public function list_input()
     {
-        $data['data_user'] = User::all();
+        // $data['data_user'] = User::all();
+        $data['data_user'] =  User::select('users.name AS nama_user', 'users.id as user_id')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->whereIn('roles.id', [11, 12, 13])
+            ->get();
         $data['input_data'] = InputData::orderBy('input_tgl', 'DESC')->get();
         //     foreach ($data['input_data'] as $key) {
         //         echo '<table><tr><td>'.$key->input_nama.'</td><td>'.$key->input_hp.'</td><td>'.$key->password.'</td></tr></table>';
@@ -225,6 +230,7 @@ class PsbController extends Controller
     public function store(Request $request)
     {
         $id_cust = (new GlobalController)->idpel_();
+        // dd($id_cust);
         // $id_cust = '12154';
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
         $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
@@ -249,10 +255,24 @@ class PsbController extends Controller
         Session::flash('input_keterangan', ucwords($request->input_keterangan));
 
         $request->validate([
+            'input_nama' => 'required',
+            'input_email' => 'required',
+            'input_alamat_ktp' => 'required',
+            'input_alamat_pasang' => 'required',
+            'input_sales' => 'required',
+            'input_subseles' => 'required',
+            'input_maps' => 'required',
             'input_ktp' => 'unique:input_data',
             'input_hp' => 'unique:input_data',
             'input_hp_2' => 'unique:input_data',
         ], [
+            'input_nama' => 'Nama tidak boleh kosong',
+            'input_email' => 'Email tidak boleh kosong',
+            'input_alamat_ktp' => 'Alamat KTP tidak boleh kosong',
+            'input_alamat_pasang' => 'Alamat Pasang tidak boleh kosong',
+            'input_sales' => 'Sales tidak boleh kosong',
+            'input_subseles' => 'Sub Sales tidak boleh kosong',
+            'input_maps' => 'Maps tidak boleh kosong',
             'input_ktp.unique' => 'Nomor Identitas sudah terdaftar',
             'input_hp.unique' => 'Nomor Whatsapp 1 sudah terdaftar',
             'input_hp_2.unique' => 'Nomor Whatsapp 2 sudah terdaftar',
@@ -385,7 +405,5 @@ class PsbController extends Controller
         return redirect()->route('admin.psb.list_input')->with($notifikasi);
     }
 
-    public function export_excel(){
-        
-    }
+    public function export_excel() {}
 }

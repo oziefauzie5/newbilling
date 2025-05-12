@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('tiket_teknisi2')->nullable();
             $table->string('tiket_barang')->nullable();
             $table->string('tiket_status')->nullable();
+            $table->string('tiket_idbarang_keluar')->nullable();
             $table->timestamps();
         });
     }

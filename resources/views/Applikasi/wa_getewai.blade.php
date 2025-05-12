@@ -34,7 +34,8 @@
                             <div class="card-body">
                               <div class="form-group">
                                   <label>Site</label>
-                                  <select name="wa_site" class="form-control" required>
+                                  <select name="wa_site" id="" required class="form-control">
+                                    <option value="">--Pilih Site</option>
                                     @foreach ($data_site as $site)
                                         <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
                                     @endforeach

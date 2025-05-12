@@ -29,45 +29,45 @@ class NotifTelatPembayaran implements ShouldQueue
      */
     public function handle(): void
     {
-        $tanggal = date('Y-m-d',strtotime(Carbon::now()));
+        $tanggal = date('Y-m-d', strtotime(Carbon::now()));
         $tagihan_kebelakang = Carbon::create($tanggal)->addMonth(-1)->toDateString();
         // dd($tagihan_kebelakang);
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-        ->where('reg_progres', '=', '5')
-        ->where('reg_status', '!=', 'PAID')
-        ->whereDate('reg_tgl_jatuh_tempo', '<', $tagihan_kebelakang)
-        ->orderBy('reg_tgl_jatuh_tempo', 'ASC');
+            ->where('reg_progres', '=', '5')
+            ->where('reg_status', '!=', 'PAID')
+            ->whereDate('reg_tgl_jatuh_tempo', '<', $tagihan_kebelakang)
+            ->orderBy('reg_tgl_jatuh_tempo', 'ASC');
         $data_pelanggan = $query->count();
 
         $status = (new GlobalController)->whatsapp_status();
-            if ($status->wa_status == 'Enable') {
+        if ($status->wa_status == 'Enable') {
 
-                Pesan::create([
-                    'pesan_id_site' => '1',
-                    'layanan' => 'CS',
-                    'ket' => 'notif',
-                    'status' => '0',
-                    'target' => '120363162052425277@g.us',
-                    'nama' => 'PENGAMBILAN PERANGKAT',
-                    'pesan' => 'Pelanggan telat bayar diatas 30 hari = '.$data_pelanggan.' Pelanggan
+            Pesan::create([
+                'pesan_id_site' => '1',
+                'layanan' => 'CS',
+                'ket' => 'notif',
+                'status' => '0',
+                'target' => '120363162052425277@g.us',
+                'nama' => 'PENGAMBILAN PERANGKAT',
+                'pesan' => 'Pelanggan telat bayar diatas 30 hari = ' . $data_pelanggan . ' Pelanggan
 Segera di Follow Up kembali.
 
 Terimakasih atas kerjasama nya',
-                ]);
-            } else {
-                
-                Pesan::create([
-                    'pesan_id_site' => '1',
-                    'layanan' => 'CS',
-                    'ket' => 'notif',
-                    'status' => '10',
-                    'target' => '120363162052425277@g.us',
-                    'nama' => 'PENGAMBILAN PERANGKAT',
-                    'pesan' => 'Pelanggan telat bayar diatas 30 hari = '.$data_pelanggan.' Pelanggan
+            ]);
+        } else {
+
+            Pesan::create([
+                'pesan_id_site' => '1',
+                'layanan' => 'CS',
+                'ket' => 'notif',
+                'status' => '10',
+                'target' => '120363162052425277@g.us',
+                'nama' => 'PENGAMBILAN PERANGKAT',
+                'pesan' => 'Pelanggan telat bayar diatas 30 hari = ' . $data_pelanggan . ' Pelanggan
 Segera di Follow Up kembali.
 
 Terimakasih atas kerjasama nya',
-                ]);
-            }
+            ]);
+        }
     }
 }

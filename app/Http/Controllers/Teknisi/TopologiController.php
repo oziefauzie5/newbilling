@@ -332,18 +332,20 @@ class TopologiController extends Controller
 
         $data_odc = Data_Odc::where('odc_id', $request->odp_id_odc)->first();
         $query = Data_Odp::query();
-        $count1 = $query->count();
-        $count2 = $query->where('odp_id', $request->odp_id_odc)->count(); #sesuai site
+        $count2 = $query->where('odp_id_odc', $request->odp_id_odc)->count(); #sesuai site
+        // $count1 = $query->count();
 
-        if ($count1 == 0) {
-            $store['odp_id'] = '1';
-        } else {
-            $store['odp_id'] = $count1 + 1;
-        }
+        // if ($count1 == 0) {
+        //     $store['odp_id'] = '1';
+        // } else {
+        //     $store['odp_id'] = $count1 + 1;
+        // }
+
         if ($count2 == 0) {
             $store['odp_kode'] = $data_odc->odc_kode . '.' . '1';
         } else {
             $store['odp_kode'] = $data_odc->odc_kode . '.' . $count2 + 1;
+            // dd( $data_odc);
         }
         $store['odp_id_odc'] = $request->odp_id_odc;
         $store['odp_port_odc'] = $request->odp_port_odc;

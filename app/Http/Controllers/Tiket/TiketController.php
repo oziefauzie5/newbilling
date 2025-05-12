@@ -166,7 +166,7 @@ Terima kasih.';
             'layanan' =>  'NOC',
             'pesan_id_site' =>  $request->tiket_site,
             'ket' =>  'tiket',
-            'target' =>  '120363028776966861@g.us',
+            'target' =>  env("GROUP_TEKNISI"),
             'status' =>  $status_pesan,
             'nama' =>  'GROUP TEKNISI',
             'pesan' => '               -- TIKET GANGGUAN --
@@ -193,9 +193,9 @@ Semangat Broooo... Sisa tiket = ' . $count . '
 
         Data_Tiket::create($tiket);
 
-        if($request->tiket_jenis == 'Reaktivasi'){
-            Registrasi::where('reg_idpel',$request->tiket_idpel)->update([
-                'reg_status' => 2,
+        if ($request->tiket_jenis == 'Reaktivasi') {
+            Registrasi::where('reg_idpel', $request->tiket_idpel)->update([
+                'reg_progres' => 2,
             ]);
             $notifikasi = [
                 'pesan' => 'Berhasil Membuat Tiket Deaktivasi',
@@ -209,7 +209,6 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             ];
             return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
         }
-
     }
 
 
@@ -238,7 +237,8 @@ Semangat Broooo... Sisa tiket = ' . $count . '
     }
     public function details_tiket($id)
     {
-
+        $user = (new globalController)->user_admin();
+        $data['user_nama'] = $user['user_nama'];
         $data['data_user'] = User::all();
         $data['teknisi'] = (new GlobalController)->getTeknisi();
         $data['user_admin'] = (new GlobalController)->user_admin();
@@ -290,38 +290,33 @@ Semangat Broooo... Sisa tiket = ' . $count . '
     {
         $no_tiket = (new GlobalController)->nomor_tiket();
         $datetime = date('Y-m-d h:m:s', strtotime(carbon::now()));
-        
+
         $admin_closed = Auth::user()->id;
-        
+
         $explode = explode('|', $request->tiket_teknisi1);
         $teknisi_id = $explode[0];
         $teknisi_nama = $explode[1];
-        
+
         $tiket['tiket_jenis'] = $request->tiket_jenis;
         $tiket['tiket_status'] = $request->tiket_status;
         $tiket['tiket_pending'] = $request->tiket_pending;
         $tiket['tiket_teknisi1'] = $teknisi_id;
         $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
-        
+
         if ($request->tiket_status == 'Closed') {
             $tiket['tiket_waktu_selesai'] = $datetime;
             $tiket['tiket_kendala'] = $request->tiket_kendala;
             $tiket['tiket_tindakan'] = $request->tiket_tindakan;
             $tiket['tiket_waktu_mulai'] = $datetime;
             $tiket['tiket_waktu_selesai'] = $datetime;
-
-            
-            
-            
-            
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
-            
+
             $photo = $request->file('tiket_foto');
             $filename = $photo->getClientOriginalName();
             $path = 'laporan-tiket/' . $filename;
             Storage::disk('public')->put($path, file_get_contents($photo));
             $tiket['tiket_foto'] = $filename;
-            
+
 
             $reg['reg_pop'] = $request->tiket_pop;
             $reg['reg_olt'] = $request->tiket_olt;
@@ -330,17 +325,33 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             if ($request->tiket_jenis == 'Reaktivasi') {
                 $reg['reg_progres'] = 2;
             }
-            
+
             // dd($request->tiket_nama);
-            if($request->tiket_nama == 'Instalasi PSB'){
+            if ($request->tiket_nama == 'Instalasi PSB') {
                 // dd('test');
                 $photo_rumah = $request->file('tiket_foto');
                 $filename_rumah = $photo_rumah->getClientOriginalName();
                 $path_rumah = 'rumah_pelanggan/' . $filename_rumah;
                 Storage::disk('public')->put($path_rumah, file_get_contents($photo_rumah));
-                $reg['reg_teknisi_team'] = $teknisi_nama .' & '. $request->tiket_teknisi2;
+                $reg['reg_teknisi_team'] = $teknisi_nama . ' & ' . $request->tiket_teknisi2;
                 $reg['reg_img'] = $filename_rumah;
             }
+
+            if ($request->kate_tindakan == 'Ganti ONT') {
+                Data_BarangKeluar::whereIn('bk_id_barang', $request->kode_barang_ont)->delete();
+                Data_Barang::whereIn('barang_id', $request->kode_barang_ont)->update([
+                    'barang_digunakan' => 0,
+                    'barang_dicek' => 1,
+                    'barang_ket' => 'Ganti Perangkat',
+                ]);
+            } elseif ($request->kate_tindakan == 'Ganti Adaptor') {
+                Data_BarangKeluar::whereIn('bk_id_barang', $request->kode_barang_adp)->delete();
+                Data_Barang::whereIn('barang_id', $request->kode_barang_adp)->update([
+                    'barang_digunakan' => 0,
+                    'barang_hilang' => 1,
+                ]);
+            }
+
 
             // dd($reg);
 
@@ -356,7 +367,7 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $pesan_closed['ket'] = 'tiket';
             $pesan_closed['pesan_id_site'] = $request->tiket_site;
             $pesan_closed['status'] = $status_pesan;
-            $pesan_closed['target'] = '120363028776966861@g.us';
+            $pesan_closed['target'] = env("GROUP_TEKNISI");
             $pesan_closed['nama'] = 'Group Teknisi';
             $pesan_closed['pesan'] = '               -- CLOSED TIKET --
 Kendala : ' . $request->tiket_kendala . '
@@ -380,5 +391,49 @@ Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
             );
             return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
         }
+    }
+
+    public function tiket_cek_ont(Request $request, $id)
+    {
+        // 
+        $cek_mac = Data_Barang::where('barang_mac', $request->mac)->where('barang_kategori', 'ONT')->first();
+        if ($cek_mac) {
+            $data_barang_keluar = Data_BarangKeluar::where('bk_id_barang', $cek_mac->barang_id)->first();
+            if ($data_barang_keluar) {
+                if ($data_barang_keluar->bk_idpel == $id) {
+                    $data['barang_id_ont'] = $data_barang_keluar->bk_id_barang;
+                    $data['barang_sn'] = $cek_mac->barang_sn;
+                    $data['barang_id'] = $cek_mac->barang_id;
+                    return response()->json($data);
+                } else {
+                    return response()->json('0');
+                }
+            } else {
+                return response()->json('1');
+            }
+        } else {
+            return response()->json('2');
+        }
+    }
+    public function tiket_cek_adp($id)
+    {
+        // $cek_mac = Data_Barang::where('barang_mac',$request->mac)->where('barang_kategori','ONT')->first();
+        // if($cek_mac){
+        $data_barang_keluar = Data_BarangKeluar::Join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
+            ->where('bk_idpel', $id)->where('bk_kategori', 'ONT')->first();
+        // return response()->json($data_barang_keluar);
+        if ($data_barang_keluar) {
+            $dbk_adp = Data_BarangKeluar::where('bk_idpel', $id)->where('bk_kategori', 'ADAPTOR')->first();
+            $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
+            $data['barang_id_ont'] = $data_barang_keluar->barang_id;
+            $data['barang_sn'] = $data_barang_keluar->barang_sn;
+            $data['barang_mac'] = $data_barang_keluar->barang_mac;
+            return response()->json($data);
+        } else {
+            return response()->json('1');
+        }
+        // } else {
+        //     return response()->json('2');
+        // }
     }
 }

@@ -6,6 +6,7 @@ use App\Exports\Export\ExportUsername;
 use App\Http\Controllers\Controller;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
+use App\Models\Teknisi\Data_pop;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -13,14 +14,15 @@ class RouterController extends Controller
 {
     public function index()
     {
-        $data['router'] = Router::all();
+        $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')->get();
+        $data['data_pop'] = Data_pop::where('pop_status', 'Enable')->get();
         return view('Router/index', $data);
     }
     public function store(Request $request)
     {
 
         $data['router_nama'] = $request->router_nama;
-        $data['router_id_pop'] = 1;
+        $data['router_id_pop'] = $request->router_id_pop;
         $data['router_ip'] = $request->router_ip;
         $data['router_dns'] = $request->router_dns;
         $data['router_port_api'] = $request->router_port_api;
@@ -40,6 +42,7 @@ class RouterController extends Controller
     {
 
         $data['router_nama'] = $request->router_nama;
+        $data['router_id_pop'] = $request->router_id_pop;
         $data['router_ip'] = $request->router_ip;
         $data['router_dns'] = $request->router_dns;
         $data['router_port_api'] = $request->router_port_api;

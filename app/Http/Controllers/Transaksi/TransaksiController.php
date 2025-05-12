@@ -30,8 +30,8 @@ class TransaksiController extends Controller
         $whereMonth = date('m', strtotime(Carbon::now()));
         $whereDate = date('Y-m-d', strtotime(Carbon::now()));
         $query = Transaksi::orderBy('created_at', 'DESC')
-        ->where('trx_jenis', 'Invoice')
-        ->whereMonth('created_at', $whereMonth);
+            ->where('trx_jenis', 'Invoice')
+            ->whereMonth('created_at', $whereMonth);
         $data['transaksi'] = $query->get();
         // Transaksi::where('trx_kategori','Pendapatan')->update([
         //     'trx_kategori' => 'Pendapatan',
@@ -52,8 +52,8 @@ class TransaksiController extends Controller
         $whereMonth = date('m', strtotime(Carbon::now()));
         $whereDate = date('Y-m-d', strtotime(Carbon::now()));
         $query = Transaksi::orderBy('created_at', 'DESC')
-        ->where('trx_jenis', 'Voucher')
-        ->whereMonth('created_at', $whereMonth);
+            ->where('trx_jenis', 'Voucher')
+            ->whereMonth('created_at', $whereMonth);
         $data['transaksi'] = $query->get();
         // Transaksi::where('trx_kategori','Pendapatan')->update([
         //     'trx_kategori' => 'Pendapatan',
@@ -84,8 +84,8 @@ class TransaksiController extends Controller
                 $query->orWhere('jurnal_admin', 'like', '%' . $data['q'] . '%');
             });
         $data['jurnal'] = $query->paginate(50);
-        $data['kredit'] = Jurnal::where('jurnal_status',1)->sum('jurnal_kredit');
-        $data['debet'] = Jurnal::where('jurnal_status',1)->sum('jurnal_debet');
+        $data['kredit'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_kredit');
+        $data['debet'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_debet');
         $data['kendaraan'] = (new GlobalController)->data_kendaraan()->get();
         $data['user'] = (new GlobalController)->all_user()->get();
         $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'PEMBAYARAN')->get();
@@ -99,14 +99,21 @@ class TransaksiController extends Controller
             ->where('registrasis.reg_progres', '=', 4)
             ->where('registrasis.reg_status', '=', 'PAID');
         $data['data_registrasi'] = $query->get();
+        $cek_mutasi = MutasiSales::count();
+        // dd($cek_mutasi);
+        if ($cek_mutasi > 0) {
+            $fee_sales = MutasiSales::select('mutasi_sales.*', 'users.id as id_user', 'users.name as nama_user', 'users.created_at as tgl_mts_salas')
+                ->join('users', 'users.id', '=', 'mutasi_sales.smt_user_id')
+                ->orderBy('tgl_mts_salas', 'ASC')
+                // ->whereDate('smt_tgl_transaksi', '>=',$start_date )
+                ->whereDate('smt_tgl_transaksi', '<=', $end_date)
+                ->where('smt_status', '=', 0);
+            $data['data_fee_sales'] = $fee_sales->get();
+        } else {
 
-        $fee_sales = MutasiSales::select('mutasi_sales.*', 'users.id as id_user', 'users.name as nama_user', 'users.created_at as tgl_mts_salas')
-            ->join('users', 'users.id', '=', 'mutasi_sales.smt_user_id')
-            ->orderBy('tgl_mts_salas', 'ASC')
-            // ->whereDate('smt_tgl_transaksi', '>=',$start_date )
-            ->whereDate('smt_tgl_transaksi', '<=',$end_date )
-            ->where('smt_status', '=', 0);
-        $data['data_fee_sales'] = $fee_sales->get();
+            $fee_sales = MutasiSales::where('smt_status', '=', 0);
+            $data['data_fee_sales'] = $fee_sales->get();
+        }
         // dd($data['data_akumulasi']);
 
         return view('Transaksi/jurnal', $data);
@@ -154,22 +161,22 @@ class TransaksiController extends Controller
             ->get();
 
         $data['lap_mingguan_akum'] = Jurnal::orderBy('created_at', 'ASC')
-        ->whereDate('jurnals.jurnal_tgl', '>=', '2025-03-01')->whereDate('jurnals.jurnal_tgl', '<=', '2025-03-31')
-            ->select('jurnal_kategori','jurnal_keterangan', DB::raw('sum(jurnal_debet) as debet'), DB::raw('sum(jurnal_kredit) as kredit'))
+            ->whereDate('jurnals.jurnal_tgl', '>=', '2025-03-01')->whereDate('jurnals.jurnal_tgl', '<=', '2025-03-31')
+            ->select('jurnal_kategori', 'jurnal_keterangan', DB::raw('sum(jurnal_debet) as debet'), DB::raw('sum(jurnal_kredit) as kredit'))
             // ->where('jurnal_id', '=', $id)
             ->where('jurnal_kategori', '!=', 'Saldo Awal')
             ->where('jurnal_kategori', '!=', 'TOPUP')
-            ->groupBy('jurnal_kategori','jurnal_keterangan')
+            ->groupBy('jurnal_kategori', 'jurnal_keterangan')
             ->get();
 
-            
-            
-            $data['saldo_awal'] = Jurnal::where('jurnal_id', '=', $id)->where('jurnal_kategori', '=', 'Saldo Awal')
+
+
+        $data['saldo_awal'] = Jurnal::where('jurnal_id', '=', $id)->where('jurnal_kategori', '=', 'Saldo Awal')
             ->sum('jurnal_kredit');
-            $data['kredit'] = Jurnal::where('jurnal_id', '=', $id)
+        $data['kredit'] = Jurnal::where('jurnal_id', '=', $id)
             ->sum('jurnal_kredit');
-            $data['debet'] = Jurnal::where('jurnal_id', '=', $id)
-                ->sum('jurnal_debet');
+        $data['debet'] = Jurnal::where('jurnal_id', '=', $id)
+            ->sum('jurnal_debet');
 
         // $query = Transaksi::whereDate('created_at', '>=', date('Y-m-d', strtotime($dari)))
         //     ->whereDate('created_at', '<=', date('Y-m-d', strtotime($sampai)));
@@ -193,8 +200,8 @@ class TransaksiController extends Controller
         $data['q'] = $request->query('q');
         // $data['akun'] = $request->query('akun');
 
-        $query = LapMingguan::select('lap_mingguans.*','lap_mingguans.created_at as tgl_laporan', 'users.id as id_user', 'users.name')
-            ->orderBy('tgl_laporan','DESC')
+        $query = LapMingguan::select('lap_mingguans.*', 'lap_mingguans.created_at as tgl_laporan', 'users.id as id_user', 'users.name')
+            ->orderBy('tgl_laporan', 'DESC')
             ->join('users', 'users.id', '=', 'lap_mingguans.lm_admin')
             ->where(function ($query) use ($data) {
                 $query->where('lm_admin', 'like', '%' . $data['q'] . '%');
@@ -230,7 +237,7 @@ class TransaksiController extends Controller
     }
     public function jurnal_tutup_buku(Request $request)
     {
-        $lates = Jurnal::where('jurnal_status',10)->orderBy('created_at', 'DESC')->first();
+        $lates = Jurnal::where('jurnal_status', 10)->orderBy('created_at', 'DESC')->first();
         // dd($lates['jurnal_tgl'].' - '.$lates['jurnal_saldo']);
 
 
@@ -271,17 +278,17 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
         Jurnal::where('jurnal_status', '=', 1)
             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($data['enddate'])))
             ->update($update);
-            $create_saldo_awal['jurnal_tgl'] = date('Y-m-d H:i:s', strtotime(Carbon::create($tanggal)->addDay(1)));
-            $create_saldo_awal['jurnal_uraian'] = 'Saldo Awal';
-            $create_saldo_awal['jurnal_kategori'] = 'Saldo Awal';
+        $create_saldo_awal['jurnal_tgl'] = date('Y-m-d H:i:s', strtotime(Carbon::create($tanggal)->addDay(1)));
+        $create_saldo_awal['jurnal_uraian'] = 'Saldo Awal';
+        $create_saldo_awal['jurnal_kategori'] = 'Saldo Awal';
 
-            $create_saldo_awal['jurnal_keterangan'] = '-';
-            $create_saldo_awal['jurnal_qty'] = '1';
-            $create_saldo_awal['jurnal_admin'] = $admin['user_id'];
-            $create_saldo_awal['jurnal_metode_bayar'] = 2;
-            $create_saldo_awal['jurnal_kredit'] = $request->saldo_akhir;
-            $create_saldo_awal['jurnal_saldo'] = $request->saldo_akhir;
-            $create_saldo_awal['jurnal_status'] = 1;
+        $create_saldo_awal['jurnal_keterangan'] = '-';
+        $create_saldo_awal['jurnal_qty'] = '1';
+        $create_saldo_awal['jurnal_admin'] = $admin['user_id'];
+        $create_saldo_awal['jurnal_metode_bayar'] = 2;
+        $create_saldo_awal['jurnal_kredit'] = $request->saldo_akhir;
+        $create_saldo_awal['jurnal_saldo'] = $request->saldo_akhir;
+        $create_saldo_awal['jurnal_status'] = 1;
         Jurnal::create($create_saldo_awal);
         $notifikasi = array(
             'pesan' => 'Laporan Mingguan Admin Berhasil dibuat',
@@ -495,7 +502,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
     public function store_jurnal_pencairan(Request $request)
     {
 
-        
+
         $tanggal = (new GlobalController)->tanggal();
         $user = (new GlobalController)->user_admin();
         $cek_saldo = (new GlobalController)->mutasi_jurnal();
@@ -569,7 +576,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             $penerima = (new GlobalController)->data_user($request->penerima);
 
             $pesan_group['ket'] = 'pencairan';
-            $pesan_group['target'] = '120363028776966861@g.us';
+            $pesan_group['target'] = env('GROUP_TEKNISI');
             $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
             $pesan_group['pesan'] = '           -- PENCAIRAN DANA --
 
@@ -602,7 +609,7 @@ Diterima oleh: ' . $penerima->nama_user . '
     }
     public function store_jurnal_fee_sales(Request $request)
     {
-        $tanggal_cair = date('Y-m-25',strtotime(Carbon::now()));
+        $tanggal_cair = date('Y-m-25', strtotime(Carbon::now()));
         $tanggal = (new GlobalController)->tanggal();
         $user = (new GlobalController)->user_admin();
         $cek_saldo = (new GlobalController)->mutasi_jurnal();
@@ -719,7 +726,7 @@ Diterima oleh: ' . $penerima->nama_user . '
 
         $data['jurnal_id'] = time();
         $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
-        $data['jurnal_uraian'] = 'Topup Petty Cash '.date('d-m-Y', strtotime($tanggal));
+        $data['jurnal_uraian'] = 'Topup Petty Cash ' . date('d-m-Y', strtotime($tanggal));
         $data['jurnal_kategori'] = 'TOPUP';
         $data['jurnal_qty'] = '1';
         $data['jurnal_keterangan'] = 'Topup Saldo';

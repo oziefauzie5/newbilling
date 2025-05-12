@@ -30,5 +30,6 @@ class Data_Tiket extends Model
         'tiket_teknisi2',
         'tiket_barang',
         'tiket_status',
+        'tiket_idbarang_keluar',
     ];
 }

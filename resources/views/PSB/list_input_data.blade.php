@@ -89,25 +89,25 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>No Identitas</label>
-                          <input id="input_ktp" type="text" class="form-control" value="{{ Session::get('input_ktp') }}" name="input_ktp" onkeyup="validasiKtp()" placeholder="No. Identitas" required>
+                          <input id="input_ktp" type="number" class="form-control" value="{{ Session::get('input_ktp') }}" name="input_ktp" onkeyup="validasiKtp()" placeholder="No. Identitas" required>
                         </div>
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>No Hp 1</label>
-                          <input id="input_hp" type="text" class="form-control" value="{{ Session::get('input_hp') }}" name="input_hp" placeholder="No. Whatsapp 1" required>
+                          <input id="input_hp" type="number" class="form-control" value="{{ Session::get('input_hp') }}" name="input_hp" placeholder="No. Whatsapp 1" required>
                         </div>
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>No Hp 2</label>
-                          <input id="input_hp_2" type="text" class="form-control" value="{{ Session::get('input_hp_2') }}" name="input_hp_2" placeholder="No. Whatsapp 2" required>
+                          <input id="input_hp_2" type="number" class="form-control" value="{{ Session::get('input_hp_2') }}" name="input_hp_2" placeholder="No. Whatsapp 2" required>
                         </div>
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>Email</label>
-                          <input id="input_email" type="text" class="form-control" value="{{ Session::get('input_email') }}" name="input_email" placeholder="Email">
+                          <input id="input_email" type="email" class="form-control" value="{{ Session::get('input_email') }}" name="input_email" placeholder="Email">
                         </div>
                       </div>
                       <div class="col-sm-12">
@@ -125,10 +125,10 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>Sales </label>
-                          <select name="input_sales" class="form-control">
+                          <select name="input_sales" class="form-control" required>
                             <option value="">PILIH</option>
                             @foreach($data_user as $du)
-                            <option value="{{$du->id}}">{{$du->name}}</option>
+                            <option value="{{$du->user_id}}">{{$du->nama_user}}</option>
                             @endforeach
                           </select>
                         </div>

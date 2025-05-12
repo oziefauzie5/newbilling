@@ -130,8 +130,8 @@ class GlobalController extends Controller
     }
     public function mutasi_jurnal()
     {
-        $data['debet'] = Jurnal::where('jurnal_status',1)->sum('jurnal_debet');
-        $data['kredit'] = Jurnal::where('jurnal_status',1)->sum('jurnal_kredit');
+        $data['debet'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_debet');
+        $data['kredit'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_kredit');
         $data['saldo'] = $data['kredit'] - $data['debet'];
 
         return $data;
@@ -179,31 +179,37 @@ class GlobalController extends Controller
         // }
         // $string = substr($latest->inv_id, 2);
         // return $bln . sprintf('%04d', $string + 1);
-        $latest = Invoice::whereMonth('inv_tgl_isolir','=', $bln)->count();
+        $latest = Invoice::whereMonth('inv_tgl_isolir', '=', $bln)->count();
         if ($latest == 0) {
             return $bln . $th . '0001';
         }
-            return $bln.$th . $latest + 1;
+        return $bln . $th . $latest + 1;
     }
 
     function idpel_()
     {
         $bl = date('m', strtotime(new Carbon()));
         $latest = InputData::orderBy('created_at', 'DESC')->latest()->first();
-        $cek_idpel = InputData::whereId($latest->id)->count();
-        if ($cek_idpel > 1) {
-            if (! $latest->id) {
-                return  '0001';
-            } else {
-                return sprintf('%04d', $latest->id + 2);
-            }
-        } else {
-            if (! $latest->id) {
-                return  '0001';
-            } else {
-                return sprintf('%04d', $latest->id + 1);
-            }
+        // $cek_idpel = InputData::whereId($latest->id)->count();
+        // if ($cek_idpel > 1) {
+        //     if (! $latest->id) {
+        //         return  '0001';
+        //     } else {
+        //         return sprintf('%04d', $latest->id + 2);
+        //     }
+        // } else {
+        //     if (! $latest->id) {
+        //         return  '0001';
+        //     } else {
+        //         return sprintf('%04d', $latest->id + 1);
+        //     }
+        // }
+        if (! $latest) {
+            return '1001';
         }
+        // dd($latest);
+        $string = substr($latest->id, 1);
+        return '1' . sprintf('%03d', $string + 1);
     }
     function id_outlet()
     {
@@ -242,24 +248,24 @@ class GlobalController extends Controller
     public function getMitraSite($id) #Layanan Hotspot
     {
         $kode_site = User::join('data__sites', 'data__sites.site_id', '=', 'users.site')
-        ->join('model_has_roles','model_has_roles.model_id','=','users.id')
-        ->where('model_has_roles.role_id','14')
-        ->where('users.status_user','Enable')
-        ->where("data__sites.site_id", $id)
-        ->get();
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->where('model_has_roles.role_id', '14')
+            ->where('users.status_user', 'Enable')
+            ->where("data__sites.site_id", $id)
+            ->get();
         return response()->json($kode_site);
     }
     public function getOutlet($id) #Layanan Hotspot
     {
         $get_outlet = Data_Outlet::where("outlet_mitra", $id)
-        ->get();
+            ->get();
         return response()->json($get_outlet);
     }
     public function getPaket($id) #Layanan Hotspot
     {
         // return response()->json($id);
         $getPaket = Paket::where('paket_id', $id)
-        ->first();
+            ->first();
         return response()->json($getPaket);
     }
     public function getOlt($id)
@@ -297,28 +303,40 @@ class GlobalController extends Controller
 
     public function no_surat_keterang()
     {
-        $y = date('y');
-        $m = date('m');
-        $d = date('d');
-        $latest = Data_BarangKeluar::orderBy('bk_id', 'DESC')->latest()->first();
+        // $y = date('y');
+        // $m = date('m');
+        // $d = date('d');
+        $date = date('ymd');
 
-        $cek_noskb = Data_BarangKeluar::where('bk_id', $latest->bk_id)->count();
-        if ($cek_noskb > 1) {
-            if (! $latest) {
-                return 'SKB/' . $y . $m . $d . '/0001';
-            }
-            $string = substr($latest->bk_id, 11);
-            $nosk  = 'SKB/' . $y . $m . $d  . '/' . sprintf('%04d', $string + 2);
-            return $nosk;
-        } else {
-            if (! $latest) {
-                return 'SKB/' . $y . $m . $d . '/0001';
-            }
-            $string = substr($latest->bk_id, 11);
-            $nosk  = 'SKB/' . $y . $m . $d  . '/' . sprintf('%04d', $string + 1);
-            return $nosk;
+        $latest = Data_BarangKeluar::orderBy('created_at', 'DESC')->latest()->first();
+        if (! $latest) {
+            return 'SKB/' . $date . '/0001';
         }
+        $string = substr($latest->bk_id, 11);
+        $nosk  = 'SKB/' . $date  . '/' . sprintf('%04d', $string + 2);
+        return $nosk;
+
+
+
+        // $latest = Data_BarangKeluar::orderBy('bk_id', 'DESC')->latest()->first();
+
+        // $cek_noskb = Data_BarangKeluar::where('bk_id', $latest->bk_id)->count();
+        // if ($cek_noskb > 1) {
+        //     if (! $latest) {
+        //         return 'SKB/' . $date . '/0001';
+        //     }
+        //     $string = substr($latest->bk_id, 11);
+        //     $nosk  = 'SKB/' . $date  . '/' . sprintf('%04d', $string + 2);
+        //     return $nosk;
+        // } else {
+        //     if (! $latest) {
+        //         return 'SKB/' . $date . '/0001';
+        //     }
+        //     $string = substr($latest->bk_id, 11);
+        //     $nosk  = 'SKB/' . $date  . '/' . sprintf('%04d', $string + 1);
+        // }
     }
+
     public function nomor_tiket()
     {
         $date = date('Y-m-d', strtotime(Carbon::now()));

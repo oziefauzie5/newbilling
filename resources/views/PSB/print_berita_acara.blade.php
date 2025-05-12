@@ -181,6 +181,26 @@
     <hr>
     <table id="customers">
         <tr >
+            <th width="40%" style="text-align:left; font-size: 11pt; background-color: #0071bc"> Layanan - Aktivasi</th>
+            <td></td>
+        </tr>
+    </table>
+    <table id="customers">
+            <tr>
+                <td width="15%">Username</td>
+                <td>:</td>
+                <td width="85%"> {{$berita_acara->reg_username}}</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td>:</td>
+                <td>{{$berita_acara->reg_password}}</td>
+            </tr>
+    </table >
+    <br>
+    <hr>
+    <table id="customers">
+        <tr >
             <th width="40%" style="text-align:left; font-size: 11pt; background-color: #0071bc"> Data Perangkat - Device Data</th>
             <td></td>
         </tr>

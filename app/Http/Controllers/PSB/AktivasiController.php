@@ -60,11 +60,16 @@ class AktivasiController extends Controller
         //     $tanggal_pasang = $tanggal;
         //     $tanggal_pasang_free = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->toDateString()));
         // }
+
+        #PASCABAYAR SESUAI TGL PASANG (SIKLUS TETAP)
         $tag_pascabayar = Carbon::create($tanggal)->addMonth(1)->toDateString();
-        $tag_free3bln = Carbon::create($tanggal)->addMonth(3)->toDateString();
-        $tag_free1th = Carbon::create($tanggal)->addMonth(12)->toDateString();
         $inv_tgl_tagih_pascabayar = Carbon::create($tag_pascabayar)->addDay(-$swaktu->wt_jeda_tagihan_pertama)->toDateString();
         $inv_tgl_isolir_pascabayar = Carbon::create($tag_pascabayar)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+
+        #PASCABAYAR SESUAI TGL YANG DI TENTUKAN (SIKLUS BULAN)
+
+        $tag_free3bln = Carbon::create($tanggal)->addMonth(3)->toDateString();
+        $tag_free1th = Carbon::create($tanggal)->addMonth(12)->toDateString();
 
         $inv_tgl_isolir1blan = Carbon::create($tanggal)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
         $inv_tgl_isolir3blan = Carbon::create($tag_free3bln)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
@@ -74,7 +79,7 @@ class AktivasiController extends Controller
         $periode12blan = Carbon::create($tanggal)->toDateString() . ' - ' . Carbon::create($tanggal)->addMonth(12)->toDateString();
         $periode1blan = Carbon::create($tanggal)->toDateString() . ' - ' . Carbon::create($tanggal)->addMonth(1)->toDateString();
 
-        
+
 
         if ($query->reg_jenis_tagihan == 'FREE') {
             $teknisi['teknisi_psb'] = '0';
@@ -123,25 +128,25 @@ class AktivasiController extends Controller
             $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
         } else if ($query->reg_jenis_tagihan == 'PASCABAYAR') {
             $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
-            $inv['inv_tgl_isolir'] = $inv_tgl_isolir_pascabayar;
-            $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
-            $inv['inv_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
-            $inv['inv_tgl_jatuh_tempo'] = $tag_pascabayar;
-            $inv['inv_periode'] = $periode1blan;
+            // $inv['inv_tgl_isolir'] = $inv_tgl_isolir_pascabayar;
+            // $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
+            // $inv['inv_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
+            // $inv['inv_tgl_jatuh_tempo'] = $tag_pascabayar;
+            // $inv['inv_periode'] = $periode1blan;
 
-            $sub_inv['subinvoice_harga'] = $query->reg_harga;
-            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
-            $sub_inv['subinvoice_total'] = $inv['inv_total'];
-            $sub_inv['subinvoice_qty'] = '1';
+            // $sub_inv['subinvoice_harga'] = $query->reg_harga;
+            // $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+            // $sub_inv['subinvoice_total'] = $inv['inv_total'];
+            // $sub_inv['subinvoice_qty'] = '1';
 
-            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
-            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
+            $pelanggan['reg_tgl_jatuh_tempo'] = $tag_pascabayar;
+            $pelanggan['reg_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
         } else if ($query->reg_jenis_tagihan == 'DEPOSIT') {
             $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
             $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
             $inv['inv_total'] = $query->reg_deposit;
-            $inv['inv_tgl_tagih'] = $tanggal_pasang;
-            $inv['inv_tgl_jatuh_tempo'] = $tanggal_pasang;
+            $inv['inv_tgl_tagih'] = $tanggal;
+            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
             $inv['inv_periode'] = $periode1blan;
 
             $sub_inv['subinvoice_harga'] = $inv['inv_total'];
@@ -211,21 +216,21 @@ class AktivasiController extends Controller
 
 
         // if ($cek_hari_pasang < 25) {
-            $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
-            if ($cek_inv) {
-                $inv['inv_id'] = $cek_inv->inv_id;
-                $sub_inv['subinvoice_id'] = $inv['inv_id'];
-                Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
-                SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
-            } else {
-                $inv['inv_id'] = (new GlobalController)->no_inv();
-                $sub_inv['subinvoice_id'] = $inv['inv_id'];
-                Invoice::create($inv);
-                SubInvoice::create($sub_inv);
-            }        
+        $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
+        if ($cek_inv) {
+            $inv['inv_id'] = $cek_inv->inv_id;
+            $sub_inv['subinvoice_id'] = $inv['inv_id'];
+            Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
+            SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
+        } else {
+            $inv['inv_id'] = (new GlobalController)->no_inv();
+            $sub_inv['subinvoice_id'] = $inv['inv_id'];
+            Invoice::create($inv);
+            SubInvoice::create($sub_inv);
+        }
         // } 
 
-       
+
 
 
         Registrasi::where('reg_idpel', $id)->update($pelanggan);

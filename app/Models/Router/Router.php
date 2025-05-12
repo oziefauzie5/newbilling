@@ -10,6 +10,7 @@ class Router extends Model
     use HasFactory;
     protected $fillable = [
         'router_nama',
+        'router_id_pop',
         'router_ip',
         'router_dns',
         'router_port_api',

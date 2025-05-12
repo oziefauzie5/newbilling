@@ -26,6 +26,8 @@ return new class extends Migration
             $table->integer('reg_dana_kerjasama')->nullable();
             $table->integer('reg_fee')->nullable();
             $table->string('reg_username')->nullable();
+            $table->string('reg_koodinat_odp')->nullable();
+            $table->string('reg_foto_odp')->nullable();
             $table->string('reg_password')->nullable();
             $table->string('reg_tgl_pasang')->nullable();
             $table->string('reg_tgl_tagih')->nullable();
@@ -35,11 +37,11 @@ return new class extends Migration
             $table->string('reg_in_ont')->nullable();
             $table->string('reg_los_opm')->nullable();
             $table->integer('reg_site')->nullable(); #ganti wilayah jadi site
-            $table->integer('reg_pop')->nullable(); #baru
-            $table->integer('reg_router')->nullable();
-            $table->integer('reg_olt')->nullable(); #baru
-            $table->integer('reg_odc')->nullable(); #baru
-            $table->integer('reg_odp')->nullable(); #baru
+            $table->string('reg_pop')->nullable(); #baru
+            $table->string('reg_router')->nullable();
+            $table->string('reg_olt')->nullable(); #baru
+            $table->string('reg_odc')->nullable(); #baru
+            $table->string('reg_odp')->nullable(); #baru
             $table->integer('reg_slot_odp')->nullable(); #ganti slot onu
             $table->string('reg_onuid')->nullable(); #baru
             $table->string('reg_skb')->nullable();

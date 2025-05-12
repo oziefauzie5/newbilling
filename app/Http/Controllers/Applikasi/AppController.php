@@ -365,9 +365,14 @@ class AppController extends Controller
     public function wa_getewai()
     {
         // $data['kendaraan'] = (new GlobalController)->data_kendaraan()->paginate(10);
-        $data['data_whatsapp'] = SettingWhatsapp::join('data__sites', 'data__sites.site_id', '=', 'setting_whatsapps.wa_site')
-            ->get();
-        $data['data_site'] = Data_Site::get();
+        $wageteway = SettingWhatsapp::count();
+        if ($wageteway > 0) {
+            $data['data_whatsapp'] = SettingWhatsapp::join('data__sites', 'data__sites.site_id', '=', 'setting_whatsapps.wa_site')
+                ->get();
+        } else {
+            $data['data_whatsapp'] = SettingWhatsapp::get();
+        }
+        $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
         return view('Applikasi/wa_getewai', $data);
     }
     public function store_wa_getewai(Request $request)

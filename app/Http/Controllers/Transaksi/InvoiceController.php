@@ -320,10 +320,10 @@ class InvoiceController extends Controller
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
         $admin_user = Auth::user()->id;
         $tampil = DB::table('invoices')
-        ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
-        // ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-        // ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-        // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+            // ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            // ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_id', '=', $id)
             ->orWhere('inv_nolayanan', '=', $id)
             ->first();
@@ -384,7 +384,7 @@ class InvoiceController extends Controller
                 'mt_saldo' => $total,
                 'mt_biaya_adm' => $pengurangan_adm,
             ]);
-        } 
+        }
 
         if ($tgl_bayar >= $tampil->inv_tgl_jatuh_tempo) {
             $status = 'SUSPEND';
@@ -449,8 +449,14 @@ class InvoiceController extends Controller
 
         $nama_user = Auth::user()->name; #NAMA USER
         $tgl_bayar = date('Y-m-d ', strtotime(Carbon::now()));
-        $sum_trx = Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_debet');
-        $count_trx = Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
+        $cek_trx = Transaksi::count();
+        if ($cek_trx > 0) {
+            $sum_trx = Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_debet');
+            $count_trx = Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
+        } else {
+            $sum_trx = '0';
+            $count_trx = '0';
+        }
 
 
         $now = Carbon::now();
@@ -471,9 +477,9 @@ class InvoiceController extends Controller
                 ->where('inv_id', $id)
                 ->first();
 
-                 
 
-           
+
+
             $date1 = Carbon::createFromDate($data_pelanggan->inv_tgl_jatuh_tempo); // start date
             $valid_date = Carbon::parse($date1)->toDateString();
             $valid_date = date('Y.m.d\\TH:i', strtotime($valid_date));
@@ -492,7 +498,7 @@ class InvoiceController extends Controller
             $inv0_tagih = Carbon::create($year . '-' . $month . '-' . $hari_tgl_tagih)->addMonth(1)->toDateString(); #new
             $inv0_tagih0 = Carbon::create($inv0_tagih)->addDay(-2)->toDateString();
             $inv0_jt_tempo = Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString(); #new
-           
+
 
 
             # diffDays < -0 artinya jika pelanggan melakukan pembayaran sebelum jatuh tempo.
@@ -500,7 +506,7 @@ class InvoiceController extends Controller
             # diffDays > -0 artinya jika pelanggan melakukan pembayaran setelah jatuh tempo.
             # Jika pelanggan melakukan pembayaran lewat dari jatuh tempo, maka tanggal jatuh tempo akan berubah ke tanggal pelanggan melakukan pembayaran.
             $cek_hari_bayar = date('d', strtotime($tgl_bayar));
-            if ($diffDays < -0) { 
+            if ($diffDays < -0) {
                 # Cek tanggal pembayaran.
                 # Jika Pelanggan melakukan pembayaran di atas tanggal 24 maka, tanggal jatuh tempo akan berubah ketanggal 1 bulan berikutnya 
                 if ($cek_hari_bayar >= 25) {
@@ -520,7 +526,7 @@ class InvoiceController extends Controller
                     // dd('Bayar di bawah tgl 25');
                 }
             } else {
-                
+
 
                 if ($cek_hari_bayar >= 25) {
                     #Tambah 1 bulan dari tgl pembeyaran
@@ -542,7 +548,7 @@ class InvoiceController extends Controller
 
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
             #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
-            
+
             if ($data_pelanggan->reg_inv_control == 0) {
                 $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
                 $reg['reg_tgl_tagih'] = $inv0_tagih0;
@@ -613,9 +619,9 @@ class InvoiceController extends Controller
             $data_lap['lap_img'] = $filename;
 
             #CEK BULAN PEMASANGAN
-            $bulan_pasang = date('Y-m',strtotime($data_pelanggan->reg_tgl_pasang));
-            $bulan_bayar = date('Y-m',strtotime($if_tgl_bayar));
-            if($bulan_pasang != $bulan_bayar){
+            $bulan_pasang = date('Y-m', strtotime($data_pelanggan->reg_tgl_pasang));
+            $bulan_bayar = date('Y-m', strtotime($if_tgl_bayar));
+            if ($bulan_pasang != $bulan_bayar) {
                 if ($data_pelanggan->reg_fee > 0) {
 
                     $count_payment = Invoice::where('inv_nolayanan', $data_pelanggan->reg_nolayanan)->count();
@@ -623,7 +629,7 @@ class InvoiceController extends Controller
                         $data_biaya = SettingBiaya::first();
                         $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
                         $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
-    
+
                         $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
                         $mutasi_sales['smt_admin'] = $admin_user;
                         $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
@@ -639,9 +645,9 @@ class InvoiceController extends Controller
                         MutasiSales::create($mutasi_sales);
                     }
                 }
-               } 
+            }
 
-            
+
             Laporan::create($data_lap);
             $reg['reg_status'] = 'PAID';
             Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
@@ -653,7 +659,7 @@ class InvoiceController extends Controller
                 $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
                 $data_trx['trx_qty'] = 1;
                 $data_trx['trx_debet'] = $data_pelanggan->inv_total;
-                Transaksi::where('trx_jenis', 'Invoice')->create($data_trx);
+                Transaksi::create($data_trx);
             } else {
                 $i = '1';
                 $data_trx['trx_qty'] = $count_trx + $i;
@@ -711,8 +717,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                             '.id' => $cek_secret[0]['.id'],
                             'profile' =>  $data_pelanggan->paket_nama == '' ? '' : $data_pelanggan->paket_nama,
                             'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
-    
-    
+
+
                             'disabled' => 'no',
                         ]);
                         $cek_status = $API->comm('/ppp/active/print', [
@@ -743,7 +749,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                             'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                             'disabled' => 'no',
                         ]);
-    
+
                         $notifikasi = array(
                             'pesan' => 'Berhasil melakukan pembayaran',
                             'alert' => 'success',
@@ -757,142 +763,140 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     );
                     return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
                 }
-        } else {
-            #JIKA PAYMENT UNTUK HOTSPOT
-            if ($API->connect($ip, $user, $pass)) {
-                $cek_secret = $API->comm('/ip/hotspot/user/print', [
-                    '?name' => $data_pelanggan->reg_username,
-                ]);
-                if ($cek_secret) {
-                    $API->comm('/ip/hotspot/user/set', [
-                        '.id' => $cek_secret[0]['.id'],
-                        'profile' => $data_pelanggan->paket_nama,
-                        'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
-                        'disabled' => 'no',
+            } else {
+                #JIKA PAYMENT UNTUK HOTSPOT
+                if ($API->connect($ip, $user, $pass)) {
+                    $cek_secret = $API->comm('/ip/hotspot/user/print', [
+                        '?name' => $data_pelanggan->reg_username,
                     ]);
-                    if ($count_trx == 0) {
-                        $data_trx['trx_kategori'] = 'Pndapatan';
-                        $data_trx['trx_jenis'] = 'Invoice';
-                        $data_trx['trx_admin'] = 'System';
-                        $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
-                        $data_trx['trx_qty'] = 1;
-                        $data_trx['trx_debet'] = $data_pelanggan->inv_total;
-                        Transaksi::where('trx_jenis', 'Invoice')->create($data_trx);
-                    } else {
-                        $i = '1';
-                        $data_trx['trx_qty'] = $count_trx + $i;
-                        $data_trx['trx_debet'] = $sum_trx + $data_pelanggan->inv_total;
-                        Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
-                    }
-
-                    if ($data_pelanggan->reg_fee > 0) {
-                        $data_biaya = SettingBiaya::first();
-                        $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
-                        $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
-
-                        $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
-                        $mutasi_sales['smt_admin'] = $admin_user;
-                        $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
-                        $mutasi_sales['smt_tgl_transaksi'] = $if_tgl_bayar;
-                        $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
-                        $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
-                        $mutasi_sales['smt_cabar'] = '2';
-                        $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
-                        $mutasi_sales['smt_debet'] = 0;
-                        $mutasi_sales['smt_saldo'] = $total;
-                        $mutasi_sales['smt_biaya_adm'] = 0;
-                        $mutasi_sales['smt_status'] = 0;
-                        MutasiSales::create($mutasi_sales);
-                    }
-
-                    Laporan::create($data_lap);
-                    Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
-                    Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
-                    Mutasi::create($mutasi);
-                    Pesan::create($pesan_group);
-                    $cek_status = $API->comm('/ip/hotspot/active/print', [
-                        '?user' => $data_pelanggan->reg_username,
-                    ]);
-                    if ($cek_status) {
-                        $API->comm('/ip/hotspot/active/remove', [
-                            '.id' =>  $cek_status['0']['.id'],
+                    if ($cek_secret) {
+                        $API->comm('/ip/hotspot/user/set', [
+                            '.id' => $cek_secret[0]['.id'],
+                            'profile' => $data_pelanggan->paket_nama,
+                            'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
+                            'disabled' => 'no',
                         ]);
+                        if ($count_trx == 0) {
+                            $data_trx['trx_kategori'] = 'Pndapatan';
+                            $data_trx['trx_jenis'] = 'Invoice';
+                            $data_trx['trx_admin'] = 'System';
+                            $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
+                            $data_trx['trx_qty'] = 1;
+                            $data_trx['trx_debet'] = $data_pelanggan->inv_total;
+                            Transaksi::where('trx_jenis', 'Invoice')->create($data_trx);
+                        } else {
+                            $i = '1';
+                            $data_trx['trx_qty'] = $count_trx + $i;
+                            $data_trx['trx_debet'] = $sum_trx + $data_pelanggan->inv_total;
+                            Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
+                        }
+
+                        if ($data_pelanggan->reg_fee > 0) {
+                            $data_biaya = SettingBiaya::first();
+                            $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                            $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
+
+                            $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                            $mutasi_sales['smt_admin'] = $admin_user;
+                            $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
+                            $mutasi_sales['smt_tgl_transaksi'] = $if_tgl_bayar;
+                            $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                            $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                            $mutasi_sales['smt_cabar'] = '2';
+                            $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                            $mutasi_sales['smt_debet'] = 0;
+                            $mutasi_sales['smt_saldo'] = $total;
+                            $mutasi_sales['smt_biaya_adm'] = 0;
+                            $mutasi_sales['smt_status'] = 0;
+                            MutasiSales::create($mutasi_sales);
+                        }
+
+                        Laporan::create($data_lap);
+                        Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
+                        Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
+                        // Mutasi::create($mutasi);
+                        Pesan::create($pesan_group);
+                        $cek_status = $API->comm('/ip/hotspot/active/print', [
+                            '?user' => $data_pelanggan->reg_username,
+                        ]);
+                        if ($cek_status) {
+                            $API->comm('/ip/hotspot/active/remove', [
+                                '.id' =>  $cek_status['0']['.id'],
+                            ]);
+                            $notifikasi = array(
+                                'pesan' => 'Berhasil melakukan pembayaran',
+                                'alert' => 'success',
+                            );
+                            return response()->json($notifikasi);
+                        } else {
+                            $notifikasi = array(
+                                'pesan' => 'Berhasil melakukan pembayaran.',
+                                'alert' => 'success',
+                            );
+                            return response()->json($notifikasi);
+                        }
+                    } else {
+                        $API->comm('/ip/hotspot/user/add', [
+                            'name' => $data_pelanggan->reg_username == '' ? '' : $data_pelanggan->reg_username,
+                            'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
+                            'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
+                            'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
+                            'disabled' => 'no',
+                        ]);
+                        if ($count_trx == 0) {
+                            $data_trx['trx_kategori'] = 'Pndapatan';
+                            $data_trx['trx_jenis'] = 'Invoice';
+                            $data_trx['trx_admin'] = 'System';
+                            $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
+                            $data_trx['trx_qty'] = 1;
+                            $data_trx['trx_debet'] = $data_pelanggan->inv_total;
+                            Transaksi::where('trx_jenis', 'Invoice')->create($data_trx);
+                        } else {
+                            $i = '1';
+                            $data_trx['trx_qty'] = $count_trx + $i;
+                            $data_trx['trx_debet'] = $sum_trx + $data_pelanggan->inv_total;
+                            Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
+                        }
+                        if ($data_pelanggan->reg_fee > 0) {
+                            $data_biaya = SettingBiaya::first();
+                            $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                            $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
+
+                            $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                            $mutasi_sales['smt_admin'] = $admin_user;
+                            $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
+                            $mutasi_sales['smt_tgl_transaksi'] = $if_tgl_bayar;
+                            $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                            $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                            $mutasi_sales['smt_cabar'] = '2';
+                            $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                            $mutasi_sales['smt_debet'] = 0;
+                            $mutasi_sales['smt_saldo'] = $total;
+                            $mutasi_sales['smt_biaya_adm'] = 0;
+                            $mutasi_sales['smt_status'] = 0;
+                            MutasiSales::create($mutasi_sales);
+                        }
+
+                        Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
+                        Laporan::create($data_lap);
+                        Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
+                        // Mutasi::create($mutasi);
+                        Pesan::create($pesan_group);
+
                         $notifikasi = array(
                             'pesan' => 'Berhasil melakukan pembayaran',
                             'alert' => 'success',
                         );
                         return response()->json($notifikasi);
-                    } else {
-                        $notifikasi = array(
-                            'pesan' => 'Berhasil melakukan pembayaran.',
-                            'alert' => 'success',
-                        );
-                        return response()->json($notifikasi);
                     }
                 } else {
-                    $API->comm('/ip/hotspot/user/add', [
-                        'name' => $data_pelanggan->reg_username == '' ? '' : $data_pelanggan->reg_username,
-                        'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
-                        'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                        'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
-                        'disabled' => 'no',
-                    ]);
-                    if ($count_trx == 0) {
-                        $data_trx['trx_kategori'] = 'Pndapatan';
-                        $data_trx['trx_jenis'] = 'Invoice';
-                        $data_trx['trx_admin'] = 'System';
-                        $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
-                        $data_trx['trx_qty'] = 1;
-                        $data_trx['trx_debet'] = $data_pelanggan->inv_total;
-                        Transaksi::where('trx_jenis', 'Invoice')->create($data_trx);
-                    } else {
-                        $i = '1';
-                        $data_trx['trx_qty'] = $count_trx + $i;
-                        $data_trx['trx_debet'] = $sum_trx + $data_pelanggan->inv_total;
-                        Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
-                    }
-                    if ($data_pelanggan->reg_fee > 0) {
-                        $data_biaya = SettingBiaya::first();
-                        $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
-                        $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
-
-                        $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
-                        $mutasi_sales['smt_admin'] = $admin_user;
-                        $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
-                        $mutasi_sales['smt_tgl_transaksi'] = $if_tgl_bayar;
-                        $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
-                        $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
-                        $mutasi_sales['smt_cabar'] = '2';
-                        $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
-                        $mutasi_sales['smt_debet'] = 0;
-                        $mutasi_sales['smt_saldo'] = $total;
-                        $mutasi_sales['smt_biaya_adm'] = 0;
-                        $mutasi_sales['smt_status'] = 0;
-                        MutasiSales::create($mutasi_sales);
-                    }
-
-                    Invoice::where('inv_id', $data_pelanggan->inv_id)->update($datas);
-                    Laporan::create($data_lap);
-                    Registrasi::where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
-                    Mutasi::create($mutasi);
-                    Pesan::create($pesan_group);
-
                     $notifikasi = array(
-                        'pesan' => 'Berhasil melakukan pembayaran',
+                        'pesan' => 'Berhasil melakukan pembayaran. Namun Maaf..!! Router Disconnected',
                         'alert' => 'success',
                     );
                     return response()->json($notifikasi);
                 }
-            } else {
-                $notifikasi = array(
-                    'pesan' => 'Berhasil melakukan pembayaran. Namun Maaf..!! Router Disconnected',
-                    'alert' => 'success',
-                );
-                return response()->json($notifikasi);
             }
-        }
-
-            
         }
     }
     public function addons(Request $request, $id)
@@ -1041,7 +1045,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     }
 
 
-    public function export_invoice(Request $request) 
+    public function export_invoice(Request $request)
     {
         $data['data_inv'] = $request->data_inv;
         $data['bulan'] = $request->bulan;
@@ -1084,14 +1088,14 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         dd($count);
     }
     public function test2()
-    {                 
+    {
         //   $smt_user_id = 2203910401;
         //               $inv_idpel = 2203910401;
         //                 $data_pelanggan =  Invoice::where('inv_nolayanan','=', 22010960601)
         //                 ->whereMonth('inv_tgl_bayar', '=', 05)->first();
-              
-                        
-                        
+
+
+
         //                 $mutasi_sales['smt_user_id'] = $smt_user_id;
         //                 $mutasi_sales['smt_admin'] = 10;
         //                 $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
@@ -1107,27 +1111,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         //                 MutasiSales::create($mutasi_sales);
         //                 dd($mutasi_sales);
 
-        // $inv_tgl = Carbon::now();
-        // $bln = $inv_tgl->format('m');
-        // $th = $inv_tgl->format('y');
-        // $latest = Invoice::whereMonth('inv_tgl_isolir','=', '5')->count();
-        // dd($latest);
-        // if ($latest == 0) {
-        //     dd($bln . $th . '0001');
-        // }
-        //     dd($bln.$th . $latest + 1);
 
-        // Data_Tiket::where('tiket_nama', 'Insatalasi PSB')->update([
-        //     'tiket_nama' => 'Instalasi PSB',
-        //     'tiket_kendala' => 'Instalasi PSB',
-        // ]);
 
-       
- 
     }
-
-
-
-
-
 }

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mutasi_saless', function (Blueprint $table) {
+        Schema::create('mutasi_sales', function (Blueprint $table) {
             $table->id();
             $table->string('smt_user_id')->nullable();
             $table->string('smt_admin')->nullable();
@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('smt_saldo')->nullable();
             $table->integer('smt_biaya_adm')->nullable();
             $table->string('smt_status')->nullable();
+            $table->string('smt_tgl_transaksi')->nullable();
             $table->timestamps();
         });
     }

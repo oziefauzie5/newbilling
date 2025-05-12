@@ -9,7 +9,7 @@ class Data_Odp extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'odp_id',
+        // 'odp_id',
         'odp_kode',
         'odp_id_odc',
         'odp_port_odc',

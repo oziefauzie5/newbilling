@@ -120,52 +120,52 @@ class CallbackController extends Controller
                     $inv0_jt_tempo = Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString(); #new
 
 
-                     # diffDays < -0 artinya jika pelanggan melakukan pembayaran sebelum jatuh tempo.
-            #Jika pelanggan melakukan pembayaran sebelum jatuh tempo, maka tanggal jatuh tempo tidak berubah.
-            # diffDays > -0 artinya jika pelanggan melakukan pembayaran setelah jatuh tempo.
-            # Jika pelanggan melakukan pembayaran lewat dari jatuh tempo, maka tanggal jatuh tempo akan berubah ke tanggal pelanggan melakukan pembayaran.
-            $cek_hari_bayar = date('d', strtotime($tgl_bayar));
-            if ($diffDays < -0) { 
-                # Cek tanggal pembayaran.
-                # Jika Pelanggan melakukan pembayaran di atas tanggal 24 maka, tanggal jatuh tempo akan berubah ketanggal 1 bulan berikutnya 
-                if ($cek_hari_bayar >= 25) {
-                    #Tambah 1 bulan dari tgl pembeyaran
-                    #Pembayaran di atas tanggal 24 maka akan di anggap bayar tgl 25 dan ditambah 1 bulan 
-                    // dd('Bayar di atas tgl 25');
-                    $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
-                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
-                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
-                    $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
-                    $if_tgl_bayar = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-01'))->addMonth(1)->toDateString()));
-                } else {
-                    $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
-                    $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
-                    $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
-                    $if_tgl_bayar = $tgl_bayar;
-                    // dd('Bayar di bawah tgl 25');
-                }
-            } else {
-                if ($cek_hari_bayar >= 25) {
-                    #Tambah 1 bulan dari tgl pembeyaran
-                    #Pembayaran di atas tanggal 24 maka akan di anggap bayar tgl 25 dan ditambah 1 bulan 
-                    $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
-                    $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
-                    $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
-                    $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
-                    $if_tgl_bayar = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-01'))->addMonth(1)->toDateString()));
-                    // dd('Bayar tepat waktu namun di atas tgl 25');
-                } else {
-                    $inv1_tagih = Carbon::create($data_pelanggan->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString();
-                    $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
-                    $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
-                    $if_tgl_bayar = $tgl_bayar;
-                    // dd('pembayaran tepat waktu dibawah tgl 25');
-                }
-            }
+                    # diffDays < -0 artinya jika pelanggan melakukan pembayaran sebelum jatuh tempo.
+                    #Jika pelanggan melakukan pembayaran sebelum jatuh tempo, maka tanggal jatuh tempo tidak berubah.
+                    # diffDays > -0 artinya jika pelanggan melakukan pembayaran setelah jatuh tempo.
+                    # Jika pelanggan melakukan pembayaran lewat dari jatuh tempo, maka tanggal jatuh tempo akan berubah ke tanggal pelanggan melakukan pembayaran.
+                    $cek_hari_bayar = date('d', strtotime($tgl_bayar));
+                    if ($diffDays < -0) {
+                        # Cek tanggal pembayaran.
+                        # Jika Pelanggan melakukan pembayaran di atas tanggal 24 maka, tanggal jatuh tempo akan berubah ketanggal 1 bulan berikutnya 
+                        if ($cek_hari_bayar >= 25) {
+                            #Tambah 1 bulan dari tgl pembeyaran
+                            #Pembayaran di atas tanggal 24 maka akan di anggap bayar tgl 25 dan ditambah 1 bulan 
+                            // dd('Bayar di atas tgl 25');
+                            $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
+                            $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                            $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
+                            $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                            $if_tgl_bayar = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-01'))->addMonth(1)->toDateString()));
+                        } else {
+                            $inv1_tagih = Carbon::create($tgl_bayar)->addMonth(1)->toDateString();
+                            $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                            $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                            $if_tgl_bayar = $tgl_bayar;
+                            // dd('Bayar di bawah tgl 25');
+                        }
+                    } else {
+                        if ($cek_hari_bayar >= 25) {
+                            #Tambah 1 bulan dari tgl pembeyaran
+                            #Pembayaran di atas tanggal 24 maka akan di anggap bayar tgl 25 dan ditambah 1 bulan 
+                            $addonemonth = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-25'))->addMonth(1)->toDateString()));
+                            $tgl_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                            $inv1_tagih1 = Carbon::create($tgl_jt_tempo)->addDay(-1)->toDateString();
+                            $inv1_jt_tempo = date('Y-m-d', strtotime(Carbon::create(date('Y-m-02', strtotime($addonemonth)))->addMonth(1)->toDateString()));
+                            $if_tgl_bayar = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-01'))->addMonth(1)->toDateString()));
+                            // dd('Bayar tepat waktu namun di atas tgl 25');
+                        } else {
+                            $inv1_tagih = Carbon::create($data_pelanggan->inv_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+                            $inv1_tagih1 = Carbon::create($inv1_tagih)->addDay(-2)->toDateString();
+                            $inv1_jt_tempo = Carbon::create($inv1_tagih)->toDateString();
+                            $if_tgl_bayar = $tgl_bayar;
+                            // dd('pembayaran tepat waktu dibawah tgl 25');
+                        }
+                    }
 
-            #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
-            #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
-            
+                    #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
+                    #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
+
                     if ($data_pelanggan->reg_inv_control == 0) {
                         $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
                         $reg['reg_tgl_tagih'] = $inv0_tagih0;
@@ -211,30 +211,30 @@ class CallbackController extends Controller
 
                     Laporan::create($data_lap);
 
-                     #CEK BULAN PEMASANGAN
-                $bulan_pasang = date('Y-m',strtotime($data_pelanggan->reg_tgl_pasang));
-                $bulan_bayar = date('Y-m',strtotime($if_tgl_bayar));
-                if($bulan_pasang != $bulan_bayar){
-                    if ($data_pelanggan->reg_fee > 0) {
-                        $data_biaya = SettingBiaya::first();
-                        $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
-                        $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
+                    #CEK BULAN PEMASANGAN
+                    $bulan_pasang = date('Y-m', strtotime($data_pelanggan->reg_tgl_pasang));
+                    $bulan_bayar = date('Y-m', strtotime($if_tgl_bayar));
+                    if ($bulan_pasang != $bulan_bayar) {
+                        if ($data_pelanggan->reg_fee > 0) {
+                            $data_biaya = SettingBiaya::first();
+                            $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
+                            $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
 
-                        $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
-                        $mutasi_sales['smt_admin'] = 10;
-                        $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
-                        $mutasi_sales['smt_tgl_transaksi'] = $if_tgl_bayar;
-                        $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
-                        $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
-                        $mutasi_sales['smt_cabar'] = '2';
-                        $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
-                        $mutasi_sales['smt_debet'] = 0;
-                        $mutasi_sales['smt_saldo'] = $total;
-                        $mutasi_sales['smt_biaya_adm'] = 0;
-                        $mutasi_sales['smt_status'] = 0;
-                        MutasiSales::create($mutasi_sales);
+                            $mutasi_sales['smt_user_id'] = $data_pelanggan->input_sales;
+                            $mutasi_sales['smt_admin'] = 10;
+                            $mutasi_sales['smt_idpel'] = $data_pelanggan->inv_idpel;
+                            $mutasi_sales['smt_tgl_transaksi'] = $if_tgl_bayar;
+                            $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
+                            $mutasi_sales['smt_deskripsi'] = $data_pelanggan->input_nama;
+                            $mutasi_sales['smt_cabar'] = '2';
+                            $mutasi_sales['smt_kredit'] = $data_biaya->biaya_sales_continue;
+                            $mutasi_sales['smt_debet'] = 0;
+                            $mutasi_sales['smt_saldo'] = $total;
+                            $mutasi_sales['smt_biaya_adm'] = 0;
+                            $mutasi_sales['smt_status'] = 0;
+                            MutasiSales::create($mutasi_sales);
+                        }
                     }
-                }
 
 
                     $reg['reg_status'] = 'PAID';

@@ -29,7 +29,7 @@ class ProssesIsolir implements ShouldQueue
     public function handle(): void
     {
         $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
-        $data_pelanggan = Invoice::orderBy('inv_status', 'ASC','inv_tgl_isolir','ASC')
+        $data_pelanggan = Invoice::orderBy('inv_status', 'ASC', 'inv_tgl_isolir', 'ASC')
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
@@ -39,22 +39,22 @@ class ProssesIsolir implements ShouldQueue
             // ->where('inv_status', '!=', 'ISOLIR')
             // ->where('inv_jenis_tagihan', '!=', 'FREE')
             ->first();
-            if ($data_pelanggan) {
-                $status = (new GlobalController)->whatsapp_status();
-                if ($status->wa_status == 'Enable') {
-                    $pesan_group['status'] = '0';
-                } else {
-                    $pesan_group['status'] = '10';
-                }
-                $cek_pesan = Pesan::where('target',$data_pelanggan->input_hp)->where('status',0)->where('ket','isolir otomatis')->count();
-                if($cek_pesan == 0){
+        if ($data_pelanggan) {
+            $status = (new GlobalController)->whatsapp_status();
+            if ($status->wa_status == 'Enable') {
+                $pesan_group['status'] = '0';
+            } else {
+                $pesan_group['status'] = '10';
+            }
+            $cek_pesan = Pesan::where('target', $data_pelanggan->input_hp)->where('status', 0)->where('ket', 'isolir otomatis')->count();
+            if ($cek_pesan == 0) {
 
-                    $pesan_group['pesan_id_site'] = '1';
-                    $pesan_group['layanan'] = 'CS';
-                    $pesan_group['ket'] = 'isolir otomatis';
-                    $pesan_group['target'] = $data_pelanggan->input_hp;
-                    $pesan_group['nama'] = $data_pelanggan->input_nama;
-                    $pesan_group['pesan'] = '
+                $pesan_group['pesan_id_site'] = '1';
+                $pesan_group['layanan'] = 'CS';
+                $pesan_group['ket'] = 'isolir otomatis';
+                $pesan_group['target'] = $data_pelanggan->input_hp;
+                $pesan_group['nama'] = $data_pelanggan->input_nama;
+                $pesan_group['pesan'] = '
 Pelanggan yang terhormat,
 Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya
 Agar dapat digunakan kembali dimohon untuk melakukan pembayaran tagihan sebagai berikut :
@@ -69,8 +69,8 @@ Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelangg
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *OVALL FIBER*
 ';
-                    Pesan::create($pesan_group);
-                }
+                Pesan::create($pesan_group);
+            }
 
 
             $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
@@ -106,8 +106,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         }
                     }
                 }
-            } 
-            elseif ($data_pelanggan->reg_layanan == 'HOTSPOT') {
+            } elseif ($data_pelanggan->reg_layanan == 'HOTSPOT') {
                 if ($API->connect($ip, $user, $pass)) {
                     $cek_secret = $API->comm('/ip/hotspot/user/print', [
                         '?name' => $data_pelanggan->reg_username,

@@ -58,7 +58,7 @@ class GudangController extends Controller
                 'pesan' => 'Gagal menambahkan Kategori. Kategori ' . $request->nama_kategori . ' sudah terdaftar. ',
                 'alert' => 'error',
             );
-            return redirect()->route('admin.gudang.data_barang')->with($notifikasi);
+            return redirect()->route('admin.gudang.stok_gudang')->with($notifikasi);
         }
     }
     public function store_barang(Request $request)
@@ -96,10 +96,10 @@ class GudangController extends Controller
         } elseif ($request->barang_kategori == 'ADSS 24 CORE') {
             $qty = '4000';
             $harga_satuan = $request->barang_harga / $qty;
-        }  elseif ($request->barang_kategori == 'LAN') {
+        } elseif ($request->barang_kategori == 'LAN') {
             $qty = '305';
             $harga_satuan = $request->barang_harga / $qty;
-        }  else {
+        } else {
             $qty = '1';
             $harga_satuan = $request->barang_harga / $qty;
         }
@@ -166,6 +166,7 @@ class GudangController extends Controller
 
     public function data_kode_group()
     {
+
         $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
             // ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
             ->select('data__barangs.barang_kategori', 'data__barangs.barang_satuan',  'data__barangs.barang_id_group', 'data__barangs.barang_tglmasuk', DB::raw('count(data__barangs.barang_kategori) as total'))
@@ -201,10 +202,15 @@ class GudangController extends Controller
 
         $data['id_kategori'] = '1' . sprintf("%03d", $id_kate);
         $data['kategori'] = Data_Kategori::all();
-        $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
-            // ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
-            ->select('data__barangs.barang_kategori', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', DB::raw('sum(data__barangs.barang_dicek) as dicek'), DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'), DB::raw('sum(barang_hilang) as hilang'))
-            ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barangs.barang_kategori');
+        $cekdata_barang = Data_Barang::count();
+        if ($cekdata_barang) {
+            $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
+                // ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
+                ->select('data__barangs.barang_kategori', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', DB::raw('sum(data__barangs.barang_dicek) as dicek'), DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'), DB::raw('sum(barang_hilang) as hilang'))
+                ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barangs.barang_kategori');
+        } else {
+            $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC');
+        }
 
 
         $data['stok_gudang'] = $query->get();
@@ -217,8 +223,8 @@ class GudangController extends Controller
         $data['nama_admin'] = Auth::user()->name;
         // dd(date('Y-m-d',strtotime($data['start_date'])));
         $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')
-            ->select('data__barangs.barang_kategori','data__barangs.barang_nama', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'), DB::raw('sum(barang_hilang) as hilang'))
-            ->groupBy('data__barangs.barang_satuan','data__barangs.barang_nama', 'data__barangs.barang_jenis', 'data__barangs.barang_kategori');
+            ->select('data__barangs.barang_kategori', 'data__barangs.barang_nama', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'), DB::raw('sum(barang_hilang) as hilang'))
+            ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_nama', 'data__barangs.barang_jenis', 'data__barangs.barang_kategori');
 
         $data['stok_gudang'] = $query->get();
         // dd($data['stok_gudang']);
@@ -232,19 +238,19 @@ class GudangController extends Controller
         $data['end_date'] = $request->end_date;
         // dd(date('Y-m-d',strtotime($data['start_date'])));
         $query = Data_Barang::orderBy('data__barangs.barang_tglmasuk', 'ASC')
-        // ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
-        ->select('data__barangs.barang_kategori', 'data__barangs.barang_tglmasuk','data__barangs.barang_nama', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis','data__barangs.barang_jenis_jurnal', DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'), DB::raw('sum(barang_hilang) as hilang'))
-        ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_jenis','data__barangs.barang_nama', 'data__barangs.barang_kategori', 'data__barangs.barang_tglmasuk','data__barangs.barang_jenis_jurnal')
-        ->whereDate('data__barangs.barang_tglmasuk', '>=', date('Y-m-d', strtotime($data['start_date'])))
-        ->whereDate('data__barangs.barang_tglmasuk', '<=', date('Y-m-d', strtotime($data['end_date'])));
+            // ->join('data__barang_keluars', 'data__barang_keluars.bk_kategori', '=', 'data__barangs.barang_kategori')
+            ->select('data__barangs.barang_kategori', 'data__barangs.barang_tglmasuk', 'data__barangs.barang_nama', 'data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barangs.barang_jenis_jurnal', DB::raw('sum(data__barangs.barang_qty) as total'),  DB::raw('sum(barang_harga) as total_harga'),  DB::raw('sum(barang_digunakan) as digunakan'),  DB::raw('sum(barang_dijual) as dijual'),  DB::raw('sum(barang_rusak) as rusak'),  DB::raw('sum(barang_pengembalian) as kembali'), DB::raw('sum(barang_hilang) as hilang'))
+            ->groupBy('data__barangs.barang_satuan', 'data__barangs.barang_jenis', 'data__barangs.barang_nama', 'data__barangs.barang_kategori', 'data__barangs.barang_tglmasuk', 'data__barangs.barang_jenis_jurnal')
+            ->whereDate('data__barangs.barang_tglmasuk', '>=', date('Y-m-d', strtotime($data['start_date'])))
+            ->whereDate('data__barangs.barang_tglmasuk', '<=', date('Y-m-d', strtotime($data['end_date'])));
 
 
         $data['stok_gudang'] = $query->get();
         $query_akum = Data_Barang::orderBy('data__barangs.barang_tglmasuk', 'ASC')
-        ->whereDate('data__barangs.barang_tglmasuk', '>=', date('Y-m-d', strtotime($data['start_date'])))
-        ->whereDate('data__barangs.barang_tglmasuk', '<=', date('Y-m-d', strtotime($data['end_date'])))
-        ->select('data__barangs.barang_jenis_jurnal',  DB::raw('sum(barang_harga) as total_harga'))
-        ->groupBy('data__barangs.barang_jenis_jurnal');
+            ->whereDate('data__barangs.barang_tglmasuk', '>=', date('Y-m-d', strtotime($data['start_date'])))
+            ->whereDate('data__barangs.barang_tglmasuk', '<=', date('Y-m-d', strtotime($data['end_date'])))
+            ->select('data__barangs.barang_jenis_jurnal',  DB::raw('sum(barang_harga) as total_harga'))
+            ->groupBy('data__barangs.barang_jenis_jurnal');
 
 
         $data['stok_gudang_akum'] = $query_akum->get();
@@ -390,9 +396,9 @@ class GudangController extends Controller
 
         $no_sk = (new GlobalController)->no_surat_keterang();
         // $no_sk = 'SKB/250209/0141';
-        $data_barang_keluar = Data_BarangKeluar::where('bk_id', $no_sk)->first();
+        $data_barang_keluar = Data_BarangKeluar::where('bk_id', $no_sk)->count();
 
-        if ($data_barang_keluar) {
+        if ($data_barang_keluar > 0) {
             return response()->json('failed');
         } else {
             $admin = Auth::user()->id;
@@ -413,10 +419,11 @@ class GudangController extends Controller
             $tiket_idpel = $request->tiket_idpel;
             for ($x = 0; $x < count($barang_id); $x++) {
                 Data_BarangKeluar::create([
+                    'bk_id' => '12121',
                     'bk_id' => $no_sk,
                     'bk_jenis_laporan' => $tiket_jenis,
-                    'bk_id_barang' => $barang_id[$x],
                     'bk_id_tiket' => $tiket_id,
+                    'bk_id_barang' => $barang_id[$x],
                     'bk_idpel' => $tiket_idpel,
                     'bk_kategori' => $barang_kategori[$x],
                     'bk_jumlah' => $jumlah_barang[$x],
@@ -430,6 +437,7 @@ class GudangController extends Controller
                     'bk_status' => 0,
                     'bk_harga' => $jumlah_harga[$x],
                 ]);
+                // return response()->json($barang_id[$x]);
                 Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
                     [
                         'barang_nama_pengguna' => $tiket_jenis,
@@ -453,29 +461,26 @@ class GudangController extends Controller
         $data['profile_perusahaan'] = SettingAplikasi::first();
         $data['nama_admin'] = Auth::user()->name;
         $query = Data_Barang::orderBy('barang_tglmasuk', 'DESC')
-        ->select('barang_kategori','barang_nama','barang_harga_satuan','barang_satuan', DB::raw('sum(barang_qty) as sum_qty'), DB::raw('sum(barang_harga_satuan) as sum_harga'),DB::raw('sum(barang_harga_satuan)* sum(barang_qty) as total'))
+            ->select('barang_kategori', 'barang_nama', 'barang_harga_satuan', 'barang_satuan', DB::raw('sum(barang_qty) as sum_qty'), DB::raw('sum(barang_harga_satuan) as sum_harga'), DB::raw('sum(barang_harga_satuan)* sum(barang_qty) as total'))
             ->where('barang_status_print', '0')
-            ->groupBy('barang_kategori','barang_nama','barang_harga_satuan','barang_satuan');
+            ->groupBy('barang_kategori', 'barang_nama', 'barang_harga_satuan', 'barang_satuan');
 
         $data['print_request_barang'] = $query->get();
         $data['data'] = Data_Barang::where('barang_status_print', '0')->first();
-        if($data['data']){
+        if ($data['data']) {
             // return view('gudang/print_request_barang', $data);
-            Data_Barang::where('barang_status_print', '0')->update(['barang_status_print'=>1]);
+            Data_Barang::where('barang_status_print', '0')->update(['barang_status_print' => 1]);
             $pdf = App::make('dompdf.wrapper');
             $html = view('gudang/print_request_barang', $data)->render();
             $pdf->loadHTML($html);
             $pdf->setPaper('A4', 'potraid');
-            return $pdf->download('Request_Barang_'.date('d-m-Y', strtotime(Carbon::now())).'.pdf');
-        } else{
+            return $pdf->download('Request_Barang_' . date('d-m-Y', strtotime(Carbon::now())) . '.pdf');
+        } else {
             $notifikasi = array(
                 'pesan' => 'Tidak ada data request barang',
                 'alert' => 'error',
             );
             return redirect()->route('admin.gudang.stok_gudang')->with($notifikasi);
         }
-
-
-        
     }
 }

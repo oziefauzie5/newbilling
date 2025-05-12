@@ -38,7 +38,7 @@
           </div>
 
             <div class="row ">
-                <div class="info-box shadow-none col-12 "style="border-radius: 30px; height:100%; background: linear-gradient(to right, #5d69be, #C89FEB);">
+                <div class="info-box shadow-none col-12 "style="border-radius: 30px; height:100%; background: linear-gradient(to right, #0d2a38, #C89FEB);">
                     <div class="table-responsive">
                         <table>
                             <tr>

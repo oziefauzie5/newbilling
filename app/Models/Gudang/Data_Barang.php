@@ -20,6 +20,7 @@ class Data_Barang extends Model
         'barang_qty',
         'barang_digunakan',
         'barang_dijual',
+        'barang_dicek',
         'barang_rusak',
         'barang_pengembalian',
         'barang_hilang',
@@ -38,6 +39,7 @@ class Data_Barang extends Model
         'barang_penerima',
         'barang_pengecek',
         'barang_status_print',
+        'barang_hilang',
         'created_at',
     ];
 }

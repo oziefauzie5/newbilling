@@ -25,7 +25,7 @@ class InputData extends Model implements Authenticatable
         'input_subseles',
         'password',
         'input_maps',
-        'input_kordinat',
+        'input_koordinat',
         'input_status',
         'input_keterangan',
     ];

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('input_subseles')->nullable();
             $table->string('password')->nullable();
             $table->string('input_maps')->nullable();
-            $table->string('input_kordinat')->nullable();
+            $table->string('input_koordinat')->nullable();
             $table->string('input_status')->nullable();
             $table->string('input_keterangan')->nullable();
             $table->timestamps();

@@ -48,20 +48,28 @@ class RegistrasiController extends Controller
     public function index()
     {
         $data['input_data'] = InputData::where('input_status', 'INPUT DATA')->get();
-        $data['data_site'] = Data_Site::all();
-        $data['data_pop'] = Data_pop::all();
-        $data['data_paket'] = Paket::all();
-        $data['data_router'] = Router::all();
-        $data['data_biaya'] = SettingBiaya::first();
+        $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
+        $data['data_pop'] = Data_pop::where('pop_status', 'Enable')->get();
+        $data['data_paket'] = Paket::where('paket_status', 'Enable')->get();
+        $data['data_router'] = Router::where('router_status', 'Enable')->get();
+        $data_biaya = SettingBiaya::first();
+        if ($data_biaya) {
+            $data['data_biaya'] = $data_biaya;
+        } else {
+            $notifikasi = array(
+                'pesan' => 'Setting Data Biaya Terlebih dahulu',
+                'alert' => 'error',
+            );
+            return redirect()->route('admin.psb.index')->with($notifikasi);
+        }
         return view('Registrasi/registrasi', $data);
     }
 
     public function store(Request $request)
     {
         $sbiaya = SettingBiaya::first();
-        // $sbiaya->biaya_psb
 
-        // $admin = Auth::user()->name;
+
         $user = (new GlobalController)->user_admin();
         $admin = $user['user_nama'];
         $cek_sales = (new GlobalController)->role($request->reg_sales);
@@ -150,10 +158,14 @@ class RegistrasiController extends Controller
         $tgl_pasang = Carbon::create($tanggal)->addDay(1)->toDateString();
 
         if ($cek_sales->role_id == 10 && $cek_sales->role_id == 13) {
-            if($request->reg_jenis_tagihan == 'FREE'){
+            if ($request->reg_jenis_tagihan == 'FREE') {
                 $data['reg_fee'] = 0;
             } else {
-            $data['reg_fee'] = $sbiaya->biaya_sales_continue;
+                if ($sbiaya) {
+                    $data['reg_fee'] = $sbiaya->biaya_sales_continue;
+                } else {
+                    $data['reg_fee'] = 0;
+                }
             }
         } else {
             $data['reg_fee'] = 0;
@@ -199,21 +211,21 @@ class RegistrasiController extends Controller
 
 
         $status = (new GlobalController)->whatsapp_status();
+        if ($status) {
+            if ($status->wa_status == 'Enable') {
+                $status_pesan = '0';
+            } else {
+                $status_pesan = '10';
+            }
 
-        if ($status->wa_status == 'Enable') {
-            $status_pesan = '0';
-        } else {
-            $status_pesan = '10';
-        }
 
-
-        $pesan_pelanggan['layanan'] = 'CS';
-        $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
-        $pesan_pelanggan['ket'] = 'registrasi';
-        $pesan_pelanggan['target'] = $request->reg_hp;
-        $pesan_pelanggan['nama'] = $request->reg_nama;
-        $pesan_pelanggan['status'] = $status_pesan;
-        $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
+            $pesan_pelanggan['layanan'] = 'CS';
+            $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
+            $pesan_pelanggan['ket'] = 'registrasi';
+            $pesan_pelanggan['target'] = $request->reg_hp;
+            $pesan_pelanggan['nama'] = $request->reg_nama;
+            $pesan_pelanggan['status'] = $status_pesan;
+            $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
 Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
 
 No.Layanan : *' . $request->reg_nolayanan . '*
@@ -232,20 +244,20 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 ';
 
 
-        $pesan_group['layanan'] = 'CS';
-        $pesan_group['pesan_id_site'] = $request->reg_site;
-        $pesan_group['ket'] = 'registrasi';
-        $pesan_group['target'] = '120363262623415382@g.us';
-        $pesan_group['nama'] = $request->reg_nama;
-        $pesan_group['status'] = $status_pesan;
-        $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
+            $pesan_group['layanan'] = 'CS';
+            $pesan_group['pesan_id_site'] = $request->reg_site;
+            $pesan_group['ket'] = 'registrasi';
+            $pesan_group['target'] = env('GROUP_REGISTRASI');;
+            $pesan_group['nama'] = $request->reg_nama;
+            $pesan_group['status'] = $status_pesan;
+            $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
 
 Antrian pemasangan tanggal ' . date('d-m-Y', strtotime($tgl_pasang)) . ' 
 
 No.Layanan : *' . $request->reg_nolayanan . '*
 Nama : ' . $request->reg_nama . '
 Alamat : ' . $request->reg_alamat_pasang .
-            '
+                '
 Paket : *' . $paket_nama->paket_nama . '*
 Jenis tagihan : ' . $request->reg_jenis_tagihan . '
 Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_dana_kerjasama + $request->reg_kode_unik + $request->reg_dana_kas . '
@@ -255,14 +267,14 @@ Diregistrasi Oleh : *' . $admin . '*
 ';
 
 
-        Pesan::create([
-            'layanan' =>  'NOC',
-            'pesan_id_site' =>  $request->reg_site,
-            'ket' =>  'tiket',
-            'target' =>  '120363028776966861@g.us',
-            'status' =>  $status_pesan,
-            'nama' =>  'GROUP TEKNISI',
-            'pesan' => '               -- TIKET GANGGUAN --
+            Pesan::create([
+                'layanan' =>  'NOC',
+                'pesan_id_site' =>  $request->reg_site,
+                'ket' =>  'tiket',
+                'target' =>  env('GROUP_TEKNISI'),
+                'status' =>  $status_pesan,
+                'nama' =>  'GROUP TEKNISI',
+                'pesan' => '               -- TIKET GANGGUAN --
 
 Hallo Broo.....
 Ada tiket masuk ke sistem nih! 😊
@@ -278,13 +290,14 @@ Whatsapp : 0' . $request->reg_hp . '
 Whatsapp Alternatif: 0' . $request->reg_hp2 . '
 Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 '
-        ]);
+            ]);
+            Pesan::create($pesan_pelanggan);
+            Pesan::create($pesan_group);
+        }
 
 
 
         Data_Tiket::create($tiket);
-        Pesan::create($pesan_pelanggan);
-        Pesan::create($pesan_group);
         Registrasi::create($data);
         InputData::where('id', $request->reg_idpel)->update($update);
         $notifikasi = array(
@@ -306,7 +319,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             $data->delete();
         }
 
-        $data_tiket = Data_Tiket::where('tiket_idpel',$id)->where('tiket_jenis','Instalasi');
+        $data_tiket = Data_Tiket::where('tiket_idpel', $id)->where('tiket_jenis', 'Instalasi');
         if ($data_tiket) {
             $data_tiket->delete();
         }
@@ -840,33 +853,6 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
     public function deaktivasi_pelanggan(Request $request, $id)
     {
-        dd('sementara dimatiin ya. hub ka ozi aja');
-
-        if($request->kelengkapan == 'ONT & Adaptor'){
-            $kode_barang = [$request->kode_barang_ont,$request->kode_barang_adp];
-            $barang_keluar = Data_BarangKeluar::whereIn('bk_id_barang',$kode_barang)->delete();
-            $barang=  Data_Barang::whereIn('barang_id',$kode_barang)->update([
-                'barang_digunakan' => 0,
-                'barang_dicek' => 1,
-            ]);
-        } elseif($request->kelengkapan == 'ONT') {
-            $kode_barang = $request->kode_barang_ont;
-            $barang_keluar = Data_BarangKeluar::where('bk_id_barang',$kode_barang)->delete();
-            $barang=  Data_Barang::where('barang_id',$kode_barang)->update([
-                'barang_digunakan' => 0,
-                'barang_dicek' => 1,
-            ]);
-        } elseif($request->kelengkapan == 'Hilang') {
-            $kode_barang = [$request->kode_barang_ont,$request->kode_barang_adp];
-            $barang_keluar = Data_BarangKeluar::whereIn('bk_id_barang',$kode_barang)->delete();
-            $barang=  Data_Barang::whereIn('barang_id',$kode_barang)->update([
-                'barang_digunakan' => 0,
-                'barang_hilang' => 1,
-            ]);
-        }
-        
-        
-        dd('test');
         $nama_admin = Auth::user()->name;
         $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
         $tgl_ambil_perangkat = date('Y-m-d', strtotime($request->deaktivasi_tanggal_pengambilan));
@@ -933,23 +919,44 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 'deaktivasi_admin' =>  $nama_admin,
             ]);
 
-            // if($request->kelengkapan == 'ONT & Adaptor'){
-            //     // Data_Barang::wherei
-            //     $kode_barang = $request->kode_barang_ont.', '.$request->kode_barang_ont;
-            //     Data_BarangKeluar::whereIn('bk_id_barang',$request)
-            // }
+            if ($request->kelengkapan == 'ONT & Adaptor') {
+                $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
+                Data_BarangKeluar::whereIn('bk_id_barang', $kode_barang)->delete();
+                Data_Barang::whereIn('barang_id', $kode_barang)->update([
+                    'barang_digunakan' => 0,
+                    'barang_dicek' => 1,
+                    'barang_ket' => 'Pengambilan Perangkat',
+                ]);
+            } elseif ($request->kelengkapan == 'ONT') {
+                Data_BarangKeluar::where('bk_id_barang', $request->kode_barang_ont)->delete();
+                Data_Barang::where('barang_id', $request->kode_barang_ont)->update([
+                    'barang_digunakan' => 0,
+                    'barang_dicek' => 1,
+                    'barang_ket' => 'Pengambilan Perangkat',
+                ]);
+                Data_Barang::where('barang_id', $request->kode_barang_adp)->update([
+                    'barang_digunakan' => 0,
+                    'barang_hilang' => 1,
+                ]);
+            } elseif ($request->kelengkapan == 'Hilang') {
+                $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
+                Data_Barang::whereIn('barang_id', $kode_barang)->update([
+                    'barang_digunakan' => 0,
+                    'barang_hilang' => 1,
+                ]);
+            }
 
             $notifikasi = [
                 'pesan' => 'Berhasil melakukan pemutusan pelanggan',
                 'alert' => 'success',
             ];
-            return redirect()->route('admin.reg.data_aktivasi_pelanggan')->with($notifikasi);
+            return redirect()->route('admin.psb.index')->with($notifikasi);
         } else {
             $notifikasi = [
                 'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
                 'alert' => 'error',
             ];
-            return redirect()->route('admin.reg.data_aktivasi_pelanggan')->with($notifikasi);
+            return redirect()->route('admin.psb.data_deaktivasi')->with($notifikasi);
         }
     }
     public function data_deaktivasi()
@@ -1051,22 +1058,22 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         $data['end_date'] = date('Y-m-d', strtotime($request->end_date));
         // dd($data);
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-        ->join('data__deaktivasis', 'data__deaktivasis.deaktivasi_idpel', '=', 'registrasis.reg_idpel')
-        ->whereDate('data__deaktivasis.created_at', '>=', $data['start_date'])
-        ->whereDate('data__deaktivasis.created_at', '<=', $data['end_date'])
-        ->orderBy('data__deaktivasis.created_at', 'ASC');
+            ->join('data__deaktivasis', 'data__deaktivasis.deaktivasi_idpel', '=', 'registrasis.reg_idpel')
+            ->whereDate('data__deaktivasis.created_at', '>=', $data['start_date'])
+            ->whereDate('data__deaktivasis.created_at', '<=', $data['end_date'])
+            ->orderBy('data__deaktivasis.created_at', 'ASC');
 
         $data['list_deaktivasi'] = $query->get();
         $pdf = App::make('dompdf.wrapper');
         $html = view('Registrasi/print_list_deaktivasi', $data)->render();
         $pdf->loadHTML($html);
         $pdf->setPaper('A4', 'landscape');
-        return $pdf->download('Data Deaktivasi Periode ' . $data['start_date'] . ' - ' .$data['end_date'] . '.pdf');
+        return $pdf->download('Data Deaktivasi Periode ' . $data['start_date'] . ' - ' . $data['end_date'] . '.pdf');
         // return view('Registrasi/print_list_deaktivasi', $data);
     }
     public function followup()
     {
-        $tanggal = date('Y-m-d',strtotime(Carbon::now()));
+        $tanggal = date('Y-m-d', strtotime(Carbon::now()));
         $tagihan_kebelakang = Carbon::create($tanggal)->addMonth(-1)->toDateString();
         $user = (new GlobalController)->user_admin();
         $data['admin'] = $user['user_nama'];
@@ -1081,17 +1088,17 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         return view('Registrasi/list_followup', $data);
     }
 
-    public function cek_perangkat(Request $request,$id)
+    public function cek_perangkat(Request $request, $id)
     {
-        if($request->kelengkapan == 'Hilang'){
-            $data_barang_keluar = Data_BarangKeluar::where('bk_idpel',$id)->where('bk_kategori','ONT')->orWhere('bk_kategori','ADAPTOR')->get();
+        if ($request->kelengkapan == 'Hilang') {
+            $data_barang_keluar = Data_BarangKeluar::where('bk_idpel', $id)->where('bk_kategori', 'ONT')->orWhere('bk_kategori', 'ADAPTOR')->get();
             return response()->json($data_barang_keluar);
-            if($data_barang_keluar) {
-                if( $data_barang_keluar->bk_idpel == $id){
-                        $dbk_adp = Data_BarangKeluar::where('bk_idpel',$id)->where('bk_kategori','ADAPTOR')->first();
-                        $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
-                        $data['barang_id_ont'] = $data_barang_keluar->bk_id_barang;
-                        $data['barang_sn'] = $cek_mac->barang_sn;
+            if ($data_barang_keluar) {
+                if ($data_barang_keluar->bk_idpel == $id) {
+                    $dbk_adp = Data_BarangKeluar::where('bk_idpel', $id)->where('bk_kategori', 'ADAPTOR')->first();
+                    $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
+                    $data['barang_id_ont'] = $data_barang_keluar->bk_id_barang;
+                    $data['barang_sn'] = $cek_mac->barang_sn;
                     return response()->json($data);
                 } else {
                     return response()->json('0');
@@ -1100,15 +1107,15 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 return response()->json('1');
             }
         } else {
-            $cek_mac = Data_Barang::where('barang_mac',$request->mac)->where('barang_kategori','ONT')->first();
-            if($cek_mac){
-                $data_barang_keluar = Data_BarangKeluar::where('bk_id_barang',$cek_mac->barang_id)->first();
-                if($data_barang_keluar) {
-                    if( $data_barang_keluar->bk_idpel == $id){
-                            $dbk_adp = Data_BarangKeluar::where('bk_idpel',$id)->where('bk_kategori','ADAPTOR')->first();
-                            $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
-                            $data['barang_id_ont'] = $data_barang_keluar->bk_id_barang;
-                            $data['barang_sn'] = $cek_mac->barang_sn;
+            $cek_mac = Data_Barang::where('barang_mac', $request->mac)->where('barang_kategori', 'ONT')->first();
+            if ($cek_mac) {
+                $data_barang_keluar = Data_BarangKeluar::where('bk_id_barang', $cek_mac->barang_id)->first();
+                if ($data_barang_keluar) {
+                    if ($data_barang_keluar->bk_idpel == $id) {
+                        $dbk_adp = Data_BarangKeluar::where('bk_idpel', $id)->where('bk_kategori', 'ADAPTOR')->first();
+                        $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
+                        $data['barang_id_ont'] = $data_barang_keluar->bk_id_barang;
+                        $data['barang_sn'] = $cek_mac->barang_sn;
                         return response()->json($data);
                     } else {
                         return response()->json('0');
@@ -1125,19 +1132,19 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
     {
         // $cek_mac = Data_Barang::where('barang_mac',$request->mac)->where('barang_kategori','ONT')->first();
         // if($cek_mac){
-            $data_barang_keluar = Data_BarangKeluar::Join('data__barangs','data__barangs.barang_id','=','data__barang_keluars.bk_id_barang')
-            ->where('bk_idpel',$id)->where('bk_kategori','ONT')->first();
-            // return response()->json($data_barang_keluar);
-            if($data_barang_keluar) {
-                        $dbk_adp = Data_BarangKeluar::where('bk_idpel',$id)->where('bk_kategori','ADAPTOR')->first();
-                        $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
-                        $data['barang_id_ont'] = $data_barang_keluar->barang_id;
-                        $data['barang_sn'] = $data_barang_keluar->barang_sn;
-                        $data['barang_mac'] = $data_barang_keluar->barang_mac;
-                    return response()->json($data);
-            } else {
-                return response()->json('1');
-            }
+        $data_barang_keluar = Data_BarangKeluar::Join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
+            ->where('bk_idpel', $id)->where('bk_kategori', 'ONT')->first();
+        // return response()->json($data_barang_keluar);
+        if ($data_barang_keluar) {
+            $dbk_adp = Data_BarangKeluar::where('bk_idpel', $id)->where('bk_kategori', 'ADAPTOR')->first();
+            $data['barang_id_adp'] = $dbk_adp->bk_id_barang;
+            $data['barang_id_ont'] = $data_barang_keluar->barang_id;
+            $data['barang_sn'] = $data_barang_keluar->barang_sn;
+            $data['barang_mac'] = $data_barang_keluar->barang_mac;
+            return response()->json($data);
+        } else {
+            return response()->json('1');
+        }
         // } else {
         //     return response()->json('2');
         // }

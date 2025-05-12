@@ -39,6 +39,7 @@
                   <input class="form-control readonly" id="tiket_jenis" name="tiket_jenis" value="{{ $tiket->tiket_jenis }}">
                 </div>
                 </div>
+                <!-- e0:e0:c2:bf:f6:48 -->
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Id Pel</label>
                 <div class="col-sm-4">
@@ -129,6 +130,51 @@
                 <input name="tiket_teknisi2" type="text" class="form-control" id="tiket_teknisi2">
                 </div>
               </div>
+              <div class="form-group row div_tiket_closed"  style="display:none;" >
+                <label class="col-sm-2 col-form-label">Kategori Tindakan</label>
+                <div class="col-sm-4 notif">
+                <select name="kate_tindakan" class="form-control" id="kate_tindakan">
+                  <option value="">--Pilih Kategori--</option>
+                  <option value="Ganti ONT">Ganti ONT</option>
+                  <option value="Ganti Adaptor">Ganti Adaptor</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+                </div>
+              </div>
+
+            <!-- JIKA CLOSE TIKET GANTI BARANG  -->
+            <div class="form-group row div_ont"  style="display:none;" >
+                      <label class="col-sm-2 col-form-label">Mac Address</label>
+                      <div class="col-sm-4 notif_ganti">
+                        <input type="text" class="form-control " value="" id="ganti_mac" name="ganti_mac" >
+                        <span>Kesalahan input mac, dapat mengakibatkan pelanggan aktif menjadi non aktif jika mac digunakan oleh pelanggan yang berbeda</span>
+                      </div>
+                      <label  class="col-sm-2 col-form-label">Serial Number</label>
+                      <div class="col-sm-4 notif_ganti">
+                        <input type="text" class="form-control readonly" value="" id="ganti_sn" name="ganti_sn" >
+                      </div>
+                    
+                      </div>
+                      <div class="form-group row div_ont"  style="display:none;" >
+                      <label class="col-sm-2 col-form-label">Kode ONT</label>
+                      <div class="col-sm-4 notif_ganti">
+                        <input type="text" class="form-control readonly " value="" id="kode_barang_ont" name="kode_barang_ont" >
+                      </div>
+                      <div class="col-sm-4 notif_ganti cek_mac">
+                        <button type="button" class="btn btn-sm btn-primary " id="tiket_cek_ont">Cek Perangkat</button>
+                      </div>
+
+                     
+                    </div>
+                    <div class="form-group row div_adp"  style="display:none;" >
+                      <label  class="col-sm-2 col-form-label">Kode Adaptor</label>
+                      <div class="col-sm-4 notif_ganti">
+                        <input type="text" class="form-control readonly notif" value="" id="kode_barang_adp" name="kode_barang_adp" >
+                      </div>
+                      <div class="col-sm-4 notif_ganti cek_id">
+                        <button type="button" class="btn btn-sm btn-primary " id="cek_id">Data Perangakat</button>
+                      </div>
+                      </div>
 
                      
 
@@ -176,9 +222,10 @@
               </div>
               </div>
 
-              <div class="form-group row">
+              <div class="form-group row div_tiket_closed"  style="display:none;">
+              <label class="col-sm-2 col-form-label">Barang digunakan</label>
                 <div class="col-sm-4">
-                <button type="button" class="btn btn-primary button_modal_barang">
+                <button type="button" class="btn btn-primary btn-sm button_modal_barang " id="button_modal_barang">
                   Tambah Barang
                 </button>
               </div>
@@ -221,7 +268,7 @@
             <div class="pesan_jumlah"></div>
           </div>
           <div class="col-sm-2">
-            <button  type="button" class="btn btn-danger  button_tambah_barang">Tambah barang</button>
+            <button  type="button" class="btn btn-danger btn-sm  button_tambah_barang">Keranjang</button>
           </div>
       </div>
       <div class="form-group row">
@@ -251,8 +298,8 @@
       </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary float-right simpan_barang_tiket">Simpan barang keluar</button>
+        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sm btn-primary float-right simpan_barang_tiket">Simpan barang keluar</button>
       </div>
     </div>
   </div>

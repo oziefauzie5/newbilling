@@ -165,7 +165,7 @@
                     @if( Session::get('reg_layanan'))
                     <option value="{{ Session::get('reg_layanan') }}">{{ Session::get('reg_layanan') }}</option>
                     @else
-                    <option value="">PILIH LAYANAN</option>
+                    <option value="">--Pilih Layanan--</option>
                     <option value="PPP">PPP</option>
                     <option value="HOTSPOT">HOTSPOT</option>
                     {{-- <option value="HOTSPOT">HOTSPOT</option> --}}

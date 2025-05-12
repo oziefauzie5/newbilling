@@ -128,35 +128,35 @@ class BillerController extends Controller
             ->whereDate('mutasi_sales.created_at', '<=', $data['end_date']);
         $data['mutasi_sales'] = $query->get();
 
-        $query_pel =  InputData::join('registrasis','registrasis.reg_idpel','input_data.id')
-            ->join('users','users.id','=','input_data.input_sales')
+        $query_pel =  InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->orderBy('registrasis.reg_tgl_pasang', 'ASC')
             ->where('users.id', '=', $data['admin_user']);
         $data['data_pelannggan'] = $query_pel->get();
 
-        $querycount = InputData::join('registrasis','registrasis.reg_idpel','input_data.id')
-            ->join('users','users.id','=','input_data.input_sales')
+        $querycount = InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('users.id', '=', $data['admin_user']);
         $data['total_pel'] = $querycount->count();
         $data['count_pelfree'] = $querycount->where('registrasis.reg_jenis_tagihan', '=', 'Free')->count();
-            
-        $querycount2 = InputData::join('registrasis','registrasis.reg_idpel','input_data.id')
-            ->join('users','users.id','=','input_data.input_sales')
+
+        $querycount2 = InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('registrasis.reg_progres', '>', 5)
             ->where('users.id', '=', $data['admin_user']);
         $data['count_putus'] = $querycount2->count();
-            
-        $querycount3 = InputData::join('registrasis','registrasis.reg_idpel','input_data.id')
-            ->join('users','users.id','=','input_data.input_sales')
+
+        $querycount3 = InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('users.id', '=', $data['admin_user'])
             ->whereDate('reg_tgl_pasang', '>', $month)
             ->where('reg_jenis_tagihan', '!=', 'FREE');
         $data['count_pel_baru'] = $querycount3->count();
-            
-        $data['pel_aktif'] = InputData::join('registrasis','registrasis.reg_idpel','input_data.id')
-            ->join('users','users.id','=','input_data.input_sales')
+
+        $data['pel_aktif'] = InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('registrasis.reg_progres', '<=', 5)
-            ->where('registrasis.reg_jenis_tagihan', '!=','FREE')
+            ->where('registrasis.reg_jenis_tagihan', '!=', 'FREE')
             ->whereDate('reg_tgl_pasang', '<', $month)
             ->where('users.id', '=', $data['admin_user'])
             ->count();
@@ -170,9 +170,9 @@ class BillerController extends Controller
             ->where('inv_status', 'PAID')
             ->where('inv_jenis_tagihan', 'PRABAYAR')
             ->where('input_sales', $data['admin_user']);
-            $data['pelanggan_lunas'] = $query_lunas->count();
+        $data['pelanggan_lunas'] = $query_lunas->count();
 
-        
+
         $data['saldo'] = (new globalController)->total_mutasi_sales($data['admin_user']);
         return view('biller/mutasi_pdf', $data);
         $pdf = App::make('dompdf.wrapper');
@@ -294,7 +294,8 @@ class BillerController extends Controller
         $user = (new GlobalController)->user_admin();
 
         $id_cust = (new GlobalController)->idpel_();
-        // $id_cust = '12248';
+        // $id_cust = '12264';
+        // dd($id_cust);
         $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
         if (!preg_match('/[^+0-9]/', trim($nomorhp2))) {
             if (substr(trim($nomorhp2), 0, 3) == '+62') {
@@ -406,7 +407,7 @@ class BillerController extends Controller
         $query->where('reg_jenis_tagihan', '!=', 'FREE');
 
         $data['data_pelanggan'] = $query->get();
-      
+
 
 
         // dd($month);
@@ -416,14 +417,14 @@ class BillerController extends Controller
             ->where('input_data.input_sales', '=', $user_id)
             ->where('reg_progres', '<=', 5)
             ->whereDate('reg_tgl_pasang', '<', $month);
-            // $data['pelanggan_aktif'] = $query_aktif->where('reg_jenis_tagihan', '!=', 'FREE')->get();
-            // foreach ($data['pelanggan_aktif'] as $key ) {
-            //     # code...
-            //     echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
-            // }
-            
-            // dd('test');
-            $data['pelanggan_aktif'] = $query_aktif->where('reg_jenis_tagihan', '!=', 'FREE')->count();
+        // $data['pelanggan_aktif'] = $query_aktif->where('reg_jenis_tagihan', '!=', 'FREE')->get();
+        // foreach ($data['pelanggan_aktif'] as $key ) {
+        //     # code...
+        //     echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
+        // }
+
+        // dd('test');
+        $data['pelanggan_aktif'] = $query_aktif->where('reg_jenis_tagihan', '!=', 'FREE')->count();
 
         #COUNT PELANGGAN BULAN INI
         $query_bulan_ini = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
@@ -457,7 +458,7 @@ class BillerController extends Controller
             ->where('inv_status', 'PAID')
             ->where('inv_jenis_tagihan', 'PRABAYAR')
             ->where('input_sales', $user_id);
-            $data['pelanggan_lunas'] = $query_lunas->count();
+        $data['pelanggan_lunas'] = $query_lunas->count();
 
 
         #COUNT PELANGGAN BELUM LUNAS
@@ -469,15 +470,15 @@ class BillerController extends Controller
             ->where('inv_status', '!=', 'PAID')
             ->where('inv_jenis_tagihan', 'PRABAYAR')
             ->where('input_sales', $user_id);
-            
-            // $data['pelanggan_belum_lunas'] = $query_belum_lunas->get();
-            // foreach ($data['pelanggan_belum_lunas'] as $key ) {
-            //         # code...
-            //         echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
-            //     }
-                
-            //     dd('test');
-                $data['pelanggan_belum_lunas'] = $query_belum_lunas->count();
+
+        // $data['pelanggan_belum_lunas'] = $query_belum_lunas->get();
+        // foreach ($data['pelanggan_belum_lunas'] as $key ) {
+        //         # code...
+        //         echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
+        //     }
+
+        //     dd('test');
+        $data['pelanggan_belum_lunas'] = $query_belum_lunas->count();
         $data['komisi'] = (new globalController)->total_mutasi_sales($user_id);
 
         return view('biller/data_pelanggan_sales', $data);
@@ -544,7 +545,7 @@ class BillerController extends Controller
             # diffDays > -0 artinya jika pelanggan melakukan pembayaran setelah jatuh tempo.
             # Jika pelanggan melakukan pembayaran lewat dari jatuh tempo, maka tanggal jatuh tempo akan berubah ke tanggal pelanggan melakukan pembayaran.
             $cek_hari_bayar = date('d', strtotime($tgl_bayar));
-            if ($diffDays < -0) { 
+            if ($diffDays < -0) {
                 # Cek tanggal pembayaran.
                 # Jika Pelanggan melakukan pembayaran di atas tanggal 24 maka, tanggal jatuh tempo akan berubah ketanggal 1 bulan berikutnya 
                 if ($cek_hari_bayar >= 25) {
@@ -564,7 +565,7 @@ class BillerController extends Controller
                     // dd('Bayar di bawah tgl 25');
                 }
             } else {
-                
+
 
                 if ($cek_hari_bayar >= 25) {
                     #Tambah 1 bulan dari tgl pembeyaran
@@ -586,7 +587,7 @@ class BillerController extends Controller
 
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
             #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
-            
+
             if ($data_pelanggan->reg_inv_control == 0) {
                 $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
                 $reg['reg_tgl_tagih'] = $inv0_tagih0;
@@ -594,7 +595,7 @@ class BillerController extends Controller
                 $reg['reg_tgl_jatuh_tempo'] = $inv1_jt_tempo;
                 $reg['reg_tgl_tagih'] = $inv1_tagih1;
             }
-            
+
             $saldo = (new globalController)->total_mutasi($admin_user);
             $pembayaran = $sumharga + $sumppn - $data_pelanggan->inv_diskon;
             $total = $saldo - $pembayaran; #SALDO MUTASI = DEBET - KREDIT
@@ -713,9 +714,9 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                         }
 
                         #CEK BULAN PEMASANGAN
-                        $bulan_pasang = date('Y-m',strtotime($data_pelanggan->reg_tgl_pasang));
-                        $bulan_bayar = date('Y-m',strtotime($if_tgl_bayar));
-                        if($bulan_pasang != $bulan_bayar){
+                        $bulan_pasang = date('Y-m', strtotime($data_pelanggan->reg_tgl_pasang));
+                        $bulan_bayar = date('Y-m', strtotime($if_tgl_bayar));
+                        if ($bulan_pasang != $bulan_bayar) {
                             if ($data_pelanggan->reg_fee > 0) {
                                 $data_biaya = SettingBiaya::first();
                                 $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);

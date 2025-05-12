@@ -106,6 +106,17 @@
                 @csrf
                 @method('POST')
                 <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label>POP</label>
+                  <select name="router_id_pop" id="" class="form-control">
+                    <option value="">--Pilih POP--</option>
+                    @foreach($data_pop as $pop)
+                    <option value="{{$pop->pop_id}}">{{$pop->pop_nama}}</option>
+                    @endforeach
+                  </select>
+                </div>
+                </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Nama Router</label>
@@ -206,6 +217,17 @@
                       @csrf
                       @method('PUT')
                       <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>POP</label>
+                          <select name="router_id_pop" id="" class="form-control">
+                            <option value="{{$d->pop_id}}">{{$d->pop_nama}}</option>
+                            @foreach($data_pop as $pop)
+                            <option value="{{$pop->pop_id}}">{{$pop->pop_nama}}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                        </div>
                         <div class="col-sm-6">
                           <div class="form-group">
                             <label>Nama Router</label>
