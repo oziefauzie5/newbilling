@@ -46,7 +46,7 @@ class TiketController extends Controller
 
         return view('tiket/dashboard_tiket', $data);
     }
-    public function w(Request $request)
+    public function data_tiket(Request $request)
     {
         $data['q'] = $request->query('q');
         $query = Data_Tiket::join('users', 'users.id', '=', 'data__tikets.tiket_pembuat')
