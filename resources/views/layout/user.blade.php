@@ -51,9 +51,10 @@
 			<!-- Logo Header -->
 			<div class="logo-header" data-background-color="blue">
 				
-				{{-- <a href="index.html" class="logo">
-					<img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" alt="navbar brand" class="navbar-brand">
-				</a> --}}
+				<a href="#" class="logo">
+					<!-- <img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" alt="navbar brand" class="navbar-brand"> -->
+					<h3 class="navbar-brand text-light"><strong> {{Session::get('app_brand')}}</strong></h3>
+				</a>
 				<button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
 			
 			</div>

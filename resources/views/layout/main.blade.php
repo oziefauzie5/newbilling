@@ -82,9 +82,8 @@
 			<!-- Logo Header -->
 			<div class="logo-header" data-background-color="blue" >
 
-				<a href="index.html" class="logo">
-					<!-- <img src="{{ asset('storage/img/LOGO.svg')}}" alt="{{Session::get('app_logo')}}" class="navbar-brand rounded float-left" >  -->
-					<!-- <img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" alt="{{Session::get('app_logo')}}" class="navbar-brand rounded float-left" >  -->
+			<a href="#" class="logo">
+					<!-- <img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" alt="navbar brand" class="navbar-brand"> -->
 					<h3 class="navbar-brand text-light"><strong> {{Session::get('app_brand')}}</strong></h3>
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
