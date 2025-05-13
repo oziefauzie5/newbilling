@@ -46,7 +46,7 @@ class TiketController extends Controller
 
         return view('tiket/dashboard_tiket', $data);
     }
-    public function data_tiket(Request $request)
+    public function w(Request $request)
     {
         $data['q'] = $request->query('q');
         $query = Data_Tiket::join('users', 'users.id', '=', 'data__tikets.tiket_pembuat')
@@ -166,7 +166,7 @@ Terima kasih.';
             'layanan' =>  'NOC',
             'pesan_id_site' =>  $request->tiket_site,
             'ket' =>  'tiket',
-            'target' =>  env("GROUP_TEKNISI"),
+            'target' =>  env('GROUP_TEKNISI'),
             'status' =>  $status_pesan,
             'nama' =>  'GROUP TEKNISI',
             'pesan' => '               -- TIKET GANGGUAN --
@@ -367,7 +367,7 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $pesan_closed['ket'] = 'tiket';
             $pesan_closed['pesan_id_site'] = $request->tiket_site;
             $pesan_closed['status'] = $status_pesan;
-            $pesan_closed['target'] = env("GROUP_TEKNISI");
+            $pesan_closed['target'] = env('GROUP_TEKNISI');
             $pesan_closed['nama'] = 'Group Teknisi';
             $pesan_closed['pesan'] = '               -- CLOSED TIKET --
 Kendala : ' . $request->tiket_kendala . '
