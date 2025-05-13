@@ -63,7 +63,7 @@
             <div class="form-group row">
               <label class="col-sm-2 col-form-label">Nama Laporan</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control readonly"  value="{{ $tiket->tiket_nama }}" name="tiket_nama">
+                <input type="text" class="form-control readonly"  value="{{ $tiket->tiket_nama }}" name="tiket_nama" id="tiket_nama">
               </div>
             </div>
             <div class="form-group row">
@@ -188,7 +188,7 @@
                 <textarea name="tiket_tindakan" id="tiket_tindakan" class="form-control"cols="30" rows="5"></textarea>
                 </div>
               </div>
-
+         
               <div class="form-group row div_tiket_closed"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">POP</label>
                 <div class="col-sm-4 notif">

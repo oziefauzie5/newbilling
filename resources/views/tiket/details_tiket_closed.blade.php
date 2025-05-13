@@ -109,7 +109,7 @@
                 <div class="form-group row div_tiket_closed"  >
                   <label class="col-sm-2 col-form-label">Foto Laporan Kerja</label>
                   <div class="col-sm-4">
-                  <img src="{{ asset('storage/laporan-tiket/'.$tiket->tiket_foto) }}" width="100%" alt="" title=""></img>
+                  <img src="{{ asset('storage/laporan-kerja/'.$tiket->tiket_foto) }}" width="100%" alt="" title=""></img>
                 </div>
                   <label class="col-sm-2 col-form-label">Barang yang digunakan</label>
                   <div class="col-sm-4">

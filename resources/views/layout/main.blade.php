@@ -3446,9 +3446,6 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 									$('#tiket_tindakan').removeAttr('required');
 									$('#tiket_foto').removeAttr('required');
 									$('#tiket_noskb').removeAttr('required');
-									
-
-									
 								} else if ($(this).val() == 'Closed') {
 									$('.div_tiket_closed').show();
 									$('.div_tiket_ket_pending').hide();

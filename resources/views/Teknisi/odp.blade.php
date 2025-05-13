@@ -152,6 +152,7 @@
                 <table id="edit_inputdata" class="table table-hover text-nowrap">
                   <thead>
                     <tr>
+                      <th>Action</th>
                       <th>Site</th>
                       <th>Pop</th>
                       <th>Olt</th>
@@ -169,13 +170,19 @@
                       <th>Topologi File</th>
                       <th>Keterangan</th>
                       <th>Status</th>
-                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                      @foreach ($data_odp as $d)
-                      <tr>
-
+                    @foreach ($data_odp as $d)
+                    <tr>
+                      
+                      <td>
+                        <div class="form-button-action">
+                            <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->odp_id}}" class="btn btn-link btn-primary btn-lg">
+                              <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+                        </td>
 
                         <td>{{$d->site_nama}}</td>
                         <td>{{$d->pop_nama}}</td>
@@ -218,13 +225,6 @@
                         <td>{{$d->odp_topologi_img}}</td>
                         <td>{{$d->odp_keterangan}}</td>
                         <td>{{$d->odp_status}}</td>
-                        <td>
-                          <div class="form-button-action">
-                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->odp_id}}" class="btn btn-link btn-primary btn-lg">
-                                <i class="fa fa-edit"></i>
-                              </button>
-                            </div>
-                          </td>
                       <div class="modal fade" id="modal-edit{{$d->odp_id}}">
                           <div class="modal-dialog modal-lg">
                             <form action="{{route('admin.topo.update_odc',['id'=>$d->odc_id])}}" method="POST" enctype="multipart/form-data">
@@ -329,6 +329,14 @@
                                 <label>Upload Foto Topologi</label>
                                 <input  type="file" class="form-control-file" required name="odp_topologi_img">
                               </div>
+                               <div class="col-6 form-group">
+                                  <label>Lokasi</label>
+                                  <img src="{{ asset('storage/topologi/'.$d->odp_lokasi_img) }}" width="100%" alt="" title=""></img>
+                                </div>
+                                <div class="col-6 form-group">
+                                  <label>Topologi</label>
+                                  <img src="{{ asset('storage/topologi/'.$d->odp_topologi_img) }}" width="100%" alt="" title=""></img>
+                                </div>
                               
                             </div>
                               </div>

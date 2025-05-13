@@ -611,9 +611,9 @@
 
     <table>
         <tr>
-            <td ><img src="{{ asset('storage/rumah_pelanggan/'.$kas->reg_img) }}"  height="420" alt="" title=""></img></td>
+            <td ><img src="{{ asset('storage/laporan-kerja/'.$kas->reg_img) }}"  height="420" alt="" title=""></img></td>
             @if($kas->reg_foto_odp)
-            <td ><img src="{{ asset('storage/odp_pelanggan/'.$kas->reg_foto_odp) }}"  height="420" alt="" title=""></img></td>
+            <td ><img src="{{ asset('storage/laporan-kerja/'.$kas->reg_foto_odp) }}"  height="420" alt="" title=""></img></td>
             @endif
             
         </tr>

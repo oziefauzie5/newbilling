@@ -318,11 +318,11 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
-          <img src="{{ asset('storage/rumah_pelanggan/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
+          <img src="{{ asset('storage/laporan-kerja/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
         </div>
         <label class="col-sm-2 col-form-label">Foto Lokasi ODP </label>
         <div class="col-sm-4">
-          <img src="{{ asset('storage/odp_pelanggan/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
+          <img src="{{ asset('storage/laporan-kerja/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
         </div>
       </div>
     <div class="card-footer">

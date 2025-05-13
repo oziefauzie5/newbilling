@@ -179,13 +179,13 @@ class AktivasiController extends Controller
         $pelanggan['reg_teknisi_team'] = $team;
         $pelanggan['reg_tgl_pasang'] = Carbon::now()->toDateString();
         // $filename = $query->input_nama . '.jpg';
-        // $path = 'rumah_pelanggan/' . $filename;
+        // $path = 'laporan-kerja/' . $filename;
         // Storage::disk('public')->put($path, file_get_contents($photo));
         // $pelanggan['reg_img'] = $filename;
 
         $photo_2 = $request->file('reg_foto_odp');
         $filename_2 = 'ODP' . $query->input_nama . '.jpg';
-        $path_2 = 'odp_pelanggan/' . $filename_2;
+        $path_2 = 'laporan-kerja/' . $filename_2;
         Storage::disk('public')->put($path_2, file_get_contents($photo_2));
         $pelanggan['reg_foto_odp'] = $filename_2;
 

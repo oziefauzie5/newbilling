@@ -196,6 +196,15 @@ Semangat Broooo... Sisa tiket = ' . $count . '
         if ($request->tiket_jenis == 'Reaktivasi') {
             Registrasi::where('reg_idpel', $request->tiket_idpel)->update([
                 'reg_progres' => 2,
+                'reg_tgl_pasang'=>'',
+                'reg_tgl_tagih'=>'',
+                'reg_tgl_jatuh_tempo'=>'',
+                'reg_out_odp'=>'',
+                'reg_in_ont'=>'',
+                'reg_los_opm'=>'',
+                'reg_onuid'=>'',
+                'reg_teknisi_team'=>'',
+                'reg_odp'=>'',
             ]);
             $notifikasi = [
                 'pesan' => 'Berhasil Membuat Tiket Deaktivasi',
@@ -288,10 +297,10 @@ Semangat Broooo... Sisa tiket = ' . $count . '
 
     public function tiket_update(Request $request, $id)
     {
-        $no_tiket = (new GlobalController)->nomor_tiket();
+        // $no_tiket = (new GlobalController)->nomor_tiket();
         $datetime = date('Y-m-d h:m:s', strtotime(carbon::now()));
 
-        $admin_closed = Auth::user()->id;
+        // $admin_closed = Auth::user()->id;
 
         $explode = explode('|', $request->tiket_teknisi1);
         $teknisi_id = $explode[0];
@@ -313,7 +322,7 @@ Semangat Broooo... Sisa tiket = ' . $count . '
 
             $photo = $request->file('tiket_foto');
             $filename = $photo->getClientOriginalName();
-            $path = 'laporan-tiket/' . $filename;
+            $path = 'laporan-kerja/' . $filename;
             Storage::disk('public')->put($path, file_get_contents($photo));
             $tiket['tiket_foto'] = $filename;
 
@@ -331,7 +340,7 @@ Semangat Broooo... Sisa tiket = ' . $count . '
                 // dd('test');
                 $photo_rumah = $request->file('tiket_foto');
                 $filename_rumah = $photo_rumah->getClientOriginalName();
-                $path_rumah = 'rumah_pelanggan/' . $filename_rumah;
+                $path_rumah = 'laporan-kerja/' . $filename_rumah;
                 Storage::disk('public')->put($path_rumah, file_get_contents($photo_rumah));
                 $reg['reg_teknisi_team'] = $teknisi_nama . ' & ' . $request->tiket_teknisi2;
                 $reg['reg_img'] = $filename_rumah;

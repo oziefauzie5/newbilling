@@ -211,6 +211,7 @@ class TopologiController extends Controller
         $data['data_odc'] = Data_Odc::join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
             ->join('data_pops', 'data_pops.pop_id', '=', 'data__olts.olt_id_pop')
             ->join('data__sites', 'data__sites.site_id', '=', 'data_pops.pop_id_site')
+            ->orderBy('odc_kode','ASC')
             ->get();
 
         return view('Teknisi/odc', $data);
@@ -323,6 +324,7 @@ class TopologiController extends Controller
             ->join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
             ->join('data_pops', 'data_pops.pop_id', '=', 'data__olts.olt_id_pop')
             ->join('data__sites', 'data__sites.site_id', '=', 'data_pops.pop_id_site')
+            ->orderBy('odP_kode','ASC')
             ->get();
 
         return view('Teknisi/odp', $data);

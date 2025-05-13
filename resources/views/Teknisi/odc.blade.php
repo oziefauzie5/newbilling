@@ -121,7 +121,7 @@
                         </ul>
                         </div>
               @endif
-                <table class="table table-hover text-nowrap">
+                <table id="edit_inputdata" class="table table-hover text-nowrap">
                   <thead>
                     <tr>
                       <th>Site</th>
