@@ -232,7 +232,6 @@ class AppController extends Controller
         ]);
 
         if ($request->file('app_logo')) {
-
             $photo = $request->file('app_logo');
             $filename1 = $photo->getClientOriginalName();
             $path = 'profile_perusahaan/' . $filename1;

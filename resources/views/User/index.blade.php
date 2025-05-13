@@ -105,9 +105,9 @@
                     </div>
                   </div>
                   <div class="modal-footer no-bd">
-                    <button type="submit" class="btn btn-success">Add</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                   </form>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>
@@ -136,20 +136,7 @@
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
-              </thead>
-              <tfoot>
-                <tr>
-                  <th>ID</th>
-                  <th>Foto</th>
-                  <th>Nama</th>
-                  <th>Level</th>
-                  <th>Whatsapp</th>
-                  <th>Site</th>
-                  <th width="250px">Alamat Lengkap</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </tfoot>
+            </thead>
               <tbody>
                 @foreach ($data_user as $d)
                 <tr>
@@ -165,9 +152,6 @@
                         <div class="form-button-action">
                           <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
                             <i class="fa fa-edit"></i>
-                          </button>
-                          <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->id}}" class="btn btn-link btn-danger">
-                            <i class="fa fa-times"></i>
                           </button>
                         </div>
                       </td>
@@ -286,34 +270,7 @@
                         </div>
                       </div>
                       <!-- End Modal Edit -->
-                      <!-- Modal Hapus -->
-                      <div class="modal fade" id="modal_hapus{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header no-bd">
-                              <h5 class="modal-title">
-                                <span class="fw-mediumbold">
-                                Hapus Data {{$d->name}}</span> 
-                              </h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                              <div class="modal-body">
-                              <p>Apakah anda yakin, akan menghapus data {{$d->name}} ??</p>
-                              </div>
-                              <div class="modal-footer no-bd">
-                                <form action="{{route('admin.user.delete',['id'=>$d->id])}}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-success">Hapus</button>
-                              </form>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- End Modal Hapus -->
+            
                     @endforeach
               </tbody>
             </table>

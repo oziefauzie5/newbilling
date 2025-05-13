@@ -66,7 +66,7 @@
                               </div>
                               <div class="col-6 form-group">
                                 <label>Upload Foto</label>
-                                <input  type="file" class="form-control-file" name="pop_topologi_img">
+                                <input  type="file" class="form-control-file" name="pop_topologi_img" required>
                               </div>
                             </div>
                             </div>

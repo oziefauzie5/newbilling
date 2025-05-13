@@ -27,14 +27,11 @@ class UserController extends Controller
 
     public function index()
     {
-        // dd(Auth::user()->photo);
-
         $data['data_user'] = User::select('users.*', 'data__sites.*', 'roles.name as level', 'roles.id as role_id')
             ->join('data__sites', 'data__sites.site_id', '=', 'users.user_site')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->get();
-        // dd($data['data_user']);
         $data['role'] = Role::get();
         $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
         return view('User/index', $data);
@@ -89,14 +86,11 @@ class UserController extends Controller
         }
 
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
-        $tgl_gabung = date('ym', strtotime($request->tgl_gabung));
-        // $d = date_create($request->tgl_gabung);
-        // $th = date_format($d, "y");
-        // $bl = date_format($d, "m");
-        // $tg = date_format($d, "d");
-        // $nik_karyawan = $th . $bl . $countuser . $level_id . $tg;
-        $countuser = User::get()->count();
-        $nik_karyawan = $tgl_gabung . $countuser . $level_id;
+        $tgl_gabung = date('ym', strtotime(Carbon::now()));
+        $countuser = User::count();
+        // $data_site = Data_Site::where('')();
+        $nik_karyawan = $tgl_gabung . $countuser . $level_id.$request->user_site; #FORMAT = th-bulan-urutan karyawan,level,site
+        // dd($request->user_site);
         $data['id'] = $nik_karyawan;
         $data['email'] = $request->email;
         $data['username'] = $request->username;
@@ -107,7 +101,7 @@ class UserController extends Controller
         $data['password'] = Hash::make($request->password);
         $data['user_site'] = $request->user_site;
         $data['photo'] = 'user.png';
-        $data['user_status'] = 'Enable';
+        $data['status_user'] = 'Enable';
 
         $datarole['role_id'] = $level_id;
         $datarole['model_type'] = 'App\Models\User';
@@ -139,25 +133,14 @@ class UserController extends Controller
     {
 
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
-        // $validator = FacadesValidator::make(
-        //     $request->all(),
-
-        //     [
-        //         'username' => 'unique:users',
-        //     ],
-        //     [
-        //         'username.unique' => 'Username sudah digunakan.',
-        //     ]
-        // );
-
-        // if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
         $get =  explode("|", $request->level);
         $level_id = $get[0];
         $datarole['role_id'] = $level_id;
 
         $photo = $request->file('file');
         if ($photo) {
-            $filename = date('d-m-Y', strtotime(Carbon::now())) . $photo->getClientOriginalName();
+
+            $filename = $id.'.png';
             $path = 'photo-user/' . $filename;
             Storage::disk('public')->put($path, file_get_contents($photo));
             $data['photo'] = $filename;
@@ -180,19 +163,6 @@ class UserController extends Controller
 
         $notifikasi = [
             'pesan' => 'Berhasil!! Data' . $request->name . ' Berhasil dirubah',
-            'alert' => 'success',
-        ];
-        return redirect()->route('admin.user.index')->with($notifikasi);
-    }
-
-    public function delete(Request $request, $id)
-    {
-        $data = User::find($id);
-        if ($data) {
-            $data->delete();
-        }
-        $notifikasi = [
-            'pesan' => 'Berhasil!! Data' . $request->name . ' Berhasil dihapus',
             'alert' => 'success',
         ];
         return redirect()->route('admin.user.index')->with($notifikasi);

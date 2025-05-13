@@ -29,7 +29,6 @@ return new class extends Migration
             $table->integer('barang_hilang')->nullable();
             $table->integer('barang_pengembalian')->nullable();
             $table->integer('barang_harga_satuan')->nullable();
-            $table->string('barang_jenis_jurnal')->nullable();
             $table->string('barang_satuan')->nullable();
             $table->string('barang_sn')->nullable();
             $table->string('barang_mac')->nullable();
@@ -44,7 +43,6 @@ return new class extends Migration
             $table->string('barang_penerima')->nullable();
             $table->string('barang_pengecek')->nullable();
             $table->string('barang_status_print')->nullable();
-            $table->string('barang_hilang')->nullable();
             $table->timestamps();
         });
     }

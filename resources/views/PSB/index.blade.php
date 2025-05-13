@@ -73,25 +73,25 @@
         @endif
         
         <a href="{{route('admin.psb.list_input')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-success">
+          <button class="btn  btn-sm ml-auto m-1 btn-primary">
             <i class="fa fa-plus"></i>
             INPUT DATA 
           </button>
         </a>
         <a href="{{route('admin.reg.index')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-info">
+          <button class="btn  btn-sm ml-auto m-1 btn-primary">
             <i class="fa fa-plus"></i>
             REGISTRASI
           </button>
         </a>
         <a href="{{route('admin.reg.data_aktivasi_pelanggan')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-warning">
+          <button class="btn  btn-sm ml-auto m-1 btn-primary">
             <i class="fa fa-plus"></i>
             AKTIVASI
           </button>
         </a>
         <a href="{{route('admin.reg.data_deaktivasi')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
+          <button class="btn  btn-sm ml-auto m-1 btn-danger">
             <i class="fa fa-plus"></i>
             DEAKTIVASI
           </button>

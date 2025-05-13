@@ -57,8 +57,8 @@ class RegistrasiController extends Controller
             $data['data_biaya'] = $data_biaya;
         } else {
             $notifikasi = array(
-                'pesan' => 'Setting Data Biaya Terlebih dahulu',
-                'alert' => 'error',
+                'pesan' => 'Pengaturan data biaya, belum diatur. Silahkan atur terlebih dahulu. Setting- Applikasi - Biaya',
+                'alert' => 'warning',
             );
             return redirect()->route('admin.psb.index')->with($notifikasi);
         }
@@ -749,13 +749,13 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                     'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             } elseif ($API == 2) {
                 $notifikasi = array(
                     'pesan' => 'Router Discconect',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             }
         } else {
             $API = (new ApiController)->aktivasi_psb_hotspot($query);
@@ -767,19 +767,19 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                     'pesan' => 'Aktivasi Berhasil ',
                     'alert' => 'success',
                 );
-                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             } elseif ($API == 1) {
                 $notifikasi = array(
                     'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             } elseif ($API == 2) {
                 $notifikasi = array(
                     'pesan' => 'Router Discconect',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.reg.form_data_pelanggan', ['id' => $id])->with($notifikasi);
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
             }
         }
     }
@@ -810,9 +810,6 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         $cek_tiket = Data_Tiket::where('tiket_idpel', $id)->where('tiket_status', 'NEW')->count();
         // dd( $cek_tiket);
         if ($cek_tiket == 0) {
-
-
-
             $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
             // dd($data['tgl_akhir']);
             $status_inet = (new NocController)->status_inet($id);
@@ -843,10 +840,10 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             return view('Registrasi/form_aktivasi', $data);
         } else {
             $notifikasi = [
-                'pesan' => 'Gagal. Closed Tiket terlebih dahulu',
-                'alert' => 'error',
+                'pesan' => 'Tiket instalasi belum di Closed, Silahkan Closed Tiket terlebih dahulu',
+                'alert' => 'warning',
             ];
-            return redirect()->route('admin.reg.data_aktivasi_pelanggan')->with($notifikasi);
+            return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
         }
     }
 
