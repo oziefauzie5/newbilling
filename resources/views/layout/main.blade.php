@@ -74,6 +74,23 @@
           /* Tambahkan properti lain seperti background-position, background-attachment, dll. */
       }
 	</style>
+	<style>
+  hr{
+    border: none;
+  height: 1px;
+  /* Set the hr color */
+  color: #161616;  /* old IE */
+  background-color: #959292;  /* Modern Browsers */
+  }
+  .noted {
+    font-size: 11px;
+    color:rgb(255, 0, 0);
+  }
+  ul{
+    font-size: 12px;
+    color:rgb(255, 0, 0);
+  }
+</style>
 
 </head>
 <body>
@@ -1055,6 +1072,39 @@ $.ajax({
 								$('#validasi_olt').val('')
 								$('.notif').addClass('has-error has-feedback')
 								$('.notif_valtiket').addClass('has-error has-feedback')
+								$('#pesan').html('<small id="text" class="form-text text-muted text-danger">Kode ODP tidak ditemukan</small>')
+								}
+						},
+						error: function(error) {
+							// console.log(error)
+
+						},
+					});
+});
+// validasi_tiket_odp
+
+$('#tiket_odp').keyup(function() {
+var tiket_odp = $('#tiket_odp').val();
+var url = '{{ route("admin.tiket.tiket_validasi_odp", ":id") }}';
+url = url.replace(':id', tiket_odp);
+// console.log(validasi_odp)
+$.ajax({
+	url: url,
+			type: 'GET',
+			data: {'_token': '{{ csrf_token() }}'},
+						dataType: 'json',
+						success: function(data) {
+							// console.log(data.odp_kode)
+							if(data.odp_kode){
+								$('#tiket_olt').val(data.olt_kode)
+								$('#tiket_odc').val(data.odc_kode)
+								$('.read').readOnly = true
+								$('.notif_valtiket').removeClass('has-error has-feedback')
+								$('.notif_valtiket').addClass('has-success has-feedback')
+								$('#pesan').html('')
+							} else{
+								$('#tiket_odc').val('')
+								$('#tiket_olt').val('')
 								$('#pesan').html('<small id="text" class="form-text text-muted text-danger">Kode ODP tidak ditemukan</small>')
 								}
 						},
@@ -3412,16 +3462,51 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 												$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
 											}
 									})
-									} else {
+									} else if($('#tiket_nama').val() == 'Reaktivasi layanan'){
+										$('.div_tiket_teknisi').hide();
+										$('#tiket_teknisi1').removeAttr('required');
+										$('#tiket_teknisi2').removeAttr('required');
+										$('#tiket_kendala').val($('#tiket_nama').val())
+										$('#tiket_tindakan').val($('#tiket_nama').val())
+										if($('#tiket_odp').val()){
+											$('#tiket_pop').removeAttr('required');
+											$('#tiket_olt').removeAttr('required');
+											$('#tiket_odc').removeAttr('required');
+											$('#tiket_odp').removeAttr('required');
+										}else {
+											$('#tiket_pop').attr('required', 'required');
+											$('#tiket_olt').attr('required', 'required');
+											$('#tiket_odc').attr('required', 'required');
+											$('#tiket_odp').attr('required', 'required');
+										}
+											$('.button_modal_barang').click(function(){
+											if($('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
+												// $('#modal_tambah_barang').modal('show');
+												$('.notif').removeClass('has-error has-feedback')
+											} else {
+												$('.notif').addClass('has-error has-feedback')
+												$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
+											}
+									})
+								 } else {
 										$('.div_tiket_teknisi').show();
 										$('.div_tiket_topologi').show();
 										$('#tiket_foto').attr('required', 'required');
 										$('#tiket_teknisi1').attr('required', 'required');
 										$('#tiket_teknisi2').attr('required', 'required');
-										$('#tiket_pop').attr('required', 'required');
-										$('#tiket_olt').attr('required', 'required');
-										$('#tiket_odc').attr('required', 'required');
-										$('#tiket_odp').attr('required', 'required');
+
+										if($('#tiket_odp').val()){
+											$('#tiket_pop').removeAttr('required');
+											$('#tiket_olt').removeAttr('required');
+											$('#tiket_odc').removeAttr('required');
+											$('#tiket_odp').removeAttr('required');
+										}else {
+											$('#tiket_pop').attr('required', 'required');
+											$('#tiket_olt').attr('required', 'required');
+											$('#tiket_odc').attr('required', 'required');
+											$('#tiket_odp').attr('required', 'required');
+										}
+
 										$('.button_modal_barang').click(function(){
 												if($('#tiket_teknisi1').val() != "" && $('#tiket_teknisi2').val() != "" && $('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
 													// $('#modal_tambah_barang').modal('show');

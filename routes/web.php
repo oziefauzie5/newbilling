@@ -328,6 +328,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/tiket/{id}/cari', [TiketController::class, 'pilih_pelanggan'])->name('tiket.pilih_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN|NOC']);
     Route::post('/tiket/{id}/cek-ont', [TiketController::class, 'tiket_cek_ont'])->name('tiket.tiket_cek_ont')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/cek-adaptor', [TiketController::class, 'tiket_cek_adp'])->name('tiket.tiket_cek_adp')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/tiket/{id}/val-odp', [GlobalController::class, 'tiket_validasi_odp'])->name('tiket.tiket_validasi_odp')->middleware(['role:admin|NOC|STAF ADMIN']);
 
 
     ##--GUDANG--

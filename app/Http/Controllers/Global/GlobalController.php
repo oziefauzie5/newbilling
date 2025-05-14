@@ -294,6 +294,13 @@ class GlobalController extends Controller
             ->where("odp_kode", $id)->first();
         return response()->json($kode_pop);
     }
+    public function tiket_validasi_odp($id)
+    {
+        $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
+            ->join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
+            ->where("odp_kode", $id)->first();
+        return response()->json($kode_pop);
+    }
 
     public function valBarang($id)
     {

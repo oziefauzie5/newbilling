@@ -1,6 +1,7 @@
 @extends('layout.main')
 @section('content')
 
+
 <div class="content">
   <div class="page-inner">
     <div class="row">
@@ -147,7 +148,7 @@
                       <label class="col-sm-2 col-form-label">Mac Address</label>
                       <div class="col-sm-4 notif_ganti">
                         <input type="text" class="form-control " value="" id="ganti_mac" name="ganti_mac" >
-                        <span>Kesalahan input mac, dapat mengakibatkan pelanggan aktif menjadi non aktif jika mac digunakan oleh pelanggan yang berbeda</span>
+                        <span class="noted">Masukan Mac Address ONT Lama, Kesalahan input mac, dapat mengakibatkan pelanggan aktif menjadi non aktif jika mac digunakan oleh pelanggan yang berbeda</span>
                       </div>
                       <label  class="col-sm-2 col-form-label">Serial Number</label>
                       <div class="col-sm-4 notif_ganti">
@@ -207,7 +208,7 @@
               </div>
               <label class="col-sm-2 col-form-label">ODP</label>
               <div class="col-sm-4 notif_valtiket">
-                  <input name="tiket_odp" id="tiket_odp" class="form-control" value="{{$tiket->reg_odp}}">
+                  <input name="tiket_odp" id="tiket_odp" class="form-control @if($tiket->reg_odp) readonly @endif" value="{{$tiket->reg_odp}}">
                   <div id="pesan"></div>
                 </div>
               </div>
@@ -216,6 +217,8 @@
                 <div class="col-sm-4 notif">
                   <input type="file" class="form-control" name="tiket_foto" id="tiket_foto">
                 </div>
+                </div>
+                <div class="form-group row div_tiket_closed"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">No. SKB</label>
                 <div class="col-sm-4 notif">
                 <input type="text" class="form-control" name="tiket_noskb" id="tiket_noskb">

@@ -15,6 +15,7 @@ use App\Http\Controllers\Global\GlobalController;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\PSB\InputData;
+use App\Models\Tiket\Data_Tiket;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\Storage;
@@ -62,7 +63,7 @@ class AktivasiController extends Controller
         // }
 
         #PASCABAYAR SESUAI TGL PASANG (SIKLUS TETAP)
-        $tag_pascabayar = Carbon::create($tanggal)->addMonth(1)->toDateString();
+        $tag_pascabayar = Carbon::create(date('Y-m-'.env('JTH_TEMPO_PASCABAYAR')))->addMonth(1)->toDateString();
         $inv_tgl_tagih_pascabayar = Carbon::create($tag_pascabayar)->addDay(-$swaktu->wt_jeda_tagihan_pertama)->toDateString();
         $inv_tgl_isolir_pascabayar = Carbon::create($tag_pascabayar)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
 
@@ -159,10 +160,7 @@ class AktivasiController extends Controller
             $pelanggan['reg_deposit'] = $inv['inv_total'];
         }
 
-        // $photo = $request->file('reg_img');
-        // $bk_name = $query->input_nama . '.jpg';
-        // $path = 'barang_keluar/' . $bk_name;
-        // Storage::disk('public')->put($path, file_get_contents($photo));
+        
         $pelanggan['reg_progres'] = '3';
 
 
@@ -178,13 +176,17 @@ class AktivasiController extends Controller
         $pelanggan['reg_koodinat_odp'] = $request->reg_koodinat_odp;
         $pelanggan['reg_teknisi_team'] = $team;
         $pelanggan['reg_tgl_pasang'] = Carbon::now()->toDateString();
-        // $filename = $query->input_nama . '.jpg';
-        // $path = 'laporan-kerja/' . $filename;
-        // Storage::disk('public')->put($path, file_get_contents($photo));
-        // $pelanggan['reg_img'] = $filename;
+
+        $hilangspasi = preg_replace('/\s+/', '_', $query->reg_nolayanan);
+
+        $photo_1 = $request->file('reg_img');
+        $filename1 = 'Rumah_' . $hilangspasi . '.jpg';
+        $path_1 = 'laporan-kerja/' . $filename1;
+        Storage::disk('public')->put($path_1, file_get_contents($photo_1));
+        $pelanggan['reg_img'] = $filename1;
 
         $photo_2 = $request->file('reg_foto_odp');
-        $filename_2 = 'ODP' . $query->input_nama . '.jpg';
+        $filename_2 = 'ODP_' . $hilangspasi . '.jpg';
         $path_2 = 'laporan-kerja/' . $filename_2;
         Storage::disk('public')->put($path_2, file_get_contents($photo_2));
         $pelanggan['reg_foto_odp'] = $filename_2;
@@ -198,6 +200,15 @@ class AktivasiController extends Controller
         $teknisi['teknisi_noc_userid'] =  $noc;
         $teknisi['teknisi_status'] =  1;
         $update_input['input_koordinat'] = $request->input_koordinat;
+
+        $tiket['tiket_teknisi1'] = $id_teknisi;
+        $tiket['tiket_teknisi2'] = $request->teknisi2;
+        $tiket['tiket_foto'] = $filename1;
+        $tiket['tiket_status'] = 'Closed';
+        Data_Tiket::where('tiket_idpel', $query->reg_idpel)->where('tiket_status', 'Aktivasi')->update($tiket);
+
+        if ($query->reg_jenis_tagihan != 'PASCABAYAR') {
+
 
         $inv['inv_tgl_pasang'] = Carbon::now()->toDateString();
         $inv['inv_status'] = 'UNPAID';
@@ -229,6 +240,7 @@ class AktivasiController extends Controller
             SubInvoice::create($sub_inv);
         }
         // } 
+        } 
 
 
 

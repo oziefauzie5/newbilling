@@ -240,46 +240,9 @@
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Redaman</label>
         <div class="col-sm-4">
-          <!-- {{-- <input type="text" name="reg_in_ont" id="reg_in_ont" class="form-control" required value="{{ Session::get('reg_ip_address') }}" > --}} -->
           <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{ Session::get('reg_in_ont') }}" maxlength="6" minlength="6">
         </div>
-        <!-- <label class="col-sm-2 col-form-label">SKB <span>(Auto)</span></label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control harga readonly" name="reg_skb" value="{{$data->reg_skb}}" >
-        </div> -->
       </div>
-      <!-- <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">Kode Kabel</label>
-        <div class="col-sm-4 notif_kabel">
-          <input type="text" name="reg_kode_dropcore" id="reg_kode_dropcore" class="form-control" required value="{{ Session::get('reg_kode_dropcore') }}" >
-          <div id="pesan_kabel"></div>
-        </div>
-        <label class=" col-sm-2 col-form-label">Before <span>(Auto)</span></label>
-        <div class="col-sm-4 notif_kabel">
-          <input type="text" name="reg_before" id="before" class="form-control readonly" required value="{{ Session::get('reg_before') }}" >
-        </div>
-      </div> -->
-      <!-- <div class="form-group row">
-        
-        <label class=" col-sm-2 col-form-label">After</label>
-        <div class="col-sm-4 notif_over">
-          <input type="text" name="reg_after" id="after" class="form-control" required value="{{ Session::get('reg_after') }}" >
-          <div id="pesan_over"></div>
-        </div>
-        <label class=" col-sm-2 col-form-label">Panjang Kabel</label>
-        <div class="col-sm-4">
-          <input type="text" name="reg_penggunaan_dropcore" id="total" class="form-control" required value="{{ Session::get('reg_penggunaan_dropcore') }}" >
-        </div>
-      </div> -->
-      <!-- <div class="form-group row">
-        
-        <label class=" col-sm-2 col-form-label">Digunakan Sebelumnya</label>
-        <div class="col-sm-4 notif_over">
-          <input type="text" name="reg_terpakai" id="terpakai" class="form-control readonly" required value="{{ Session::get('reg_terpakai') }}" >
-          <div id="pesan_over"></div>
-        </div>
-        <span class=" col-sm-6 col-form-label">Kabel yang telah digunakan sebelumnya <span>(Auto)</span></span>
-      </div> -->
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Teknisi 1</label>
         <div class="col-sm-4">
@@ -308,11 +271,11 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
-          <!-- <input  type="file" class="form-control-file" name="reg_img" required value="{{ Session::get('reg_img') }}"> -->
+          <input  type="file" class="form-control-file" name="reg_img"  value="{{ Session::get('reg_img') }}">
         </div>
         <label class="col-sm-2 col-form-label">Foto Lokasi ODP</label>
         <div class="col-sm-4">
-          <input  type="file" class="form-control-file" name="reg_foto_odp" required value="{{ Session::get('reg_foto_odp') }}">
+          <input  type="file" class="form-control-file" name="reg_foto_odp"  value="{{ Session::get('reg_foto_odp') }}">
         </div>
       </div>
       <div class="form-group row">

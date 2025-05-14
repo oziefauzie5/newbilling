@@ -678,7 +678,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         Session::flash('reg_olt', $request->reg_olt);
         Session::flash('reg_odc', $request->reg_odc);
         Session::flash('reg_odp', $request->reg_odp);
-        Session::flash('reg_in_ont', $request->reg_odp);
+        Session::flash('reg_in_ont', $request->reg_in_ont);
         Session::flash('reg_onuid', $request->reg_onuid);
         Session::flash('reg_slot_odp', $request->reg_slot_odp);
         Session::flash('reg_terpakai', $request->reg_terpakai);
@@ -704,8 +704,8 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             'teknisi2' => 'required',
             'input_koordinat' => 'required',
             'reg_koodinat_odp' => 'required',
-            // 'reg_img' => 'required|max:20000|mimes:jpg',
-            'reg_foto_odp' => 'required',
+            'reg_img' => 'required|max:2000|mimes:jpg',
+            'reg_foto_odp' => 'required|max:2000|mimes:jpg',
         ], [
             'reg_site.required' => 'Site tidak boleh kosong',
             'reg_pop.required' => 'POP tidak boleh kosong',
@@ -720,10 +720,12 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             'teknisi2.required' => 'Teknisi 2 tidak boleh kosong',
             'input_koordinat.required' => 'Koordinat Rumah pelanggan tidak boleh kosong',
             'reg_koodinat_odp.required' => 'Koordinat ODP tidak boleh kosong',
-            // 'reg_img.required' => 'Foto rumah tidak boleh kosong',
-            // 'reg_img.max' => 'Ukuran foto terlalu besar',
-            // 'reg_img.mimes' => 'Format hanya bisa jpg',
-            'reg_foto_odp.required' => 'Foto ODP tidak boleh kosong',
+            'reg_img.required' => 'Foto rumah tidak boleh kosong',
+            'reg_img.max' => 'Ukuran foto terlalu besar',
+            'reg_img.mimes' => 'Format hanya bisa jpg',
+            'reg_foto_odp.required' => 'Foto Odp tidak boleh kosong',
+            'reg_foto_odp.max' => 'Ukuran foto terlalu besar',
+            'reg_foto_odp.mimes' => 'Format hanya bisa jpg',
         ]);
 
 

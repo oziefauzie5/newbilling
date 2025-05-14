@@ -302,48 +302,20 @@ Semangat Broooo... Sisa tiket = ' . $count . '
 
         // $admin_closed = Auth::user()->id;
         if($request->tiket_nama == 'Instalasi PSB'){
-            $teknisi_id = '';
+                $teknisi_id = '';
                 $teknisi_nama = '';
-            } else{
-            $explode = explode('|', $request->tiket_teknisi1);
+                 $tiket['tiket_status'] = 'Aktivasi';
+                
+            } elseif($request->tiket_nama == 'Reaktivasi layanan'){
+                 $teknisi_id = '';
+                $teknisi_nama = '';
+                 $tiket['tiket_status'] = 'Aktivasi';
+                //  $reg['reg_progres'] = 2;
+
+            } else {
+                $explode = explode('|', $request->tiket_teknisi1);
                 $teknisi_id = $explode[0];
                 $teknisi_nama = $explode[1];
-
-        }
-       
-
-        $tiket['tiket_jenis'] = $request->tiket_jenis;
-        $tiket['tiket_status'] = $request->tiket_status;
-        $tiket['tiket_pending'] = $request->tiket_pending;
-        
-
-        if ($request->tiket_status == 'Closed') {
-            $tiket['tiket_waktu_selesai'] = $datetime;
-            $tiket['tiket_kendala'] = $request->tiket_kendala;
-            $tiket['tiket_tindakan'] = $request->tiket_tindakan;
-            $tiket['tiket_waktu_mulai'] = $datetime;
-            $tiket['tiket_waktu_selesai'] = $datetime;
-            $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
-
-           
-
-
-            $reg['reg_pop'] = $request->tiket_pop;
-            $reg['reg_olt'] = $request->tiket_olt;
-            $reg['reg_odc'] = $request->tiket_odc;
-            $reg['reg_odp'] = $request->tiket_odp;
-            if ($request->tiket_jenis == 'Reaktivasi') {
-                $reg['reg_progres'] = 2;
-            } else{
-                $tiket['tiket_teknisi1'] = $teknisi_id;
-                $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
-            }
-
-            // dd($request->tiket_nama);
-            if ($request->tiket_nama == 'Instalasi PSB') {
-                $reg['reg_teknisi_team'] = $teknisi_nama . ' & ' . $request->tiket_teknisi2;
-            } else{
-                 
                 $tiket['tiket_teknisi1'] = $teknisi_id;
                 $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
                  $photo = $request->file('tiket_foto');
@@ -351,8 +323,36 @@ Semangat Broooo... Sisa tiket = ' . $count . '
                 $path = 'laporan-kerja/' . $filename;
                 Storage::disk('public')->put($path, file_get_contents($photo));
                 $tiket['tiket_foto'] = $filename;
-            }
+                $tiket['tiket_status'] = $request->tiket_status;
 
+        }
+       
+
+        $tiket['tiket_jenis'] = $request->tiket_jenis;
+        $tiket['tiket_pending'] = $request->tiket_pending;
+        
+
+        if ($request->tiket_status == 'Closed') {
+            
+            $tiket['tiket_waktu_selesai'] = $datetime;
+            $tiket['tiket_kendala'] = $request->tiket_kendala;
+            $tiket['tiket_tindakan'] = $request->tiket_tindakan;
+            $tiket['tiket_waktu_mulai'] = $datetime;
+            $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
+
+
+            $reg['reg_pop'] = $request->tiket_pop;
+            $reg['reg_olt'] = $request->tiket_olt;
+            $reg['reg_odc'] = $request->tiket_odc;
+            $reg['reg_odp'] = $request->tiket_odp;
+            // if ($request->tiket_jenis == 'Reaktivasi') {
+            //     $reg['reg_progres'] = 2;
+            // } else{
+            //     $tiket['tiket_teknisi1'] = $teknisi_id;
+            //     $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
+            // }
+
+       
             if ($request->kate_tindakan == 'Ganti ONT') {
                 Data_BarangKeluar::whereIn('bk_id_barang', $request->kode_barang_ont)->delete();
                 Data_Barang::whereIn('barang_id', $request->kode_barang_ont)->update([
