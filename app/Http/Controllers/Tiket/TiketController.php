@@ -301,16 +301,21 @@ Semangat Broooo... Sisa tiket = ' . $count . '
         $datetime = date('Y-m-d h:m:s', strtotime(carbon::now()));
 
         // $admin_closed = Auth::user()->id;
+        if($request->tiket_nama == 'Instalasi PSB'){
+            $teknisi_id = '';
+                $teknisi_nama = '';
+            } else{
+            $explode = explode('|', $request->tiket_teknisi1);
+                $teknisi_id = $explode[0];
+                $teknisi_nama = $explode[1];
 
-        $explode = explode('|', $request->tiket_teknisi1);
-        $teknisi_id = $explode[0];
-        $teknisi_nama = $explode[1];
+        }
+       
 
         $tiket['tiket_jenis'] = $request->tiket_jenis;
         $tiket['tiket_status'] = $request->tiket_status;
         $tiket['tiket_pending'] = $request->tiket_pending;
-        $tiket['tiket_teknisi1'] = $teknisi_id;
-        $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
+        
 
         if ($request->tiket_status == 'Closed') {
             $tiket['tiket_waktu_selesai'] = $datetime;
@@ -320,11 +325,7 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $tiket['tiket_waktu_selesai'] = $datetime;
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
 
-            $photo = $request->file('tiket_foto');
-            $filename = $photo->getClientOriginalName();
-            $path = 'laporan-kerja/' . $filename;
-            Storage::disk('public')->put($path, file_get_contents($photo));
-            $tiket['tiket_foto'] = $filename;
+           
 
 
             $reg['reg_pop'] = $request->tiket_pop;
@@ -333,17 +334,23 @@ Semangat Broooo... Sisa tiket = ' . $count . '
             $reg['reg_odp'] = $request->tiket_odp;
             if ($request->tiket_jenis == 'Reaktivasi') {
                 $reg['reg_progres'] = 2;
+            } else{
+                $tiket['tiket_teknisi1'] = $teknisi_id;
+                $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
             }
 
             // dd($request->tiket_nama);
             if ($request->tiket_nama == 'Instalasi PSB') {
-                // dd('test');
-                $photo_rumah = $request->file('tiket_foto');
-                $filename_rumah = $photo_rumah->getClientOriginalName();
-                $path_rumah = 'laporan-kerja/' . $filename_rumah;
-                Storage::disk('public')->put($path_rumah, file_get_contents($photo_rumah));
                 $reg['reg_teknisi_team'] = $teknisi_nama . ' & ' . $request->tiket_teknisi2;
-                $reg['reg_img'] = $filename_rumah;
+            } else{
+                 
+                $tiket['tiket_teknisi1'] = $teknisi_id;
+                $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
+                 $photo = $request->file('tiket_foto');
+                $filename = $photo->getClientOriginalName();
+                $path = 'laporan-kerja/' . $filename;
+                Storage::disk('public')->put($path, file_get_contents($photo));
+                $tiket['tiket_foto'] = $filename;
             }
 
             if ($request->kate_tindakan == 'Ganti ONT') {

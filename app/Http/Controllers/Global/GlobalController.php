@@ -247,7 +247,7 @@ class GlobalController extends Controller
     }
     public function getMitraSite($id) #Layanan Hotspot
     {
-        $kode_site = User::join('data__sites', 'data__sites.site_id', '=', 'users.site')
+        $kode_site = User::join('data__sites', 'data__sites.site_id', '=', 'users.user_site')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->where('model_has_roles.role_id', '14')
             ->where('users.status_user', 'Enable')

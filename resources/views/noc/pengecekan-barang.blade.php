@@ -89,44 +89,45 @@
                   </div>
                  
                   @if($d->barang_kategori == 'ONT')
+                  
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn"  value="" required>
+                      <input type="text" class="form-control" name="barang_sn"  value="{{$d->barang_sn}}" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" id="mac" minlength="17" maxlength="17" value="" required>
+                      <input type="text" class="form-control" name="barang_mac" id="mac" minlength="17" maxlength="17" value="{{$d->barang_mac}}" required>
                     </div> 
                     <div class="col-6">
                       <label for="">Mac Address OLT</label>
-                      <input type="text" class="form-control" name="barang_mac_olt" id="mac1" minlength="17" maxlength="17" value="" required>
+                      <input type="text" class="form-control" name="barang_mac_olt" id="mac1" minlength="17" maxlength="17" value="{{$d->barang_mac_olt}}" required>
                     </div> 
                     @elseif($d->barang_kategori == 'OLT')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn"  value="" required>
+                      <input type="text" class="form-control" name="barang_sn"  value="{{$d->barang_sn}}" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" id="" value="" required>
+                      <input type="text" class="form-control" name="barang_mac" id="" value="{{$d->barang_mac}}" required>
                     </div> 
                     @elseif($d->barang_kategori == 'ROUTER')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn" value="" required>
+                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" id="" value="" required>
+                      <input type="text" class="form-control" name="barang_mac" id="" value="{{$d->barang_mac}}" required>
                     </div> 
                     @elseif($d->barang_kategori == 'SWITCH')
                     <div class="col-6">
                       <label for="">Serial Number</label>
-                      <input type="text" class="form-control" name="barang_sn" value="" required>
+                      <input type="text" class="form-control" name="barang_sn" value="{{$d->barang_sn}}" required>
                     </div>
                     <div class="col-6">
                       <label for="">Mac Address</label>
-                      <input type="text" class="form-control" name="barang_mac" id=""  value="" required>
+                      <input type="text" class="form-control" name="barang_mac" id=""  value="{{$d->barang_mac}}" required>
                     </div> 
                     @elseif($d->barang_kategori == 'SPLICER')
 
@@ -143,7 +144,7 @@
                   </div>
                   <div class="col-12">
                     <label for="">Keterangan<strong class="text-danger">*</strong></label>
-                    <textarea type="text" class="form-control" id="" name="barang_ket" row="5" required>{{$d->barang_ket}}</textarea>
+                    <textarea type="text" class="form-control @if($d->barang_mac) readonly  @endif " id="" name="barang_ket" row="5" required>{{$d->barang_ket}}</textarea>
                     <div class="invalid-feedback">
                         Keterangan tidak boleh kosong
                     </div>

@@ -205,9 +205,10 @@ class NocController extends Controller
                 }
                 return $data;
             } else {
-                $data['address'] = '-';
+                $data['address'] = 'Router Disconnected';
                 $data['status']  = "TIDAK TERSAMBUNG KE SERVER";
                 $data['uptime'] = "-";
+                $data['status_secret'] = 'Router Disconnected';
                 return $data;
             }
         } elseif ($data_pelanggan->reg_layanan == 'HOTSPOT') {
@@ -636,7 +637,24 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             $barang_rusak = 1;
         }
 
-        if ($request->barang_mac) {
+         if($request->barang_ket == 'Pengambilan Perangkat'){
+            $sub['barang_dicek'] = $barang_dicek;
+            $sub['barang_rusak'] = $barang_rusak;
+            $sub['barang_status'] = $request->barang_status;
+            $sub['barang_ket'] = $request->barang_ket;
+            $sub['barang_pengecek'] = $user;
+            Data_Barang::where('barang_id', $id)->update($sub);
+            $notifikasi = array(
+                'pesan' => 'Berhasil Update Status Barang',
+                'alert' => 'success',
+            );
+            return redirect()->route('admin.noc.pengecekan_barang')->with($notifikasi);
+            } elseif($request->barang_ket == 'Pergantian Perangkat'){
+
+            } else{
+
+                if ($request->barang_mac) {
+           
             $cek_barang = Data_Barang::where('barang_mac', $request->barang_mac)->first();
             $cek_sn = Data_Barang::where('barang_sn', $request->barang_sn)->first();
             // dd($cek_sn);
@@ -687,5 +705,9 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             );
             return redirect()->route('admin.noc.pengecekan_barang')->with($notifikasi);
         }
+
+            }
+
+        
     }
 }

@@ -813,38 +813,46 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
             // dd($data['tgl_akhir']);
             $status_inet = (new NocController)->status_inet($id);
-            // dd($status_inet['status']);
-            $data['input_data'] = InputData::all();
-            $data['data_router'] = Router::all();
-            $data['data_paket'] = Paket::all();
-            $data['data_biaya'] = SettingBiaya::first();
-            $data['data_teknisi'] = (new GlobalController)->getTeknisi();
+            if($status_inet['status'] == 'TIDAK TERSAMBUNG KE SERVER'){
+                 $notifikasi = [
+                    'pesan' => 'Router Disconnected. Perikasi koneksi router.',
+                    'alert' => 'warning',
+                ];
+                return redirect()->route('admin.reg.data_aktivasi_pelanggan')->with($notifikasi);
+            } else {
+                $data['input_data'] = InputData::all();
+                $data['data_router'] = Router::all();
+                $data['data_paket'] = Paket::all();
+                $data['data_biaya'] = SettingBiaya::first();
+                $data['data_teknisi'] = (new GlobalController)->getTeknisi();
 
-            $data['data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
-                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-                ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-                ->join('data__sites', 'data__sites.site_id', '=', 'registrasis.reg_site')
-                ->join('data_pops', 'data_pops.pop_id', '=', 'registrasis.reg_pop')
-                ->where('input_data.id', $id)
-                ->first();
+                $data['data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+                    ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+                    ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+                    ->join('data__sites', 'data__sites.site_id', '=', 'registrasis.reg_site')
+                    ->join('data_pops', 'data_pops.pop_id', '=', 'registrasis.reg_pop')
+                    ->where('input_data.id', $id)
+                    ->first();
 
-            $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')
-                ->get();
+                $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')
+                    ->get();
 
-            $data['data_olt'] = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
-                ->where('pop_id', $data['data']->reg_pop)->get();
-            $data['status'] = $status_inet['status'];
-            $data['uptime'] = $status_inet['uptime'];
-            $data['address'] = $status_inet['address'];
-            $data['status_secret'] = $status_inet['status_secret'];
-            return view('Registrasi/form_aktivasi', $data);
-        } else {
-            $notifikasi = [
-                'pesan' => 'Tiket instalasi belum di Closed, Silahkan Closed Tiket terlebih dahulu',
-                'alert' => 'warning',
-            ];
-            return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
-        }
+                $data['data_olt'] = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
+                    ->where('pop_id', $data['data']->reg_pop)->get();
+                $data['status'] = $status_inet['status'];
+                $data['uptime'] = $status_inet['uptime'];
+                $data['address'] = $status_inet['address'];
+                $data['status_secret'] = $status_inet['status_secret'];
+                return view('Registrasi/form_aktivasi', $data);
+            }
+            } else {
+                $notifikasi = [
+                    'pesan' => 'Tiket instalasi belum di Closed, Silahkan Closed Tiket terlebih dahulu',
+                    'alert' => 'warning',
+                ];
+                return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
+            }
+            // dd(;
     }
 
 

@@ -115,7 +115,7 @@
      
 
             
-              <div class="form-group row ">
+              <div class="form-group row div_tiket_teknisi " style="display:none;">
                 <label class="col-sm-2 col-form-label">Teknisi 1</label>
                 <div class="col-sm-4 notif">
                 <select name="tiket_teknisi1" class="form-control" id="tiket_teknisi1">
@@ -189,29 +189,29 @@
                 </div>
               </div>
          
-              <div class="form-group row div_tiket_closed"  style="display:none;" >
+              <div class="form-group row div_tiket_topologi"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">POP</label>
                 <div class="col-sm-4 notif">
-                <input name="tiket_pop" id="validasi_pop" class="form-control readonly" value="{{$tiket->reg_pop}}">
+                <input name="tiket_pop" id="tiket_pop" class="form-control readonly" value="{{$tiket->reg_pop}}">
               </div>
               <label class="col-sm-2 col-form-label">OLT</label>
               <div class="col-sm-4 notif">
-                  <input name="tiket_olt" id="validasi_olt" class="form-control readonly" value="{{$tiket->reg_odp}}">
+                  <input name="tiket_olt" id="tiket_olt" class="form-control readonly" value="{{$tiket->reg_odp}}">
                 </div>
               </div>
 
-              <div class="form-group row div_tiket_closed"  style="display:none;" >
+              <div class="form-group row div_tiket_topologi"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">ODC</label>
                 <div class="col-sm-4 notif">
                 <input name="tiket_odc" id="tiket_odc" class="form-control readonly" value="{{$tiket->reg_odc}}">
               </div>
               <label class="col-sm-2 col-form-label">ODP</label>
               <div class="col-sm-4 notif_valtiket">
-                  <input name="tiket_odp" id="validasi_odp" class="form-control" value="{{$tiket->reg_odp}}">
+                  <input name="tiket_odp" id="tiket_odp" class="form-control" value="{{$tiket->reg_odp}}">
                   <div id="pesan"></div>
                 </div>
               </div>
-              <div class="form-group row div_tiket_closed"  style="display:none;" >
+              <div class="form-group row div_tiket_topologi"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">Foto Laporan Kerja</label>
                 <div class="col-sm-4 notif">
                   <input type="file" class="form-control" name="tiket_foto" id="tiket_foto">

@@ -3225,7 +3225,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
-										
+										console.log(data)
 										if(data == 'failed'){
 												swal("Gagal!", "No Skb sudah ada. Silahkan coba klik simpan kembali.", {
 													icon : "error",
@@ -3256,70 +3256,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					//--------------------START TIKET CLOSE GANTI BARANG----------------------
 					$(document).ready(function() {
 					// 
-					$('.submit_tiket').attr('disabled','disabled');
-					$('select[name=kate_tindakan]').change(function () {
-						if ($(this).val() == 'Ganti ONT') {
-							$('#ganti_mac').val('');
-							$('#ganti_sn').val('');
-							$('#kode_barang_ont').val('');
-							$('#kode_barang_adp').val('');
-							$('.div_adp').hide()
-							$('.div_ont').show()
-							$('#ganti_mac').attr('required', 'required');
-							$('#ganti_sn').attr('required', 'required');
-							$('#kode_barang_ont').attr('required', 'required');
-							$('#kode_barang_adp').removeAttr('required');
-							$('#button_modal_barang').click(function(){
-								if($('#ganti_mac').val() != "" && $('#ganti_sn').val() != "" && $('#kode_barang_ont').val()!= ""){
-									$('#modal_tambah_barang').modal('show');
-									$('.notif_ganti').removeClass('has-error has-feedback')
-								} else {
-									$('.notif_ganti').addClass('has-error has-feedback')
-									$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
-								}
-
-							})
-						} else if($(this).val() == 'Ganti Adaptor') { 
-							$('#modal_tambah_barang').modal('hide');
-							$('.notif_ganti').removeClass('has-error has-feedback')
-							$('#ganti_mac').val('');
-							$('#ganti_sn').val('');
-							$('#kode_barang_ont').val('');
-							$('#kode_barang_adp').val('');
-							$('.div_adp').show()
-							$('.div_ont').hide()
-							$('#ganti_mac').removeAttr('required');
-							$('#ganti_sn').removeAttr('required');
-							$('#kode_barang_ont').removeAttr('required');
-							$('#kode_barang_adp').attr('required', 'required');
-							$('#button_modal_barang').click(function(){
-								if($('#kode_barang_adp').val() != ""){
-									$('#modal_tambah_barang').modal('show');
-									$('.notif_ganti').removeClass('has-error has-feedback')
-								} else {
-									$('.notif_ganti').addClass('has-error has-feedback')
-									$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
-								}
-							})
-						} else if($(this).val() == 'Lainnya') { 
-							$('.notif_ganti').removeClass('has-error has-feedback')
-							$('#ganti_mac').val('');
-							$('#ganti_sn').val('');
-							$('#kode_barang_ont').val('');
-							$('#kode_barang_adp').val('');
-							$('.div_adp').hide()
-							$('.div_ont').hide()
-							$('#ganti_mac').removeAttr('required');
-							$('#ganti_sn').removeAttr('required');
-							$('#kode_barang_ont').removeAttr('required');
-							$('#kode_barang_adp').removeAttr('required');
-							$('.submit_tiket').removeAttr('disabled');
-							$('#button_modal_barang').click(function(){
-									$('#modal_tambah_barang').modal('show');
-									$('.notif_ganti').removeClass('has-error has-feedback')
-							})
-						}
-					});
+					
 					});
 
 					$('#tiket_cek_ont').click(function(){
@@ -3451,15 +3388,23 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 									$('.div_tiket_ket_pending').hide();
 									$('#tiket_ket_pending').removeAttr('required');
 									$('#tiket_waktu_penanganan').attr('required', 'required');
-									$('#tiket_teknisi1').attr('required', 'required');
-									$('#tiket_teknisi2').attr('required', 'required');
+									
 									$('#kate_tindakan').attr('required', 'required');
-									$('#tiket_foto').attr('required', 'required');
+									
 									$('#tiket_kendala').attr('required', 'required');
 									$('#tiket_tindakan').attr('required', 'required');
-
-									$('.button_modal_barang').click(function(){
-											if($('#tiket_teknisi1').val() != "" && $('#tiket_teknisi2').val() != "" && $('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
+									if($('#tiket_nama').val() == 'Instalasi PSB'){
+										$('.div_tiket_teknisi').hide();
+										$('#tiket_teknisi1').removeAttr('required');
+										$('#tiket_teknisi2').removeAttr('required');
+										$('#tiket_kendala').val($('#tiket_nama').val())
+										$('#tiket_tindakan').val($('#tiket_nama').val())
+										$('#tiket_pop').removeAttr('required');
+										$('#tiket_olt').removeAttr('required');
+										$('#tiket_odc').removeAttr('required');
+										$('#tiket_odp').removeAttr('required');
+											$('.button_modal_barang').click(function(){
+											if($('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
 												// $('#modal_tambah_barang').modal('show');
 												$('.notif').removeClass('has-error has-feedback')
 											} else {
@@ -3467,6 +3412,95 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 												$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
 											}
 									})
+									} else {
+										$('.div_tiket_teknisi').show();
+										$('.div_tiket_topologi').show();
+										$('#tiket_foto').attr('required', 'required');
+										$('#tiket_teknisi1').attr('required', 'required');
+										$('#tiket_teknisi2').attr('required', 'required');
+										$('#tiket_pop').attr('required', 'required');
+										$('#tiket_olt').attr('required', 'required');
+										$('#tiket_odc').attr('required', 'required');
+										$('#tiket_odp').attr('required', 'required');
+										$('.button_modal_barang').click(function(){
+												if($('#tiket_teknisi1').val() != "" && $('#tiket_teknisi2').val() != "" && $('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
+													// $('#modal_tambah_barang').modal('show');
+													$('.notif').removeClass('has-error has-feedback')
+												} else {
+													$('#modal_tambah_barang').modal('hide');
+													$('.notif').addClass('has-error has-feedback')
+													$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
+												}
+										})
+									}
+
+									$('.submit_tiket').attr('disabled','disabled');
+									$('select[name=kate_tindakan]').change(function () {
+										if ($(this).val() == 'Ganti ONT') {
+											$('#ganti_mac').val('');
+											$('#ganti_sn').val('');
+											$('#kode_barang_ont').val('');
+											$('#kode_barang_adp').val('');
+											$('.div_adp').hide()
+											$('.div_ont').show()
+											$('#ganti_mac').attr('required', 'required');
+											$('#ganti_sn').attr('required', 'required');
+											$('#kode_barang_ont').attr('required', 'required');
+											$('#kode_barang_adp').removeAttr('required');
+											$('#button_modal_barang').click(function(){
+												if($('#ganti_mac').val() != "" && $('#ganti_sn').val() != "" && $('#kode_barang_ont').val()!= ""){
+													$('#modal_tambah_barang').modal('show');
+													$('.notif_ganti').removeClass('has-error has-feedback')
+												} else {
+													$('.notif_ganti').addClass('has-error has-feedback')
+													$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
+												}
+
+											})
+										} else if($(this).val() == 'Ganti Adaptor') { 
+											$('#modal_tambah_barang').modal('hide');
+											$('.notif_ganti').removeClass('has-error has-feedback')
+											$('#ganti_mac').val('');
+											$('#ganti_sn').val('');
+											$('#kode_barang_ont').val('');
+											$('#kode_barang_adp').val('');
+											$('.div_adp').show()
+											$('.div_ont').hide()
+											$('#ganti_mac').removeAttr('required');
+											$('#ganti_sn').removeAttr('required');
+											$('#kode_barang_ont').removeAttr('required');
+											$('#kode_barang_adp').attr('required', 'required');
+											$('#button_modal_barang').click(function(){
+												if($('#kode_barang_adp').val() != ""){
+													$('#modal_tambah_barang').modal('show');
+													$('.notif_ganti').removeClass('has-error has-feedback')
+												} else {
+													$('.notif_ganti').addClass('has-error has-feedback')
+													$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
+												}
+											})
+										} else if($(this).val() == 'Lainnya') { 
+											$('.notif_ganti').removeClass('has-error has-feedback')
+											$('#ganti_mac').val('');
+											$('#ganti_sn').val('');
+											$('#kode_barang_ont').val('');
+											$('#kode_barang_adp').val('');
+											$('.div_adp').hide()
+											$('.div_ont').hide()
+											$('#ganti_mac').removeAttr('required');
+											$('#ganti_sn').removeAttr('required');
+											$('#kode_barang_ont').removeAttr('required');
+											$('#kode_barang_adp').removeAttr('required');
+											$('.submit_tiket').removeAttr('disabled');
+											$('#button_modal_barang').click(function(){
+													$('#modal_tambah_barang').modal('show');
+													$('.notif_ganti').removeClass('has-error has-feedback')
+											})
+										}
+									});
+									
+
+
 									
 
 								};
