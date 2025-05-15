@@ -121,11 +121,14 @@
                     <div class="form-group">
                       <label>Paket </label>
                       <select class="form-control" name="input_keterangan" id="" >
-                        <option value="">PILIH PAKET</option>
-                        <option value="10 Mbps">10 Mbps</option>
+                        @foreach ($paket as $p)
+                           <option value="{{$p->paket_nama}}">{{$p->paket_nama}}</option> 
+                        @endforeach
+                        <option value="">--Pilih Paket--</option>
+                        {{-- <option value="10 Mbps">10 Mbps</option>
                         <option value="15 Mbps">15 Mbps</option>
                         <option value="20 Mbps">20 Mbps</option>
-                        <option value="30 Mbps">30 Mbps</option>
+                        <option value="30 Mbps">30 Mbps</option> --}}
                       </select>
                     </div>
                   </div>

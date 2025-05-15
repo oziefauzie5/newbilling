@@ -15,6 +15,7 @@ use App\Models\Mitra\MutasiSales;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
+use App\Models\Router\Paket;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
 use App\Models\Transaksi\Invoice;
@@ -285,6 +286,7 @@ class BillerController extends Controller
         $role = (new globalController)->data_user($user_id);
         $data['role'] = $role->name;
         $data['admin_user'] = (new GlobalController)->user_admin();
+        $data['paket'] = Paket::where('paket_status','Enable')->get();
 
         return view('biller/sales_input', $data);
     }
