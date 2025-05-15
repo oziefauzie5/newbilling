@@ -142,6 +142,7 @@ class AktivasiController extends Controller
 
             $pelanggan['reg_tgl_jatuh_tempo'] = $tag_pascabayar;
             $pelanggan['reg_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
+            $pelanggan['reg_status'] = 'PAID';
         } else if ($query->reg_jenis_tagihan == 'DEPOSIT') {
             $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
             $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
@@ -173,7 +174,7 @@ class AktivasiController extends Controller
         $pelanggan['reg_in_ont'] = $request->reg_in_ont;
         $pelanggan['reg_onuid'] = $request->reg_onuid;
         $pelanggan['reg_slot_odp'] = $request->reg_slot_odp;
-        $pelanggan['reg_koordinat_odp'] = $request->reg_koordinat_odp;
+        $pelanggan['reg_koodinat_odp'] = $request->reg_koodinat_odp;
         $pelanggan['reg_teknisi_team'] = $team;
         $pelanggan['reg_tgl_pasang'] = Carbon::now()->toDateString();
 

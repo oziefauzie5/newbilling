@@ -94,7 +94,7 @@ class TransaksiController extends Controller
         $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'PEMBAYARAN')->get();
 
         $data['data_biaya'] = (new GlobalController)->setting_biaya();
-
+            
         $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
@@ -578,6 +578,8 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             }
             $penerima = (new GlobalController)->data_user($request->penerima);
 
+            $pesan_group['pesan_id_site'] = '1';
+            $pesan_group['layanan'] = 'CS';
             $pesan_group['ket'] = 'pencairan';
             $pesan_group['target'] = env('GROUP_TEKNISI');
             $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
