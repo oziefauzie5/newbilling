@@ -205,11 +205,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/pelanggan/status_secret/{id}', [NocController::class, 'status_secret'])->name('noc.status_secret')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/aktivasi/{id}/Pelanggan', [RegistrasiController::class, 'proses_aktivasi_pelanggan'])->name('reg.proses_aktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/Update-Profile/{id}', [RegistrasiApiController::class, 'update_profile'])->name('psb.update_profile')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/pelanggan/Update-Router/{id}', [RegistrasiApiController::class, 'update_router'])->name('psb.update_router')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/get-update-tgl/{id}', [RegistrasiApiController::class, 'get_update_tgl_tempo'])->name('psb.get_update_tgl_tempo')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/update-tgl/{id}', [RegistrasiApiController::class, 'update_tgl_jth_tempo'])->name('psb.update_tgl_jth_tempo')->middleware(['role:admin|NOC|STAF ADMIN']);
-
-
+    
+    
     // Route::get('/teknisi', [TeknisiController::class, 'index'])->name('teknisi.index')->middleware(['role:TEKNISI']);
     // Route::post('/teknisi/job', [TeknisiController::class, 'job'])->name('teknisi.job')->middleware(['role:TEKNISI']);
     // Route::post('/teknisi/tiket-job', [TeknisiController::class, 'job_tiket'])->name('teknisi.job_tiket')->middleware(['role:TEKNISI']);
@@ -221,8 +220,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     // Route::get('/teknisi/Aktivasi/{id}', [TeknisiController::class, 'aktivasi'])->name('teknisi.aktivasi')->middleware(['role:TEKNISI']);
     // Route::put('/teknisi/Proses-Aktivasi/{id}', [TeknisiController::class, 'proses_aktivasi'])->name('teknisi.proses_aktivasi')->middleware(['role:TEKNISI']);
     Route::get('/teknisi/teknisi-getBarang/{id}', [TeknisiController::class, 'getBarang'])->name('teknisi.getBarang')->middleware(['role:TEKNISI']);
-
-
+    
+    
     Route::get('/invoice', [InvoiceController::class, 'index'])->name('inv.index')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/invoice/rolback/{id}', [InvoiceController::class, 'rollback'])->name('inv.rollback')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/invoice/generate', [GenerateInvoice::class, 'generate_invoice'])->name('inv.generate_invoice')->middleware(['role:admin|STAF ADMIN']);
@@ -240,7 +239,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/suspend-manual', [InvoiceController::class, 'suspend_manual'])->name('inv.suspend_manual')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/test2', [InvoiceController::class, 'test2'])->name('inv.test2')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/invoice/export-excel', [InvoiceController::class, 'export_invoice'])->name('inv.export_invoice')->middleware(['role:admin|STAF ADMIN']);
-
+    
     Route::get('/mitra', [MitraController::class, 'index'])->name('mitra.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/mitra/Create', [MitraController::class, 'create'])->name('mitra.create')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/mitra/Add-Mitra', [MitraController::class, 'addmitra'])->name('mitra.addmitra')->middleware(['role:admin|STAF ADMIN']);
@@ -249,7 +248,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/mitra/store/edit/{id}', [MitraController::class, 'store_edit'])->name('mitra.store_edit')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/mitra/data/top-up/{id}', [MitraController::class, 'topup'])->name('mitra.topup')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/mitra/data/debet-saldo/{id}', [MitraController::class, 'debet_saldo'])->name('mitra.debet_saldo')->middleware(['role:admin|STAF ADMIN']);
-
+    
     Route::get('/biller/index', [BillerController::class, 'index'])->name('biller.index')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/tagihan', [BillerController::class, 'list_tagihan'])->name('biller.list_tagihan')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/pembayaran', [BillerController::class, 'pembayaran'])->name('biller.pembayaran')->middleware(['role:KOLEKTOR|BILLER']);
@@ -264,29 +263,29 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/biller/sales-export/pdf', [BillerController::class, 'mutasi_sales_pdf'])->name('biller.export.mutasi_sales')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/print/{id}', [BillerController::class, 'print'])->name('biller.print')->middleware(['role:KOLEKTOR|BILLER']);
     Route::put('/biller/pb/{idpel}', [BillerController::class, 'biller_putus_berlanggan'])->name('biller.biller_putus_berlanggan')->middleware(['role:KOLEKTOR']);
-
-
+    
+    
     Route::get('/biller/sales', [BillerController::class, 'sales'])->name('biller.sales')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/sales-input', [BillerController::class, 'sales_input'])->name('biller.sales_input')->middleware(['role:KOLEKTOR|BILLER']);
     Route::post('/biller/store', [BillerController::class, 'sales_store'])->name('biller.sales_store')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/sales-pelanggan', [BillerController::class, 'biller_pelanggan'])->name('biller.biller_pelanggan')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/sales-mutasi', [BillerController::class, 'biller_mutasi_sales'])->name('biller.biller_mutasi_sales')->middleware(['role:KOLEKTOR|BILLER']);
-
-
+    
+    
     // Route::get('/Kolektor/Tagihan', [KolektorController::class, 'index'])->name('kolektor.index');
     // Route::get('/Kolektor/kolektor-payment/{id}', [KolektorController::class, 'kolektor_payment'])->name('kolektor.kolektor_payment');
     Route::get('/whatsapp/update-group', [WhatsappApi::class, 'update_group_list'])->name('whatsapp.update_group_list')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/whatsapp/send-message', [WhatsappApi::class, 'send_message'])->name('whatsapp.send_message')->middleware(['role:admin|STAF ADMIN']);
-
+    
     Route::get('/sales/index', [SalesController::class, 'index'])->name('sales.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/sales/list', [SalesController::class, 'list_registrasi'])->name('sales.list_registrasi')->middleware(['role:admin|STAF ADMIN']);
-
+    
     Route::put('/whatsapp/{id}/app-whatsapp-manual', [WhatsappController::class, 'kirim_pesan_manual'])->name('wa.kirim_pesan_manual')->middleware(['role:admin|NOC|STAF ADMIN']);
-
+    
     Route::get('/whatsapp/pesan', [WhatsappController::class, 'index'])->name('wa.index')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/whatsapp/broadcast', [WhatsappController::class, 'broadcast'])->name('whatsapp.broadcast')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/whatsapp/pesan-delete/{id}', [WhatsappController::class, 'delete_pesan'])->name('wa.delete_pesan')->middleware(['role:admin|STAF ADMIN']);
-
+    
     ##--HOSTPOT
     Route::get('/hotspot', [HotspotController::class, 'data_voucher'])->name('vhc.data_voucher')->middleware(['role:admin|STAF ADMIN|NOC']);
     Route::get('/hotspot/data-pesanan', [HotspotController::class, 'data_pesanan'])->name('vhc.data_pesanan')->middleware(['role:admin|STAF ADMIN|NOC']);
@@ -308,12 +307,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/hotspot/{username}/reset', [HotspotController::class, 'reset_voucher'])->name('vhc.reset_voucher')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/hotspot/{id}/print-notas', [HotspotController::class, 'print_nota_pesanan'])->name('vhc.print_nota_pesanan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/hotspot/update-voucher', [HotspotController::class, 'update_voucher'])->name('vhc.update_voucher')->middleware(['role:admin|NOC|STAF ADMIN']);
-
+    
     ##--HOSTPOT-GLOBAL CONTROLLER
     Route::get('/hotspot/{id}/get-site', [GlobalController::class, 'getMitraSite'])->name('glb.getMitraSite')->middleware(['role:admin|STAF ADMIN|NOC']);
     Route::get('/hotspot/{id}/get-outlet', [GlobalController::class, 'getOutlet'])->name('glb.getOutlet')->middleware(['role:admin|STAF ADMIN|NOC']);
     Route::get('/hotspot/{id}/get-paket', [GlobalController::class, 'getPaket'])->name('glb.getPaket')->middleware(['role:admin|STAF ADMIN|NOC']);
-
+    
     ##--TIKET
     Route::get('/tiket', [TiketController::class, 'dashboard_tiket'])->name('tiket.dashboard_tiket')->middleware(['role:admin|STAF ADMIN|NOC']);
     Route::get('/tiket/data-tiket', [TiketController::class, 'data_tiket'])->name('tiket.data_tiket')->middleware(['role:admin|STAF ADMIN|NOC']);
@@ -329,8 +328,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/tiket/{id}/cek-ont', [TiketController::class, 'tiket_cek_ont'])->name('tiket.tiket_cek_ont')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/cek-adaptor', [TiketController::class, 'tiket_cek_adp'])->name('tiket.tiket_cek_adp')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/tiket/{id}/val-odp', [GlobalController::class, 'tiket_validasi_odp'])->name('tiket.tiket_validasi_odp')->middleware(['role:admin|NOC|STAF ADMIN']);
-
-
+    
+    
     ##--GUDANG--
     Route::get('/gudang', [GudangController::class, 'data_barang'])->name('gudang.data_barang')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/gudang/Tambah-kategori', [GudangController::class, 'store_kategori'])->name('gudang.store_kategori')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -356,6 +355,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/pelanggan/{id}/cek-perangkat', [RegistrasiController::class, 'cek_perangkat'])->name('reg.cek_perangkat')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/cek-perangkat-hilang', [RegistrasiController::class, 'cek_perangkat_hilang'])->name('reg.cek_perangkat_hilang')->middleware(['role:admin|NOC|STAF ADMIN']);
     ##--REGISTRASI/EDIT/AKTIVASI--
+    Route::put('/pelanggan/update-Router/{id}', [RegistrasiApiController::class, 'update_router'])->name('reg.update_router')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/form-pelanggan', [RegistrasiController::class, 'form_update_pelanggan'])->name('reg.form_update_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/{id}/form-update-pelanggan/no-skb', [RegistrasiController::class, 'proses_update_noskb'])->name('reg.proses_update_noskb')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/data-aktivasi-pelanggan', [RegistrasiController::class, 'data_aktivasi_pelanggan'])->name('reg.data_aktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);

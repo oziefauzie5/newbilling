@@ -624,7 +624,8 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
         $status_inet = (new NocController)->status_inet($id);
         $data['input_data'] = InputData::all();
-        $data['data_router'] = Router::all();
+        $data['data_router'] = Router::where('router_status','Enable')->get();
+        // dd($data['data_router']);
         $data['data_paket'] = Paket::all();
         $data['data_biaya'] = SettingBiaya::first();
         $data['data_teknisi'] = (new GlobalController)->getTeknisi();

@@ -748,32 +748,32 @@ class RegistrasiApiController extends Controller
     public function update_router(Request $request, $id)
     {
         $nama_admin = Auth::user()->name;
-        $router = Router::whereId($request->reg_router)->first();
 
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('registrasis.reg_idpel', $id)
             ->first();
-        // $paket = Paket::where("paket_id", $query->reg_profile)->first();
-        if ($query->reg_jenis_tagihan == 'FREE') {
-            $comment = '( Done ) FREE  ';
+
+            if ($query->reg_jenis_tagihan == 'FREE') {
+                $comment = '( Done ) FREE  ';
         } else {
             $comment = '( Done ) ' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
         }
-
+        
         if ($query->reg_jenis_tagihan == 'FREE') {
             $comment = 'FREE Update-Router-By:' . $nama_admin;
         } else {
             $comment = 'Update-Router By: ' . $nama_admin . ' Jatuh-Tempo :' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
         }
-
-        $ip =   $router->router_ip . ':' . $router->router_port_api;
-        $user = $router->router_username;
-        $pass = $router->router_password;
+        
+        $ip =   $query->router_ip . ':' . $query->router_port_api;
+        $user = $query->router_username;
+        $pass = $query->router_password;
         $API = new RouterosAPI();
         $API->debug = false;
-
+        
+        // dd($request->reg_router);
         if ($request->reg_router == $query->reg_router) {
             $before_ip =   $query->router_ip . ':' . $query->router_port_api;
             $before_user = $query->router_username;
@@ -799,7 +799,7 @@ class RegistrasiApiController extends Controller
                         $data['reg_ip_address'] = $request->reg_ip_address;
                         $data['reg_username'] = $request->reg_username;
                         $data['reg_password'] = $request->reg_password;
-                        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+                        // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
                         Registrasi::where('reg_idpel', $id)->update($data);
                         $notifikasi = array(
                             'pesan' => 'Berhasil merubah data Internet',
@@ -818,7 +818,7 @@ class RegistrasiApiController extends Controller
                         $data['reg_ip_address'] = $request->reg_ip_address;
                         $data['reg_username'] = $request->reg_username;
                         $data['reg_password'] = $request->reg_password;
-                        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+                        // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
                         Registrasi::where('reg_idpel', $id)->update($data);
                         $notifikasi = array(
                             'pesan' => 'Berhasil merubah data Internet',
@@ -850,7 +850,7 @@ class RegistrasiApiController extends Controller
                         $data['reg_ip_address'] = $request->reg_ip_address;
                         $data['reg_username'] = $request->reg_username;
                         $data['reg_password'] = $request->reg_password;
-                        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+                        // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
                         Registrasi::where('reg_idpel', $id)->update($data);
                         $notifikasi = array(
                             'pesan' => 'Berhasil merubah data Internet',
@@ -868,7 +868,7 @@ class RegistrasiApiController extends Controller
                         $data['reg_ip_address'] = $request->reg_ip_address;
                         $data['reg_username'] = $request->reg_username;
                         $data['reg_password'] = $request->reg_password;
-                        $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+                        // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
                         Registrasi::where('reg_idpel', $id)->update($data);
                         $notifikasi = array(
                             'pesan' => 'Berhasil merubah data Internet',

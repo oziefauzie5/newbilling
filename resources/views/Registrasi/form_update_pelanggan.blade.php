@@ -284,7 +284,7 @@
         <!-- <div class="col-md-12"> -->
           <!-- <div class="card">
             <div class="card-body"> -->
-              <form class="form-horizontal"action="{{route('admin.psb.update_router',['id'=>$data->reg_idpel])}}" method="POST">
+              <form class="form-horizontal"action="{{route('admin.reg.update_router',['id'=>$data->reg_idpel])}}" method="POST">
             @csrf
             @method('PUT')
             <h3 class="mt-3 text-bolt">INTERNET</h3><hr>
@@ -299,6 +299,19 @@
                     <option value="PPP">PPP</option>
                     <option value="HOTSPOT">HOTSPOT</option>
                     @endif
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Router</label>
+                <div class="col-sm-10">
+                  <select class="form-control" id="" name="reg_router"  >
+                    @if( $data->reg_router)
+                    <option value="{{ $data->reg_router}}">{{ $data->router_nama}}</option>
+                    @endif
+                    @foreach ($data_router as $r)
+                    <option value="{{ $r->id}}">{{ $r->router_nama}}</option>
+                    @endforeach
                   </select>
                 </div>
               </div>
