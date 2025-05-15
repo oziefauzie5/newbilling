@@ -689,7 +689,7 @@ No.Layanan : ' . $data_pelanggan->inv_nolayanan . '
 Pelanggan : ' . $data_pelanggan->inv_nama . '
 Invoice : *' . $data_pelanggan->inv_id . '*
 Paket : ' . $data_pelanggan->inv_profile . '
-Total : *Rp' . $data_pelanggan->inv_total . '*
+Total : *Rp' . number_format($data_pelanggan->inv_total) . '*
 
 Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
 Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
