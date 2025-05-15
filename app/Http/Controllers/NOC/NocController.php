@@ -17,6 +17,7 @@ use App\Models\Transaksi\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class NocController extends Controller
@@ -315,7 +316,7 @@ Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelangg
 Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *https://ovallapp.com*
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*
+*'.Session::get('app_brand').'*
 
 
 ';

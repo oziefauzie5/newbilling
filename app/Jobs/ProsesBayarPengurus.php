@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Session;
 
 class ProsesBayarPengurus implements ShouldQueue
 {
@@ -63,7 +64,7 @@ Tanggal lunas : ' . date('Y-m-d H:m:s', strtotime(Carbon::now())) . '
 *************************
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*',
+*'.Session::get('app_brand').'*',
             ]);
             $cek_hari_bayar = date('d', strtotime($tgl_bayar));
             if ($cek_hari_bayar >= 25) {

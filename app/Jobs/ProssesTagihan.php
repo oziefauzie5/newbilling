@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Session;
 
 class ProssesTagihan implements ShouldQueue
 {
@@ -70,7 +71,7 @@ Silahkan login ke aplikasi client area *https://ovallapp.com*
 Tagihan otomatis lunas setelah melakukan pembayaran, jika menggunakan QRIS, Virtual account, Indomaret, Alfamart dan lain lain.
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*
+*'.Session::get('app_brand').'R*
 "
     
                         ',
@@ -101,7 +102,7 @@ Silahkan login ke aplikasi client area https://ovallapp.com
 Tagihan otomatis lunas setelah melakukan pembayaran, jika menggunakan QRIS, Virtual account, Indomaret, Alfamart dan lain lain.
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*',
+*'.Session::get('app_brand').'*',
                 ]);
             }
         }

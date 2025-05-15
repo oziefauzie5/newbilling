@@ -33,6 +33,7 @@ use App\Exports\ExportInvoice;
 use App\Models\Transaksi\Jurnal;
 // use App\Imports\ImportUsers;
 use App\Models\Gudang\Data_Barang;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -697,7 +698,7 @@ BY : ' . $nama_user . '
 *************************
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*';
+*'.Session::get('app_brand').'*';
             Pesan::create($pesan_group);
 
             $router = Router::whereId($data_pelanggan->reg_router)->first();

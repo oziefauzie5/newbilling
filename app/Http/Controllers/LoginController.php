@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Applikasi\AppController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,18 @@ class LoginController extends Controller
 {
     public function index()
     {
-        return view('auth.login');
+        $settingapp = SettingAplikasi::first();
+        if($settingapp){
+            $data['logo'] = $settingapp->app_logo;
+            $data['favicon'] = $settingapp->app_favicon;
+            $data['brand'] = $settingapp->app_brand;
+        } else{
+            $data['logo'] = 'LOGO.png';
+            $data['favicon'] = 'LOGO.png';
+            $data['brand'] = 'APPBILL';
+
+        }
+        return view('auth.login',$data);
     }
 
     public function login_proses(Request $request)

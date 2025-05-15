@@ -47,6 +47,7 @@ class RegistrasiController extends Controller
 {
     public function index()
     {
+        
         $data['input_data'] = InputData::where('input_status', 'INPUT DATA')->get();
         $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
         $data['data_pop'] = Data_pop::where('pop_status', 'Enable')->get();
@@ -240,7 +241,7 @@ Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *ht
 
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*
+*'.Session::get('app_brand').'*
 ';
 
 

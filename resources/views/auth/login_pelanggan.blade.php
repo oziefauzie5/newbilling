@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OVALL FIBER</title>
+ <title>{{$brand}}</title>
+  <link rel="icon" href="{{ asset('storage/profile_perusahaan/'.$favicon) }}" type="image/x-icon"/>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="{{ asset('lte/plugins/fontawesome-free/css/all.min.css')}}">
@@ -14,8 +15,8 @@
 <div class="login-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      {{-- <a href="" class="h1"><b>OVALL FIBER</b></a> --}}
-<img src="{{ asset('atlantis/assets/img/ovall_logo.png')}}" alt="OVALL FIBER" class="brand-image " style="opacity: .8">
+      <img src="{{ asset('storage/profile_perusahaan/'.$logo) }}" alt="{{$brand}}" class="brand-image " style="opacity: .8">
+
 
     </div>
     <div class="card-body">

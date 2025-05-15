@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Session;
 
 class ProssesIsolir implements ShouldQueue
 {
@@ -67,7 +68,7 @@ Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelangg
 
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*
+*'.Session::get('app_brand').'*
 ';
                 Pesan::create($pesan_group);
             }

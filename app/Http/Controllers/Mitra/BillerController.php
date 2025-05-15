@@ -673,7 +673,7 @@ BY : ' . $nama_user . '
 *************************
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*';
+*'.Session::get('app_brand').'*';
 
 
             $router = Router::whereId($data_pelanggan->reg_router)->first();

@@ -17,7 +17,18 @@ class LoginPelangganController extends Controller
 
     public function index()
     {
-        return view('auth.login_pelanggan');
+         $settingapp = SettingAplikasi::first();
+        if($settingapp){
+            $data['logo'] = $settingapp->app_logo;
+            $data['favicon'] = $settingapp->app_favicon;
+            $data['brand'] = $settingapp->app_brand;
+        } else{
+            $data['logo'] = 'LOGO.png';
+            $data['favicon'] = 'LOGO.png';
+            $data['brand'] = 'APPBILL';
+
+        }
+        return view('auth.login_pelanggan',$data);
     }
 
     public function login_proses(Request $request)

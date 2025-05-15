@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Applikasi\SettingBiaya;
 use App\Models\Mitra\MutasiSales;
+use Illuminate\Support\Facades\Session;
 
 class CallbackController extends Controller
 {
@@ -286,7 +287,7 @@ BY : ' . $nama_user . '
 *************************
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*OVALL FIBER*';
+*'.Session::get('app_brand').'*';
                     Pesan::create($pesan_group);
 
 

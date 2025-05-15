@@ -280,8 +280,8 @@
     <ul id="sk">
         <li>Berlangganan minimal 6 Bulan</li>
         <li>Mengembalikan Perangkat ONT ( Modem ) saat berhenti berlangganan</li>
-        <li>Pelanggan akan dikenakan Denda Pengakhiran sebesar Rp 500.000,- sesuai dengan ketentuan dalam Syarat dan Ketentuan, apabila memutuskan untuk berhenti berlangganan Layanan Ovall Fiber sebelum 6 bulan.</li>
-        <li>Kontrak Berlangganan ini digunakan sebagai dasar untuk menjaga pelayanan dan komitmen antara pelanggan dengan Ovall Fiber.</li>
+        <li>Pelanggan akan dikenakan Denda Pengakhiran sebesar Rp 500.000,- sesuai dengan ketentuan dalam Syarat dan Ketentuan, apabila memutuskan untuk berhenti berlangganan Layanan {{{{Session::get('app_brand')}}}} sebelum 6 bulan.</li>
+        <li>Kontrak Berlangganan ini digunakan sebagai dasar untuk menjaga pelayanan dan komitmen antara pelanggan dengan {{{{Session::get('app_brand')}}}}.</li>
     </ul>
     <table id="ttd">
         <tr>
