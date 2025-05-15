@@ -113,7 +113,7 @@ class LaporanController extends Controller
             'pesan' => 'Berhasil Hapus Data Laporan',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.trx.laporan')->with($notifikasi);
+        return redirect()->route('admin.trx.laporan_harian')->with($notifikasi);
     }
     public function topup(Request $request)
     {
@@ -182,7 +182,7 @@ class LaporanController extends Controller
 
         $route = URL::to('/');
         return response()->json($route);
-        // return redirect()->route('admin.trx.laporan')->with($notifikasi);
+        // return redirect()->route('admin.trx.laporan_harian')->with($notifikasi);
     }
 
     public function serah_terima(Request $request, $id)
@@ -200,7 +200,7 @@ class LaporanController extends Controller
             'pesan' => 'Terimakasih. Laporan anda berhasil diserah terima',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.trx.laporan')->with($notifikasi);
+        return redirect()->route('admin.trx.laporan_harian')->with($notifikasi);
     }
     public function buat_laporan(Request $request, $id)
     {
@@ -214,7 +214,7 @@ class LaporanController extends Controller
                 'pesan' => 'Maaf, Anda gagal membuat laporan. silahkan ulangi kembali yah',
                 'alert' => 'error',
             ];
-            return redirect()->route('admin.trx.laporan')->with($notifikasi);
+            return redirect()->route('admin.trx.laporan_harian')->with($notifikasi);
         } else {
             $tgl = date('Y-m-d', strtotime(Carbon::now()));
             $data['data_lap_id'] = $request->lap_id;
@@ -261,7 +261,7 @@ class LaporanController extends Controller
                 'pesan' => 'Terimakasih. Laporan anda berhasil dibuat',
                 'alert' => 'success',
             ];
-            return redirect()->route('admin.trx.laporan')->with($notifikasi);
+            return redirect()->route('admin.trx.laporan_harian')->with($notifikasi);
         };
     }
     public function data_laporan(Request $request)
