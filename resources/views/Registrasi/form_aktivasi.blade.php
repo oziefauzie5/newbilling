@@ -91,7 +91,7 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-body">
-              <form class="form-horizontal"action="{{route('admin.psb.update_router',['id'=>$data->reg_idpel])}}" method="POST">
+              <form class="form-horizontal"action="{{route('admin.reg.update_router',['id'=>$data->reg_idpel])}}" method="POST">
             @csrf
             @method('PUT')
             <h3 class="mt-3 text-bolt">INTERNET</h3><hr>
