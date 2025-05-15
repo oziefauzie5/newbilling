@@ -365,11 +365,6 @@ Antrian tiket = ' . $count . '
                 ]);
             }
 
-
-            // dd($reg);
-
-
-
             $status = (new GlobalController)->whatsapp_status();
             if ($status->wa_status == 'Enable') {
                 $status_pesan = '0';
@@ -383,6 +378,7 @@ Antrian tiket = ' . $count . '
             $pesan_closed['target'] = env('GROUP_TEKNISI');
             $pesan_closed['nama'] = 'Group Teknisi';
             $pesan_closed['pesan'] = '               -- CLOSED TIKET --
+            
 Problem : ' . $request->tiket_kendala . '
 Action : ' . $request->tiket_tindakan . '
 

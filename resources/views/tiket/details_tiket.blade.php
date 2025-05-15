@@ -323,7 +323,7 @@
                 <div class="col-sm-12">
                 <textarea name="tiket_menunggu" class="form-control readonly"cols="50" rows="15">
 Name : {{ $tiket->input_nama }}
-No. Layanan : {{ $tiket->reg_nolayanan }}
+Customer Number : {{ $tiket->reg_nolayanan }}
 
 WAITING LIST {{$tiket_count}} TICKETS
 
