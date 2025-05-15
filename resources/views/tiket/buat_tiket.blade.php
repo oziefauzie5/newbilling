@@ -87,7 +87,7 @@
               <label class="col-sm-2 col-form-label">Jenis Laporan</label>
               <div class="col-sm-4">
                 <select class="form-control" required name="tiket_jenis">
-                  <option value="">- Pilih -</option>
+                  <option value="">--Pilih--</option>
                   <option value="Gangguan / Komplain">Gangguan / Komplain</option>
                   <option value="Edukasi">Edukasi</option>
                   <option value="Instalasi">Instalasi</option>
@@ -118,7 +118,7 @@
               </div>
               </div>
             <div class="form-group row">
-              <label class="col-sm-2 col-form-label">Nama Laporan</label>
+              <label class="col-sm-2 col-form-label">Topik Laporan</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" required id="1ssss" value="{{ Session::get('tiket_nama') }}" name="tiket_nama">
               </div>

@@ -85,8 +85,8 @@ class TiketController extends Controller
     public function buat_tiket(Request $request)
     {
         // $data['no_tiket'] = (new GlobalController)->nomor_tiket();
-        $data['data_site'] = Data_Site::all();
-        $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->get();
+        $data['data_site'] = Data_Site::where('site_status','Enable')->get();
+        $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->where('reg_progres','<=',5)->get();
         return view('tiket/buat_tiket', $data);
     }
 
