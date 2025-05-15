@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transaksi;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Applikasi\SettingAkun;
+use App\Models\Applikasi\SettingBiaya;
 use App\Models\Global\ConvertNoHp;
 use App\Models\Mitra\MutasiSales;
 use App\Models\Pesan\Pesan;
@@ -17,9 +18,11 @@ use App\Models\Transaksi\Kasbon;
 use App\Models\Transaksi\Kendaraan;
 use App\Models\Transaksi\LapMingguan;
 use App\Models\Transaksi\Pinjaman;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
@@ -756,4 +759,75 @@ Diterima oleh: ' . $penerima->nama_user . '
         $pathToFile = public_path($path . $id);
         return response()->download($pathToFile);
     }
+
+     public function pencairan_operasional()
+    {
+
+        $data['data_bank'] = SettingAkun::where('id', '>', 1)->get();
+        $data['data_user'] = User::where('id', '>', 10)->get();
+        $data['data_biaya'] = SettingBiaya::first();
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->orderBy('tgl', 'DESC');
+
+        $data['data_registrasi'] = $query->get();
+
+        return view('PSB/operasional', $data);
+    }
+    // public function konfirm_pencairan(Request $request)
+    // {
+    //     $admin = Auth::user()->id;
+    //     $nama_admin = Auth::user()->name;
+    //     $biaya = SettingBiaya::first();
+    //     $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
+
+    //     Teknisi::whereIn('teknisi_idpel', $request->idpel)->where('teknisi_status', '1')->where('teknisi_job', 'PSB')->update(
+    //         [
+    //             'teknisi_keuangan_userid' => $admin,
+    //             'teknisi_status' => 2,
+    //         ]
+    //     );
+    //     $count = count($request->idpel);
+    //     $total = ($biaya->biaya_psb + $biaya->biaya_sales) * $count;
+    //     $psb = $biaya->biaya_psb * $count;
+    //     $marketing = $biaya->biaya_sales * $count;
+
+    //     $cek_saldo = (new GlobalController)->mutasi_jurnal();
+
+    //     if ($cek_saldo['saldo'] >= $total) {
+    //         Jurnal::create([
+    //             'jurnal_id' => time(),
+    //             'jurnal_tgl' => $data['input_tgl'],
+    //             'jurnal_uraian' => 'Pencairan PSB oleh ' . $nama_admin . ' Sebanyak ' . $count . ' Pelanggan',
+    //             'jurnal_kategori' => 'PENGELUARAN',
+    //             'jurnal_keterangan' => 'PSB',
+    //             'jurnal_admin' => $admin,
+    //             'jurnal_penerima' => $request->penerima,
+    //             'jurnal_metode_bayar' => $request->akun,
+    //             'jurnal_debet' => $psb,
+    //             'jurnal_status' => 1,
+    //         ]);
+    //         Jurnal::create([
+    //             'jurnal_id' => time(),
+    //             'jurnal_tgl' => $data['input_tgl'],
+    //             'jurnal_uraian' => 'Pencairan MARKETING oleh ' . $nama_admin . ' Sebanyak ' . $count . ' Pelanggan',
+    //             'jurnal_kategori' => 'PENGELUARAN',
+    //             'jurnal_keterangan' => 'MARKETING',
+    //             'jurnal_admin' => $admin,
+    //             'jurnal_penerima' => $request->penerima,
+    //             'jurnal_metode_bayar' => $request->akun,
+    //             'jurnal_debet' => $marketing,
+    //             'jurnal_status' => 1,
+    //         ]);
+
+    //         Registrasi::where('reg_progres', '4')->whereIn('reg_idpel', $request->idpel)->update(['reg_progres' => '5']);
+
+    //         $notifikasi = 'berhasil';
+    //         return response()->json($notifikasi);
+    //     } else {
+    //         $notifikasi = 'saldo_tidak_cukup';
+    //         return response()->json($notifikasi);
+    //     }
+    // }
 }

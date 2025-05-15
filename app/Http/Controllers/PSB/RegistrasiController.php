@@ -399,76 +399,62 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
         return view('PSB/berita_acara', $data);
     }
-    public function operasional()
-    {
+   
+    // public function konfirm_pencairan(Request $request)
+    // {
+    //     $admin = Auth::user()->id;
+    //     $nama_admin = Auth::user()->name;
+    //     $biaya = SettingBiaya::first();
+    //     $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
 
-        $data['data_bank'] = SettingAkun::where('id', '>', 1)->get();
-        $data['data_user'] = User::where('id', '>', 10)->get();
-        $data['data_biaya'] = SettingBiaya::first();
-        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
-            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->orderBy('tgl', 'DESC');
+    //     Teknisi::whereIn('teknisi_idpel', $request->idpel)->where('teknisi_status', '1')->where('teknisi_job', 'PSB')->update(
+    //         [
+    //             'teknisi_keuangan_userid' => $admin,
+    //             'teknisi_status' => 2,
+    //         ]
+    //     );
+    //     $count = count($request->idpel);
+    //     $total = ($biaya->biaya_psb + $biaya->biaya_sales) * $count;
+    //     $psb = $biaya->biaya_psb * $count;
+    //     $marketing = $biaya->biaya_sales * $count;
 
-        $data['data_registrasi'] = $query->get();
+    //     $cek_saldo = (new GlobalController)->mutasi_jurnal();
 
-        return view('PSB/operasional', $data);
-    }
-    public function konfirm_pencairan(Request $request)
-    {
-        $admin = Auth::user()->id;
-        $nama_admin = Auth::user()->name;
-        $biaya = SettingBiaya::first();
-        $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
+    //     if ($cek_saldo['saldo'] >= $total) {
+    //         Jurnal::create([
+    //             'jurnal_id' => time(),
+    //             'jurnal_tgl' => $data['input_tgl'],
+    //             'jurnal_uraian' => 'Pencairan PSB oleh ' . $nama_admin . ' Sebanyak ' . $count . ' Pelanggan',
+    //             'jurnal_kategori' => 'PENGELUARAN',
+    //             'jurnal_keterangan' => 'PSB',
+    //             'jurnal_admin' => $admin,
+    //             'jurnal_penerima' => $request->penerima,
+    //             'jurnal_metode_bayar' => $request->akun,
+    //             'jurnal_debet' => $psb,
+    //             'jurnal_status' => 1,
+    //         ]);
+    //         Jurnal::create([
+    //             'jurnal_id' => time(),
+    //             'jurnal_tgl' => $data['input_tgl'],
+    //             'jurnal_uraian' => 'Pencairan MARKETING oleh ' . $nama_admin . ' Sebanyak ' . $count . ' Pelanggan',
+    //             'jurnal_kategori' => 'PENGELUARAN',
+    //             'jurnal_keterangan' => 'MARKETING',
+    //             'jurnal_admin' => $admin,
+    //             'jurnal_penerima' => $request->penerima,
+    //             'jurnal_metode_bayar' => $request->akun,
+    //             'jurnal_debet' => $marketing,
+    //             'jurnal_status' => 1,
+    //         ]);
 
-        Teknisi::whereIn('teknisi_idpel', $request->idpel)->where('teknisi_status', '1')->where('teknisi_job', 'PSB')->update(
-            [
-                'teknisi_keuangan_userid' => $admin,
-                'teknisi_status' => 2,
-            ]
-        );
-        $count = count($request->idpel);
-        $total = ($biaya->biaya_psb + $biaya->biaya_sales) * $count;
-        $psb = $biaya->biaya_psb * $count;
-        $marketing = $biaya->biaya_sales * $count;
+    //         Registrasi::where('reg_progres', '4')->whereIn('reg_idpel', $request->idpel)->update(['reg_progres' => '5']);
 
-        $cek_saldo = (new GlobalController)->mutasi_jurnal();
-
-        if ($cek_saldo['saldo'] >= $total) {
-            Jurnal::create([
-                'jurnal_id' => time(),
-                'jurnal_tgl' => $data['input_tgl'],
-                'jurnal_uraian' => 'Pencairan PSB oleh ' . $nama_admin . ' Sebanyak ' . $count . ' Pelanggan',
-                'jurnal_kategori' => 'PENGELUARAN',
-                'jurnal_keterangan' => 'PSB',
-                'jurnal_admin' => $admin,
-                'jurnal_penerima' => $request->penerima,
-                'jurnal_metode_bayar' => $request->akun,
-                'jurnal_debet' => $psb,
-                'jurnal_status' => 1,
-            ]);
-            Jurnal::create([
-                'jurnal_id' => time(),
-                'jurnal_tgl' => $data['input_tgl'],
-                'jurnal_uraian' => 'Pencairan MARKETING oleh ' . $nama_admin . ' Sebanyak ' . $count . ' Pelanggan',
-                'jurnal_kategori' => 'PENGELUARAN',
-                'jurnal_keterangan' => 'MARKETING',
-                'jurnal_admin' => $admin,
-                'jurnal_penerima' => $request->penerima,
-                'jurnal_metode_bayar' => $request->akun,
-                'jurnal_debet' => $marketing,
-                'jurnal_status' => 1,
-            ]);
-
-            Registrasi::where('reg_progres', '4')->whereIn('reg_idpel', $request->idpel)->update(['reg_progres' => '5']);
-
-            $notifikasi = 'berhasil';
-            return response()->json($notifikasi);
-        } else {
-            $notifikasi = 'saldo_tidak_cukup';
-            return response()->json($notifikasi);
-        }
-    }
+    //         $notifikasi = 'berhasil';
+    //         return response()->json($notifikasi);
+    //     } else {
+    //         $notifikasi = 'saldo_tidak_cukup';
+    //         return response()->json($notifikasi);
+    //     }
+    // }
 
     public function bukti_kas_keluar($id)
     {

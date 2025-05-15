@@ -161,10 +161,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/pelanggan/berita_acara', [RegistrasiController::class, 'berita_acara'])->name('psb.berita_acara')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/Print-Berita_Acara', [RegistrasiController::class, 'print_berita_acara'])->name('psb.print_berita_acara')->middleware(['role:admin|NOC|STAF ADMIN']);
     // ------------PENCAIRAN PSB-----------------
-    Route::get('/Transaksi/Operasional', [RegistrasiController::class, 'operasional'])->name('inv.operasional')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/Transaksi/Konfirm', [RegistrasiController::class, 'konfirm_pencairan'])->name('inv.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/Transaksi/laporan-harian', [LaporanController::class, 'index'])->name('inv.laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/buat-laporan', [LaporanController::class, 'buat_laporan'])->name('inv.buat_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/serah-terima', [LaporanController::class, 'serah_terima'])->name('inv.serah_terima')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/topup', [LaporanController::class, 'topup'])->name('inv.topup')->middleware(['role:admin|STAF ADMIN']);
@@ -173,7 +170,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/Transaksi/data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/add-pendapatan', [LaporanController::class, 'store_add_transaksi'])->name('lap.store_add_transaksi')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Data-Laporan', [LaporanController::class, 'data_lap_delete'])->name('inv.data_lap_delete')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('inv.laporan_print')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi', [TransaksiController::class, 'index'])->name('inv.trx.index')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/voucher', [TransaksiController::class, 'voucher'])->name('inv.trx.voucher')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/jurnal', [TransaksiController::class, 'jurnal'])->name('lap.jurnal')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -189,7 +185,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/Transaksi/jurnal_pengeluaran', [TransaksiController::class, 'store_jurnal_pengeluaran'])->name('lap.store_jurnal_pengeluaran')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/data-laporan', [TransaksiController::class, 'data_laporan_mingguan'])->name('lap.data_laporan_mingguan')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/{id}/laporan-mingguan-print', [TransaksiController::class, 'jurnal_print'])->name('lap.jurnal_print')->middleware(['role:admin|STAF ADMIN']);
-
+    
     Route::get('/pelanggan/Registrasi-cari/{id}', [RegistrasiController::class, 'pilih_pelanggan_registrasi'])->name('reg.pilih_pelanggan_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/Registrasi-Store', [RegistrasiController::class, 'store'])->name('reg.store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/Validasi1/{id}', [RegistrasiController::class, 'validasi_pachcore'])->name('reg.validasi_pachcore')->middleware(['role:admin|NOC|TEKNISI|STAF ADMIN']);
@@ -286,6 +282,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/whatsapp/broadcast', [WhatsappController::class, 'broadcast'])->name('whatsapp.broadcast')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/whatsapp/pesan-delete/{id}', [WhatsappController::class, 'delete_pesan'])->name('wa.delete_pesan')->middleware(['role:admin|STAF ADMIN']);
     
+    
+    ##--KEUANGAN/TRANSAKSI
+    Route::get('/Transaksi/Operasional', [TransaksiController::class, 'pencairan_operasional'])->name('trx.pencairan_operasional')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/Transaksi/Konfirmasi-Pencairan', [TransaksiController::class, 'konfirm_pencairan'])->name('trx.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Transaksi/laporan-harian-admin', [LaporanController::class, 'laporan_harian'])->name('trx.laporan_harian')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('trx.laporan_print')->middleware(['role:admin|STAF ADMIN']);
+    
+    
     ##--HOSTPOT
     Route::get('/hotspot', [HotspotController::class, 'data_voucher'])->name('vhc.data_voucher')->middleware(['role:admin|STAF ADMIN|NOC']);
     Route::get('/hotspot/data-pesanan', [HotspotController::class, 'data_pesanan'])->name('vhc.data_pesanan')->middleware(['role:admin|STAF ADMIN|NOC']);
@@ -307,6 +311,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/hotspot/{username}/reset', [HotspotController::class, 'reset_voucher'])->name('vhc.reset_voucher')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/hotspot/{id}/print-notas', [HotspotController::class, 'print_nota_pesanan'])->name('vhc.print_nota_pesanan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/hotspot/update-voucher', [HotspotController::class, 'update_voucher'])->name('vhc.update_voucher')->middleware(['role:admin|NOC|STAF ADMIN']);
+
     
     ##--HOSTPOT-GLOBAL CONTROLLER
     Route::get('/hotspot/{id}/get-site', [GlobalController::class, 'getMitraSite'])->name('glb.getMitraSite')->middleware(['role:admin|STAF ADMIN|NOC']);

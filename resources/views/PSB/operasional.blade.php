@@ -29,9 +29,9 @@
           </div>
           @endif
            <!-- Button trigger modal -->
-                      {{-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_pencairan">
+                      <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_pencairan">
                         Konfirmasi
-                      </button><hr> --}}
+                      </button><hr>
 
                       <!-- Modal -->
                       <div class="modal fade" id="modal_pencairan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -44,12 +44,15 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <form method="post" action="{{route('admin.inv.konfirm_pencairan')}}">
+                              <form method="post" action="route('admin.trx.konfirm_pencairan')">
                                   @csrf
                                   @method('POST')
+                                  <ul>
+                                    <li>Pencarilan PSB & Fee Marketing dapat langsung dilakukan pada jurnal</li>
+                                  </ul>
                                   <div class="form-row">
                                     <div class="col">
-                                      <select name="akun" id="" class="form-control akun">
+                                      <select name="akun" id="" class="form-control akun" disabled>
                                         <option value="">PILIH METODE BAYAR</option>
                                       @foreach($data_bank as $bank)
                                       <option value="{{$bank->id}}">{{$bank->akun_nama}}</option>
@@ -57,7 +60,7 @@
                                       </select>
                                     </div>
                                     <div class="col">
-                                      <select name="penerima" id="" class="form-control penerima">
+                                      <select name="penerima" id="" class="form-control penerima" disabled>
                                         <option value="">PILIH PENERIMA</option>
                                       @foreach($data_user as $user)
                                       <option value="{{$user->id}}">{{$user->name}}</option>
@@ -72,12 +75,17 @@
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                                  <button type="button" class="btn btn-sm btn-primary submit_pencairan">Konfirmasi</button>
+                                  <button type="button" class="btn btn-sm btn-primary submit_pencairan" disabled>Konfirmasi</button>
                                 </form>
                             </div>
                           </div>
                         </div>
                       </div>
+                      <ul class="ul">
+                        <li>Print berita acara lanjutan, untuk melakukan pencairan PSB & Fee Marketing</li>
+                        <li>Pilih pelanggan yang ingin dicairkan</li>
+                        <li>Lakukan konfirmasi setelah memilih pelanggan</li>
+                      </ul>
           <div class="table-responsive">
             <table id="pencairan_list" class="display table table-striped table-hover text-nowrap">
               <thead>

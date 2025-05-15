@@ -9,7 +9,6 @@ use App\Models\Mitra\Mutasi;
 use App\Models\Model_Has_Role;
 use App\Models\Transaksi\DataLaporan;
 use App\Models\Transaksi\Laporan;
-use App\Models\Transaksi\Jurnal;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Transaksi\Transaksi;
@@ -18,10 +17,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\DB;
 class LaporanController extends Controller
 {
-    public function index(Request $request)
+    public function laporan_harian(Request $request)
     {
         // $date = Carbon::now();
         $data['admin_user'] = Auth::user()->id;
@@ -115,7 +113,7 @@ class LaporanController extends Controller
             'pesan' => 'Berhasil Hapus Data Laporan',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.inv.laporan')->with($notifikasi);
+        return redirect()->route('admin.trx.laporan')->with($notifikasi);
     }
     public function topup(Request $request)
     {
@@ -184,7 +182,7 @@ class LaporanController extends Controller
 
         $route = URL::to('/');
         return response()->json($route);
-        // return redirect()->route('admin.inv.laporan')->with($notifikasi);
+        // return redirect()->route('admin.trx.laporan')->with($notifikasi);
     }
 
     public function serah_terima(Request $request, $id)
@@ -202,7 +200,7 @@ class LaporanController extends Controller
             'pesan' => 'Terimakasih. Laporan anda berhasil diserah terima',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.inv.laporan')->with($notifikasi);
+        return redirect()->route('admin.trx.laporan')->with($notifikasi);
     }
     public function buat_laporan(Request $request, $id)
     {
@@ -216,7 +214,7 @@ class LaporanController extends Controller
                 'pesan' => 'Maaf, Anda gagal membuat laporan. silahkan ulangi kembali yah',
                 'alert' => 'error',
             ];
-            return redirect()->route('admin.inv.laporan')->with($notifikasi);
+            return redirect()->route('admin.trx.laporan')->with($notifikasi);
         } else {
             $tgl = date('Y-m-d', strtotime(Carbon::now()));
             $data['data_lap_id'] = $request->lap_id;
@@ -263,7 +261,7 @@ class LaporanController extends Controller
                 'pesan' => 'Terimakasih. Laporan anda berhasil dibuat',
                 'alert' => 'success',
             ];
-            return redirect()->route('admin.inv.laporan')->with($notifikasi);
+            return redirect()->route('admin.trx.laporan')->with($notifikasi);
         };
     }
     public function data_laporan(Request $request)

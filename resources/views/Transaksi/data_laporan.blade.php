@@ -106,7 +106,7 @@
                       <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->data_lap_id}}" class="btn btn-link btn-danger">
                         <i class="fa fa-times"></i>
                       </button>
-                      <a href="{{route('admin.inv.laporan_print',['id'=>$d->data_lap_id])}}"><button type="button" class="btn btn-link btn-primary">
+                      <a href="{{route('admin.trx.laporan_print',['id'=>$d->data_lap_id])}}"><button type="button" class="btn btn-link btn-primary">
                         <i class="fa fa-print"></i>
                       </button></a>
                     </div>

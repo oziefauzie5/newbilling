@@ -256,6 +256,16 @@
 										</a>
 									</li>
 									<li>
+										<a href="{{route('admin.trx.pencairan_operasional')}}">
+											<span class="sub-item">Pencairan PSB & Sales</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.trx.laporan_harian')}}">
+											<span class="sub-item">Laporan Harian</span>
+										</a>
+									</li>
+									<li>
 										<a href="{{route('admin.lap.pinjaman')}}">
 											<span class="sub-item">Pinjaman</span>
 										</a>
@@ -279,16 +289,6 @@
 									<li>
 										<a href="{{route('admin.inv.paid')}}">
 											<span class="sub-item">Invoice Paid</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.inv.operasional')}}">
-											<span class="sub-item">Pencairan PSB & Sales</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.inv.laporan')}}">
-											<span class="sub-item">Laporan Harian</span>
 										</a>
 									</li>
 									<li>
@@ -2499,7 +2499,7 @@ for (let i = 0; i < pencairan_fee.length; i++) {
 					}
 
 
-			var url = '{{ route("admin.inv.konfirm_pencairan") }}';
+			var url = '{{ route("admin.trx.konfirm_pencairan") }}';
 			$('.cb_pencairan').each(function(){  
 					if(this.checked) {              
 						idpel.push($(this).val());                                                                               
@@ -2591,7 +2591,7 @@ for (let i = 0; i < jurnal_akumulasi.length; i++) {
 					}
 
 
-			var url = '{{ route("admin.inv.konfirm_pencairan") }}';
+			var url = '{{ route("admin.trx.konfirm_pencairan") }}';
 			$('.cb_pencairan').each(function(){  
 					if(this.checked) {              
 						idpel.push($(this).val());                                                                               
