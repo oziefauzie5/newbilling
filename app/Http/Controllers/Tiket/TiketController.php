@@ -383,11 +383,11 @@ Antrian tiket = ' . $count . '
             $pesan_closed['target'] = env('GROUP_TEKNISI');
             $pesan_closed['nama'] = 'Group Teknisi';
             $pesan_closed['pesan'] = '               -- CLOSED TIKET --
-Kendala : ' . $request->tiket_kendala . '
-Tindakan : ' . $request->tiket_tindakan . '
+Problem : ' . $request->tiket_kendala . '
+Action : ' . $request->tiket_tindakan . '
 
-Waktu selesai: ' . date('d-M-y h:m') . '
-Dikerjakan Oleh : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
+Finish Time: ' . date('d-M-y h:m') . '
+Technician : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
 
 ' . $request->tiket_menunggu . '';
 

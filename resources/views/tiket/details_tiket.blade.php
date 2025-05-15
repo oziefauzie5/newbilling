@@ -322,21 +322,21 @@
             <div class="form-group row">
                 <div class="col-sm-12">
                 <textarea name="tiket_menunggu" class="form-control readonly"cols="50" rows="15">
-Nama : {{ $tiket->input_nama }}
+Name : {{ $tiket->input_nama }}
 No. Layanan : {{ $tiket->reg_nolayanan }}
 
 WAITING LIST {{$tiket_count}} TICKETS
 
 @foreach($tiket_menunggu as $antrian)
 {{$loop->iteration}}. {{$antrian->input_nama}}
-      Report time : {{date('d-m-y h:m',strtotime($antrian->tgl_buat))}}
-      @if($antrian->tiket_jenis == 'Instalasi')
-      Action       : {{$antrian->tiket_nama}}
-      @elseif($antrian->tiket_jenis == 'Reaktivasi')
-      Action       : {{$antrian->tiket_nama}}
-      @else
-      Suspect       : {{$antrian->tiket_nama}}
-      @endif
+Report time : {{date('d-m-y h:m',strtotime($antrian->tgl_buat))}}
+@if($antrian->tiket_jenis == 'Instalasi')
+Action       : {{$antrian->tiket_nama}}
+@elseif($antrian->tiket_jenis == 'Reaktivasi')
+Action       : {{$antrian->tiket_nama}}
+@else
+Suspect       : {{$antrian->tiket_nama}}
+@endif
 @endforeach
                 </textarea>
                 </div>
