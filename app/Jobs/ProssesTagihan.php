@@ -67,7 +67,7 @@ Total tagihan : *' . number_format($key->reg_harga + $key->reg_ppn + $key->reg_k
 Pembayaran paling lambat : ' . date('d/m/Y', strtotime($key->reg_tgl_jatuh_tempo)) . '
 
 *PELUNASAN OTOMATIS*
-Silahkan login ke aplikasi client area *https://ovallapp.com*
+Silahkan login ke aplikasi client area *'.env('LINK_APK').'*
 Tagihan otomatis lunas setelah melakukan pembayaran, jika menggunakan QRIS, Virtual account, Indomaret, Alfamart dan lain lain.
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
@@ -98,7 +98,7 @@ Total tagihan : *' . number_format($key->reg_harga + $key->reg_ppn + $key->reg_k
 Pembayaran paling lambat : ' . date('d/m/Y', strtotime($key->reg_tgl_jatuh_tempo)) . '
 
 *PELUNASAN OTOMATIS*
-Silahkan login ke aplikasi client area https://ovallapp.com
+Silahkan login ke aplikasi client area '.env('LINK_APK').'
 Tagihan otomatis lunas setelah melakukan pembayaran, jika menggunakan QRIS, Virtual account, Indomaret, Alfamart dan lain lain.
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas

@@ -122,7 +122,7 @@
                       <label>Paket </label>
                       <select class="form-control" name="input_keterangan" id="" >
                         @foreach ($paket as $p)
-                           <option value="{{$p->paket_nama}}">{{$p->paket_nama.'|'.number_format($p->paket_harga)}}</option> 
+                           <option value="{{$p->paket_nama}}">{{$p->paket_nama.' - '.number_format($p->paket_harga)}}</option> 
                         @endforeach
                         <option value="">--Pilih Paket--</option>
                         {{-- <option value="10 Mbps">10 Mbps</option>

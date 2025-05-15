@@ -72,7 +72,7 @@ class TripayController extends Controller
                         'image_url'   => $icon,
                     ]
                 ],
-                'return_url'   => 'https://ovallapp.com/client/home',
+                'return_url'   => ''.env('LINK_APK').'/client/home',
                 'expired_time' => (time() + (24 * 60 * 60)), // 24 jam
                 'signature'    => hash_hmac('sha256', $merchantCode . $merchantRef . $amount, $privateKey)
                 // 'signature'    => hash_hmac('sha256', $merchantCode . $merchantRef . $datapel->upd_total, $privateKey)

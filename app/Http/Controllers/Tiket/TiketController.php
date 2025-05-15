@@ -146,7 +146,7 @@ class TiketController extends Controller
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
         $pesan_pelanggan['status'] = $status_pesan;
         $pesan_pelanggan['nama'] = $data['data_pelanggan']->input_nama;
-        $pesan_pelanggan['pesan'] = '               -- TIKET GANGGUAN --
+        $pesan_pelanggan['pesan'] = '               -- TIKET '.strtoupper($request->tiket_jenis).' --
 
 Pelanggan yth
 Tiket anda sudah masuk ke system kami.
@@ -169,12 +169,9 @@ Terima kasih.';
             'target' =>  env('GROUP_TEKNISI'),
             'status' =>  $status_pesan,
             'nama' =>  'GROUP TEKNISI',
-            'pesan' => '               -- TIKET GANGGUAN --
+            'pesan' => '               -- TIKET '.strtoupper($request->tiket_jenis).' --
 
-Hallo Broo.....
-Ada tiket masuk ke sistem nih! 😊
-
-No. Tiket : *' . $tiket['tiket_kode'] . '*
+            No. Tiket : *' . $tiket['tiket_kode'] . '*
 Topik : ' . $request->tiket_nama . '
 Keterangan : *' . $request->tiket_keterangan . '*
 Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
@@ -186,7 +183,7 @@ Maps : https://www.google.com/maps/place/' . $maps . '
 Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
 Tanggal tiket : ' . $tanggal . '
 
-Semangat Broooo... Sisa tiket = ' . $count . '
+Antrian tiket = ' . $count . '
 '
         ]);
 

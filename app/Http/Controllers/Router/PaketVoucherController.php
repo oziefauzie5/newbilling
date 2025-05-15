@@ -75,7 +75,7 @@ class PaketVoucherController extends Controller
 
         $onlogin = ':put (",'.$data['paket_mode'].',' . $price . ',' . $data['paket_masa_aktif'] . ','.$sprice.',,' . $getlock . ',"); {:local comment [ /ip hotspot user get [/ip hotspot user find where name="$user"] comment]; :local ucode [:pic $comment 0 2]; :if ($ucode = "vc" or $ucode = "up" or $comment = "") do={ :local date [ /system clock get date ];:local year [ :pick $date 7 11 ];:local month [ :pick $date 0 3 ]; /sys sch add name="$user" disable=no start-date=$date interval="' . $data['paket_masa_aktif'] . '"; :delay 5s; :local exp [ /sys sch get [ /sys sch find where name="$user" ] next-run]; :local getxp [len $exp]; :if ($getxp = 15) do={ :local d [:pic $exp 0 6]; :local t [:pic $exp 7 16]; :local s ("/"); :local exp ("$d$s$year $t"); /ip hotspot user set comment="$exp" [find where name="$user"];}; :if ($getxp = 8) do={ /ip hotspot user set comment="$date $exp" [find where name="$user"];}; :if ($getxp > 15) do={ /ip hotspot user set comment="$exp" [find where name="$user"];};:delay 5s; /sys sch remove [find where name="$user"]';
 
-        $post = ' /tool fetch mode=https url="https://ovallapp.com/voucher"  http-method=post  http-data="name=$user&tgl_pakai=$date&waktu_pakai=$time&waktu_exp=$wexp&mac=$mac"';
+        $post = ' /tool fetch mode=https url="'.env('LINK_APK').'/voucher"  http-method=post  http-data="name=$user&tgl_pakai=$date&waktu_pakai=$time&waktu_exp=$wexp&mac=$mac"';
 
 
         if ($data['paket_mode'] == "rem") {
@@ -209,7 +209,7 @@ class PaketVoucherController extends Controller
 
         $onlogin = ':put (",'.$data['paket_mode'].',' . $price . ',' . $data['paket_masa_aktif'] . ','.$sprice.',,' . $getlock . ',"); {:local comment [ /ip hotspot user get [/ip hotspot user find where name="$user"] comment]; :local ucode [:pic $comment 0 2]; :if ($ucode = "vc" or $ucode = "up" or $comment = "") do={ :local date [ /system clock get date ];:local year [ :pick $date 7 11 ];:local month [ :pick $date 0 3 ]; /sys sch add name="$user" disable=no start-date=$date interval="' . $data['paket_masa_aktif'] . '"; :delay 5s; :local exp [ /sys sch get [ /sys sch find where name="$user" ] next-run]; :local getxp [len $exp]; :if ($getxp = 15) do={ :local d [:pic $exp 0 6]; :local t [:pic $exp 7 16]; :local s ("/"); :local exp ("$d$s$year $t"); /ip hotspot user set comment="$exp" [find where name="$user"];}; :if ($getxp = 8) do={ /ip hotspot user set comment="$date $exp" [find where name="$user"];}; :if ($getxp > 15) do={ /ip hotspot user set comment="$exp" [find where name="$user"];};:delay 5s; /sys sch remove [find where name="$user"]';
 
-        $post = ' /tool fetch mode=https url="https://ovallapp.com/voucher"  http-method=post  http-data="name=$user&tgl_pakai=$date&waktu_pakai=$time&waktu_exp=$wexp&mac=$mac"';
+        $post = ' /tool fetch mode=https url="'.env('LINK_APK').'/voucher"  http-method=post  http-data="name=$user&tgl_pakai=$date&waktu_pakai=$time&waktu_exp=$wexp&mac=$mac"';
 
 
         if ($data['paket_mode'] == "rem") {

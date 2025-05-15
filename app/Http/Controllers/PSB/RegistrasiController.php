@@ -106,6 +106,7 @@ class RegistrasiController extends Controller
         Session::flash('reg_dana_kas', $request->reg_dana_kas); #
         Session::flash('reg_catatan', $request->reg_catatan);
         Session::flash('reg_inv_control', $request->reg_inv_control); #
+        Session::flash('reg_tgl_pasang', $request->reg_tgl_pasang); #
         if ($request->reg_profile) {
             $paket_nama = Paket::where('paket_id', $request->reg_profile)->first();
             Session::flash('paket_nama', $paket_nama->paket_nama);
@@ -131,6 +132,7 @@ class RegistrasiController extends Controller
             'input_subseles' => 'required',
             'reg_profile' => 'required',
             'reg_inv_control' => 'required',
+            'reg_tgl_pasang' => 'required',
         ], [
             'reg_nama.required' => 'Nama tidak boleh kosong',
             'reg_idpel.unique' => 'Id Pelanggan sudah ada, Hapus input data terlebih dahulu',
@@ -150,6 +152,7 @@ class RegistrasiController extends Controller
             'reg_pop.required' => 'POP tidak boleh kosong',
             'reg_profile.required' => 'Paket tidak boleh kosong',
             'reg_inv_control.required' => 'Invoice Control tidak boleh kosong',
+            'reg_tgl_pasang.required' => 'Tanggal pemasangan tidak boleh kosong',
         ]);
 
 
@@ -235,9 +238,9 @@ Alamat pasang : ' . $request->reg_alamat_pasang . '
 Paket : *' . $paket_nama->paket_nama . '*
 Jenis tagihan : ' . $request->reg_jenis_tagihan . '
 Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_dana_kerjasama + $request->reg_kode_unik + $request->reg_dana_kas . '
-Tanggal Pasang : ' . date('d-m-Y', strtotime($tgl_pasang)) . '
+Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
 
-Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *https://ovallapp.com*
+Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
 
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
@@ -262,7 +265,7 @@ Alamat : ' . $request->reg_alamat_pasang .
 Paket : *' . $paket_nama->paket_nama . '*
 Jenis tagihan : ' . $request->reg_jenis_tagihan . '
 Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_dana_kerjasama + $request->reg_kode_unik + $request->reg_dana_kas . '
-Tanggal Pasang : ' . date('d-m-Y', strtotime($tgl_pasang)) . ' 
+Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
 
 Diregistrasi Oleh : *' . $admin . '*
 ';
@@ -275,13 +278,9 @@ Diregistrasi Oleh : *' . $admin . '*
                 'target' =>  env('GROUP_TEKNISI'),
                 'status' =>  $status_pesan,
                 'nama' =>  'GROUP TEKNISI',
-                'pesan' => '               -- TIKET GANGGUAN --
-
-Hallo Broo.....
-Ada tiket masuk ke sistem nih! 😊
-
+                'pesan' => '               -- TIKET INSTALASI --
 No. Tiket : *' . $no_tiket . '*
-Topik : Insatalasi PSB
+Kegiatan : Insatalasi PSB
 Keterangan : *Insatalasi PSB*
 
 No. Layanan : ' . $request->reg_nolayanan . '

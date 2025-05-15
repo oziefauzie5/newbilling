@@ -1,23 +1,6 @@
 @extends('layout.main')
 @section('content')
 
-<style>
-  hr{
-    border: none;
-  height: 1px;
-  /* Set the hr color */
-  color: #161616;  /* old IE */
-  background-color: #959292;  /* Modern Browsers */
-  }
-  span{
-    font-size: 11px;
-    color:rgb(255, 0, 0);
-  }
-  ul{
-    font-size: 12px;
-    color:rgb(255, 0, 0);
-  }
-</style>
 
 <div class="content">
   <div class="page-inner">
@@ -195,8 +178,12 @@
               <h3 class="mt-3">BILLING</h3><hr>
               <div class="form-group row">
                 <label for="paket" class="col-sm-2 col-form-label" >Tanggal registrasi*</label>
-                <div class="col-sm-10">
+                <div class="col-sm-4">
                 <input type="text" class="form-control" id="tampil_tgl" name="reg_tgl" value="{{Session::get('reg_tgl')}}" readonly>
+                </div>
+                <label for="paket" class="col-sm-2 col-form-label" >Tanggal Pasang*</label>
+                <div class="col-sm-4">
+                <input type="text" class="form-control datepicker" id="" name="reg_tgl_pasang" value="{{Session::get('reg_tgl_pasang')}}" >
                 </div>
               </div>
               <div class="form-group row">
