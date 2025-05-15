@@ -672,9 +672,9 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         Session::flash('teknisi1', $request->teknisi1);
         Session::flash('teknisi2', $request->teknisi2);
         Session::flash('input_koordinat', $request->input_koordinat);
-        Session::flash('reg_koodinat_odp', $request->reg_koodinat_odp);
-        // Session::flash('reg_img', $request->reg_koodinat_odp);
-        Session::flash('reg_foto_odp', $request->reg_koodinat_odp);
+        Session::flash('reg_koordinat_odp', $request->reg_koordinat_odp);
+        // Session::flash('reg_img', $request->reg_koordinat_odp);
+        Session::flash('reg_foto_odp', $request->reg_koordinat_odp);
 
 
         $request->validate([
@@ -690,7 +690,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             'teknisi1' => 'required',
             'teknisi2' => 'required',
             'input_koordinat' => 'required',
-            'reg_koodinat_odp' => 'required',
+            'reg_koordinat_odp' => 'required',
             'reg_img' => 'required|max:2000|mimes:jpg',
             'reg_foto_odp' => 'required|max:2000|mimes:jpg',
         ], [
@@ -706,7 +706,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             'teknisi1.required' => 'Teknisi 1 tidak boleh kosong',
             'teknisi2.required' => 'Teknisi 2 tidak boleh kosong',
             'input_koordinat.required' => 'Koordinat Rumah pelanggan tidak boleh kosong',
-            'reg_koodinat_odp.required' => 'Koordinat ODP tidak boleh kosong',
+            'reg_koordinat_odp.required' => 'Koordinat ODP tidak boleh kosong',
             'reg_img.required' => 'Foto rumah tidak boleh kosong',
             'reg_img.max' => 'Ukuran foto terlalu besar',
             'reg_img.mimes' => 'Format hanya bisa jpg',

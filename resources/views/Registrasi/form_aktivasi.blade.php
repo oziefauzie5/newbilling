@@ -265,7 +265,7 @@
         </div>
         <label class="col-sm-2 col-form-label">Koordinat ODP</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control"  name="reg_koodinat_odp" required value="{{ Session::get('reg_koodinat_odp') }}">
+          <input type="text" class="form-control"  name="reg_koordinat_odp" required value="{{ Session::get('reg_koordinat_odp') }}">
         </div>
       </div>
       <div class="form-group row">

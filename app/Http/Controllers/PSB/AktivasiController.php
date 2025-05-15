@@ -173,7 +173,7 @@ class AktivasiController extends Controller
         $pelanggan['reg_in_ont'] = $request->reg_in_ont;
         $pelanggan['reg_onuid'] = $request->reg_onuid;
         $pelanggan['reg_slot_odp'] = $request->reg_slot_odp;
-        $pelanggan['reg_koodinat_odp'] = $request->reg_koodinat_odp;
+        $pelanggan['reg_koordinat_odp'] = $request->reg_koordinat_odp;
         $pelanggan['reg_teknisi_team'] = $team;
         $pelanggan['reg_tgl_pasang'] = Carbon::now()->toDateString();
 

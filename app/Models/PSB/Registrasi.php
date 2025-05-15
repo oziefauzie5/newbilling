@@ -36,7 +36,7 @@ class Registrasi extends Model
         'reg_odp',
         'reg_slot_odp',
         'reg_onuid',
-        'reg_koodinat_odp',
+        'reg_koordinat_odp',
         'reg_foto_odp',
 
         'reg_sn',

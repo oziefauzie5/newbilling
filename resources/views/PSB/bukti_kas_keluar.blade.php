@@ -358,7 +358,7 @@
             <tr>
             <td>Koordinat ODP</td>
             <td>:</td>
-            <td>{{$berita_acara->reg_koodinat_odp}}</td>
+            <td>{{$berita_acara->reg_koordinat_odp}}</td>
             </tr>
     </table>
     <br>

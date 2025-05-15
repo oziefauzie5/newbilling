@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('reg_dana_kerjasama')->nullable();
             $table->integer('reg_fee')->nullable();
             $table->string('reg_username')->nullable();
-            $table->string('reg_koodinat_odp')->nullable();
+            $table->string('reg_koordinat_odp')->nullable();
             $table->string('reg_foto_odp')->nullable();
             $table->string('reg_password')->nullable();
             $table->string('reg_tgl_pasang')->nullable();
