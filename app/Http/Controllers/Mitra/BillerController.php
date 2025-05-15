@@ -286,7 +286,7 @@ class BillerController extends Controller
         $role = (new globalController)->data_user($user_id);
         $data['role'] = $role->name;
         $data['admin_user'] = (new GlobalController)->user_admin();
-        $data['paket'] = Paket::where('paket_status','Enable')->get();
+        $data['paket'] = Paket::where('paket_status','Enable')->where('paket_layanan','PPP')->get();
 
         return view('biller/sales_input', $data);
     }
