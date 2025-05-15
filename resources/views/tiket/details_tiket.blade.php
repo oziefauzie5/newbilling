@@ -330,7 +330,7 @@ WAITING LIST {{$tiket_count}} TICKETS
 @foreach($tiket_menunggu as $antrian)
 {{$loop->iteration}}. {{$antrian->input_nama}}
       Waktu Laporan : {{date('d-m-y h:m',strtotime($antrian->tgl_buat))}}
-      Keluhan       : {{$antrian->tiket_nama}}
+      Komplain       : {{$antrian->tiket_nama}}
 @endforeach
                 </textarea>
                 </div>

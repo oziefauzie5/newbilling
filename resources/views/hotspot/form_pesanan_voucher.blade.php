@@ -1,24 +1,5 @@
 @extends('layout.main')
 @section('content')
-
-<style>
-  hr{
-    border: none;
-  height: 1px;
-  /* Set the hr color */
-  color: #161616;  /* old IE */
-  background-color: #959292;  /* Modern Browsers */
-  }
-  span{
-    font-size: 11px;
-    color:rgb(255, 0, 0);
-  }
-  ul{
-    font-size: 12px;
-    color:rgb(255, 0, 0);
-  }
-</style>
-
 <div class="content">
   <div class="page-inner">
     <div class="col-md-12">
@@ -42,7 +23,7 @@
               <div class="form-group row">
                 <label class=" col-sm-2 col-form-label">Site Id</label>
                 <div class="col-sm-4 ">
-                <select name="vhc_site" id="vhc_site" class="form-control">
+                <select name="vhc_site" id="vhc_site" class="form-control" required>
                     <option value="">PILIH SITE</option>
                   @foreach($data_site as $site)
                    <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
@@ -51,7 +32,7 @@
                 </div>
                   <label class="col-sm-2 col-form-label" >Mitra</label>
                 <div class="col-sm-4">
-                  <select name="vhc_mitra" id="vhc_mitra" class="form-control">
+                  <select name="vhc_mitra" id="vhc_mitra" class="form-control" required>
                   <option value="">---Pilih Mitra---</option>
                   </select>
                 </div>
@@ -59,13 +40,13 @@
               <div class="form-group row ">
                 <label class="col-sm-2 col-form-label">Outlet</label>
                 <div class="col-sm-4">
-                <select name="vhc_outlet" id="vhc_outlet" class="form-control">
+                <select name="vhc_outlet" id="vhc_outlet" class="form-control" required>
                     <option value="">---Pilih Outlet---</option>
                 </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Router</label>
                 <div class="col-sm-4">
-                <select name="vhc_router" id="vhc_router" class="form-control">
+                <select name="vhc_router" id="vhc_router" class="form-control" required>
                     <option value="">--Pilih Router--</option>
                     @foreach($data_router as $router)
                     <option value="{{$router->id}}">{{$router->router_nama}}</option>
