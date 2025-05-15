@@ -20,7 +20,7 @@
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <img src="{{ asset('storage/profile_perusahaan/'.$logo) }}" alt="{{$brand}}" class="brand-image " style="opacity: .8">
+      <img src="{{ asset('storage/profile_perusahaan/'.$logo) }}" alt="{{$brand}}" class="brand-image " style="opacity: .8; width: 200px;">
       {{-- <img src="{{ asset('atlantis/assets/img/ovall_logo.png')}}" alt="OVALL FIBER" class="brand-image " style="opacity: .8"> --}}
     </div>
     <div class="card-body">

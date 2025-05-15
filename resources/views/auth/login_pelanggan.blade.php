@@ -15,7 +15,7 @@
 <div class="login-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <img src="{{ asset('storage/profile_perusahaan/'.$logo) }}" alt="{{$brand}}" class="brand-image " style="opacity: .8">
+      <img src="{{ asset('storage/profile_perusahaan/'.$logo) }}" alt="{{$brand}}" class="brand-image " style="opacity: .8; width: 200px;">
 
 
     </div>
