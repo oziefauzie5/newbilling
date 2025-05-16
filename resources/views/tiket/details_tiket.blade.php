@@ -107,10 +107,10 @@
                 <div class="col-sm-4 div_tiket_ket_pending"  style="display:none;">
                 <input name="tiket_ket_pending" id="tiket_ket_pending" type="text" class="form-control">
                 </div>
-                <label class="col-sm-2 col-form-label div_tiket_closed"  style="display:none;">Waktu Penanganan</label>
+                {{-- <label class="col-sm-2 col-form-label div_tiket_closed"  style="display:none;">Waktu Penanganan</label>
                 <div class="col-sm-4 div_tiket_closed"  style="display:none;">
                 <input name="tiket_waktu_penanganan" id="tiket_waktu_penanganan" type="datetime-local" class="form-control ">
-                </div>
+                </div> --}}
               </div>
 
      
@@ -221,7 +221,7 @@
                 <div class="form-group row div_tiket_closed"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">No. SKB</label>
                 <div class="col-sm-4 notif">
-                <input type="text" class="form-control" name="tiket_noskb" id="tiket_noskb">
+                <input type="text" class="form-control readonly" name="tiket_noskb" id="tiket_noskb">
               </div>
               </div>
 

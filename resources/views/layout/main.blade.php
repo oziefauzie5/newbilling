@@ -3437,7 +3437,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 									$('.div_tiket_closed').show();
 									$('.div_tiket_ket_pending').hide();
 									$('#tiket_ket_pending').removeAttr('required');
-									$('#tiket_waktu_penanganan').attr('required', 'required');
+									// $('#tiket_waktu_penanganan').attr('required', 'required');
 									
 									$('#kate_tindakan').attr('required', 'required');
 									
@@ -3453,7 +3453,9 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										$('#tiket_olt').removeAttr('required');
 										$('#tiket_odc').removeAttr('required');
 										$('#tiket_odp').removeAttr('required');
-											$('.button_modal_barang').click(function(){
+										$('#tiket_noskb').attr('required', 'required');
+										
+										$('.button_modal_barang').click(function(){
 											if($('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
 												// $('#modal_tambah_barang').modal('show');
 												$('.notif').removeClass('has-error has-feedback')
@@ -3461,13 +3463,14 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 												$('.notif').addClass('has-error has-feedback')
 												$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
 											}
-									})
+										})
 									} else if($('#tiket_nama').val() == 'Reaktivasi layanan'){
 										$('.div_tiket_teknisi').hide();
 										$('#tiket_teknisi1').removeAttr('required');
 										$('#tiket_teknisi2').removeAttr('required');
 										$('#tiket_kendala').val($('#tiket_nama').val())
 										$('#tiket_tindakan').val($('#tiket_nama').val())
+										$('#tiket_noskb').attr('required', 'required');
 										if($('#tiket_odp').val()){
 											$('#tiket_pop').removeAttr('required');
 											$('#tiket_olt').removeAttr('required');
@@ -3479,7 +3482,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											$('#tiket_odc').attr('required', 'required');
 											$('#tiket_odp').attr('required', 'required');
 										}
-											$('.button_modal_barang').click(function(){
+										$('.button_modal_barang').click(function(){
 											if($('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
 												// $('#modal_tambah_barang').modal('show');
 												$('.notif').removeClass('has-error has-feedback')
@@ -3487,14 +3490,15 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 												$('.notif').addClass('has-error has-feedback')
 												$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
 											}
-									})
-								 } else {
+										})
+									} else {
 										$('.div_tiket_teknisi').show();
 										$('.div_tiket_topologi').show();
 										$('#tiket_foto').attr('required', 'required');
 										$('#tiket_teknisi1').attr('required', 'required');
 										$('#tiket_teknisi2').attr('required', 'required');
-
+										$('#tiket_noskb').removeAttr('required');
+										
 										if($('#tiket_odp').val()){
 											$('#tiket_pop').removeAttr('required');
 											$('#tiket_olt').removeAttr('required');
