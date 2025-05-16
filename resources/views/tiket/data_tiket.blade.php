@@ -108,6 +108,8 @@
                   <tr>
                     @if($d->tiket_status == 'Closed')
                     <td><div class="badge badge-success tiket_closed" data-id="{{$d->tiket_id}}">{{$d->tiket_status}}</div></td>
+                    @elseif($d->tiket_status == 'Aktivasi')
+                    <td  class="aktivasi" data-id="{{$d->reg_idpel}}"><div class="badge badge-danger">{{$d->tiket_status}}</div></td>
                     @else
                     <td><div class="badge badge-danger tiket" data-id="{{$d->tiket_id}}">{{$d->tiket_status}}</div></td>
                     @endif
