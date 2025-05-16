@@ -474,7 +474,8 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             // ->join('data__barang_keluars', 'data__barang_keluars.bk_id', '=', 'registrasis.reg_skb')
             ->where('registrasis.reg_idpel', $id)
             ->where('teknisis.teknisi_job', 'PSB')
-            ->where('teknisis.teknisi_psb', '>', '0')
+            // ->where('teknisis.teknisi_psb', '>', '0') #Ujicoba Update 16-05
+            ->where('teknisis.teknisi_status','1')
             ->first();
 
         $query = Data_BarangKeluar::select('data__barangs.*', 'data__barang_keluars.*')
