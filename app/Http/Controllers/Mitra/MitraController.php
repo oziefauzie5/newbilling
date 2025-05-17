@@ -44,6 +44,7 @@ class MitraController extends Controller
             'tittle' => 'TAMBAH MITRA',
 
         );
+        // dd($data);
         return view('mitra/create', $data);
     }
 

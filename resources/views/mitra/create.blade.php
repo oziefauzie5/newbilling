@@ -75,7 +75,7 @@
                             </div>
                       <div class="form-group">
                           <label for="password" >Tanggal Gabung</label>
-                          <input type="text" class="form-control pickupDate" id="tgl_gabung"  name="tgl_gabung" required value="{{ old('tgl_gabung') }}">
+                          <input type="date" class="form-control datepicker" id="tgl_gabung"  name="tgl_gabung" required value="{{ old('tgl_gabung') }}">
                           <div class="invalid-feedback">
                             Tanggal Bergabung tidak boleh kosong
                         </div>
