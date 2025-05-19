@@ -41,7 +41,8 @@
                   <th>Alamat</th>
                   <th>Saldo</th>
                   <th>Limit Minus</th>
-                  <th>Komisi</th>
+                  <th>Komisi Biller</th>
+                  <th>Komisi Sales</th>
                   <th>Kode Unik</th>
                 </tr>
                 </thead>
@@ -57,6 +58,7 @@
                    <td></td>
                    <td>{{$d->mts_limit_minus}}</td>
                    <td>{{$d->mts_komisi}}</td>
+                   <td>{{$d->mts_komisi_sales}}</td>
                    <td>{{$d->mts_kode_unik}}</td>
                    </tr>
                    @endforeach

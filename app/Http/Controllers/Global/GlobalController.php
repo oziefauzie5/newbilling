@@ -64,10 +64,12 @@ class GlobalController extends Controller
     }
     public function role($iduser) #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
     {
+        // dd($iduser);
         $role =  DB::table('users')
-            ->select('users.name AS nama_user', 'roles.name', 'roles.id as role_id', 'users.hp', 'users.email', 'users.alamat_lengkap', 'users.username', 'users.password')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
+            ->select('users.name AS nama_user', 'roles.name', 'roles.id as role_id', 'users.hp', 'users.email', 'users.alamat_lengkap', 'users.username', 'users.password', 'mitra_settings.mts_user_id', 'mitra_settings.mts_komisi_sales')
             ->where('users.id', '=', $iduser)
             ->first();
         return $role;

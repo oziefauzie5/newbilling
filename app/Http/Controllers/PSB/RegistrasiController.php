@@ -74,6 +74,7 @@ class RegistrasiController extends Controller
         $user = (new GlobalController)->user_admin();
         $admin = $user['user_nama'];
         $cek_sales = (new GlobalController)->role($request->reg_sales);
+        // dd($cek_sales->mts_komisi_sales);
         $no_tiket = (new GlobalController)->nomor_tiket();
         $site = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')
             ->where('routers.id', $request->reg_router)->first();
@@ -165,11 +166,7 @@ class RegistrasiController extends Controller
             if ($request->reg_jenis_tagihan == 'FREE') {
                 $data['reg_fee'] = 0;
             } else {
-                if ($sbiaya) {
-                    $data['reg_fee'] = $sbiaya->biaya_sales_continue;
-                } else {
-                    $data['reg_fee'] = 0;
-                }
+                    $data['reg_fee'] = $cek_sales->mts_komisi_sales;
             }
         } else {
             $data['reg_fee'] = 0;

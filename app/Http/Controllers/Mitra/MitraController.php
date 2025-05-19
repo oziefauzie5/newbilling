@@ -30,7 +30,7 @@ class MitraController extends Controller
         $data = array(
             'tittle' => 'MITRA',
             'datauser' => DB::table('users')
-                ->select('users.name AS nama', 'users.alamat_lengkap', 'users.id', 'users.hp', 'users.username', 'roles.name', 'mitra_settings.mts_limit_minus', 'mitra_settings.mts_kode_unik', 'mitra_settings.mts_komisi')
+                ->select('users.name AS nama', 'users.alamat_lengkap', 'users.id', 'users.hp', 'users.username', 'roles.name', 'mitra_settings.mts_limit_minus', 'mitra_settings.mts_kode_unik', 'mitra_settings.mts_komisi','mitra_settings.mts_komisi_sales')
                 ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
                 ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
                 ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
@@ -72,19 +72,33 @@ class MitraController extends Controller
         $data_level['id'] = $level_id;
         $data_level['name'] = $level;
         $data_level['guard_name'] = 'web';
+        
+        $cek_role = Role::whereId($level_id)->count();
+        // dd($cek_role);
+        if ($cek_role == 0) {
+            Role::create($data_level);
+        }
+        $cek_permision = Permission::whereId($level_id)->count();
+        if ($cek_permision == 0) {
+            Permission::create($data_level);
+        }
 
-        Role::updateorcreate($data_level);
-        Permission::updateorcreate($data_level);
+        // Role::updateorcreate($data_level);
+        // Permission::updateorcreate($data_level);
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
         // dd($request->tgl_gabung);
-        $d = date_create($request->tgl_gabung);
-        $th = date_format($d, "y");
-        $bl = date_format($d, "m");
-        $tg = date_format($d, "d");
-        $rand = rand(100, 9999);
-        $id_mitra = $th . $bl  . $rand . $tg;
+        // $d = date_create($request->tgl_gabung);
+        // $th = date_format($d, "y");
+        // $bl = date_format($d, "m");
+        // $tg = date_format($d, "d");
+        // $rand = rand(100, 9999);
+        // $id_mitra = $th . $bl  . $rand . $tg;
         // dd($id_mitra);
+        $tgl_gabung = date('ym', strtotime($request->tgl_gabung));
+        $countuser = User::count();
+        $id_mitra = $tgl_gabung . $countuser . $level_id.$request->user_site; #FORMAT = th-bulan-urutan karyawan,level,site
         $data['id'] = $id_mitra;
+        // $data['id'] = $id_mitra;
         $data['email'] = $request->email;
         $data['username'] = $request->username;
         $data['ktp'] = $request->ktp;
@@ -92,7 +106,8 @@ class MitraController extends Controller
         $data['alamat_lengkap'] = strtoupper($request->alamat_lengkap);
         $data['name'] = strtoupper($request->name);
         $data['password'] = Hash::make($request->password);
-        $data['status_user'] = $request->status_user;
+        $data['photo'] = 'user.png';
+        $data['status_user'] = 'Enable';
 
         $datarole['role_id'] = $level_id;
         $datarole['model_type'] = 'App\Models\User';
@@ -107,6 +122,7 @@ class MitraController extends Controller
         $mitra_setting['mts_limit_minus'] = $request->limit_minus;
         $mitra_setting['mts_kode_unik'] = $request->kode_unik;
         $mitra_setting['mts_komisi'] = $request->mts_komisi;
+        $mitra_setting['mts_komisi_sales'] = $request->mts_komisi_sales;
 
         MitraSetting::create($mitra_setting);
 
@@ -169,6 +185,7 @@ class MitraController extends Controller
         $mitra_setting['mts_limit_minus'] = $request->limit_minus;
         $mitra_setting['mts_kode_unik'] = $request->kode_unik;
         $mitra_setting['mts_komisi'] = $request->mts_komisi;
+        $mitra_setting['mts_komisi_sales'] = $request->mts_komisi_sales;
 
         MitraSetting::where('mts_user_id', $id)->update($mitra_setting);
 
@@ -188,10 +205,10 @@ class MitraController extends Controller
 
 
         $notifikasi = array(
-            'pesan' => 'User berhasil ditambahkan',
+            'pesan' => 'Update mitra berhasil',
             'alert' => 'success',
         );
-        return redirect()->route('admin.mitra.index')->with($notifikasi);
+        return redirect()->route('admin.mitra.edit',['id'=>$id])->with($notifikasi);
     }
     public function edit($id)
     {

@@ -71,13 +71,6 @@
                           <label for="password" >Password</label>
                           <input type="password" class="form-control" id="password" name="password" >
                             </div>
-                      <div class="form-group">
-                          <label for="password" >Tanggal Gabung</label>
-                          <input type="text" class="form-control pickupDate" id="tgl_gabung"  name="tgl_gabung" required value="{{$data_mitra->tgl}}">
-                          <div class="invalid-feedback">
-                            Tanggal Bergabung tidak boleh kosong
-                        </div>
-                            </div>
                             <div class="form-group">
                                 <label>Limit Minus</label>
                                 <input type="number" class="form-control" id="limit_minus"  name="limit_minus" value="{{$data_mitra->mts_limit_minus}}" required>
@@ -93,10 +86,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Komisi</label>
+                                <label>Komisi Biller</label>
                                 <input type="number" class="form-control" id="mts_komisi"  name="mts_komisi" value="{{$data_mitra->mts_komisi}}" required>
                                 <div class="invalid-feedback">
-                                    Kode Unik tidak boleh kosong
+                                    Komisi Biller tidak boleh kosong
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Komisi Sales</label>
+                                <input type="number" class="form-control" id="mts_komisi_sales"  name="mts_komisi_sales" value="{{$data_mitra->mts_komisi_sales}}" required>
+                                <div class="invalid-feedback">
+                                    Komisi Sales tidak boleh kosong
                                 </div>
                             </div>
                       <div class="form-group">

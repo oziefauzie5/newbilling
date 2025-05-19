@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('mts_limit_minus')->nullable();
             $table->integer('mts_kode_unik')->nullable();
             $table->integer('mts_komisi')->nullable();
+            $table->integer('mts_komisi_sales')->nullable();
             $table->timestamps();
         });
     }

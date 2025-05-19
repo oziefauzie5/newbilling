@@ -14,5 +14,6 @@ class MitraSetting extends Model
         'mts_limit_minus',
         'mts_kode_unik',
         'mts_komisi',
+        'mts_komisi_sales',
     ];
 }

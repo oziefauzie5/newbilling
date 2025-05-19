@@ -75,7 +75,7 @@
                             </div>
                       <div class="form-group">
                           <label for="password" >Tanggal Gabung</label>
-                          <input type="date" class="form-control datepicker" id="tgl_gabung"  name="tgl_gabung" required value="{{ old('tgl_gabung') }}">
+                          <input type="text" class="form-control datepicker" id="tgl_gabung"  name="tgl_gabung" required value="{{ old('tgl_gabung') }}">
                           <div class="invalid-feedback">
                             Tanggal Bergabung tidak boleh kosong
                         </div>
@@ -95,10 +95,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Komisi</label>
+                                <label>Komisi Biller</label>
                                 <input type="number" class="form-control" id="mts_komisi"  name="mts_komisi" value="0" required>
                                 <div class="invalid-feedback">
-                                    Kode Unik tidak boleh kosong
+                                    Komisi Biller tidak boleh kosong
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Komisi Sales</label>
+                                <input type="number" class="form-control" id="mts_komisi_sales"  name="mts_komisi_sales" value="0" required>
+                                <div class="invalid-feedback">
+                                    Komisi Sales tidak boleh kosong
                                 </div>
                             </div>
                       <div class="form-group">
@@ -112,14 +119,6 @@
                             <div class="invalid-feedback">
                               Pilih Level terlebih dahulu
                           </div>
-                            </div>
-                      <div class="form-group">
-                          <label >Status</label>
-                          <select name="status_user" id="status_user" class="form-control" required >
-                              <option value="">-PILIH-</option>
-                              <option value="Enable">Enable</option>
-                              <option value="Disable">Disable</option>
-                            </select>
                             </div>
                                 </div>
                         <div class="card-footer">
