@@ -82,9 +82,9 @@
                 <div class="col-3">
                   <input name="bulan" type="month" class="form-control form-control-sm"></input>
                 </div>
-                <div class="col-3">
+                {{-- <div class="col-3">
                  <input type="text" name="q" class="form-control form-control-sm" value="" placeholder="Cari Data">
-                </div>
+                </div> --}}
                 <div class="col-3">
                   <button type="submit" class="btn btn-block btn-dark btn-sm">Cari
                 </div>

@@ -167,7 +167,7 @@ class HotspotController extends Controller
         $data['status'] = $request->query('status');
         $data['outlet'] = $request->query('outlet');
         $data['bulan'] = $request->query('bulan');
-        $data['q'] = $request->query('q');
+        // $data['q'] = $request->query('q');
         // dd($data['bulan']);
         if ($data['bulan']) {
             $startdate = date('Y-m-25', strtotime(Carbon::create($data['bulan'])->addMonth(-1)->toDateString()));
