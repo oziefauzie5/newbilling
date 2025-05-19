@@ -165,6 +165,7 @@ class HotspotController extends Controller
         // dd('test');
         $tanggal = Carbon::now();
         $data['status'] = $request->query('status');
+        $data['outlet'] = $request->query('outlet');
         $data['bulan'] = $request->query('bulan');
         $data['q'] = $request->query('q');
         // dd($data['bulan']);
@@ -189,6 +190,9 @@ class HotspotController extends Controller
             });
         if ($data['bulan']) {
             $query->whereDate('pesanan_tanggal', '>=', $startdate)->whereDate('pesanan_tanggal', '<=', $enddate);
+        }
+        if ($data['outlet']) {
+            $query->where('data__outlets', $data['outlet']);
         }
         // dd($data['q']);
         $data['data_pesanan'] = $query->paginate(10);
