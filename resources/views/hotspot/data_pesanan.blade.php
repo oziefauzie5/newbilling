@@ -59,6 +59,7 @@
             <div class="col-3">
                 <a href="{{route('admin.vhc.update_data_voucher')}}"><button class="btn btn-primary btn-sm mb-3 btn-block" type="button" >Update data voucher manual</button></a>
             </div>
+            </div>
           <hr>
           <form >
             <div class="row mb-1">
@@ -112,20 +113,19 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="pull-left">
+              Showing
+              {{$data_pesanan->firstItem()}}
+              to
+              {{$data_pesanan->lastItem()}}
+              of
+              {{$data_pesanan->total()}}
+              entries
+            </div>
+            <div class="pull-right">
+              {{ $data_pesanan->withQueryString()->links('pagination::bootstrap-4') }}
+            </div>
               </div>
-              <div class="pull-left">
-            Showing
-            {{$data_pesanan->firstItem()}}
-            to
-            {{$data_pesanan->lastItem()}}
-            of
-            {{$data_pesanan->total()}}
-            entries
-          </div>
-          <div class="pull-right">
-            {{ $data_pesanan->withQueryString()->links('pagination::bootstrap-4') }}
-          </div>
-         </div>
       </div>
     </div>
   </div>
