@@ -183,11 +183,11 @@ class HotspotController extends Controller
             ->join('data__sites', 'data__sites.site_id', '=', 'data__pesanans.pesanan_siteid')
             ->join('data__outlets', 'data__outlets.outlet_id', '=', 'data__pesanans.pesanan_outletid')
             ->select('data__pesanans.pesanan_id', 'data__pesanans.pesanan_siteid', 'data__pesanans.pesanan_mitraid', 'data__pesanans.pesanan_outletid', 'data__pesanans.pesanan_tanggal', 'data__pesanans.pesanan_tgl_proses', 'data__pesanans.pesanan_tgl_bayar', 'data__pesanans.pesanan_status', 'data__pesanans.pesanan_status_generate', 'data__sites.site_nama', 'users.name', 'data__outlets.outlet_nama', DB::raw('sum(pesanan_total_hpp) as sumtotal_hpp'))
-            ->groupBy('data__pesanans.pesanan_id', 'data__pesanans.pesanan_siteid', 'data__pesanans.pesanan_mitraid', 'data__pesanans.pesanan_outletid', 'data__pesanans.pesanan_tanggal', 'data__pesanans.pesanan_tgl_proses', 'data__pesanans.pesanan_tgl_bayar', 'data__pesanans.pesanan_status', 'data__pesanans.pesanan_status_generate', 'data__sites.site_nama', 'users.name', 'data__outlets.outlet_nama')
-            ->where(function ($query) use ($data) {
-                $query->where('users.name', 'like', '%' . $data['q'] . '%');
-                $query->where('data__outlets.outlet_nama', 'like', '%' . $data['q'] . '%');
-            });
+            ->groupBy('data__pesanans.pesanan_id', 'data__pesanans.pesanan_siteid', 'data__pesanans.pesanan_mitraid', 'data__pesanans.pesanan_outletid', 'data__pesanans.pesanan_tanggal', 'data__pesanans.pesanan_tgl_proses', 'data__pesanans.pesanan_tgl_bayar', 'data__pesanans.pesanan_status', 'data__pesanans.pesanan_status_generate', 'data__sites.site_nama', 'users.name', 'data__outlets.outlet_nama');
+            // ->where(function ($query) use ($data) {
+            //     $query->where('users.name', 'like', '%' . $data['q'] . '%');
+            //     $query->where('data__outlets.outlet_nama', 'like', '%' . $data['q'] . '%');
+            // });
         if ($data['bulan']) {
             $query->whereDate('pesanan_tanggal', '>=', $startdate)->whereDate('pesanan_tanggal', '<=', $enddate);
         }

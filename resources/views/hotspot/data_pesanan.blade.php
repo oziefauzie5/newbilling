@@ -66,7 +66,7 @@
               
                 <div class="col-3">
                   <select name="outlet" class="custom-select custom-select-sm">
-                    <option value="">-- All Data--</option>
+                    <option value="">-- All Outlet--</option>
                     @foreach ($data_outlet as $o)
                     <option value="{{$o->outlet_id}}">{{$o->outlet_nama}}</option>
                     @endforeach
@@ -74,7 +74,7 @@
                 </div>
                 <div class="col-3">
                   <select name="status" class="custom-select custom-select-sm">
-                    <option value="">-- All Data--</option>
+                    <option value="">-- All Status--</option>
                     <option value="PAID">PAID</option>
                     <option value="UNPAID">UNPAID</option>
                   </select>
