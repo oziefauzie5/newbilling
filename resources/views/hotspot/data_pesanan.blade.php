@@ -82,7 +82,7 @@
             </div>
             <form >
            <div class="table-responsive">
-            <table id="" class="display table table table-nowrap-striped table-hover" >                          
+            <table id="" class="display table table-nowrap table-striped table-hover" >                          
                 <thead>
                         <tr class="text-center">
                             <th>Id Pesanan</th>
