@@ -170,7 +170,7 @@ class MitraController extends Controller
         $mitra_setting['mts_kode_unik'] = $request->kode_unik;
         $mitra_setting['mts_komisi'] = $request->mts_komisi;
 
-        // MitraSetting::where('mts_user_id', $id)->update($mitra_setting);
+        MitraSetting::where('mts_user_id', $id)->update($mitra_setting);
 
         #DISABLE SEMENTAR UNTUK TES WA
         if (!RoleHasPermission::where('permission_id', $level_id)
