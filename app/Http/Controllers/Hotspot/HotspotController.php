@@ -192,7 +192,7 @@ class HotspotController extends Controller
             $query->whereDate('pesanan_tanggal', '>=', $startdate)->whereDate('pesanan_tanggal', '<=', $enddate);
         }
         if ($data['outlet']) {
-            $query->where('data__outlets', $data['outlet']);
+            $query->where('data__outlets.outlet_id', $data['outlet']);
         }
         // dd($data['q']);
         $data['data_pesanan'] = $query->paginate(10);
