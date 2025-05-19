@@ -178,7 +178,7 @@ class HotspotController extends Controller
         }
         // Carbon::create($tanggal)->addMonth(1)->toDateString();
         $data['data_outlet'] = Data_Outlet::where('outlet_status', 'Enable')->get();
-        $query = Data_Pesanan::orderBy('pesanan_status', 'DESC')->join('users', 'users.id', '=', 'data__pesanans.pesanan_mitraid')
+        $query = Data_Pesanan::orderBy('pesanan_tanggal', 'DESC')->orderBy('pesanan_status', 'ASC')->join('users', 'users.id', '=', 'data__pesanans.pesanan_mitraid')
             ->join('data__sites', 'data__sites.site_id', '=', 'data__pesanans.pesanan_siteid')
             ->join('data__outlets', 'data__outlets.outlet_id', '=', 'data__pesanans.pesanan_outletid')
             ->select('data__pesanans.pesanan_id', 'data__pesanans.pesanan_siteid', 'data__pesanans.pesanan_mitraid', 'data__pesanans.pesanan_outletid', 'data__pesanans.pesanan_tanggal', 'data__pesanans.pesanan_tgl_proses', 'data__pesanans.pesanan_tgl_bayar', 'data__pesanans.pesanan_status', 'data__pesanans.pesanan_status_generate', 'data__sites.site_nama', 'users.name', 'data__outlets.outlet_nama', DB::raw('sum(pesanan_total_hpp) as sumtotal_hpp'))
@@ -190,7 +190,7 @@ class HotspotController extends Controller
         if ($data['bulan']) {
             $query->whereDate('pesanan_tanggal', '>=', $startdate)->whereDate('pesanan_tanggal', '<=', $enddate);
         }
-        // dd('test');
+        // dd($data['q']);
         $data['data_pesanan'] = $query->paginate(10);
 
         #PERIODE BULAN BERJALAN
