@@ -241,6 +241,7 @@ class PsbController extends Controller
                 $nomorhp2 = '' . substr($nomorhp2, 1);
             }
         }
+        // dd(strtoupper($request->input_nama));
         Session::flash('input_nama', ucwords($request->input_nama));
         Session::flash('input_hp', $request->input_hp);
         Session::flash('input_hp_2', $request->input_hp_2);
@@ -290,10 +291,10 @@ class PsbController extends Controller
                 'input_hp' => $nomorhp,
                 'input_hp_2' => $nomorhp2,
                 'input_email' => $request->input_email,
-                'input_alamat_ktp' => ucwords($request->input_alamat_ktp),
-                'input_alamat_pasang' => ucwords($request->input_alamat_pasang),
+                'input_alamat_ktp' => strtoupper($request->input_alamat_ktp),
+                'input_alamat_pasang' => strtoupper($request->input_alamat_pasang),
                 'input_sales' => $request->input_sales,
-                'input_subseles' => ucwords($request->input_subseles),
+                'input_subseles' => strtoupper($request->input_subseles),
                 'password' => Hash::make($nomorhp),
                 'input_maps' => $request->input_maps,
                 'input_status' => 'INPUT DATA',
