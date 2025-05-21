@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        env('LINK_APK').'/callback'
+        'env("LINK_APK")/callback'
     ];
 }
