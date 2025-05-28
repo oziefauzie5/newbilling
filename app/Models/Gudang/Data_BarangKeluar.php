@@ -9,7 +9,7 @@ class Data_BarangKeluar extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'bk_id',
+        // 'bk_id',
         'bk_id_barang',
         'corporate_id',
         'bk_idpel',

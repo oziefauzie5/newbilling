@@ -417,7 +417,7 @@ class GudangController extends Controller
             for ($x = 0; $x < count($barang_id); $x++) {
                 Data_BarangKeluar::create([
                     // 'bk_id' => '12121',
-                    'bk_id' => $no_sk,
+                    // 'bk_id' => $no_sk,
                     'bk_id_barang' => $barang_id[$x],
                     'corporate_id' => Session::get('corp_id'),
                     'bk_jenis_laporan' => $tiket_jenis,
@@ -435,7 +435,7 @@ class GudangController extends Controller
                     'bk_penerima' => $tiket_teknisi1,
                     'bk_status' => 0,
                 ]);
-                return response()->json($request->all());
+                // return response()->json($request->all());
                 Data_Barang::where('corporate_id',Session::get('corp_id'))->whereIn('barang_id', [$barang_id[$x]])->update(
                     [
                         'barang_nama_pengguna' => $tiket_jenis,

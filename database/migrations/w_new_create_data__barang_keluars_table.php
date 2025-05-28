@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('data__barang_keluars', function (Blueprint $table) {
-            $table->id('bk_id');
+            $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('bk_id_barang');
             $table->foreign('bk_id_barang')->references('barang_id')->on('data__barangs')->onDelete('restrict');
