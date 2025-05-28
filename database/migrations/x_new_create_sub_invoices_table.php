@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sub_invoices', function (Blueprint $table) {
-            // $table->id();
+            $table->id();
             $table->unsignedBigInteger('subinvoice_id');
            $table->foreign('subinvoice_id')->references('inv_id')->on('invoices')->onDelete('cascade');
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();

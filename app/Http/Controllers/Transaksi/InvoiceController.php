@@ -662,19 +662,15 @@ class InvoiceController extends Controller
     
                                                             foreach($mitra as $mit){
                                                                 MutasiSales::create([
-                                                                    
-                                                                    'smt_user_id' => $data_pelanggan->input_sales,
-                                                                    'smt_admin' => $admin_user,
-                                                                    // 'smt_idpel' => $data_pelanggan->fee_idpel,
-                                                                    'smt_tgl_transaksi' => $if_tgl_bayar,
-                                                                    'smt_kategori' => 'credit',
-                                                                    'smt_deskripsi' => $data_pelanggan->input_nama,
+
+                                                                    'mts_mitra_id' => $mit->reg_mitra,
+                                                                    'mts_mitra_idpel' => $data_pelanggan->fee_idpel,
+                                                                    'mts_admin' => $admin_user,
+                                                                    // 'mts_type' => $if_tgl_bayar,
+                                                                    'mts_type' => 'credit',
+                                                                    'mts_deskripsi' => $data_pelanggan->input_nama,
                                                                     'smt_cabar' => '2',
-                                                                    'smt_kredit' => $mit->reg_fee,
-                                                                    // 'smt_debet' => 0,
-                                                                    // 'smt_saldo' => $total,
-                                                                    'smt_biaya_adm' => 0,
-                                                                    'smt_status' => 0,
+                                                                    'mts_jumlah' => $mit->reg_fee,
                                                                     'corporate_id' => Session::get('corp_id'),
                                                                 ]);
                                                             }

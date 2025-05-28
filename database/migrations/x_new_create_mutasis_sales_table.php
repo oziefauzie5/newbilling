@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('mts_mitra_idpel')->references('reg_idpel')->on('registrasis')->onDelete('restrict');
             $table->string('mts_admin')->nullable();
             $table->enum('mts_type', ['debet', 'credit']);
-            $table->decimal('mts_jumlah', 15, 1);
+            $table->integer('mts_jumlah')->nullable();
             $table->string('mts_deskripsi')->nullable();
             $table->timestamps();
         });
