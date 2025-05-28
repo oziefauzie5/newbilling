@@ -44,7 +44,7 @@
                                 <div class="col-sm-4">
                                   <div class="row">
                                   <div class="col">
-                                  <input id="" type="number" class="form-control readonly" value="+62"  maxlength="3">
+                                  <input id="" type="text" class="form-control readonly" value="+62"readonly maxlength="3">
                                 </div>
                                 <div class="col">
                                   <input type="tel" id="phone" placeholder="No. Whatsapp 1" value="{{ Session::get('input_hp') }}" name="input_hp" maxlength="11" class="form-control"/>
@@ -55,7 +55,7 @@
                                 <div class="col-sm-4 ">
                                   <div class="row">
                                   <div class="col">
-                                    <input id="" type="number" class="form-control readonly" value="+62"  maxlength="3">
+                                    <input id="" type="text" class="form-control readonly" value="+62"readonly maxlength="3">
                                 </div>
                                   <div class="col">
                                   <input type="tel" id="phone1" class="form-control" value="{{ Session::get('input_hp_2') }}" name="input_hp_2" placeholder="No. Whatsapp 2" oninput="numberOnly(this.id);" maxlength="11">
