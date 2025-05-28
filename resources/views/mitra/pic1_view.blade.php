@@ -39,6 +39,7 @@
                       <a href="{{route('admin.mitra.pic1_edit_view',['id'=>$d->mts_user_id])}}" class="btn btn-link btn-primary"><i class="fas fa-edit"></i></a>
                       <a href="{{route('admin.mitra.pic_sub_view',['id'=>$d->mts_user_id])}}" class="btn btn-link btn-primary"><i class="fas fa-users"></i></a>
                       <a href="{{route('admin.mitra.pic_addsub_view',['id'=>$d->mts_user_id,'pic'=>$d->user_mitra->name ?? ''])}}" class="btn btn-link btn-primary"><i class="fas fa-plus"></i></a>
+                      <a href="{{route('admin.mitra.mitra_mutasi',['id'=>$d->mts_user_id])}}" class="btn btn-link btn-primary"><i class="fas fa-receipt"></i></a>
 										</div>
                    </td>
                    <td>{{$d->mts_user_id ?? '-'}}</td>

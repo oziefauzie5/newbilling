@@ -382,19 +382,40 @@ class MitraController extends Controller
     {
         $data['pic_sub_view'] = Mitra_Sub::where('corporate_id',Session::get('corp_id'))->where('mts_sub_mitra_id',$id)->with(['user_submitra','submitra_site','submitra_mitra'])->get();
 
-        // $data['pic_sub_view'] = MitraSetting::where('mitra_settings.corporate_id',Session::get('corp_id'))
-        //                                 // ->join('model_has_roles','model_has_roles.model_id','=','mitra__subs.mts_sub_mitra_id')
-        //                                 ->join('mitra__subs','mitra__subs.mts_sub_mitra_id','=','mitra_settings.mts_user_id')
-        //                                 ->where('mitra__subs.mts_sub_mitra_id',$id)
-        //                                 // ->with(['user_mitra','mitra_site'])
-        //                                 ->get();
-
-                                        // dd($data['pic_sub_view']);
-
         $data['pic_mitra'] = MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id',$id)->with(['user_mitra'])->first();
         $data['data_site'] = Data_Site::where('site_status','Enable')->where('corporate_id',Session::get('corp_id',$id))->get();
         
         return view('mitra/pic_sub_view', $data);
+    }
+       public function mitra_mutasi($id)
+    {
+          $mutasi = DB::table('mutasi_sales')
+            ->where('mutasi_sales_mitra_id' , '25055121')
+            ->orderBy('created_at') // To ensure correct chronological order
+            ->select(
+                'mutasi_sales_mitra_id',
+                'mutasi_sales_idpel',
+                'mutasi_sales_admin',
+                'mutasi_sales_type',
+                'mutasi_sales_jumlah',
+                'mutasi_sales_deskripsi',
+                'created_at',
+                DB::raw('SUM(CASE WHEN mutasi_sales_type = "debit" THEN mutasi_sales_jumlah ELSE 0 END) OVER (ORDER BY created_at) AS debit_balance'),
+                DB::raw('SUM(CASE WHEN mutasi_sales_type = "credit" THEN mutasi_sales_jumlah ELSE 0 END) OVER (ORDER BY created_at) AS credit_balance')
+            )
+            ->get();
+            
+        // Add a final saldo column:
+        $mutasi->map(function ($transaction) {
+            $transaction->saldo = $transaction->debit_balance - $transaction->credit_balance;
+            // dd($transaction);
+            return $transaction;
+        });
+
+        return $mutasi;
+
+
+        return view('mitra/pic_mutasi', $data);
     }
     
     function pic_sub_edit_view($id,$mit)

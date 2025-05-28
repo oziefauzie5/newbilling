@@ -307,6 +307,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::post('/mitra/store-subpic', [MitraController::class, 'store_pic_sub'])->name('mitra.store_pic_sub')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/mitra/{id}/pic_sub-edit/{mit}', [MitraController::class, 'pic_sub_edit_view'])->name('mitra.pic_sub_edit_view')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/mitra/{id}/store-pic-sub-edit', [MitraController::class, 'store_edit_pic_sub'])->name('mitra.store_edit_pic_sub')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/mitra/{id}/pic-mutasi', [MitraController::class, 'mitra_mutasi'])->name('mitra.mitra_mutasi')->middleware(['role:admin|STAF ADMIN']);
     
     
     
