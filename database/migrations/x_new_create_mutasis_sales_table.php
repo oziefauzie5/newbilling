@@ -15,14 +15,14 @@ return new class extends Migration
         Schema::create('mutasi_sales', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-             $table->unsignedBigInteger('mts_mitra_id');
-            $table->foreign('mts_mitra_id')->references('id')->on('users')->onDelete('restrict');
-             $table->unsignedBigInteger('mts_mitra_idpel');
-            $table->foreign('mts_mitra_idpel')->references('reg_idpel')->on('registrasis')->onDelete('restrict');
-            $table->string('mts_admin')->nullable();
-            $table->enum('mts_type', ['debet', 'credit']);
-            $table->integer('mts_jumlah')->nullable();
-            $table->string('mts_deskripsi')->nullable();
+             $table->unsignedBigInteger('mutasi_sales_mitra_id');
+            $table->foreign('mutasi_sales_mitra_id')->references('id')->on('users')->onDelete('restrict');
+             $table->unsignedBigInteger('mutasi_sales_idpel');
+            $table->foreign('mutasi_sales_idpel')->references('reg_idpel')->on('registrasis')->onDelete('restrict');
+            $table->string('mutasi_sales_admin')->nullable();
+            $table->enum('mutasi_sales_type', ['debet', 'credit']);
+            $table->integer('mutasi_sales_jumlah')->nullable();
+            $table->string('mutasi_sales_deskripsi')->nullable();
             $table->timestamps();
         });
     }

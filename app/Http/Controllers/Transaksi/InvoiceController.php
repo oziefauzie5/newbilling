@@ -663,14 +663,14 @@ class InvoiceController extends Controller
                                                             foreach($mitra as $mit){
                                                                 MutasiSales::create([
 
-                                                                    'mts_mitra_id' => $mit->reg_mitra,
-                                                                    'mts_mitra_idpel' => $data_pelanggan->fee_idpel,
-                                                                    'mts_admin' => $admin_user,
+                                                                    'mutasi_sales_mitra_id' => $mit->reg_mitra,
+                                                                    'mutasi_sales_idpel' => $data_pelanggan->fee_idpel,
+                                                                    'mutasi_sales_admin' => $admin_user,
                                                                     // 'mts_type' => $if_tgl_bayar,
-                                                                    'mts_type' => 'credit',
-                                                                    'mts_deskripsi' => $data_pelanggan->input_nama,
-                                                                    'smt_cabar' => '2',
-                                                                    'mts_jumlah' => $mit->reg_fee,
+                                                                    'mutasi_sales_type' => 'credit',
+                                                                    'mutasi_sales_deskripsi' => $data_pelanggan->input_nama,
+                                                                    // 'smt_cabar' => '2',
+                                                                    'mutasi_sales_jumlah' => $mit->reg_fee,
                                                                     'corporate_id' => Session::get('corp_id'),
                                                                 ]);
                                                             }

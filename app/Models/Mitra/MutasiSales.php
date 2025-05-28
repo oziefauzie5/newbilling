@@ -11,11 +11,11 @@ class MutasiSales extends Model
     protected $fillable = [
         'id',
         'corporate_id',
-        'mts_mitra_id',
-        'mts_mitra_idpel',
-        'mts_admin',
-        'mts_type',
-        'mts_jumlah',
-        'mts_deskripsi',
+        'mutasi_sales_mitra_id',
+        'mutasi_sales_idpel',
+        'mutasi_sales_admin',
+        'mutasi_sales_type',
+        'mutasi_sales_jumlah',
+        'mutasi_sales_deskripsi',
     ];
 }
