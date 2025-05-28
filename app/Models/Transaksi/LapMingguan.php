@@ -9,6 +9,7 @@ class LapMingguan extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'lm_id',
         'lm_admin',
         'lm_debet',

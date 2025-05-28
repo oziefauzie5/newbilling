@@ -9,6 +9,7 @@ class Paid extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'id_unpaid',
         'idpel_unpaid',
         'reference',

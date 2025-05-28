@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Aplikasi\Corporate;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +14,11 @@ return new class extends Migration
     {
         Schema::create('setting_aplikasis', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->string('app_nama')->nullable();
             $table->string('app_brand')->nullable();
             $table->text('app_alamat')->nullable();
             $table->string('app_npwp',)->nullable();
-            $table->string('app_clientid',)->nullable();
             $table->string('app_logo',)->nullable();
             $table->string('app_favicon',)->nullable();
             $table->string('app_link_admin',)->nullable();

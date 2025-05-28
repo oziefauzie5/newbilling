@@ -2,6 +2,8 @@
 
 namespace App\Models\Teknisi;
 
+use App\Models\Aplikasi\Data_Site;
+use App\Models\Router\Router;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,22 +11,24 @@ class Data_Olt extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'olt_id',
-        'olt_id_pop',
-        'olt_kode',
+        'id',
+        'corporate_id',
+        'router_id',
         'olt_nama',
-        'olt_merek',
-        'olt_mac',
-        'olt_sn',
         'olt_pon',
-        'olt_ip',
-        'olt_username',
-        'olt_password',
-        'olt_ip_default',
-        'olt_username_default',
-        'olt_password_default',
-        'olt_topologi_img',
-        'olt_keterangan',
+        'olt_file_topologi',
         'olt_status',
     ];
+
+       function olt_router()
+    {
+        return $this->hasOne(Router::class,'id','router_id');
+    }
+       function olt_odc()
+    {
+        return $this->hasMany(Data_Odc::class,'data__olt_id','id');
+    }
+     
+
+    
 }

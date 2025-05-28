@@ -9,6 +9,7 @@ class Data_Deaktivasi extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'deaktivasi_idpel',
         'deaktivasi_mac',
         'deaktivasi_sn',

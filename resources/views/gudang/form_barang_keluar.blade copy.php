@@ -176,7 +176,7 @@
               </div>
               </div> --}}
             <div class="card-footer">
-              <a href="{{route('admin.psb.index')}}"><button type="button" class="btn  ">Batal</button></a>
+              <a href="{{route('admin.psb.ftth')}}"><button type="button" class="btn  ">Batal</button></a>
               <button type="submit" class="btn btn-primary float-right simpan">Simpan</button>
             </div>
           </form>

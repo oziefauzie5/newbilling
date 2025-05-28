@@ -15,54 +15,53 @@ class PaketController extends Controller
 {
     public function index()
     {
-        $data['tittle'] = 'PAKET INTERNET';
-        $data['data_paket'] = Paket::all();
-        $data['data_router'] = Router::all();
+        $data['data_paket'] = Paket::where('corporate_id',Session::get('corp_id'))->with('paket_router')->get();
+        // echo $data['data_paket'];
+        $data['data_router'] = Router::where('corporate_id',Session::get('corp_id'))->get();
         return view('Router/paket', $data);
     }
-    public function create()
-    {
-        // dd(Router::all());
-        $data = array(
-            'tittle' => 'PAKET',
-            'data_router' => Router::all(),
-        );
-        return view('router/paket_create', $data);
-    }
+    // public function create()
+    // {
+    //     // $data = array(
+    //     //     'tittle' => 'PAKET',
+    //     //     'data_router' => Router::all(),
+    //     // );
+    //     // return view('router/paket_create', $data);
+    // }
 
     public function store(Request $request)
     {
         Session::flash('paket_nama', $request->paket_nama);
-        Session::flash('paket_komisi', $request->paket_komisi);
         Session::flash('paket_limitasi', $request->paket_limitasi);
         Session::flash('paket_lokal', $request->paket_lokal);
+        Session::flash('router_id', $request->router_id);
         Session::flash('paket_harga', $request->paket_harga);
-        Session::flash('paket_layanan', $request->paket_harga);
+        Session::flash('paket_komisi', $request->paket_komisi);
+        Session::flash('paket_layanan', $request->paket_layanan);
         $request->validate([
             'paket_nama' => 'unique:pakets',
         ], [
-            'paket_nama.unique' => 'Nama Paket tidak boleh sama',
+            'paket_nama.unique' => 'Nama Paket sudah digunakan',
         ]);
-        // $paketreplace = str_replace(" ", "_", strtoupper($request->paket_nama));
-        $data['id'] = $request->id;
+        $data['corporate_id'] = Session::get('corp_id');
+        $data['router_id'] = $request->router_id;
         $data['paket_nama'] = $request->paket_nama;
-        $data['paket_komisi'] = $request->paket_komisi;
         $data['paket_limitasi'] = $request->paket_limitasi;
         $data['paket_shared'] = $request->paket_shared;
         $data['paket_lokal'] = $request->paket_lokal;
         $data['paket_masa_aktif'] = $request->paket_masa_aktif;
         $data['paket_harga'] = $request->paket_harga;
+        $data['paket_komisi'] = 0;
         $data['paket_layanan'] = 'PPP';
         $data['paket_status'] = 'Enable';
 
-
-        $router = Router::where('id', $request->router)->first();
-        // $data_paket = Paket::all();
+        
+        
+        $router = Router::where('corporate_id',Session::get('corp_id'))->where('id', $request->router_id)->first();
         $API = new RouterosAPI();
         $API->debug = false;
-        // foreach ($router as $d) {
-        //     foreach ($data_paket as $dp) {
-
+        
+        
         if ($API->connect($router->router_ip . ':' . $router->router_port_api, $router->router_username, $router->router_password)) {
             $API->comm('/ip/pool/add', [
                 'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
@@ -73,10 +72,9 @@ class PaketController extends Controller
                 'rate-limit' => $request->paket_nama == '' ? '' : $request->paket_nama,
                 'local-address' => $request->paket_lokal == '' ? '' : $request->paket_lokal,
                 'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
-                'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                'comment' => 'default by appbill' == '' ? '' : 'default by appbill',
                 'queue-type' => 'default-small' == '' ? '' : 'default-small',
                 'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
-                'disabled' => 'yes',
                 'only-one' => 'yes',
             ]);
             Paket::create($data);
@@ -84,13 +82,13 @@ class PaketController extends Controller
                 'pesan' => 'Berhasil menambhkan paket',
                 'alert' => 'success',
             );
-            return redirect()->route('admin.router.paket.index')->with($notifikasi);
+            return redirect()->route('admin.router.noc.index')->with($notifikasi);
         } else {
             $notifikasi = array(
                 'pesan' => 'Gagal menambhkan paket',
                 'alert' => 'error',
             );
-            return redirect()->route('admin.router.paket.index')->with($notifikasi);
+            return redirect()->route('admin.router.noc.index')->with($notifikasi);
         }
     }
     public function store_isolir(Request $request)
@@ -125,7 +123,7 @@ class PaketController extends Controller
                         'rate-limit' => $dp->paket_limitasi == '' ? '' : $dp->paket_limitasi,
                         'local-address' => $dp['paket_lokal'] == '' ? '' : $dp['paket_lokal'],
                         'remote-address' => $dp->paket_nama == '' ? '' : $dp->paket_nama,
-                        'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+                        'comment' => 'default by appbill' == '' ? '' : 'default by appbill',
                         'queue-type' => 'default-small' == '' ? '' : 'default-small',
                         'dns-server' => $d->router_dns == '' ? '' : $d->router_dns,
                     ]);
@@ -136,14 +134,12 @@ class PaketController extends Controller
             'pesan' => 'Berhasil menambahkan Paket Isolir',
             'alert' => 'success',
         );
-        return redirect()->route('admin.router.paket.index')->with($notifikasi);
+        return redirect()->route('admin.router.noc.index')->with($notifikasi);
     }
     public function update(Request $request, $id)
     {
 
-
         if ($request->paket_layanan == 'PPP') {
-
             $sbiaya = SettingBiaya::first();
             $data['paket_nama'] = $request->paket_nama;
             $data['paket_komisi'] = $request->paket_komisi;
@@ -162,13 +158,10 @@ class PaketController extends Controller
             $data_paket = Paket::where('paket_id', $id)->get();
             $API = new RouterosAPI();
             $API->debug = false;
-
-
-
             foreach ($router as $d) {
                 if ($API->connect($d->router_ip . ':' . $d->router_port_api, $d->router_username, $d->router_password)) {
                     $cek = $API->comm('/ppp/profile/print', [
-                        '?comment' => 'default by appbill ( jangan diubah )',
+                        '?comment' => 'default by appbill',
                     ]);
                     foreach ($cek as $c) {
                         $API->comm('/ppp/profile/set', [
@@ -185,7 +178,7 @@ class PaketController extends Controller
                 'pesan' => 'Berhasil merubah paket',
                 'alert' => 'success',
             );
-            return redirect()->route('admin.router.paket.index')->with($notifikasi);
+            return redirect()->route('admin.router.noc.index')->with($notifikasi);
         } elseif ($request->paket_layanan == 'HOTSPOT') {
             dd('belum bisa update paket layanan hotspot');
         } elseif ($request->paket_layanan == 'VOUCHER') {
@@ -195,13 +188,13 @@ class PaketController extends Controller
                     'pesan' => 'Berhasil merubah paket',
                     'alert' => 'success',
                 );
-                return redirect()->route('admin.router.paket.index')->with($notifikasi);
+                return redirect()->route('admin.router.noc.index')->with($notifikasi);
             } else {
                 $notifikasi = array(
                     'pesan' => 'Rubah paket tidak berhasil, Router Discconnect',
                     'alert' => 'error',
                 );
-                return redirect()->route('admin.router.paket.index')->with($notifikasi);
+                return redirect()->route('admin.router.noc.index')->with($notifikasi);
             }
         }
     }
@@ -217,12 +210,7 @@ class PaketController extends Controller
         } else {
             $data_paket = Paket::where('paket_layanan', 'HOTSPOT')->get();
         }
-        // foreach ($router as $d) {
         foreach ($data_paket as $dp) {
-
-            echo $router->router_nama . '-' . $router->router_port_api . '-' . $router->router_username . '-' . $router->router_password . '-' . $dp->paket_nama . '<br>';
-
-            // if ($API->connect('103.171.83.97:5534', 'ovallnet122', '@Fauzi12234')) {
             if ($API->connect($router->router_ip . ':' . $router->router_port_api, $router->router_username, $router->router_password)) {
                 $API->comm('/ip/pool/add', [
                     'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
@@ -236,84 +224,19 @@ class PaketController extends Controller
                     'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
                     'queue-type' => 'default-small' == '' ? '' : 'default-small',
                     'dns-server' => $router->router_dns == '' ? '' : $router->router_dns,
-                    // 'disabled' => 'no',
                     'only-one' => 'yes',
                 ]);
             }
         }
-        // }
         $notifikasi = array(
             'pesan' => 'Berhasil export Paket',
             'alert' => 'success',
         );
-        return redirect()->route('admin.router.paket.index')->with($notifikasi);
-
-
-        // $data_paket = Paket::all();
-        // $router = Router::where("id", $request->paket_router)->first();
-        // $API = new RouterosAPI();
-        // $API->debug = false;
-        // if ($API->connect($router->router_ip . ':' . $router->router_port_api, $router->router_username, $router->router_password)) {
-        //     foreach ($data_paket as $d) {
-        //         $dns = $request->dns1 . ',' . $request->dns2;
-        //         $API->comm('/ppp/profile/add', [
-        //             'name' =>  $d->paket_nama == '' ? '' : $d->paket_nama,
-        //             'rate-limit' => $d->paket_limitasi == '' ? '' : $d->paket_limitasi,
-        //             'local-address' => $request->paket_lokal == '' ? '' : $request->paket_lokal,
-        //             'remote-address' => $request->pool == '' ? '' : $request->pool,
-        //             'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
-        //             'queue-type' => 'default-small' == '' ? '' : 'default-small',
-        //             'dns-server' => $dns == '' ? '' : $dns,
-        //             'only-one' => 'yes',
-        //         ]);
-        //     }
-        //     $notifikasi = array(
-        //         'pesan' => 'Berhasil export Paket',
-        //         'alert' => 'success',
-        //     );
-        //     return redirect()->route('admin.router.paket.index')->with($notifikasi);
-        // } else {
-        //     $notifikasi = array(
-        //         'pesan' => 'Gagal export Paket',
-        //         'alert' => 'error',
-        //     );
-        //     return redirect()->route('admin.router.paket.index')->with($notifikasi);
-        // }
-
-
-
-        // $router = Router::where("id", $request->paket_router)->first();
-        // $API = new RouterosAPI();
-        // $API->debug = false;
-        // $dns = $request->dns1 . ',' . $request->dns2;
-        // if ($API->connect($router->router_ip . ':' . $router->router_port_api, $router->router_username, $router->router_password)) {
-        //     $API->comm('/ppp/profile/add', [
-        //         'name' =>  $data_paket->paket_nama == '' ? '' : $data_paket->paket_nama,
-        //         'rate-limit' => $data_paket['paket_limitasi'] == '' ? '' : $data_paket['paket_limitasi'],
-        //         'local-address' => $request->paket_lokal == '' ? '' : $request->paket_lokal,
-        //         'remote-address' => $request->pool == '' ? '' : $request->pool,
-        //         'comment' => 'appbill' == '' ? '' : 'appbill',
-        //         'queue-type' => 'default-small' == '' ? '' : 'default-small',
-        //         'dns-server' => $dns == '' ? '' : $dns,
-        //         'only-one' => 'yes',
-        //     ]);
-        //     $notifikasi = array(
-        //         'pesan' => 'Berhasil export Paket',
-        //         'alert' => 'success',
-        //     );
-        //     return redirect()->route('admin.router.paket.index')->with($notifikasi);
-        // } else {
-        //     $notifikasi = array(
-        //         'pesan' => 'Gagal export Paket',
-        //         'alert' => 'error',
-        //     );
-        //     return redirect()->route('admin.router.paket.index')->with($notifikasi);
-        // }
+        return redirect()->route('admin.router.noc.index')->with($notifikasi);
     }
 
     public function getRouter($id)
     {
-        // return response()->json($id);
         $data_router = Router::where("id", $id)->get();
 
         $ip = $data_router[0]->router_ip . ':' . $data_router[0]->router_port_api;
@@ -328,6 +251,5 @@ class PaketController extends Controller
             $API->disconnect();
             return response()->json($getallpoll);
         }
-        // $data_router = Router::where("id", $request->id)->get();
     }
 }

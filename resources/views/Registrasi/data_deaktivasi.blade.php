@@ -61,7 +61,7 @@
               </ul>
           </div> 
         @endif
-        <a href="{{route('admin.psb.index')}}">
+        <a href="{{route('admin.psb.ftth')}}">
           <button class="btn  btn-sm ml-auto m-1 btn-primary">
             <i class="fa fa-plus"></i>
             KEMBALI

@@ -8,7 +8,7 @@
             <div class="row">
               <div class="col-12">
                 <h4>
-                  {{$invoice->inv_nolayanan}}
+                  {{$invoice->reg_nolayanan}}
                   <small class="float-right">Date: {{date("d/m/Y", strtotime($invoice->inv_tgl_tagih))}}</small>
                 </h4>
               </div>
@@ -16,7 +16,7 @@
             <div class="row m-3">
               <div class="col-sm-4">
                 <address>
-                  <b><strong>{{$invoice->inv_nama}}</strong></b><br>
+                  <b><strong>{{$invoice->input_nama}}</strong></b><br>
                   {{$invoice->input_alamat_pasang}}<br>
                   {{$invoice->input_hp}}<br>
                   {{$invoice->input_email}}

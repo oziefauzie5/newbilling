@@ -28,9 +28,9 @@ class AktivasiController extends Controller
 
 
 
-        $user = (new GlobalController)->user_admin();
-        $noc = $user['user_id'];
-        $noc_nama = $user['user_nama'];
+        // $user = (new GlobalController)->user_admin();
+        // $noc = $user['user_id'];
+        // $noc_nama = $user['user_nama'];
 
         // dd($no_sk);
 
@@ -40,18 +40,18 @@ class AktivasiController extends Controller
 
         $id_teknisi = $explode1[0];
         $teknisi_nama = $explode1[1];
-        $swaktu = SettingWaktuTagihan::first();
-        $sbiaya = SettingBiaya::first();
-        $barang = Data_Barang::where('barang_id', $request->reg_kode_dropcore)->first();
+        $swaktu = SettingWaktuTagihan::where('corporate_id',Session::get('corp_id'))->first();
+        $sbiaya = SettingBiaya::where('corporate_id',Session::get('corp_id'))->first();
+        // $barang = Data_Barang::where('barang_id', $request->reg_kode_dropcore)->first();
 
 
         $tagihan_tanpa_ppn = $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik;
 
         #FORMAT TANGGAL
         $tanggal = Carbon::now()->toDateString();
-        $now = Carbon::now();
-        $m = $now->format('m');
-        $y = $now->format('Y');
+        // $now = Carbon::now();
+        // $m = $now->format('m');
+        // $y = $now->format('Y');
 
         // $cek_hari_pasang = date('d', strtotime($tanggal));
         // if ($cek_hari_pasang >= 25) {
@@ -97,21 +97,6 @@ class AktivasiController extends Controller
 
             $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
             $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
-        } else if ($query->reg_jenis_tagihan == 'FREE 3 BULAN') {
-            $teknisi['teknisi_psb'] = '0';
-            $inv['inv_tgl_isolir'] = $inv_tgl_isolir3blan;
-            $inv['inv_total'] = $tagihan_tanpa_ppn * 3 + ($query->reg_ppn * 3);
-            $inv['inv_tgl_tagih'] = $tanggal;
-            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
-            $inv['inv_periode'] = $periode3blan;
-
-            $sub_inv['subinvoice_harga'] = $query->reg_harga;
-            $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
-            $sub_inv['subinvoice_total'] = $inv['inv_total'];
-            $sub_inv['subinvoice_qty'] = '3';
-
-            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
-            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
         } else if ($query->reg_jenis_tagihan == 'PRABAYAR') {
             $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
             $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
@@ -129,53 +114,25 @@ class AktivasiController extends Controller
             $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
         } else if ($query->reg_jenis_tagihan == 'PASCABAYAR') {
             $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
-            // $inv['inv_tgl_isolir'] = $inv_tgl_isolir_pascabayar;
-            // $inv['inv_total'] = $tagihan_tanpa_ppn  + $query->reg_ppn;
-            // $inv['inv_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
-            // $inv['inv_tgl_jatuh_tempo'] = $tag_pascabayar;
-            // $inv['inv_periode'] = $periode1blan;
-
-            // $sub_inv['subinvoice_harga'] = $query->reg_harga;
-            // $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
-            // $sub_inv['subinvoice_total'] = $inv['inv_total'];
-            // $sub_inv['subinvoice_qty'] = '1';
-
             $pelanggan['reg_tgl_jatuh_tempo'] = $tag_pascabayar;
             $pelanggan['reg_tgl_tagih'] = $inv_tgl_tagih_pascabayar;
             $pelanggan['reg_status'] = 'PAID';
-        } else if ($query->reg_jenis_tagihan == 'DEPOSIT') {
-            $teknisi['teknisi_psb'] = $sbiaya->biaya_psb;
-            $inv['inv_tgl_isolir'] = $inv_tgl_isolir1blan;
-            $inv['inv_total'] = $query->reg_deposit;
-            $inv['inv_tgl_tagih'] = $tanggal;
-            $inv['inv_tgl_jatuh_tempo'] = $tanggal;
-            $inv['inv_periode'] = $periode1blan;
-
-            $sub_inv['subinvoice_harga'] = $inv['inv_total'];
-            $sub_inv['subinvoice_ppn'] = '0';
-            $sub_inv['subinvoice_total'] = $inv['inv_total'];
-            $sub_inv['subinvoice_qty'] = '1';
-
-            $pelanggan['reg_tgl_jatuh_tempo'] = $inv['inv_tgl_jatuh_tempo'];
-            $pelanggan['reg_tgl_tagih'] = $inv['inv_tgl_tagih'];
-            $pelanggan['reg_deposit'] = $inv['inv_total'];
-        }
-
+        } 
         
         $pelanggan['reg_progres'] = '3';
 
 
-        $pelanggan['reg_site'] = $request->reg_site;
-        $pelanggan['reg_pop'] = $request->reg_pop;
-        $pelanggan['reg_router'] = $request->reg_router;
-        $pelanggan['reg_olt'] = $request->reg_olt;
-        $pelanggan['reg_odc'] = $request->reg_odc;
-        $pelanggan['reg_odp'] = $request->reg_odp;
-        $pelanggan['reg_in_ont'] = $request->reg_in_ont;
-        $pelanggan['reg_onuid'] = $request->reg_onuid;
-        $pelanggan['reg_slot_odp'] = $request->reg_slot_odp;
-        $pelanggan['reg_koordinat_odp'] = $request->reg_koordinat_odp;
-        $pelanggan['reg_teknisi_team'] = $team;
+        // $pelanggan['reg_site'] = $request->reg_site;
+        // $pelanggan['reg_pop'] = $request->reg_pop;
+        // $pelanggan['reg_router'] = $request->reg_router;
+        // $pelanggan['reg_olt'] = $request->reg_olt;
+        // $pelanggan['reg_odc'] = $request->reg_odc;
+        // $pelanggan['reg_odp'] = $request->reg_odp;
+        // $pelanggan['reg_in_ont'] = $request->reg_in_ont;
+        // $pelanggan['reg_onuid'] = $request->reg_onuid;
+        // $pelanggan['reg_slot_odp'] = $request->reg_slot_odp;
+        // $pelanggan['reg_koordinat_odp'] = $request->reg_koordinat_odp;
+        // $pelanggan['reg_teknisi_team'] = $team;
         $pelanggan['reg_tgl_pasang'] = Carbon::now()->toDateString();
 
         $hilangspasi = preg_replace('/\s+/', '_', $query->reg_nolayanan);
@@ -186,19 +143,13 @@ class AktivasiController extends Controller
         Storage::disk('public')->put($path_1, file_get_contents($photo_1));
         $pelanggan['reg_img'] = $filename1;
 
-        $photo_2 = $request->file('reg_foto_odp');
-        $filename_2 = 'ODP_' . $hilangspasi . '.jpg';
-        $path_2 = 'laporan-kerja/' . $filename_2;
-        Storage::disk('public')->put($path_2, file_get_contents($photo_2));
-        $pelanggan['reg_foto_odp'] = $filename_2;
 
-
-        $teknisi['teknisi_userid'] = $id_teknisi;
+        $teknisi['corporate_id'] = Session::get('corp_id');
+        $teknisi['user_id'] = $id_teknisi;
         $teknisi['teknisi_team'] = $team;
         $teknisi['teknisi_job'] = 'PSB';
         $teknisi['teknisi_ket'] =  $query->input_nama;
         $teknisi['teknisi_idpel'] =  $id;
-        $teknisi['teknisi_noc_userid'] =  $noc;
         $teknisi['teknisi_status'] =  1;
         $update_input['input_koordinat'] = $request->input_koordinat;
 
@@ -206,48 +157,50 @@ class AktivasiController extends Controller
         $tiket['tiket_teknisi2'] = $request->teknisi2;
         $tiket['tiket_foto'] = $filename1;
         $tiket['tiket_status'] = 'Closed';
-        Data_Tiket::where('tiket_idpel', $query->reg_idpel)->where('tiket_status', 'Aktivasi')->update($tiket);
+        Data_Tiket::where('corporate_id',Session::get('corp_id'))->where('tiket_idpel', $query->reg_idpel)->where('tiket_status', 'Aktivasi')->update($tiket);
 
         if ($query->reg_jenis_tagihan != 'PASCABAYAR') {
 
 
-        $inv['inv_tgl_pasang'] = Carbon::now()->toDateString();
+        // $inv['inv_tgl_pasang'] = Carbon::now()->toDateString();
+        $inv['corporate_id'] = Session::get('corp_id');
         $inv['inv_status'] = 'UNPAID';
         $inv['inv_idpel'] = $query->reg_idpel;
-        $inv['inv_nolayanan'] = $query->reg_nolayanan;
-        $inv['inv_nama'] = $query->input_nama;
-        $inv['inv_jenis_tagihan'] = $query->reg_jenis_tagihan;
-        $inv['inv_profile'] = $query->paket_nama;
-        $inv['inv_mitra'] = 'SYSTEM';
-        $inv['inv_kategori'] = 'OTOMATIS';
+        // $inv['inv_nolayanan'] = $query->reg_nolayanan;
+        // $inv['inv_nama'] = $query->input_nama;
+        // $inv['inv_jenis_tagihan'] = $query->reg_jenis_tagihan;
+        // $inv['inv_profile'] = $query->paket_nama;
+        // $inv['inv_mitra'] = 'SYSTEM';
+        // $inv['inv_kategori'] = 'OTOMATIS';
         $inv['inv_diskon'] = '0';
         $inv['inv_note'] = $query->input_nama;
-
+        
+        $sub_inv['corporate_id'] = Session::get('corp_id');
         $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
         $sub_inv['subinvoice_status'] = '0';
 
-
         // if ($cek_hari_pasang < 25) {
-        $cek_inv = Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
-        if ($cek_inv) {
-            $inv['inv_id'] = $cek_inv->inv_id;
-            $sub_inv['subinvoice_id'] = $inv['inv_id'];
-            Invoice::where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
-            SubInvoice::where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
-        } else {
-            $inv['inv_id'] = (new GlobalController)->no_inv();
-            $sub_inv['subinvoice_id'] = $inv['inv_id'];
-            Invoice::create($inv);
-            SubInvoice::create($sub_inv);
-        }
-        // } 
+            $cek_inv = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
+            if ($cek_inv) {
+                $inv['inv_id'] = $cek_inv->inv_id;
+                $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
+                SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
+            } else {
+                $inv['inv_id'] = (new GlobalController)->no_inv();
+                $sub_inv['subinvoice_id'] = $inv['inv_id'];
+                Invoice::create($inv);
+                SubInvoice::create($sub_inv);
+            }
+            // } 
         } 
-
-
-
-
-        Registrasi::where('reg_idpel', $id)->update($pelanggan);
-        InputData::where('id', $id)->update($update_input);
-        Teknisi::where('teknisi_idpel', $id)->where('teknisi_userid', $id_teknisi)->create($teknisi);
+        
+        
+        
+        
+        Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_idpel', $id)->update($pelanggan);
+        InputData::where('corporate_id',Session::get('corp_id'))->where('id', $id)->update($update_input);
+        Teknisi::create($teknisi);
+        // dd($sub_inv);
     }
 }

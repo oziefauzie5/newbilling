@@ -10,6 +10,7 @@ class Data_Keranjang extends Model
     use HasFactory;
     protected $fillable = [
         'keranjang_id',
+        'corporate_id',
         'keranjang_kategori',
         'keranjang_id_barang',
         'keranjang_id_barang',

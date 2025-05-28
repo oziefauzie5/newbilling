@@ -2,6 +2,8 @@
 
 namespace App\Models\PSB;
 
+use App\Models\Mitra\MitraSetting;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -13,6 +15,8 @@ class InputData extends Model implements Authenticatable
     use HasFactory;
     protected $fillable = [
         'id',
+        'corporate_id',
+        'data__site_id',
         'input_tgl',
         'input_nama',
         'input_ktp',
@@ -29,4 +33,14 @@ class InputData extends Model implements Authenticatable
         'input_status',
         'input_keterangan',
     ];
+
+    function user_sales()
+    {
+        return $this->hasOne(User::class,'id','input_sales');
+    }
+     function input_mitra()
+    {
+        return $this->hasOne(MitraSetting::class,'mts_user_id','input_sales');
+    }
+    
 }

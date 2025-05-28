@@ -8,7 +8,7 @@
         <div class="card">
           <div class="card-header bg-primary">
             <div class="d-flex align-items-center">
-              <h4 class="card-title text-bold">PAKET INTERNET</h4>
+              <span class="text-light text-bold">PAKET INTERNET</span>
             </div>
           </div>
           <div class="card-body">
@@ -18,7 +18,7 @@
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addpaketvhc">
               <i class="fa fa-plus"></i>
               BUAT PROFILE HOTSPOT
-              <form action="{{route('admin.router.paket.store_isolir')}}" method="POST">
+              <form action="{{route('admin.router.noc.store_isolir')}}" method="POST">
               @csrf
               @method('POST')
               <button class="btn  btn-sm ml-auto m-1 btn-primary ">
@@ -31,7 +31,7 @@
             </button>
 
             <div class="modal fade" id="addpaket" tabindex="-1" role="dialog" aria-hidden="true">
-              <div class="modal-dialog modal-xl" role="document">
+              <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header no-bd bg-primary">
                     <h5 class="modal-title">
@@ -43,15 +43,15 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form action="{{route('admin.router.paket.store')}}" method="POST">
+                    <form action="{{route('admin.router.noc.store')}}" method="POST">
                       @csrf
                       @method('POST')
                       <div class="row">
                         <div class="col-sm-12">
                           <div class="form-group">
                             <label>Router</label>
-                            <select type="text" class="form-control" name="router" value="{{ Session::get('router') }}" required>
-                              <option value="">- PILIH ROUTER - </option>
+                            <select type="text" class="form-control" name="router_id" value="{{ Session::get('router_id') }}" required>
+                              <option value="">--Pilih Router-- </option>
                               @foreach($data_router as $s)
                               <option value="{{$s->id}}">{{$s->router_nama}}</option>
                               @endforeach
@@ -67,7 +67,7 @@
                         <div class="col-sm-12">
                           <div class="form-group">
                             <label>Limitasi</label>
-                            <input type="text" class="form-control" value="{{ Session::get('paket_limitasi') }}" name="paket_limitasi" required>
+                            <input type="text" class="form-control" value="{{ Session::get('paket_limitasi')}}" name="paket_limitasi" required placeholder="15M/15M 0/0 0/0 0/0 8 0/0">
                           </div>
                         </div>
                         <div class="col-sm-12">
@@ -78,31 +78,11 @@
                         </div>
                         <div class="col-sm-6">
                           <div class="form-group">
-                            <label>Shared</label>
-                            <input type="number" class="form-control" value="1" name="paket_shared" required>
-                          </div>
-                        </div>
-                        <div class="col-sm-6">
-                          <div class="form-group">
-                            <label>Masa Aktif (Hari)</label>
-                            <input type="number" class="form-control" value="30" name="paket_masa_aktif" required>
-                          </div>
-                        </div>
-                        <div class="col-sm-6">
-                          <div class="form-group">
                             <label>Harga</label>
                             <input type="number" class="form-control" value="{{ Session::get('paket_harga') }}" name="paket_harga" required>
                             <span>Harga diluar PPN</span>
                           </div>
                         </div>
-                        <div class="col-sm-6">
-                          <div class="form-group">
-                            <label>Komisi</label>
-                            <input type="number" class="form-control" value="{{ Session::get('paket_komisi') }}" name="paket_komisi" required>
-                            <span>Komisi reseller yang akan dikeuarkan tiap pembayaran
-                              (Isi 0 jika hitungan komisi dalam bentuk persentase)</span>
-                            </div>
-                          </div>
                           
                       </div>
                     </div>
@@ -152,7 +132,7 @@
                         <div class="col-sm-12">
                           <div class="form-group">
                             <label>Limitasi</label>
-                            <input type="text" class="form-control" value="{{ Session::get('paket_limitasi') }}" name="paket_limitasi" required>
+                            <input type="text" class="form-control" value="{{ Session::get('paket_limitasi') }}" name="paket_limitasi" required placeholder="15M/15M 0/0 0/0 0/0 8 0/0">
                           </div>
                         </div>
                         <div class="col-sm-6">
@@ -227,7 +207,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form action="{{route('admin.router.paket.exportPaketToMikrotik')}}" method="POST">
+                    <form action="{{route('admin.router.noc.exportPaketToMikrotik')}}" method="POST">
                       @csrf
                       @method('POST')
                       <div class="row">
@@ -302,30 +282,17 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tfoot>
-                  <tr>
-                    <th>#</th>
-                    <th>Nama Paket</th>
-                    <th>HPP</th>
-                    <th>Komisi</th>
-                    <th>Rate Limit</th>
-                    <th>Shared</th>
-                    <th>Aktif</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </tfoot>
                 <tbody>
                   @foreach ($data_paket as $d)
                   <tr>
                     @if($d->paket_nama == 'APPBILL_ISOLIR')
                     <td>{{$d->paket_id}}</td>
                     <td >{{$d->paket_nama}}</td>
-                    <td >Rp. {{ number_format( $d->paket_harga)}}</td>
-                    <td >Rp. {{ number_format( $d->paket_komisi)}}</td>
-                    <td >{{$d->paket_limitasi}}</td>
-                    <td >{{$d->paket_shared}}</td>
-                    <td >{{$d->paket_masa_aktif}}</td>
+                    <td >Rp. {{ number_format( $d->paket_harga) ??'0'}} </td>
+                    <td >Rp. {{ number_format( $d->paket_komisi) ??'0'}}</td>
+                    <td >{{$d->paket_limitasi ??'-'}}</td>
+                    <td >{{$d->paket_shared ??'-'}}</td>
+                    <td >{{$d->paket_masa_aktif ??'-'}}</td>
                     <td>{{$d->paket_status}}</td>
                     <td>
                       <div class="form-button-action">
@@ -356,27 +323,27 @@
                       </tr>
                         <!-- Modal Edit -->
                         <div class="modal fade" id="modal_edit{{$d->paket_id}}" tabindex="-1" role="dialog" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header no-bd">
                                 <h5 class="modal-title">
                                   <span class="fw-mediumbold">
-                                  Edit Data {{$d->input_nama}}</span> 
+                                  Edit Paket {{$d->input_nama}}</span> 
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form action="{{route('admin.router.paket.update',['id'=>$d->paket_id])}}" method="POST">
+                                <form action="{{route('admin.router.noc.update',['id'=>$d->paket_id])}}" method="POST">
                                   @csrf
                                   @method('POST')
                                   <div class="row">
                                     <div class="col-sm-12">
                                       <div class="form-group">
                                         <label>Router</label>
-                                        <select name="router" id="" class="form-control" required>
-                                          <option value="">-- Pilih Router --</option>
+                                        <select name="router_id" id="" class="form-control" required>
+                                          <option value="{{$d->router_id}}">{{$d->paket_router->router_nama}}</option>
                                           @foreach($data_router as $dr)
                                           <option value="{{$dr->id}}">{{$dr->router_nama}}</option>
                                           @endforeach

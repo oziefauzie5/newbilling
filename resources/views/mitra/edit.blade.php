@@ -79,13 +79,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Kode Unik</label>
-                                <input type="number" class="form-control" id="kode_unik"  name="kode_unik" value="{{$data_mitra->mts_kode_unik}}" required>
-                                <div class="invalid-feedback">
-                                    Kode Unik tidak boleh kosong
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label>Komisi Biller</label>
                                 <input type="number" class="form-control" id="mts_komisi"  name="mts_komisi" value="{{$data_mitra->mts_komisi}}" required>
                                 <div class="invalid-feedback">

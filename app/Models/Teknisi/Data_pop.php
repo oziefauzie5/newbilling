@@ -2,6 +2,7 @@
 
 namespace App\Models\Teknisi;
 
+use App\Models\Aplikasi\Data_Site;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,16 +10,17 @@ class Data_pop extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'pop_id',
-        'pop_kode',
-        'pop_id_site',
+        'corporate_id',
+        'data__site_id',
         'pop_nama',
         'pop_alamat',
         'pop_koordinat',
-        'pop_ip1',
-        'pop_ip2',
-        'pop_topologi_img',
-        'pop_keterangan',
+        'pop_file_topologi',
         'pop_status',
     ];
+
+    function pop_site()
+    {
+        return $this->hasOne(Data_Site::class,'id','data__site_id');
+    }
 }

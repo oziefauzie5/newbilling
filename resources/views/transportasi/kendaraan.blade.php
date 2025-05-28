@@ -132,7 +132,7 @@
                     <td>{{$d->trans_status}}</td>
                     <td><div class="form-button-action">
                         <button class="btn btn btn-link btn-primary  " data-toggle="modal" data-target="#edit{{$d->trans_id}}">
-                        <i class="fas fa-pen"></i></button>
+                        <i class="fas fa-edit"></i></button>
                         <button class="btn btn-link btn-danger " data-toggle="modal" data-target="#delete{{$d->trans_id}}">
                         <i class="fas fa-trash"></i></button>        
                         </div>    

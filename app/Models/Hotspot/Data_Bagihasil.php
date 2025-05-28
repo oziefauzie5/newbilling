@@ -10,6 +10,7 @@ class Data_Bagihasil extends Model
     use HasFactory;
     protected $fillable = [
         'bh_id',
+        'corporate_id',
         'bh_mitraid',
         'bh_keterangan',
         'bh_saldo',

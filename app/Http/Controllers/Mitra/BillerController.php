@@ -309,18 +309,18 @@ class BillerController extends Controller
         $user_nama = $user['user_nama'];
         $user_id = $user['user_id'];
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
-        Session::flash('input_nama', ucwords($request->input_nama));
+        Session::flash('input_nama', strtoupper($request->input_nama));
         Session::flash('input_hp', $request->input_hp);
         Session::flash('input_hp_2', $request->input_hp_2);
         Session::flash('input_ktp', $request->input_ktp);
         Session::flash('input_email', $request->input_email);
-        Session::flash('input_alamat_ktp', ucwords($request->input_alamat_ktp));
-        Session::flash('input_alamat_pasang', ucwords($request->input_alamat_pasang));
-        Session::flash('input_sales', ucwords($request->input_sales));
-        Session::flash('input_subseles', ucwords($request->input_subseles));
+        Session::flash('input_alamat_ktp', strtoupper($request->input_alamat_ktp));
+        Session::flash('input_alamat_pasang', strtoupper($request->input_alamat_pasang));
+        Session::flash('input_sales', strtoupper($request->input_sales));
+        Session::flash('input_subseles', strtoupper($request->input_subseles));
         Session::flash('input_password', Hash::make($request->input_hp));
         Session::flash('input_maps', $request->input_maps);
-        Session::flash('input_keterangan', ucwords($request->input_keterangan));
+        Session::flash('input_keterangan', strtoupper($request->input_keterangan));
 
         $request->validate([
             'input_ktp' => 'unique:input_data',
@@ -338,16 +338,16 @@ class BillerController extends Controller
 
         if ($cek_nohp == 0) {
             $input['input_tgl'] = $data['input_tgl'];
-            $input['input_nama'] = ucwords($request->input_nama);
+            $input['input_nama'] = strtoupper($request->input_nama);
             $input['id'] = $id_cust;
             $input['input_ktp'] = $request->input_ktp;
             $input['input_hp'] = $nomorhp;
             $input['input_hp_2'] = $nomorhp2;
             $input['input_email'] = $request->input_email;
-            $input['input_alamat_ktp'] = ucwords($request->input_alamat_ktp);
-            $input['input_alamat_pasang'] = ucwords($request->input_alamat_pasang);
+            $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp);
+            $input['input_alamat_pasang'] = strtoupper($request->input_alamat_pasang);
             $input['input_sales'] = $user_id;
-            $input['input_subseles'] = ucwords($user_nama);
+            $input['input_subseles'] = strtoupper($user_nama);
             $input['password'] = Hash::make($nomorhp);
             $input['input_maps'] = $request->input_maps;
             $input['input_status'] = 'INPUT DATA';

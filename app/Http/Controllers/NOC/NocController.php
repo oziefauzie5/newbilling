@@ -168,18 +168,30 @@ class NocController extends Controller
     public function status_inet($id)
     {
 
-
-        $data_pelanggan = Registrasi::where('reg_idpel', $id)->first();
+          $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
+            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+             ->where('registrasis.corporate_id',Session::get('corp_id'))
+            ->where('registrasis.reg_idpel', $id)
+            ->select([
+                'registrasis.reg_username',
+                'registrasis.reg_layanan',
+                'routers.router_ip',
+                'routers.router_port_api',
+                'routers.router_username',
+                'routers.router_password',
+                'routers.router_dns',
+            ])->first();
         if ($data_pelanggan->reg_layanan == 'PPP') {
-            $router = Router::whereId($data_pelanggan->reg_router)->first();
-            $ip =   $router->router_ip . ':' . $router->router_port_api;
-            $user = $router->router_username;
-            $pass = $router->router_password;
+            $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
+            $user = $data_pelanggan->router_username;
+            $pass = $data_pelanggan->router_password;
             $API = new RouterosAPI();
             $API->debug = false;
-
-            // dd($data_pelanggan->reg_username);
-
             if ($API->connect($ip, $user, $pass)) {
                 $cek = $API->comm('/ppp/active/print', [
                     '?name' => $data_pelanggan->reg_username,

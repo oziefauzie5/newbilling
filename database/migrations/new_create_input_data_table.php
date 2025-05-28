@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Aplikasi\Corporate;
+use App\Models\Aplikasi\Data_Site;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('input_data', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Data_Site::class)->constrained()->on('data__sites')->onDelete('restrict');
             $table->string('input_tgl')->nullable();
             $table->string('input_nama')->nullable();
             $table->string('input_ktp')->nullable();
@@ -21,7 +25,7 @@ return new class extends Migration
             $table->string('input_email')->nullable();
             $table->string('input_alamat_ktp')->nullable();
             $table->string('input_alamat_pasang')->nullable();
-            $table->string('input_sales')->nullable();
+            $table->integer('input_sales')->nullable();
             $table->string('input_subseles')->nullable();
             $table->string('password')->nullable();
             $table->string('input_maps')->nullable();

@@ -302,19 +302,6 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Router</label>
-                <div class="col-sm-10">
-                  <select class="form-control" id="" name="reg_router"  >
-                    @if( $data->reg_router)
-                    <option value="{{ $data->reg_router}}">{{ $data->router_nama}}</option>
-                    @endif
-                    @foreach ($data_router as $r)
-                    <option value="{{ $r->id}}">{{ $r->router_nama}}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
              {{-- @if($data->reg_layanan=='PPP') --}}
             
              {{-- @endif --}}
@@ -395,11 +382,12 @@
 
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Site</label>
-        <div class="col-sm-4">
-          <select class="form-control" id="reg_site" name="reg_site" required >
-            @if($data->reg_site)
-            <option value="{{$data->site_id}}">{{$data->site_nama}}</option>
+        <div class="col-sm-4 notif">
+          <select class="form-control" id="validasi_site" name="reg_site" required >
+            @if($data->id_site)
+            <option value="{{$data->id_site}}">{{$data->site_nama}}</option>
             @endif
+
           </select>
         </div>
         <label class=" col-sm-2 col-form-label">Status perangkat</label>
@@ -412,22 +400,19 @@
       </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">POP</label>
-        <div class="col-sm-4">
-          <select name="reg_pop" id="" class="form-control" required>
-            @if ($data->pop_id)
-                <option value="{{$data->pop_id}}">{{$data->pop_nama}}</option>
+        <div class="col-sm-4 notif">
+          <select name="reg_pop" id="validasi_pop" class="form-control" required>
+            @if ($data->id_pop)
+                <option value="{{$data->id_pop}}">{{$data->pop_nama}}</option>
             @endif
           </select>
         </div>
         <label for="router" class="col-sm-2 col-form-label">Router</label>
-        <div class="col-sm-4">
-          <select class="form-control" id="" name="reg_router" >
-            @if( $data->reg_router)
-          <option value="{{ $data->reg_router}}">{{ $data->router_nama}}</option>
+        <div class="col-sm-4 notif">
+          <select class="form-control " id="validasi_router" name="reg_router" >
+            @if( $data->id_router)
+          <option value="{{ $data->id_router}}">{{ $data->router_nama}}</option>
           @endif
-          @foreach ($router as $d)
-              <option value="{{$d->id}}">{{$d->router_nama}}</option>
-          @endforeach
           </select>
         </div>
         </div>
@@ -435,31 +420,29 @@
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">OLT</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_olt" id="validasi_olt" class="form-control readonly" autocomplete="off"   required value="{{$data->reg_olt}}">
+          <select class="form-control" id="validasi_olt" name="reg_olt" >
+            @if( $data->id_olt)
+          <option value="{{ $data->id_olt}}">{{ $data->olt_nama}}</option>
+          @endif
+          </select>
         </div>
         <label class=" col-sm-2 col-form-label">ODC</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly" required value="{{$data->reg_odc}}" >
+          <input type="text" name="reg_odc" id="validasi_odc" class="form-control" required value="{{$data->odp_id}}" >
         </div>
     </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">ODP</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odp" id="validasi_odp" class="form-control" required value="{{$data->reg_odp}}" >
+          <input type="text" name="reg_odp" id="validasi_odp" class="form-control" required value="{{$data->odp_id}}" >
           <div id="pesan"></div>
         </div>
-    </div>
-     
-      <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">ONU ID</label>
-        <div class="col-sm-4">
-          <input type="text" name="reg_onuid" class="form-control" required value="{{$data->reg_onuid}}">
-        </div>
+        
         <label class=" col-sm-2 col-form-label">Slot ODP</label>
         <div class="col-sm-4">
           <input type="text" name="reg_slot_odp" class="form-control" required value="{{$data->reg_slot_odp}}" >
         </div>
-      </div>
+    </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Redaman</label>
         <div class="col-sm-4">
@@ -468,7 +451,7 @@
         </div>
         <label class="col-sm-2 col-form-label">Teknisi Team</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control harga readonly"value="{{$data->reg_teknisi_team}}" >
+          <input type="text" class="form-control harga readonly"value="{{$data->teknisi_team}}" >
         </div>
       </div>
       <div class="form-group row">
@@ -476,29 +459,16 @@
         <div class="col-sm-4">
           <input type="text" class="form-control"  name="input_koordinat" required value="{{$data->input_koordinat}}">
         </div>
-        <label class="col-sm-2 col-form-label">Koordinat ODP</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control"  name="reg_koordinat_odp" required value="{{$data->reg_koordinat_odp}}">
-        </div>
-      </div>
-      <div class="form-group row">
+        
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
           <input  type="file" class="form-control-file" name="reg_img" required value="{{ Session::get('reg_img') }}">
-        </div>
-        <label class="col-sm-2 col-form-label">Foto Lokasi ODP</label>
-        <div class="col-sm-4">
-          <input  type="file" class="form-control-file" name="reg_foto_odp" required value="{{ Session::get('reg_foto_odp') }}">
         </div>
       </div>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
           <img src="{{ asset('storage/laporan-kerja/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
-        </div>
-        <label class="col-sm-2 col-form-label">Foto Lokasi ODP </label>
-        <div class="col-sm-4">
-          <img src="{{ asset('storage/laporan-kerja/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
         </div>
       </div>
 
@@ -518,25 +488,12 @@
    </form>
    @endif
 
-      <form class="form-horizontal"action="{{route('admin.reg.proses_update_noskb',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
         <h3 class="mt-3 text-bolt"> DATA BARANG</h3><hr>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">No SKB</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_skb"  class="form-control" required value="{{$data->reg_skb}}" >
-          <div id="pesan"></div>
+          <input type="text" name="reg_barang_id"  class="form-control readonly" required value="{{$data->reg_barang_id}}" >
         </div>
-        <div class="col-sm-4">
-          <a href="{{route('admin.gudang.print_skb')}}?idpel={{$data->reg_idpel}}"><button type="button" class="btn  btn-info ">Print SKB</button></a>
-        </div>
-        @if($data->reg_progres>=3)
-        <div class="col-sm-4">
-          <a href="{{route('admin.psb.bukti_kas_keluar',['id'=>$data->reg_idpel])}}" target="_blank">
-            <button type="button" class="btn btn-dark">Print</button></a>
-          </div>
-          @endif
       </div>
       <div class="form-group row">
         <div class="table-responsive">
@@ -570,13 +527,6 @@
           </table>
         </div>
       </div>
-     @if($data->reg_skb == "")
-    <div class="card-footer">
-    <button type="button" class="btn  ">Batal</button>
-    <button type="submit" class="btn btn-primary float-right">Simpan</button>
-    </div>
-    @endif
-   </form>
    @if($data->reg_progres>=3)
         @role('admin|STAF ADMIN')
               <h3 class="mt-3">BILLING</h3><hr>

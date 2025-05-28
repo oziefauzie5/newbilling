@@ -9,6 +9,7 @@ class Laporan extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'lap_id',
         'lap_tgl',
         'lap_inv',

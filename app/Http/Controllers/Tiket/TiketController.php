@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Telegram\Bot\Api;
 
 class TiketController extends Controller
@@ -207,7 +208,7 @@ Antrian tiket = ' . $count . '
                 'pesan' => 'Berhasil Membuat Tiket Deaktivasi',
                 'alert' => 'success',
             ];
-            return redirect()->route('admin.psb.index')->with($notifikasi);
+            return redirect()->route('admin.psb.ftth')->with($notifikasi);
         } else {
             $notifikasi = [
                 'pesan' => 'Berhasil Membuat Tiket',
@@ -250,8 +251,8 @@ Antrian tiket = ' . $count . '
         $data['user_admin'] = (new GlobalController)->user_admin();
         $data['tiket'] = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
-            ->join('data__sites', 'data__sites.site_id', '=', 'data__tikets.tiket_site')
-            ->select('data__sites.site_id', 'data__sites.site_nama', 'data__tikets.*', 'input_data.*', 'registrasis.*', 'data__tikets.created_at as tgl_buat')
+            ->join('data__sites', 'data__sites.id', '=', 'data__tikets.data__site_id')
+            ->select('data__sites.id', 'data__sites.site_nama', 'data__tikets.*', 'input_data.*', 'registrasis.*', 'data__tikets.created_at as tgl_buat')
             ->where('tiket_id', $id)
             ->first();
         $query = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
@@ -302,12 +303,14 @@ Antrian tiket = ' . $count . '
                 $teknisi_id = '';
                 $teknisi_nama = '';
                  $tiket['tiket_status'] = 'Aktivasi';
+                  
                 
             } elseif($request->tiket_nama == 'Reaktivasi layanan'){
                  $teknisi_id = '';
                 $teknisi_nama = '';
                  $tiket['tiket_status'] = 'Aktivasi';
                 //  $reg['reg_progres'] = 2;
+                
 
             } else {
                 $explode = explode('|', $request->tiket_teknisi1);
@@ -321,6 +324,11 @@ Antrian tiket = ' . $count . '
                 Storage::disk('public')->put($path, file_get_contents($photo));
                 $tiket['tiket_foto'] = $filename;
                 $tiket['tiket_status'] = $request->tiket_status;
+                $reg['reg_pop'] = $request->tiket_pop;
+                $reg['reg_olt'] = $request->tiket_olt;
+                $reg['reg_odc'] = $request->tiket_odc;
+                $reg['reg_odp'] = $request->tiket_odp;
+                 Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_nolayanan', $request->tiket_nolayanan)->update($reg);
 
         }
        
@@ -338,10 +346,7 @@ Antrian tiket = ' . $count . '
             $barang['tiket_total_kabel'] = $request->tiket_total_kabel;
 
 
-            $reg['reg_pop'] = $request->tiket_pop;
-            $reg['reg_olt'] = $request->tiket_olt;
-            $reg['reg_odc'] = $request->tiket_odc;
-            $reg['reg_odp'] = $request->tiket_odp;
+           
             // if ($request->tiket_jenis == 'Reaktivasi') {
             //     $reg['reg_progres'] = 2;
             // } else{
@@ -351,46 +356,48 @@ Antrian tiket = ' . $count . '
 
        
             if ($request->kate_tindakan == 'Ganti ONT') {
-                Data_BarangKeluar::whereIn('bk_id_barang', $request->kode_barang_ont)->delete();
-                Data_Barang::whereIn('barang_id', $request->kode_barang_ont)->update([
+                Data_BarangKeluar::where('corporate_id',Session::get('corp_id'))->whereIn('bk_id_barang', $request->kode_barang_ont)->delete();
+                Data_Barang::where('corporate_id',Session::get('corp_id'))->whereIn('barang_id', $request->kode_barang_ont)->update([
                     'barang_digunakan' => 0,
                     'barang_dicek' => 1,
                     'barang_ket' => 'Ganti Perangkat',
                 ]);
             } elseif ($request->kate_tindakan == 'Ganti Adaptor') {
-                Data_BarangKeluar::whereIn('bk_id_barang', $request->kode_barang_adp)->delete();
-                Data_Barang::whereIn('barang_id', $request->kode_barang_adp)->update([
+                Data_BarangKeluar::where('corporate_id',Session::get('corp_id'))->whereIn('bk_id_barang', $request->kode_barang_adp)->delete();
+                Data_Barang::where('corporate_id',Session::get('corp_id'))->whereIn('barang_id', $request->kode_barang_adp)->update([
                     'barang_digunakan' => 0,
                     'barang_hilang' => 1,
                 ]);
             }
 
             $status = (new GlobalController)->whatsapp_status();
-            if ($status->wa_status == 'Enable') {
-                $status_pesan = '0';
-            } else {
-                $status_pesan = '10';
+            if($status){
+                if ($status->wa_status == 'Enable') {
+                    $status_pesan = '0';
+                } else {
+                    $status_pesan = '10';
+                }
+                $pesan_closed['layanan'] = 'NOC';
+                $data['corporate_id'] = Session::get('corp_id');
+                $pesan_closed['ket'] = 'tiket';
+                $pesan_closed['pesan_id_site'] = $request->tiket_site;
+                $pesan_closed['status'] = $status_pesan;
+                $pesan_closed['target'] = env('GROUP_TEKNISI');
+                $pesan_closed['nama'] = 'Group Teknisi';
+                $pesan_closed['pesan'] = '               -- CLOSED TIKET --
+                
+    Problem : ' . $request->tiket_kendala . '
+    Action : ' . $request->tiket_tindakan . '
+    
+    Finish Time: ' . date('d-M-y h:m') . '
+    Technician : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
+    
+    ' . $request->tiket_menunggu . '';
+    Pesan::create($pesan_closed);
             }
-            $pesan_closed['layanan'] = 'NOC';
-            $pesan_closed['ket'] = 'tiket';
-            $pesan_closed['pesan_id_site'] = $request->tiket_site;
-            $pesan_closed['status'] = $status_pesan;
-            $pesan_closed['target'] = env('GROUP_TEKNISI');
-            $pesan_closed['nama'] = 'Group Teknisi';
-            $pesan_closed['pesan'] = '               -- CLOSED TIKET --
-            
-Problem : ' . $request->tiket_kendala . '
-Action : ' . $request->tiket_tindakan . '
 
-Finish Time: ' . date('d-M-y h:m') . '
-Technician : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
-
-' . $request->tiket_menunggu . '';
-
-            Registrasi::where('reg_nolayanan', $request->tiket_nolayanan)->update($reg);
-            // dd($reg);
-            Data_Tiket::where('tiket_id', $id)->update($tiket);
-            Pesan::create($pesan_closed);
+           
+            Data_Tiket::where('corporate_id',Session::get('corp_id'))->where('tiket_id', $id)->update($tiket);
 
 
 

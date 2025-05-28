@@ -10,6 +10,7 @@ class Data_BarangKeluar extends Model
     use HasFactory;
     protected $fillable = [
         'bk_id',
+        'corporate_id',
         'bk_jenis_laporan',
         'bk_id_tiket',
         'bk_id_barang',

@@ -10,6 +10,7 @@ class MutasiSales extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'corporate_id',
         'smt_user_id',
         'smt_admin',
         'smt_idpel',

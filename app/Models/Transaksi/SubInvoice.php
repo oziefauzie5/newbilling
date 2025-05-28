@@ -9,6 +9,7 @@ class SubInvoice extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'subinvoice_id',
         'subinvoice_deskripsi',
         'subinvoice_qty',

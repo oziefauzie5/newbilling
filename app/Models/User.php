@@ -3,6 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Aplikasi\Data_Site;
+use App\Models\Mitra\Mitra_Sub;
+use App\Models\Mitra\MitraSetting;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,6 +24,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id',
+        'corporate_id',
         'name',
         'username',
         'email',
@@ -27,8 +32,9 @@ class User extends Authenticatable
         'ktp',
         'hp',
         'photo',
-        'user_site',
+        'data__site_id',
         'alamat_lengkap',
+        'tgl_gabung',
         'status_user',
     ];
 
@@ -51,4 +57,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    //  function user_role()
+    // {
+    //     return $this->hasMany(Model_Has_Role::class,'model_id','id');
+    // }
+     function user_mitra()
+    {
+        return $this->hasOne(MitraSetting::class,'mts_user_id','id');
+    }
+    function user_site()
+    {
+        return $this->hasOne(Data_Site::class,'id','data__site_id');
+    }
+    function user_submitra()
+    {
+        return $this->hasOne(Mitra_Sub::class,'mts_sub_user_id','id');
+    }
+   
+
+
+    
 }

@@ -9,6 +9,7 @@ class Kasbon extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'kasbon_user_id',
         'kasbon_jenis',
         'kasbon_tempo',

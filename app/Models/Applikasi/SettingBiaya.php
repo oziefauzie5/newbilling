@@ -10,13 +10,11 @@ class SettingBiaya extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'corporate_id',
         'biaya_pasang',
         'biaya_ppn',
         'biaya_psb',
         'biaya_sales',
-        'biaya_sales_continue',
-        'biaya_deposit',
-        'biaya_kas',
-        'biaya_kerjasama',
+        'biaya_bph_uso',
     ];
 }

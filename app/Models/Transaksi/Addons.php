@@ -9,6 +9,7 @@ class Addons extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'addons_nama',
         'addons_stok',
         'addons_harga',

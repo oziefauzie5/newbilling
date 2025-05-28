@@ -9,6 +9,7 @@ class Transaksi extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'trx_kategori',
         'trx_jenis',
         'trx_admin',

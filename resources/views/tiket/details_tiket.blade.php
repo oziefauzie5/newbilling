@@ -23,7 +23,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Site Id</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control readonly" id="tiket_site" name="tiket_site" required value="{{ $tiket->tiket_site }}">
+                  <input type="text" class="form-control readonly" id="tiket_site" name="tiket_site" required value="{{ $tiket->data__site_id }}">
                 </div>
                 <label class="col-sm-2 col-form-label">Type Tiket</label>
                 <div class="col-sm-4">

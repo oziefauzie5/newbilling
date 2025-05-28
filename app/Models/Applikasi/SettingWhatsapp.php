@@ -9,8 +9,8 @@ class SettingWhatsapp extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'wa_nama',
-        'wa_site',
         'wa_key',
         'wa_url',
         'wa_status',

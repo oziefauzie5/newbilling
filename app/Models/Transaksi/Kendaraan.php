@@ -9,6 +9,7 @@ class Kendaraan extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'trans_user_id',
         'trans_divisi_id',
         'trans_plat_nomor',

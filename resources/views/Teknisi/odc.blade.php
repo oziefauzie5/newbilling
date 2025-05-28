@@ -24,7 +24,7 @@
                       @csrf
                     <div class="modal-content">
                       <div class="modal-header bg-primary">
-                        <h4 class="modal-title">TAMBAH ODC </h4>
+                        <h4 class="modal-title">Tambah ODC </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -33,71 +33,101 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6 form-group">
-                                      <label>Site</label>
-                                      <select class="form-control" id="site" name=""  >
-                                        <option value="">PILIH SITE</option>
-                                        @foreach ($data_site as $d)
-                                        <option value="{{$d->site_id}}">{{$d->site_nama}}</option>
+                                      <label>Pilih OLT</label>
+                                      <select class="form-control" id="" name="data__olt_id"  >
+                                        <option value="">--Pilih Olt--</option>
+                                        @foreach ($data_olt as $d)
+                                        <option value="{{$d->id}}">{{$d->olt_nama}} -|- {{$d->router_nama}} -|- {{$d->pop_nama}} -|- {{$d->site_nama}} </option>
                                         @endforeach
                                       </select>
                                   </div>
-                                  <div class="col-6 form-group">
-                                      <label>POP</label>
-                                        <select class="form-control" id="pop" name=""  >
-                                          <option value="">- Pilih POP -</option>
-                                        </select>
-                                  </div>
-                                  <div class="col-6 form-group">
-                                      <label>OLT</label>
-                                        <select class="form-control" id="olt" name="odc_id_olt"  >
-                                          <option value="">- Pilih OLT -</option>
-                                        </select>
-                                  </div>
+                              <div class="col-6 form-group">
+                                  <label>Odc Id</label>
+                                  <input type="text" class="form-control"value="{{ Session::get('odc_id') }}" name="odc_id">
+                              </div>
                               <div class="col-6 form-group">
                                   <label>Nama Odc</label>
-                                  <input type="text" class="form-control" required name="odc_nama">
+                                  <input type="text" class="form-control"value="{{ Session::get('odc_nama') }}" name="odc_nama">
                               </div>
                               <div class="col-6 form-group">
                                   <label>PON OLT</label>
-                                  <input type="number" class="form-control" required max="8" name="odc_pon_olt">
+                                      <select name="odc_pon_olt" id="" class="form-control">
+                                      @if(Session::get('odc_pon_olt'))
+                                      <option value="{{ Session::get('odc_pon_olt') }}">{{ Session::get('odc_pon_olt') }}</option>
+                                      @endif
+                                    <option value="">--Pilih Pon OLT--</option>
+                                      <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                  </select>
                               </div>
                               <div class="col-6 form-group">
                                   <label>Core Kabel </label>
                                   <select name="odc_core" id="" class="form-control">
-                                    <option value="">- Pilih Warna Kabel -</option>
-                                    <option value="1">Biru</option>
-                                    <option value="2">Orange</option>
-                                    <option value="3">Hijau</option>
-                                    <option value="4">Coklat</option>
-                                    <option value="5">Abu-abu</option>
-                                    <option value="6">Putih</option>
-                                    <option value="7">Merah</option>
-                                    <option value="8">Hitam</option>
-                                    <option value="9">Kuning</option>
-                                    <option value="10">Ungu</option>
-                                    <option value="11">Pink</option>
-                                    <option value="12">Toska</option>
+                                       @if(Session::get('odc_core'))
+                                      <option value="{{ Session::get('odc_core') }}">{{ Session::get('odc_core') }}</option>
+                                      @endif
+                                    <option value="">- Pilih Core Kabel -</option>
+                                     <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
                                   </select>
                               </div>
                               <div class="col-6 form-group">
-                                  <label>Jumlah Port </label>
-                                  <input type="number" class="form-control" required  name="odc_jumlah_port">
+                                  <label>Jumlah Slot Spliter </label>
+                                    <select name="odc_jumlah_port" id="" class="form-control">
+                                      @if(Session::get('odc_jumlah_port'))
+                                      <option value="{{ Session::get('odc_jumlah_port') }}">{{ Session::get('odc_jumlah_port') }}</option>
+                                      @endif
+                                    <option value="">--Pilih Julah Slot--</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                  </select>
+                                  
                               </div>
                               <div class="col-6 form-group">
                                   <label>Keterangan</label>
-                                  <input type="text" class="form-control"  required name="odc_keterangan">
+                                  <input type="text" class="form-control" value="{{ Session::get('odc_keterangan') }}" name="odc_keterangan">
                               </div>
                               <div class="col-6 form-group">
                                   <label>Koodinat</label>
-                                  <input type="text" class="form-control"  required name="odc_koordinat">
+                                  <input type="text" class="form-control" value="{{ Session::get('odc_koordinat') }}" name="odc_koordinat">
                               </div>
                               <div class="col-6 form-group">
                                 <label>Upload Foto Lokasi</label>
-                                <input  type="file" class="form-control-file" required name="odc_lokasi_img">
+                                <input  type="file" class="form-control-file" name="odc_lokasi_img">
                               </div>
                               <div class="col-6 form-group">
                                 <label>Upload Foto Topologi</label>
-                                <input  type="file" class="form-control-file" required name="odc_topologi_img">
+                                <input  type="file" class="form-control-file" name="odc_file_topologi">
                               </div>
                             </div>
                             </div>
@@ -126,12 +156,14 @@
                     <tr>
                       <th>Site</th>
                       <th>Pop</th>
+                      <th>Router Distribusi</th>
                       <th>Olt</th>
-                      <th>Kode Odc</th>
-                      <th>Odc Pon</th>
+                      <th>Odc Nama</th>
+                      <th>Odc Id</th>
+                      <th>Olt Pon</th>
                       <th>Core</th>
-                      <th>Nama</th>
-                      <th>Jumlah Port</th>
+                      <th>Jumlah Slot Odc</th>
+                      <th>Slot Terpakai</th>
                       <th>Koordinat</th>
                       <th>Lokasi File</th>
                       <th>Topologi File</th>
@@ -145,56 +177,34 @@
                       <tr>
                                 <td>{{$d->site_nama}}</td>
                                 <td>{{$d->pop_nama}}</td>
+                                <td>{{$d->router_nama}}</td>
                                 <td>{{$d->olt_nama}}</td>
-                                <td>{{$d->odc_kode}}</td>
-                                <td>{{$d->odc_pon_olt}}</td>
-                                @if ($d->odc_core==1)
-                                <td>Biru</td>
-                                @elseif($d->odc_core == 2)
-                                <td>Orange</td>
-                                @elseif($d->odc_core == 3)
-                                <td>Hijau</td>
-                                @elseif($d->odc_core == 4)
-                                <td>Coklat</td>
-                                @elseif($d->odc_core == 5)
-                                <td>Abu-abu</td>
-                                @elseif($d->odc_core == 6)
-                                <td>Putih</td>
-                                @elseif($d->odc_core == 7)
-                                <td>Merah</td>
-                                @elseif($d->odc_core == 8)
-                                <td>Hitam</td>
-                                @elseif($d->odc_core == 9)
-                                <td>Kuning</td>
-                                @elseif($d->odc_core == 10)
-                                <td>Ungu</td>
-                                @elseif($d->odc_core == 11)
-                                <td>Pink</td>
-                                @elseif($d->odc_core == 12)
-                                <td>Toska</td>
-                                @endif
                                 <td>{{$d->odc_nama}}</td>
+                                <td>{{$d->odc_id}}</td>
+                                <td>{{$d->odc_pon_olt}}</td>
+                                <td>Core {{$d->odc_core}}</td>
                                 <td>{{$d->odc_jumlah_port}}</td>
+                                <td>{{$d->odp_odc->count()}}</td>
                                 <td>{{$d->odc_koordinat}}</td>
                                 <td>{{$d->odc_lokasi_img}}</td>
-                                <td>{{$d->odc_topologi_img}}</td>
+                                <td>{{$d->odc_file_topologi}}</td>
                                 <td>{{$d->odc_keterangan}}</td>
                                 <td>{{$d->odc_status}}</td>
                         <td>
                           <div class="form-button-action">
-                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->odc_id}}" class="btn btn-link btn-primary btn-lg">
+                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
                                 <i class="fa fa-edit"></i>
                               </button>
                             </div>
                           </td>
-                      <div class="modal fade" id="modal-edit{{$d->odc_id}}">
+                      <div class="modal fade" id="modal-edit{{$d->id}}">
                           <div class="modal-dialog modal-lg">
-                            <form action="{{route('admin.topo.update_odc',['id'=>$d->odc_id])}}" method="POST" enctype="multipart/form-data">
+                            <form action="{{route('admin.topo.update_odc',['id'=>$d->id])}}" method="POST" enctype="multipart/form-data">
                             @csrf  
                             @method('PUT')
                             <div class="modal-content">
                               <div class="modal-header bg-primary ">
-                                <h4 class="modal-title">EDIT OLT </h4>
+                                <h4 class="modal-title">Edit Odc </h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
@@ -202,110 +212,117 @@
                               <div class="modal-body">
                                 <div class="card-body">
                                   <div class="row">
-                                      <div class="col-6 form-group">
-                                          <label>Id ODC</label>
-                                          <input type="text" class="form-control"  required name="odc_kode" value="{{$d->odc_kode}}" readonly>
-                                      </div>
-                                      <div class="col-6 form-group">
-                                          <label>OLT</label>
-                                          <select required name="odc_id_olt" id=""  class="form-control">
-                                            <option value="{{$d->olt_id}}">{{$d->olt_nama}}</option>
-                                            @foreach ($data_olt as $da)
-                                            <option value="{{$da->olt_id}}">{{$da->olt_nama}}</option>
-                                            @endforeach
-                                          </select>
-                                      </div>
-                                <div class="col-6 form-group">
-                                    <label>Nama Odc</label>
-                                    <input type="text" class="form-control" required value="{{$d->odc_nama}}" name="odc_nama">
-                                </div>
-                                <div class="col-6 form-group">
-                                    <label>PON OLT</label>
-                                    <input type="number" class="form-control" required value="{{$d->odc_pon_olt}}"  name="odc_pon_olt">
-                                </div>
-                                <div class="col-6 form-group">
-                                    <label>Core Kabel </label>
-                                    <select name="odc_core" id="" class="form-control" required >
-                                      @if($d->odc_core == 1 )
-                                      <option value="1">Biru</option>
-                                      @elseif($d->odc_core == 2)
-                                      <option value="2">Orange</option>
-                                      @elseif($d->odc_core == 3)
-                                      <option value="3">Hijau</option>
-                                      @elseif($d->odc_core == 4)
-                                      <option value="4">Coklat</option>
-                                      @elseif($d->odc_core == 5)
-                                      <option value="5">Abu-abu</option>
-                                      @elseif($d->odc_core == 6)
-                                      <option value="6">Putih</option>
-                                      @elseif($d->odc_core == 7)
-                                      <option value="7">Merah</option>
-                                      @elseif($d->odc_core == 8)
-                                      <option value="8">Hitam</option>
-                                      @elseif($d->odc_core == 9)
-                                      <option value="9">Kuning</option>
-                                      @elseif($d->odc_core == 10)
-                                      <option value="10">Ungu</option>
-                                      @elseif($d->odc_core == 11)
-                                      <option value="11">Pink</option>
-                                      @elseif($d->odc_core == 12)
-                                      <option value="12">Toska</option>
+                                    <div class="col-6 form-group">
+                                      <label>Pilih OLT</label>
+                                      <select class="form-control" id="" name="data__olt_id"  >
+                                        @if($d->data__olt_id)
+                                        <option value="{{$d->data__olt_id}}">{{$d->olt_nama}} -|- {{$d->router_nama}} -|- {{$d->pop_nama}} -|- {{$d->site_nama}} </option>
+                                        @endif
+                                        @foreach ($data_olt as $olt)
+                                        <option value="{{$olt->id}}">{{$olt->olt_nama}} -|- {{$olt->router_nama}} -|- {{$olt->pop_nama}} -|- {{$olt->site_nama}} </option>
+                                        @endforeach
+                                      </select>
+                                  </div>
+                              <div class="col-6 form-group">
+                                  <label>Odc Id</label>
+                                  <input type="text" class="form-control"value="{{$d->odc_id}}" name="odc_id">
+                              </div>
+                              <div class="col-6 form-group">
+                                  <label>Nama Odc</label>
+                                  <input type="text" class="form-control"value="{{$d->odc_nama}}" name="odc_nama">
+                              </div>
+                              <div class="col-6 form-group">
+                                  <label>PON OLT</label>
+                                      <select name="odc_pon_olt" id="" class="form-control">
+                                      @if($d->odc_pon_olt)
+                                      <option value="{{ $d->odc_pon_olt }}">{{ $d->odc_pon_olt }}</option>
                                       @endif
-                                      <option value="">- Pilih Warna Kabel -</option>
-                                      <option value="1">Biru</option>
-                                      <option value="2">Orange</option>
-                                      <option value="3">Hijau</option>
-                                      <option value="4">Coklat</option>
-                                      <option value="5">Abu-abu</option>
-                                      <option value="6">Putih</option>
-                                      <option value="7">Merah</option>
-                                      <option value="8">Hitam</option>
-                                      <option value="9">Kuning</option>
-                                      <option value="10">Ungu</option>
-                                      <option value="11">Pink</option>
-                                      <option value="12">Toska</option>
-                                    </select>
-                                </div>
-                                <div class="col-6 form-group">
-                                    <label>Jumlah Port </label>
-                                    <input type="number" class="form-control" required value="{{$d->odc_jumlah_port}}"  name="odc_jumlah_port">
-                                </div>
-                                <div class="col-6 form-group">
-                                    <label>Keterangan</label>
-                                    <input type="text" class="form-control"  required value="{{$d->odc_keterangan}}" name="odc_keterangan">
-                                </div>
-                                <div class="col-6 form-group">
-                                    <label>Koodinat</label>
-                                    <input type="text" class="form-control"  required value="{{$d->odc_koordinat}}" name="odc_koordinat">
-                                </div>
-                                <div class="col-6 form-group">
-                                  <label>Upload Foto Lokasi</label>
-                                  <input  type="file" class="form-control-file"   name="odc_lokasi_img">
-                                </div>
-                                <div class="col-6 form-group">
-                                  <label>Upload Foto Topologi</label>
-                                  <input  type="file" class="form-control-file"   name="odc_topologi_img">
-                                </div>
-                                <div class="col-12 form-group">
-                                  <label>Status</label>
-                                  <select name="odc_status" class="form-control">
-                                    @if($d->odc_status) 
-                                    <option value="{{$d->odc_status}}">{{$d->odc_status}}</option>
-                                    @endif
-                                  <option value="">Pilih Status</option>
-                                    <option value="Enable">Enable</option>
-                                    <option value="Disable">Disable</option>
+                                    <option value="">--Pilih Pon OLT--</option>
+                                      <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
                                   </select>
                               </div>
-                                <div class="col-6 form-group">
-                                  <label>Lokasi</label>
-                                  <img src="{{ asset('storage/topologi/'.$d->odc_lokasi_img) }}" width="100%" alt="" title=""></img>
-                                </div>
-                                <div class="col-6 form-group">
-                                  <label>Topologi</label>
-                                  <img src="{{ asset('storage/topologi/'.$d->odc_topologi_img) }}" width="100%" alt="" title=""></img>
-                                </div>
+                              <div class="col-6 form-group">
+                                  <label>Core Kabel </label>
+                                    <select name="odc_core" id="" class="form-control">
+                                      @if($d->odc_core)
+                                      <option value="{{ $d->odc_core }}">{{ $d->odc_core }}</option>
+                                      @endif
+                                    <option value="">- Pilih Core Kabel -</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                  </select>
                               </div>
+                              <div class="col-6 form-group">
+                                  <label>Jumlah Slot Spliter </label>
+                                    <select name="odc_jumlah_port" id="" class="form-control">
+                                      @if($d->odc_jumlah_port)
+                                      <option value="{{ $d->odc_jumlah_port }}">{{ $d->odc_jumlah_port }}</option>
+                                      @endif
+                                    <option value="">--Pilih Julah Slot--</option>
+                                      <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                  </select>
+                                  
+                              </div>
+                              <div class="col-6 form-group">
+                                  <label>Keterangan</label>
+                                  <input type="text" class="form-control" value="{{ $d->odc_keterangan }}" name="odc_keterangan">
+                              </div>
+                              <div class="col-6 form-group">
+                                  <label>Koodinat</label>
+                                  <input type="text" class="form-control" value="{{ $d->odc_koordinat }}" name="odc_koordinat">
+                              </div>
+                              <div class="col-6 form-group">
+                                <label>Upload Foto Lokasi</label>
+                                <input  type="file" class="form-control-file" name="odc_lokasi_img">
+                              </div>
+                              <div class="col-6 form-group">
+                                <label>Upload Foto Topologi</label>
+                                <input  type="file" class="form-control-file" name="odc_file_topologi">
+                              </div>
+                              
+                              <div class="col-6 form-group">
+                                    <label>Status</label>
+                                    <select name="odc_status" class="form-control">
+                                      @if($d->odc_status) 
+                                      <option value="{{$d->odc_status}}">{{$d->odc_status}}</option>
+                                      @endif
+                                      <option value="Enable">Enable</option>
+                                      <option value="Disable">Disable</option>
+                                    </select>
+                                </div>
+                            </div>
                               </div>
                         </div>
                               <div class="modal-footer justify-content-between">

@@ -36,19 +36,19 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>Nama Lengkap</label>
-                          <input id="name" type="text" class="form-control" name="name"placeholder="Nama Lengkap" value="{{ old('name') }}" required>
+                          <input id="name" type="text" class="form-control" name="name"placeholder="Nama Lengkap" value="{{ old('name') }}">
                         </div>
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>No Identitas</label>
-                          <input id="ktp" type="number" class="form-control" value="{{ old('ktp') }}" name="ktp" onkeyup="validasiKtp()" placeholder="No. Identitas" required>
+                          <input id="ktp" type="number" class="form-control" value="{{ old('ktp') }}" name="ktp" onkeyup="validasiKtp()" placeholder="No. Identitas">
                         </div>
                       </div>
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>No Hp</label>
-                          <input id="hp" type="number" class="form-control" value="{{ old('hp') }}" name="hp" placeholder="No. Whatsapp" required>
+                          <input id="hp" type="number" class="form-control" value="{{ old('hp') }}" name="hp" placeholder="No. Whatsapp">
                         </div>
                       </div>
                       <div class="col-sm-12">
@@ -66,10 +66,10 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>Site</label>
-                          <select name="user_site" class="form-control" id="">
+                          <select name="data__site_id" class="form-control" id="">
                           <option value="">--Pilih Site--</option>
                           @foreach ($data_site as $site)
-                              <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
+                              <option value="{{$site->id}}">{{$site->site_nama}}</option>
                           @endforeach
                         </select>
                         </div>
@@ -89,7 +89,7 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label for="level" >Level</label>
-                          <select name="level" id="level" class="form-control" required value="{{ old('level') }}">
+                          <select name="level" id="level" class="form-control" value="{{ old('level') }}">
                               <option value="">-PILIH-</option>
                               <option value="1|admin">ADMINISTRATOR</option>
                               <option value="5|STAF ADMIN">STAF ADMIN</option>
@@ -97,10 +97,9 @@
                               <option value="8|KEUANGAN">KEUANGAN</option>
                               <option value="9|GUDANG">GUDANG</option>
                               <option value="11|TEKNISI">TEKNISI</option>
-                              <option value="12|SALES">SALES</option>
-                              <option value="14|RESELLER">RESELLER</option>
+                              
                             </select>
-                        </div>>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -133,6 +132,7 @@
                   <th>Whatsapp</th>
                   <th>Site</th>
                   <th width="250%">Alamat Lengkap</th>
+                  <th>Tanggal Gabung</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -141,12 +141,13 @@
                 @foreach ($data_user as $d)
                 <tr>
                       <td>{{$d->id}}</td>
-                      <td> <img src="{{ asset('storage/photo-user/'.$d->photo) }}" width="100" alt="" title=""></img></td>
-                      <td>{{$d->name}}</td>
-                      <td>{{$d->level}}</td>
-                      <td>{{$d->hp}}</td>
-                      <td>{{$d->site_nama}}</td>
-                      <td width="250px">{{$d->alamat_lengkap}}</td>
+                      <td> <img src="{{ asset('storage/photo-user/'.$d->photo ?? '-') }}" width="100" alt="" title=""></img></td>
+                      <td>{{$d->name ?? '-'}}</td>
+                      <td>{{$d->level ?? '-'}}</td>
+                      <td>{{$d->hp ?? '-'}}</td>
+                      <td>{{$d->user_site->site_nama ?? '-'}}</td>
+                      <td width="250px">{{$d->alamat_lengkap ?? '-'}}</td>
+                      <td>{{date('d-m-Y', strtotime($d->tgl_gabung)) ?? '-'}}</td>
                       <td>{{$d->status_user}}</td>
                       <td>
                         <div class="form-button-action">
@@ -207,13 +208,12 @@
                                   <div class="col-sm-12">
                                     <div class="form-group">
                                       <label>Site</label>
-                                      <select name="user_site" class="form-control" id="">
-                                        @if ($d->user_site)
-                                            <option value="{{ $d->user_site }}">{{ $d->site_nama }}</option>
+                                      <select name="data__site_id" class="form-control" id="">
+                                        @if ($d->data__site_id)
+                                            <option value="{{ $d->data__site_id }}">{{ $d->user_site->site_nama }}</option>
                                         @endif
-                                      <option value="">--Pilih Site--</option>
                                       @foreach ($data_site as $site)
-                                          <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
+                                          <option value="{{$site->id}}">{{$site->site_nama}}</option>
                                       @endforeach
                                     </select>
                                     </div>

@@ -7,55 +7,62 @@ use App\Http\Controllers\Global\GlobalController;
 use App\Models\Aplikasi\Data_Site;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
+use App\Models\Router\Router;
 use App\Models\Teknisi\Data_Odc;
 use App\Models\Teknisi\Data_Odp;
 use App\Models\Teknisi\Data_Olt;
+use App\Models\Teknisi\Data_OltSub;
 use App\Models\Teknisi\Data_pop;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class TopologiController extends Controller
 {
     public function pop()
     {
-
-        $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
-        $data['data_pop'] = Data_pop::join('data__sites', 'data__sites.site_id', '=', 'data_pops.pop_id_site')->get();
+        $data['data_site'] = Data_Site::where('corporate_id',Session::get('corp_id'))->where('site_status', 'Enable')->get();
+        $data['data_pop'] = Data_pop::where('corporate_id',Session::get('corp_id'))->with('pop_site')->get();
 
         return view('Teknisi/pop', $data);
     }
 
     public function pop_store(Request $request)
     {
-        $query = Data_pop::query();
-        $count1 = $query->count();
-        $count2 = $query->where('pop_id_site', $request->pop_id_site)->count(); #sesuai site
-
-        if ($count1 == 0) {
-            $store_pop['pop_id'] = '1';
-        } else {
-            $store_pop['pop_id'] = $count1 + 1;
-        }
-        if ($count2 == 0) {
-            $store_pop['pop_kode'] = $request->pop_id_site . '.' . '1';
-        } else {
-            $store_pop['pop_kode'] = $request->pop_id_site . '.' . $count2 + 1;
-        }
-        $store_pop['pop_id_site'] = $request->pop_id_site;
-        $store_pop['pop_nama'] = $request->pop_nama;
-        $store_pop['pop_alamat'] = $request->pop_alamat;
+        Session::flash('pop_nama', $request->pop_nama); #
+        Session::flash('pop_alamat', $request->pop_alamat); #
+        Session::flash('pop_koordinat', $request->pop_koordinat); #
+        Session::flash('data__site_id', $request->data__site_id); #
+         $request->validate([
+            'pop_nama' => 'required',
+            'pop_alamat' => 'required',
+            'pop_koordinat' => 'required',
+            'data__site_id' => 'required',
+            'pop_file_topologi' => 'required|max:1000|mimes:pdf',
+       
+        ], [
+            'pop_nama.required' => 'Nama tidak boleh kosong',
+            'pop_alamat.required' => 'Alamat tidak boleh kosong',
+            'pop_koordinat.required' => 'Koordinat tidak boleh kosong',
+            'data__site_id.required' => 'Site tidak boleh kosong',
+            'pop_file_topologi.required' => 'File tidak boleh kosong',
+            'pop_file_topologi.max' => 'Ukuran File terlalu besar',
+            'pop_file_topologi.mimes' => 'Format hanya bisa pdf',
+        ]);
+        
+        $store_pop['corporate_id'] = Session::get('corp_id');
+        $store_pop['data__site_id'] = $request->data__site_id;
+        $store_pop['pop_nama'] = strtoupper($request->pop_nama);
+        $store_pop['pop_alamat'] = strtoupper($request->pop_alamat);
         $store_pop['pop_koordinat'] = $request->pop_koordinat;
-        $store_pop['pop_ip1'] = $request->pop_ip1;
-        $store_pop['pop_ip2'] = $request->pop_ip2;
-        $store_pop['pop_keterangan'] = $request->pop_keterangan;
         $store_pop['pop_status'] = 'Enable';
-        // dd($store_pop);
-        $photo = $request->file('pop_topologi_img');
-        $filename = $photo->getClientOriginalName();
+        
+        $photo = $request->file('pop_file_topologi');
+        $filename = Session::get('corp_id').'_'.$store_pop['pop_nama'].'.pdf';
         $path = 'topologi/' . $filename;
         Storage::disk('public')->put($path, file_get_contents($photo));
-        $store_pop['pop_topologi_img'] = $filename;
+        $store_pop['pop_file_topologi'] = $filename;
 
 
         Data_pop::create($store_pop);
@@ -67,27 +74,45 @@ class TopologiController extends Controller
     }
     public function update_pop(Request $request, $id)
     {
+        Session::flash('pop_nama', $request->pop_nama); #
+        Session::flash('pop_alamat', $request->pop_alamat); #
+        Session::flash('pop_koordinat', $request->pop_koordinat); #
+        Session::flash('data__site_id', $request->data__site_id); #
+         $request->validate([
+            'pop_nama' => 'required',
+            'pop_alamat' => 'required',
+            'pop_koordinat' => 'required',
+            'data__site_id' => 'required',
+       
+        ], [
+            'pop_nama.required' => 'Nama tidak boleh kosong',
+            'pop_alamat.required' => 'Alamat tidak boleh kosong',
+            'pop_koordinat.required' => 'Koordinat tidak boleh kosong',
+            'data__site_id.required' => 'Site tidak boleh kosong',
+        ]);
 
-        $find = Data_pop::where('pop_id', $id)->first();
-        $store_pop['pop_nama'] = $request->pop_nama;
-        $store_pop['pop_alamat'] = $request->pop_alamat;
+        $store_pop['pop_nama'] = strtoupper($request->pop_nama);
+        $store_pop['pop_alamat'] = strtoupper($request->pop_alamat);
         $store_pop['pop_koordinat'] = $request->pop_koordinat;
-        $store_pop['pop_ip1'] = $request->pop_ip1;
-        $store_pop['pop_ip2'] = $request->pop_ip2;
-        $store_pop['pop_keterangan'] = $request->pop_keterangan;
         $store_pop['pop_status'] = $request->pop_status;
-        $photo = $request->file('pop_topologi_img');
+        $photo = $request->file('pop_file_topologi');
         if ($photo) {
-            $filename = $photo->getClientOriginalName();
+            $request->validate([
+                'pop_file_topologi' => 'required|max:1000|mimes:pdf',
+                
+            ], [
+                'pop_file_topologi.required' => 'File tidak boleh kosong',
+                'pop_file_topologi.max' => 'Ukuran File terlalu besar',
+                'pop_file_topologi.mimes' => 'Format hanya bisa pdf',
+            ]);
+            $photo = $request->file('pop_file_topologi');
+            $filename = Session::get('corp_id').'_'.$store_pop['pop_nama'].'.pdf';
             $path = 'topologi/' . $filename;
-            if ($find->pop_topologi_img) {
-                Storage::disk('public')->delete('topologi/' . $find->pop_topologi_img);
-            }
             Storage::disk('public')->put($path, file_get_contents($photo));
-            $store_pop['pop_topologi_img'] = $filename;
+            $store_pop['pop_file_topologi'] = $filename;
         }
 
-        Data_pop::where('pop_id', $id)->update($store_pop);
+        Data_pop::where('corporate_id',Session::get('corp_id'))->where('id', $id)->update($store_pop);
         $notifikasi = array(
             'pesan' => 'Berhasil update data Site',
             'alert' => 'success',
@@ -96,65 +121,63 @@ class TopologiController extends Controller
     }
     public function olt()
     {
-
-        $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
-        $data['data_barang'] = Data_Barang::where('barang_status', '0')->get();
-        $data['data_pop'] = Data_pop::where('pop_status', 'Enable')->get();
-        // $data['data_olt'] = Data_Site::join('data_pops', 'data_pops.pop_id_site', '=', 'data__sites.site_id')
-        //     ->join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
-        //     ->get();
-        $data['data_olt'] = Data_Olt::join('data_pops', 'data_pops.pop_id', '=', 'data__olts.olt_id_pop')
-            ->join('data__sites', 'data__sites.site_id', '=', 'data_pops.pop_id_site')
+        $data['data_olt'] = Data_Olt::query()
+            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->with('olt_odc')
+            ->where('data__olts.corporate_id',Session::get('corp_id'))
+             ->select('data__olts.id','data__olts.*','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
             ->get();
-
-
-        return view('Teknisi/olt', $data);
-    }
-
-
-
+        $data['data_router'] = Router::query()
+            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->where('routers.corporate_id',Session::get('corp_id'))
+            ->where('router_status','Enable')
+            ->select('routers.id as router_id','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->get();
+            
+            
+            return view('Teknisi/olt', $data);
+        }
+        
+        
+        
     public function olt_store(Request $request)
     {
 
+         Session::flash('router_id', $request->router_id); #
+        Session::flash('olt_nama', $request->olt_nama); #
+        Session::flash('olt_pon', $request->olt_pon); #
+         $request->validate([
+            'router_id' => 'required',
+            'olt_nama' => 'required',
+            'olt_pon' => 'required',
+            'olt_file_topologi' => 'required|max:1000|mimes:pdf',
+          
 
-        $data_pop = Data_Pop::where('pop_id', $request->olt_id_pop)->first();
-        $query = Data_Olt::query();
-        $count1 = $query->count();
-        $count2 = $query->where('olt_id_pop', $request->olt_id_pop)->count(); #sesuai site
+       
+        ], [
+            'router_id.required' => 'Router tidak boleh kosong',
+            'olt_nama.required' => 'Nama Olt tidak boleh kosong',
+            'olt_pon.required' => 'Jumlah Pon tidak boleh kosong',
+            'olt_file_topologi.required' => 'File tidak boleh kosong',
+            'olt_file_topologi.max' => 'Ukuran File terlalu besar',
+            'olt_file_topologi.mimes' => 'Format hanya bisa pdf',
+        ]);
 
-        if ($count1 == 0) {
-            $store_olt['olt_id'] = '1';
-        } else {
-            $store_olt['olt_id'] = $count1 + 1;
-        }
-        if ($count2 == 0) {
-            $store_olt['olt_kode'] = $data_pop->pop_kode . '.' . '1';
-        } else {
-            $store_olt['olt_kode'] = $data_pop->pop_kode . '.' . $count2 + 1;
-        }
-
-        $store_olt['olt_id_pop'] = $request->olt_id_pop;
-        $store_olt['olt_nama'] = $request->olt_nama;
-        $store_olt['olt_merek'] = $request->olt_merek;
-        $store_olt['olt_mac'] = $request->olt_mac;
-        $store_olt['olt_sn'] = $request->olt_sn;
+        $store_olt['corporate_id'] = Session::get('corp_id');
+        $store_olt['router_id'] = $request->router_id;
         $store_olt['olt_pon'] = $request->olt_pon;
-        $store_olt['olt_ip'] = $request->olt_ip;
-        $store_olt['olt_username'] = $request->olt_username;
-        $store_olt['olt_password'] = $request->olt_password;
-        $store_olt['olt_ip_default'] = $request->olt_ip_default;
-        $store_olt['olt_username_default'] = $request->olt_username_default;
-        $store_olt['olt_password_default'] = $request->olt_password_default;
-        $store_olt['olt_keterangan'] = $request->olt_keterangan;
+        $store_olt['olt_nama'] = strtoupper($request->olt_nama);
         $store_olt['olt_status'] = 'Enable';
-        // dd($store_olt);
-
-        $photo = $request->file('olt_topologi_img');
-        $filename = $photo->getClientOriginalName();
+        
+        $photo = $request->file('olt_file_topologi');
+        $filename = Session::get('corp_id').'_'.$store_olt['olt_nama'].'.pdf';
         $path = 'topologi/' . $filename;
         Storage::disk('public')->put($path, file_get_contents($photo));
-        $store_olt['olt_topologi_img'] = $filename;
-
+        $store_olt['olt_file_topologi'] = $filename;
+        
         Data_Olt::create($store_olt);
         // dd($store_olt['olt_id']);
         $notifikasi = array(
@@ -163,55 +186,53 @@ class TopologiController extends Controller
         );
         return redirect()->route('admin.topo.olt')->with($notifikasi);
     }
-
+    
     public function update_olt(Request $request, $id)
     {
-        $find = Data_Olt::where('olt_id', $id)->first();
+        $store_olt['router_id'] = $request->router_id;
         $store_olt['olt_nama'] = $request->olt_nama;
-        $store_olt['olt_merek'] = $request->olt_merek;
-        $store_olt['olt_mac'] = $request->olt_mac;
-        $store_olt['olt_sn'] = $request->olt_sn;
         $store_olt['olt_pon'] = $request->olt_pon;
-        $store_olt['olt_ip'] = $request->olt_ip;
-        $store_olt['olt_username'] = $request->olt_username;
-        $store_olt['olt_password'] = $request->olt_password;
-        $store_olt['olt_ip_default'] = $request->olt_ip_default;
-        $store_olt['olt_username_default'] = $request->olt_username_default;
-        $store_olt['olt_password_default'] = $request->olt_password_default;
-        $store_olt['olt_keterangan'] = $request->olt_keterangan;
         $store_olt['olt_status'] = $request->olt_status;
         // dd($store_pop);
-        $photo = $request->file('olt_topologi_img');
+        $photo = $request->file('olt_file_topologi');
         if ($photo) {
-            $filename = $photo->getClientOriginalName();
+            $filename = Session::get('corp_id').'_'.$store_olt['olt_nama'].'.pdf';
             $path = 'topologi/' . $filename;
-            if ($find->olt_topologi_img) {
-                Storage::disk('public')->delete('topologi/' . $find->olt_topologi_img);
-            }
             Storage::disk('public')->put($path, file_get_contents($photo));
-            $store_olt['olt_topologi_img'] = $filename;
+            $store_olt['olt_file_topologi'] = $filename;
         }
-
-        Data_Olt::where('olt_id', $id)->update($store_olt);
+        
+        Data_Olt::where('corporate_id',Session::get('corp_id'))->where('id', $id)->update($store_olt);
         $notifikasi = array(
             'pesan' => 'Berhasil update data Site',
             'alert' => 'success',
         );
         return redirect()->route('admin.topo.olt')->with($notifikasi);
     }
-
-
+    
+    
     public function odc()
-    {
+    {        
+        $data['data_olt'] = Data_Olt::query()
+            ->join('routers', 'routers.id', '=', 'data__olts.id')
+            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->where('router_status','Enable')
+            ->where('routers.corporate_id',Session::get('corp_id'))
+            ->select('data__olts.id','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->get();
 
-        $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
-
-        $data['data_barang'] = Data_Barang::where('barang_status', '0')->get();
-        $data['data_olt'] = Data_Olt::where('olt_status', 'Enable')->get();
-        $data['data_odc'] = Data_Odc::join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
-            ->join('data_pops', 'data_pops.pop_id', '=', 'data__olts.olt_id_pop')
-            ->join('data__sites', 'data__sites.site_id', '=', 'data_pops.pop_id_site')
-            ->orderBy('odc_kode','ASC')
+            // dd($data['data_olt'] );
+            
+        $data['data_odc'] = Data_Odc::query()
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->where('data__odcs.corporate_id',Session::get('corp_id'))
+            ->select('data__odcs.*','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->orderBy('odc_id','ASC')
+            ->with('odp_odc')
             ->get();
 
         return view('Teknisi/odc', $data);
@@ -219,42 +240,68 @@ class TopologiController extends Controller
 
     public function odc_store(Request $request)
     {
+            Session::flash('odc_id', $request->odc_id); #
+            Session::flash('odc_nama', $request->odc_nama); #
+            Session::flash('odc_pon_olt', $request->odc_pon_olt); #
+            Session::flash('odc_core', $request->odc_pon_olt); #
+            Session::flash('data__olt_id', $request->data__olt_id); #
+            Session::flash('odc_jumlah_port', $request->odc_jumlah_port); #
+            Session::flash('odc_keterangan', $request->odc_keterangan); #
+            Session::flash('odc_koordinat', $request->odc_koordinat); #
+         $request->validate([
+            'odc_id' => 'required',
+            'odc_nama' => 'required',
+            'odc_pon_olt' => 'required',
+            'odc_core' => 'required',
+            'data__olt_id' => 'required',
+            'odc_jumlah_port' => 'required',
+            'odc_keterangan' => 'required',
+            'odc_koordinat' => 'required',
+            'odc_file_topologi' => 'required|max:1000|mimes:pdf',
+            'odc_lokasi_img' => 'required|max:1000|mimes:jpeg',
+          
 
-        $data_olt = Data_Olt::where('olt_id', $request->odc_id_olt)->first();
-        $query = Data_Odc::query();
-        $count1 = $query->count();
-        $count2 = $query->where('odc_id_olt', $request->odc_id_olt)->count(); #sesuai site
+       
+        ], [
+            'odc_id.required' => 'Odc Id tidak boleh kosong',
+            'odc_nama.required' => 'Nama Olt tidak boleh kosong',
+            'odc_pon_olt.required' => 'Pon Olt tidak boleh kosong',
+            'odc_core.required' => 'Core Kabel tidak boleh kosong',
+            'data__olt_id.required' => 'Olt tidak boleh kosong',
+            'odc_jumlah_port.required' => 'Jumlah Slot tidak boleh kosong',
+            'odc_keterangan.required' => 'Keterangan tidak boleh kosong',
+            'odc_koordinat.required' => 'Koordinat tidak boleh kosong',
+            'odc_file_topologi.required' => 'File pdf tidak boleh kosong',
+            'odc_file_topologi.max' => 'Ukuran File Pdf terlalu besar',
+            'odc_file_topologi.mimes' => 'Topologi Format hanya bisa pdf',
+            'odc_lokasi_img.required' => 'Foto lokasi tidak boleh kosong',
+            'odc_lokasi_img.max' => 'Ukuran foto lokasi terlalu besar',
+            'odc_lokasi_img.mimes' => 'Format foto lokasi hanya bisa jpeg',
+        ]);
 
-        if ($count1 == 0) {
-            $store['odc_id'] = '1';
-        } else {
-            $store['odc_id'] = $count1 + 1;
-        }
-        if ($count2 == 0) {
-            $store['odc_kode'] = $data_olt->olt_kode . '.' . '1';
-        } else {
-            $store['odc_kode'] = $data_olt->olt_kode . '.' . $count2 + 1;
-        }
+        
 
-        $store['odc_id_olt'] = $request->odc_id_olt;
+        $store['corporate_id'] = Session::get('corp_id');
+        $store['odc_id'] = $request->odc_id;
+        $store['odc_nama'] = $request->odc_nama;
         $store['odc_pon_olt'] = $request->odc_pon_olt;
         $store['odc_core'] = $request->odc_core;
-        $store['odc_nama'] = $request->odc_nama;
+        $store['data__olt_id'] = $request->data__olt_id;
         $store['odc_jumlah_port'] = $request->odc_jumlah_port;
-        $store['odc_koordinat'] = $request->odc_koordinat;
         $store['odc_keterangan'] = $request->odc_keterangan;
+        $store['odc_koordinat'] = $request->odc_koordinat;
         $store['odc_status'] = 'Enable';
 
-        // dd($store);
+        // dd($request->all());
 
-        $photo = $request->file('odc_topologi_img');
-        $filename = $photo->getClientOriginalName();
+        $photo = $request->file('odc_file_topologi');
+        $filename = Session::get('corp_id').'_'.$store['odc_nama'].'.pdf';
         $path = 'topologi/' . $filename;
         Storage::disk('public')->put($path, file_get_contents($photo));
-        $store['odc_topologi_img'] = $filename;
+        $store['odc_file_topologi'] = $filename;
 
         $photo_2 = $request->file('odc_lokasi_img');
-        $filename_2 = $photo_2->getClientOriginalName();
+        $filename_2 = Session::get('corp_id').'_'.$store['odc_nama'].'.jpeg';
         $path_2 = 'topologi/' . $filename_2;
         Storage::disk('public')->put($path_2, file_get_contents($photo_2));
         $store['odc_lokasi_img'] = $filename_2;
@@ -271,42 +318,75 @@ class TopologiController extends Controller
 
     public function update_odc(Request $request, $id)
     {
-        $exp = explode(".", $request->odc_kode);
-        $update_kode = $exp[0] . '.' . $exp[1] . '.' . $request->odc_id_olt . '.' . $exp[3];
-        $find = Data_Odc::where('odc_id', $id)->first();
-        $store['odc_kode'] = $update_kode;
-        $store['odc_id_olt'] = $request->odc_id_olt;
+        Session::flash('odc_id', $request->odc_id); #
+            Session::flash('odc_nama', $request->odc_nama); #
+            Session::flash('odc_pon_olt', $request->odc_pon_olt); #
+            Session::flash('odc_core', $request->odc_pon_olt); #
+            Session::flash('data__olt_id', $request->data__olt_id); #
+            Session::flash('odc_jumlah_port', $request->odc_jumlah_port); #
+            Session::flash('odc_keterangan', $request->odc_keterangan); #
+            Session::flash('odc_koordinat', $request->odc_koordinat); #
+         $request->validate([
+            'odc_id' => 'required',
+            'odc_nama' => 'required',
+            'odc_pon_olt' => 'required',
+            'odc_core' => 'required',
+            'data__olt_id' => 'required',
+            'odc_jumlah_port' => 'required',
+            'odc_keterangan' => 'required',
+            'odc_koordinat' => 'required',
+        ], [
+            'odc_id.required' => 'Odc Id tidak boleh kosong',
+            'odc_nama.required' => 'Nama Olt tidak boleh kosong',
+            'odc_pon_olt.required' => 'Pon Olt tidak boleh kosong',
+            'odc_core.required' => 'Core Kabel tidak boleh kosong',
+            'data__olt_id.required' => 'Olt tidak boleh kosong',
+            'odc_jumlah_port.required' => 'Jumlah Slot tidak boleh kosong',
+            'odc_keterangan.required' => 'Keterangan tidak boleh kosong',
+            'odc_koordinat.required' => 'Koordinat tidak boleh kosong',
+        ]);
+
+        $store['odc_id'] = $request->odc_id;
+        $store['odc_nama'] = $request->odc_nama;
         $store['odc_pon_olt'] = $request->odc_pon_olt;
         $store['odc_core'] = $request->odc_core;
-        $store['odc_nama'] = $request->odc_nama;
+        $store['data__olt_id'] = $request->data__olt_id;
         $store['odc_jumlah_port'] = $request->odc_jumlah_port;
-        $store['odc_koordinat'] = $request->odc_koordinat;
         $store['odc_keterangan'] = $request->odc_keterangan;
+        $store['odc_koordinat'] = $request->odc_koordinat;
         $store['odc_status'] = $request->odc_status;
-        // dd($store_pop);
-        $photo = $request->file('odc_topologi_img');
+        // dd($store);
+        $photo = $request->file('odc_file_topologi');
         if ($photo) {
+            $request->validate([
+            'odc_file_topologi' => 'required|max:1000|mimes:pdf',
+        ], [
+            'odc_file_topologi.required' => 'File pdf tidak boleh kosong',
+            'odc_file_topologi.max' => 'Ukuran File Pdf terlalu besar',
+            'odc_file_topologi.mimes' => 'Topologi Format hanya bisa pdf',
+        ]);
 
-            $filename = $photo->getClientOriginalName();
+             $filename = Session::get('corp_id').'_'.$store['odc_nama'].'.pdf';
             $path = 'topologi/' . $filename;
-            if ($find->odc_topologi_img) {
-                Storage::disk('public')->delete('topologi/' . $find->odc_topologi_img);
-            }
             Storage::disk('public')->put($path, file_get_contents($photo));
-            $store['odc_topologi_img'] = $filename;
+            $store['odc_file_topologi'] = $filename;
         }
         $photo_2 = $request->file('odc_lokasi_img');
         if ($photo_2) {
-            $filename_2 = $photo_2->getClientOriginalName();
+               $request->validate([
+            'odc_lokasi_img' => 'required|max:1000|mimes:jpeg',
+        ], [
+            'odc_lokasi_img.required' => 'Foto lokasi tidak boleh kosong',
+            'odc_lokasi_img.max' => 'Ukuran foto lokasi terlalu besar',
+            'odc_lokasi_img.mimes' => 'Foto lokasi Format hanya bisa jpeg',
+        ]);
+             $filename_2 = Session::get('corp_id').'_'.$store['odc_nama'].'.jpeg';
             $path_2 = 'topologi/' . $filename_2;
-            if ($find->odc_lokasi_img) {
-                Storage::disk('public')->delete('topologi/' . $find->odc_lokasi_img);
-            }
             Storage::disk('public')->put($path_2, file_get_contents($photo_2));
             $store['odc_lokasi_img'] = $filename_2;
         }
 
-        Data_Odc::where('odc_id', $id)->update($store);
+        Data_Odc::where('id', $id)->where('data__odcs.corporate_id',Session::get('corp_id'))->update($store);
         $notifikasi = array(
             'pesan' => 'Berhasil update data Odc',
             'alert' => 'success',
@@ -316,68 +396,118 @@ class TopologiController extends Controller
 
     public function odp()
     {
-
-        $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
-        $data['data_olt'] = Data_Olt::where('olt_status', 'Enable')->get();
-        $data['data_odc'] = Data_Odc::where('odc_status', 'Enable')->get();
-        $data['data_odp'] = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
-            ->join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
-            ->join('data_pops', 'data_pops.pop_id', '=', 'data__olts.olt_id_pop')
-            ->join('data__sites', 'data__sites.site_id', '=', 'data_pops.pop_id_site')
-            ->orderBy('odP_kode','ASC')
+        $data['data_odc'] = Data_Odc::query()
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->where('data__odcs.corporate_id',Session::get('corp_id'))
+            ->select('data__odcs.id','data__odcs.odc_nama','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
             ->get();
-
+            
+            $data['data_odp'] = Data_Odp::query()
+            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->where('data__odcs.corporate_id',Session::get('corp_id'))
+            ->select('data__odps.*','data__odcs.odc_nama','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->with('data_isntalasi')
+            ->orderBy('data__odps.odp_id','ASC')
+            ->get();
+        // echo $data['data_odp'];
         return view('Teknisi/odp', $data);
+    }
+    public function odp_instalasi($id)
+    {
+            $data['details_odp'] = Data_Odp::where('data__odps.id',$id)->first();
+            $data['data_odp'] = Data_Odp::query()
+            ->join('ftth_instalasis', 'ftth_instalasis.data__odp_id', '=', 'data__odps.id')
+            ->join('input_data', 'input_data.id', '=', 'ftth_instalasis.id')
+            ->select([
+                'ftth_instalasis.id as idpel',
+                'ftth_instalasis.reg_slot_odp',
+                'data__odps.*',
+                'input_data.input_nama',
+                'input_data.input_alamat_pasang',
+            ])
+            ->orderBy('ftth_instalasis.reg_slot_odp','ASC')
+            ->where('data__odps.id',$id)
+            ->get();
+        // echo $data['data_odp'];
+        return view('Teknisi/odp_instalasi', $data);
     }
     public function odp_store(Request $request)
     {
+            Session::flash('odp_id', $request->odp_id); #
+            Session::flash('odp_nama', $request->odp_nama); #
+            Session::flash('odp_jumlah_slot', $request->odp_jumlah_slot); #
+            Session::flash('odp_core', $request->odp_core); #
+            Session::flash('data__odc_id', $request->data__odc_id); #
+            Session::flash('odp_koordinat', $request->odp_koordinat); #
+            Session::flash('odp_keterangan', $request->odp_keterangan); #
+            Session::flash('odc_koordinat', $request->odc_koordinat); #
+            Session::flash('odp_status', $request->odp_status); #
+            Session::flash('odp_slot_odc', $request->odp_slot_odc); #
+         $request->validate([
+            'odp_id' => 'required',
+            'odp_nama' => 'required',
+            'odp_jumlah_slot' => 'required',
+            'odp_core' => 'required',
+            'data__odc_id' => 'required',
+            'odp_koordinat' => 'required',
+            'odp_keterangan' => 'required',
+            'odp_status' => 'required',
+            'odp_slot_odc' => 'required',
+            'odp_file_topologi' => 'required|max:1000|mimes:pdf',
+            'odp_lokasi_img' => 'required|max:1000|mimes:jpeg',
+       
+        ], [
+            'odp_id.required' => 'Odp Id tidak boleh kosong',
+            'odp_nama.required' => 'Nama Odp tidak boleh kosong',
+            'odp_jumlah_slot.required' => 'Junmlah slot spliter tidak boleh kosong',
+            'odp_core.required' => 'Core Kabel tidak boleh kosong',
+            'data__odc_id.required' => 'Odc tidak boleh kosong',
+            'odp_koordinat.required' => 'Koordinat tidak boleh kosong',
+            'odp_keterangan.required' => 'Keterangan tidak boleh kosong',
+            'odp_status.required' => 'Status tidak boleh kosong',
+            'odp_slot_odc.required' => 'Slot ODC tidak boleh kosong',
+            'odp_file_topologi.required' => 'File pdf tidak boleh kosong',
+            'odp_file_topologi.max' => 'Ukuran File Pdf terlalu besar',
+            'odp_file_topologi.mimes' => 'Topologi Format hanya bisa pdf',
+            'odp_lokasi_img.required' => 'Foto lokasi tidak boleh kosong',
+            'odp_lokasi_img.max' => 'Ukuran foto lokasi terlalu besar',
+            'odp_lokasi_img.mimes' => 'Foto lokasi Format hanya bisa jpeg',
+        ]);
 
-        $data_odc = Data_Odc::where('odc_id', $request->odp_id_odc)->first();
-        $query = Data_Odp::query();
-        $count2 = $query->where('odp_id_odc', $request->odp_id_odc)->count(); #sesuai site
-        // $count1 = $query->count();
-
-        // if ($count1 == 0) {
-        //     $store['odp_id'] = '1';
-        // } else {
-        //     $store['odp_id'] = $count1 + 1;
-        // }
-
-        if ($count2 == 0) {
-            $store['odp_kode'] = $data_odc->odc_kode . '.' . '1';
-        } else {
-            $store['odp_kode'] = $data_odc->odc_kode . '.' . $count2 + 1;
-            // dd( $data_odc);
-        }
-        $store['odp_id_odc'] = $request->odp_id_odc;
-        $store['odp_port_odc'] = $request->odp_port_odc;
-        $store['odp_opm_out_odc'] = $request->odp_opm_out_odc;
-        $store['odp_opm_in'] = $request->odp_opm_in;
-        $store['odp_opm_out'] = $request->odp_opm_out;
+        $store['corporate_id'] = Session::get('corp_id');
+        $store['odp_id'] = $request->odp_id;
+        $store['data__odc_id'] = $request->data__odc_id;
+        $store['odp_slot_odc'] = $request->odp_slot_odc;
         $store['odp_core'] = $request->odp_core;
         $store['odp_nama'] = $request->odp_nama;
-        $store['odp_jumlah_port'] = $request->odp_jumlah_port;
+        $store['odp_jumlah_slot'] = $request->odp_jumlah_slot;
         $store['odp_koordinat'] = $request->odp_koordinat;
         $store['odp_keterangan'] = $request->odp_keterangan;
         $store['odp_status'] = $request->odp_status;
 
         // dd($store);
 
-
-        $photo = $request->file('odp_topologi_img');
-        $filename = $photo->getClientOriginalName();
+        $photo = $request->file('odp_file_topologi');
+        $filename = Session::get('corp_id').'_'.$store['odp_nama'].'.pdf';
         $path = 'topologi/' . $filename;
         Storage::disk('public')->put($path, file_get_contents($photo));
-        $store['odp_topologi_img'] = $filename;
+        $store['odp_file_topologi'] = $filename;
 
         $photo_2 = $request->file('odp_lokasi_img');
-        $filename_2 = $photo_2->getClientOriginalName();
+        $filename_2 = Session::get('corp_id').'_'.$store['odp_nama'].'.jpeg';
         $path_2 = 'topologi/' . $filename_2;
         Storage::disk('public')->put($path_2, file_get_contents($photo_2));
         $store['odp_lokasi_img'] = $filename_2;
 
-
         Data_Odp::create($store);
+        // dd($store);
         // dd($store);
         $notifikasi = array(
             'pesan' => 'Berhasil menambahkan ODP',
@@ -386,5 +516,87 @@ class TopologiController extends Controller
         return redirect()->route('admin.topo.odp')->with($notifikasi);
     }
 
-    public function update_odp() {}
+    public function update_odp(Request $request,$id) {
+
+          Session::flash('odp_id', $request->odp_id); #
+            Session::flash('odp_nama', $request->odp_nama); #
+            Session::flash('odp_jumlah_slot', $request->odp_jumlah_slot); #
+            Session::flash('odp_core', $request->odp_core); #
+            Session::flash('data__odc_id', $request->data__odc_id); #
+            Session::flash('odp_koordinat', $request->odp_koordinat); #
+            Session::flash('odp_keterangan', $request->odp_keterangan); #
+            Session::flash('odc_koordinat', $request->odc_koordinat); #
+            Session::flash('odp_status', $request->odp_status); #
+            Session::flash('odp_slot_odc', $request->odp_slot_odc); #
+         $request->validate([
+            'odp_id' => 'required',
+            'odp_nama' => 'required',
+            'odp_jumlah_slot' => 'required',
+            'odp_core' => 'required',
+            'data__odc_id' => 'required',
+            'odp_koordinat' => 'required',
+            'odp_keterangan' => 'required',
+            'odp_status' => 'required',
+            'odp_slot_odc' => 'required',
+       
+        ], [
+            'odp_id.required' => 'Odp Id tidak boleh kosong',
+            'odp_nama.required' => 'Nama Odp tidak boleh kosong',
+            'odp_jumlah_slot.required' => 'Junmlah slot spliter tidak boleh kosong',
+            'odp_core.required' => 'Core Kabel tidak boleh kosong',
+            'data__odc_id.required' => 'Odc tidak boleh kosong',
+            'odp_koordinat.required' => 'Koordinat tidak boleh kosong',
+            'odp_keterangan.required' => 'Keterangan tidak boleh kosong',
+            'odp_status.required' => 'Status tidak boleh kosong',
+            'odp_slot_odc.required' => 'Slot ODC tidak boleh kosong',
+        ]);
+
+        $store['odp_id'] = $request->odp_id;
+        $store['data__odc_id'] = $request->data__odc_id;
+        $store['odp_slot_odc'] = $request->odp_slot_odc;
+        $store['odp_core'] = $request->odp_core;
+        $store['odp_nama'] = $request->odp_nama;
+        $store['odp_jumlah_slot'] = $request->odp_jumlah_slot;
+        $store['odp_koordinat'] = $request->odp_koordinat;
+        $store['odp_keterangan'] = $request->odp_keterangan;
+        $store['odp_status'] = $request->odp_status;
+
+        $photo = $request->file('odp_file_topologi');
+        if ($photo) {
+            $request->validate([
+            'odp_file_topologi' => 'required|max:1000|mimes:pdf',
+        ], [
+            'odp_file_topologi.required' => 'File pdf tidak boleh kosong',
+            'odp_file_topologi.max' => 'Ukuran File Pdf terlalu besar',
+            'odp_file_topologi.mimes' => 'Topologi Format hanya bisa pdf',
+        ]);
+
+             $filename = Session::get('corp_id').'_'.$store['odp_nama'].'.pdf';
+            $path = 'topologi/' . $filename;
+            Storage::disk('public')->put($path, file_get_contents($photo));
+            $store['odp_file_topologi'] = $filename;
+        }
+
+        $photo_2 = $request->file('odp_lokasi_img');
+        if ($photo_2) {
+               $request->validate([
+            'odp_lokasi_img' => 'required|max:1000|mimes:jpeg',
+        ], [
+            'odp_lokasi_img.required' => 'Foto lokasi tidak boleh kosong',
+            'odp_lokasi_img.max' => 'Ukuran foto lokasi terlalu besar',
+            'odp_lokasi_img.mimes' => 'Foto lokasi Format hanya bisa jpeg',
+        ]);
+             $filename_2 = Session::get('corp_id').'_'.$store['odp_nama'].'.jpeg';
+            $path_2 = 'topologi/' . $filename_2;
+            Storage::disk('public')->put($path_2, file_get_contents($photo_2));
+            $store['odp_lokasi_img'] = $filename_2;
+        }
+
+        Data_Odp::where('id', $id)->where('corporate_id',Session::get('corp_id'))->update($store);
+        $notifikasi = array(
+            'pesan' => 'Berhasil menambahkan ODP',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.topo.odp')->with($notifikasi);
+    }
 }

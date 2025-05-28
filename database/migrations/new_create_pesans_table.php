@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Aplikasi\Corporate;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('pesans', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->integer('pesan_id_site')->nullable();
             $table->string('layanan')->nullable();
             $table->string('target')->nullable();

@@ -11,7 +11,7 @@
           </div>
         </div>
         <div class="card-body">
-          <a href="{{route('admin.psb.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary ">
+          <a href="{{route('admin.psb.ftth')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary ">
             <i class="fas fa-angle-double-left "></i>
             Kembali
           </button></a>

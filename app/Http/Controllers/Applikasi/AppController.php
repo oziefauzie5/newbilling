@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Applikasi;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Aplikasi\Data_Kelurahan;
+use App\Models\Aplikasi\Data_RT;
 use App\Models\Aplikasi\Data_Site;
 use App\Models\Applikasi\SettingAkun;
 use App\Models\Applikasi\SettingAplikasi;
@@ -14,6 +16,7 @@ use App\Models\Applikasi\SettingWhatsapp;
 use App\Models\Permission;
 use App\Models\Transaksi\Kendaraan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,7 +24,7 @@ class AppController extends Controller
 {
     public function index()
     {
-        $SettingTripay = SettingTripay::whereId('1')->first();
+        $SettingTripay = SettingTripay::where('corporate_id',Session::get('corp_id'))->first();
         if (isset($SettingTripay) == NULL) {
             $data['tripay_merchant'] = " ";
             $data['tripay_kode_merchant'] = " ";
@@ -37,14 +40,13 @@ class AppController extends Controller
             $data['tripay_privatekey'] = $SettingTripay->tripay_privatekey;
             $data['tripay_admin_topup'] = $SettingTripay->tripay_admin_topup;
         }
-        $SettingAplikasi = SettingAplikasi::first();
+        $SettingAplikasi = SettingAplikasi::where('corporate_id',Session::get('corp_id'))->first();
 
         if (isset($SettingAplikasi) == NULL) {
             $data['app_nama'] = " ";
             $data['app_brand'] = " ";
             $data['app_alamat'] = " ";
             $data['app_npwp'] = "";
-            $data['app_clientid'] = "";
             $data['app_logo'] = "";
             $data['app_favicon'] = "";
             $data['app_link_admin'] = "";
@@ -53,35 +55,29 @@ class AppController extends Controller
             $data['app_nama'] = $SettingAplikasi->app_nama;
             $data['app_brand'] = $SettingAplikasi->app_brand;
             $data['app_alamat'] = $SettingAplikasi->app_alamat;
-            $data['app_clientid'] = $SettingAplikasi->app_clientid;
             $data['app_npwp'] = $SettingAplikasi->app_npwp;
             $data['app_logo'] = $SettingAplikasi->app_logo;
             $data['app_favicon'] = $SettingAplikasi->app_favicon;
             $data['app_link_admin'] = $SettingAplikasi->app_link_admin;
             $data['app_link_pelanggan'] = $SettingAplikasi->app_link_pelanggan;
         }
-        $SettingBiaya = SettingBiaya::first();
+        $SettingBiaya = SettingBiaya::where('corporate_id',Session::get('corp_id'))->first();
 
         if (isset($SettingBiaya) == NULL) {
             $data['biaya_ppn'] = "0";
-            $data['biaya_deposit'] = "0";
+            $data['biaya_bph_uso'] = "0";
             $data['biaya_sales'] = "0";
-            $data['biaya_sales_continue'] = "0";
             $data['biaya_psb'] = "0";
             $data['biaya_pasang'] = "0";
             $data['biaya_kas'] = "0";
-            $data['biaya_kerjasama'] = "0";
         } else {
             $data['biaya_ppn'] = $SettingBiaya->biaya_ppn;
-            $data['biaya_deposit'] = $SettingBiaya->biaya_deposit;
+            $data['biaya_bph_uso'] = $SettingBiaya->biaya_bph_uso;
             $data['biaya_sales'] = $SettingBiaya->biaya_sales;
-            $data['biaya_sales_continue'] = $SettingBiaya->biaya_sales_continue;
             $data['biaya_psb'] = $SettingBiaya->biaya_psb;
             $data['biaya_pasang'] = $SettingBiaya->biaya_pasang;
-            $data['biaya_kas'] = $SettingBiaya->biaya_kas;
-            $data['biaya_kerjasama'] = $SettingBiaya->biaya_kerjasama;
         }
-        $SettingBiaya = SettingWaktuTagihan::first();
+        $SettingBiaya = SettingWaktuTagihan::where('corporate_id',Session::get('corp_id'))->first();
 
         if (isset($SettingBiaya) == NULL) {
             $data['wt_jeda_isolir_hari'] = "0";
@@ -93,22 +89,23 @@ class AppController extends Controller
 
 
         $data['SettingAkun'] =  (new SettingAkun())->SettingAkun()->get();
-        // dd($data['SettingAkun']);
-        $count = SettingAkun::count();
-        if ($count == 0) {
-            $data['akun_id'] = $Settingakun_id = 1;
-        } else {
-            $data['akun_id'] = $Settingakun_id = $count + 1;
-        }
+        // // dd($data['SettingAkun']);
+        // $count = SettingAkun::where('corporate_id',Session::get('corp_id'))->count();
+        // if ($count == 0) {
+        //     $data['akun_id'] = $Settingakun_id = 1;
+        // } else {
+        //     $data['akun_id'] = $Settingakun_id = $count + 1;
+        // }
         return view('Applikasi/index', $data);
     }
     public function tripay_store(Request $request)
     {
         SettingTripay::updateOrCreate(
             [
-                'id' => '1',
+                'corporate_id' => Session::get('corp_id'),
             ],
             [
+                'corporate_id' => Session::get('corp_id'),
                 'tripay_merchant' => 'Tripay',
                 'tripay_kode_merchant' => $request->tripay_kode_merchant,
                 'tripay_url_callback' => $request->tripay_url_callback,
@@ -117,6 +114,21 @@ class AppController extends Controller
                 'tripay_admin_topup' => $request->tripay_admin_topup,
             ]
         );
+
+        SettingAkun::updateOrCreate(
+            [
+                'corporate_id' => Session::get('corp_id'),
+            ],
+            [
+                'corporate_id' => Session::get('corp_id'),
+                'akun_pemilik' => 'SYSTEM',
+                'akun_rekening' => '0',
+                'akun_nama' => 'TRIPAY',
+                'akun_status' => 'Enable',
+                'akun_kategori' => 'PEMBAYARAN',
+           ]
+    );
+
         $notifikasi = array(
             'pesan' => 'Berhasil menambahkan Tripay',
             'alert' => 'success',
@@ -136,36 +148,29 @@ class AppController extends Controller
             'akun_id.unique' => 'Id Akun sudah terdaftar',
             'akun_rekening.unique' => 'Nomor Rekening sudah terdaftar',
         ]);
-
-        if ($request->akun_id == '1') {
-            $tripay['id'] = '1';
-            $tripay['akun_id'] = '1';
-            $tripay['akun_nama'] = 'TRIPAY';
-            $tripay['akun_status'] = 'Enable';
-            $tripay['akun_kategori'] = 'PEMBAYARAN';
-
-            $tunai['id'] = '2';
-            $tunai['akun_id'] = '2';
+        $cek_akun = SettingAkun::where('corporate_id',Session::get('corp_id'))->where('akun_nama','TUNAI')->count();
+        if ($cek_akun == 0) {
+            $tunai['corporate_id'] = Session::get('corp_id');
             $tunai['akun_nama'] = 'TUNAI';
+            $tunai['akun_pemilik'] = 'SYSTEM';
+            $tunai['akun_rekening'] = '0';
             $tunai['akun_status'] = 'Enable';
             $tunai['akun_kategori'] = 'PEMBAYARAN';
-
-            $akun['id'] = '3';
-            $akun['akun_id'] = '3';
+            
+            $akun['corporate_id'] = Session::get('corp_id');
             $akun['akun_nama'] = $request->nama_akun;
             $akun['akun_rekening'] = $request->akun_rekening;
             $akun['akun_pemilik'] = $request->nama_pemilik;
             $akun['akun_status'] = 'Enable';
             $akun['akun_kategori'] = $request->akun_kategori;
-
-            SettingAkun::create($tripay);
+            
             SettingAkun::create($tunai);
             SettingAkun::create($akun);
         } else {
             SettingAkun::create(
                 [
-                    'id' => $request->akun_id,
-                    'akun_id' => $request->akun_id,
+                    // 'id' => $request->akun_id,
+                    'corporate_id' => Session::get('corp_id'),
                     'akun_nama' => $request->nama_akun,
                     'akun_rekening' => $request->akun_rekening,
                     'akun_pemilik' => $request->nama_pemilik,
@@ -183,7 +188,7 @@ class AppController extends Controller
     }
     public function akun_edit(Request $request, $id)
     {
-        SettingAkun::whereId($id)->update(
+        SettingAkun::where('corporate_id',Session::get('corp_id'))->whereId($id)->update(
             [
                 'akun_id' => $request->akun_id,
                 'akun_nama' => $request->nama_akun,
@@ -201,7 +206,7 @@ class AppController extends Controller
     }
     public function akun_delete($id)
     {
-        $data = SettingAkun::find($id);
+        $data = SettingAkun::where('corporate_id',Session::get('corp_id'))->find($id);
         if ($data) {
             $data->delete();
         }
@@ -249,7 +254,7 @@ class AppController extends Controller
         }
 
         // dd($filename2);.
-        $cek = SettingAplikasi::count();
+        $cek = SettingAplikasi::where('corporate_id', Session::get('corp_id'))->count();
         if ($cek == 0) {
 
             SettingAplikasi::create(
@@ -259,7 +264,6 @@ class AppController extends Controller
                     'app_brand' => $request->app_brand,
                     'app_alamat' => $request->app_alamat,
                     'app_npwp' => $request->app_npwp,
-                    'app_clientid' => $request->app_clientid,
                     'app_logo' => $filename1,
                     'app_favicon' => $filename2,
                     'app_link_admin' => $request->app_link_admin,
@@ -267,13 +271,12 @@ class AppController extends Controller
                 ]
             );
         } else {
-            SettingAplikasi::whereId('1')->update(
+            SettingAplikasi::where('corporate_id', Session::get('corp_id'))->update(
                 [
                     'app_nama' => $request->app_nama,
                     'app_brand' => $request->app_brand,
                     'app_alamat' => $request->app_alamat,
                     'app_npwp' => $request->app_npwp,
-                    'app_clientid' => $request->app_clientid,
                     'app_logo' => $filename1,
                     'app_favicon' => $filename2,
                     'app_link_admin' => $request->app_link_admin,
@@ -294,38 +297,32 @@ class AppController extends Controller
     public function biaya_store(Request $request)
     {
 
-        $cek = SettingBiaya::count();
+        $cek = SettingBiaya::where('corporate_id', Session::get('corp_id'))->count();
         // dd($cek);
         if ($cek == 0) {
             SettingBiaya::create(
                 [
-                    'id' => '1',
+                    'corporate_id' =>  Session::get('corp_id'),
                     'biaya_pasang' => $request->biaya_pasang,
                     'biaya_psb' => $request->biaya_psb,
                     'biaya_sales' => $request->biaya_sales,
-                    'biaya_sales_continue' => $request->biaya_sales_continue,
-                    'biaya_deposit' => $request->biaya_deposit,
                     'biaya_ppn' => $request->biaya_ppn,
-                    'biaya_kas' => $request->biaya_kas,
-                    'biaya_kerjasama' => $request->biaya_kerjasama,
+                    'biaya_bph_uso' => $request->biaya_bph_uso,
                 ]
             );
         } else {
-            SettingBiaya::whereId('1')->update(
+            SettingBiaya::where('corporate_id', Session::get('corp_id'))->update(
                 [
                     'biaya_pasang' => $request->biaya_pasang,
                     'biaya_psb' => $request->biaya_psb,
                     'biaya_sales' => $request->biaya_sales,
-                    'biaya_sales_continue' => $request->biaya_sales_continue,
-                    'biaya_deposit' => $request->biaya_deposit,
                     'biaya_ppn' => $request->biaya_ppn,
-                    'biaya_kas' => $request->biaya_kas,
-                    'biaya_kerjasama' => $request->biaya_kerjasama,
+                    'biaya_bph_uso' => $request->biaya_bph_uso,
                 ]
             );
         }
         $notifikasi = array(
-            'pesan' => 'Menambah Akun Berhasil',
+            'pesan' => 'Menambah Biaya Berhasil',
             'alert' => 'success',
         );
         return redirect()->route('admin.app.index')->with($notifikasi);
@@ -335,19 +332,20 @@ class AppController extends Controller
     // ==============================================START WAKTU TAGIHAN==============================================
     public function waktu_store(Request $request)
     {
-        $cek = SettingWaktuTagihan::count();
+        $cek = SettingWaktuTagihan::where('corporate_id', Session::get('corp_id'))->count();
         // dd($cek);
         if ($cek == 0) {
             SettingWaktuTagihan::create(
                 [
                     'id' => '1',
+                    'corporate_id' => Session::get('corp_id'),
                     'wt_jeda_isolir_hari' => $request->wt_jeda_isolir_hari,
                     'wt_jeda_tagihan_pertama' => $request->wt_jeda_tagihan_pertama,
-                ]
-            );
-        } else {
-            SettingWaktuTagihan::whereId('1')->update(
-                [
+                    ]
+                );
+            } else {
+                SettingWaktuTagihan::where('corporate_id', Session::get('corp_id'))->update(
+                    [
                     'wt_jeda_isolir_hari' => $request->wt_jeda_isolir_hari,
                     'wt_jeda_tagihan_pertama' => $request->wt_jeda_tagihan_pertama,
                 ]
@@ -364,19 +362,26 @@ class AppController extends Controller
     public function wa_getewai()
     {
         // $data['kendaraan'] = (new GlobalController)->data_kendaraan()->paginate(10);
-        $wageteway = SettingWhatsapp::count();
-        if ($wageteway > 0) {
-            $data['data_whatsapp'] = SettingWhatsapp::join('data__sites', 'data__sites.site_id', '=', 'setting_whatsapps.wa_site')
-                ->get();
-        } else {
-            $data['data_whatsapp'] = SettingWhatsapp::get();
-        }
-        $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
+        $wageteway = SettingWhatsapp::where('corporate_id', Session::get('corp_id'))->count();
+            $data['data_whatsapp'] = SettingWhatsapp::where('corporate_id', Session::get('corp_id'))->get();
+        // $data['data_site'] = Data_Site::where('site_status', 'Enable')->get();
         return view('Applikasi/wa_getewai', $data);
     }
     public function store_wa_getewai(Request $request)
     {
-        $create['wa_site'] = $request->wa_site;
+
+         $request->validate([
+             'wa_nama' => 'required|unique:setting_whatsapps,wa_nama',
+             'wa_key' => 'required',
+             'wa_url' => 'required',
+        ], [
+            'wa_nama.required' => 'Agent tidak boleh kosong',
+            'wa_nama.unique' => 'Agent sudah ada',
+            'wa_key.required' => 'Key tidak boleh kosong',
+            'wa_url.required' => 'URL tidak boleh kosong',
+        ]);
+
+        $create['corporate_id'] = Session::get('corp_id');
         $create['wa_nama'] = $request->wa_nama;
         $create['wa_key'] = $request->wa_key;
         $create['wa_url'] = $request->wa_url;
@@ -390,12 +395,12 @@ class AppController extends Controller
     }
     public function update_wa_getewai(Request $request, $id)
     {
-        $update['wa_site'] = $request->wa_site;
+        $update['corporate_id'] = Session::get('corp_id');
         $update['wa_nama'] = $request->wa_nama;
         $update['wa_key'] = $request->wa_key;
         $update['wa_url'] = $request->wa_url;
         $update['wa_status'] = $request->wa_status;
-        SettingWhatsapp::whereId($id)->update($update);
+        SettingWhatsapp::where('corporate_id', Session::get('corp_id'))->whereId($id)->update($update);
         $notifikasi = array(
             'pesan' => 'Menambah Data Whatsapp Getewai Berhasil',
             'alert' => 'success',
@@ -459,29 +464,27 @@ class AppController extends Controller
     public function site()
     {
         // dd('t');
-        $count = Data_Site::count();
+        $count = Data_Site::where('corporate_id', Session::get('corp_id'))->count();
 
         if ($count == 0) {
-            $data['site_id'] = 1;
+            $data['id'] = 1;
         } else {
-            $data['site_id'] = $count + 1;
+            $data['id'] = $count + 1;
         }
-        // $data['site_id'] = '1' . sprintf("%03d", $idsite);
 
-        $data['data_site'] = Data_Site::get();
+        $data['data_site'] = Data_Site::where('corporate_id', Session::get('corp_id'))->get();
 
 
         return view('Applikasi/site', $data);
     }
     public function site_store(Request $request)
     {
-        $store_site['site_id'] = $request->site_id;
+        $store_site['corporate_id'] = Session::get('corp_id');
+        $store_site['id'] = $request->id;
         $store_site['site_nama'] = $request->site_nama;
         $store_site['site_prefix'] = $request->site_prefix;
-        $store_site['site_brand'] = $request->site_brand;
-        $store_site['site_keterangan'] = $request->site_keterangan;
-        $store_site['site_status'] = 'Disable';
-
+        $store_site['site_status'] = 'Enable';
+        
         Data_Site::create($store_site);
         $notifikasi = array(
             'pesan' => 'Berhasil menambahkan Site',
@@ -493,15 +496,62 @@ class AppController extends Controller
     {
         $store_site['site_nama'] = $request->site_nama;
         $store_site['site_prefix'] = $request->site_prefix;
-        $store_site['site_brand'] = $request->site_brand;
-        $store_site['site_keterangan'] = $request->site_keterangan;
         $store_site['site_status'] = $request->site_status;
-
-        Data_Site::where('site_id', $id)->update($store_site);
+        
+        Data_Site::where('corporate_id', Session::get('corp_id'))->where('id', $id)->update($store_site);
         $notifikasi = array(
             'pesan' => 'Berhasil update data Site',
             'alert' => 'success',
         );
         return redirect()->route('admin.app.site')->with($notifikasi);
     }
+    public function kelurahan()
+    {
+        $data['data_site'] = Data_Site::where('site_status','Enable')->where('corporate_id', Session::get('corp_id'))->get();
+        $data['data_kelurahan'] = Data_Kelurahan::where('corporate_id', Session::get('corp_id'))->get();
+        return view('Applikasi/kelurahan', $data);
+    }
+    public function kelurahan_store(Request $request)
+    {
+        $store['corporate_id'] = Session::get('corp_id');
+        $store['kel_site_id'] = $request->kel_site_id;
+        $store['kel_nama'] = $request->kel_nama;
+        $store['kel_ket'] = $request->kel_ket;
+        $store['kel_status'] = 'Enable';
+        
+        Data_Kelurahan::create($store);
+        $notifikasi = array(
+            'pesan' => 'Berhasil menambahkan Kelurahan',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.kelurahan')->with($notifikasi);
+    }
+    public function update_kelurahan(Request $request, $id)
+    {
+        $store['kel_site_id'] = $request->kel_site_id;
+        $store['kel_nama'] = $request->kel_nama;
+        $store['kel_ket'] = $request->kel_ket;
+        $store['kel_status'] = $request->kel_status;
+        
+        Data_Kelurahan::where('kel_id', $id)->where('corporate_id',Session::get('corp_id'))->update($store);
+        $notifikasi = array(
+            'pesan' => 'Berhasil update data Kelurahan',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.kelurahan')->with($notifikasi);
+    }
+    public function data_rt()
+    {
+        $data['data_kelurahan'] = Data_Kelurahan::where('corporate_id',Session::get('corp_id'))->where('kel_status','Enable')->get();
+        $data['data_rt'] = Data_RT::join('data__kelurahans','data__kelurahans.kel_id','=','data__rts.rt_kel_id')
+        ->join('data__sites','data__sites.site_id','=','data__kelurahans.kel_site_id')
+        ->where('corporate_id',Session::get('corp_id'))
+        ->get();
+        return view('Applikasi/rt', $data);
+    }
+    //    'rt_id',
+    //     'rt_kelurahan',
+    //     'rt_nama',
+    //     'rt_ket',
+    //     'rt_status',
 }

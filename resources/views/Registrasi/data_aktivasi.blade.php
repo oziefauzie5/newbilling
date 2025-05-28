@@ -37,7 +37,7 @@
               </ul>
           </div> 
         @endif
-        <a href="{{route('admin.psb.index')}}">
+        <a href="{{route('admin.psb.ftth')}}">
           <button class="btn  btn-sm ml-auto m-1 btn-info">
             <i class="fa fa-plus"></i>
             KEMBALI
@@ -48,42 +48,22 @@
             <table id="datatable" class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
-                  <th>NO LAYANAN</th>
-                  <th>PELANGGAN</th>
-                  <th>TGL JT TEMPO</th>
-                  <th>TGL PASANG</th>
-                  <th>TGL Registrasi</th>
-                  <th>PROFILE</th>
-                  <th>ROUTER</th>
-                  <th>USERNAME</th>
-                  <th>ALAMAT PASANG</th>
-                  <th>NOTE</th>
+                  <th>No Layanan</th>
+                  <th>Pelanggan</th>
+                  <th>Tgl Registrasi</th>
+                  <th>Paket</th>
+                  <th>Alamat Pasang</th>
+                  <th>Catatan</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach ($data_registrasi as $d)
                 <tr>
-                  @if($d->reg_progres == 'MIGRASI')
-                  <td class="text-info">{{$d->reg_nolayanan}}</td>
-                  @else
-                  <td>{{$d->reg_nolayanan}}</td>
-                  @endif
-                      <td class="aktivasi" data-id="{{$d->reg_idpel}}">{{$d->input_nama}}</td>
-                      @if($d->reg_tgl_jatuh_tempo)
-                      @if($d->reg_status != 'PAID')
-                      <td data-id="{{$d->reg_idpel}}" class="aktivasi text-danger font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}</td>
-                      @else
-                      <td data-id="{{$d->reg_idpel}}" class="aktivasi font-weight-bold" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->reg_tgl_jatuh_tempo))}}---</td>
-                      @endif
-                      @else
-                      <td  data-id="{{$d->reg_idpel}}" class="aktivasi text-danger font-weight-bold" >Belum Terpasang</td>
-                      @endif
-                      <td class="aktivasi" data-id="{{$d->reg_idpel}}" >{{$d->reg_tgl_pasang}}</td>
-                      <td class="aktivasi" data-id="{{$d->reg_idpel}}" >{{date('d-m-Y',strtotime($d->input_tgl))}}</td>
-                      <td class="aktivasi" data-id="{{$d->reg_idpel}}" >{{$d->paket_nama}}</td>
-                      <td class="aktivasi" data-id="{{$d->reg_idpel}}" >{{$d->router_nama}}</td>
-                      <td class="aktivasi" data-id="{{$d->reg_idpel}}" >{{$d->reg_username}}</td>
-                      <td class="aktivasi" data-id="{{$d->reg_idpel}}" >{{$d->input_alamat_pasang}}</td>
+                      <td class="aktivasi" data-id="{{$d->reg_idpel ?? ''}}">{{$d->reg_nolayanan ??''}}</td>
+                      <td class="aktivasi" data-id="{{$d->reg_idpel ?? ''}}">{{$d->input_nama ??''}}</td>
+                      <td class="aktivasi" data-id="{{$d->reg_idpel ?? ''}}">{{date('d-m-Y', strtotime($d->tgl_regist ??''))}}</td>
+                      <td class="aktivasi" data-id="{{$d->reg_idpel ?? ''}}" >{{$d->paket_nama ?? ''}}</td>
+                      <td class="aktivasi" data-id="{{$d->reg_idpel ?? ''}}" >{{$d->input_alamat_pasang ?? ''}}</td>
                       <td>{{$d->reg_catatan}}</td>
                     </tr>
                     @endforeach

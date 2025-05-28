@@ -15,18 +15,7 @@
                      <li >Biller adalah orang yang dapat menerima pembayaran tagihan langganan, misalnya loket pembayaran, tukang tagih dll</li>
                  </ul>
                <hr>
-<div class="btn-group" role="group">
-  <button type="button" class="btn btn-dark dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-      <i class="fas fa-solid fa-bars"></i></i>&ensp;MENU
-  </button>
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">SET AKTIF</a>
-    <a class="dropdown-item" href="#">NON AKTIF</a>
-    <a class="dropdown-item" href="#">HAPUS</a>
-  </div>
-</div>
-<button class="btn btn-dark btn-sm"><i class="fas fa-solid fa-plus"></i>&ensp;RESELLER</button>
-<a href="{{ route('admin.mitra.create') }}" class="btn btn-dark btn-sm" ><i class="fas fa-solid fa-plus"></i>&ensp;BILLER</a><br><hr>
+<a href="{{ route('admin.mitra.create') }}" class="btn btn-dark btn-sm" ><i class="fas fa-solid fa-plus"></i>&ensp;Tambah Mitra Lingkungan</a><br><hr>
 
 <div class="table-responsive">
     <table id="input_data" class="display table table-striped table-hover text-nowrap" >
@@ -36,30 +25,23 @@
                   <th>Aksi</th>
                   <th>Nama</th>
                   <th>Kategori</th>
-                  {{-- <th>Stok VC</th> --}}
                   <th>Phone</th>
                   <th>Alamat</th>
                   <th>Saldo</th>
-                  <th>Limit Minus</th>
                   <th>Komisi Biller</th>
-                  <th>Komisi Sales</th>
-                  <th>Kode Unik</th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach ($datauser as $d)
                   <tr>
                    <td>{{$loop->iteration}}</td>
-                   <td><a href="{{route('admin.mitra.edit',['id'=>$d->id])}}" class="btn btn-sm btn-block"><i class="fas fa-pen"></i></a></td>
+                   <td><a href="{{route('admin.mitra.edit',['id'=>$d->id])}}" class="btn btn-sm btn-block"><i class="fas fa-edit"></i></a></td>
                    <td><a href="{{route('admin.mitra.data',['id'=>$d->id])}}"><strong>{{$d->nama}}</strong> </a> </td>
                    <td>{{$d->name}}</td>
                    <td>{{$d->hp}}</td>
                    <td>{{$d->alamat_lengkap}}</td>
                    <td></td>
-                   <td>{{$d->mts_limit_minus}}</td>
                    <td>{{$d->mts_komisi}}</td>
-                   <td>{{$d->mts_komisi_sales}}</td>
-                   <td>{{$d->mts_kode_unik}}</td>
                    </tr>
                    @endforeach
                 </tbody>

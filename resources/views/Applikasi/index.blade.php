@@ -23,7 +23,7 @@
                       @csrf
                     <div class="modal-content">
                       <div class="modal-header bg-primary">
-                        <h4 class="modal-title">TAMBAH AKUN </h4>
+                        <h4 class="modal-title">TAMBAH AKUN BANK </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -32,10 +32,6 @@
 
                         
                             <div class="card-body">
-                              <div class="form-group">
-                                  <label>Id Akun</label>
-                                  <input type="text" class="form-control" id="akun_id" name="akun_id" value="{{$akun_id}}">
-                              </div>
                               <div class="form-group">
                                   <label>Nama Akun</label>
                                   <input type="text" class="form-control" id="nama_akun" name="nama_akun" placeholder="Masukan Nama Akun">
@@ -82,7 +78,6 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>Id Akun</th>
                       <th>Nama Akun</th>
                       <th>Rekening</th>
                       <th>Nama Pemilik</th>
@@ -94,13 +89,13 @@
                   <tbody>
                       @foreach ($SettingAkun as $d)
                       <tr>
-                        @if($d->id>2)
-                        <td>{{$d->akun_id}}</td>
                         <td>{{$d->akun_nama}}</td>
                         <td>{{$d->akun_rekening}}</td>
                         <td>{{$d->akun_pemilik}}</td>
                         <td>{{$d->akun_kategori}}</td>
                         <td>{{$d->akun_status}}</td>
+                        @if($d->akun_pemilik != 'SYSTEM')
+                       
                         <td>
                           <div class="form-button-action">
                               <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
@@ -111,7 +106,7 @@
                               </button>
                             </div>
                           </td>
-                          @endif
+                           @endif
                       <div class="modal fade" id="modal-edit{{$d->id}}">
                           <div class="modal-dialog">
                             <form action="{{route('admin.app.akun_edit',['id'=>$d->id])}}" method="POST">
@@ -126,10 +121,6 @@
                               </div>
                               <div class="modal-body">
                                     <div class="card-body">
-                                    <div class="form-group">
-                                  <label>Id Akun</label>
-                                  <input type="text" class="form-control" id="akun_id" name="akun_id" value="{{$d->akun_id}}">
-                              </div>
                                       <div class="form-group">
                                           <label>Nama akun</label>
                                           <input type="text" class="form-control" id="nama_akun" name="nama_akun" value="{{$d->akun_nama}}">
@@ -272,10 +263,6 @@
                   <input type="text" class="form-control"  name="app_npwp" id="" value="{{$app_npwp}}">
                 </div>
                 <div class="form-group">
-                  <label >Frefix Id Client</label>
-                  <input type="text" class="form-control"  name="app_clientid" id="" value="{{$app_clientid}}">
-                </div>
-                <div class="form-group">
                   <label >Link Admin</label>
                   <input type="text" class="form-control"  name="app_link_admin" id="" value="{{$app_link_admin}}">
                 </div>
@@ -328,26 +315,12 @@
                   <input type="text" class="form-control" name="biaya_sales" value="{{$biaya_sales}}"  required>
                 </div>
                 <div class="form-group">
-                  <label >Biaya Sales Continue</label>
-                  <input type="text" class="form-control" name="biaya_sales_continue" value="{{$biaya_sales_continue}}"  required>
-                </div>
-                <div class="form-group">
-                  <label >Biaya Deposit</label>
-                  <input type="text" class="form-control" name="biaya_deposit" value="{{$biaya_deposit}}"  required>
-                </div>
-                <div class="form-group">
-                  <label >Biaya Kas Wilayah</label>
-                  <input type="text" class="form-control" name="biaya_kas" value="{{$biaya_kas}}"  required>
-                  <span class="notice">Biaya kas wilayah yang dibebankan kepada persatu pelanggan</span>
-                </div>
-                <div class="form-group">
-                  <label >Biaya Kerjasama</label>
-                  <input type="text" class="form-control" name="biaya_kerjasama" value="{{$biaya_kerjasama}}"  required>
-                  <span class="notice">Biaya kerjasama yang dibebankan kepada persatu pelanggan</span>
-                </div>
-                <div class="form-group">
                   <label >PPN %</label>
                   <input type="text" class="form-control" name="biaya_ppn" value="{{$biaya_ppn}}"  required>
+                </div>
+                <div class="form-group">
+                  <label >BPH USO %</label>
+                  <input type="text" class="form-control" name="biaya_bph_uso" value="{{$biaya_bph_uso}}"  required>
                 </div>
                 
                 <button type="submit" class="btn btn-block btn-primary">Simpan</button>

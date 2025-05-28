@@ -69,107 +69,65 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nama Pelanggan</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="tampil_nama" value="{{ Session::get('reg_nama') }}" data-toggle="modal" data-target="#cari_data" name="reg_nama">
+                  <input type="text" class="form-control" id="tampil_nama" value="" data-toggle="modal" data-target="#cari_data" name="">
                 </div>
               </div>
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label" >ID Pelanggan</label>
                 <div class="col-sm-4">
-                  <input type="number" id="tampil_idpel" class="form-control" name="reg_idpel" value="{{ Session::get('reg_idpel') }}" name="reg_idpel" readonly >
+                  <input type="number" id="tampil_idpel" class="form-control" name="reg_idpel" value="" name="reg_idpel" readonly >
                 </div>
                   <label class=" col-sm-2 col-form-label">No Layanan</label>
                 <div class="col-sm-4">
-                  <input type="text" id="tampil_nolay" name="reg_nolayanan" class="form-control" value="{{ Session::get('reg_nolayanan') }}" readonly>
+                  <input type="text" id="tampil_nolay" name="reg_nolayanan" class="form-control" value="" readonly>
                 </div>
               </div>
               <div class="form-group row">
                   <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 1</label>
                   <div class="col-sm-4">
-                    <input type="number" class="form-control" id="tampil_hp" value="{{ Session::get('reg_hp') }}" name="reg_hp" readonly>
+                    <input type="number" class="form-control" id="tampil_hp" value="" name="" readonly>
                   </div>
                   <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 2</label>
                   <div class="col-sm-4">
-                    <input type="number" class="form-control" id="tampil_hp2" value="{{ Session::get('reg_hp2') }}" name="reg_hp2" readonly>
+                    <input type="number" class="form-control" id="tampil_hp2" value="" name="" readonly>
                   </div>
               </div>
               <div class="form-group row">
                   <label for="alamat_pasang" class="col-sm-2 col-form-label">Alamat Pasang</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="tampil_alamat_pasang" value="{{ Session::get('reg_alamat_pasang') }}" name="reg_alamat_pasang" readonly>
+                    <input type="text" class="form-control" id="tampil_alamat_pasang" value="" name="" readonly>
                   </div>
               </div>
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Maps</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="tampil_maps" name="reg_maps" value="{{ Session::get('reg_maps') }}" required>
+                    <input type="text" class="form-control" id="tampil_maps" name="reg_maps" value="" required>
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Sales Id</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="tampil_sales" name="reg_sales" value="{{ Session::get('reg_sales') }}" required>
-                  </div>
-                  <label class="col-sm-2 col-form-label">Sales</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="tampil_sales_nama" name="reg_sales_nama" value="{{ Session::get('reg_sales_nama') }}" required>
+                  <label class="col-sm-2 col-form-label">Site</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="tampil_site" name="reg_site" value="" required>
                   </div>
               </div>
-              <h3 class="mt-3 text-bolt">INTERNET & HADHWARE</h3><hr>
-
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Site</label>
-                <div class="col-sm-4">
-                  <select class="form-control" id="site" name="reg_site"  >
-                    <option value="">PILIH SITE</option>
-                    @foreach ($data_site as $d)
-                    <option value="{{$d->site_id}}">{{$d->site_nama}}</option>
-                    @endforeach
-                  </select>
-                </div>
-                <label class="col-sm-2 col-form-label">POP</label>
-                <div class="col-sm-4">
-                  <select class="form-control pop_router" id="pop" name="reg_pop"  >
-                    <option value="">- Pilih POP -</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="router" class="col-sm-2 col-form-label">Router</label>
-                <div class="col-sm-10">
-                  <select class="form-control" id="router" name="reg_router"  >
-                    <option value="">- Pilih Router -</option>
-                  </select>
-                </div>
-            </div>
+            
+              <h3 class="mt-3 text-bolt">INTERNET</h3><hr>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Layanan</label>
                 <div class="col-sm-10">
                   <select class="form-control" id="reg_layanan" name="reg_layanan" >
-                    @if( Session::get('reg_layanan'))
-                    <option value="{{ Session::get('reg_layanan') }}">{{ Session::get('reg_layanan') }}</option>
-                    @else
-                    <option value="">--Pilih Layanan--</option>
-                    <option value="PPP">PPP</option>
+                    <option selected value="PPP">PPP</option>
                     <option value="HOTSPOT">HOTSPOT</option>
-                    {{-- <option value="HOTSPOT">HOTSPOT</option> --}}
-                    @endif
                   </select>
                 </div>
               </div>
               
-              <div id="divip" class="form-group row" >
-                <label class="col-sm-2 col-form-label">IP address</label>
-                <div class="col-sm-10">
-                  <input type="text"  name="reg_ip_address" id="ipaddres" value="{{ Session::get('reg_ip_address') }}" class="form-control"  >
-                  <span>Jika diisi maka ip address user ini akan di tambahkan ke address list Mikrotik (berfungsi untuk policy based routing dll)</span>
-                </div>
-              </div>
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Username internet *</label>
               <div class="col-sm-4">
-                <input type="text" id="tampil_username" name="reg_username" class="form-control hotspot" value="{{ Session::get('reg_username') }}" required >
+                <input type="text" id="tampil_username" name="reg_username" class="form-control hotspot" value="" required >
               </div>
-                <label class=" col-sm-2 col-form-label" >Passwd internet *</label>
+                <label class=" col-sm-2 col-form-label" >Password internet *</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control pwhotspot" name="reg_password" value="1234567" required >
               </div>
@@ -179,91 +137,111 @@
               <div class="form-group row">
                 <label for="paket" class="col-sm-2 col-form-label" >Tanggal registrasi*</label>
                 <div class="col-sm-4">
-                <input type="text" class="form-control" id="tampil_tgl" name="reg_tgl" value="{{Session::get('reg_tgl')}}" readonly>
+                <input type="text" class="form-control" id="tampil_tgl" name="" value="" readonly>
                 </div>
                 <label for="paket" class="col-sm-2 col-form-label" >Tanggal Pasang*</label>
                 <div class="col-sm-4">
-                <input type="text" class="form-control datepicker" id="" name="reg_tgl_pasang" value="{{Session::get('reg_tgl_pasang')}}" >
+                <input type="text" class="form-control datepicker" id="" name="reg_tgl_pasang" value="" >
                 </div>
               </div>
               <div class="form-group row">
-                <label for="paket" class="col-sm-2 col-form-label">Profile langganan *</label>
+                <label for="paket" class="col-sm-2 col-form-label">Paket langganan *</label>
                 <div class="col-sm-4">
                   <select class="form-control" id="paket" name="reg_profile" >
-                    @if(Session::get('reg_profile'))
-                    <option value="{{(Session::get('reg_profile'))}}">{{(Session::get('paket_nama'))}}</option>
                     <option value="">Pilih</option>
                     @foreach($data_paket as $p)
                     <option value="{{$p->paket_id}}">{{$p->paket_nama}}</option>
                     @endforeach
-                    @else
-                    <option value="">Pilih</option>
-                    @foreach($data_paket as $p)
-                    <option value="{{$p->paket_id}}">{{$p->paket_nama}}</option>
-                    @endforeach
-                    @endif
                   </select>
                 </div>
                 <label for="jenis_tagihan" class=" col-sm-2 col-form-label">Jenis tagihan *</label>
                 <div class="col-sm-4">
                   <select class="form-control" id="jenis_tagihan" name="reg_jenis_tagihan" >
-                    @if( Session::get('reg_jenis_tagihan'))
-                    <option value="{{ Session::get('reg_jenis_tagihan') }}">{{ Session::get('reg_jenis_tagihan')}}</option>
-                    <option value="">Pilih</option>
-                    <option value="PRABAYAR">PRABAYAR</option>
-                    <option value="PASCABAYAR">PASCABAYAR</option>
-                    <option value="DEPOSIT">DEPOSIT</option>
-                    <option value="FREE">FREE</option>
-                    @else
-                    <option value="">Pilih</option>
-                    <option value="PRABAYAR">PRABAYAR</option>
-                    <option value="PASCABAYAR">PASCABAYAR</option>
-                    <option value="DEPOSIT">DEPOSIT</option>
-                    <option value="FREE">FREE</option>
-                    @endif
                   </select>
                 </div>
               </div>
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Harga prorata</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="harga" name="reg_harga" value="{{Session::get('reg_harga')}}" readonly >
+                  <input type="text" class="form-control" id="harga" name="reg_harga" value="" readonly >
                 </div>
                     <label class="form-check col-sm-2 col-form-label">PPN 11%&nbsp;&nbsp;
-                      <input class="form-check-input checkboxppn" type="checkbox" id="ppn" value="{{$data_biaya->biaya_ppn}}" @if( Session::get('reg_ppn')) checked @endif>
+                      <input class="form-check-input checkboxppn" type="checkbox" id="ppn" value="{{$data_biaya->biaya_ppn}}">
                       <span class="form-check-sign"></span>
                     </label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="biaya_ppn" name="reg_ppn" value="{{Session::get('reg_ppn')}}" >
+                  <input type="text" class="form-control" id="biaya_ppn" name="reg_ppn" value="" >
                 </div>
               </div>
+              
               <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Sub Sales</label>
+                <label class="col-sm-2 col-form-label">Kode Unik</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="tampil_subsales" name="input_subseles" value="{{Session::get('input_subseles')}}" readonly>
+                  <input type="text" class="form-control" id="kode_unik" name="reg_kode_unik" value="" >
                 </div>
-              <label class="form-check col-sm-2 col-form-label">Dana Kerja Sama &nbsp;&nbsp;
-                <input class="form-check-input checkboxkerjasama" type="checkbox" id="kas" value="{{$data_biaya->dana_kas}}" @if( Session::get('reg_dana_kerjasama')) checked @endif>
-                <span class="form-check-sign"></span>
-              </label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="kerjasama" name="reg_dana_kerjasama" value="{{Session::get('reg_dana_kerjasama')}}" readonly>
-              </div>
-            </div>
-              <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Kode Unik</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="kode_unik" name="reg_kode_unik" value="{{Session::get('reg_kode_unik')}}" >
-                </div>
-
-                <label class="form-check col-sm-2 col-form-label">Dana Kas &nbsp;&nbsp;
-                  <input class="form-check-input checkboxkas" type="checkbox" id="kas" value="{{$data_biaya->dana_kas}}" @if( Session::get('reg_dana_kas')) checked @endif>
+                
+              <label class="form-check col-sm-2 col-form-label">Bph Uso &nbsp;&nbsp;
+                  <input class="form-check-input checkboxbiaya_bph_uso" type="checkbox" id="kas" value="{{$data_biaya->dana_kas}}">
                   <span class="form-check-sign"></span>
                 </label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" id="biaya_kas" name="reg_dana_kas" value="{{Session::get('reg_dana_kas')}}" readonly>
-              </div>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="biaya_bph_uso" name="reg_bph_uso" value="" >
+                </div>
+             
+
+                  
             </div>
+              <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Pic Lapangan</label>
+              <div class="col-sm-4">
+                <select name="reg_mitra[]" id="reg_mitra" class="form-control">
+                  {{-- <option value="0">--None--</option>
+                  @foreach ($mitra as $m)
+                  <option value="{{$m->mts_user_id ??''}}">{{$m->user_mitra->name ??''}} | Sub Mitra {{$m->mitra_sub->count() ?? ''}}</option>
+                  @endforeach --}}
+                </select>
+              </div>
+              
+              <label class="col-sm-2 col-form-label">Fee PIC</label>
+              <div class="col-sm-4">
+                {{-- <input type="text" class="form-control readonly " id="fee_pic" name="fee[]" value="{{Session::get('fee_pic')}}" > --}}
+                <select type="text" class="form-control readonly" id="fee_pic" name="fee[]" ></select>
+                </div>
+                  
+              </div>
+              <div class="form-group row">
+                   <label class="col-sm-2 col-form-label">Sub Pic Lapangan</label>
+                  <div class="col-sm-4">
+                    <select name="reg_mitra[]" id="sub_mitra" class="form-control">
+                  <option value="">--None--</option>
+                </select>
+              </div>
+                 <label class="col-sm-2 col-form-label">Fee SUB-PIC</label>
+                <div class="col-sm-4">
+                  {{-- <input type="text" class="form-control readonly" id="fee_subpic" name="fee[]" value="{{Session::get('fee_subpic')}}" > --}}
+                  <select type="text" class="form-control readonly " id="fee_subpic" name="fee[]" ></select>
+                </div>
+                
+            </div>
+              <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Sales Id</label>
+                  <div class="col-sm-4">
+                    <select name="reg_mitra[]" id="tampil_sales" class="form-control "></select>
+                    {{-- <input type="text" class="form-control readonly" id="tampil_sales" name="reg_mitra[]" value="{{ Session::get('reg_sales') }}"> --}}
+                  </div>
+                 <label class="col-sm-2 col-form-label">Fee Sales</label>
+                <div class="col-sm-4">
+                  <select type="text" class="form-control readonly fee_sales" id="tampil_fee_sales" name="fee[]" ></select>
+                  {{-- <input type="text" class="form-control readonly fee_sales" id="tampil_fee_sales" name="fee[]" value="{{Session::get('fee_sales')}}" > --}}
+                </div>
+              </div>
+              <div class="form-group row">
+                 <label class="col-sm-2 col-form-label">Sub Sales</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control " id="tampil_subsales" name="input_subseles" value="{{Session::get('input_subseles')}}" readonly>
+                </div>
+              </div>
+            {{-- </div> --}}
             <div class="form-group row">
               <label class="form-check col-sm-2 col-form-label">Invoice Suspand &nbsp;&nbsp;
               </label>

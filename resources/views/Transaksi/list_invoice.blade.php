@@ -145,18 +145,6 @@
 
           <form >
             <div class="row mb-1">
-              
-                <div class="col">
-                  <select name="data_bulan" class="custom-select custom-select-sm">
-                    @if($data_bulan)
-                    <option value="{{$data_bulan}}" selected>{{$data_bulan}}</option>
-                    @endif
-                    <option value="">ALL DATA</option>
-                    <option value="1">PELANGGAN BARU</option>
-                    <option value="2">PELANGGAN 2 BULAN</option>
-                    <option value="3">PELANGGAN 3 BULAN</option>
-                  </select>
-                </div>
 
                 <div class="col">
                   <select name="data_inv" class="custom-select custom-select-sm">
@@ -203,20 +191,18 @@
             <table class="display table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
-                  <th>STATUS</th>
-                  <th>ACTION</th>
-                  <th>JTH TEMPO</th>
-                  <th>ISOLIR</th>
-                  <th>INVOICE</th>
-                  <th>ID PEL</th>
-                  <th>NO.LAYANAN</th>
-                  <th>PELANGGAN</th>
-                  <th>PROFILE</th>
-                  <th>MITRA</th>
-                  <th>KATEGORI</th>
-                  <th>TGL TERBIT</th>
-                  <th>TOTAL</th>
-                  <th>NOTE</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                  <th>Jatuh Tempo</th>
+                  <th>Tgl Isolir</th>
+                  <th>No Invoice</th>
+                  <th>Id Pelanggan</th>
+                  <th>No Layanan</th>
+                  <th>Nama</th>
+                  <th>Pakeyt</th>
+                  <th>Tgl Terbit</th>
+                  <th>Total</th>
+                  <th>Catatan</th>
                 </tr>
               </thead>
               <tbody>
@@ -235,22 +221,20 @@
                   @endif
                   <td>
                     <div class="form-button-action">
-                      <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->inv_id}}" class="btn btn-link btn-danger">
+                      <button type="button" data-toggle="modal" data-target="#modal_hapus{{$d->inv_id ??''}}" class="btn btn-link btn-danger">
                         <i class="fa fa-times"></i>
                       </button>
                     </div>
                   </td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_jatuh_tempo))}}</td>
-                  <td class="href_inv" data-id="{{$d->inv_id}}" >{{date('d-m-Y', strtotime($d->inv_tgl_isolir))}}</td>
-                  <td>{{$d->inv_id}}</td>
-                      <td>{{$d->inv_idpel}}</td>
-                      <td>{{$d->inv_nolayanan}}</td>
-                      <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_nama}}</td>
-                      <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_profile}}</td>
-                      <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_mitra}}</td>
-                      <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_kategori}}</td>
-                      <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_tgl_tagih}}</td>
-                      <td class="href_inv" data-id="{{$d->inv_id}}" >{{$d->inv_total}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{date('d-m-Y', strtotime($d->inv_tgl_jatuh_tempo)) ??''}}</td>
+                  <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{date('d-m-Y', strtotime($d->inv_tgl_isolir)) ??''}}</td>
+                  <td>{{$d->inv_id ??''}}</td>
+                      <td>{{$d->inv_idpel ??''}}</td>
+                      <td>{{$d->reg_nolayanan ??''}}</td>
+                      <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{$d->input_nama??'' ??''}}</td>
+                      <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{$d->paket_nama ??''}}</td>
+                      <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{$d->inv_tgl_tagih ??''}}</td>
+                      <td class="href_inv" data-id="{{$d->inv_id ??''}}" >Rp. {{number_format($d->inv_total??'') }}</td>
                       <td>{{$d->inv_note}}</td>
                     </tr>
                       <!-- Modal Hapus -->

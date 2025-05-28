@@ -87,32 +87,23 @@ class InvoiceController extends Controller
         // dd($data['data_bulan']);
 
         $query = Invoice::query()
+        ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_status', '!=', 'PAID')
-            ->orderBy('inv_id', 'ASC')
-            // ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
+            ->where('invoices.corporate_id',Session::get('corp_id'))
+            ->orderBy('invoices.inv_id', 'ASC')
+            ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
             ->where(function ($query) use ($data) {
-                $query->where('inv_id', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
-                $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->where('invoices.inv_id', 'like', '%' . $data['q'] . '%');
+                // $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
+                // $query->orWhere('inv_nama', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('invoices.inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
+                // $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
             });
 
         if ($data['bulan'])
-            $query->whereMonth('inv_tgl_jatuh_tempo', date('m', strtotime($data['bulan'])))->whereYear('inv_tgl_jatuh_tempo', date('Y', strtotime($data['bulan'])));
-
-
-        if ($data['data_bulan'] == "1") {
-            $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_ini);
-            $data['data_bulan'] = 'PELANGGAN BARU';
-        } elseif ($data['data_bulan'] == "2") {
-            $query->whereMonth('inv_tgl_pasang', '=', $pasang_bulan_lalu);
-            $data['data_bulan'] = 'PELANGGAN 2 BULAN';
-        } elseif ($data['data_bulan'] == "3") {
-            $query->whereMonth('inv_tgl_pasang', '=', $pasang_3_bulan_lalu);
-            $data['data_bulan'] = 'PELANGGAN 3 BULAN';
-        }
-
+            $query->whereMonth('invoices.inv_tgl_jatuh_tempo', date('m', strtotime($data['bulan'])))->whereYear('inv_tgl_jatuh_tempo', date('Y', strtotime($data['bulan'])));
 
         if ($data['data_inv'])
             $query->where('inv_status', '=', $data['data_inv']);
@@ -125,14 +116,14 @@ class InvoiceController extends Controller
 
         $data['inv_count_all'] = $query->count();
         $data['data_invoice'] = $query->paginate(20);
-        $data['inv_count_belum_terbayar'] = Invoice::where('inv_status', '!=', 'PAID')->count() + Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->count();
-        $data['inv_count_total'] = Invoice::whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
-        $data['inv_count_unpaid'] = Invoice::where('inv_status', '=', 'UNPAID')->count();
-        $data['inv_count_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->count();
-        $data['inv_belum_lunas'] = Invoice::where('inv_status', '!=', 'PAID')->sum('inv_total');
-        $data['inv_lunas'] = Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->sum('inv_total');
-        $data['inv_count_suspend'] = Invoice::where('inv_status', '=', 'SUSPEND')->count();
-        $data['inv_count_isolir'] = Invoice::where('inv_status', '=', 'ISOLIR')->count();
+        $data['inv_count_belum_terbayar'] = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_status', '!=', 'PAID')->count() + Invoice::where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->count();
+        $data['inv_count_total'] = Invoice::where('corporate_id',Session::get('corp_id'))->whereMonth('inv_tgl_jatuh_tempo', '=', $month)->count();
+        $data['inv_count_unpaid'] = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_status', '=', 'UNPAID')->count();
+        $data['inv_count_lunas'] = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->count();
+        $data['inv_belum_lunas'] = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_status', '!=', 'PAID')->sum('inv_total');
+        $data['inv_lunas'] = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_status', '=', 'PAID')->whereMonth('inv_tgl_bayar', '=', $month)->sum('inv_total');
+        $data['inv_count_suspend'] = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_status', '=', 'SUSPEND')->count();
+        $data['inv_count_isolir'] = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_status', '=', 'ISOLIR')->count();
         return view('Transaksi/list_invoice', $data);
     }
     public function paid(Request $request)
@@ -145,6 +136,7 @@ class InvoiceController extends Controller
         $invoice = Invoice::where('invoices.inv_status', '=', 'PAID')
             // ->where('invoices.inv_jenis_tagihan', '!=', 'FREE')
             // ->whereMonth('invoices.inv_tgl_bayar', '=', $month)
+            ->where('invoices.corporate_id',Session::get('corp_id'))
             ->orderBy('inv_tgl_bayar', 'DESC')
             ->where(function ($invoice) use ($data) {
                 $invoice->orWhere('inv_id', 'like', '%' . $data['q'] . '%');
@@ -180,8 +172,8 @@ class InvoiceController extends Controller
     public function delete_inv($inv_id)
     {
 
-        $invoice = Invoice::where('inv_id', '=', $inv_id)->first();
-        $sub_invoice = SubInvoice::where('subinvoice_id', '=', $inv_id)->first();
+        $invoice = Invoice::where('invoices.corporate_id',Session::get('corp_id'))->where('inv_id', '=', $inv_id)->first();
+        $sub_invoice = SubInvoice::where('subinvoice_id', '=', $inv_id)->where('invoices.corporate_id',Session::get('corp_id'))->first();
         // dd($invoice);
         if ($sub_invoice) {
             $sub_invoice->delete();
@@ -203,8 +195,9 @@ class InvoiceController extends Controller
     public function sub_invoice($id)
     {
         $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
-            // ->join('users', 'users.id', '=', 'invoices.inv_admin')
-            ->where('inv_id', $id)->first();
+            ->where('inv_id', $id)
+            ->where('invoices.corporate_id',Session::get('corp_id'))
+            ->first();
 
         if ($data['invoice']->inv_admin) {
             if ($data['invoice']->inv_admin == 'SYSTEM') {
@@ -220,14 +213,17 @@ class InvoiceController extends Controller
         // dd($data['invoice']);sss
 
         $data['deskripsi'] = Invoice::join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+            ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('invoices.inv_id', $id)->get();
 
 
-        $data['sumharga'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_total');
-        $data['sumppn'] = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn');
+        $data['sumharga'] = SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $id)->sum('subinvoice_total');
+        $data['sumppn'] = SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $id)->sum('subinvoice_ppn');
         $data['ppnj'] = env('PPN');
         $data['akun'] = $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'LAPORAN')->get();
-        $data['ppn'] = SettingBiaya::first();
+        $data['ppn'] = SettingBiaya::where('corporate_id',Session::get('corp_id'))->first();
 
 
         return view('Transaksi/subinvoice', $data);
@@ -309,7 +305,7 @@ class InvoiceController extends Controller
         // return response()->json($id);
         $data['inv_diskon'] = $request->diskon;
         $data['inv_total'] = $request->total;
-        Invoice::where('inv_id', $id)->update($data);
+        Invoice::where('inv_id', $id)->where('invoices.corporate_id',Session::get('corp_id'))->update($data);
         return response()->json($data);
     }
 
@@ -317,7 +313,7 @@ class InvoiceController extends Controller
     {
         // $data_laporan = Laporan::where('lap_inv',$id)->first();
         // if($data_laporan->)
-        $swaktu = SettingWaktuTagihan::first();
+        $swaktu = SettingWaktuTagihan::where('invoices.corporate_id',Session::get('corp_id'))->first();
         $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
         $admin_user = Auth::user()->id;
         $tampil = DB::table('invoices')
@@ -330,8 +326,8 @@ class InvoiceController extends Controller
             ->first();
         $diskon = $tampil->inv_diskon;
 
-        $sumppn = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_ppn'); #hitung total ppn invoice
-        $sumharga = SubInvoice::where('subinvoice_id', $id)->sum('subinvoice_harga'); #hitung total harga invoice
+        $sumppn = SubInvoice::where('subinvoice_id', $id)->where('invoices.corporate_id',Session::get('corp_id'))->sum('subinvoice_ppn'); #hitung total ppn invoice
+        $sumharga = SubInvoice::where('subinvoice_id', $id)->where('invoices.corporate_id',Session::get('corp_id'))->sum('subinvoice_harga'); #hitung total harga invoice
         $total_debet = $sumharga + $sumppn - $diskon;
 
         #Kembalikan tanggal jatuh tempo ke tanggal sebelumnya
@@ -360,7 +356,7 @@ class InvoiceController extends Controller
         Laporan::create($data_lap);
 
         $update_lap['lap_inv'] = '';
-        Laporan::where('lap_inv', $id)->update($update_lap);
+        Laporan::where('lap_inv', $id)->where('invoices.corporate_id',Session::get('corp_id'))->update($update_lap);
 
         $cek_role = DB::table('users')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
@@ -426,10 +422,10 @@ class InvoiceController extends Controller
         $data['inv_tgl_isolir'] = $inv_tgl_isolir;
         $data['inv_tgl_tagih'] = $inv_tgl_tagih;
         $data['inv_tgl_jatuh_tempo'] = $tampil->inv_tgl_jatuh_tempo;
-        Invoice::where('inv_id', $id)->update($data);
+        Invoice::where('inv_id', $id)->where('invoices.corporate_id',Session::get('corp_id'))->update($data);
 
 
-        Registrasi::where('reg_idpel', $tampil->inv_idpel)->update([
+        Registrasi::where('reg_idpel', $tampil->inv_idpel)->where('invoices.corporate_id',Session::get('corp_id'))->update([
             'reg_status' => $status,
             'reg_tgl_jatuh_tempo' => $kurangi_tgl_jth_tempo,
         ]);
@@ -904,7 +900,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     {
         $unp = Invoice::where('inv_id', $id)->first();
         if ($unp) {
-
+            $data['corporate_id'] = Session::get('corp_id');
             $data['subinvoice_id'] = $id;
             $data['subinvoice_deskripsi'] = $request->Deskripsi;
             $data['subinvoice_qty'] = $request->qty;
@@ -914,7 +910,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             $data['subinvoice_status'] = '1';
             $upd['inv_total'] = $unp->inv_total + $request->total;
             SubInvoice::create($data);
-            Invoice::where('inv_id', $id)->update($upd);
+            Invoice::where('invoices.corporate_id',Session::get('corp_id'))->where('inv_id', $id)->update($upd);
             $notifikasi = array(
                 'pesan' => 'Berhasil menambahkan addons',
                 'alert' => 'success',
@@ -931,10 +927,10 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
     public function addons_delete($id, $inv, $tot)
     {
-        $unp = Invoice::where('inv_id', $inv)->first();
+        $unp = Invoice::where('invoices.corporate_id',Session::get('corp_id'))->where('inv_id', $inv)->first();
         $upd['inv_total'] = $unp->inv_total - $tot;
-        Invoice::where('inv_id', $inv)->update($upd);
-        SubInvoice::where('id', $id)->delete();
+        Invoice::where('invoices.corporate_id',Session::get('corp_id'))->where('inv_id', $inv)->update($upd);
+        SubInvoice::where('invoices.corporate_id',Session::get('corp_id'))->where('id', $id)->delete();
         $notifikasi = array(
             'pesan' => 'Berhasil menghapus addons',
             'alert' => 'success',

@@ -10,12 +10,13 @@ class ApiController extends Controller
 {
     public function aktivasi_psb_ppp($query)
     {
+        
         $ip =   $query->router_ip . ':' . $query->router_port_api;
         $user = $query->router_username;
         $pass = $query->router_password;
         $API = new RouterosAPI();
         $API->debug = false;
-
+        
         if ($API->connect($ip, $user, $pass)) {
             $API->comm('/ip/pool/add', [
                 'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
@@ -29,10 +30,10 @@ class ApiController extends Controller
                 'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
                 'queue-type' => 'default-small' == '' ? '' : 'default-small',
                 'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
-                'disabled' => 'yes',
+                // 'disabled' => 'yes',
                 'only-one' => 'yes',
             ]);
-
+            
             $profile = $API->comm('/ppp/profile/print', [
                 '?name' => $query->paket_nama,
             ]);
@@ -45,6 +46,7 @@ class ApiController extends Controller
                     'comment' => 'REGISTRASI' == '' ? '' : 'REGISTRASI',
                     'disabled' => 'no',
                 ]);
+                // dd($ip .' '.$user.' '. $pass);
                 return '0';
             } else {
                 return '1';

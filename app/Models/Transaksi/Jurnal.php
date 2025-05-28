@@ -9,6 +9,7 @@ class Jurnal extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'jurnal_id',
         'jurnal_tgl',
         'jurnal_uraian',

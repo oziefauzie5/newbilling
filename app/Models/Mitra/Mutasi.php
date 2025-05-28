@@ -10,6 +10,7 @@ class Mutasi extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'corporate_id',
         'mt_mts_id',
         'mt_admin',
         'mt_kategori',

@@ -20,4 +20,6 @@ class Model_Has_Role extends Model
         'model_type',
         'model_id',
     ];
+
+    
 }

@@ -5,9 +5,9 @@
   <div class="page-inner">
     <div class="card " >
       <div class="card-header card-primary">
-            <a href="{{route('admin.router.index')}}" class="btn btn-primary stretched-link">ROUTER</a>
-            <a href="{{route('admin.router.getPppoe',['id'=>$id])}}" class="btn btn-primary stretched-link">PPPOE</a>
-            <a href="{{route('admin.router.getHotspot',['id'=>$id])}}" class="btn btn-primary stretched-link">HOTSPOT</a>
+            <a href="{{route('admin.topo.index')}}" class="btn btn-primary stretched-link">ROUTER</a>
+            <a href="{{route('admin.topo.getPppoe',['id'=>$id])}}" class="btn btn-primary stretched-link">PPPOE</a>
+            <a href="{{route('admin.topo.getHotspot',['id'=>$id])}}" class="btn btn-primary stretched-link">HOTSPOT</a>
         </div>
       <div class="card-body">
         <div id="alert" class="alert alert-danger d-none">									
@@ -30,7 +30,7 @@
             <tr> 
               <td>
                <div class="form-button-action">
-                 <a href="{{route('admin.router.kick_hotspot',['id'=>$id,'idmik'=>$d[".id"]])}}" class="btn btn-link btn-danger"><i class="fa fa-times"></i></a>
+                 <a href="{{route('admin.topo.kick_hotspot',['id'=>$id,'idmik'=>$d[".id"]])}}" class="btn btn-link btn-danger"><i class="fa fa-times"></i></a>
                </div>
               </td>
               <td>{{$d['server']}}</td> 

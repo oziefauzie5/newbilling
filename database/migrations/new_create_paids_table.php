@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Aplikasi\Corporate;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('paids', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->integer('id_unpaid')->nullable();
             $table->integer('idpel_unpaid')->nullable();
             $table->string('reference')->nullable();

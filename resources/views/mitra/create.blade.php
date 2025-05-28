@@ -9,7 +9,7 @@
                   <div class="col-md-6">
                     <div class="card">
                       <div class="card-header bg-primary">
-                        <h3 class="card-title">Tambah Pengguna</h3>
+                        <h3 class="card-title text-light">Tambah Data</h3>
                       </div>
                       @if ($errors->any())
                       <div class="alert alert-danger" role="alert">
@@ -113,8 +113,10 @@
                           <select name="level" id="level" class="form-control" required >
                               <option value="">-PILIH-</option>
                               <option value="10|BILLER">BILLER</option>
-                            <option value="13|KOLEKTOR">KOLEKTOR</option>
-                            <option value="14|RESELLER">RESELLER</option>
+                              <option value="12|SALES">SALES</option>
+                              <option value="13|KOLEKTOR">KOLEKTOR</option>
+                              <option value="14|RESELLER">RESELLER</option>
+                              <option value="15|PIC LINGKUNGAN">PIC LINGKUNGAN</option>
                             </select>
                             <div class="invalid-feedback">
                               Pilih Level terlebih dahulu

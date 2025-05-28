@@ -9,6 +9,7 @@ class Data_SubTiket extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'corporate_id',
         'subtiket_id',
         'subtiket_kode_barang',
         'subtiket_jenis_barang',

@@ -30,7 +30,7 @@ use App\Models\Router\Paket;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Session;
 
 class GlobalController extends Controller
 {
@@ -62,18 +62,18 @@ class GlobalController extends Controller
             ->first();
         return $data_user;
     }
-    public function role($iduser) #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
-    {
-        // dd($iduser);
-        $role =  DB::table('users')
-            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
-            ->select('users.name AS nama_user', 'roles.name', 'roles.id as role_id', 'users.hp', 'users.email', 'users.alamat_lengkap', 'users.username', 'users.password', 'mitra_settings.mts_user_id', 'mitra_settings.mts_komisi_sales')
-            ->where('users.id', '=', $iduser)
-            ->first();
-        return $role;
-    }
+    // public function role($iduser) #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
+    // {
+    //     // dd($iduser);
+    //     $role =  DB::table('users')
+    //         ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+    //         ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+    //         ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
+    //         ->select('users.name AS nama_user', 'roles.name', 'roles.id as role_id', 'users.hp', 'users.email', 'users.alamat_lengkap', 'users.username', 'users.password', 'mitra_settings.mts_user_id', 'mitra_settings.mts_komisi_sales')
+    //         ->where('users.id', '=', $iduser)
+    //         ->first();
+    //     return $role;
+    // }
     public function getTeknisi() #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
     {
         $teknisi =  DB::table('users')
@@ -192,24 +192,9 @@ class GlobalController extends Controller
     {
         $bl = date('m', strtotime(new Carbon()));
         $latest = InputData::orderBy('created_at', 'DESC')->latest()->first();
-        // $cek_idpel = InputData::whereId($latest->id)->count();
-        // if ($cek_idpel > 1) {
-        //     if (! $latest->id) {
-        //         return  '0001';
-        //     } else {
-        //         return sprintf('%04d', $latest->id + 2);
-        //     }
-        // } else {
-        //     if (! $latest->id) {
-        //         return  '0001';
-        //     } else {
-        //         return sprintf('%04d', $latest->id + 1);
-        //     }
-        // }
         if (! $latest) {
             return '1001';
         }
-        // dd($latest);
         $string = substr($latest->id, 1);
         return '1' . sprintf('%03d', $string + 1);
     }
@@ -249,7 +234,7 @@ class GlobalController extends Controller
     }
     public function getMitraSite($id) #Layanan Hotspot
     {
-        $kode_site = User::join('data__sites', 'data__sites.site_id', '=', 'users.user_site')
+        $kode_site = User::join('data__sites', 'data__sites.site_id', '=', 'users.data__site_id')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
             ->where('model_has_roles.role_id', '14')
             ->where('users.status_user', 'Enable')
@@ -289,13 +274,13 @@ class GlobalController extends Controller
         return response()->json($kode_pop);
     }
 
-    public function validasi_odp($id)
-    {
-        $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
-            ->join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
-            ->where("odp_kode", $id)->first();
-        return response()->json($kode_pop);
-    }
+    // public function validasi_odp($id)
+    // {
+    //     $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
+    //         ->join('data__olts', 'data__olts.olt_id', '=', 'data__odcs.odc_id_olt')
+    //         ->where("odp_kode", $id)->first();
+    //     return response()->json($kode_pop);
+    // }
     public function tiket_validasi_odp($id)
     {
         $kode_pop = Data_Odp::join('data__odcs', 'data__odcs.odc_id', '=', 'data__odps.odp_id_odc')
@@ -384,4 +369,16 @@ class GlobalController extends Controller
         $string = substr($latest->bh_id, 4);
         return $bln . sprintf('%04d', $string + 1);
     }
+    public function pop_id() 
+    {
+        $th = date('y', strtotime(new Carbon()));
+        $latest = Data_pop::orderBy('created_at', 'DESC')->where('corporate_id',Session::get('corp_id'))->latest()->first();
+        if (! $latest) {
+            return $th.'0001';
+        }
+        $string = substr($latest->pop_id, 2);
+        return $th . sprintf('%04d', $string + 1);
+    }
+
+
 }

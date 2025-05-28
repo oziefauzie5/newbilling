@@ -10,6 +10,7 @@ class Data_Pesanan extends Model
     use HasFactory;
     protected $fillable = [
     'pesanan_id',
+    'corporate_id',
     'pesanan_siteid',
     'pesanan_paketid',
     'pesanan_mitraid',

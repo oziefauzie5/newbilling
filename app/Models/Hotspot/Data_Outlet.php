@@ -10,6 +10,7 @@ class Data_Outlet extends Model
     use HasFactory;
     protected $fillable = [
         'outlet_id',
+        'corporate_id',
         'outlet_nama',
         'outlet_pemilik',
         'outlet_hp',

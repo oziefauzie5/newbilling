@@ -10,6 +10,7 @@ class Titikvhc extends Model
     use HasFactory;
     protected $fillable = [
         'titik_id', #
+        'corporate_id', #
         'titik_nama', #
         'titik_nama_titik', #
         'titik_pen_jawab_id',

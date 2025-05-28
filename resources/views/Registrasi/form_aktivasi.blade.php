@@ -1,7 +1,7 @@
 @extends('layout.main')
 @section('content')
 
-<style>
+{{-- <style>
   hr{
     border: none;
   height: 1px;
@@ -17,7 +17,7 @@
     font-size: 12px;
     color:rgb(255, 0, 0);
   }
-</style>
+</style> --}}
 
 <div class="content">
   <div class="page-inner">
@@ -35,7 +35,9 @@
           </div> 
           @endif
           <h3 class="mt-3 text-bolt text-center">AKTIVASI PELANGGAN</h3>
-
+          <form class="form-horizontal"action="{{route('admin.reg.proses_aktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
           <h3 class="mt-3 text-bolt">PELANGGAN</h3><hr>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nama Pelanggan</label>
@@ -82,122 +84,49 @@
               </div>
             </div>
                      
-            </form>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
-              <form class="form-horizontal"action="{{route('admin.reg.update_router',['id'=>$data->reg_idpel])}}" method="POST">
-            @csrf
-            @method('PUT')
-            <h3 class="mt-3 text-bolt">INTERNET</h3><hr>
-              
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Status Internet :</label>
-                <div class="col-sm-4">
-                  @if($status=='CONNECTED')
-                  <label class="col-sm-2 col-form-label font-weight-bold text-success" >{{ $status}}</label>
-                  @else
-                  <label class="col-sm-2 col-form-label font-weight-bold text-danger" >{{ $status}}</label>
-                  @endif
-                </div>
-                <label class="col-sm-2 col-form-label">IP Address :</label>
-              <div class="col-sm-4">
-                <label class="col-sm-2 col-form-label font-weight-bold text-danger" >{{ $address}}</label>
-              </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Aksi</label>
-              <div class="col-sm-3 mt-1">
-                <a href="{{route('admin.noc.pengecekan',['id'=>$data->reg_idpel])}}" target="_blank">
-                  <button type="button" class="btn btn-sm btn-warning btn-block">
-                    Remote
-                  </button></a>             
-                </div>
-              <div class="col-sm-3 mt-1">
-                <a href="{{route('admin.noc.kick',['id'=>$data->reg_idpel])}}">
-                  <button type="button" class="btn btn-sm btn-danger btn-block">
-                    Kick
-                  </button></a>             
-                </div>
-              <div class="col-sm-3 mt-1">
-                @if($status_secret=='false')
-                <a href="{{route('admin.noc.status_secret',['id'=>$data->reg_idpel.'?stat=false'])}}">
-                  <button type="button" class="btn btn-sm btn-danger btn-block">
-                    Disable
-                  </button></a>     
-                  @elseif($status_secret=='true')
-                  <a href="{{route('admin.noc.status_secret',['id'=>$data->reg_idpel.'?stat=true'])}}">
-                    <button type="button" class="btn btn-sm btn-success btn-block">
-                      Enable
-                    </button></a>   
-                    @else
-                    <button type="button" class="btn btn-sm btn-danger btn-block">
-                      Data tidak ditemukan
-                    </button>
-                  @endif        
-                </div>
-</form>
-              </div>
             </div>
           </div>
         </div>
 <div class="col-md-12">
   <div class="card">
     <div class="card-body"> 
-      <form class="form-horizontal"action="{{route('admin.reg.proses_aktivasi_pelanggan',['id'=>$data->reg_idpel])}}" method="POST"  enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
+      
         <h3 class="mt-3 text-bolt"> HADHWARE</h3><hr>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Site</label>
-        <div class="col-sm-4">
-          <select class="form-control" id="reg_site" name="reg_site" required >
-            @if($data->reg_site)
-            <option value="{{$data->site_id}}">{{$data->site_nama}}</option>
-            @endif
+        <div class="col-sm-4 notif">
+          <select class="form-control" id="validasi_site" name="reg_site"  >
+          </select>
+        </div>
+         <label class=" col-sm-2 col-form-label">POP <span>(Auto)</span></label>
+        <div class="col-sm-4 notif">
+          <select name="reg_pop" id="validasi_pop" class="form-control" >
           </select>
         </div>
       </div>
       <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">POP <span>(Auto)</span></label>
-        <div class="col-sm-4">
-          <select name="reg_pop" id="" class="form-control" required>
-            @if ($data->pop_id)
-                <option value="{{$data->pop_id}}">{{$data->pop_nama}}</option>
-            @endif
+       
+        <label for="router" class="col-sm-2 col-form-label">Router</label>
+        <div class="col-sm-4 notif">
+          <select class="form-control" id="validasi_router" name="reg_router" >
           </select>
         </div>
-        <label for="router" class="col-sm-2 col-form-label">Router</label>
-        <div class="col-sm-4">
-          <select class="form-control" id="" name="reg_router" >
-            @if( $data->reg_router)
-          <option value="{{ $data->reg_router}}">{{ $data->router_nama}}</option>
-          @endif
-          @foreach ($router as $d)
-              <option value="{{$d->id}}">{{$d->router_nama}}</option>
-          @endforeach
+          <label class=" col-sm-2 col-form-label">OLT <span>(Auto)</span></label>
+        <div class="col-sm-4 notif">
+          <select  id="validasi_olt"  name="reg_olt" class="form-control" >
           </select>
+          {{-- <input type="text" name="reg_olt" id="validasi_olt" class="form-control readonly" autocomplete="off"    value="{{ Session::get('reg_olt') }}"> --}}
         </div>
         </div>
       <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">OLT <span>(Auto)</span></label>
-        <div class="col-sm-4 notif">
-          <input type="text" name="reg_olt" id="validasi_olt" class="form-control readonly" autocomplete="off"   required value="{{ Session::get('reg_olt') }}">
-        </div>
+      
         <label class=" col-sm-2 col-form-label">ODC <span>(Auto)</span></label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly" required value="{{ Session::get('reg_odc') }}" >
+          <input type="text" name="reg_odc" id="validasi_odc" class="form-control readonly"  value="{{ Session::get('reg_odc') }}" >
         </div>
-    </div>
-      <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">ODP</label>
+         <label class=" col-sm-2 col-form-label">ODP</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odp" id="validasi_odp" class="form-control " required value="{{ Session::get('reg_odp') }}" >
+          <input type="text" name="reg_odp" id="validasi_odp" class="form-control "  value="{{ Session::get('reg_odp') }}" >
           <div id="pesan"></div>
         </div>
     </div>
@@ -216,7 +145,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Username internet <span>(Auto)</span></label>
+        <label class="col-sm-2 col-form-label">Username<span>(Auto)</span></label>
       <div class="col-sm-4">
         <input type="text" id="tampil_username" name="reg_username" class="form-control readonly" value="{{ $data->reg_username}}" >
       </div>
@@ -228,25 +157,19 @@
       <!-- #</div> hilang terhapus -->
      
       <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">ONU ID</label>
-        <div class="col-sm-4">
-          <input type="text" name="reg_onuid" class="form-control" required value="{{ Session::get('reg_onuid') }}">
-        </div>
         <label class=" col-sm-2 col-form-label">Slot ODP</label>
         <div class="col-sm-4">
-          <input type="text" name="reg_slot_odp" class="form-control" required value="{{ Session::get('reg_slot_odp') }}" >
+          <input type="text" name="reg_slot_odp" class="form-control"  value="{{ Session::get('reg_slot_odp') }}" >
         </div>
-      </div>
-      <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Redaman</label>
         <div class="col-sm-4">
-          <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont" required value="{{ Session::get('reg_in_ont') }}" maxlength="6" minlength="6">
+          <input type="number" class="form-control" step="0.01"  placeholder="OPM" id="reg_in_ont" name="reg_in_ont"  value="{{ Session::get('reg_in_ont') }}" maxlength="6" minlength="6">
         </div>
       </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">Teknisi 1</label>
         <div class="col-sm-4">
-          <select name="teknisi1" id="" class="form-control" required value="{{ Session::get('teknisi1') }}">
+          <select name="teknisi1" id="" class="form-control"  value="{{ Session::get('teknisi1') }}">
             <option value="">- Pilih Teknisi -</option>
           @foreach ($data_teknisi as $t)
               <option value="{{$t->user_id}}|{{$t->user_nama}}">{{$t->user_nama}}</option>
@@ -255,17 +178,17 @@
         </div>
         <label class=" col-sm-2 col-form-label">Teknisi 2</label>
         <div class="col-sm-4">
-          <input type="text" name="teknisi2" class="form-control" required value="{{ Session::get('teknisi2') }}" >
+          <input type="text" name="teknisi2" class="form-control"  value="{{ Session::get('teknisi2') }}" >
         </div>
       </div>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Koordinat Rumah</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control"  name="input_koordinat" required value="{{ Session::get('input_koordinat') }}">
+          <input type="text" class="form-control"  name="input_koordinat"  value="{{ Session::get('input_koordinat') }}">
         </div>
-        <label class="col-sm-2 col-form-label">Koordinat ODP</label>
+        <label class="col-sm-2 col-form-label">Barang Id</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control"  name="reg_koordinat_odp" required value="{{ Session::get('reg_koordinat_odp') }}">
+          <input  type="text" class="form-control readonly" name="reg_barang"  value="{{ $data->registrasi_tiket->tiket_idbarang_keluar }}">
         </div>
       </div>
       <div class="form-group row">
@@ -273,24 +196,14 @@
         <div class="col-sm-4">
           <input  type="file" class="form-control-file" name="reg_img"  value="{{ Session::get('reg_img') }}">
         </div>
-        <label class="col-sm-2 col-form-label">Foto Lokasi ODP</label>
-        <div class="col-sm-4">
-          <input  type="file" class="form-control-file" name="reg_foto_odp"  value="{{ Session::get('reg_foto_odp') }}">
-        </div>
-      </div>
-      <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
           <img src="{{ asset('storage/laporan-kerja/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
         </div>
-        <label class="col-sm-2 col-form-label">Foto Lokasi ODP </label>
-        <div class="col-sm-4">
-          <img src="{{ asset('storage/laporan-kerja/'.$data->reg_foto_odp) }}" width="100%" alt="" title=""></img>
-        </div>
       </div>
     <div class="card-footer">
     @role('admin|STAF ADMIN|NOC')
-    <a href="{{route('admin.psb.index')}}"><button type="button" class="btn  ">Batal</button></a>
+    <a href="{{route('admin.psb.ftth')}}"><button type="button" class="btn  ">Batal</button></a>
     <button type="submit" class="btn btn-primary float-right">Simpan</button>
     @endrole
     </div>

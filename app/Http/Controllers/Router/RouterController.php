@@ -8,13 +8,14 @@ use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
 use App\Models\Teknisi\Data_pop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 
 class RouterController extends Controller
 {
     public function index()
     {
-        $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')->get();
+        $data['router'] = Router::where('corporate_id',Session::get('corp_id'))->with('pop_router')->get();
         $data['data_pop'] = Data_pop::where('pop_status', 'Enable')->get();
         return view('Router/index', $data);
     }
@@ -22,7 +23,8 @@ class RouterController extends Controller
     {
 
         $data['router_nama'] = $request->router_nama;
-        $data['router_id_pop'] = $request->router_id_pop;
+        $data['corporate_id'] = Session::get('corp_id');
+        $data['data_pop_id'] = $request->router_id_pop;
         $data['router_ip'] = $request->router_ip;
         $data['router_dns'] = $request->router_dns;
         $data['router_port_api'] = $request->router_port_api;
@@ -36,13 +38,13 @@ class RouterController extends Controller
             'pesan' => 'Berhasil menambahkan router',
             'alert' => 'success',
         );
-        return redirect()->route('admin.router.index')->with($notifikasi);
+        return redirect()->route('admin.topo.index')->with($notifikasi);
     }
     public function edit(Request $request, $id)
     {
 
         $data['router_nama'] = $request->router_nama;
-        $data['router_id_pop'] = $request->router_id_pop;
+        $data['data_pop_id'] = $request->router_id_pop;
         $data['router_ip'] = $request->router_ip;
         $data['router_dns'] = $request->router_dns;
         $data['router_port_api'] = $request->router_port_api;
@@ -75,13 +77,13 @@ class RouterController extends Controller
                 'pesan' => 'Gagal edit router',
                 'alert' => 'error',
             );
-            return redirect()->route('admin.router.index')->with($notifikasi);
+            return redirect()->route('admin.topo.index')->with($notifikasi);
         }
         $notifikasi = array(
             'pesan' => 'Berhasil edit router',
             'alert' => 'success',
         );
-        return redirect()->route('admin.router.index')->with($notifikasi);
+        return redirect()->route('admin.topo.index')->with($notifikasi);
     }
     public function delete_router(Request $request, $id)
     {
@@ -93,7 +95,7 @@ class RouterController extends Controller
             'alert' => 'success',
             'mik' => 'Berhasil menghapus Router',
         );
-        return redirect()->route('admin.router.index')->with($notifikasi);
+        return redirect()->route('admin.topo.index')->with($notifikasi);
     }
     public function cekRouter($id)
     {
@@ -147,7 +149,7 @@ class RouterController extends Controller
             return view('Router/pppoe', $data);
         } else {
             dd('tidak konek');
-            return redirect()->route('admin.router.index');
+            return redirect()->route('admin.topo.index');
         }
     }
     public function getHotspot($id)
@@ -164,7 +166,7 @@ class RouterController extends Controller
             return view('Router/hotspot', $data);
         } else {
             dd('tidak konek');
-            return redirect()->route('admin.router.index');
+            return redirect()->route('admin.topo.index');
         }
     }
     public function router_remote($id, $ipremote)
@@ -203,7 +205,7 @@ class RouterController extends Controller
             return redirect()->to('http://' . $router->router_ip . ':' . $router->router_port_remote . '/');
         } else {
             dd('tidak konek');
-            return redirect()->route('admin.router.index');
+            return redirect()->route('admin.topo.index');
         }
     }
     public function kick_hotspot($id, $idmik)
@@ -223,7 +225,7 @@ class RouterController extends Controller
             return view('Router/hotspot', $data);
         } else {
             dd('tidak konek');
-            return redirect()->route('admin.router.hotspot');
+            return redirect()->route('admin.topo.hotspot');
         }
     }
 }

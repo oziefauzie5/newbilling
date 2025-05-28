@@ -10,6 +10,7 @@ class Data_Barang extends Model
     use HasFactory;
     protected $fillable = [
         'barang_id',
+        'corporate_id',
         'barang_id_group',
         'barang_lokasi',
         'barang_kategori',
@@ -42,4 +43,10 @@ class Data_Barang extends Model
         'barang_hilang',
         'created_at',
     ];
+
+
+    // function data_barang_keluar()
+    // {
+    //     return $this->hasMany(Data_BarangKeluar::class,'bk_id_barang','barang_id');
+    // }
 }

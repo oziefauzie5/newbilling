@@ -10,6 +10,7 @@ class Data_Voucher extends Model
     use HasFactory;
     protected $fillable = [
             'vhc_id',
+            'corporate_id',
             'vhc_pesananid',
             'vhc_username',
             'vhc_password',

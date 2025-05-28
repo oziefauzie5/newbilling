@@ -5,9 +5,9 @@
   <div class="page-inner">
     <div class="card " >
       <div class="card-header card-primary">
-        <a href="{{route('admin.router.index')}}" class="btn btn-primary stretched-link">ROUTER</a>
-            <a href="{{route('admin.router.getPppoe',['id'=>$id])}}" class="btn btn-primary stretched-link">PPPOE</a>
-            <a href="{{route('admin.router.getHotspot',['id'=>$id])}}" class="btn btn-primary stretched-link">HOTSPOT</a>
+        <a href="{{route('admin.topo.index')}}" class="btn btn-primary stretched-link">ROUTER</a>
+            <a href="{{route('admin.topo.getPppoe',['id'=>$id])}}" class="btn btn-primary stretched-link">PPPOE</a>
+            <a href="{{route('admin.topo.getHotspot',['id'=>$id])}}" class="btn btn-primary stretched-link">HOTSPOT</a>
         </div>
       <div class="card-body">
         <div id="alert" class="alert alert-danger d-none">									
@@ -30,7 +30,7 @@
             <tr> 
              <td>{{$d['name']}}</td> 
              <td>{{$d['caller-id']}}</td> 
-             <td><a href="{{route('admin.router.router_remote',['id'=>$id,'ip'=>$d["address"]])}}" target="_blank" rel="noopener noreferrer">{{$d["address"]}}</a></td> 
+             <td><a href="{{route('admin.topo.router_remote',['id'=>$id,'ip'=>$d["address"]])}}" target="_blank" rel="noopener noreferrer">{{$d["address"]}}</a></td> 
              <td>{{$d['uptime']}}</td> 
              <td></td>
             </tr>   

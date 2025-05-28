@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Applikasi\AppController;
+use App\Models\Aplikasi\Corporate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,8 @@ class LoginController extends Controller
 
     public function login_proses(Request $request)
     {
+        $CORP_ID = Corporate::where('corp_url',url('/'))->first('id');
+        // dd($CORP_ID );
         $request->validate([
             'username' => 'required',
             'password' => 'required',
@@ -51,6 +54,7 @@ class LoginController extends Controller
                 $request->session()->put('app_link_admin', $app->app_link_admin);
                 $request->session()->put('app_link_pelanggan', $app->app_link_pelanggan);
                 $request->session()->put('data_site', '1');
+                $request->session()->put('corp_id', $CORP_ID->id);
             } else {
                 $request->session()->put('app_brand', 'APPBILL');
                 $request->session()->put('app_nama', 'APPBILL');
@@ -62,6 +66,7 @@ class LoginController extends Controller
                 $request->session()->put('app_link_admin', '-');
                 $request->session()->put('app_link_pelanggan', '-');
                 $request->session()->put('data_site', '1');
+                $request->session()->put('corp_id', $CORP_ID->id);
             }
 
 
@@ -103,6 +108,7 @@ class LoginController extends Controller
         session()->forget('app_link_pelanggan');
         session()->forget('nama_roles');
         session()->forget('data_site');
+        session()->forget('corp_id');
         Auth::logout();
         return redirect()->route('adminapp')->with('success', 'Kamu berhasil logout');
     }

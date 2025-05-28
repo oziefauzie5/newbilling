@@ -156,7 +156,7 @@ class PaketVoucherController extends Controller
             'pesan' => 'Berhasil menambahkan Profile Hotspot',
             'alert' => 'success',
         );
-        return redirect()->route('admin.router.paket.index')->with($notifikasi);
+        return redirect()->route('admin.router.noc.index')->with($notifikasi);
     }
 
     public function update_paket_voucher($request, $id)

@@ -33,17 +33,12 @@
                         
                             <div class="card-body">
                               <div class="form-group">
-                                  <label>Site</label>
-                                  <select name="wa_site" id="" required class="form-control">
-                                    <option value="">--Pilih Site</option>
-                                    @foreach ($data_site as $site)
-                                        <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
-                                    @endforeach
+                                  <label>Whatsapp Agent</label>
+                                  <select name="wa_nama" class="form-control" id="">
+                                    <option value="">--Pilih Agent--</option>
+                                    <option value="CS">CS</option>
+                                    <option value="NOC">NOC</option>
                                   </select>
-                              </div>
-                              <div class="form-group">
-                                  <label>Whatsapp Nama</label>
-                                  <input type="text" class="form-control" name="wa_nama" placeholder="Masukan Nama Whatsapp Getewai">
                               </div>
                               <div class="form-group">
                                 <label>Whatsapp Key</label>
@@ -85,8 +80,7 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>Id</th>
-                      <th>Nama</th>
+                      <th>Agent</th>
                       <th>Key</th>
                       <th>Url</th>
                       <th>Status</th>
@@ -96,7 +90,6 @@
                   <tbody>
                       @foreach ($data_whatsapp as $d)
                       <tr>
-                        <td>{{$d->wa_site}}</td>
                         <td>{{$d->wa_nama}}</td>
                         <td>{{$d->wa_key}}</td>
                         <td>{{$d->wa_url}}</td>
@@ -122,21 +115,16 @@
                               </div>
                               <div class="modal-body">
                                 <div class="card-body">
-                                  <div class="form-group">
-                                      <label>Site</label>
-                                      <select name="wa_site" class="form-control" required>
-                                        @if($d->wa_site)
-                                        <option value="{{$d->wa_site}}">{{$d->site_nama}}</option>
-                                        @endif
-                                        @foreach ($data_site as $site)
-                                            <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
-                                        @endforeach
-                                      </select>
-                                  </div>
-                                  <div class="form-group">
-                                      <label>Whatsapp Nama</label>
-                                      <input type="text" class="form-control" name="wa_nama"value="{{$d->wa_nama}}">
-                                  </div>
+                                 <div class="form-group">
+                                  <label>Whatsapp Agent</label>
+                                  <select name="wa_nama" class="form-control" id="">
+                                    @if($d->wa_nama)
+                                    <option value="{{$d->wa_nama}}">{{$d->wa_nama}}</option>
+                                    @endif
+                                    <option value="CS">CS</option>
+                                    <option value="NOC">NOC</option>
+                                  </select>
+                              </div>
                                   <div class="form-group">
                                     <label>Whatsapp Key</label>
                                     <input type="text" class="form-control" name="wa_key" value="{{$d->wa_key}}">

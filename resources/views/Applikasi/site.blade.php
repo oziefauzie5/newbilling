@@ -34,7 +34,7 @@
                             <div class="card-body">
                               <div class="form-group">
                                   <label>Id Site</label>
-                                  <input type="text" class="form-control"  name="site_id" value="{{$site_id}}" readonly>
+                                  <input type="text" class="form-control"  name="id" value="{{$id}}" readonly>
                               </div>
                               <div class="form-group">
                                   <label>Nama Site</label>
@@ -44,14 +44,6 @@
                                 <label>Prefix kode</label>
                                 <input type="text" class="form-control" name="site_prefix">
                             </div>
-                              <div class="form-group">
-                                  <label>Nama Brand</label>
-                                  <input type="text" class="form-control"  name="site_brand" placeholder="Masukan Nama Brand">
-                              </div>
-                              <div class="form-group">
-                                  <label>Keterangan</label>
-                                  <input type="text" class="form-control"  name="site_keterangan" placeholder="Masukan Keterangan">
-                              </div>
                             </div>
                       </div>
                       <div class="modal-footer justify-content-between">
@@ -80,8 +72,6 @@
                       <th>Id Site</th>
                       <th>Nama Site</th>
                       <th>Kode Prefix</th>
-                      <th>Brand</th>
-                      <th>Keterangan</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -89,22 +79,20 @@
                   <tbody>
                       @foreach ($data_site as $d)
                       <tr>
-                        <td>{{$d->site_id}}</td>
+                        <td>{{$d->id}}</td>
                         <td>{{$d->site_nama}}</td>
                         <td>{{$d->site_prefix}}</td>
-                        <td>{{$d->site_brand}}</td>
-                        <td>{{$d->site_keterangan}}</td>
                         <td>{{$d->site_status}}</td>
                         <td>
                           <div class="form-button-action">
-                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->site_id}}" class="btn btn-link btn-primary btn-lg">
+                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
                                 <i class="fa fa-edit"></i>
                               </button>
                             </div>
                           </td>
-                      <div class="modal fade" id="modal-edit{{$d->site_id}}">
+                      <div class="modal fade" id="modal-edit{{$d->id}}">
                           <div class="modal-dialog">
-                            <form action="{{route('admin.app.update_site',['id'=>$d->site_id])}}" method="POST">
+                            <form action="{{route('admin.app.update_site',['id'=>$d->id])}}" method="POST">
                             @csrf  
                             @method('PUT')
                             <div class="modal-content">
@@ -125,20 +113,11 @@
                                 <input type="text" class="form-control" name="site_prefix" value="{{$d->site_prefix}}">
                             </div>
                             <div class="form-group">
-                                <label>Nama Brand</label>
-                                <input type="text" class="form-control"  name="site_brand" value="{{$d->site_brand}}">
-                            </div>
-                            <div class="form-group">
-                                <label>Keterangan</label>
-                                <input type="text" class="form-control"  name="site_keterangan" value="{{$d->site_keterangan}}">
-                            </div>
-                            <div class="form-group">
                                 <label>Status</label>
                                 <select name="site_status" class="form-control">
                                   @if($d->site_status) 
                                   <option value="{{$d->site_status}}">{{$d->site_status}}</option>
                                   @endif
-                                <option value="">Pilih Status</option>
                                   <option value="Enable">Enable</option>
                                   <option value="Disable">Disable</option>
                                 </select>
