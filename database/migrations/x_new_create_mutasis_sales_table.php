@@ -15,16 +15,14 @@ return new class extends Migration
         Schema::create('mutasi_sales', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-             $table->unsignedBigInteger('mitra_id');
-            $table->foreign('mitra_id')->references('id')->on('users')->onDelete('restrict');
-             $table->unsignedBigInteger('client_id');
-            $table->foreign('client_id')->references('reg_idpel')->on('registrasi')->onDelete('restrict');
-            $table->string('merchant')->nullable();
-            $table->string('type')->nullable();
-            $table->enum('type', ['debet', 'credit']);
-            $table->decimal('amount', 15, 1);
-            $table->string('description')->nullable();
-            $table->string('fee_merchant')->nullable();
+             $table->unsignedBigInteger('mts_mitra_id');
+            $table->foreign('mts_mitra_id')->references('id')->on('users')->onDelete('restrict');
+             $table->unsignedBigInteger('mts_mitra_idpel');
+            $table->foreign('mts_mitra_idpel')->references('reg_idpel')->on('registrasis')->onDelete('restrict');
+            $table->string('mts_admin')->nullable();
+            $table->enum('mts_type', ['debet', 'credit']);
+            $table->decimal('mts_jumlah', 15, 1);
+            $table->string('mts_deskripsi')->nullable();
             $table->timestamps();
         });
     }
