@@ -130,8 +130,8 @@ class GudangController extends Controller
 
         for ($x = 0; $x < $request->barang_qty; $x++) {
             $data[] = [
-                'barang_id' => fake()->randomNumber(6),
-                // 'barang_id' => mt_rand(100000, 999999),
+                // 'barang_id' => fake()->randomNumber(6),
+                'barang_id' => mt_rand(1000000, 9999999),
                 'corporate_id' => Session::get('corp_id'),
                 'barang_id_group' => $barang_id_group,
                 'barang_jenis' => $request->barang_jenis,
