@@ -19,8 +19,6 @@ return new class extends Migration
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Data_Odp::class)->constrained()->on('data__odps')->onDelete('restrict');
             $table->foreign('id')->references('reg_idpel')->on('registrasis')->onDelete('cascade');
-             $table->unsignedBigInteger('reg_router');
-            $table->foreign('reg_router')->references('id')->on('routers')->onDelete('restrict');
              $table->unsignedBigInteger('reg_noc');
             $table->foreign('reg_noc')->references('id')->on('users')->onDelete('restrict');
              $table->unsignedBigInteger('reg_barang_id');
