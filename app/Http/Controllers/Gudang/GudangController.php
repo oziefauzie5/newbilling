@@ -27,7 +27,6 @@ class GudangController extends Controller
     public function data_barang(Request $request)
     {
 
-
         $data['tittle'] = 'Data Barang';
 
         $data['find_kate'] = $request->query('find_kate');
@@ -123,7 +122,6 @@ class GudangController extends Controller
             $status = '0';
         }
         $barang_id_group = time();
-        dd(randomNumber(6));
 
         // $barang_id_group = date('d') . mt_rand(1000, 9999);
 
@@ -381,8 +379,8 @@ class GudangController extends Controller
             }
             Data_Tiket::create([
                 'tiket_id' => $no_tiket,
-                'tiket_kode' => 'T-' . $no_tiket,
-                'tiket_site' => $tiket_site,
+                // 'tiket_kode' => 'T-' . $no_tiket,
+                // 'tiket_site' => $tiket_site,
                 'tiket_type' => $tiket_type,
                 'tiket_jenis' => $bk_jenis_laporan,
                 'tiket_status' => 'NEW',
@@ -416,16 +414,15 @@ class GudangController extends Controller
             $after = $request->after;
             $terpakai = $request->terpakai;
             $tiket_idpel = $request->tiket_idpel;
-            // return response()->json($request->all());
             for ($x = 0; $x < count($barang_id); $x++) {
                 Data_BarangKeluar::create([
                     // 'bk_id' => '12121',
                     'bk_id' => $no_sk,
-                    'corporate_id' => Session::get('corp_id'),
                     'bk_id_barang' => $barang_id[$x],
+                    'corporate_id' => Session::get('corp_id'),
                     'bk_jenis_laporan' => $tiket_jenis,
+                    'bk_idpel' => $tiket_idpel,
                     // 'bk_id_tiket' => $tiket_id,
-                    // 'bk_idpel' => $tiket_idpel,
                     // 'bk_kategori' => $barang_kategori[$x],
                     'bk_harga' => $jumlah_harga[$x],
                     'bk_before' => $before[$x],
@@ -438,6 +435,7 @@ class GudangController extends Controller
                     'bk_penerima' => $tiket_teknisi1,
                     'bk_status' => 0,
                 ]);
+                return response()->json($request->all());
                 Data_Barang::where('corporate_id',Session::get('corp_id'))->whereIn('barang_id', [$barang_id[$x]])->update(
                     [
                         'barang_nama_pengguna' => $tiket_jenis,
@@ -446,78 +444,15 @@ class GudangController extends Controller
                     ]
                 );
             }
-            Data_Tiket::where('corporate_id',Session::get('corp_id'))->where('tiket_id', $tiket_id)->update(
-                [
-                    'tiket_idbarang_keluar' => $no_sk,
-                ]
-            );
+            // Data_Tiket::where('corporate_id',Session::get('corp_id'))->where('tiket_id', $tiket_id)->update(
+            //     [
+            //         'tiket_idbarang_keluar' => $no_sk,
+            //     ]
+            // );
 
             return response()->json($no_sk);
     }
-    // public function barang_aktivasi_psb(Request $request)
-    // {
-
-    //     // $no_sk = (new GlobalController)->no_surat_keterang();
-    //     $no_sk = time();
-    //     $data_barang_keluar = Data_BarangKeluar::where('bk_id', $no_sk)->count();
-
-    //     if ($data_barang_keluar > 0) {
-    //         return response()->json('failed');
-    //     } else {
-    //         $admin = Auth::user()->id;
-    //         $barang_id = $request->barang_id;
-    //         $tiket_id = $request->tiket_id;
-    //         $jumlah_harga = $request->jumlah_harga;
-    //         $jumlah_barang = $request->jumlah_barang;
-    //         $tiket_teknisi1 = $request->tiket_teknisi1;
-    //         $tiket_jenis = $request->tiket_jenis;
-    //         $tiket_tindakan = $request->tiket_tindakan;
-    //         $barang_kategori = $request->barang_kategori;
-    //         $tiket_status = $request->tiket_status;
-    //         $tiket_type = $request->tiket_type;
-    //         $tiket_site = $request->tiket_site;
-    //         $before = $request->before;
-    //         $after = $request->after;
-    //         $terpakai = $request->terpakai;
-    //         $tiket_idpel = $request->tiket_idpel;
-    //         for ($x = 0; $x < count($barang_id); $x++) {
-    //             Data_BarangKeluar::create([
-    //                 // 'bk_id' => '12121',
-    //                 'bk_id' => $no_sk,
-    //                 'bk_jenis_laporan' => 'Instalasi',
-    //                 // 'bk_id_tiket' => $tiket_id,
-    //                 'bk_id_barang' => $barang_id[$x],
-    //                 'bk_idpel' => $tiket_idpel,
-    //                 // 'bk_kategori' => $barang_kategori[$x],
-    //                 'bk_jumlah' => $jumlah_barang[$x],
-    //                 'bk_before' => $before[$x],
-    //                 'bk_after' => $after[$x],
-    //                 'bk_terpakai' => $terpakai[$x] + $jumlah_barang[$x],
-    //                 'bk_keperluan' => Instalasi PSB,
-    //                 'bk_waktu_keluar' => date('Y-m-d H:m:s', strtotime(Carbon::now())),
-    //                 'bk_admin_input' => $admin,
-    //                 // 'bk_penerima' => $tiket_teknisi1,
-    //                 'bk_status' => 0,
-    //                 'bk_harga' => $jumlah_harga[$x],
-    //             ]);
-    //             // return response()->json($barang_id[$x]);
-    //             Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
-    //                 [
-    //                     'barang_nama_pengguna' => $tiket_jenis,
-    //                     'barang_digunakan' => $terpakai[$x] + $jumlah_barang[$x],
-    //                     'barang_status' => 1,
-    //                 ]
-    //             );
-    //         }
-    //         // Data_Tiket::where('tiket_id', $tiket_id)->update(
-    //         //     [
-    //         //         'tiket_idbarang_keluar' => $no_sk,
-    //         //     ]
-    //         // );
-
-    //         return response()->json($no_sk);
-    //     }
-    // }
+   
 
     public function print_request_barang()
     {

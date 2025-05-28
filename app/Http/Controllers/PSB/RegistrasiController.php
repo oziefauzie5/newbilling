@@ -565,9 +565,13 @@ Data_Tiket::create($tiket);
             ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
             ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            // ->join('data__barang_keluars', 'data__barang_keluars.bk_idpel', '=', 'registrasis.reg_idpel')
+            // ->join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
              ->where('registrasis.corporate_id',Session::get('corp_id'))
             ->where('registrasis.reg_idpel', $id)
             ->select([
+                // 'data__barang_keluars.*',
+                // 'data__barangs.*',
                 'input_data.*',
                 'registrasis.*',   
                 'teknisis.*',   
@@ -589,23 +593,19 @@ Data_Tiket::create($tiket);
             ])
             ->first();
 
-        // $data['data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
-        //     ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-        //     ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-        //     ->join('data__sites', 'data__sites.site_id', '=', 'registrasis.reg_site')
-        //     ->join('data_pops', 'data_pops.pop_id', '=', 'registrasis.reg_pop')
-        //     ->where('input_data.id', $id)
-        //     ->first();
+  
         // $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')
         //     ->get();
         // $data['data_olt'] = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
         //     ->where('pop_id', $data['data']->reg_pop)->get();
 
 
-        $query = FtthInstalasi::join('data__barang_keluars', 'data__barang_keluars.bk_id', '=', 'ftth_instalasis.reg_barang_id')
+   
+
+        $query = Registrasi::join('data__barang_keluars', 'data__barang_keluars.bk_idpel', '=', 'registrasis.reg_idpel')
             ->join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
             ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
-            ->where('ftth_instalasis.id', $data['data']->reg_idpel);
+            ->where('registrasis.reg_idpel', $data['data']->reg_idpel);
         $data['print_skb'] = $query->get();
 
 
@@ -683,12 +683,11 @@ Data_Tiket::create($tiket);
         // dd( $request->all());
         $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
         // dd($ODP);
-        $data['instalasi_idpel'] = $request-> reg_idpel;
+        $data['id'] = $request-> reg_idpel;
         $data['corporate_id'] = Session::get('corp_id');
         $data['data__odp_id'] = $ODP->id;
         $data['reg_router'] = $request->reg_router;
         $data['reg_noc'] = $user_admin;
-        $data['reg_barang_id'] = $request->reg_barang;
         $data['reg_in_ont'] = $request->reg_in_ont;
         $data['reg_slot_odp'] = $request->reg_slot_odp;
 

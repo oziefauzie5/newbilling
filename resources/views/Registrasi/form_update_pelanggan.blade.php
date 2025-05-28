@@ -465,10 +465,32 @@
           <input  type="file" class="form-control-file" name="reg_img" required value="{{ Session::get('reg_img') }}">
         </div>
       </div>
+
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>
         <div class="col-sm-4">
-          <img src="{{ asset('storage/laporan-kerja/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
+                      <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#show_foto">
+              Show Rumah
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="show_foto" tabindex="-1" role="dialog" aria-labelledby="show_fotoLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="show_fotoLabel">Rumah Pelanggan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                  <img src="{{ asset('storage/laporan-kerja/'.$data->reg_img) }}" width="100%" alt="" title=""></img>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
         </div>
       </div>
 
@@ -489,12 +511,6 @@
    @endif
 
         <h3 class="mt-3 text-bolt"> DATA BARANG</h3><hr>
-      <div class="form-group row">
-        <label class=" col-sm-2 col-form-label">No SKB</label>
-        <div class="col-sm-4 notif">
-          <input type="text" name="reg_barang_id"  class="form-control readonly" required value="{{$data->reg_barang_id}}" >
-        </div>
-      </div>
       <div class="form-group row">
         <div class="table-responsive">
           <table id="" class="display table table-striped table-hover text-nowrap" >

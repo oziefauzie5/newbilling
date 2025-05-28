@@ -14,13 +14,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('data__barang_keluars', function (Blueprint $table) {
-            // $table->id();
-            // $table->unsignedBigInteger('bk_id');
-            $table->id('bk_id_barang');
-            $table->foreign('bk_id_barang')->references('barang_id')->on('data__barangs')->onDelete('restrict');
+            $table->id('bk_id');
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('bk_idpel');
-            $table->foreign('bk_idpel')->references('reg_idpel')->on('registrasis')->onDelete('restrict');
+            $table->unsignedBigInteger('bk_id_barang');
+            $table->foreign('bk_id_barang')->references('barang_id')->on('data__barangs')->onDelete('restrict');
             $table->string('bk_jenis_laporan')->nullable();
             $table->string('bk_kategori')->nullable();
             $table->string('bk_harga')->nullable();
