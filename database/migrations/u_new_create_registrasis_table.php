@@ -27,8 +27,6 @@ return new class extends Migration
             $table->foreign('reg_idpel')->references('id')->on('input_data')->onDelete('restrict');
             $table->unsignedBigInteger('reg_profile');
             $table->foreign('reg_profile')->references('paket_id')->on('pakets')->onDelete('restrict');
-            
-
             $table->string('reg_nolayanan')->nullable();
             $table->string('reg_layanan')->nullable();
             $table->string('reg_jenis_tagihan')->nullable();
