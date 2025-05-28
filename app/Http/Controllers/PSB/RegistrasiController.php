@@ -159,6 +159,7 @@ class RegistrasiController extends Controller
             
             $paket_nama = Paket::where('corporate_id',Session::get('corp_id'))->where('paket_id',$request->reg_profile)->select('paket_nama')->first();
             $pesan_pelanggan['layanan'] = 'CS';
+            $pesan_pelanggan['corporate_id' ]= Session::get('corp_id');
             $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
             $pesan_pelanggan['ket'] = 'registrasi';
             $pesan_pelanggan['target'] = $request->reg_hp;
@@ -186,6 +187,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             $pesan_group['layanan'] = 'CS';
             $pesan_group['pesan_id_site'] = $request->reg_site;
             $pesan_group['ket'] = 'registrasi';
+            $pesan_group['corporate_id']= Session::get('corp_id');
             $pesan_group['target'] = env('GROUP_REGISTRASI');;
             $pesan_group['nama'] = $request->reg_nama;
             $pesan_group['status'] = $status_pesan;
@@ -208,8 +210,8 @@ Diregistrasi Oleh : *' . $user_nama . '*
 
             Pesan::create([
                 'layanan' =>  'NOC',
-                'pesan_id_site' =>  $request->reg_site,
                 'ket' =>  'tiket',
+                'corporate_id'=> Session::get('corp_id'),
                 'target' =>  env('GROUP_TEKNISI'),
                 'status' =>  $status_pesan,
                 'nama' =>  'GROUP TEKNISI',
