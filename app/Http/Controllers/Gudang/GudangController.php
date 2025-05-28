@@ -123,7 +123,7 @@ class GudangController extends Controller
             $status = '0';
         }
         $barang_id_group = time();
-        // dd(fake()->randomNumber(6));
+        dd(randomNumber(6));
 
         // $barang_id_group = date('d') . mt_rand(1000, 9999);
 

@@ -683,7 +683,7 @@ Data_Tiket::create($tiket);
         // dd( $request->all());
         $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
         // dd($ODP);
-        $data['id'] = $request-> reg_idpel;
+        $data['instalasi_idpel'] = $request-> reg_idpel;
         $data['corporate_id'] = Session::get('corp_id');
         $data['data__odp_id'] = $ODP->id;
         $data['reg_router'] = $request->reg_router;
