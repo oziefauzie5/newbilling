@@ -15,17 +15,16 @@ return new class extends Migration
         Schema::create('mutasi_sales', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-            $table->string('smt_user_id')->nullable();
-            $table->string('smt_admin')->nullable();
-            $table->string('smt_kategori')->nullable();
-            $table->text('smt_deskripsi')->nullable();
-            $table->string('smt_cabar')->nullable();
-            $table->integer('smt_kredit')->nullable();
-            $table->integer('smt_debet')->nullable();
-            $table->integer('smt_saldo')->nullable();
-            $table->integer('smt_biaya_adm')->nullable();
-            $table->string('smt_status')->nullable();
-            $table->string('smt_tgl_transaksi')->nullable();
+             $table->unsignedBigInteger('mitra_id');
+            $table->foreign('mitra_id')->references('id')->on('users')->onDelete('restrict');
+             $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('reg_idpel')->on('registrasi')->onDelete('restrict');
+            $table->string('merchant')->nullable();
+            $table->string('type')->nullable();
+            $table->enum('type', ['debet', 'credit']);
+            $table->decimal('amount', 15, 1);
+            $table->string('description')->nullable();
+            $table->string('fee_merchant')->nullable();
             $table->timestamps();
         });
     }

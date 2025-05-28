@@ -34,6 +34,7 @@ use App\Models\Transaksi\Jurnal;
 // use App\Imports\ImportUsers;
 use App\Models\Gudang\Data_Barang;
 use Illuminate\Support\Facades\Session;
+use App\Models\PSB\FtthFee;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -55,6 +56,38 @@ class InvoiceController extends Controller
     }
     public function index(Request $request)
     {
+
+        // $mutasi = DB::table('mutasi_sales')
+        //     ->where('smt_user_id' , '25055121')
+        //     ->orderBy('created_at') // To ensure correct chronological order
+        //     ->select(
+        //         'smt_user_id',
+        //         'smt_kategori',
+        //         'smt_deskripsi',
+        //         'smt_kredit',
+        //         // 'type',
+        //         // 'amount',
+        //         // 'description',
+        //         'created_at',
+        //         DB::raw('SUM(CASE WHEN smt_kategori = "debit" THEN smt_kredit ELSE 0 END) OVER (ORDER BY created_at) AS debit_balance'),
+        //         DB::raw('SUM(CASE WHEN smt_kategori = "credit" THEN smt_kredit ELSE 0 END) OVER (ORDER BY created_at) AS credit_balance')
+        //     )
+        //     ->get();
+            
+        // // Add a final saldo column:
+        // $mutasi->map(function ($transaction) {
+        //     $transaction->saldo = $transaction->debit_balance - $transaction->credit_balance;
+        //     // dd($transaction);
+        //     return $transaction;
+        // });
+
+        // return $mutasi;
+
+        // echo '<table><tr><td>'.$mutasi.'</td></tr></table>';
+        // dd('test');
+
+
+
 
         // $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
         // $data_pelanggan = Invoice::orderBy('inv_status', 'ASC','inv_tgl_isolir','ASC')
@@ -442,14 +475,12 @@ class InvoiceController extends Controller
 
     {
 
-
-
         $nama_user = Auth::user()->name; #NAMA USER
         $tgl_bayar = date('Y-m-d ', strtotime(Carbon::now()));
         $cek_trx = Transaksi::count();
         if ($cek_trx > 0) {
-            $sum_trx = Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_debet');
-            $count_trx = Transaksi::where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
+            $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_debet');
+            $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
         } else {
             $sum_trx = '0';
             $count_trx = '0';
@@ -471,6 +502,7 @@ class InvoiceController extends Controller
             $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
                 ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
                 ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+                ->where('invoices.corporate_id',Session::get('corp_id'))
                 ->where('inv_id', $id)
                 ->first();
 
@@ -593,10 +625,11 @@ class InvoiceController extends Controller
             $datas['inv_tgl_bayar'] = $if_tgl_bayar;
             $datas['inv_bukti_bayar'] = $filename;
             $datas['inv_status'] = 'PAID';
-            Invoice::where('inv_id', $id)->update($datas);
+            // Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_id', $id)->update($datas);
 
             $data_lap['lap_id'] = time();
             $data_lap['lap_tgl'] = date('Y-m-d H:m:s', strtotime($if_tgl_bayar));
+            $data_lap['corporate_id'] = Session::get('corp_id');
             $data_lap['lap_inv'] = $id;
             $data_lap['lap_admin'] = $admin_user;
             $data_lap['lap_cabar'] = $request->cabar;
@@ -615,15 +648,52 @@ class InvoiceController extends Controller
             $data_lap['lap_status'] = 0;
             $data_lap['lap_img'] = $filename;
 
-            #CEK BULAN PEMASANGAN
-            $bulan_pasang = date('Y-m', strtotime($data_pelanggan->reg_tgl_pasang));
-            $bulan_bayar = date('Y-m', strtotime($if_tgl_bayar));
+            #CEK JUMLAH INVOICE
+            $cek_count_inv = Invoice::where('corporate_id',Session::get('corp_id'))
+                                    ->where('inv_idpel', $data_pelanggan->reg_idpel)
+                                    ->count();
+                                    
+                                    if($cek_count_inv >= 1){
+                                        
+                                        $mitra = FtthFee::join('mitra_settings','mitra_settings.mts_user_id','=','ftth_fees.reg_mitra')
+                                                            ->where('ftth_fees.fee_idpel',$data_pelanggan->reg_idpel)
+                                                            ->where('ftth_fees.corporate_id',Session::get('corp_id'))
+                                                            ->get();
+    
+                                                            foreach($mitra as $mit){
+                                                                MutasiSales::create([
+                                                                    
+                                                                    'smt_user_id' => $data_pelanggan->input_sales,
+                                                                    'smt_admin' => $admin_user,
+                                                                    // 'smt_idpel' => $data_pelanggan->fee_idpel,
+                                                                    'smt_tgl_transaksi' => $if_tgl_bayar,
+                                                                    'smt_kategori' => 'credit',
+                                                                    'smt_deskripsi' => $data_pelanggan->input_nama,
+                                                                    'smt_cabar' => '2',
+                                                                    'smt_kredit' => $mit->reg_fee,
+                                                                    // 'smt_debet' => 0,
+                                                                    // 'smt_saldo' => $total,
+                                                                    'smt_biaya_adm' => 0,
+                                                                    'smt_status' => 0,
+                                                                    'corporate_id' => Session::get('corp_id'),
+                                                                ]);
+                                                            }
+                                    }
+
+                                                           
+
+                                    dd($mitra);
+
+
+
+            // $bulan_pasang = date('Y-m', strtotime($data_pelanggan->reg_tgl_pasang));
+            // $bulan_bayar = date('Y-m', strtotime($if_tgl_bayar));
             if ($bulan_pasang != $bulan_bayar) {
                 if ($data_pelanggan->reg_fee > 0) {
 
-                    $count_payment = Invoice::where('inv_nolayanan', $data_pelanggan->reg_nolayanan)->count();
+                    $count_payment = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $data_pelanggan->reg_idpel)->count();
                     if ($count_payment >= 1) {
-                        $data_biaya = SettingBiaya::first();
+                        $data_biaya = SettingBiaya::where('corporate_id',Session::get('corp_id'))->first();
                         $saldo = (new globalController)->total_mutasi_sales($data_pelanggan->reg_idpel);
                         $total = $saldo + $data_biaya->biaya_sales_continue; #SALDO MUTASI = DEBET - KREDIT
 
