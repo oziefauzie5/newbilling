@@ -22,7 +22,6 @@ return new class extends Migration
              $table->foreignIdFor(Data_Site::class)->constrained()->on('data__sites')->onDelete('restrict');
             $table->integer('mts_limit_minus')->nullable();
             $table->integer('mts_komisi')->nullable();
-            $table->integer('mts_fee')->nullable();
             $table->string('mts_wilayah')->nullable();
             $table->timestamps();
         });

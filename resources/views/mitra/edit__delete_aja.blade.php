@@ -21,8 +21,6 @@
                          </ul>
                         </div>
                       @endif
-
-
                         <div class="card-body ">
                             <div class="form-group">
                               <label for="name">Nama Lengkap</label>

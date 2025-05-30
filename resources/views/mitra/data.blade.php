@@ -25,20 +25,6 @@
                                 </div>
                               </div>
                             </div>
-                    <div class="card " >
-                            <div class="row invoice-info">
-                                <div class="col invoice-col m-3" >
-                                  <address>
-                                      <strong>Fee Sales</strong><br>
-                                    </address>
-                                    <h1>Rp {{ number_format($saldo_sales) }}.-</h1>
-                                    <address>
-                                        - Saldo saat ini<br><br>
-                                        <strong><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#mutasi_sales">Mutasi Sales</button></strong>
-                                      </address>
-                                </div>
-                              </div>
-                            </div>
                           </div>
    
                     <div class="col-md-8">
@@ -210,75 +196,6 @@
                               </div>
                           </div>
                     </div>
-
-
-
-{{-- MODAL MUTASI SALES --}}
-
-
-<!-- Modal -->
-  <div class="modal fade" id="mutasi_sales" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">DATA MUTASI SALDO</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-                                <div class="row ">
-                                    <div class="col-6">
-                                        <div class="form-group row">
-                                            <label for="inputEmail3" class="col-sm-6 col-form-label">TANGGAL</label>
-                                            <div class="col-sm-6">
-                                            <input type="text" class="form-control pickupDate" id="tgl_gabung"  name="tgl_gabung" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="table-responsive">
-                                    <table id="input_data" class="display table table-striped table-hover text-nowrap" >
-                                <thead>
-                          <tr>
-                            <th>NO</th>
-                            <th>TANGGAL</th>
-                            <th>KATEGORI</th>
-                            <th>KETERANGAN</th> 
-                            <th>KREDIT</th>
-                            <th>DEBET</th>
-                            <th>SALDO</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                            @foreach ($mutasi_saldo as $d)
-                            <tr>
-                                <td>{{$loop->iteration}}</td>
-                                {{-- <td>{{ $d->id }}</td> --}}
-                                <td>{{ date('d-m-Y H:m:s', strtotime($d->tgl_trx ))}}</td>
-                                <td>{{ $d->smt_kategori }}</td>
-                                <td>{{ $d->smt_deskripsi }}</td>
-                                <td>{{ number_format($d->smt_kredit) }}</td>
-                                <td>{{ number_format($d->smt_debet) }}</td>
-                                <td>{{ number_format($d->smt_saldo) }}</td>
-                            </tr>
-                             @endforeach
-                          </tbody>
-                          <tfoot>
-                        </table>
-                        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
 
                 </div>
             </div>

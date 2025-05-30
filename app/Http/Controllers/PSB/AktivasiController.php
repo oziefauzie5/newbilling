@@ -14,7 +14,9 @@ use Carbon\Carbon;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
+use App\Models\PSB\FtthInstalasi;
 use App\Models\PSB\InputData;
+use App\Models\Teknisi\Data_Odp;
 use App\Models\Tiket\Data_Tiket;
 use Illuminate\Support\Facades\Session;
 
@@ -24,15 +26,6 @@ class AktivasiController extends Controller
 {
     public function aktivasi_psb($request, $query, $id)
     {
-
-
-
-
-        // $user = (new GlobalController)->user_admin();
-        // $noc = $user['user_id'];
-        // $noc_nama = $user['user_nama'];
-
-        // dd($no_sk);
 
 
         $explode1 = explode("|", $request->teknisi1);
@@ -49,18 +42,11 @@ class AktivasiController extends Controller
 
         #FORMAT TANGGAL
         $tanggal = Carbon::now()->toDateString();
-        // $now = Carbon::now();
-        // $m = $now->format('m');
-        // $y = $now->format('Y');
+        $now = Carbon::now();
+        $m = $now->format('m');
+        $y = $now->format('Y');
 
-        // $cek_hari_pasang = date('d', strtotime($tanggal));
-        // if ($cek_hari_pasang >= 25) {
-        //     $tanggal_pasang = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->addMonth(1)->toDateString()));
-        //     $tanggal_pasang_free = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->addMonth(1)->toDateString()));
-        // } else {
-        //     $tanggal_pasang = $tanggal;
-        //     $tanggal_pasang_free = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->toDateString()));
-        // }
+       
 
         #PASCABAYAR SESUAI TGL PASANG (SIKLUS TETAP)
         $tag_pascabayar = Carbon::create(date('Y-m-'.env('JTH_TEMPO_PASCABAYAR')))->addMonth(1)->toDateString();
@@ -72,15 +58,28 @@ class AktivasiController extends Controller
         $tag_free3bln = Carbon::create($tanggal)->addMonth(3)->toDateString();
         $tag_free1th = Carbon::create($tanggal)->addMonth(12)->toDateString();
 
-        $inv_tgl_isolir1blan = Carbon::create($tanggal)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
-        $inv_tgl_isolir3blan = Carbon::create($tag_free3bln)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
-        $inv_tgl_isolir12blan = Carbon::create($tag_free1th)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+         $cek_hari_pasang = date('d', strtotime($tanggal));
+        if ($cek_hari_pasang >= 25) {
+            // $tanggal_pasang = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->addMonth(1)->toDateString()));
+            // $tanggal_pasang_free = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->addMonth(1)->toDateString()));
+            $inv_tgl_isolir1blan = Carbon::create($tanggal)->toDateString();
+            $inv_tgl_isolir3blan = Carbon::create($tag_free3bln)->toDateString();
+            $inv_tgl_isolir12blan = Carbon::create($tag_free1th)->toDateString();
+        } else {
+            // $tanggal_pasang = $tanggal;
+            // $tanggal_pasang_free = date('Y-m-d', strtotime(Carbon::create(date($y . '-' . $m . '-01'))->toDateString()));
+            $inv_tgl_isolir1blan = Carbon::create($tanggal)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+            $inv_tgl_isolir3blan = Carbon::create($tag_free3bln)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+            $inv_tgl_isolir12blan = Carbon::create($tag_free1th)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
+        }
+
+      
 
         $periode3blan = Carbon::create($tanggal)->toDateString() . ' - ' . Carbon::create($tanggal)->addMonth(3)->toDateString();
         $periode12blan = Carbon::create($tanggal)->toDateString() . ' - ' . Carbon::create($tanggal)->addMonth(12)->toDateString();
         $periode1blan = Carbon::create($tanggal)->toDateString() . ' - ' . Carbon::create($tanggal)->addMonth(1)->toDateString();
 
-
+       
 
         if ($query->reg_jenis_tagihan == 'FREE') {
             $teknisi['teknisi_psb'] = '0';
@@ -92,6 +91,7 @@ class AktivasiController extends Controller
 
             $sub_inv['subinvoice_harga'] = $query->reg_harga;
             $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+            $sub_inv['subinvoice_bph_uso'] = $query->reg_bph_uso;
             $sub_inv['subinvoice_total'] = $inv['inv_total'];
             $sub_inv['subinvoice_qty'] = '12';
 
@@ -107,6 +107,7 @@ class AktivasiController extends Controller
 
             $sub_inv['subinvoice_harga'] = $query->reg_harga;
             $sub_inv['subinvoice_ppn'] = $query->reg_ppn;
+             $sub_inv['subinvoice_bph_uso'] = $query->reg_bph_uso;
             $sub_inv['subinvoice_total'] = $inv['inv_total'];
             $sub_inv['subinvoice_qty'] = '1';
 
@@ -121,18 +122,6 @@ class AktivasiController extends Controller
         
         $pelanggan['reg_progres'] = '3';
 
-
-        // $pelanggan['reg_site'] = $request->reg_site;
-        // $pelanggan['reg_pop'] = $request->reg_pop;
-        // $pelanggan['reg_router'] = $request->reg_router;
-        // $pelanggan['reg_olt'] = $request->reg_olt;
-        // $pelanggan['reg_odc'] = $request->reg_odc;
-        // $pelanggan['reg_odp'] = $request->reg_odp;
-        // $pelanggan['reg_in_ont'] = $request->reg_in_ont;
-        // $pelanggan['reg_onuid'] = $request->reg_onuid;
-        // $pelanggan['reg_slot_odp'] = $request->reg_slot_odp;
-        // $pelanggan['reg_koordinat_odp'] = $request->reg_koordinat_odp;
-        // $pelanggan['reg_teknisi_team'] = $team;
         $pelanggan['reg_tgl_pasang'] = Carbon::now()->toDateString();
 
         $hilangspasi = preg_replace('/\s+/', '_', $query->reg_nolayanan);
@@ -182,12 +171,14 @@ class AktivasiController extends Controller
         // if ($cek_hari_pasang < 25) {
             $cek_inv = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
             if ($cek_inv) {
+                // dd('botak');
                 $inv['inv_id'] = $cek_inv->inv_id;
                 $sub_inv['subinvoice_id'] = $inv['inv_id'];
                 Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
                 SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
             } else {
                 $inv['inv_id'] = (new GlobalController)->no_inv();
+                // dd($inv['inv_id']);
                 $sub_inv['subinvoice_id'] = $inv['inv_id'];
                 Invoice::create($inv);
                 SubInvoice::create($sub_inv);

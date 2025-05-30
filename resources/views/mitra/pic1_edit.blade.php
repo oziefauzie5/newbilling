@@ -20,7 +20,7 @@
                       @endif
                       
                       
-                      <form action="{{route('admin.mitra.store_edit_pic1',['id'=>$data_pic1->user_mitra->mts_user_id])}}" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+                      <form action="{{route('admin.mitra.store_edit_pic1',['id'=>$data_pic1->user_mitra->mts_user_id,'Mitra='.$Mitra])}}" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
                           @csrf
                           @method('POST')
                         <div class="card-body ">
@@ -69,7 +69,7 @@
                                 </div>
                                   <label class=" col-sm-2 col-form-label">Fee Continue</label>
                                 <div class="col-sm-4">
-                                  <input type="text" id="" class="form-control" name="mts_fee" value="{{$data_pic1->user_mitra->mts_fee}}">
+                                  <input type="text" id="" class="form-control" name="mts_komisi" value="{{$data_pic1->user_mitra->mts_komisi}}">
                                 </div>
                               </div>
                               <div class="form-group row">

@@ -14,6 +14,7 @@ class Data_Kategori extends Model
         'nama_kategori',
         'jenis_jurnal_kategori',
         'kategori_satuan',
+        'kategori_qty',
         'status_kategori',
     ];
 }

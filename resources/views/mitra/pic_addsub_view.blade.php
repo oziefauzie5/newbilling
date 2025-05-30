@@ -79,7 +79,7 @@
                                 </div>
                                   <label class=" col-sm-2 col-form-label">Fee Continue</label>
                                 <div class="col-sm-4">
-                                  <input type="text" id="" class="form-control" name="mts_fee" value="{{ Session::get('mts_fee') }}">
+                                  <input type="text" id="" class="form-control" name="mts_komisi" value="{{ Session::get('mts_komisi') }}">
                                 </div>
                               </div>
                               

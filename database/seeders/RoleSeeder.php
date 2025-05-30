@@ -300,8 +300,7 @@ class RoleSeeder extends Seeder
         //     'mts_user_id' =>'25053151',
         //     'data__site_id' =>'1',
         //     'mts_limit_minus' =>'0',
-        //     'mts_komisi' =>'0',
-        //     'mts_fee' =>'10000',
+        //     'mts_komisi' =>'10000',
         // ]);
         // Registrasi::updateorcreate([
         //     'reg_idpel' =>'1001',

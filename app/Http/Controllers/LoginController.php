@@ -85,7 +85,7 @@ class LoginController extends Controller
             } elseif ($datas->role_id == 10) {
                 return redirect()->route('admin.biller.index');
             } elseif ($datas->role_id == 12) {
-                return redirect()->route('admin.sales.index');
+                return redirect()->route('admin.sales.sales');
             } elseif ($datas->role_id == 13) {
                 return redirect()->route('admin.biller.index');
             } else {

@@ -70,7 +70,7 @@
 
                     <div class="card-body ">
            
-              <form action="{{route('admin.biller.sales_store')}}" method="POST">
+              <form action="{{route('admin.sales.sales_store')}}" method="POST">
                 @csrf
                 @method('POST')
                 <div class="row">
@@ -78,7 +78,6 @@
                     <div class="form-group">
                       <label>Nama Lengkap</label>
                       <input id="input_nama" type="text" class="form-control" name="input_nama"placeholder="Nama Lengkap" value="{{ Session::get('input_nama') }}" required>
-                      <input id="id" type="hidden" class="form-control" name="id"value="{{ rand(10000,99999) }}" required>
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -121,14 +120,10 @@
                     <div class="form-group">
                       <label>Paket </label>
                       <select class="form-control" name="input_keterangan" id="" >
+                        <option value="">--Pilih Paket--</option>
                         @foreach ($paket as $p)
                            <option value="{{$p->paket_nama}}">{{$p->paket_nama.' - '.number_format($p->paket_harga)}}</option> 
                         @endforeach
-                        <option value="">--Pilih Paket--</option>
-                        {{-- <option value="10 Mbps">10 Mbps</option>
-                        <option value="15 Mbps">15 Mbps</option>
-                        <option value="20 Mbps">20 Mbps</option>
-                        <option value="30 Mbps">30 Mbps</option> --}}
                       </select>
                     </div>
                   </div>
@@ -141,7 +136,7 @@
                   <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </form>
-                  <a href="{{route('admin.biller.sales')}}"><button type="button" class="btn btn-primary">Kembali</button></a>
+                  <a href="{{route('admin.sales.sales')}}"><button type="button" class="btn btn-primary">Kembali</button></a>
                   </div>
                 </div>
               </div>

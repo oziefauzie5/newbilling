@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('setting_akuns', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-            $table->string('akun_id')->nullable();
+            $table->enum('akun_type', ['TUNAI', 'TRANSFER','TRIPAY']);
             $table->string('akun_nama')->nullable();
             $table->string('akun_rekening')->nullable();
             $table->string('akun_pemilik')->nullable();

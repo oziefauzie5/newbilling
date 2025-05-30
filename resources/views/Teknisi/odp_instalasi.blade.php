@@ -41,6 +41,7 @@
                       <th>Slot Odp</th>
                       <th>Id Pelanggan</th>
                       <th>Nama</th>
+                      <th>Redaman</th>
                       <th>Alamat</th>
                       <th>Status</th>
                     </tr>
@@ -53,6 +54,7 @@
                       <td class="text-center">{{$d->reg_slot_odp ?? ''}}</td>
                         <td>{{$d->idpel ?? ''}}</td>
                         <td>{{$d->input_nama ?? ''}}</td>
+                        <td>{{$d->reg_in_ont ?? ''}}</td>
                         <td>{{$d->input_alamat_pasang ?? ''}}</td>
                         <td>{{$d->odp_status ?? ''}}</td> 
                       </tr>

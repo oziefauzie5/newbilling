@@ -141,10 +141,10 @@
               @csrf
               @method('POST')
               <div class="form-row">
-              <div class="col-3">
+              {{-- <div class="col-3">
                   <label for="">ID Barang</label>
                   <input type="text" class="form-control" name="barang_id" value="{{mt_rand(1000000,9999999)}}" required>
-                </div>
+                </div> --}}
                 <div class="col">
                   <label for="">Kategori<strong class="text-danger">*</strong></label>
                   <select name="barang_kategori" id="" class="form-control" required>
@@ -256,7 +256,8 @@
                     <option value="ONT">ONT</option>
                       <option value="DROPCORE">DROPCORE</option> 
                       <option value="PACTCORE">PACTCORE</option>
-                      <option value="PIGTAIL">PIGTAIL</option>
+                      <option value="ADAPTOR">ADAPTOR</option>
+                      {{-- <option value="PIGTAIL">PIGTAIL</option>
                       <option value="SPLICER">SPLICER</option>
                       <option value="CLIPPER">CLIPPER</option>
                       <option value="STRIPPER">STRIPPER</option>
@@ -282,7 +283,6 @@
                       <option value="BOX ODP 1:16">BOX ODP 1:16</option>
                       <option value="BOX ODP 1:24">BOX ODP 1:24</option>
                       <option value="CLOUSUR">CLOUSUR</option>
-                      <option value="ADAPTOR">ADAPTOR</option>
                       <option value="PROTECTOR">PROTECTOR</option>
                       <option value="STEKER">STEKER</option>
                       <option value="CONVERTER">CONVERTER</option>
@@ -293,7 +293,7 @@
                       <option value="KABEL DISPLAY">KABEL DISPLAY</option>
                       <option value="PC">PC</option>
                       <option value="SFF CARD">SFF CARD</option>
-                      <option value="DAC">DAC</option>
+                      <option value="DAC">DAC</option> --}}
                   </select>
                   <!-- <input type="text" class="form-control" name="nama_kategori" required> -->
                   <div class="invalid-feedback">
@@ -302,13 +302,17 @@
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="">Satuan<strong class="text-danger">*</strong></label>
-                  <select name="kategori_satuan" id="" class="form-control" required>
-                    <option value="">- Satuan -</option>
+                  <select name="kategori_satuan" id="kategori_satuan" class="form-control" required>
+                    <option value="">--Pilih Satuan--</option>
                     <option value="Pcs">Pcs</option>
                     <option value="Roll">Roll</option>
                     <option value="Pack">Pack</option>
                     <option value="Meter">Meter</option>
                   </select>
+                </div>
+                <div class="col-md-6 mb-3 div_satuan" style="display:none">
+                  <label for="">Qty<strong class="text-danger">*</strong></label>
+                  <input type="text" class="form-control" name="kategori_qty" id="kategori_qty" value="" >
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="">Jenis Jurnal<strong class="text-danger">*</strong></label>

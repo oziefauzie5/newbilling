@@ -54,26 +54,26 @@
               <div class="table-responsive">
                   <table>
                       <tr>
-                        <td>
-                          <a href="{{ route('admin.biller.index') }}" class="card mb-2 card_custom1" style="width: 4rem;">
+                        {{-- <td>
+                          <a href="{{ route('admin.sales.index') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                           <img src="{{ asset('atlantis/assets/img/home.png') }}" class="card-img-center p-2" alt="...">
                           </a>
                           <div class="text-light mb-3 text-center">Home</div>
-                        </td>
+                        </td> --}}
                         <td>
-                          <a href="{{ route('admin.biller.sales_input') }}" class="card mb-2 card_custom1" style="width: 4rem;">
+                          <a href="{{ route('admin.sales.sales_input') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                           <img src="{{ asset('atlantis/assets/img/add_users.png') }}" class="card-img-center p-2" alt="...">
                           </a>
                           <div class="text-light mb-3 text-center">Input</div>
                         </td>
                         <td>
-                          <a href="{{ route('admin.biller.biller_pelanggan') }}" class="card mb-2 card_custom1" style="width: 4rem;">
+                          <a href="{{ route('admin.sales.pelanggan') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                           <img src="{{ asset('atlantis/assets/img/users.png') }}" class="card-img-center p-2" alt="...">
                           </a>
                           <div class="text-light mb-3 text-center">Pelanggan</div>
                         </td>
                         <td>
-                          <a href="{{route('admin.biller.biller_mutasi_sales') }}" class="card mb-2 card_custom1" style="width: 4rem;">
+                          <a href="{{route('admin.sales.mutasi_sales') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                           <img src="{{ asset('atlantis/assets/img/mutasi.png') }}" class="card-img-center p-2" alt="...">
                           </a>
                           <div class="text-light mb-3 text-center">Mutasi</div>

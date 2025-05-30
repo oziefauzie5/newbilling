@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('subinvoice_qty')->nullable();
             $table->string('subinvoice_harga')->nullable();
             $table->string('subinvoice_ppn')->nullable();
+            $table->string('subinvoice_bph_uso')->nullable();
             $table->string('subinvoice_total')->nullable();
             $table->string('subinvoice_status')->nullable();
             $table->timestamps();

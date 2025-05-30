@@ -17,7 +17,6 @@ class MitraSetting extends Model
         'data__site_id',
         'mts_limit_minus',
         'mts_komisi',
-        'mts_fee',
         'mts_wilayah',
     ];
 

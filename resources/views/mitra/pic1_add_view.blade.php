@@ -20,7 +20,7 @@
                       @endif
                       
                       
-                      <form action="{{route('admin.mitra.store_pic1')}}" method="POST" class="needs-validation" novalidate>
+                      <form action="{{route('admin.mitra.store_pic1',['Mitra='.$Mitra])}}" method="POST" class="needs-validation" novalidate>
                           @csrf
                           @method('POST')
                         <div class="card-body ">
@@ -69,7 +69,7 @@
                                 </div>
                                   <label class=" col-sm-2 col-form-label">Komisi</label>
                                 <div class="col-sm-4">
-                                  <input type="text" id="" class="form-control" name="mts_fee" value="{{ Session::get('mts_fee') }}">
+                                  <input type="text" id="" class="form-control" name="mts_komisi" value="{{ Session::get('mts_komisi') }}">
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -85,9 +85,16 @@
                                   <label class=" col-sm-2 col-form-label">Level</label>
                                 <div class="col-sm-4">
                                   <select name="level" id="level" class="form-control" required >
-                                    <option value="">-PILIH-</option>
+                                    @if($Mitra)
+                                    <option value="">--Pilih Level--</option>
+                                       <option value="10|BILLER">BILLER</option>
+                                      <option value="13|KOLEKTOR">KOLEKTOR</option>
+                                      <option vaslue="14|RESELLER">RESELLER</option>
+                                    @else
+                                    <option value="">--Pilih Level--</option>
                                     <option value="12|SALES">SALES</option>
                                     <option value="15|PIC">PIC</option>
+                                    @endif
                                   </select>
                                 </div>
                               </div>

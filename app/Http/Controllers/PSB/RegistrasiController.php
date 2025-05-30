@@ -680,19 +680,8 @@ Data_Tiket::create($tiket);
             'reg_img.mimes' => 'Format hanya bisa jpg',
         ]);
 
-        // dd( $request->all());
-        $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
-        // dd($ODP);
-        $data['id'] = $request-> reg_idpel;
-        $data['corporate_id'] = Session::get('corp_id');
-        $data['data__odp_id'] = $ODP->id;
-        $data['reg_router'] = $request->reg_router;
-        $data['reg_noc'] = $user_admin;
-        $data['reg_in_ont'] = $request->reg_in_ont;
-        $data['reg_slot_odp'] = $request->reg_slot_odp;
-
-        FtthInstalasi::create($data);
-
+        
+    
         // $teknisi['corporate_id'] = $data['corporate_id'];
         // $teknisi['user_id'] = $request->aaaaaa;
         // $teknisi['teknisi_idpel'] = $request->aaaaaa;
@@ -702,7 +691,20 @@ Data_Tiket::create($tiket);
         // $teknisi['teknisi_psb'] = $request->aaaaaa;
         // $teknisi['teknisi_status'] = $request->aaaaaa;
 
+ $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
 
+                FtthInstalasi::updateOrCreate(
+                [
+                    'id'=> $request-> reg_idpel,
+                ],
+                [
+                    'corporate_id'=> Session::get('corp_id'),
+                    'data__odp_id'=> $ODP->id,
+                    'reg_noc'=> $user_admin,
+                    'reg_in_ont'=> $request->reg_in_ont,
+                    'reg_slot_odp'=> $request->reg_slot_odp,
+                ]
+            );
 
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
@@ -724,11 +726,14 @@ Data_Tiket::create($tiket);
             ])
             ->first();
             // dd($query);
+
+            //    dd($query);
             if ($query->reg_layanan == 'PPP') {
                 
-                $API = (new ApiController)->aktivasi_psb_ppp($query);
+                $API = (new ApiController)->aktivasi_psb_ppp($query,);
                 if ($API == 0) {
                 //LANJUTAN AKTIVASI
+                
                 (new AktivasiController)->aktivasi_psb($request, $query, $id);
                 $notifikasi = array(
                     'pesan' => 'Aktivasi Berhasil ',
@@ -753,6 +758,7 @@ Data_Tiket::create($tiket);
 
             if ($API == 0) {
                 //LANJUTAN AKTIVASI
+                
                 (new AktivasiController)->aktivasi_psb($request, $query, $id);
                 $notifikasi = array(
                     'pesan' => 'Aktivasi Berhasil ',

@@ -45,9 +45,18 @@
                                   <input type="text" class="form-control" id="akun_rekening" name="nama_pemilik" placeholder="Masukan Nama Pemilik">
                               </div>
                               <div class="form-group">
+                                            <label>Akun Type</label>
+                                            <select class="form-control" name="akun_type" id="">
+                                              <option value="">--Pilih Type--</option>
+                                              <option value="TUNAI">TUNAI</option>
+                                              <option value="TRANSFER">TRANSFER</option>
+                                              <option value="TRIPAY">TRIPAY</option>
+                                            </select>
+                                        </div>
+                              <div class="form-group">
                                   <label>Nama Kategori</label>
                                   <select name="akun_kategori"class="form-control"  id="">
-                                    <option value="">PILIH AKUN</option>
+                                    <option value="">--Pilih Akun--</option>
                                     <option value="PEMBAYARAN">PEMBAYARAN</option>
                                     <option value="LAPORAN">LAPORAN</option>
                                   </select>
@@ -78,24 +87,19 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
+                      <th>Aksi</th>
                       <th>Nama Akun</th>
                       <th>Rekening</th>
                       <th>Nama Pemilik</th>
+                      <th>Type</th>
                       <th>Kategori</th>
                       <th>Status</th>
-                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                       @foreach ($SettingAkun as $d)
                       <tr>
-                        <td>{{$d->akun_nama}}</td>
-                        <td>{{$d->akun_rekening}}</td>
-                        <td>{{$d->akun_pemilik}}</td>
-                        <td>{{$d->akun_kategori}}</td>
-                        <td>{{$d->akun_status}}</td>
-                        @if($d->akun_pemilik != 'SYSTEM')
-                       
+                        @if($d->akun_type != 'TUNAI')
                         <td>
                           <div class="form-button-action">
                               <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
@@ -106,7 +110,15 @@
                               </button>
                             </div>
                           </td>
+                          @else
+                          <td></td>
                            @endif
+                        <td>{{$d->akun_nama}}</td>
+                        <td>{{$d->akun_rekening}}</td>
+                        <td>{{$d->akun_pemilik}}</td>
+                        <td>{{$d->akun_type}}</td>
+                        <td>{{$d->akun_kategori}}</td>
+                        <td>{{$d->akun_status}}</td>
                       <div class="modal fade" id="modal-edit{{$d->id}}">
                           <div class="modal-dialog">
                             <form action="{{route('admin.app.akun_edit',['id'=>$d->id])}}" method="POST">
@@ -114,7 +126,7 @@
                             @method('PUT')
                             <div class="modal-content">
                               <div class="modal-header bg-primary ">
-                                <h4 class="modal-title">TAMBAH </h4>
+                                <h4 class="modal-title">Edit Akun </h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
@@ -126,12 +138,23 @@
                                           <input type="text" class="form-control" id="nama_akun" name="nama_akun" value="{{$d->akun_nama}}">
                                       </div>
                                       <div class="form-group">
-                                          <label>Nomor Rekening</label>
-                                          <input type="number" class="form-control" id="akun_rekening" name="akun_rekening" value="{{$d->akun_rekening}}" > 
+                                        <label>Nomor Rekening</label>
+                                        <input type="number" class="form-control" id="akun_rekening" name="akun_rekening" value="{{$d->akun_rekening}}" > 
                                       </div>
                                       <div class="form-group">
-                                          <label>Nama Pemilik</label>
-                                          <input type="text" class="form-control" id="akun_pemilik" name="akun_pemilik" value="{{$d->akun_pemilik}}" >
+                                        <label>Nama Pemilik</label>
+                                        <input type="text" class="form-control" id="akun_pemilik" name="akun_pemilik" value="{{$d->akun_pemilik}}" >
+                                        <div class="form-group">
+                                            <label>Akun Type</label>
+                                            <select class="form-control" name="akun_type" id="">
+                                              @if($d->akun_type)
+                                              <option value="{{$d->akun_type}}">{{$d->akun_type}}</option>
+                                              @endif
+                                              <option value="TUNAI">TUNAI</option>
+                                              <option value="TRANSFER">TRANSFER</option>
+                                              <option value="TRIPAY">TRIPAY</option>
+                                            </select>
+                                        </div>
                                       </div>
                                     </div>
       

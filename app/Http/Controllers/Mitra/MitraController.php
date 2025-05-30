@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Aplikasi\Data_Kelurahan;
 use App\Models\Aplikasi\Data_Site;
+use App\Models\Applikasi\SettingAkun;
 // use App\Models\Applikasi\SettingAkun;
 use App\Models\Global\ConvertNoHp;
 use App\Models\Mitra\Data_Submitra;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 use App\Models\Mitra\MitraSetting;
 use App\Models\Mitra\Mutasi;
+use App\Models\Mitra\MutasiSales;
 use App\Models\User;
 use App\Models\Model_Has_Role;
 use App\Models\Permission;
@@ -32,36 +34,38 @@ class MitraController extends Controller
 {
     function index()
     {
-        $data = array(
-            'tittle' => 'MITRA',
-            'datauser' => DB::table('users')
-                ->select('users.name AS nama', 'users.alamat_lengkap', 'users.id', 'users.hp', 'users.username', 'roles.name', 'mitra_settings.mts_limit_minus', 'mitra_settings.mts_komisi')
-                ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-                ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-                ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
-                ->get(),
-        );
+        $data['data_mitra'] = MitraSetting::join('model_has_roles','model_has_roles.model_id','=','mitra_settings.mts_user_id')
+                                ->whereIn('model_has_roles.role_id', [10])
+                                ->where('corporate_id',Session::get('corp_id'))
+                                ->with('user_mitra','mitra_site','mitra_sub')->get();
         return view('mitra/index', $data);
     }
 
     #LIST PIC
+    // function add_biller()
+    // {
+    //    $data['data_site'] = Data_Site::where('site_status','Enable')->where('corporate_id',Session::get('corp_id'))->get();
+    //     return view('mitra/create', $data);
+    // }
     function pic1_view()
     {
         $data['pic1_view'] = MitraSetting::join('model_has_roles','model_has_roles.model_id','=','mitra_settings.mts_user_id')
-                                ->where('model_has_roles.role_id', 15)->orWhere('model_has_roles.role_id', 12)
+                                ->whereIn('model_has_roles.role_id', [15,12])
                                 ->where('corporate_id',Session::get('corp_id'))
                                 ->with('user_mitra','mitra_site','mitra_sub')->get();
         return view('mitra/pic1_view', $data);
     }
 
-    public function pic1_add_view()
+    public function pic1_add_view(Request $request)
     {
+        $data['Mitra'] = $request->query('Mitra');
         $data['data_site'] = Data_Site::where('site_status','Enable')->where('corporate_id',Session::get('corp_id'))->get();
         return view('mitra/pic1_add_view', $data);
     }
 
     function store_pic1(Request $request)
     {
+        $data['Mitra'] = $request->query('Mitra');
         Session::flash('name', $request->name); #
         Session::flash('ktp', $request->ktp); #
         Session::flash('email', $request->email); #
@@ -70,7 +74,7 @@ class MitraController extends Controller
         Session::flash('username', $request->username); #
         Session::flash('password', $request->password); #
         Session::flash('tgl_gabung', $request->tgl_gabung); #
-        Session::flash('mts_fee', $request->mts_fee); #
+        Session::flash('mts_komisi', $request->mts_komisi); #
         Session::flash('data__site_id', $request->data__site_id); #
         Session::flash('level', $request->level); #
         // dd($request->all());
@@ -83,7 +87,7 @@ class MitraController extends Controller
             'username' => 'required|unique:users',
             'password' => 'required',
             'tgl_gabung' => 'required',
-            'mts_fee' => 'required:mitra_settings',
+            'mts_komisi' => 'required:mitra_settings',
             'data__site_id' => 'required',
             'level' => 'required',
        
@@ -99,7 +103,7 @@ class MitraController extends Controller
             'username.unique' => 'Username sudah digunakan',
             'password.required' => 'Password tidak boleh kosong',
             'tgl_gabung.required' => 'Tanggal gabung tidak boleh kosong',
-            'mts_fee.required' => 'Komisi tidak boleh kosong',
+            'mts_komisi.required' => 'Komisi tidak boleh kosong',
             'data__site_id.required' => 'Site tidak boleh kosong',
             'level.required' => 'Level tidak boleh kosong',
         ]);
@@ -152,8 +156,7 @@ class MitraController extends Controller
         $mitra_setting['data__site_id'] = $request->data__site_id;
         $mitra_setting['mts_user_id'] = $id_mitra;
         $mitra_setting['mts_limit_minus'] = 0;
-        $mitra_setting['mts_komisi'] = 0;
-        $mitra_setting['mts_fee'] = $request->mts_fee;
+        $mitra_setting['mts_komisi'] = $request->mts_komisi;
 
         
         
@@ -172,21 +175,27 @@ class MitraController extends Controller
     
     MitraSetting::create($mitra_setting);
         $notifikasi = array(
-            'pesan' => 'PIC berhasil ditambahkan',
+            'pesan' => $data_level['name'].' berhasil ditambahkan',
             'alert' => 'success',
         );
-        return redirect()->route('admin.mitra.pic1_view')->with($notifikasi);
+        // return redirect()->route('admin.mitra.pic1_view')->with($notifikasi);
+            if($request->query('Mitra')){
+            return redirect()->route('admin.mitra.index')->with($notifikasi);
+        } else {
+            return redirect()->route('admin.mitra.pic1_view')->with($notifikasi);
+        }
     }
 
-      function pic1_edit_view($id)
+      function pic1_edit_view(Request $request,$id)
     {
+         $data['Mitra'] = $request->query('Mitra');
         $data['data_pic1'] = User::where('corporate_id',Session::get('corp_id'))->where('id', $id)->with('user_site','user_mitra')->first();
         $data['data_site'] = Data_Site::where('site_status','Enable')->where('corporate_id',Session::get('corp_id'))->get();
         return view('mitra/pic1_edit', $data);
     }
       function store_edit_pic1(Request $request, $id)
     {
-        // dd($id);
+        $data['Mitra'] = $request->query('Mitra');
          $validator = FacadesValidator::make(
             $request->all(),
         [
@@ -196,7 +205,7 @@ class MitraController extends Controller
             'email' => 'required',
             'alamat_lengkap' => 'required',
             'data__site_id' => 'required',
-            'mts_fee' => 'required:mitra_settings',
+            'mts_komisi' => 'required:mitra_settings',
             'data__site_id' => 'required:mitra_settings',
             'file' => 'max:1000|mimes:jpeg',
 
@@ -208,14 +217,13 @@ class MitraController extends Controller
             'email.required' => 'Email tidak boleh kosong',
             'alamat_lengkap.required' => 'Alamat tidak boleh kosong',
             'data__site_id.required' => 'Site tidak boleh kosong',
-            'mts_fee.required' => 'Komisi tidak boleh kosong',
+            'mts_komisi.required' => 'Komisi tidak boleh kosong',
             'data__site_id.required' => 'Site tidak boleh kosong',
             'file.max' => 'Ukuran foto terlalu besar',
             'file.mimes' => 'Format hanya bisa jpeg',
         ]
     );
  if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
-
 
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
         $photo = $request->file('file');
@@ -224,24 +232,24 @@ class MitraController extends Controller
             $filename = Session::get('corp_id').$id.'.jpeg';
             $path = 'image/' . $filename;
             Storage::disk(     )->put($path, file_get_contents($photo));
-            $data['photo'] = $filename;
+            $data_user['photo'] = $filename;
         }
 
-        $data['email'] = $request->email;
-        $data['ktp'] = $request->ktp;
-        $data['hp'] = $nomorhp;
-        $data['alamat_lengkap'] = ucwords($request->alamat_lengkap);
-        $data['name'] = ucwords($request->name);
-        $data['username'] = $request->username;
-        $data['data__site_id'] = $request->data__site_id;
-        $data['status_user'] = $request->status_user;
+        $data_user['email'] = $request->email;
+        $data_user['ktp'] = $request->ktp;
+        $data_user['hp'] = $nomorhp;
+        $data_user['alamat_lengkap'] = ucwords($request->alamat_lengkap);
+        $data_user['name'] = ucwords($request->name);
+        $data_user['username'] = $request->username;
+        $data_user['data__site_id'] = $request->data__site_id;
+        $data_user['status_user'] = $request->status_user;
         if ($request->password) {
-            $data['password'] = Hash::make($request->password);
+            $data_user['password'] = Hash::make($request->password);
         }
 
-        User::where('corporate_id',Session::get('corp_id'))->where('id', $id)->update($data);
+        User::where('corporate_id',Session::get('corp_id'))->where('id', $id)->update($data_user);
 
-        $mitra_setting['mts_fee'] = $request->mts_fee;
+        $mitra_setting['mts_komisi'] = $request->mts_komisi;
         $mitra_setting['data__site_id'] = $request->data__site_id;
         MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id', $id)->update($mitra_setting);
 
@@ -249,7 +257,12 @@ class MitraController extends Controller
             'pesan' => 'Data' . $request->name . ' Berhasil dirubah',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.mitra.pic1_view')->with($notifikasi);
+        // dd($request->query('Mitra'));
+        if($request->query('Mitra') == 'Biller'){
+            return redirect()->route('admin.mitra.index')->with($notifikasi);
+        } else {
+            return redirect()->route('admin.mitra.pic1_view')->with($notifikasi);
+        }
     }
    
 
@@ -272,7 +285,7 @@ class MitraController extends Controller
         Session::flash('username', $request->username); #
         Session::flash('password', $request->password); #
         Session::flash('tgl_gabung', $request->tgl_gabung); #
-        Session::flash('mts_fee', $request->mts_fee); #
+        Session::flash('mts_komisi', $request->mts_komisi); #
          $request->validate([
             'name' => 'required',
             'ktp' => 'required|unique:users',
@@ -282,7 +295,7 @@ class MitraController extends Controller
             'username' => 'required|unique:users',
             'password' => 'required',
             'tgl_gabung' => 'required',
-            'mts_fee' => 'required:mitra_settings',
+            'mts_komisi' => 'required:mitra_settings',
        
         ], [
             'name.required' => 'Nama tidak boleh kosong',
@@ -296,7 +309,7 @@ class MitraController extends Controller
             'username.unique' => 'Username sudah digunakan',
             'password.required' => 'Password tidak boleh kosong',
             'tgl_gabung.required' => 'Tanggal gabung tidak boleh kosong',
-            'mts_fee.required' => 'Fee Continue tidak boleh kosong',
+            'mts_komisi.required' => 'Fee Continue tidak boleh kosong',
         ]);
 
             $level_id = '16';
@@ -360,7 +373,7 @@ class MitraController extends Controller
         $mitra_setting['mts_user_id'] = $id_mitra;
         $mitra_setting['mts_limit_minus'] = 0;
         $mitra_setting['mts_komisi'] = 0;
-        $mitra_setting['mts_fee'] = $request->mts_fee;
+        $mitra_setting['mts_komisi'] = $request->mts_komisi;
     MitraSetting::create($mitra_setting);
 
         $submitra['mts_sub_mitra_id'] = $request->mts_sub_mitra_id;
@@ -389,31 +402,17 @@ class MitraController extends Controller
     }
        public function mitra_mutasi($id)
     {
-          $mutasi = DB::table('mutasi_sales')
-            ->where('mutasi_sales_mitra_id' , '25055121')
-            ->orderBy('created_at') // To ensure correct chronological order
-            ->select(
-                'mutasi_sales_mitra_id',
-                'mutasi_sales_idpel',
-                'mutasi_sales_admin',
-                'mutasi_sales_type',
-                'mutasi_sales_jumlah',
-                'mutasi_sales_deskripsi',
-                'created_at',
-                DB::raw('SUM(CASE WHEN mutasi_sales_type = "debit" THEN mutasi_sales_jumlah ELSE 0 END) OVER (ORDER BY created_at) AS debit_balance'),
-                DB::raw('SUM(CASE WHEN mutasi_sales_type = "credit" THEN mutasi_sales_jumlah ELSE 0 END) OVER (ORDER BY created_at) AS credit_balance')
-            )
-            ->get();
-            
-        // Add a final saldo column:
-        $mutasi->map(function ($transaction) {
-            $transaction->saldo = $transaction->debit_balance - $transaction->credit_balance;
-            // dd($transaction);
-            return $transaction;
-        });
-
-        return $mutasi;
-
+          $data['mutasi'] = MutasiSales::where('mutasi_sales_mitra_id',$id)
+            ->join('users','users.id','=','mutasi_sales.mutasi_sales_mitra_id')
+                            ->orderBy('created_at') 
+                            ->select(
+                                'mutasi_sales.*',
+                                'users.name',
+                            )
+                            ->get();
+          $Credit = MutasiSales::where('corporate_id',Session::get('corp_id'))->where('mutasi_sales_mitra_id',$id)->where('mutasi_sales_type','Credit')->sum('mutasi_sales_jumlah');
+          $Debit = MutasiSales::where('corporate_id',Session::get('corp_id'))->where('mutasi_sales_mitra_id',$id)->where('mutasi_sales_type','Debit')->sum('mutasi_sales_jumlah');
+          $data['saldo'] = $Credit - $Debit;
 
         return view('mitra/pic_mutasi', $data);
     }
@@ -437,7 +436,7 @@ class MitraController extends Controller
             'email' => 'required',
             'alamat_lengkap' => 'required',
             'data__site_id' => 'required',
-            'mts_fee' => 'required:mitra_settings',
+            'mts_komisi' => 'required:mitra_settings',
             'file' => 'max:1000|mimes:jpeg',
 
         ], [
@@ -447,7 +446,7 @@ class MitraController extends Controller
             'hp.unique' => 'Nomor Hp sudah terdaftar.',
             'email.required' => 'Email tidak boleh kosong',
             'alamat_lengkap.required' => 'Alamat tidak boleh kosong',
-            'mts_fee.required' => 'Komisi tidak boleh kosong',
+            'mts_komisi.required' => 'Komisi tidak boleh kosong',
             'data__site_id.required' => 'Site tidak boleh kosong',
             'file.max' => 'Ukuran foto terlalu besar',
             'file.mimes' => 'Format hanya bisa jpeg',
@@ -479,7 +478,7 @@ class MitraController extends Controller
 
         User::where('corporate_id',Session::get('corp_id'))->where('id', $id)->update($data);
 
-        $mitra_setting['mts_fee'] = $request->mts_fee;
+        $mitra_setting['mts_komisi'] = $request->mts_komisi;
         MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id', $id)->update($mitra_setting);
 
         $notifikasi = [
@@ -489,179 +488,11 @@ class MitraController extends Controller
         return redirect()->route('admin.mitra.pic_sub_edit_view',['id'=>$request->mts_sub_user_id,'mit'=>$request->mts_sub_mitra_id])->with($notifikasi);
     }
 
-
-    public function create()
-    {
-        $data = array(
-            'tittle' => 'TAMBAH MITRA',
-
-        );
-        return view('mitra/create', $data);
-    }
-
-    public function addmitra(Request $request)
-    {
-        $validator = FacadesValidator::make(
-            $request->all(),
-            [
-
-                'username' => 'unique:users',
-                'hp' => 'required|unique:users',
-            ],
-            [
-                'username.unique' => 'Username sudah digunakan.',
-                'hp.unique' => 'Nomor Hp sudah terdaftar.',
-            ]
-        );
-        if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
-
-        $get =  explode("|", $request->level);
-        $level_id = $get[0];
-        $level = $get[1];
-
-
-        $data_level['id'] = $level_id;
-        $data_level['name'] = $level;
-        $data_level['guard_name'] = 'web';
-        
-        $cek_role = Role::whereId($level_id)->count();
-        if ($cek_role == 0) {
-            Role::create($data_level);
-        }
-        $cek_permision = Permission::whereId($level_id)->count();
-        if ($cek_permision == 0) {
-            Permission::create($data_level);
-        }
-
-        $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
-
-        $tgl_gabung = date('ym', strtotime($request->tgl_gabung));
-        $countuser = User::count();
-        $id_mitra = $tgl_gabung . $countuser . $level_id.$request->data__site_id; #FORMAT = th-bulan-urutan karyawan,level,site
-        $data['id'] = $id_mitra;
-        $data['email'] = $request->email;
-        $data['username'] = $request->username;
-        $data['ktp'] = $request->ktp;
-        $data['hp'] = $nomorhp;
-        $data['alamat_lengkap'] = strtoupper($request->alamat_lengkap);
-        $data['name'] = strtoupper($request->name);
-        $data['password'] = Hash::make($request->password);
-        $data['photo'] = 'user.png';
-        $data['status_user'] = 'Enable';
-
-        $datarole['role_id'] = $level_id;
-        $datarole['model_type'] = 'App\Models\User';
-        $datarole['model_id'] = $id_mitra;
-
-        $datarolepermission['permission_id'] = $level_id;
-        $datarolepermission['role_id'] = $level_id;
-
-        $mitra_setting['mts_user_id'] = $id_mitra;
-        $mitra_setting['mts_limit_minus'] = $request->limit_minus;
-        $mitra_setting['mts_komisi'] = $request->mts_komisi;
-        $mitra_setting['mts_komisi_sales'] = $request->mts_komisi_sales;
-
-        MitraSetting::create($mitra_setting);
-
-        if (!RoleHasPermission::where('permission_id', $level_id)
-            ->where('role_id', $level_id)
-            ->get()
-            ->isEmpty()) {
-            User::create($data);
-            Model_Has_Role::create($datarole);
-        } else {
-            User::create($data);
-            Model_Has_Role::create($datarole);
-            RoleHasPermission::create($datarolepermission);
-        }
-
-
-        $notifikasi = array(
-            'pesan' => 'User berhasil ditambahkan',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.mitra.index')->with($notifikasi);
-    }
-    public function store_edit(Request $request, $id)
-    {
-
-        $get =  explode("|", $request->level);
-        $level_id = $get[0];
-        $level = $get[1];
-
-        $data_level['id'] = $level_id;
-        $data_level['name'] = $level;
-        $data_level['guard_name'] = 'web';
-
-        Role::updateorcreate($data_level);
-        Permission::updateorcreate($data_level);
-
-        $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
-        $data['email'] = $request->email;
-        $data['ktp'] = $request->ktp;
-        $data['hp'] = $nomorhp;
-        $data['alamat_lengkap'] = strtoupper($request->alamat_lengkap);
-        $data['name'] = strtoupper($request->name);
-        if ($request->password) {
-            $data['password'] = Hash::make($request->password);
-        }
-        if (User::whereId($id)->first('username')->username != $request->username) {
-            $data['username'] = $request->username;
-        }
-
-
-
-        $datarole['role_id'] = $level_id;
-        $datarole['model_type'] = 'App\Models\User';
-        $datarole['model_id'] = $id;
-
-        $datarolepermission['permission_id'] = $level_id;
-        $datarolepermission['role_id'] = $level_id;
-
-        $mitra_setting['mts_limit_minus'] = $request->limit_minus;
-        $mitra_setting['mts_komisi'] = $request->mts_komisi;
-        $mitra_setting['mts_komisi_sales'] = $request->mts_komisi_sales;
-
-        MitraSetting::where('mts_user_id', $id)->update($mitra_setting);
-
-        #DISABLE SEMENTAR UNTUK TES WA
-        if (!RoleHasPermission::where('permission_id', $level_id)
-            ->where('role_id', $level_id)
-            ->get()
-            ->isEmpty()) {
-            User::whereId($id)->update($data);
-            Model_Has_Role::where('model_id', $id)->update($datarole);
-            // dd(1);
-        } else {
-            User::whereId($id)->update($data);
-            Model_Has_Role::where('model_id', $id)->update($datarole);
-            RoleHasPermission::updateorcreate($datarolepermission);
-        }
-
-
-        $notifikasi = array(
-            'pesan' => 'Update mitra berhasil',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.mitra.edit',['id'=>$id])->with($notifikasi);
-    }
-    public function edit($id)
-    {
-        $data['data_mitra'] = DB::table('users')
-            ->select('users.name AS nama', 'users.*', 'users.created_at as tgl', 'roles.name as role_name', 'roles.id as role_id', 'mitra_settings.*')
-            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
-            ->where('users.id', $id)
-            ->first();
-
-        return view('mitra/edit', $data);
-    }
     public function data($id)
     {
 
         $saldo = (new GlobalController)->total_mutasi($id);
-        $saldo_sales = (new GlobalController)->total_mutasi_sales($id);
+        // $saldo_sales = (new GlobalController)->total_mutasi_sales($id);
 
 
         $data = array(
@@ -679,15 +510,15 @@ class MitraController extends Controller
                 ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasis.mt_mts_id')
                 ->where('mutasis.mt_mts_id', '=', $id)
                 ->get(),
-            'mutasi_saldo' =>  DB::table('mutasi_sales')
-                ->select('mutasi_sales.*', 'mutasi_sales.created_at as tgl_trx', 'mitra_settings.*')
-                ->orderBy('mutasi_sales.id', 'ASC')
-                ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasi_sales.smt_user_id')
-                ->where('mutasi_sales.smt_user_id', '=', $id)
-                ->get(),
-            'akun' => (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'LAPORAN')->get(),
+            // 'mutasi_saldo' =>  DB::table('mutasi_sales')
+            //     ->select('mutasi_sales.*', 'mutasi_sales.created_at as tgl_trx', 'mitra_settings.*')
+            //     ->orderBy('mutasi_sales.id', 'ASC')
+            //     ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'mutasi_sales.smt_user_id')
+            //     ->where('mutasi_sales.smt_user_id', '=', $id)
+            //     ->get(),
+            'akun' => $setting_akun = SettingAkun::where('corporate_id',Session::get('corp_id'))->where('akun_kategori', '!=', 'LAPORAN')->get(),
             'saldo' => $saldo,
-            'saldo_sales' => $saldo_sales,
+            // 'saldo_sales' => $saldo_sales,
         );
         return view('mitra/data', $data);
     }
@@ -824,16 +655,5 @@ class MitraController extends Controller
         return redirect()->route('admin.mitra.data', ['id' => $id])->with($notifikasi);
     }
 
-    function tees($request)
-    {
-        if($request->pic1_view){
-            $pic1_view = MitraSetting::where('mts_user_id',$request->pic1_view)->first();
-            $data['mutasi_lingkungan1'] = $pic1_view->mts_fee;
-        }elseif($request->pic_2){
-            $pic1_view = MitraSetting::where('mts_user_id',$request->pic1_view)->first();
-            $data['mutasi_lingkungan1'] = $pic1_view->mts_fee;
-            $data['mutasi_lingkungan2'] = $pic1_view->mts_fee;
-
-        }
-    }
+   
 }

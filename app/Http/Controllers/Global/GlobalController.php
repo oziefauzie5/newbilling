@@ -27,6 +27,7 @@ use App\Models\Hotspot\Data_Pesanan;
 use App\Models\Hotspot\Data_Bagihasil;
 use App\Models\Hotspot\Data_Voucher;
 use App\Models\Router\Paket;
+use App\Models\Transaksi\Laporan;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,7 @@ class GlobalController extends Controller
     }
     public function user_admin() #mennampilkan data user
     {
-        $data['user_id'] = Auth::user()->id;
+        // $data['user_id'] = Auth::user()->id;
         $data['user_nama'] = Auth::user()->name;
         $data['user_hp'] = Auth::user()->hp;
         return $data;
@@ -62,18 +63,18 @@ class GlobalController extends Controller
             ->first();
         return $data_user;
     }
-    // public function role($iduser) #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
-    // {
-    //     // dd($iduser);
-    //     $role =  DB::table('users')
-    //         ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
-    //         ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-    //         ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
-    //         ->select('users.name AS nama_user', 'roles.name', 'roles.id as role_id', 'users.hp', 'users.email', 'users.alamat_lengkap', 'users.username', 'users.password', 'mitra_settings.mts_user_id', 'mitra_settings.mts_komisi_sales')
-    //         ->where('users.id', '=', $iduser)
-    //         ->first();
-    //     return $role;
-    // }
+    public function role($iduser) #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
+    {
+        // dd($iduser);
+        $role =  DB::table('users')
+            ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->join('mitra_settings', 'mitra_settings.mts_user_id', '=', 'users.id')
+            ->select('users.name AS nama_user', 'roles.name', 'roles.id as role_id', 'users.hp', 'users.email', 'users.alamat_lengkap', 'users.username', 'users.password', 'mitra_settings.mts_user_id', 'mitra_settings.mts_komisi_sales')
+            ->where('users.id', '=', $iduser)
+            ->first();
+        return $role;
+    }
     public function getTeknisi() #mennampilkan data user sesuai hak akses (Mitra Controller |  |  |)
     {
         $teknisi =  DB::table('users')
@@ -95,11 +96,11 @@ class GlobalController extends Controller
             ->where('users.id', '>', 10);
         return $all_user;
     }
-    public function setting_akun() #mennampilkan data akun/bank
-    {
-        $setting_akun = SettingAkun::where('id', '>', 1);
-        return $setting_akun;
-    }
+    // public function setting_akun() #mennampilkan data akun/bank
+    // {
+    //     $setting_akun = SettingAkun::where('corporate_id',Session::get('corp_id'));
+    //     return $setting_akun;
+    // }
     public function no_invoice_mitra()
     {
         $count = Mutasi::count();
@@ -115,21 +116,20 @@ class GlobalController extends Controller
 
     public function total_mutasi($id)
     {
-        $debet = Mutasi::where('mt_mts_id', $id)->sum('mt_debet');
-        $kredit = Mutasi::where('mt_mts_id', $id)->sum('mt_kredit');
+        $debet = Mutasi::where('mt_mts_id', $id)->where('corporate_id',Session::get('corp_id'))->sum('mt_debet');
+        $kredit = Mutasi::where('mt_mts_id', $id)->where('corporate_id',Session::get('corp_id'))->sum('mt_kredit');
         $saldo = $kredit - $debet;
-
         return $saldo;
-    }
-    public function total_mutasi_sales($id)
-    {
-        $debet = MutasiSales::where('smt_user_id', $id)->sum('smt_debet');
-        $kredit = MutasiSales::where('smt_user_id', $id)->sum('smt_kredit');
-        // dd($kredit);
-        $saldo = $kredit - $debet;
 
-        return $saldo;
     }
+    // public function total_mutasi_sales($id)
+    // {
+    //     $debet = MutasiSales::where('smt_user_id', $id)->sum('smt_debet');
+    //     $kredit = MutasiSales::where('smt_user_id', $id)->sum('smt_kredit');
+    //     $saldo = $kredit - $debet;
+
+    //     return $saldo;
+    // }
     public function mutasi_jurnal()
     {
         $data['debet'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_debet');
@@ -148,20 +148,45 @@ class GlobalController extends Controller
 
         return $data;
     }
-    public function data_tagihan($invoice)
+    public function data_tagihan($invoice)  #Digunakan untuk pengecekan data pada BillerController
     {
         $data_tagihan =  DB::table('invoices')
             ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
             ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->where('inv_status', '!=', 'PAID')
-            ->where('inv_id', '=', $invoice)
-            ->orWhere('inv_nolayanan', '=', $invoice)
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'invoices.inv_idpel')
+            ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
+            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            ->where('invoices.inv_status', '!=', 'PAID')
+            ->where('invoices.inv_id', '=', $invoice)
+            ->orWhere('registrasis.reg_nolayanan', '=', $invoice)
             ->orWhere('input_data.input_hp', '=', $invoice)
             ->orWhere('input_data.input_nama', '=', $invoice)
-            ->latest('inv_tgl_jatuh_tempo')
+            ->where('invoices.corporate_id',Session::get('corp_id'))
+            ->latest('invoices.inv_tgl_jatuh_tempo')
+             ->where('inv_id', $invoice)
+                ->select([
+                    'invoices.*',
+                    'routers.*',
+                    'registrasis.reg_inv_control',
+                    'registrasis.reg_idpel',
+                    'registrasis.reg_tgl_tagih',
+                    'registrasis.reg_tgl_jatuh_tempo',
+                    'registrasis.reg_layanan',
+                    'registrasis.reg_username',
+                    'registrasis.reg_nolayanan',
+                    'registrasis.reg_password',
+                    'input_data.input_nama',
+                    'input_data.input_hp',
+                    'pakets.paket_nama',
+                    'routers.id as id_router',
+                    'routers.*',
+                ])
             ->first();
+       
         return $data_tagihan;
     }
     public function whatsapp_status()
@@ -182,6 +207,7 @@ class GlobalController extends Controller
         // $string = substr($latest->inv_id, 2);
         // return $bln . sprintf('%04d', $string + 1);
         $latest = Invoice::whereMonth('inv_tgl_isolir', '=', $bln)->count();
+        // dd($latest);
         if ($latest == 0) {
             return $bln . $th . '0001';
         }
@@ -379,6 +405,7 @@ class GlobalController extends Controller
         $string = substr($latest->pop_id, 2);
         return $th . sprintf('%04d', $string + 1);
     }
+
 
 
 }

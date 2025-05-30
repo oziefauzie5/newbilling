@@ -15,6 +15,7 @@ use App\Models\Transaksi\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 class LaporanController extends Controller
@@ -24,7 +25,7 @@ class LaporanController extends Controller
         // $date = Carbon::now();
         $data['admin_user'] = Auth::user()->id;
         $data['admin_name'] = Auth::user()->name;
-        $data['setting_akun'] = (new GlobalController)->setting_akun()->where('id', '=', '2')->get();
+        $data['setting_akun'] = SettingAkun::where('corporate_id',Session::get('corp_id'))->get();
         $ids = [1, 2, 5, 10, 13, 14];
         $biller = [10, 13, 14];
         $data['dat'] = "Laporan";
@@ -44,56 +45,53 @@ class LaporanController extends Controller
             $data['admin'] = User::join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
                 ->whereIn('model_has_roles.role_id', $ids)->get();
 
-            $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
+            $query = Laporan::orderBy('laporans.created_at', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
-                ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
-                ->where('laporans.lap_jenis_inv', '=', 'INVOICE')
+                ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
+                // ->where('laporans.lap_jenis_inv', '=', 'INVOICE')
                 ->where(function ($query) use ($data) {
                     $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
                 });
         } else {
             $data['admin'] = User::where('id', $data['admin_user'])->get();
             // $data['admin'] = User::where('id', '2023116515')->get();
-            $query = Laporan::orderBy('laporans.lap_tgl', 'DESC')
+            $query = Laporan::orderBy('laporans.created_at', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
-                ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
+                ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
                 ->where('laporans.lap_admin', '=', $data['admin_user'])
-                ->where('laporans.lap_jenis_inv', '=', 'INVOICE')
+                // ->where('laporans.lap_jenis_inv', '=', 'INVOICE')
                 // ->whereDate('laporans.lap_tgl', '>=',$start_date )
-                ->whereDate('laporans.lap_tgl', '<=',$end_date )
+                ->whereDate('laporans.created_at', '<=',$end_date )
                 ->where(function ($query) use ($data) {
                     $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
                 });
         }
-        $data['buat_laporan'] = $query->where('lap_status', 0)->where('laporans.lap_jenis_inv', '=', 'INVOICE')->sum('laporans.lap_kredit');
+        $data['buat_laporan'] = $query->where('lap_status', 0)->sum('laporans.lap_jumlah');
 
         if ($data['ak'])
             $query->where('setting_akuns.akun_nama', '=', $data['ak']);
-        if ($data['adm'])
-            $query->where('users.name', '=', $data['adm']);
 
         $data['laporan'] = $query->get();
-        $data['pendapatan'] = $query->where('lap_status', 0)->where('laporans.lap_jenis_inv', '=', 'INVOICE')->sum('laporans.lap_kredit');
-        $data['refund'] = $query->where('lap_status', 0)->where('laporans.lap_jenis_inv', '=', 'INVOICE')->sum('laporans.lap_debet');
-        $data['biaya_adm'] = $query->where('lap_status', 0)->where('laporans.lap_jenis_inv', '=', 'INVOICE')->sum('laporans.lap_adm');
-        $data['count_trx'] = $query->where('lap_status', 0)->where('laporans.lap_jenis_inv', '=', 'INVOICE')->count();
+        $data['pendapatan'] = $query->where('lap_status', 0)->sum('laporans.lap_jumlah');
+        $data['biaya_adm'] = 0;
+        $data['count_trx'] = $query->where('lap_status', 0)->count();
 
 
         if ($role->role_id == 1) {
-            $querysum = Laporan::orderBy('laporans.lap_tgl', 'DESC')
+            $querysum = Laporan::orderBy('laporans.created_at', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
-                ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun');
+                ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun');
         } else {
-            $querysum = Laporan::orderBy('laporans.lap_tgl', 'DESC')
+            $querysum = Laporan::orderBy('laporans.created_at', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
-                ->join('setting_akuns', 'setting_akuns.akun_id', '=', 'laporans.lap_akun')
+                ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
                 ->where('laporans.lap_admin', '=', $data['admin_user'])
-                ->where('laporans.lap_jenis_inv', '=', 'INVOICE')
-                ->whereDate('laporans.lap_tgl', '>=',$start_date )
-                ->whereDate('laporans.lap_tgl', '<=',$end_date );
+                // ->where('laporans.lap_jenis_inv', '=', 'INVOICE')
+                ->whereDate('laporans.created_at', '>=',$start_date )
+                ->whereDate('laporans.created_at', '<=',$end_date );
         }
 
-        $data['sum_tunai'] = $querysum->where('lap_status', 0)->where('laporans.lap_jenis_inv', '=', 'INVOICE')->where('lap_akun', 2)->sum('laporans.lap_kredit');
+        $data['sum_tunai'] = $querysum->where('lap_status', 0)->where('lap_jenis_inv', 'Debit')->sum('laporans.lap_jumlah');
 
         $data['users'] = (new GlobalController)->all_user()->where('model_has_roles.role_id', '=', '5')->get();
         $data['biller'] = (new GlobalController)->all_user()->whereIn('model_has_roles.role_id', $biller)->get();

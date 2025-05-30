@@ -428,6 +428,7 @@ class TopologiController extends Controller
             ->select([
                 'ftth_instalasis.id as idpel',
                 'ftth_instalasis.reg_slot_odp',
+                'ftth_instalasis.reg_in_ont',
                 'data__odps.*',
                 'input_data.input_nama',
                 'input_data.input_alamat_pasang',

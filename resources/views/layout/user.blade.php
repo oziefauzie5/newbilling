@@ -921,6 +921,7 @@ $(function(){
 							},
 							dataType: 'json',
 							success: function(data) {
+								console.log(data)
 								$("#cari_data_inv").modal('hide');
 								if(data['data']=='PAID'){
 									$("#progress").html('');
@@ -946,11 +947,11 @@ $(function(){
 										komisi=0
 									}
 									var total = parseInt(harga)+parseInt(ppn)+parseInt(komisi)-parseInt(diskon);
-									document.getElementById("upd_pelanggan").innerHTML =data['data'].inv_nama;
+									document.getElementById("upd_pelanggan").innerHTML =data['data'].input_nama;
 									document.getElementById("hp").innerHTML =data['data'].input_hp;
-									document.getElementById("nolay").innerHTML =data['data'].inv_nolayanan;
+									document.getElementById("nolay").innerHTML =data['data'].reg_nolayanan;
 									document.getElementById("alamat_pasang").innerHTML =data['data'].input_alamat_pasang;
-									document.getElementById("upd_kategori").innerHTML =data['data'].inv_kategori;
+									document.getElementById("upd_kategori").innerHTML =data['data'].reg_jenis_tagihan;
 									document.getElementById("upd_tgl_tagih").innerHTML =data['data'].inv_tgl_tagih;
 									document.getElementById("upd_tgl_jatuh_tempo").innerHTML =data['data'].inv_tgl_jatuh_tempo;
 									document.getElementById("subinvoice_harga").innerHTML = new Intl.NumberFormat('id-ID', {
@@ -973,7 +974,7 @@ $(function(){
 																				style: 'currency',minimumFractionDigits: 0,
 																				currency: 'IDR',
 																				}).format(total);
-									$("#buton").html('<input value="Proses Pembayaran" id="bayar" class="btn btn-block  btn-primary" ></input>');
+									$("#buton").html('<input value="Proses Pembayaran1" id="bayar" class="btn btn-block  btn-primary" ></input>');
 									$('#bayar').click(function(e) {
 	
 										$("#buton").html('<button class="btn btn-block btn-primary text-light " type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...</button>');
@@ -986,6 +987,7 @@ $(function(){
 											},
 											dataType: 'json',
 											success: function(data) {
+												console.log(data)
 												if(data.alert=='success'){
 													swal(data.pesan, {
 														icon : data.alert,
@@ -1010,7 +1012,7 @@ $(function(){
 	
 											},
 											error: function(error) {
-												$("#buton").html('<input value="Proses Pembayaran" id="bayar" class="btn btn-block btn-primary text-light" ></input>');
+												// $("#buton").html('<input value="Proses Pembayaran" id="bayar" class="btn btn-block btn-primary text-light" ></input>');
 												 $("#text").html('Transaksi Gagal. Coba lagi nanti...');
 	
 	

@@ -15,6 +15,7 @@ class SubInvoice extends Model
         'subinvoice_qty',
         'subinvoice_harga',
         'subinvoice_ppn',
+        'subinvoice_bph_uso',
         'subinvoice_total',
         'subinvoice_status'
     ];

@@ -34,7 +34,7 @@
     <div class="modal-content">
       <div class="modal-header bg-primary">
         <h5 class="modal-title" id="staticBackdropLabel">Cari Data</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -52,8 +52,8 @@
             <tbody>
               @foreach($input_data as $d)
               <tr id="{{$d->inv_id}}">
-                <td>{{$d->inv_nolayanan}}</td>
-                <td>{{$d->inv_nama}}</td>
+                <td>{{$d->reg_nolayanan}}</td>
+                <td>{{$d->input_nama}}</td>
                 <td>0{{$d->input_hp}}</td>
                 <td>{{$d->input_alamat_pasang}}</td>
               </tr>

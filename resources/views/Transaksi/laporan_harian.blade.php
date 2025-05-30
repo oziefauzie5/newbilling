@@ -7,32 +7,8 @@
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. {{number_format($pendapatan-$refund)}}</div>
+            <div class="h2 m-0">Rp. {{number_format($pendapatan)}}</div>
             <div class="text-muted mb-3">PENDAPATAN</div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. {{number_format($refund)}}</div>
-            <div class="text-muted mb-3">REFUND</div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. {{number_format($biaya_adm)}}</div>
-            <div class="text-muted mb-3">ADM</div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0">{{$count_trx}}</div>
-            <div class="text-muted mb-3">JUMLAH TRANSAKSI</div>
           </div>
         </div>
       </div>
@@ -41,6 +17,14 @@
           <div class="card-body p-3 text-center">
             <div class="h2 m-0">{{$sum_tunai}}</div>
             <div class="text-muted mb-3">PENDAPATAN TUNAI</div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h2 m-0">{{$count_trx}}</div>
+            <div class="text-muted mb-3">JUMLAH TRANSAKSI</div>
           </div>
         </div>
       </div>
@@ -78,10 +62,6 @@
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan Tunai</label>
                           <input type="text" class="form-control" name="tunai" value="{{$sum_tunai}}" readonly>
-                        </div>
-                        <div class="form-group">
-                          <label for="formGroupExampleInput">Total Refund</label>
-                          <input type="text" class="form-control" name="refund" value="{{$refund}}" readonly>
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan Adm</label>
@@ -140,10 +120,6 @@
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan Tunai</label>
                           <input type="text" class="form-control" name="tunai" value="{{$sum_tunai}}">
-                        </div>
-                        <div class="form-group">
-                          <label for="formGroupExampleInput">Total Refund</label>
-                          <input type="text" class="form-control" name="refund" value="{{$refund}}">
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan Adm</label>
@@ -328,16 +304,14 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>ID</th>
-                  <th>TANGGAL</th>
-                  <th>ADMIN</th>
-                  <th>INVOICE</th>
-                  <th>KETERANGAN</th>
-                  <th>CABAR</th>
-                  <th>METODE BAYAR</th>
-                  <th>KREDIT</th>
-                  <th>DEBET</th>
-                  <th>AKSI</th>
+                  <th>Id</th>
+                  <th>Tanggal</th>
+                  <th>Admin</th>
+                  <th>Keterangan</th>
+                  <th>Metode Bayar</th>
+                  <th>Kredit</th>
+                  <th>Debet</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -345,13 +319,11 @@
                 <tr>
                   <td>{{$loop->iteration}}</td>
                       <td>{{$d->lap_id}}</td>
-                      <td>{{date('d-m-Y',strtotime($d->lap_tgl))}}</td>
+                      <td>{{date('d-m-Y',strtotime($d->created_at))}}</td>
                       <td>{{$d->name}}</td>
-                      <td>{{$d->lap_inv}}</td>
                       <td>{{$d->lap_keterangan}}</td>
-                      <td>{{$d->lap_cabar}}</td>
                       <td>{{$d->akun_nama}}</td>
-                      <td>{{$d->lap_kredit}}</td>
+                      <td>{{$d->lap_jumlah}}</td>
                       <td>{{$d->lap_debet}}</td>
                       <td>
                         <div class="form-button-action">

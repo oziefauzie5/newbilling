@@ -9,25 +9,19 @@ class Laporan extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'corporate_id',
         'lap_id',
-        'lap_tgl',
+        'corporate_id',
         'lap_inv',
-        'lap_admin',
-        'lap_cabar',
-        'lap_debet',
-        'lap_kredit',
-        'lap_fee_lingkungan',
-        'lap_fee_kerja_sama',
-        'lap_fee_marketing',
+        'lap_fee_mitra',
         'lap_ppn',
-        'lap_adm',
-        'lap_jumlah_bayar',
+        'lap_bph_uso',
+        'lap_admin',
+        'lap_pokok',
+        'lap_jumlah',
         'lap_akun',
         'lap_keterangan',
         'lap_jenis_inv',
         'lap_status',
         'lap_img',
-        'lap_idpel',
     ];
 }

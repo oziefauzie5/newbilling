@@ -15,23 +15,18 @@ return new class extends Migration
         Schema::create('data_laporans', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-            $table->integer('data_lap_id')->nullable();
+            $table->unsignedBigInteger('data_lap_id');
+            $table->foreign('data_lap_id')->references('lap_id')->on('laporans')->onDelete('restrict');
+
             $table->string('data_lap_tgl')->nullable();
             $table->integer('data_lap_pendapatan')->nullable();
-            $table->integer('data_lap_tunai')->nullable();
-            $table->integer('data_lap_adm')->nullable();
             $table->integer('data_lap_admin')->nullable();
-            $table->integer('data_lap_refund')->nullable();
-            $table->string('data_lap_trx')->nullable();
             $table->string('data_lap_keterangan')->nullable();
             $table->string('data_lap_status')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('data_laporans');

@@ -283,15 +283,10 @@
                       <div class="form-group row">
                           <label for="inputPassword" class="col-sm-4 col-form-label">PELANGGAN</label>
                         <div class="col-sm-8">
-                          <input type="text" class="form-control" id="inputtext" name="nama" value="{{$invoice->inv_nama}}">
+                          <input type="text" class="form-control" id="inputtext" name="nama" value="{{$invoice->input_nama}}">
                         </div>
                       </div>
-                      <div class="form-group row">
-                        <label for="inputtext" class="col-sm-4 col-form-label">KATEGORI</label>
-                        <div class="col-sm-8">
-                          <input type="text" class="form-control" id="inputtext" value="{{$invoice->inv_kategori}}">
-                        </div>
-                      </div>
+                      
                       <div class="form-group row">
                         <label for="inputtext" class="col-sm-4 col-form-label">TGL BAYAR</label>
                         <div class="col-sm-8">
@@ -308,6 +303,17 @@
                         <label for="inputtext" class="col-sm-4 col-form-label">TOTAL</label>
                         <div class="col-sm-8">
                           <input type="text" class="form-control" id="inputtext" name="total" value="{{$invoice->inv_total}}">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputtext" class="col-sm-4 col-form-label">Metode Pengembalian</label>
+                        <div class="col-sm-8">
+                         <select name="metode_bayar_rolback" id="metode_bayar_rolback"  class="form-control" required>
+                          <option value="">--Pilih Bank--</option>
+                          @foreach($akun_all as $b)
+                          <option value="{{$b->id.'|'.$b->akun_nama}}">{{$b->akun_nama}}</option>
+                          @endforeach
+                        </select>
                         </div>
                       </div>
                       <div class="form-group row">
@@ -341,17 +347,20 @@
                           @csrf
                           @method('PUT')
                        <select name="cabar" id="cabar"  class="form-control" required>
-                        <option value="">METODE PEMBAYARAN</option>
+                        <option value="">--Pilih Metode Bayar--</option>
                         <option value="TUNAI">BAYAR TUNAI</option>
                         <option value="TRANSFER">TRANSFER BANK</option>
                        </select>
 <br>
+                        <select name="tunai" id="tunai"  class="form-control" style="display:none;">
+                          @foreach($akun_tunai as $b)
+                          <option selected value="{{$b->id.'|'.$b->akun_rekening.'|'.$b->akun_nama}}">{{$b->akun_nama}}</option>
+                          @endforeach
+                        </select>
                         <select name="transfer" id="transfer"  class="form-control" style="display:none;">
-                          <option value="">-PILIH BANK-</option>
+                          <option value="">--Pilih Bank--</option>
                           @foreach($akun as $b)
-                          @if($b->id >'2')
                           <option value="{{$b->id.'|'.$b->akun_rekening.'|'.$b->akun_nama}}">{{$b->akun_nama}}</option>
-                          @endif
                           @endforeach
                         </select>
                         <br>

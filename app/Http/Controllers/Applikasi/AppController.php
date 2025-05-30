@@ -152,6 +152,7 @@ class AppController extends Controller
         if ($cek_akun == 0) {
             $tunai['corporate_id'] = Session::get('corp_id');
             $tunai['akun_nama'] = 'TUNAI';
+            $tunai['akun_type'] = 'TUNAI';
             $tunai['akun_pemilik'] = 'SYSTEM';
             $tunai['akun_rekening'] = '0';
             $tunai['akun_status'] = 'Enable';
@@ -159,6 +160,7 @@ class AppController extends Controller
             
             $akun['corporate_id'] = Session::get('corp_id');
             $akun['akun_nama'] = $request->nama_akun;
+            $akun['akun_type'] = $request->akun_type;
             $akun['akun_rekening'] = $request->akun_rekening;
             $akun['akun_pemilik'] = $request->nama_pemilik;
             $akun['akun_status'] = 'Enable';
@@ -172,6 +174,7 @@ class AppController extends Controller
                     // 'id' => $request->akun_id,
                     'corporate_id' => Session::get('corp_id'),
                     'akun_nama' => $request->nama_akun,
+                    'akun_type' => $request->akun_type,
                     'akun_rekening' => $request->akun_rekening,
                     'akun_pemilik' => $request->nama_pemilik,
                     'akun_status' => 'Enable',
@@ -191,6 +194,7 @@ class AppController extends Controller
         SettingAkun::where('corporate_id',Session::get('corp_id'))->whereId($id)->update(
             [
                 'akun_id' => $request->akun_id,
+                'akun_type' => $request->akun_type,
                 'akun_nama' => $request->nama_akun,
                 'akun_rekening' => $request->akun_rekening,
                 'akun_pemilik' => $request->akun_pemilik,

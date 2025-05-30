@@ -1,0 +1,334 @@
+<?php
+
+namespace App\Http\Controllers\Mitra;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Global\GlobalController;
+use App\Models\Global\ConvertNoHp;
+use App\Models\PSB\InputData;
+use App\Models\PSB\Registrasi;
+use App\Models\Router\Paket;
+use App\Models\Mitra\MutasiSales;
+use App\Models\Transaksi\Invoice;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+
+class SalesController extends Controller
+{
+     public function sales()
+    {
+        // dd('sales');
+        $user_id = Auth::user()->id;
+        $role = (new globalController)->data_user($user_id);
+        $data['role'] = $role->name;
+        $debet = MutasiSales::where('corporate_id',Session::get('corp_id'))->where('mutasi_sales_type', 'Debit')->where('mutasi_sales_mitra_id', $user_id)->sum('mutasi_sales_jumlah');
+        $kredit = MutasiSales::where('corporate_id',Session::get('corp_id'))->where('mutasi_sales_type', 'Kredit')->where('mutasi_sales_mitra_id', $user_id)->sum('mutasi_sales_jumlah');
+        $saldo = $kredit - $debet;
+        $data['komisi'] = $saldo;
+        $m = date('m', strtotime(new Carbon()));
+        $data['pencairan'] = MutasiSales::whereMonth('created_at', $m)->where('corporate_id',Session::get('corp_id'))->where('mutasi_sales_type', 'Debit')->where('mutasi_sales_mitra_id', $user_id)->sum('mutasi_sales_jumlah');
+        // dd($debet);
+        $data['input_data'] = InputData::where('input_sales', $user_id)->where('input_status', 'INPUT DATA')->get();
+        $data['registrasi'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('input_data.input_sales', '=', $user_id)
+            ->where('reg_status', '<', '5')->get();
+        // dd($data['pelanggan']);
+
+        return view('biller/sales', $data);
+    }
+    public function sales_input()
+    {
+     
+        $user_id = Auth::user()->id;
+        $role = (new globalController)->data_user($user_id);
+        $data['role'] = $role->name;
+        $data['admin_user'] = (new GlobalController)->user_admin();
+        $data['paket'] = Paket::where('paket_status','Enable')->where('paket_layanan','PPP')->get();
+
+        return view('biller/sales_input', $data);
+    }
+    public function sales_store(Request $request)
+    {
+
+        $user = (new GlobalController)->user_admin();
+        $user_nama = $user['user_nama'];
+        $user_id = $user['user_id'];
+        
+
+        $id_cust = (new GlobalController)->idpel_();
+        // $id_cust = '12264';
+        // dd($id_cust);
+        $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
+        if (!preg_match('/[^+0-9]/', trim($nomorhp2))) {
+            if (substr(trim($nomorhp2), 0, 3) == '+62') {
+                $nomorhp2 = trim($nomorhp2);
+            } elseif (substr($nomorhp2, 0, 1) == '0') {
+                $nomorhp2 = '' . substr($nomorhp2, 1);
+            }
+        }
+        $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
+        Session::flash('input_nama', strtoupper($request->input_nama));
+        Session::flash('input_hp', $request->input_hp);
+        Session::flash('input_hp_2', $request->input_hp_2);
+        Session::flash('input_ktp', $request->input_ktp);
+        Session::flash('input_email', $request->input_email);
+        Session::flash('input_alamat_ktp', strtoupper($request->input_alamat_ktp));
+        Session::flash('input_alamat_pasang', strtoupper($request->input_alamat_pasang));
+        Session::flash('input_sales', strtoupper($request->input_sales));
+        Session::flash('input_subseles', strtoupper($request->input_subseles));
+        Session::flash('input_password', Hash::make($request->input_hp));
+        Session::flash('input_maps', $request->input_maps);
+        Session::flash('input_keterangan', strtoupper($request->input_keterangan));
+
+        $request->validate([
+            'input_ktp' => 'unique:input_data',
+            'input_hp' => 'unique:input_data',
+            'input_hp_2' => 'unique:input_data',
+        ], [
+            'input_ktp.unique' => 'Nomor Identitas sudah terdaftar',
+            'input_hp.unique' => 'Nomor Whatsapp sudah terdaftar',
+            'input_hp_2.unique' => 'Nomor Whatsapp cadangan sudah terdaftar',
+        ]);
+        $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
+
+        $cek_nohp = InputData::where('input_hp', $nomorhp)->count();
+        $cek_nohp2 = InputData::where('input_hp', $nomorhp2)->count();
+
+        if ($cek_nohp == 0) {
+            $input['input_tgl'] = $data['input_tgl'];
+            $input['input_nama'] = strtoupper($request->input_nama);
+            $input['id'] = $id_cust;
+            $input['input_ktp'] = $request->input_ktp;
+            $input['input_hp'] = $nomorhp;
+            $input['input_hp_2'] = $nomorhp2;
+            $input['input_email'] = $request->input_email;
+            $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp);
+            $input['input_alamat_pasang'] = strtoupper($request->input_alamat_pasang);
+            $input['input_sales'] = $user_id;
+            $input['input_subseles'] = strtoupper($user_nama);
+            $input['password'] = Hash::make($nomorhp);
+            $input['input_maps'] = $request->input_maps;
+            $input['input_status'] = 'INPUT DATA';
+            $input['input_keterangan'] = $request->input_keterangan;
+            // dd($input);
+            InputData::create($input);
+            $notifikasi = [
+                'pesan' => 'Berhasil input data',
+                'alert' => 'success',
+            ];
+            return redirect()->route('admin.biller.sales')->with($notifikasi);
+        } else {
+            $notifikasi = [
+                'pesan' => 'Nomor Hp sudah terdaftar',
+                'alert' => 'error',
+            ];
+            return redirect()->route('admin.biller.sales_input')->with($notifikasi);
+        }
+    }
+    public function mutasi_sales()
+    {
+        $admin_user = Auth::user()->id;
+        $data['tittle'] = 'MITRA';
+        $query =  DB::table('mutasi_sales')
+            ->orderBy('mutasi_sales.created_at', 'DESC')
+            ->where('mutasi_sales.smt_user_id', '=', $admin_user);
+        $data['mutasi_sales'] = $query->get();
+
+        return view('biller/mutasi_sales', $data);
+    }
+    public function pelanggan(Request $request)
+    {
+        $date = Carbon::now();
+        $month = date('Y-m-01', strtotime($date));
+        $user = (new GlobalController)->user_admin();
+        $user_id = $user['user_id'];
+        $role = (new globalController)->data_user($user_id);
+        $data['role'] = $role->name;
+        $data['q'] = $request->query('q');
+        $data['putus'] = $request->query('putus');
+        $data['fee'] = $request->query('fee');
+
+
+
+
+
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->where('input_data.input_sales', '=', $user_id)
+            ->where('reg_progres', '>=', 3)
+            ->orderBy('tgl', 'DESC')
+            ->where(function ($query) use ($data) {
+                $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_username', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_jenis_tagihan', 'like', '%' . $data['q'] . '%');
+            });
+        // dd($data['putus']);
+        if ($data['putus'])
+            $query->where('registrasis.reg_progres', '>', 5);
+        if ($data['fee'])
+            $query->whereDate('reg_tgl_pasang', '<', $month);
+        $query->whereIn('registrasis.reg_progres', [3, 4, 5]);
+        $query->where('reg_jenis_tagihan', '!=', 'FREE');
+
+        $data['data_pelanggan'] = $query->get();
+
+
+
+        // dd($month);
+        #COUNT PELANGGANG AKTIF
+        $query_aktif = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->where('input_data.input_sales', '=', $user_id)
+            ->where('reg_progres', '<=', 5)
+            ->whereDate('reg_tgl_pasang', '<', $month);
+        // $data['pelanggan_aktif'] = $query_aktif->where('reg_jenis_tagihan', '!=', 'FREE')->get();
+        // foreach ($data['pelanggan_aktif'] as $key ) {
+        //     # code...
+        //     echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
+        // }
+
+        // dd('test');
+        $data['pelanggan_aktif'] = $query_aktif->where('reg_jenis_tagihan', '!=', 'FREE')->count();
+
+        #COUNT PELANGGAN BULAN INI
+        $query_bulan_ini = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->where('input_data.input_sales', '=', $user_id)
+            ->where('reg_progres', '<=', 5)
+            ->whereDate('reg_tgl_pasang', '>=', $month);
+        $data['pelanggan_bulan_ini'] = $query_bulan_ini->where('reg_jenis_tagihan', '!=', 'FREE')->count();
+
+        #COUNT PELANGGAN PUTUS
+        $query_putus = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->where('input_data.input_sales', '=', $user_id)
+            ->where('reg_progres', '>', 5);
+        $data['pelanggan_putus'] = $query_putus->count();
+
+        #COUNT PELANGGAN FREE
+        $query_free = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->where('input_data.input_sales', '=', $user_id)
+            ->where('reg_progres', '>=', 3);
+        $data['total_pelanggan'] = $query_free->count();
+        $data['pelanggan_free'] = $query_free->where('reg_jenis_tagihan', '=', 'FREE')->count();
+
+        #COUNT PELANGGAN LUNAS
+        $query_lunas = Invoice::select('input_data.*', 'registrasis.*', 'invoices.*')
+            ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->whereDate('inv_tgl_bayar', '>=', $month)
+            ->whereDate('reg_tgl_pasang', '<', $month)
+            ->where('inv_status', 'PAID')
+            ->where('inv_jenis_tagihan', 'PRABAYAR')
+            ->where('input_sales', $user_id);
+        $data['pelanggan_lunas'] = $query_lunas->count();
+
+
+        #COUNT PELANGGAN BELUM LUNAS
+        $query_belum_lunas = Invoice::select('input_data.*', 'registrasis.*', 'invoices.*')
+            ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            // ->whereDate('inv_tgl_bayar', '>=', $month)
+            ->whereDate('reg_tgl_pasang', '<', $month)
+            ->where('inv_status', '!=', 'PAID')
+            ->where('inv_jenis_tagihan', 'PRABAYAR')
+            ->where('input_sales', $user_id);
+
+        // $data['pelanggan_belum_lunas'] = $query_belum_lunas->get();
+        // foreach ($data['pelanggan_belum_lunas'] as $key ) {
+        //         # code...
+        //         echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
+        //     }
+
+        //     dd('test');
+        $data['pelanggan_belum_lunas'] = $query_belum_lunas->count();
+        $data['komisi'] = (new globalController)->total_mutasi_sales($user_id);
+
+        return view('biller/data_pelanggan_sales', $data);
+    }
+
+     public function mutasi_sales_pdf(Request $request)
+    {
+        // dd('test');
+        // $month = date('m',strtotime(Carbon::now()));
+        // $year = date('Y',strtotime(Carbon::now()));
+        $month = date('Y-m-01', strtotime(Carbon::now()));
+        $data['admin_user'] = Auth::user()->id;
+        $data['admin_name'] = Auth::user()->name;
+
+        $data['start_date'] =  $request->start_date;
+        $data['end_date'] =  $request->end_date;
+
+        $query =  DB::table('mutasi_sales')
+            ->orderBy('mutasi_sales.smt_tgl_transaksi', 'ASC')
+            ->where('mutasi_sales.smt_user_id', '=', $data['admin_user'])
+            ->whereDate('mutasi_sales.created_at', '>=', $data['start_date'])
+            ->whereDate('mutasi_sales.created_at', '<=', $data['end_date']);
+        $data['mutasi_sales'] = $query->get();
+
+        $query_pel =  InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->orderBy('registrasis.reg_tgl_pasang', 'ASC')
+            ->where('users.id', '=', $data['admin_user']);
+        $data['data_pelannggan'] = $query_pel->get();
+
+        $querycount = InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->where('users.id', '=', $data['admin_user']);
+        $data['total_pel'] = $querycount->count();
+        $data['count_pelfree'] = $querycount->where('registrasis.reg_jenis_tagihan', '=', 'Free')->count();
+
+        $querycount2 = InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->where('registrasis.reg_progres', '>', 5)
+            ->where('users.id', '=', $data['admin_user']);
+        $data['count_putus'] = $querycount2->count();
+
+        $querycount3 = InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->where('users.id', '=', $data['admin_user'])
+            ->whereDate('reg_tgl_pasang', '>', $month)
+            ->where('reg_jenis_tagihan', '!=', 'FREE');
+        $data['count_pel_baru'] = $querycount3->count();
+
+        $data['pel_aktif'] = InputData::join('registrasis', 'registrasis.reg_idpel', 'input_data.id')
+            ->join('users', 'users.id', '=', 'input_data.input_sales')
+            ->where('registrasis.reg_progres', '<=', 5)
+            ->where('registrasis.reg_jenis_tagihan', '!=', 'FREE')
+            ->whereDate('reg_tgl_pasang', '<', $month)
+            ->where('users.id', '=', $data['admin_user'])
+            ->count();
+
+        #COUNT PELANGGAN LUNAS
+        $query_lunas = Invoice::select('input_data.*', 'registrasis.*', 'invoices.*')
+            ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
+            ->whereDate('inv_tgl_bayar', '>=', $month)
+            ->whereDate('reg_tgl_pasang', '<', $month)
+            ->where('inv_status', 'PAID')
+            ->where('inv_jenis_tagihan', 'PRABAYAR')
+            ->where('input_sales', $data['admin_user']);
+        $data['pelanggan_lunas'] = $query_lunas->count();
+
+
+        $data['saldo'] = (new globalController)->total_mutasi_sales($data['admin_user']);
+        return view('biller/mutasi_pdf', $data);
+        $pdf = App::make('dompdf.wrapper');
+        $html = view('biller/mutasi_pdf', $data)->render();
+        $pdf->loadHTML($html);
+        $pdf->setPaper('A4', 'potraid');
+        return $pdf->download('Mutasi-Sales.pdf');
+    }
+}

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('fee_idpel');
             $table->foreign('fee_idpel')->references('reg_idpel')->on('registrasis')->onDelete('cascade');
-            $table->integer('reg_mitra')->nullable();
+            $table->unsignedBigInteger('reg_mitra');
+            $table->foreign('reg_mitra')->references('id')->on('users')->onDelete('cascade');
             $table->integer('reg_fee')->nullable();
             $table->timestamps();
         });

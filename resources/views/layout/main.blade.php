@@ -203,7 +203,7 @@
 									</li>
 									<li>
 										<a href="{{route('admin.mitra.pic1_view')}}">
-											<span class="sub-item">Pic Lingkunganr</span>
+											<span class="sub-item">Pic Lingkungan</span>
 										</a>
 									</li>
 								</ul>
@@ -1816,21 +1816,25 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 				
 				$('select[name=cabar]').change(function () {
 					if ($(this).val() == 'TRANSFER') {
+						$('#tunai').hide();
 						$('#transfer').show();
-			$('#transfer').attr('required', 'required');;
-			$('#jb').show();
-			$('#bb').show();
-			$('#jb').attr('required', 'required');;
-			$('#bb').attr('required', 'required');;
-		} else {
-			$('#transfer').hide();
-			$('#transfer').removeAttr('required');
-			$('#jb').hide();
-			$('#bb').hide();
-			$('#jb').removeAttr('required');
-			$('#bb').removeAttr('required');
-		}
-	});
+						$('#transfer').attr('required', 'required');;
+						$('#jb').show();
+						$('#bb').show();
+						$('#jb').attr('required', 'required');;
+						$('#bb').attr('required', 'required');;
+						$('#tunai').removeAttr('required');
+					} else {
+						$('#tunai').show();
+						$('#tunai').attr('required', 'required');;
+						$('#transfer').hide();
+						$('#transfer').removeAttr('required');
+						$('#jb').hide();
+						$('#bb').hide();
+						$('#jb').removeAttr('required');
+						$('#bb').removeAttr('required');
+					}
+				});
 
 	
 	// #LAYANAN REGISTRASI
@@ -3583,8 +3587,8 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 								$('#tampil_fee_sales').empty()
 								// $('#tampil_fee_sales').val('')
 								$('#tampil_sales').append('<option value="'+data['tampil_data']['input_sales']+'">'+data['tampil_data']['user_sales']['name']+'</option>');
-								$('#tampil_fee_sales').append('<option value="'+data['tampil_data']['input_mitra']['mts_fee']+'">'+data['tampil_data']['input_mitra']['mts_fee']+'</option>');
-								// document.getElementById("tampil_fee_sales").value =data['tampil_data']['input_mitra']['mts_fee'];
+								$('#tampil_fee_sales').append('<option value="'+data['tampil_data']['input_mitra']['mts_komisi']+'">'+data['tampil_data']['input_mitra']['mts_komisi']+'</option>');
+								// document.getElementById("tampil_fee_sales").value =data['tampil_data']['input_mitra']['mts_komisi'];
 							} else {
 								$('#tampil_fee_sales').empty()
 								$('#tampil_sales').empty()
@@ -3687,7 +3691,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 												
 												if(data['fee_sales']['input_sales']){
 													// Fee Sales
-													var fee_sales = data['fee_sales']['input_mitra']['mts_fee'];
+													var fee_sales = data['fee_sales']['input_mitra']['mts_komisi'];
 													if(data['mitra_subfee'] == ''){
 														$('#fee_pic').empty();
 														$('#tampil_fee_sales').empty();
@@ -3714,8 +3718,8 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 														$('#sub_mitra').removeAttr('disabled');
 														$('#fee_subpic').empty();
 														$('#fee_pic').empty();
-														$('#fee_pic').append('<option value="'+data['mitra_subfee'][0]['mts_fee']+'">'+data['mitra_subfee'][0]['mts_fee']+'</option>')
-													// $('#fee_pic').val(data['mitra_subfee'][0]['mts_fee']);
+														$('#fee_pic').append('<option value="'+data['mitra_subfee'][0]['mts_komisi']+'">'+data['mitra_subfee'][0]['mts_komisi']+'</option>')
+													// $('#fee_pic').val(data['mitra_subfee'][0]['mts_komisi']);
 												}
 
 
@@ -3734,8 +3738,8 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 															if(data){
 																// $('#fee_subpic').val('');
 																$('#fee_subpic').empty();
-																$('#fee_subpic').append('<option value="'+data[0]['mts_fee']+'">'+data[0]['mts_fee']+'</option>')
-																// $('#fee_subpic').val(data[0]['mts_fee']);
+																$('#fee_subpic').append('<option value="'+data[0]['mts_komisi']+'">'+data[0]['mts_komisi']+'</option>')
+																// $('#fee_subpic').val(data[0]['mts_komisi']);
 															}else {
 																$('#fee_subpic').empty();
 																// $('#fee_subpic').val('');
@@ -3792,6 +3796,19 @@ $.ajax({
 						},
 					});
 });
+
+
+
+					// --------------------------------------START ADD KATEGORI BARANG-------------------------------------
+					$('select[name=kategori_satuan]').change(function () {
+						if ($(this).val() == 'Roll') {
+							$('.div_satuan').show();
+						$('.kategori_qty').attr('required', 'required');;
+					} else {
+							$('.div_satuan').hide();
+						}
+					});
+					// --------------------------------------END ADD KATEGORI BARANG-------------------------------------
 
 
 						</script>

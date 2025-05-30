@@ -20,8 +20,9 @@ return new class extends Migration
              $table->unsignedBigInteger('mutasi_sales_idpel');
             $table->foreign('mutasi_sales_idpel')->references('reg_idpel')->on('registrasis')->onDelete('restrict');
             $table->string('mutasi_sales_admin')->nullable();
-            $table->enum('mutasi_sales_type', ['debet', 'credit']);
+            $table->enum('mutasi_sales_type', ['Debit', 'Credit']);
             $table->integer('mutasi_sales_jumlah')->nullable();
+            $table->integer('mutasi_sales_inv_id')->nullable();
             $table->string('mutasi_sales_deskripsi')->nullable();
             $table->timestamps();
         });

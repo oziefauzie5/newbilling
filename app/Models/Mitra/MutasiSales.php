@@ -17,5 +17,6 @@ class MutasiSales extends Model
         'mutasi_sales_type',
         'mutasi_sales_jumlah',
         'mutasi_sales_deskripsi',
+        'mutasi_sales_inv_id',
     ];
 }

@@ -12,6 +12,7 @@ class SettingAkun extends Model
     protected $fillable = [
         'id',
         'corporate_id',
+        'akun_type',
         'akun_nama',
         'akun_rekening',
         'akun_pemilik',

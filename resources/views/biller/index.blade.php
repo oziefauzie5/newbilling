@@ -58,12 +58,12 @@
                                 </a>
                                 <div class="text-light mb-3 text-center">Payment</div>
                               </td>
-                              <td>
-                                <a href="{{ route('admin.biller.sales') }}" class="card mb-2 card_custom1" style="width: 4rem;">
+                              {{-- <td>
+                                <a href="{{ route('admin.sales.sales') }}" class="card mb-2 card_custom1" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/add_users.png') }}" class="card-img-center p-2" alt="...">
                                 </a>
                                 <div class="text-light mb-3 text-center">Sales</div>
-                              </td>
+                              </td> --}}
                               <td>
                                 <a href="#" onclick="comingson()" class="card mb-2 card_custom1" style="width: 4rem;">
                                 <img src="{{ asset('atlantis/assets/img/top-up.png') }}" class="card-img-center p-2" alt="...">

@@ -37,7 +37,7 @@
                    <td>{{$d->mts_sub_user_id ?? '-'}}</td>
                    <td><a href="{{route('admin.mitra.data',['id'=>$d->mts_sub_user_id])}}"><strong class="text-primary">{{$d->user_submitra->name ?? '-'}}</strong> </a> </td>
                    <td>0{{$d->user_submitra->hp ?? '-'}}</td>
-                   <td>Rp. {{ number_format($d->mts_fee) ?? '0'}}</td>
+                   <td>Rp. {{ number_format($d->mts_komisi) ?? '0'}}</td>
                    <td>{{$d->user_submitra->alamat_lengkap ?? '-'}}</td>
                    </tr>
                    @endforeach
