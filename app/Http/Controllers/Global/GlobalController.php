@@ -43,7 +43,7 @@ class GlobalController extends Controller
     }
     public function user_admin() #mennampilkan data user
     {
-        // $data['user_id'] = Auth::user()->id;
+        $data['user_id'] = Auth::user()->id;
         $data['user_nama'] = Auth::user()->name;
         $data['user_hp'] = Auth::user()->hp;
         return $data;

@@ -316,7 +316,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="">Jenis Jurnal<strong class="text-danger">*</strong></label>
-                  <select name="jenis_jurnal" id="" class="form-control" required>
+                  <select name="jenis_jurnal_kategori" id="" class="form-control" required>
                     <option value="">- Jenis Jurnal -</option>
                     <option value="Perlengkapan">Perlengkapan</option>
                     <option value="Aset Tetap - Mesin & Peralatan">Aset Tetap - Mesin & Peralatan</option>

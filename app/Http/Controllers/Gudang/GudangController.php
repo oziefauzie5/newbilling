@@ -44,8 +44,7 @@ class GudangController extends Controller
     public function store_kategori(Request $request)
     {
          $data['corporate_id'] = Session::get('corp_id');
-        // $data['id_kategori'] = $request->id_kategori;
-        $data['kategori_kategori'] = $request->kategori;
+        $data['jenis_jurnal_kategori'] = $request->jenis_jurnal_kategori;
         $data['kategori_satuan'] = $request->kategori_satuan;
         $data['nama_kategori'] = $request->nama_kategori;
         $data['kategori_qty'] = $request->kategori_qty;
@@ -71,6 +70,7 @@ class GudangController extends Controller
 
        
         $penerima = (new GlobalController)->user_admin()['user_id'];
+        
         $photo = $request->file('barang_img');
         $filename = date('d-m-Y', strtotime(Carbon::now())) . '_' . $request->barang_nama;
         $path = 'photo-tanda_terima_gudang/' . $filename;
@@ -79,8 +79,8 @@ class GudangController extends Controller
         // $data['barang_pengecek'] = $request->barang_pengecek;
 
         $kategori = Data_Kategori::where('nama_kategori', $request->barang_kategori)->first();
-        // dd($kategori['Kategori_kategori']);
-
+        
+        // dd($kategori);
         if ($request->barang_kategori == 'DROPCORE') {
             $qty = $kategori->kategori_qty;
             $harga_satuan = $request->barang_harga / $qty;
@@ -106,7 +106,7 @@ class GudangController extends Controller
             $qty = $kategori->kategori_qty ;           
             $harga_satuan = $request->barang_harga / $qty;
         }
-
+        
         if ($request->barang_kategori == 'ONT') {
             $status = '1';
         } elseif ($request->barang_kategori == 'ADAPTOR') {

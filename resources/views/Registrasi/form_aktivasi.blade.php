@@ -186,10 +186,6 @@
         <div class="col-sm-4">
           <input type="text" class="form-control"  name="input_koordinat"  value="{{ Session::get('input_koordinat') }}">
         </div>
-        <label class="col-sm-2 col-form-label">Barang Id</label>
-        <div class="col-sm-4">
-          <input  type="text" class="form-control readonly" name="reg_barang"  value="{{ $data->registrasi_tiket->tiket_idbarang_keluar }}">
-        </div>
       </div>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Foto Rumah</label>

@@ -658,7 +658,6 @@ Data_Tiket::create($tiket);
             'reg_slot_odp' => 'required',
             'teknisi1' => 'required',
             'input_koordinat' => 'required',
-            'reg_barang' => 'required',
             'reg_img' => 'required|max:2000|mimes:jpg',
         ], [
             'reg_site.required' => 'Site tidak boleh kosong',
@@ -673,7 +672,6 @@ Data_Tiket::create($tiket);
             'reg_onuid.required' => 'Onu Id tidak boleh kosong',
             'reg_slot_odp.required' => 'Slot Odp tidak boleh kosong',
             'teknisi1.required' => 'Teknisi 1 tidak boleh kosong',
-            'reg_barang.required' => 'Barang Id tidak boleh kosong',
             'input_koordinat.required' => 'Koordinat Rumah pelanggan tidak boleh kosong',
             'reg_img.required' => 'Foto rumah tidak boleh kosong',
             'reg_img.max' => 'Ukuran foto terlalu besar',

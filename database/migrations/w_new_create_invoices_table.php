@@ -19,16 +19,6 @@ return new class extends Migration
             $table->string('inv_status')->nullable();
             $table->unsignedBigInteger('inv_idpel');
             $table->foreign('inv_idpel')->references('reg_idpel')->on('registrasis')->onDelete('cascade');
-            
-            // $table->string('inv_idpel')->nullable();
-            // $table->string('inv_nolayanan')->nullable();
-            // $table->string('inv_nama')->nullable();
-            // $table->string('inv_jenis_tagihan')->nullable();
-            // $table->string('inv_profile')->nullable();
-            // $table->string('inv_mitra')->nullable();
-            // $table->string('inv_kategori')->nullable();
-            // $table->string('inv_tgl_pasang')->nullable();
-
             $table->string('inv_tgl_tagih')->nullable();
             $table->string('inv_tgl_jatuh_tempo')->nullable();
             $table->string('inv_tgl_isolir')->nullable();
@@ -37,10 +27,8 @@ return new class extends Migration
             $table->string('inv_diskon')->nullable();
             $table->string('inv_total')->nullable();
             $table->enum('inv_cabar', ['TUNAI', 'TRANSFER','BILLER','SYSTEM']);
-            $table->string('inv_cabar')->nullable();
             $table->integer('inv_akun')->nullable();
             $table->string('inv_admin')->nullable();
-
             $table->string('inv_reference')->nullable();
             $table->string('inv_payment_method')->nullable();
             $table->string('inv_payment_method_code')->nullable();
