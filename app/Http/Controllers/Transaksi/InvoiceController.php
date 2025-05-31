@@ -233,8 +233,20 @@ class InvoiceController extends Controller
     public function sub_invoice($id)
     {
         $data['invoice'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->where('inv_id', $id)
             ->where('invoices.corporate_id',Session::get('corp_id'))
+             ->select([
+                'invoices.*',
+                'input_data.input_nama',
+                'input_data.input_alamat_pasang',
+                'input_data.input_hp',
+                'input_data.input_email',
+                'registrasis.reg_nolayanan',
+                // 'pakets.*',
+                // 'sub_invoices.*',
+                // 'sub_invoices.id as subinv_id',
+            ])
             ->first();
 
         if ($data['invoice']->inv_admin) {
@@ -254,10 +266,21 @@ class InvoiceController extends Controller
             ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->select([
+                // 'invoices.*',
+                // 'input_data.input_nama',
+                // 'input_data.input_alamat_pasang',
+                // 'input_data.input_hp',
+                // 'input_data.input_email',
+                // 'registrasis.*',
+                // 'pakets.*',
+                'sub_invoices.*',
+                'sub_invoices.id as subinv_id',
+            ])
             ->where('invoices.inv_id', $id)->get();
 
 
-        $data['sumharga'] = SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $id)->sum('subinvoice_total');
+        $data['sumharga'] = SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $id)->sum('subinvoice_harga');
         $data['sumppn'] = SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $id)->sum('subinvoice_ppn');
         $data['ppnj'] = env('PPN');
         $data['akun_tunai'] = $data['setting_akun'] = SettingAkun::where('corporate_id',Session::get('corp_id'))->where('akun_type', 'TUNAI')->get();
@@ -376,12 +399,26 @@ class InvoiceController extends Controller
                 'input_data.input_nama',
                 'pakets.paket_nama',
                 'routers.*',
-            ])
-            ->first();
+                ])
+                ->first();
+                // dd($tampil);
+
+              $tgl_bayar = date('Y-m-d H:i:s', strtotime(Carbon::now()));
+
+                    $now = Carbon::now();
+                    $month = $now->format('m');
+                    $year = $now->format('Y');
+
+
+            $cek_hari_bayar = date('d', strtotime($tgl_bayar));
+                if ($cek_hari_bayar >= 25) {
+                    $if_tgl_bayar = date('Y-m-d', strtotime(Carbon::create(date($year . '-' . $month . '-01'))->addMonth(1)->toDateString()));
+                } else {
+                    $if_tgl_bayar = $tgl_bayar;
+                }
 
         $diskon = $tampil->inv_diskon ??'0';
 
-        // dd($tampil);
         // $sum_fee = FtthFee::where('corporate_id',Session::get('corp_id'))->where('fee_idpel',$tampil->reg_idpel)->sum('reg_fee');
         $sumppn = SubInvoice::where('subinvoice_id', $id)->where('corporate_id',Session::get('corp_id'))->sum('subinvoice_ppn'); #hitung total ppn invoice
         $sumharga = SubInvoice::where('subinvoice_id', $id)->where('corporate_id',Session::get('corp_id'))->sum('subinvoice_harga'); #hitung total harga invoice
@@ -391,12 +428,41 @@ class InvoiceController extends Controller
         $inv_tgl_isolir = Carbon::create($tampil->inv_tgl_jatuh_tempo)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
         $inv_tgl_tagih = Carbon::create($tampil->inv_tgl_jatuh_tempo)->addDay(-$swaktu->wt_jeda_isolir_hari)->toDateString();
         $kurangi_tgl_jth_tempo = Carbon::create($tampil->inv_tgl_jatuh_tempo)->addMonth(-1)->toDateString();
+        
 
 
         MutasiSales::where('corporate_id',Session::get('corp_id'))->where('mutasi_sales_inv_id',$id)->delete();
 
-        // $data_rolback = Laporan::where('lap_id',$tampil->lap_id)->first();
-        // dd($data_rolback);
+           $sumppn = SubInvoice::where('subinvoice_id', $id)->where('corporate_id',Session::get('corp_id'))->sum('subinvoice_ppn'); #hitung total ppn invoice
+            $sumharga = SubInvoice::where('subinvoice_id', $id)->where('corporate_id',Session::get('corp_id'))->sum('subinvoice_harga'); #hitung total harga invoice
+            $sumhbph_uso = SubInvoice::where('subinvoice_id', $id)->where('corporate_id',Session::get('corp_id'))->sum('subinvoice_bph_uso'); #hitung total bph_uso invoice
+            $diskon = $tampil->inv_diskon;
+            $total_inv = $sumharga + $sumppn - $diskon;
+
+        $cek_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->whereDate('created_at', $if_tgl_bayar)->count();
+                if ($cek_trx > 0) {
+                    $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_debet');
+                    $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_qty');
+                } else {
+                    $sum_trx = '0';
+                    $count_trx = '0';
+                }
+
+            if ($count_trx == 0) {
+                $data_trx['corporate_id'] = Session::get('corp_id');
+                $data_trx['trx_kategori'] = 'Pendapatan';
+                $data_trx['trx_jenis'] = 'Invoice';
+                $data_trx['trx_admin'] = 'System';
+                $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
+                $data_trx['trx_qty'] = 1;
+                $data_trx['trx_debet'] = $total_inv;
+                Transaksi::create($data_trx);
+            } else {
+                $i = '1';
+                $data_trx['trx_qty'] = $count_trx - $i;
+                $data_trx['trx_debet'] = $sum_trx - $total_inv;
+                Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
+            }
 
 
         $data_lap['lap_fee_mitra'] = $tampil->lap_fee_mitra ?? '0';
@@ -510,13 +576,13 @@ class InvoiceController extends Controller
 
 
         $nama_user = Auth::user()->name; #NAMA USER
-        $tgl_bayar = date('Y-m-d ', strtotime(Carbon::now()));
+        $tgl_bayar = date('Y-m-d H:i:s', strtotime(Carbon::now()));
 
         $now = Carbon::now();
         $month = $now->format('m');
         $year = $now->format('Y');
 
-        $cek_inv = Laporan::where('lap_inv', $id)->where('lap_jenis_inv', 'Credit')->first();
+        $cek_inv = Laporan::where('lap_inv', $id)->where('corporate_id',Session::get('corp_id'))->where('lap_jenis_inv', 'Credit')->first();
         if ($cek_inv) {
             $notifikasi = array(
                 'pesan' => 'Invoice telah terbayar pada laporan admin',
@@ -524,6 +590,9 @@ class InvoiceController extends Controller
             );
             return redirect()->route('admin.inv.sub_invoice', ['id' => $id])->with($notifikasi);
         } else {
+
+
+            
             
             $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
                 ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -733,10 +802,11 @@ class InvoiceController extends Controller
             $reg['reg_status'] = 'PAID';
 
             Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
-            $cek_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->count();
+
+            $cek_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->whereDate('created_at', $if_tgl_bayar)->count();
                 if ($cek_trx > 0) {
-                    $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_debet');
-                    $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
+                    $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_debet');
+                    $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_qty');
                 } else {
                     $sum_trx = '0';
                     $count_trx = '0';
@@ -749,12 +819,14 @@ class InvoiceController extends Controller
                 $data_trx['trx_admin'] = 'System';
                 $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
                 $data_trx['trx_qty'] = 1;
-                $data_trx['trx_debet'] = $data_pelanggan->inv_total;
+                $data_trx['trx_debet'] = $total_inv;
+                $data_trx['created_at'] = $if_tgl_bayar;
                 Transaksi::create($data_trx);
             } else {
                 $i = '1';
                 $data_trx['trx_qty'] = $count_trx + $i;
-                $data_trx['trx_debet'] = $sum_trx + $data_pelanggan->inv_total;
+                $data_trx['trx_debet'] = $sum_trx + $total_inv;
+                $data_trx['created_at'] = $if_tgl_bayar;
                 Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
             }
 
@@ -828,7 +900,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             $data['subinvoice_id'] = $id;
             $data['subinvoice_deskripsi'] = $request->Deskripsi;
             $data['subinvoice_qty'] = $request->qty;
-            $data['subinvoice_harga'] = $request->harga;
+            $data['subinvoice_harga'] = $request->total;
             $data['subinvoice_ppn'] = $request->ppn;
             $data['subinvoice_total'] = $request->total;
             $data['subinvoice_status'] = '1';
@@ -851,119 +923,120 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
     public function addons_delete($id, $inv, $tot)
     {
-        $unp = Invoice::where('invoices.corporate_id',Session::get('corp_id'))->where('inv_id', $inv)->first();
+        // dd($id);
+        $unp = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_id', $inv)->first();
         $upd['inv_total'] = $unp->inv_total - $tot;
-        Invoice::where('invoices.corporate_id',Session::get('corp_id'))->where('inv_id', $inv)->update($upd);
-        SubInvoice::where('invoices.corporate_id',Session::get('corp_id'))->where('id', $id)->delete();
+        Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_id', $inv)->update($upd);
+        SubInvoice::where('corporate_id',Session::get('corp_id'))->where('id', $id)->delete();
         $notifikasi = array(
             'pesan' => 'Berhasil menghapus addons',
             'alert' => 'success',
         );
         return redirect()->route('admin.inv.sub_invoice', ['id' => $inv])->with($notifikasi);
     }
-    public function update_inv(Request $request, $inv_id)
-    {
-        $data_pelanggan = Invoice::where('inv_id', '=', $inv_id)
-            ->first();
-        $swaktu = SettingWaktuTagihan::first();
-        $tgl_tagih =  Carbon::create($request->tgl_jth_tempo)->addDay(-$swaktu->wt_jeda_tagihan_pertama)->toDateString();
-        $periode = date('d-m-Y', strtotime(Carbon::create($request->tgl_jth_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($request->tgl_jth_tempo)->addMonth(1)->toDateString()));
+    // public function update_inv(Request $request, $inv_id)
+    // {
+    //     $data_pelanggan = Invoice::where('inv_id', '=', $inv_id)
+    //         ->first();
+    //     $swaktu = SettingWaktuTagihan::first();
+    //     $tgl_tagih =  Carbon::create($request->tgl_jth_tempo)->addDay(-$swaktu->wt_jeda_tagihan_pertama)->toDateString();
+    //     $periode = date('d-m-Y', strtotime(Carbon::create($request->tgl_jth_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($request->tgl_jth_tempo)->addMonth(1)->toDateString()));
 
-        $cek_hari = date('d', strtotime($request->tgl_jth_tempo));
-        if ($cek_hari == 31) {
-            $jeda_waktu = '0';
-        } elseif ($cek_hari == 30) {
-            $jeda_waktu = '0';
-        } else {
-            $jeda_waktu = $swaktu->wt_jeda_isolir_hari;
-        }
-        $tgl_isolir =  Carbon::create($request->tgl_jth_tempo)->addDay($jeda_waktu)->toDateString();
-        // dd($data_pelanggan->inv_profile);
+    //     $cek_hari = date('d', strtotime($request->tgl_jth_tempo));
+    //     if ($cek_hari == 31) {
+    //         $jeda_waktu = '0';
+    //     } elseif ($cek_hari == 30) {
+    //         $jeda_waktu = '0';
+    //     } else {
+    //         $jeda_waktu = $swaktu->wt_jeda_isolir_hari;
+    //     }
+    //     $tgl_isolir =  Carbon::create($request->tgl_jth_tempo)->addDay($jeda_waktu)->toDateString();
+    //     // dd($data_pelanggan->inv_profile);
 
-        Invoice::where('inv_id', '=', $inv_id)->update([
-            'inv_tgl_tagih' => $tgl_tagih,
-            'inv_tgl_jatuh_tempo' => date('Y-m-d', strtotime($request->tgl_jth_tempo)),
-            'inv_tgl_isolir' => $tgl_isolir,
-            'inv_periode' => $periode,
-        ]);
+    //     Invoice::where('inv_id', '=', $inv_id)->update([
+    //         'inv_tgl_tagih' => $tgl_tagih,
+    //         'inv_tgl_jatuh_tempo' => date('Y-m-d', strtotime($request->tgl_jth_tempo)),
+    //         'inv_tgl_isolir' => $tgl_isolir,
+    //         'inv_periode' => $periode,
+    //     ]);
 
-        SubInvoice::where('subinvoice_id', '=', $inv_id)->update(
-            [
-                'subinvoice_id' => $inv_id,
-                'subinvoice_deskripsi' => $data_pelanggan->inv_profile . ' ( ' . $periode . ' )',
-            ]
-        );
-        $notifikasi = array(
-            'pesan' => 'Berhasil merubah tanggal jatuh tempo',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.inv.sub_invoice', ['id' => $inv_id])->with($notifikasi);
-    }
-    public function update_tgl_bayar(Request $request, $inv_id)
-    {
-        $data_pelanggan = Invoice::where('inv_id', '=', $inv_id)
-            ->first();
+    //     SubInvoice::where('subinvoice_id', '=', $inv_id)->update(
+    //         [
+    //             'subinvoice_id' => $inv_id,
+    //             'subinvoice_deskripsi' => $data_pelanggan->inv_profile . ' ( ' . $periode . ' )',
+    //         ]
+    //     );
+    //     $notifikasi = array(
+    //         'pesan' => 'Berhasil merubah tanggal jatuh tempo',
+    //         'alert' => 'success',
+    //     );
+    //     return redirect()->route('admin.inv.sub_invoice', ['id' => $inv_id])->with($notifikasi);
+    // }
+    // public function update_tgl_bayar(Request $request, $inv_id)
+    // {
+    //     $data_pelanggan = Invoice::where('inv_id', '=', $inv_id)
+    //         ->first();
 
-        Invoice::where('inv_id', '=', $inv_id)->update([
-            'inv_tgl_bayar' => date('Y-m-d', strtotime($request->tgl_bayar)),
-        ]);
+    //     Invoice::where('inv_id', '=', $inv_id)->update([
+    //         'inv_tgl_bayar' => date('Y-m-d', strtotime($request->tgl_bayar)),
+    //     ]);
 
-        $notifikasi = array(
-            'pesan' => 'Berhasil merubah tanggal bayar',
-            'alert' => 'success',
-        );
-        return redirect()->route('admin.inv.sub_invoice', ['id' => $inv_id])->with($notifikasi);
-    }
+    //     $notifikasi = array(
+    //         'pesan' => 'Berhasil merubah tanggal bayar',
+    //         'alert' => 'success',
+    //     );
+    //     return redirect()->route('admin.inv.sub_invoice', ['id' => $inv_id])->with($notifikasi);
+    // }
 
-    public function add_inv_manual(Request $request)
-    {
-        dd($request->add_nolayanan);
-        $now = Carbon::now();
-        $month = $now->format('m');
-        $hitung = Invoice::whereMonth('tgl_jatuh_tempo', $month)->counnt();
-        $year = $now->format('Y');
-        $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
-            ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
-            ->where('reg_nolayanan', '=', 240175402)
-            ->first();
-        $swaktu = SettingWaktuTagihan::first();
-        $i = 1338;
-        $inv_id = rand(1000, 1999) . $i++;
-        $hari_jt_tempo = date('d', strtotime($data_pelanggan->reg_tgl_jatuh_tempo));
-        $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($data_pelanggan->reg_tgl_tagih));
-        $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
-        $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($data_pelanggan->reg_tgl_jatuh_tempo));
-        $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
-        // dd($tgl_isolir);
-        Invoice::create([
-            'inv_id' => $inv_id,
-            'inv_status' => 'UNPAID',
-            'inv_idpel' => $data_pelanggan->reg_idpel,
-            'inv_nolayanan' => $data_pelanggan->reg_nolayanan,
-            'input_nama' => $data_pelanggan->input_nama,
-            'inv_jenis_tagihan' => $data_pelanggan->reg_jenis_tagihan,
-            'inv_profile' => $data_pelanggan->paket_nama,
-            'inv_mitra' => 'SYSTEM',
-            'inv_kategori' => 'OTOMATIS',
-            'inv_tgl_tagih' => $hari_tgl_tagih,
-            'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
-            'inv_tgl_isolir' => $tgl_isolir,
-            'inv_periode' => $periode1blan,
-            'inv_total' => $data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama,
-        ]);
+    // public function add_inv_manual(Request $request)
+    // {
+    //     dd($request->add_nolayanan);
+    //     $now = Carbon::now();
+    //     $month = $now->format('m');
+    //     $hitung = Invoice::whereMonth('tgl_jatuh_tempo', $month)->counnt();
+    //     $year = $now->format('Y');
+    //     $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
+    //         ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
+    //         ->where('reg_nolayanan', '=', 240175402)
+    //         ->first();
+    //     $swaktu = SettingWaktuTagihan::first();
+    //     $i = 1338;
+    //     $inv_id = rand(1000, 1999) . $i++;
+    //     $hari_jt_tempo = date('d', strtotime($data_pelanggan->reg_tgl_jatuh_tempo));
+    //     $hari_tgl_tagih = date($year . '-' . $month . '-d', strtotime($data_pelanggan->reg_tgl_tagih));
+    //     $periode1blan = date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->toDateString())) . ' - ' . date('d-m-Y', strtotime(Carbon::create($year . '-' . $month . '-' . $hari_jt_tempo)->addMonth(1)->toDateString()));
+    //     $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($data_pelanggan->reg_tgl_jatuh_tempo));
+    //     $tgl_isolir =  Carbon::create($tgl_jt_tempo)->addDay($swaktu->wt_jeda_tagihan_pertama)->toDateString();
+    //     // dd($tgl_isolir);
+    //     Invoice::create([
+    //         'inv_id' => $inv_id,
+    //         'inv_status' => 'UNPAID',
+    //         'inv_idpel' => $data_pelanggan->reg_idpel,
+    //         'inv_nolayanan' => $data_pelanggan->reg_nolayanan,
+    //         'input_nama' => $data_pelanggan->input_nama,
+    //         'inv_jenis_tagihan' => $data_pelanggan->reg_jenis_tagihan,
+    //         'inv_profile' => $data_pelanggan->paket_nama,
+    //         'inv_mitra' => 'SYSTEM',
+    //         'inv_kategori' => 'OTOMATIS',
+    //         'inv_tgl_tagih' => $hari_tgl_tagih,
+    //         'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
+    //         'inv_tgl_isolir' => $tgl_isolir,
+    //         'inv_periode' => $periode1blan,
+    //         'inv_total' => $data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama,
+    //     ]);
 
-        SubInvoice::create(
-            [
-                'subinvoice_id' => $inv_id,
-                'subinvoice_deskripsi' => $data_pelanggan->paket_nama . ' ( ' . $periode1blan . ' )',
-                'subinvoice_harga' => $data_pelanggan->reg_harga + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama,
-                'subinvoice_ppn' => $data_pelanggan->reg_ppn,
-                'subinvoice_total' => $data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama,
-                'subinvoice_qty' => 1,
-                'subinvoice_status' => 0,
-            ]
-        );
-    }
+    //     SubInvoice::create(
+    //         [
+    //             'subinvoice_id' => $inv_id,
+    //             'subinvoice_deskripsi' => $data_pelanggan->paket_nama . ' ( ' . $periode1blan . ' )',
+    //             'subinvoice_harga' => $data_pelanggan->reg_harga + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama,
+    //             'subinvoice_ppn' => $data_pelanggan->reg_ppn,
+    //             'subinvoice_total' => $data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama,
+    //             'subinvoice_qty' => 1,
+    //             'subinvoice_status' => 0,
+    //         ]
+    //     );
+    // }
 
 
     public function export_invoice(Request $request)

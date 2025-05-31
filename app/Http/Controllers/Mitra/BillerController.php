@@ -49,6 +49,7 @@ class BillerController extends Controller
         ->orWhere('registrasis.reg_nolayanan', '=', $id)
         ->orWhere('input_data.input_hp', '=', $id)
         ->orWhere('input_data.input_nama', '=', $id)
+        ->where('invoices.corporate_id',Session::get('corp_id'))
         ->latest('invoices.inv_tgl_jatuh_tempo')
         ->select([
                 'registrasis.reg_nolayanan',
@@ -65,10 +66,10 @@ class BillerController extends Controller
             $data['data'] = $query->inv_status;
         } else {
             $data['data'] = $query;
-            $data['biller'] = MitraSetting::where('mts_user_id', $admin_user)->first();
+            $data['biller'] = MitraSetting::where('mts_user_id', $admin_user)->where('corporate_id',Session::get('corp_id'))->first();
             $data['saldo'] = (new GlobalController)->total_mutasi($admin_user);
-            $data['sumharga'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_harga');
-            $data['sumppn'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->sum('subinvoice_ppn');
+            $data['sumharga'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->where('corporate_id',Session::get('corp_id'))->sum('subinvoice_harga');
+            $data['sumppn'] = SubInvoice::where('subinvoice_id', $data['data']->inv_id)->where('corporate_id',Session::get('corp_id'))->sum('subinvoice_ppn');
         }
         return response()->json($data);
     }
@@ -199,7 +200,8 @@ class BillerController extends Controller
     public function bayar(Request $request, $id)
     {
         
-        $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+        // $tgl_bayar = date('Y-m-d', strtotime(Carbon::now()));
+        $tgl_bayar = date('Y-m-d H:i:s', strtotime(Carbon::now()));
         $now = Carbon::now();
         $month = $now->format('m');
         $year = $now->format('Y');
@@ -396,10 +398,10 @@ class BillerController extends Controller
                         $reg['reg_status'] = 'PAID';
                         
                         Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
-                        $cek_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->count();
+                        $cek_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->whereDate('created_at', $if_tgl_bayar)->count();
                         if ($cek_trx > 0) {
-                            $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_debet');
-                            $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
+                            $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_debet');
+                            $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_qty');
                         } else {
                             $sum_trx = '0';
                             $count_trx = '0';

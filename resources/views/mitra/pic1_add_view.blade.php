@@ -69,9 +69,19 @@
                                 </div>
                                   <label class=" col-sm-2 col-form-label">Komisi</label>
                                 <div class="col-sm-4">
-                                  <input type="text" id="" class="form-control" name="mts_komisi" value="{{ Session::get('mts_komisi') }}">
+                                  <input type="text" id="" class="form-control" name="mts_komisi" value="{{ Session::get('mts_komisi') ?? '0' }}">
                                 </div>
                               </div>
+                              @if($Mitra)
+                              <div class="form-group row">
+                                <div class="col-sm-6">
+                              </div>
+                                  <label class=" col-sm-2 col-form-label">Limit Minus</label>
+                                  <div class="col-sm-4">
+                                  <input type="number" id="" class="form-control" name="mts_limit_minus" value="{{ Session::get('mts_limit_minus') ?? '0' }}">
+                                </div>
+                              </div>
+                              @endif
                               <div class="form-group row">
                                   <label class=" col-sm-2 col-form-label">Site</label>
                                 <div class="col-sm-4">

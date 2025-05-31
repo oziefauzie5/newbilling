@@ -10,7 +10,8 @@
               <h3 class="card-title">Data PIC Lingkungan</h3>
             </div>
               <div class="card-body">
-<a href="{{ route('admin.mitra.pic1_add_view') }}" class="btn btn-dark btn-sm" ><i class="fas fa-solid fa-plus"></i>&ensp;Tambah PIC Lingkungan</a><br><hr>
+<a href="{{ route('admin.mitra.pic1_add_view') }}" class="btn btn-dark btn-sm" ><i class="fas fa-solid fa-plus"></i>&ensp;Tambah PIC Lingkungan</a>
+<a href="{{ route('admin.mitra.mutasi_continue') }}" class="btn btn-dark btn-sm" ><i class="fas fa-solid fa-plus"></i>&ensp;Mutasi Continue a</a><br><hr>
 
 
 <div class="table-responsive">
@@ -26,7 +27,6 @@
                   <th>Phone</th>
                   <th>Alamat</th>
                   <th>Komisi</th>
-                  <th>Fee Continue</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,7 +48,6 @@
                    <td>{{$d->mitra_sub->count() ?? '-'}}</td>
                    <td>{{$d->user_mitra->hp ?? '-'}}</td>
                    <td>{{$d->user_mitra->alamat_lengkap ?? '-'}}</td>
-                   <td>Rp. {{ number_format($d->mts_komisi) ?? '0'}}</td>
                    <td>Rp. {{ number_format($d->mts_komisi) ?? '0'}}</td>
                    </tr>
                    @endforeach

@@ -18,5 +18,6 @@ class Transaksi extends Model
         'trx_kredit',
         'trx_debet',
         'trx_saldo',
+        'created_at',
     ];
 }

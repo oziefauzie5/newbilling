@@ -1,534 +1,5 @@
-	
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>{{Session::get('app_brand')}}</title>
-	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-	<link rel="icon" href="{{ asset('storage/img/'.Session::get('app_favicon')) }}" type="image/x-icon"/>
-
-	<!-- Fonts and icons -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
-	<script src="{{asset('atlantis/assets/js/plugin/webfont/webfont.min.js')}}"></script>
-	<script>
-		WebFont.load({
-			google: {"families":["Lato:300,400,700,900"]},
-			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ["{{asset('atlantis/assets/css/fonts.min.css')}}"]},
-			active: function() {
-				sessionStorage.fonts = true;
-			}
-		});
-	</script>
-	   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
-	   {{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" /> --}}
-
-	<!-- CSS Files -->
-	<link rel="stylesheet" href="{{asset('atlantis/assets/css/bootstrap.min.css')}}">
-	<link rel="stylesheet" href="{{asset('atlantis/assets/css/atlantis.min.css')}}">
-
-	<!-- CSS Just for demo purpose, don't include it in your project -->
-	<link rel="stylesheet" href="{{asset('atlantis/assets/css/demo.css')}}">
-
-	<style>
-		   /* HTML:  */
-		   .loader {
-  border: 5px solid #f3f3f3;
-  /* position: fixed; */
-  border-radius: 50%;
-  border-top: 5px solid #0d2a38;
-  margin-bottom: 30px;
-  width: 50px;
-  height: 50px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
-}
-
-/* Safari */
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-	</style>
-	<style>
-		.nav {
-			color:black
-		}
-		.card {
-			border-radius: 15px; overflow: hidden;
-		}
-		.btn {
-  border-radius: 15px;
-  font-weight: bold;
-}
-
-  .navbar-bg {
-          background-image: url('atlantis/assets/img/baground_navbar.jpeg');
-          background-size: cover;
-          /* Tambahkan properti lain seperti background-position, background-attachment, dll. */
-      }
-	</style>
-	<style>
-  hr{
-    border: none;
-  height: 1px;
-  /* Set the hr color */
-  color: #161616;  /* old IE */
-  background-color: #959292;  /* Modern Browsers */
-  }
-  .noted {
-    font-size: 11px;
-    color:rgb(255, 0, 0);
-  }
-  ul{
-    font-size: 12px;
-    color:rgb(255, 0, 0);
-  }
-</style>
-
-</head>
-<body>
-	<div class="wrapper">
-		<div class="main-header">
-			<!-- Logo Header -->
-			<div class="logo-header" data-background-color="blue" >
-
-			<a href="#" class="logo">
-					<!-- <img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" alt="navbar brand" class="navbar-brand"> -->
-					<h3 class="navbar-brand text-light"><strong> {{Session::get('app_brand')}}</strong></h3>
-				</a>
-				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon">
-						<i class="icon-menu"></i>
-					</span>
-				</button>
-				<button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
-				<div class="nav-toggle">
-					<button class="btn btn-toggle toggle-sidebar">
-						<i class="icon-menu"></i>
-					</button>
-				</div>
-			</div>
-			<!-- End Logo Header -->
-
-			<!-- Navbar Header -->
-			<nav class="navbar navbar-header navbar-expand-lg"  data-background-color="blue2">
-				
-				<div class="container-fluid">
-					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-						
-						<li class="nav-item dropdown hidden-caret">
-							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
-								<div class="avatar-sm">
-									<img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
-								</div>
-							</a>
-							<ul class="dropdown-menu dropdown-user animated fadeIn">
-								<div class="dropdown-user-scroll scrollbar-outer">
-									<li>
-										<div class="user-box">
-											<div class="avatar-lg"><img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
-											</div>
-											
-											<div class="u-text">
-												<h4>{{Auth::user()->name;}}</h4>
-											</div>
-										</div>
-									</li>
-									<li>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="#">Logout</a>
-									</li>
-								</div>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</nav>
-			<!-- End Navbar -->
-		</div>
-		
-		<!-- Sidebar -->
-		<div class="sidebar sidebar-style-2 " style="position: fixed; background-image: url({{asset('atlantis/assets/img/bg-sidebar.png')}}) ">			
-			<!-- <div class="sidebar sidebar-style-2 " style="background-color: green">			 -->
-				<div class="sidebar-wrapper scrollbar scrollbar-inner">
-				<div class="sidebar-content">
-					<div class="user">
-						<div class="avatar-sm float-left mr-2">
-							<img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
-						</div>
-						<div class="info">
-							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
-								<span>
-									<span class="user-level">{{Auth::user()->name}}</span>
-									<span class="user-level">{{Session::get('nama_roles')}}</span>
-									<span class="user-level">{{Auth::user()->user_corporate_id}}</span>
-								</span>
-							</a>
-							{{-- <div class="clearfix"></div> --}}
-						</div>
-					</div>
-					<ul class="nav nav-primary">
-						<li class="nav-item {{\Route::is('admin.home') ? 'active' : ''}}">
-							<a href="{{route('admin.home')}}" class="collapsed" aria-expanded="false">
-								<i class="fas fa-home"></i>
-								<p>Dashboard</p>
-							</a>
-						</li>
-						@role('admin|STAF ADMIN')
-						<li class="nav-item {{\Route::is('admin.kemitraan.*') ? 'active' : ''}}">
-							<a href="{{route('admin.mitra.index')}}">
-								<i class="fas fas fa-user-friends"></i>
-								<p>Corporate</p>
-							</a>
-						</li>
-						<li class="nav-item {{\Route::is('admin.mitra.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#mitra">
-								<i class="fas fa-user-friends"></i>
-								<p>Mitra</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="mitra">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.mitra.index')}}">
-											<span class="sub-item">Biller</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.mitra.pic1_view')}}">
-											<span class="sub-item">Pic Lingkungan</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
-						<li class="nav-item {{\Route::is('admin.vhc.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#vhc">
-								<i class="fas fa-wifi"></i>
-								<p>Hotspot</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="vhc">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.vhc.data_voucher')}}">
-											<span class="sub-item">Data Voucher</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.vhc.titik_vhc')}}">
-											<span class="sub-item">Titik Voucher</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
-						@endrole
-						@role('admin|STAF ADMIN|NOC')
-						<li class="nav-item {{\Route::is('admin.psb.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#base">
-								<i class="fas fa-users"></i>
-								<p>FTTH</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="base">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.psb.list_input')}}">
-											<span class="sub-item">Input Data</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.psb.ftth')}}">
-											<span class="sub-item">Registrasi</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.psb.ftth')}}">
-											<span class="sub-item">Data Pelanggan</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.psb.listputus_langganan')}}">
-											<span class="sub-item">Putus Berlangganan</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
-						@endrole
-						@role('admin|NOC|STAF ADMIN')
-						<li class="nav-item {{\Route::is('admin.tiket.*') ? 'active' : ''}}">
-							<a href="{{route('admin.tiket.dashboard_tiket')}}">
-								<i class="fas fa-ticket-alt"></i>
-								<p>Tiket</p>
-							</a>
-						</li>
-						@endrole
-						@role('admin|STAF ADMIN')
-						
-						<li class="nav-item {{\Route::is('admin.lap.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#keuangan">
-								<i class="fas fa-random"></i>
-								<p>Keuangan</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="keuangan">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.lap.jurnal')}}">
-											<span class="sub-item">Jurnal</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.trx.pencairan_operasional')}}">
-											<span class="sub-item">Pencairan PSB & Sales</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.trx.laporan_harian')}}">
-											<span class="sub-item">Laporan Harian</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.lap.pinjaman')}}">
-											<span class="sub-item">Pinjaman</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
-						<li class="nav-item {{\Route::is('admin.inv.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#transaksi">
-								<i class="fas fa-receipt"></i>
-								<p>Transaksi</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="transaksi">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.inv.index')}}">
-											<span class="sub-item">Invoice Unpaid</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.inv.paid')}}">
-											<span class="sub-item">Invoice Paid</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.inv.trx.index')}}">
-											<span class="sub-item">Transaksi</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
-						<li class="nav-item {{\Route::is('admin.gudang.*') ? 'active' : ''}}">
-							<a href="{{route('admin.gudang.stok_gudang')}}">
-								<i class="fas fa-list-alt"></i>
-								<p>Gudang</p>
-							</a>
-						</li>
-						<li class="nav-item {{\Route::is('admin.wa.*') ? 'active' : ''}}">
-							<a href="{{route('admin.wa.index')}}">
-								<i class="fab fa-whatsapp"></i>
-								<p>whatsapp</p>
-							</a>
-						</li>
-						@role('admin|STAF ADMIN')
-						<li class="nav-item">
-							<a data-toggle="collapse" href="#charts">
-								<i class="fas fa-cog"></i>
-								<p>Setting</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="charts">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.user.index')}}">
-											<span class="sub-item">User</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.app.index')}}">
-											<span class="sub-item">Aplikasi</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.app.site')}}">
-											<span class="sub-item">Site</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.app.wa_getewai')}}">
-											<span class="sub-item">Whatsapp Getewai</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.app.kelurahan')}}">
-											<span class="sub-item">Data Kelurahan</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.app.kendaraan')}}">
-											<span class="sub-item">Kendaraan</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
-						@endrole
-						@endrole
-						@role('admin|NOC')
-						<li class="nav-item {{\Route::is('admin.topologi.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#sidebartopologi">
-								<i class="fas fa-server"></i>
-								<p>Data Topologi</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="sidebartopologi">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.topo.pop')}}">
-											<span class="sub-item">POP</span>
-										</a>
-									</li>
-										<li>
-										<a href="{{route('admin.topo.index')}}">
-											<span class="sub-item">Router</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.topo.olt')}}">
-											<span class="sub-item">OLT</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.topo.odc')}}">
-											<span class="sub-item">ODC</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.topo.odp')}}">
-											<span class="sub-item">ODP</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</li>
-						<li class="nav-item {{\Route::is('admin.noc.*') ? 'active' : ''}}">
-							<a data-toggle="collapse" href="#sidebarNoc">
-								<i class="fas fa-server"></i>
-								<p>NOC</p>
-								<span class="caret"></span>
-							</a>
-							<div class="collapse" id="sidebarNoc">
-								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.noc.index')}}">
-											<span class="sub-item">Pengecekan</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.noc.pengecekan_barang')}}">
-											<span class="sub-item">Pengecekan-barang</span>
-										</a>
-									</li>
-									@role('admin')
-									<li>
-										<a href="{{route('admin.router.noc.index')}}">
-											<span class="sub-item">Paket</span>
-										</a>
-									</li>
-									@endrole
-								</ul>
-							</div>
-								{{-- </ul>
-							</div> --}}
-						</li>
-						@endrole
-						<li class="nav-item">
-							<a  href="{{ route('logout') }}">
-								<i class="fas fa-sign-out-alt"></i>
-								<p>Logout</p>
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<!-- End Sidebar -->
-
-		<div class="main-panel">
-			
- @yield('content')
-      		</div>
-
-		<!-- End Custom template -->
-	</div>
-	<!--   Core JS Files   -->
-	<script src="{{asset('atlantis/assets/js/core/jquery.3.2.1.min.js')}}"></script>
-	<script src="{{asset('atlantis/assets/js/core/popper.min.js')}}"></script>
-	<script src="{{asset('atlantis/assets/js/core/bootstrap.min.js')}}"></script>
-
-	<!-- jQuery UI -->
-	<script src="{{asset('atlantis/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js')}}"></script>
-	<script src="{{asset('atlantis/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js')}}"></script>
-
-	<!-- jQuery Scrollbar -->
-	<script src="{{asset('atlantis/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js')}}"></script>
-
-
-	<!-- Chart JS -->
-	<script src="{{asset('atlantis/assets/js/plugin/chart.js/chart.min.js')}}"></script>
-
-	<!-- jQuery Sparkline -->
-	<script src="{{asset('atlantis/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js')}}"></script>
-
-	<!-- Chart Circle -->
-	<script src="{{asset('atlantis/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
-
-	<!-- Datatables -->
-	<script src="{{asset('atlantis/assets/js/plugin/datatables/datatables.min.js')}}"></script>
-
-	<!-- Bootstrap Notify -->
-	<script src="{{asset('atlantis/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js')}}"></script>
-
-	<!-- jQuery Vector Maps -->
-	<script src="{{asset('atlantis/assets/js/plugin/jqvmap/jquery.vmap.min.js')}}"></script>
-	<script src="{{asset('atlantis/assets/js/plugin/jqvmap/maps/jquery.vmap.world.js')}}"></script>
-
-	<!-- Sweet Alert -->
-	<script src="{{asset('atlantis/assets/js/plugin/sweetalert/sweetalert.min.js')}}"></script>
-
-	<!-- Atlantis JS -->
-	<script src="{{asset('atlantis/assets/js/atlantis.min.js')}}"></script>
-	{{-- <script src="{{asset('appbill/appbill.js')}}"></script> --}}
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
-	{{-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> --}}
-	
-	
-	<!-- Atlantis DEMO methods, don't include it in your project! -->
-	{{-- <script src="{{asset('atlantis/assets/js/setting-demo.js')}}"></script>
-	<script src="{{asset('atlantis/assets/js/demo.js')}}"></script> --}}
-
-
-
-
-  <script >
-	//--------------------START FORMAT MAC----------------------
+//--------------------START FORMAT MAC----------------------
 	  $(document).ready(function() {
 		  //format mac adrress Aktivasi pelanggan
 		  document.getElementById("mac").addEventListener('keyup', function() { 
@@ -628,55 +99,11 @@
 				"pageLength": 10,
 			});
 
-			// #EDIT INPUT DATA
-// 			var table = $('#edit_inputdata').DataTable(); $('#edit_inputdata tbody').on( 'click', 'tr', function () 
-// 			{  
-// 			var idpel = table.row( this ).id();
-
-			
-// 			var url = '{{ route("admin.psb.edit_inputdata", ":id") }}';
-// 			url = url.replace(':id', idpel);
-// 			// console.log(idpel);
-// 			$.ajax({
-//                     url: url,
-//                     type: 'GET',
-//                     data: {
-//                         '_token': '{{ csrf_token() }}'
-//                     },
-//                     dataType: 'json',
-//                     success: function(data) {
-// 						if (data) {
-// 							$('#modal_edit').modal('show')
-// 							// console.log(data[0]['input_nama'])
-// 							$("#edit_id").val(data[0]['id']);
-// 							$("#edit_input_nama").val(data[0]['input_nama']);
-// 							$("#edit_input_hp").val(data[0]['input_hp']);
-// 							$("#edit_input_hp2").val(data[0]['input_hp_2']);
-// 							$("#edit_input_ktp").val(data[0]['input_ktp']);
-// 							$("#edit_input_email").val(data[0]['input_email']);
-// 							$("#edit_input_alamat_ktp").val(data[0]['input_alamat_ktp']);
-// 							$("#edit_input_alamat_pasang").val(data[0]['input_alamat_pasang']);
-// 							$("#edit_input_seles").val(data[0]['input_seles']);
-// 							$("#edit_input_subseles").val(data[0]['input_subseles']);
-// 							$("#edit_input_maps").val(data[0]['input_maps']);
-// 							$("#edit_input_keterangan").val(data[0]['input_keterangan']);			 
-// 							$("#edit_input_status").val(data[0]['input_status']);			 
-//                         } else {
-							
-//                         }
-//                     }
-//                 });
-//  });
- 
 		});
-	</script>
 
-	<script>
 		$(document).ready(function() {
 } );
-	</script>
-	{{-- Start Router --}}
-	<script>
+
 
 function myFunction() {
       var x = document.getElementById("router_password");
@@ -1191,387 +618,8 @@ $("#reg_kode_dropcore").keyup(function(){
 
 
 });
-		</script>
-		
-		{{-- End Router --}}
 
-
-		
-
-<!-- {{-- START VALISASI KODE BARANG REGISTRASI --}}
-
-		<script>
-
-			$(document).ready(function() {
-				
-				//Validasi Pactcore
-				
-			$("#pactcore").click(function() {
-				if($(this).is(":checked")) {
-					$('#modal_pactcore').modal('show')
-
-				} else {
-					$('#validasi').removeClass("has-error has-feedback");
-					$('#validasi').removeClass("has-success");
-					$("#kode_pactcore").val('');
-					$('#notif').html('');
-					$('#note').html('');
-				}
-			});
-			$('.hide_pachcore').click(function(){
-				$("#modal_pactcore").modal('hide');
-				$("#pactcore").prop('checked', false);
-				$('#validasi').removeClass("has-error has-feedback");
-				$('#validasi').removeClass("has-success");
-				$("#kode_pactcore").val('');
-				$('#notif').html('');
-				$('#note').html('');
-			});
-
-				$('.val_pachcore').click(function(){
-					var kode_pact = $('#kode_pactcore').val();
-					var url = '{{ route("admin.reg.validasi_pachcore", ":id") }}';
-					url = url.replace(':id', kode_pact);
-						$.ajax({
-							url: url,
-							type: 'GET',
-							data: {
-								'_token': '{{ csrf_token() }}'
-							},
-							dataType: 'json',
-							success: function(data) {
-								if(data.barang_id){
-										let stok_barang = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(data.barang_dijual) - parseInt(data.barang_rusak) - parseInt(data.barang_dicek);
-										if( stok_barang == 0){
-										$("#validasi").addClass("has-error has-feedback");
-										$('#notif').html('<small class="form-text text-muted text-danger">Kode Pactcore tidak ada atau telah digunakan</small>');
-										$('#note').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-										} else{
-											$('#validasi').removeClass("has-error has-feedback");
-											$("#validasi").addClass("has-success");
-											$('#notif').html('');
-											$("#modal_pactcore").modal('hide');
-											$('#note').html('');
-										}
-								}else{
-									$("#validasi").addClass("has-error has-feedback");
-									$('#notif').html('<small class="form-text text-muted text-danger">Kode Pactcore tidak ada atau telah digunakan</small>');
-									$('#note').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-								}
-							},
-							error: function(data) {
-								$("#validasi").addClass("has-error has-feedback");
-								$('#notif').html('<small class="form-text text-muted text-danger">Kode Pactcore tidak boleh kosong</small>');
-								$('#note').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-							}
-						});
-					});
-				
-
-
-				// #VALIDASI KODE ADAPTOR
-			$("#adaptor").click(function() {
-				if($(this).is(":checked")) {
-					$('#modal_adaptor').modal('show')
-
-				} else {
-					$('#validasi_adp').removeClass("has-error has-feedback");
-					$('#validasi_adp').removeClass("has-success");
-					$("#kode_adaptor").val('');
-					$('#notif_adp').html('');
-					$('#note_adp').html('');
-				}
-			});
-			$('.hide_adp').click(function(){
-				$("#modal_adaptor").modal('hide');
-				$("#adaptor").prop('checked', false);
-				$('#validasi_adp').removeClass("has-error has-feedback");
-				$('#validasi_adp').removeClass("has-success");
-				$("#kode_adaptor").val('');
-				$('#notif_adp').html('');
-				$('#note_adp').html('');
-
-			});
-
-
-				$('.val_adp').click(function(){
-					var kode_adp = $('#kode_adaptor').val();
-					var url = '{{ route("admin.reg.validasi_adaptor", ":id") }}';
-					url = url.replace(':id', kode_adp);
-				$.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-						'_token': '{{ csrf_token() }}'
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-						// console.log(data)
-						if(data.barang_id){
-							let stok_barang = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(data.barang_dijual) - parseInt(data.barang_rusak) - parseInt(data.barang_dicek);
-							if( stok_barang == 0){
-								$("#validasi_adp").addClass("has-error has-feedback");
-								$('#notif_adp').html('<small class="form-text text-muted text-danger">Kode adaptor tidak ada atau telah digunakan</small>');
-								$('#note_adp').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan barang sudah dicek</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-							} else{
-								$('#validasi_adp').removeClass("has-error has-feedback");
-								$("#validasi_adp").addClass("has-success");
-								$('#notif_adp').html('');
-								$("#modal_adaptor").modal('hide');
-								$('#note_adp').html('');
-							}
-						}else{
-							$("#validasi_adp").addClass("has-error has-feedback");
-							$('#notif_adp').html('<small class="form-text text-muted text-danger">Kode adaptor tidak ada atau telah digunakan</small>');
-							$('#note_adp').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-						}
-                    },
-					error: function(data) {
-						$("#validasi_adp").addClass("has-error has-feedback");
-						$('#notif_adp').html('<small class="form-text text-muted text-danger">Kode adaptor tidak boleh kosong</small>');
-						$('#note_adp').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-						
-					}
-				});
-			});
-
-
-			//Validasi ONT
-				
-			$("#ont").click(function() {
-				if($(this).is(":checked")) {
-					$('#modal_ont').modal('show')
-					$('.ont').attr('required', 'required');
-					
-
-				} else {
-					$('#validasi_ont').removeClass("has-error has-feedback");
-					$('#validasi_ont').removeClass("has-success");
-					$("#kode_ont").val('');
-					$('#notif_ont').html('');
-					$('#note_ont').html('');
-					$('#reg_mac').val('');
-					$('#reg_mac_olt').val('');
-					$('#reg_sn').val('');
-					$('#reg_mrek').val('');
-					$('.ont').removeAttr('required');
-					
-				}
-			});
-			$('.hide_ont').click(function(){
-				$("#modal_ont").modal('hide');
-				$("#ont").prop('checked', false);
-				$('#validasi_ont').removeClass("has-error has-feedback");
-				$('#validasi_ont').removeClass("has-success");
-				$("#kode_ont").val('');
-				$('#notif_ont').html('');
-				$('#note_ont').html('');
-				$('#reg_mac').val('');
-				$('#reg_mac_olt').val('');
-				$('#reg_sn').val('');
-				$('#reg_mrek').val('');
-				$('#reg_nama_barang').val('');
-			});
-
-				$('.val_ont').click(function(){
-					var kode_pact = $('#kode_ont').val();
-					var url = '{{ route("admin.reg.validasi_ont", ":id") }}';
-					url = url.replace(':id', kode_pact);
-						$.ajax({
-							url: url,
-							type: 'GET',
-							data: {
-								'_token': '{{ csrf_token() }}'
-							},
-							dataType: 'json',
-							success: function(data) {
-								// console.log(data)
-								if(data.barang_id){
-									let stok_barang = parseInt(data.barang_qty) - parseInt(data.barang_digunakan) - parseInt(data.barang_dijual) - parseInt(data.barang_rusak) - parseInt(data.barang_dicek);
-									if( stok_barang == 0){
-										// alert('aaa')
-										$("#validasi_ont").addClass("has-error has-feedback");
-										$('#notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak ada atau telah digunakan</small>');
-										$('#note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Pastikan stok barang tersedia</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-										$('#reg_mac').val('');
-										$('#reg_mac_olt').val('');
-										$('#reg_sn').val('');
-										$('#reg_mrek').val('');
-										$('#reg_nama_barang').val('');
-									}else {
-										if(data.barang_mac == null && data.barang_mac_olt == null && data.barang_sn == null ){
-											$("#validasi_ont").addClass("has-error has-feedback");
-											$('#notif_ont').html('<small class="form-text text-muted text-danger">Mac address / Mac address OLT / Sn  belum di update </small>');
-											$('#note_ont').html('<ul><li>barang belum di cek</li></ul>');
-											$('#reg_mac').val('');
-											$('#reg_mac_olt').val('');
-											$('#reg_sn').val('');
-											$('#reg_mrek').val('');
-											$('#reg_nama_barang').val('');
-										} else {
-											$('#validasi_ont').removeClass("has-error has-feedback");
-											$("#validasi_ont").addClass("has-success");
-											$('#notif_ont').html('');
-											$("#modal_ont").modal('hide');
-											$('#note_ont').html('');
-											$('#reg_mac').val(data.barang_mac);
-											$('#reg_mac_olt').val(data.barang_mac_olt);
-											$('#reg_sn').val(data.barang_sn);
-											$('#reg_mrek').val(data.barang_merek);
-											$('#reg_nama_barang').val(data.barang_nama);
-										
-									}
-
-								}
-									
-								}else{
-									$("#validasi_ont").addClass("has-error has-feedback");
-									$('#notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak ada atau telah digunakan</small>');
-									$('#note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-									$('#reg_mac').val('');
-									$('#reg_mac_olt').val('');
-									$('#reg_sn').val('');
-									$('#reg_mrek').val('');
-									$('#reg_nama_barang').val('');
-								}
-							},
-							error: function(data) {
-								$("#validasi_ont").addClass("has-error has-feedback");
-								$('#notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak boleh kosong</small>');
-								$('#note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-								$('#reg_mac').val('');
-								$('#reg_mac_olt').val('');
-									$('#reg_sn').val('');
-									$('#reg_mrek').val('');
-									$('#reg_nama_barang').val('');
-							}
-						});
-					});
-
-
-		});
-			
-			
-
-
-
-			
-			
-			
-			
-			
-			
-				</script>
-{{-- END VALISASI KODE BARANG REGISTRASI --}}
-{{-- START VALISASI KODE BARANG REGISTRASI=EDIT
-
-		<script>
-
-			$(document).ready(function() {
-			$("#edit_ont").click(function() {
-				if($(this).is(":checked")) {
-					$('#edit_modal_ont').modal('show')
-					$('.edit_ont').attr('required', 'required');
-
-				} else {
-					$('#edit_validasi_ont').removeClass("has-error has-feedback");
-					$('#edit_validasi_ont').removeClass("has-success");
-					$("#edit_kode_ont").val('');
-					$('#edit_notif_ont').html('');
-					$('#edit_note_ont').html('');
-					$('#edit_reg_mac').val('');
-					$('#edit_reg_sn').val('');
-					$('#edit_reg_mrek').val('');
-					$('#alasan').val('');
-					$('#keterangan').val('');
-					$('.edit_ont').removeAttr('required');
-					$("#edit_validasi_keterangan").removeClass("has-error has-feedback");
-								$('#edit_notif_keterangan').html('');
-								$("#edit_validasi_alasan").removeClass("has-error has-feedback");
-						$('#edit_notif_alasan').html('');
-				}
-			});
-			$('.edit_hide_ont').click(function(){
-				$("#edit_modal_ont").modal('hide');
-				$("#edit_ont").prop('checked', false);
-				$('#edit_validasi_ont').removeClass("has-error has-feedback");
-				$('#edit_validasi_ont').removeClass("has-success");
-				$("#edit_kode_ont").val('');
-				$('#edit_notif_ont').html('');
-				$('#edit_note_ont').html('');
-				$('#edit_reg_mac').val('');
-				$('#edit_reg_sn').val('');
-				$('#edit_reg_mrek').val('');
-			});
-
-				$('.edit_val_ont').click(function(){
-
-					if($('#alasan').val()=== ""){
-						$("#edit_validasi_alasan").addClass("has-error has-feedback");
-						$('#edit_notif_alasan').html('<small class="form-text text-muted text-danger">Alasan tidak boleh kosong</small>');
-					}  else {
-						$('#edit_validasi_alasan').removeClass("has-error has-feedback");
-						$('#edit_notif_alasan').html('');
-						if($('#keterangan').val()=== ""){
-								$("#edit_validasi_keterangan").addClass("has-error has-feedback");
-								$('#edit_notif_keterangan').html('<small class="form-text text-muted text-danger">keterangan tidak boleh kosong</small>');
-							} else {
-								$('#edit_validasi_keterangan').removeClass("has-error has-feedback");
-								$('#edit_notif_keterangan').html('');
-								var kode_pact = $('#edit_kode_ont').val();
-					var url = '{{ route("admin.reg.validasi_ont", ":id") }}';
-					url = url.replace(':id', kode_pact);
-					
-						$.ajax({
-							url: url,
-							type: 'GET',
-							data: {
-								'_token': '{{ csrf_token() }}'
-							},
-							dataType: 'json',
-							success: function(data) {
-								if(data.id_subbarang){
-									
-									$('#edit_validasi_ont').removeClass("has-error has-feedback");
-									$("#edit_validasi_ont").addClass("has-success");
-									$('#edit_notif_ont').html('');
-									$("#edit_modal_ont").modal('hide');
-									$('#edit_note_ont').html('');
-									$('#edit_reg_mac').val(data.subbarang_mac);
-									$('#edit_reg_sn').val(data.subbarang_sn);
-									$('#edit_reg_mrek').val(data.subbarang_nama);
-								}else{
-									$("#edit_validasi_ont").addClass("has-error has-feedback");
-									$('#edit_notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak ada atau telah digunakan</small>');
-									$('#edit_note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-									$('#edit_reg_mac').val('');
-									$('#edit_reg_sn').val('');
-									$('#edit_reg_mrek').val('');
-								}
-							},
-							error: function(data) {
-								$("#edit_validasi_ont").addClass("has-error has-feedback");
-								$('#edit_notif_ont').html('<small class="form-text text-muted text-danger">Kode ont tidak boleh kosong</small>');
-								$('#edit_note_ont').html('<ul><li>Pastikan kode belum digunkan</li><li>Pastikan kode terdaftar pada sistem</li><li>Kode yang dimasukan harus sesuai kategori barang</li></ul>');
-								$('#edit_reg_mac').val('');
-									$('#edit_reg_sn').val('');
-									$('#edit_reg_mrek').val('');
-							}
-						});
-							}
-					}
-				});
-
-
-		});
-			
-				</script> --}}
-{{-- END VALISASI KODE BARANG REGISTRASI=EDIT --}} -->
-
-
-		{{-- TAMBAH PAKET --}}
-		<script>
-			$(document).ready(function() {
+$(document).ready(function() {
 				var button = $('#Button');
     			$(button).attr('disabled', 'disabled');
 				$('#paket_router').on('change', function() {
@@ -1610,53 +658,8 @@ $("#reg_kode_dropcore").keyup(function(){
             }
  });
 });
-</script>
 
-
-
-
-{{-- END TAMBAH PAKET --}}
-	<script>
-//  NOTIFIKASI
-@if (Session::has('pesan'))
-swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
-						icon : "{{Session::get('alert')}}",
-						buttons: {        			
-							confirm: {
-								className : 'btn btn-success'
-							}
-						},
-					});
-@endif
-
-	//   function validasiKtp() {
-	// 		var input_ktp =$("#input_ktp").val();
-
-	// 		var url = '{{ route("admin.psb.storeValidateKtp", ":ktp") }}';
-	// 		url = url.replace(':ktp', '1');
-	// 		$.ajax({
-	// 			url: url,
-	// 			type: 'PUT',
-	// 			data: {
-    //                 input_ktp:input_ktp,
-    //                       '_token': '{{ csrf_token() }}'
-    //                     },
-    //                     dataType: 'json',
-    //                     success: function(data) {
-							
-    //                                  },
-	// 					error: function(response){
-	// 						$.each( response.responseJSON.errors, function( key, value ) {
-	// 							console.log(value);has-error
-    //                 });
-    //             }
-    //                 });
-	// 			}
-				
-				//  #START EDIT BARANG 
-			</script>
-				<script type="text/javascript">
-					$(document).ready(function(){
+$(document).ready(function(){
 					  $("#qty, #harga,#editharga,#editqty").keyup(function() {
 							  var harga  = $("#harga").val();
 							  var jumlah = $("#qty").val();
@@ -1677,9 +680,10 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 					  });
 					});
 					//  END EDIT BARANG
-					</script>
-				
-					<script>
+
+
+
+					
 						// START DETAIL INVOICE
 						$('.href_inv').click(function(){
 							var id =$(this).data("id");
@@ -1688,8 +692,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 							// alert(url);
 							window.location=url;
 						});
-					</script>
-					<script>
 						// #DINVOICE
 						$(function() {
     enable_cb();
@@ -1760,9 +762,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
     var idi = $('#inv_id').val();
     var harga = $('#inv_harga').val();
     var jumlah = $('#inv_jumlah').val();
-    var inv_ppn = $('#inv_ppn').val();
-	var total = parseInt(jumlah)+parseInt(inv_ppn)-parseInt(diskon);
-    // var total = jumlah+inv_ppn-diskon;
+    var total = jumlah-diskon;
     var url = '{{ route("admin.inv.addDiskon", ":id") }}';
     url = url.replace(':id', idi);
                 $.ajax({
@@ -1855,9 +855,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 		}
 	});
 
-    
-	</script>
-	<script>
 	$('.whatsapp').change(function () {
 		if ($(this).is(":checked")) {
 			$('#wa').html('Enable');
@@ -1868,8 +865,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			alert('Disable');
 		}
 	});
-	</script>
-		<script>
 			// BUAT TIKET
 			$(function(){ 
   var table = $('#tiket_pilih_pelanggan').DataTable(); $('#tiket_pilih_pelanggan tbody').on( 'click', 'tr', function () 
@@ -1894,8 +889,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
                 });
 			});
 		});
-		</script>
-		<script>
 			// DETAILS TIKET
 			$('.tiket').click(function(){
 				var id =$(this).data("id");
@@ -1920,8 +913,6 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 				// alert(url);
 				window.location=url;
 			});
-		</script>
-    <script>
 		//TOPUP
         document.getElementById('selectAllCheckbox')
                   .addEventListener('change', function () {
@@ -1988,9 +979,7 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
                 });
 		});  
 			
-			
-			</script>
-    <script>
+
 		// pencairan
         // document.getElementById('selectAllpencairan')
         //           .addEventListener('change', function () {
@@ -2330,9 +1319,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 
 //akhir
 });
-			</script>
 
-			<script>
 					//--------------------START DEAKTIVASI----------------------
 					$(document).ready(function() {
 					// 
@@ -2518,10 +1505,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					});
 		
 					//--------------------END DEAKTIVASI----------------------
-					</script>
-					
 
-					<script>
 						//--------------------START BARANG KELUAR----------------------
 						$('.button_masukan').click(function(){
 								var i = 1;
@@ -2725,9 +1709,6 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 								//--------------------END BARANG KELUAR----------------------
 			
 
-					</script>
-					<script>
-						
 						//--------------------START TIKET BARANG KELUAR----------------------
 							$('.button_tambah_barang').click(function(){
 								var i = 1;
@@ -2922,11 +1903,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 								});
 								// });
 								//--------------------END TIKET BARANG KELUAR----------------------
-			
 
-					</script>
-
-<script>
 					//--------------------START TIKET CLOSE GANTI BARANG----------------------
 					$(document).ready(function() {
 					// 
@@ -3042,9 +2019,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					});
 		
 					//--------------------END TIKET CLOSE GANTI BARANG----------------------
-					</script>
 
-					<script>
 						//-----------------------START CLOSED TIKET NEW ---------------------------
 							$('select[name=tiket_status]').change(function () {
 								if ($(this).val() == 'Pending') {
@@ -3219,9 +2194,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 								};
 							});
 						//-----------------------END CLOSED TIKET NEW -----------------------------
-						</script>
 
-					<script>
 						//-----------------------START KIRIM WHATSAPP MANUAL-----------------------------
 						$('.pesan_manual').click(function(){
 							var id =$(this).data("id");
@@ -3245,9 +2218,6 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 						});
 						//-----------------------END KIRIM WHATSAPP MANUAL-----------------------------
 
-					</script>
-
-					<script>
 				//START BUAT PESANAN VOUCHER
 					$('#vhc_site').on('change', function() {
 					$('#vhc_mitra').empty();
@@ -3443,9 +2413,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							
 
 				//END BUAT PESANAN VOUCHER
-					</script>
-
-					<script>
+	
 							//--------------------START TABLE CLICK LIHAT VOUCHER TERJUAL----------------------
 							$('.href_voucher_terjual').click(function(){
 							var id =$(this).data("id");
@@ -3485,9 +2453,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							
 							});
 							//--------------------END TABLE CLICK LIHAT VOUCHER TERJUAL----------------------
-					</script>
-					{{-- -----------------------------FORMAT NO HP------------------------------- --}}
-					<script>
+					// -- -----------------------------FORMAT NO HP------------------------------- --
 						window.addEventListener('load', () => {
 					const phoneInput = document.querySelector('#phone');
 					phoneInput.addEventListener('keydown', disallowNonNumericInput);
@@ -3528,10 +2494,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 					const formatToPhone1 = (evt) => {
 					const digits = evt.target.value.replace(/\D/g,'').substring(0,11);
 					};
-					</script>
 
-<script>
-	
 	//  pilih registrasi
 	$(function(){ 
 
@@ -3812,19 +2775,3 @@ $.ajax({
 						}
 					});
 					// --------------------------------------END ADD KATEGORI BARANG-------------------------------------
-
-
-						</script>
-
-						
-						
-
-				
-
-
-					
-			
-
-			
-</body>
-</html>

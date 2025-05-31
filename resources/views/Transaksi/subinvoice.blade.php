@@ -7,10 +7,10 @@
     <div class="invoice p-3">
             <div class="row">
               <div class="col-12">
-                <h4>
-                  {{$invoice->reg_nolayanan}}
+                <h6>
+                  No. Layanan {{$invoice->reg_nolayanan}}
                   <small class="float-right">Date: {{date("d/m/Y", strtotime($invoice->inv_tgl_tagih))}}</small>
-                </h4>
+                </h6>
               </div>
             </div>
             <div class="row m-3">
@@ -126,7 +126,7 @@
                     <td class="text-right ">{{number_format($desk->subinvoice_ppn)}}</td>
                     <td class="text-right text-bold">{{number_format($desk->subinvoice_total)}}</td>
                     @if($desk->subinvoice_status=='1')
-                    <form action="{{route('admin.inv.addons_delete',['id'=>$desk->id,'inv'=>$desk->subinvoice_id,'tot'=>$desk->subinvoice_total])}}" method="POST" >
+                    <form action="{{route('admin.inv.addons_delete',['id'=>$desk->subinv_id,'inv'=>$desk->subinvoice_id,'tot'=>$desk->subinvoice_total])}}" method="POST" >
                     @csrf
                     @method('DELETE')
                       <td><button type="submit" class="btn text-danger btn-sm" > <i class="fas fa-solid fa-trash"></i></button></td>
@@ -149,6 +149,7 @@
                     <input type="text"  id="diskon" class="form-control">
                     <input type="hidden"  id="inv_id" value="{{$invoice->inv_id}}" class="form-control">
                     <input type="hidden"  id="inv_harga" value="{{$sumharga-$sumppn}}" class="form-control">
+                    <input type="hidden"  id="inv_ppn" value="{{$sumppn}}" class="form-control">
                     <input type="hidden"  id="inv_jumlah" value="{{$sumharga}}" class="form-control">
                   </div>
                   <div class="col">
@@ -200,8 +201,8 @@
                 <div class="table-responsive">
                   <table class="table" id="Table">
                     <tr>
-                      <th style="width:50%">Subtotal:</th>
-                      <td>Rp {{number_format($sumharga-$sumppn)}}</td>
+                      <th style="width:50%">Subtotal harga:</th>
+                      <td>Rp {{number_format($sumharga)}}</td>
                     </tr>
                     <tr>
                       <th>PPN {{$ppnj}}%</th>
@@ -213,7 +214,7 @@
                     </tr>
                     <tr>
                       <th>Total:</th>
-                      <td id="tot">Rp {{number_format($sumharga-$invoice->inv_diskon)}}</td>
+                      <td id="tot">Rp {{number_format($sumharga+$sumppn-$invoice->inv_diskon)}}</td>
                     </tr>
                   </table>
                 </div>

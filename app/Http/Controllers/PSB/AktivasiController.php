@@ -165,7 +165,7 @@ class AktivasiController extends Controller
         $inv['inv_note'] = $query->input_nama;
         
         $sub_inv['corporate_id'] = Session::get('corp_id');
-        $sub_inv['subinvoice_deskripsi'] = $query->paket_nama . ' ( ' . $inv['inv_periode'] . ' )';
+        $sub_inv['subinvoice_deskripsi'] = $query->paket_nama;
         $sub_inv['subinvoice_status'] = '0';
 
         // if ($cek_hari_pasang < 25) {

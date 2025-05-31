@@ -716,6 +716,7 @@ Data_Tiket::create($tiket);
                 'registrasis.*',
                 'input_data.input_nama',
                 'pakets.paket_lokal',
+                'pakets.paket_nama',
                 'routers.router_ip',
                 'routers.router_port_api',
                 'routers.router_username',
@@ -813,7 +814,7 @@ Data_Tiket::create($tiket);
     public function aktivasi_pelanggan($id)
     {
 
-        $cek_tiket = Data_Tiket::where('tiket_idpel', $id)->where('tiket_status', 'NEW')->count();
+        $cek_tiket = Data_Tiket::where('corporate_id',Session::get('corp_id'))->where('tiket_idpel', $id)->where('tiket_status', 'NEW')->count();
         // dd( $cek_tiket);
         if ($cek_tiket == 0) {
             $data['tgl_akhir'] = date('t', strtotime(Carbon::now()));
@@ -826,10 +827,10 @@ Data_Tiket::create($tiket);
             //     ];
             //     return redirect()->route('admin.reg.data_aktivasi_pelanggan')->with($notifikasi);
             // } else {
-                $data['input_data'] = InputData::all();
-                $data['data_router'] = Router::all();
-                $data['data_paket'] = Paket::all();
-                $data['data_biaya'] = SettingBiaya::first();
+                $data['input_data'] = InputData::where('corporate_id',Session::get('corp_id'))->get();
+                // $data['data_router'] = Router::where('corporate_id',Session::get('corp_id'))->all();
+                $data['data_paket'] = Paket::where('corporate_id',Session::get('corp_id'))->get();
+                $data['data_biaya'] = SettingBiaya::where('corporate_id',Session::get('corp_id'))->first();
                 $data['data_teknisi'] = (new GlobalController)->getTeknisi();
 
                 $data['data'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -842,7 +843,7 @@ Data_Tiket::create($tiket);
                     ->first();
                     // echo $data['data'];
 
-                $data['router'] = Router::get();
+                // $data['router'] = Router::where('corporate_id',Session::get('corp_id'))->get();
 
                 // $data['data_olt'] = Data_pop::join('data__olts', 'data__olts.olt_id_pop', '=', 'data_pops.pop_id')
                 //     ->where('pop_id', $data['data']->reg_pop)->get();
@@ -863,114 +864,114 @@ Data_Tiket::create($tiket);
     }
 
 
-    public function deaktivasi_pelanggan(Request $request, $id)
-    {
-        $nama_admin = Auth::user()->name;
-        $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
-        $tgl_ambil_perangkat = date('Y-m-d', strtotime($request->deaktivasi_tanggal_pengambilan));
+    // public function deaktivasi_pelanggan(Request $request, $id)
+    // {
+    //     $nama_admin = Auth::user()->name;
+    //     $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
+    //     $tgl_ambil_perangkat = date('Y-m-d', strtotime($request->deaktivasi_tanggal_pengambilan));
 
-        $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('registrasis.reg_idpel', $id)->first();
+    //     $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+    //         ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+    //         ->where('registrasis.reg_idpel', $id)->first();
 
-        if ($request->status == 'PUTUS LANGGANAN') {
-            $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
-            $progres = '90';
-        } else {
-            $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
-            $progres = '100';
-        }
-
-
-        $ip =   $query->router_ip . ':' . $query->router_port_api;
-        $user = $query->router_username;
-        $pass = $query->router_password;
-        $API = new RouterosAPI();
-        $API->debug = false;
+    //     if ($request->status == 'PUTUS LANGGANAN') {
+    //         $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
+    //         $progres = '90';
+    //     } else {
+    //         $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
+    //         $progres = '100';
+    //     }
 
 
-        if ($API->connect($ip, $user, $pass)) {
-            $cek_status = $API->comm('/ppp/active/print', [
-                '?name' => $query->reg_username,
-            ]);
-            if ($cek_status) {
-                $API->comm('/ppp/active/remove', [
-                    '.id' => $cek_status[0]['.id'],
-                ]);
-            }
-            $cari_pel = $API->comm('/ppp/secret/print', [
-                '?name' => $query->reg_username,
-            ]);
-            if ($cari_pel) {
-                $API->comm('/ppp/secret/remove', [
-                    '.id' =>  $cari_pel['0']['.id']
-                ]);
-            }
+    //     $ip =   $query->router_ip . ':' . $query->router_port_api;
+    //     $user = $query->router_username;
+    //     $pass = $query->router_password;
+    //     $API = new RouterosAPI();
+    //     $API->debug = false;
 
-            $data = Invoice::where('inv_idpel', $id)->where('inv_status', '!=', 'PAID')->first();
-            if ($data) {
-                $data->delete();
-                SubInvoice::where('subinvoice_id', $data->inv_id)->delete();
-            }
 
-            Registrasi::where('reg_idpel', $id)->update([
-                'reg_progres' => $progres,
-                'reg_catatan' => $request->reg_catatan,
-                'reg_tgl_deaktivasi' => $tgl_ambil_perangkat,
-            ]);
-            Data_Deaktivasi::create([
-                'deaktivasi_idpel' => $id,
-                'deaktivasi_mac' => $request->deaktivasi_mac,
-                'deaktivasi_sn' => $request->deaktivasi_sn,
-                'deaktivasi_kelengkapan_perangkat' => $request->kelengkapan,
-                'deaktivasi_tanggal_pengambilan' => $tgl_ambil_perangkat,
-                'deaktivasi_pengambil_perangkat' => $request->deaktivasi_pengambil_perangkat,
-                'deaktivasi_admin' => $request->deaktivasi_admin,
-                'deaktivasi_alasan_deaktivasi' => $request->deaktivasi_alasan_deaktivasi,
-                'deaktivasi_pernyataan' => $request->deaktivasi_pernyataan,
-                'deaktivasi_admin' =>  $nama_admin,
-            ]);
+    //     if ($API->connect($ip, $user, $pass)) {
+    //         $cek_status = $API->comm('/ppp/active/print', [
+    //             '?name' => $query->reg_username,
+    //         ]);
+    //         if ($cek_status) {
+    //             $API->comm('/ppp/active/remove', [
+    //                 '.id' => $cek_status[0]['.id'],
+    //             ]);
+    //         }
+    //         $cari_pel = $API->comm('/ppp/secret/print', [
+    //             '?name' => $query->reg_username,
+    //         ]);
+    //         if ($cari_pel) {
+    //             $API->comm('/ppp/secret/remove', [
+    //                 '.id' =>  $cari_pel['0']['.id']
+    //             ]);
+    //         }
 
-            if ($request->kelengkapan == 'ONT & Adaptor') {
-                $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
-                Data_BarangKeluar::whereIn('bk_id_barang', $kode_barang)->delete();
-                Data_Barang::whereIn('barang_id', $kode_barang)->update([
-                    'barang_digunakan' => 0,
-                    'barang_dicek' => 1,
-                    'barang_ket' => 'Pengambilan Perangkat',
-                ]);
-            } elseif ($request->kelengkapan == 'ONT') {
-                Data_BarangKeluar::where('bk_id_barang', $request->kode_barang_ont)->delete();
-                Data_Barang::where('barang_id', $request->kode_barang_ont)->update([
-                    'barang_digunakan' => 0,
-                    'barang_dicek' => 1,
-                    'barang_ket' => 'Pengambilan Perangkat',
-                ]);
-                Data_Barang::where('barang_id', $request->kode_barang_adp)->update([
-                    'barang_digunakan' => 0,
-                    'barang_hilang' => 1,
-                ]);
-            } elseif ($request->kelengkapan == 'Hilang') {
-                $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
-                Data_Barang::whereIn('barang_id', $kode_barang)->update([
-                    'barang_digunakan' => 0,
-                    'barang_hilang' => 1,
-                ]);
-            }
+    //         $data = Invoice::where('inv_idpel', $id)->where('inv_status', '!=', 'PAID')->first();
+    //         if ($data) {
+    //             $data->delete();
+    //             SubInvoice::where('subinvoice_id', $data->inv_id)->delete();
+    //         }
 
-            $notifikasi = [
-                'pesan' => 'Berhasil melakukan pemutusan pelanggan',
-                'alert' => 'success',
-            ];
-            return redirect()->route('admin.psb.ftth')->with($notifikasi);
-        } else {
-            $notifikasi = [
-                'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
-                'alert' => 'error',
-            ];
-            return redirect()->route('admin.psb.data_deaktivasi')->with($notifikasi);
-        }
-    }
+    //         Registrasi::where('reg_idpel', $id)->update([
+    //             'reg_progres' => $progres,
+    //             'reg_catatan' => $request->reg_catatan,
+    //             'reg_tgl_deaktivasi' => $tgl_ambil_perangkat,
+    //         ]);
+    //         Data_Deaktivasi::create([
+    //             'deaktivasi_idpel' => $id,
+    //             'deaktivasi_mac' => $request->deaktivasi_mac,
+    //             'deaktivasi_sn' => $request->deaktivasi_sn,
+    //             'deaktivasi_kelengkapan_perangkat' => $request->kelengkapan,
+    //             'deaktivasi_tanggal_pengambilan' => $tgl_ambil_perangkat,
+    //             'deaktivasi_pengambil_perangkat' => $request->deaktivasi_pengambil_perangkat,
+    //             'deaktivasi_admin' => $request->deaktivasi_admin,
+    //             'deaktivasi_alasan_deaktivasi' => $request->deaktivasi_alasan_deaktivasi,
+    //             'deaktivasi_pernyataan' => $request->deaktivasi_pernyataan,
+    //             'deaktivasi_admin' =>  $nama_admin,
+    //         ]);
+
+    //         if ($request->kelengkapan == 'ONT & Adaptor') {
+    //             $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
+    //             Data_BarangKeluar::whereIn('bk_id_barang', $kode_barang)->delete();
+    //             Data_Barang::whereIn('barang_id', $kode_barang)->update([
+    //                 'barang_digunakan' => 0,
+    //                 'barang_dicek' => 1,
+    //                 'barang_ket' => 'Pengambilan Perangkat',
+    //             ]);
+    //         } elseif ($request->kelengkapan == 'ONT') {
+    //             Data_BarangKeluar::where('bk_id_barang', $request->kode_barang_ont)->delete();
+    //             Data_Barang::where('barang_id', $request->kode_barang_ont)->update([
+    //                 'barang_digunakan' => 0,
+    //                 'barang_dicek' => 1,
+    //                 'barang_ket' => 'Pengambilan Perangkat',
+    //             ]);
+    //             Data_Barang::where('barang_id', $request->kode_barang_adp)->update([
+    //                 'barang_digunakan' => 0,
+    //                 'barang_hilang' => 1,
+    //             ]);
+    //         } elseif ($request->kelengkapan == 'Hilang') {
+    //             $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
+    //             Data_Barang::whereIn('barang_id', $kode_barang)->update([
+    //                 'barang_digunakan' => 0,
+    //                 'barang_hilang' => 1,
+    //             ]);
+    //         }
+
+    //         $notifikasi = [
+    //             'pesan' => 'Berhasil melakukan pemutusan pelanggan',
+    //             'alert' => 'success',
+    //         ];
+    //         return redirect()->route('admin.psb.ftth')->with($notifikasi);
+    //     } else {
+    //         $notifikasi = [
+    //             'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
+    //             'alert' => 'error',
+    //         ];
+    //         return redirect()->route('admin.psb.data_deaktivasi')->with($notifikasi);
+    //     }
+    // }
     public function data_deaktivasi()
     {
         // $month = Carbon::now()->addMonth(-0)->format('m');

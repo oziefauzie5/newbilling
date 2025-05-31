@@ -168,12 +168,13 @@
                                 <thead>
                           <tr>
                             <th>NO</th>
-                            <th>TANGGAL</th>
-                            <th>KATEGORI</th>
-                            <th>KETERANGAN</th> 
-                            <th>KREDIT</th>
-                            <th>DEBET</th>
-                            <th>SALDO</th>
+                            <th>Tanggal</th>
+                            <th>Kategori</th>
+                            <th>Keterangan</th> 
+                            <th>Kredit</th>
+                            <th>Debet</th>
+                            <th>Kredit</th>
+                            <th>Limit Minus </th>
                           </tr>
                           </thead>
                           <tbody>

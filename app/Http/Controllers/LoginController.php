@@ -66,7 +66,7 @@ class LoginController extends Controller
                 $request->session()->put('app_link_admin', '-');
                 $request->session()->put('app_link_pelanggan', '-');
                 $request->session()->put('data_site', '1');
-                $request->session()->put('corp_id', $CORP_ID->id);
+                $request->session()->put('corp_id', '0');
             }
 
 

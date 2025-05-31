@@ -10,6 +10,7 @@ use App\Models\Transaksi\SubInvoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class PelangganController extends Controller
 {
@@ -19,13 +20,16 @@ class PelangganController extends Controller
         $data['nama'] = Auth::guard('pelanggan')->user()->input_nama;
 
         $data['tagihan']  = Invoice::where('invoices.inv_idpel', '=', $idpel)
+            ->where('corporate_id',Session::get('corp_id'))
             ->latest()
             ->paginate(2);
         $data['layanan'] = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
             ->where('invoices.inv_idpel', '=', $idpel)
+            ->where('invoices.corporate_id',Session::get('corp_id'))
             ->first();
         $data['details'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('input_data.corporate_id',Session::get('corp_id'))
             ->where('registrasis.reg_idpel', $idpel)->first();
         return view('client/index', $data);
     }
@@ -35,6 +39,7 @@ class PelangganController extends Controller
         $idpel = Auth::guard('pelanggan')->user()->id;
         $data['details'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('input_data.corporate_id',Session::get('corp_id'))
             ->where('registrasis.reg_idpel', $idpel)->first();
         return view('client/details', $data);
     }
@@ -46,6 +51,7 @@ class PelangganController extends Controller
         $idpel = Auth::guard('pelanggan')->user()->id;
         $data['layanan'] = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
             ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->where('invoices.corporate_id',Session::get('corp_id'))
             ->where('invoices.inv_id', '=', $inv_id)
             ->where('invoices.inv_status', '!=', 'PAID')
             ->where('invoices.inv_idpel', '=', $idpel)
@@ -60,7 +66,10 @@ class PelangganController extends Controller
         $inv = $request->inv;
         $method = $request->code;
         $icon = $request->icon;
-        $data_inv = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')->where('inv_id', $inv)->first();
+        $data_inv = Invoice::join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+                            ->where('invoices.corporate_id',Session::get('corp_id'))
+                            ->where('invoices.inv_id', $inv)
+                            ->first();
         $tripay = (new TripayController)->requestTransaksi($method, $data_inv, $inv, $icon);
 
 
@@ -83,7 +92,9 @@ class PelangganController extends Controller
         // dd($refrensi);
         $tripay = (new TripayController)->detailsTransakasi($refrensi);
         // dd($tripay );
-        $cek_inv = Invoice::where('inv_id', $tripay->merchant_ref)->first();
+        $cek_inv = Invoice::where('inv_id', $tripay->merchant_ref)
+                        ->where('corporate_id',Session::get('corp_id'))
+                        ->first();
         if ($cek_inv->inv_status != 'PAID') {
             $date = Carbon::parse($tripay->expired_time);
             $today = Carbon::now()->isoFormat('D MMMM Y');

@@ -23,12 +23,13 @@
                 <tr>
                   <th>No</th>
                   <th>Aksi</th>
-                  <th>PIC Id</th>
+                  <th>Pic Id</th>
                   <th>Nama</th>
                   <th>Site</th>
                   <th>Phone</th>
                   <th>Alamat</th>
                   <th>Komisi</th>
+                  <th>Limit Minus</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,6 +49,7 @@
                    <td>{{$d->user_mitra->hp ?? '-'}}</td>
                    <td>{{$d->user_mitra->alamat_lengkap ?? '-'}}</td>
                    <td>Rp. {{ number_format($d->mts_komisi) ?? '0'}}</td>
+                   <td>Rp. {{ number_format($d->mts_limit_minus) ?? '0'}}</td>
                    </tr>
                    @endforeach
                 </tbody>

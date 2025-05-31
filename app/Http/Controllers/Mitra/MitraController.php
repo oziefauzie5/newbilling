@@ -53,7 +53,29 @@ class MitraController extends Controller
                                 ->whereIn('model_has_roles.role_id', [15,12])
                                 ->where('corporate_id',Session::get('corp_id'))
                                 ->with('user_mitra','mitra_site','mitra_sub')->get();
+
         return view('mitra/pic1_view', $data);
+    }
+    function mutasi_continue()
+    {
+        $data['mutasi'] = MitraSetting::join('model_has_roles','model_has_roles.model_id','=','mitra_settings.mts_user_id')
+                                ->join('mutasi_sales','mutasi_sales.mutasi_sales_mitra_id','=','mitra_settings.mts_user_id')
+                                ->join('input_data','input_data.id','=','mutasi_sales.mutasi_sales_idpel')
+                                ->whereIn('model_has_roles.role_id', [15,12])
+                                ->whereMonth('mutasi_sales.created_at', date('m',strtotime(Carbon::now())))
+                                ->where('mitra_settings.corporate_id',Session::get('corp_id'))
+                                ->select([
+                                    'mutasi_sales.mutasi_sales_mitra_id',
+                                    'mitra_settings.mts_user_id',  
+                                    DB::raw('sum(mutasi_sales.mutasi_sales_jumlah) as sum_komisi'),
+                                    'input_data.input_nama',
+
+                                ])
+                                ->groupBy('mutasi_sales.mutasi_sales_mitra_id','mitra_settings.mts_user_id','input_data.input_nama')
+                                ->get();
+
+
+        return view('mitra/mutasi_continue', $data);
     }
 
     public function pic1_add_view(Request $request)
@@ -77,6 +99,7 @@ class MitraController extends Controller
         Session::flash('mts_komisi', $request->mts_komisi); #
         Session::flash('data__site_id', $request->data__site_id); #
         Session::flash('level', $request->level); #
+        Session::flash('mts_limit_minus', $request->mts_limit_minus); #
         // dd($request->all());
          $request->validate([
             'name' => 'required',
@@ -107,8 +130,8 @@ class MitraController extends Controller
             'data__site_id.required' => 'Site tidak boleh kosong',
             'level.required' => 'Level tidak boleh kosong',
         ]);
+     
 
-        
             $get =  explode("|", $request->level);
             $level_id = $get[0];
             $level = $get[1];
@@ -155,7 +178,7 @@ class MitraController extends Controller
         $mitra_setting['corporate_id'] = Session::get('corp_id');
         $mitra_setting['data__site_id'] = $request->data__site_id;
         $mitra_setting['mts_user_id'] = $id_mitra;
-        $mitra_setting['mts_limit_minus'] = 0;
+        $mitra_setting['mts_limit_minus'] = $request->mts_limit_minus;
         $mitra_setting['mts_komisi'] = $request->mts_komisi;
 
         
@@ -404,12 +427,17 @@ class MitraController extends Controller
     {
           $data['mutasi'] = MutasiSales::where('mutasi_sales_mitra_id',$id)
             ->join('users','users.id','=','mutasi_sales.mutasi_sales_mitra_id')
-                            ->orderBy('created_at') 
+            ->join('input_data','input_data.id','=','mutasi_sales.mutasi_sales_idpel')
+                            ->orderBy('mutasi_sales.created_at') 
                             ->select(
                                 'mutasi_sales.*',
+                                'input_data.*',
                                 'users.name',
+                                'mutasi_sales.created_at as tgl_transaksi',
                             )
                             ->get();
+
+                            // dd($data['mutasi']);
           $Credit = MutasiSales::where('corporate_id',Session::get('corp_id'))->where('mutasi_sales_mitra_id',$id)->where('mutasi_sales_type','Credit')->sum('mutasi_sales_jumlah');
           $Debit = MutasiSales::where('corporate_id',Session::get('corp_id'))->where('mutasi_sales_mitra_id',$id)->where('mutasi_sales_type','Debit')->sum('mutasi_sales_jumlah');
           $data['saldo'] = $Credit - $Debit;

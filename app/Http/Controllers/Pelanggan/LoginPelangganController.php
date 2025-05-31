@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pelanggan;
 
 use App\Http\Controllers\Controller;
+use App\Models\Aplikasi\Corporate;
 use App\Models\Applikasi\SettingAplikasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,7 @@ class LoginPelangganController extends Controller
 
     public function login_proses(Request $request)
     {
+        $CORP_ID = Corporate::where('corp_url',url('/'))->first('id');
         $request->validate([
             'input_hp' => 'required',
         ]);
@@ -59,6 +61,7 @@ class LoginPelangganController extends Controller
             $request->session()->put('app_nama', $app->app_nama);
             $request->session()->put('app_logo', $app->app_logo);
             $request->session()->put('app_favicon', $app->app_favicon);
+            $request->session()->put('corp_id', $CORP_ID->id);
             return redirect()->route('client.index');
         } else {
             return redirect()->route('login_pelanggan')->with('failed', 'Nomor Whatsapp tidak terdaftar');
@@ -71,6 +74,8 @@ class LoginPelangganController extends Controller
         session()->forget('app_nama');
         session()->forget('app_logo');
         session()->forget('app_favicon');
+        session()->forget('corp_id');
+
         Auth::guard('pelanggan')->logout();
         return redirect()->route('login_pelanggan')->with('success', 'Kamu berhasil logout');
     }

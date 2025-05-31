@@ -271,7 +271,8 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 									$("#progress").html('');
 									$("#text").html('');
 									var harga = data['sumharga'];
-									var ppn = data['data'].subinvoice_ppn;
+									var ppn = data['sumppn'];
+									// var ppn = data['data'].subinvoice_ppn;
 									var komisi = data['biller'].mts_komisi;
 									var diskon = data['data'].inv_diskon;
 									if(diskon == null){
@@ -284,6 +285,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 										komisi=0
 									}
 									var total = parseInt(harga)+parseInt(ppn)+parseInt(komisi)-parseInt(diskon);
+
 									document.getElementById("upd_pelanggan").innerHTML =data['data'].inv_nama;
 									document.getElementById("hp").innerHTML =data['data'].input_hp;
 									document.getElementById("nolay").innerHTML =data['data'].inv_nolayanan;
@@ -302,7 +304,7 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 									document.getElementById("subinvoice_ppn").innerHTML = new Intl.NumberFormat('id-ID', {
 																				style: 'currency',minimumFractionDigits: 0,
 																				currency: 'IDR',
-																				}).format(data['data'].subinvoice_ppn);
+																				}).format(data['sumppn']);
 									document.getElementById("biaya_layanan").innerHTML = new Intl.NumberFormat('id-ID', {
 																				style: 'currency',minimumFractionDigits: 0,
 																				currency: 'IDR',
@@ -934,7 +936,7 @@ $(function(){
 									$("#progress").html('');
 									$("#text").html('');
 									var harga = data['sumharga'];
-									var ppn = data['data'].subinvoice_ppn;
+									var ppn = data['sumppn'];
 									var komisi = data['biller'].mts_komisi;
 									var diskon = data['data'].inv_diskon;
 									if(diskon == null){
@@ -965,7 +967,7 @@ $(function(){
 									document.getElementById("subinvoice_ppn").innerHTML = new Intl.NumberFormat('id-ID', {
 																				style: 'currency',minimumFractionDigits: 0,
 																				currency: 'IDR',
-																				}).format(data['data'].subinvoice_ppn);
+																				}).format(data['sumppn']);
 									document.getElementById("biaya_layanan").innerHTML = new Intl.NumberFormat('id-ID', {
 																				style: 'currency',minimumFractionDigits: 0,
 																				currency: 'IDR',
