@@ -250,7 +250,7 @@
                             </button>
                           </div>
                         <div class="form-button-action">
-                          <a href="{{route('admin.topo.odp_instalasi',['id'=>$d->odp_id ?? '1'])}}">
+                          <a href="{{route('admin.topo.odp_instalasi',['id'=>$d->id_odp ?? '1'])}}">
                             <button type="button"class="btn btn-link btn-primary btn-lg">
                               <i class="fa fa-users"></i>
                             </button></a>

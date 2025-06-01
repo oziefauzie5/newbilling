@@ -412,7 +412,7 @@ class TopologiController extends Controller
             ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
             ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->where('data__odcs.corporate_id',Session::get('corp_id'))
-            ->select('data__odps.*','data__odcs.odc_nama','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->select('data__odps.*','data__odps.id as id_odp','data__odcs.odc_nama','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
             ->with('data_isntalasi')
             ->orderBy('data__odps.odp_id','ASC')
             ->get();
