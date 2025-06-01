@@ -38,6 +38,7 @@
                                     <option value="">--Pilih Agent--</option>
                                     <option value="CS">CS</option>
                                     <option value="NOC">NOC</option>
+                                    <option value="NOTIF">NOTIF</option>
                                   </select>
                               </div>
                               <div class="form-group">
@@ -123,6 +124,7 @@
                                     @endif
                                     <option value="CS">CS</option>
                                     <option value="NOC">NOC</option>
+                                    <option value="NOTIF">NOTIF</option>
                                   </select>
                               </div>
                                   <div class="form-group">

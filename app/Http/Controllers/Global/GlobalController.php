@@ -195,23 +195,22 @@ class GlobalController extends Controller
         return $wa_status;
     }
 
-    function no_inv()
+     function no_inv()
     {
         $inv_tgl = Carbon::now();
         $bln = $inv_tgl->format('m');
         $th = $inv_tgl->format('y');
-        // $latest = Invoice::orderBy('created_at', 'DESC')->latest()->first();
-        // if (! $latest) {
-        //     return $bln . $th . '0001';
-        // }
-        // $string = substr($latest->inv_id, 2);
-        // return $bln . sprintf('%04d', $string + 1);
-        $latest = Invoice::whereMonth('inv_tgl_isolir', '=', $bln)->count();
-        // dd($latest);
-        if ($latest == 0) {
+        $latest = Invoice::orderBy('created_at', 'DESC')->orderBy('inv_id', 'DESC')->latest()->first();
+        if (! $latest) {
             return $bln . $th . '0001';
         }
-        return $bln . $th . $latest + 1;
+        $string = substr($latest->inv_id, 4);
+        return $bln . $th. sprintf('%04d', $string + 1);
+        // $latest = Invoice::orderBy('created_at', 'DESC')->orderBy('inv_id', 'DESC')->count();
+        // if ($latest == 0) {
+        //     return $bln . $th . '0001';
+        // }
+        // return $bln . $th . $latest + 1;
     }
 
     function idpel_()
