@@ -259,10 +259,10 @@
                                       <label>Pilih OLT</label>
                                       <select class="form-control" id="" name="data__olt_id"  >
                                         @if($d->data__olt_id)
-                                        <option value="{{$d->data__olt_id}}">{{$d->olt_nama}} -|- {{$d->router_nama}} -|- {{$d->pop_nama}} -|- {{$d->site_nama}} </option>
+                                        <option value="{{$d->data__olt_id}}">{{$d->olt_nama}} </option>
                                         @endif
                                         @foreach ($data_olt as $olt)
-                                        <option value="{{$olt->id}}">{{$olt->olt_nama}} -|- {{$olt->router_nama}} -|- {{$olt->pop_nama}} -|- {{$olt->site_nama}} </option>
+                                        <option value="{{$olt->id}}">{{$olt->olt_nama}}</option>
                                         @endforeach
                                       </select>
                                   </div>

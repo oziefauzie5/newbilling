@@ -213,6 +213,7 @@ class TopologiController extends Controller
     
     public function odc()
     {        
+     
         $data['data_olt'] = Data_Olt::query()
             // ->join('routers', 'routers.id', '=', 'data__olts.id')
             // ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
