@@ -13,10 +13,10 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-primary">
-              <h3 class="card-title text-light">Data Odc</h3>
+              <h3 class="card-title text-light">Data Odp Distibusi </h3>
             </div>
             <div class="card-body table-responsive -sm">
-              <button class="btn btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#modal-adduser"><i class="fas fa-solid fa-plus"></i>Tambah ODC</button>
+              <button class="btn btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#modal-adduser"><i class="fas fa-solid fa-plus"></i>Tambah Odp Distibusi</button>
               <button class="btn btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
                 <i class="fa fa-file-import"></i> Import
               </button>
@@ -89,7 +89,7 @@
                                   <input type="text" class="form-control"value="{{ Session::get('odc_id') }}" name="odc_id">
                               </div>
                               <div class="col-6 form-group">
-                                  <label>Nama Odc</label>
+                                  <label>Odp Dist. Nama</label>
                                   <input type="text" class="form-control"value="{{ Session::get('odc_nama') }}" name="odc_nama">
                               </div>
                               <div class="col-6 form-group">
@@ -203,7 +203,7 @@
                       <th>Olt</th>
                       <th>Aksi</th>
                       <th>Odp Dist. Nama</th>
-                      <th>Odp Dist. Id</th>
+                      {{-- <th>Odp Dist. Id</th> --}}
                       <th>Olt Pon</th>
                       <th>Core</th>
                       <th>Jumlah Slot Odc</th>
@@ -230,7 +230,7 @@
                             </div>
                           </td>
                                 <td>{{$d->odc_nama}}</td>
-                                <td>{{$d->odc_id}}</td>
+                                {{-- <td>{{$d->odc_id}}</td> --}}
                                 <td>{{$d->odc_pon_olt}}</td>
                                 <td>Core {{$d->odc_core}}</td>
                                 <td>{{$d->odc_jumlah_port}}</td>
@@ -266,12 +266,12 @@
                                         @endforeach
                                       </select>
                                   </div>
-                              <div class="col-6 form-group">
+                              {{-- <div class="col-6 form-group">
                                   <label>Odc Id</label>
                                   <input type="text" class="form-control"value="{{$d->odc_id}}" name="odc_id">
-                              </div>
+                              </div> --}}
                               <div class="col-6 form-group">
-                                  <label>Nama Odc</label>
+                                  <label>Odp Dist. Nama</label>
                                   <input type="text" class="form-control"value="{{$d->odc_nama}}" name="odc_nama">
                               </div>
                               <div class="col-6 form-group">
