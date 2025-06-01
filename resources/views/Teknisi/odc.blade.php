@@ -194,11 +194,11 @@
                 <table id="edit_inputdata" class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>Action</th>
                       <th>Site</th>
                       <th>Pop</th>
                       <th>Router Distribusi</th>
                       <th>Olt</th>
+                      <th>Aksi</th>
                       <th>Odc Nama</th>
                       <th>Odc Id</th>
                       <th>Olt Pon</th>
@@ -216,16 +216,16 @@
                       @foreach ($data_odc as $d)
                       <tr>
                         <td>
+                          <td>{{$d->site_nama}}</td>
+                          <td>{{$d->pop_nama}}</td>
+                          <td>{{$d->router_nama}}</td>
+                          <td>{{$d->olt_nama}}</td>
                           <div class="form-button-action">
                               <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
                                 <i class="fa fa-edit"></i>
                               </button>
                             </div>
                           </td>
-                                <td>{{$d->site_nama}}</td>
-                                <td>{{$d->pop_nama}}</td>
-                                <td>{{$d->router_nama}}</td>
-                                <td>{{$d->olt_nama}}</td>
                                 <td>{{$d->odc_nama}}</td>
                                 <td>{{$d->odc_id}}</td>
                                 <td>{{$d->odc_pon_olt}}</td>
