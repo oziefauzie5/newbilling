@@ -96,10 +96,16 @@
             DEAKTIVASI
           </button>
         </a>
-        <a href="{{route('admin.reg.export_excel')}}">
+        <a href="{{route('admin.export.export_registrasi')}}">
           <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
             <i class="fa fa-plus"></i>
             EXPORT EXCEL
+          </button>
+        </a>
+        <a href="{{route('admin.export.import_registrasi')}}">
+          <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
+            <i class="fa fa-plus"></i>
+            IMPORT
           </button>
         </a>
         @role('admin')

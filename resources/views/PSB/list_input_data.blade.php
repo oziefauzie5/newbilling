@@ -19,6 +19,10 @@
             <i class="fas fa-angle-double-left "></i>
             Input Data
           </button></a>
+           <a href="{{route('admin.export.export_input_data')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary " >
+            <i class="fa fa-plus"></i>
+            Input Data export 
+          </button></a>
           <button class="btn  btn-sm ml-auto m-1 btn-warning " data-toggle="modal" data-target="#import">
             <i class="fa fa-file-import"></i> Import
           </button>
@@ -36,7 +40,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form action="{{route('admin.psb.input_data_import')}}" method="POST" enctype="multipart/form-data">
+                  <form action="{{route('admin.export.export_input_data')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
                     <div class="row">

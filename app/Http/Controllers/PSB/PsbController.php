@@ -379,17 +379,5 @@ class PsbController extends Controller
         return redirect()->route('admin.psb.list_input')->with($notifikasi);
     }
 
-    public function input_data_import(Request $request)
-    {
-        // dd($request->all());
-        Excel::import(new InputDataImport,request()->file('file'));
-        // Excel::import(new InputDataImport(), $request->file('file'));
-        $notifikasi = [
-            'pesan' => 'Berhasil import Data',
-            'alert' => 'success',
-        ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
-    }
 
-    public function export_excel() {}
 }

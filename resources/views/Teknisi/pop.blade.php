@@ -16,7 +16,8 @@
               <h3 class="card-title text-light">Data POP</h3>
             </div>
             <div class="card-body table-responsive -sm">
-              <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-adduser" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Tambah POP</button>
+              <button class="btn btn-sm btn-primary" data- toggle="modal" data-target="#modal-adduser" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Tambah POP</button>
+              <a href="{{route('admin.export.import_pop')}}"><button class="btn btn-sm btn-primary" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Import POP</button></a>
                 
                 <!-- ----------------------------------------------------------------------MODAL ADD AKUN------------------------------------------------ -->
                 

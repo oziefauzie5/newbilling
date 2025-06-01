@@ -8,6 +8,7 @@ use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Hotspot\HotspotController;
 use App\Http\Controllers\Hotspot\TitikvhcController;
 use App\Http\Controllers\Hotspot\PostVoucherController;
+use App\Http\Controllers\ImportExport\ExportController;
 use App\Http\Controllers\Mitra\BillerController;
 use App\Http\Controllers\Mitra\MitraController;
 use App\Http\Controllers\Mitra\SalesController;
@@ -52,16 +53,28 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
 });
 
 // Route::group(['prefix' => 'client', 'middleware' => ['auth:sales'], 'as' => 'sales.'], function () {
-//     Route::get('/home', [PelangganController::class, 'index'])->name('index');
-// });
+    //     Route::get('/home', [PelangganController::class, 'index'])->name('index');
+    // });
+    
+    Route::post('/callback', [CallbackController::class, 'handle']);
+    Route::post('/voucher', [PostVoucherController::class, 'handle']);
+    
+    
+    Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.'], function () {
+        
+        Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN']);
+        
+        ##EXPORT
+         Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin']);
+        Route::post('/input-import', [ExportController::class, 'import_input_data'])->name('export.import_input_data')->middleware(['role:admin']);
+        Route::get('/regist-export', [ExportController::class, 'export_registrasi'])->name('export.export_registrasi')->middleware(['role:admin']);
+        Route::post('/regist-import', [ExportController::class, 'import_registrasi'])->name('export.import_registrasi')->middleware(['role:admin']);
+        Route::post('/pop-import', [ExportController::class, 'import_pop'])->name('export.import_pop')->middleware(['role:admin']);
+        Route::post('/olt-import', [ExportController::class, 'import_olt'])->name('export.import_olt')->middleware(['role:admin']);
+        Route::post('/odc-import', [ExportController::class, 'import_odc'])->name('export.import_odc')->middleware(['role:admin']);
+        Route::post('/odp-import', [ExportController::class, 'import_odp'])->name('export.import_odp')->middleware(['role:admin']);
 
-Route::post('/callback', [CallbackController::class, 'handle']);
-Route::post('/voucher', [PostVoucherController::class, 'handle']);
-
-
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.'], function () {
-
-    Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN']);
+    
     ##CRUD DATA USER
     Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store')->middleware(['role:admin|STAF ADMIN']);
@@ -152,10 +165,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/ftth/{id}/validasiBarang', [RegistrasiController::class, 'validasiBarang'])->name('reg.validasiBarang')->middleware(['role:admin|NOC|STAF ADMIN']);
     
     
-    Route::post('/pelanggan/Input-Import', [PsbController::class, 'input_data_import'])->name('psb.input_data_import')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     
-    Route::post('/pelanggan/export-excel', [PsbController::class, 'export_excel'])->name('reg.export_excel')->middleware(['role:admin|NOC|STAF ADMIN']);
+    // Route::post('/pelanggan/export-excel', [PsbController::class, 'export_excel'])->name('reg.export_excel')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/putus-langganan', [PsbController::class, 'listputus_langganan'])->name('psb.listputus_langganan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/mac_bermaslah', [PsbController::class, 'listmac_bermasalah'])->name('psb.listmac_bermasalah')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/pelanggan/update-mac_bermaslah/{idpel}', [PsbController::class, 'update_mac'])->name('psb.update_mac')->middleware(['role:admin|NOC|STAF ADMIN']);

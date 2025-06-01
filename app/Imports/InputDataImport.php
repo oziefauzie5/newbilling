@@ -1,22 +1,19 @@
 <?php
 
-namespace App\Imports\Import;
+namespace App\Imports;
 
-use App\Models\PSB\InputData ;
-use Illuminate\Support\Facades\Hash;
+use App\Models\PSB\InputData;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
+// use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class InputDataImport implements ToModel
 {
     /**
-     * @param array $row
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-   
-    public function model(array $row)
+    * @param Collection $collection
+    */
+     public function model(array $row)
     {
         return new InputData([
             'id' =>$row[0],
