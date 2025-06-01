@@ -13,7 +13,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-primary">
-              <h3 class="card-title text-light">Data POP</h3>
+              <h3 class="card-title text-light">Data Odc</h3>
             </div>
             <div class="card-body table-responsive -sm">
               <button class="btn btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#modal-adduser"><i class="fas fa-solid fa-plus"></i>Tambah ODC</button>
@@ -194,6 +194,7 @@
                 <table id="edit_inputdata" class="table table-hover text-nowrap">
                   <thead>
                     <tr>
+                      <th>Action</th>
                       <th>Site</th>
                       <th>Pop</th>
                       <th>Router Distribusi</th>
@@ -209,12 +210,18 @@
                       <th>Topologi File</th>
                       <th>Keterangan</th>
                       <th>Status</th>
-                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                       @foreach ($data_odc as $d)
                       <tr>
+                        <td>
+                          <div class="form-button-action">
+                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
+                                <i class="fa fa-edit"></i>
+                              </button>
+                            </div>
+                          </td>
                                 <td>{{$d->site_nama}}</td>
                                 <td>{{$d->pop_nama}}</td>
                                 <td>{{$d->router_nama}}</td>
@@ -230,13 +237,6 @@
                                 <td>{{$d->odc_file_topologi}}</td>
                                 <td>{{$d->odc_keterangan}}</td>
                                 <td>{{$d->odc_status}}</td>
-                        <td>
-                          <div class="form-button-action">
-                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
-                                <i class="fa fa-edit"></i>
-                              </button>
-                            </div>
-                          </td>
                       <div class="modal fade" id="modal-edit{{$d->id}}">
                           <div class="modal-dialog modal-lg">
                             <form action="{{route('admin.topo.update_odc',['id'=>$d->id])}}" method="POST" enctype="multipart/form-data">
