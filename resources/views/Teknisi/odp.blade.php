@@ -219,13 +219,13 @@
                     <tr>
                       <th>Site</th>
                       <th>Pop</th>
-                      <th>Router Distrribusi</th>
+                      <th>Router Dist</th>
                       <th>Olt</th>
-                      <th>Odc</th>
+                      <th>Odp Dist.</th>
                       <th>Action</th>
                       <th>Odp Id</th>
-                      <th>Nama</th>
-                      <th>Odc Slot</th>
+                      <th>Odp Nama</th>
+                      <th>Odp Dist. Slot</th>
                       <th>Core</th>
                       <th>Jumlah Slot Spliter</th>
                       <th>Slot digunakan</th>

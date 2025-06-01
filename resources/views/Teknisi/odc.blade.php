@@ -202,8 +202,8 @@
                       <th>Router Distribusi</th>
                       <th>Olt</th>
                       <th>Aksi</th>
-                      <th>Odc Nama</th>
-                      <th>Odc Id</th>
+                      <th>Odp Dist. Nama</th>
+                      <th>Odp Dist. Id</th>
                       <th>Olt Pon</th>
                       <th>Core</th>
                       <th>Jumlah Slot Odc</th>
