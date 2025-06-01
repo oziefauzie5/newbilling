@@ -102,12 +102,6 @@
             EXPORT EXCEL
           </button>
         </a>
-        <a href="{{route('admin.export.import_registrasi')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
-            <i class="fa fa-plus"></i>
-            IMPORT
-          </button>
-        </a>
         @role('admin')
       <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
         <i class="fa fa-file-import"></i> IMPORT
