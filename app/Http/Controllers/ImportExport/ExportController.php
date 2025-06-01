@@ -10,6 +10,7 @@ use App\Imports\InputDataImport;
 use App\Imports\OdcImport;
 use App\Imports\OdpImport;
 use App\Imports\OltImport;
+use App\Imports\PaketImport;
 use App\Imports\PopImport;
 use App\Imports\RegistImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -79,6 +80,15 @@ class ExportController extends Controller
     public function import_odp(Request $request)
     {
         Excel::import(new OdpImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.topo.odp')->with($notifikasi);
+    }
+    public function import_paket(Request $request)
+    {
+        Excel::import(new PaketImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',

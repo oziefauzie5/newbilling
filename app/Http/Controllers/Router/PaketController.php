@@ -16,19 +16,9 @@ class PaketController extends Controller
     public function index()
     {
         $data['data_paket'] = Paket::where('corporate_id',Session::get('corp_id'))->with('paket_router')->get();
-        // echo $data['data_paket'];
         $data['data_router'] = Router::where('corporate_id',Session::get('corp_id'))->get();
         return view('Router/paket', $data);
     }
-    // public function create()
-    // {
-    //     // $data = array(
-    //     //     'tittle' => 'PAKET',
-    //     //     'data_router' => Router::all(),
-    //     // );
-    //     // return view('router/paket_create', $data);
-    // }
-
     public function store(Request $request)
     {
         Session::flash('paket_nama', $request->paket_nama);
@@ -55,7 +45,6 @@ class PaketController extends Controller
         $data['paket_layanan'] = 'PPP';
         $data['paket_status'] = 'Enable';
 
-        
         
         $router = Router::where('corporate_id',Session::get('corp_id'))->where('id', $request->router_id)->first();
         $API = new RouterosAPI();

@@ -94,6 +94,44 @@
                 </div>
               </div>
             </div>
+
+            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
+                <i class="fa fa-file-import"></i> Import
+              </button>
+               <!-- Modal Import -->
+          <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header no-bd">
+                  <h5 class="modal-title">
+                    <span class="fw-mediumbold">
+                    Import Odp</span> 
+                  </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{route('admin.export.import_paket')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('POST')
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>Pilih file (EXCEL,CSV)</label>
+                          <input id="import" type="file" class="form-control" name="file" required>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer no-bd">
+                    <button type="submit" class="btn btn-success">Add</button>
+                  </form>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
             {{-- END MODAL BUAT PAKET PPP --}}
             <div class="modal fade" id="addpaketvhc" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-xl" role="document">
@@ -343,7 +381,7 @@
                                       <div class="form-group">
                                         <label>Router</label>
                                         <select name="router_id" id="" class="form-control" required>
-                                          <option value="{{$d->router_id}}">{{$d->paket_router->router_nama}}</option>
+                                          <option value="{{$d->id}}">{{$d->router_nama}}</option>
                                           @foreach($data_router as $dr)
                                           <option value="{{$dr->id}}">{{$dr->router_nama}}</option>
                                           @endforeach
