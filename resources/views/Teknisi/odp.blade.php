@@ -259,13 +259,13 @@
                             </button></a>
                           </div>
                         </td>
-                        <td>{{$d->odp_nama ?? ''}}</td>
                         <td>{{$d->odp_id ?? ''}}</td>
+                        <td>{{$d->odp_nama ?? ''}}</td>
                         <td>{{$d->odp_slot_odc ?? ''}}</td>
                         <td>{{$d->odp_core ?? ''}}</td>
                         <td>{{$d->odp_jumlah_slot ?? ''}}</td>
                         <td>{{$d->data_isntalasi->count() ?? ''}}</td>
-                        <td><a href="https://www.google.com/maps/place/{{$d->odp_koordinat ?? ''}}">{{$d->odp_koordinat ?? ''}}</a></td>
+                        <td><a href="https://www.google.com/maps/place/{{$d->odp_koordinat ?? ''}}">{{$d->odp_koordinat ?? '-'}}</a></td>
                         <td>{{$d->odp_lokasi_img ?? ''}}</td>
                         <td>{{$d->odp_file_topologi ?? ''}}</td>
                         <td>{{$d->odp_keterangan ?? ''}}</td>
