@@ -218,14 +218,14 @@
                   <tbody>
                       @foreach ($data_odc as $d)
                       <tr>
+                        <td>{{$d->site_nama}}</td>
+                        <td>{{$d->pop_nama}}</td>
+                        <td>{{$d->router_nama}}</td>
+                        <td>{{$d->olt_nama}}</td>
                         <td>
-                          <td>{{$d->site_nama}}</td>
-                          <td>{{$d->pop_nama}}</td>
-                          <td>{{$d->router_nama}}</td>
-                          <td>{{$d->olt_nama}}</td>
-                          <div class="form-button-action">
-                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
-                                <i class="fa fa-edit"></i>
+                        <div class="form-button-action">
+                          <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
+                            <i class="fa fa-edit"></i>
                               </button>
                             </div>
                           </td>
