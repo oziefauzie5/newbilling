@@ -222,7 +222,7 @@
                       <th>Router Dist</th>
                       <th>Olt</th>
                       <th>Odp Dist.</th>
-                      <th>Action</th>
+                      <th>Aksi</th>
                       <th>Odp Id</th>
                       <th>Odp Nama</th>
                       <th>Odp Dist. Slot</th>
@@ -265,7 +265,7 @@
                         <td>{{$d->odp_core ?? ''}}</td>
                         <td>{{$d->odp_jumlah_slot ?? ''}}</td>
                         <td>{{$d->data_isntalasi->count() ?? ''}}</td>
-                        <td><a href="https://www.google.com/maps/place/{{$d->odp_koordinat ?? ''}}">{{$d->odp_koordinat ?? '-'}}</a></td>
+                        <td><a href="https://www.google.com/maps/place/{{$d->odp_koordinat ?? ''}}" target="_blank" >{{$d->odp_koordinat ?? '-'}}</a></td>
                         <td>{{$d->odp_lokasi_img ?? ''}}</td>
                         <td>{{$d->odp_file_topologi ?? ''}}</td>
                         <td>{{$d->odp_keterangan ?? ''}}</td>
