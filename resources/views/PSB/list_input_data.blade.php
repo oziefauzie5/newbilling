@@ -43,7 +43,7 @@
                       <div class="col-sm-12">
                         <div class="form-group">
                           <label>Pilih file (EXCEL,CSV)</label>
-                          <input id="import" type="file" class="form-control" name="file" placeholder="Nama Lengkap" required>
+                          <input id="import" type="file" class="form-control" name="file" required>
                         </div>
                       </div>
                     </div>

@@ -150,8 +150,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::get('/ftth/{id}/getMitraSubfee', [RegistrasiController::class, 'getMitraSubfee'])->name('reg.getMitraSubfee')->middleware(['role:admin|NOC|STAF ADMIN']); 
     Route::get('/ftth/{id}/val-odp', [RegistrasiController::class, 'aktivasi_validasi_odp'])->name('reg.aktivasi_validasi_odp')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/ftth/{id}/validasiBarang', [RegistrasiController::class, 'validasiBarang'])->name('reg.validasiBarang')->middleware(['role:admin|NOC|STAF ADMIN']);
-
-
+    
+    
+    Route::post('/pelanggan/Input-Import', [PsbController::class, 'input_data_import'])->name('psb.input_data_import')->middleware(['role:admin|NOC|STAF ADMIN']);
 
     
     Route::post('/pelanggan/export-excel', [PsbController::class, 'export_excel'])->name('reg.export_excel')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -163,7 +164,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.
     Route::put('/pelanggan/Validasi/{ktp}', [PsbController::class, 'storeValidateKtp'])->name('psb.storeValidateKtp')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/pelanggan/Input-Data', [PsbController::class, 'store'])->name('psb.store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/ShowEdit-Input-Data', [PsbController::class, 'edit_inputdata'])->name('psb.edit_inputdata')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/pelanggan/Input-Import', [PsbController::class, 'input_data_import'])->name('psb.input_data_import')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/Registrasi', [RegistrasiController::class, 'index'])->name('reg.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/get/{id}/site', [GlobalController::class, 'getSite'])->name('reg.getSite')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/get/{id}/pop', [GlobalController::class, 'getPop'])->name('reg.getPop')->middleware(['role:admin|NOC|STAF ADMIN']);

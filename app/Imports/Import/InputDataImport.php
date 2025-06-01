@@ -2,9 +2,9 @@
 
 namespace App\Imports\Import;
 
-use App\Models\InputData;
-use App\Models\PSB\InputData as PSBInputData;
+use App\Models\PSB\InputData ;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Concerns\ToModel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
@@ -17,26 +17,29 @@ class InputDataImport implements ToModel
      */
     public function model(array $row)
     {
-        // $date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1]);
-        $date = Date::excelToDateTimeObject($row[1]);
-        // $tgl = date('Y-m-d', strtotime($date));
-        // dd($tgl);
-        return new PSBInputData([
-            'id' => $row[0],
-            'input_tgl' => $date,
-            'input_nama' => $row[2],
-            'input_ktp' => $row[3],
-            'input_hp' => $row[4],
-            'input_email' => $row[2] . '@gmail.com',
-            'input_alamat_ktp' => $row[6],
-            'input_alamat_pasang' => $row[7],
-            'input_sales' => $row[8],
-            'input_subseles' => $row[9],
-            'input_password' => '0' . $row[4],
-            'input_maps' => $row[10],
-            'input_kordinat' => $row[11],
-            'input_status' => $row[12],
-            'input_keterangan' => $row[13],
+    
+        // dd('ozi');
+        return new InputData([
+
+            'id' =>$row[0],
+            'corporate_id' =>Session::get('corp_id'),
+            'data__site_id' =>$row[1],
+            'input_tgl' =>$row[2],
+            'input_nama' =>$row[3],
+            'input_ktp' =>$row[4],
+            'input_hp' =>$row[5],
+            'input_hp_2' =>$row[6],
+            'input_email' =>$row[7],
+            'input_alamat_ktp' =>$row[8],
+            'input_alamat_pasang' =>$row[9],
+            'input_sales' =>$row[10],
+            'input_subseles' =>$row[11],
+            'password' =>$row[12],
+            'input_maps' =>$row[13],
+            'input_koordinat' =>$row[14],
+            'input_status' =>$row[15],
+            'input_keterangan' =>$row[16],
+
         ]);
     }
 }
