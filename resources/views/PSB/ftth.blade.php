@@ -184,7 +184,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action="{{route('admin.reg.registrasi_import')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('admin.export.import_registrasi')}}" method="POST" enctype="multipart/form-data">
                   @csrf
                   @method('POST')
                   <div class="row">
