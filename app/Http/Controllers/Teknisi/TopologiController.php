@@ -333,7 +333,7 @@ class TopologiController extends Controller
             Session::flash('odc_keterangan', $request->odc_keterangan); #
             Session::flash('odc_koordinat', $request->odc_koordinat); #
          $request->validate([
-            'odc_id' => 'required',
+            // 'odc_id' => 'required',
             'odc_nama' => 'required',
             'odc_pon_olt' => 'required',
             'odc_core' => 'required',
@@ -342,7 +342,7 @@ class TopologiController extends Controller
             'odc_keterangan' => 'required',
             'odc_koordinat' => 'required',
         ], [
-            'odc_id.required' => 'Odc Id tidak boleh kosong',
+            // 'odc_id.required' => 'Odc Id tidak boleh kosong',
             'odc_nama.required' => 'Nama Olt tidak boleh kosong',
             'odc_pon_olt.required' => 'Pon Olt tidak boleh kosong',
             'odc_core.required' => 'Core Kabel tidak boleh kosong',
@@ -352,7 +352,7 @@ class TopologiController extends Controller
             'odc_koordinat.required' => 'Koordinat tidak boleh kosong',
         ]);
 
-        $store['odc_id'] = $request->odc_id;
+        // $store['odc_id'] = $request->odc_id;
         $store['odc_nama'] = $request->odc_nama;
         $store['odc_pon_olt'] = $request->odc_pon_olt;
         $store['odc_core'] = $request->odc_core;
