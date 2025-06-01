@@ -215,16 +215,16 @@ class TopologiController extends Controller
     {        
         $data['data_olt'] = Data_Olt::query()
             // ->join('routers', 'routers.id', '=', 'data__olts.id')
-            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
-            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            // ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            // ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->where('data__olts.olt_status','Enable')
             ->where('data__olts.corporate_id',Session::get('corp_id'))
             ->select([
                 'data__olts.id',
                 'data__olts.olt_nama',
                 // 'routers.router_nama',
-                'data_pops.pop_nama',
-                'data__sites.site_nama'
+                // 'data_pops.pop_nama',
+                // 'data__sites.site_nama'
             ])
             ->get();
 
