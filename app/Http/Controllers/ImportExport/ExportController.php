@@ -7,6 +7,10 @@ use App\Exports\RegistExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Imports\InputDataImport;
+use App\Imports\OdcImport;
+use App\Imports\OdpImport;
+use App\Imports\OltImport;
+use App\Imports\PopImport;
 use App\Imports\RegistImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\PSB\InputData;
@@ -47,7 +51,34 @@ class ExportController extends Controller
     }
     public function import_pop(Request $request)
     {
-        Excel::import(new RegistImport,request()->file('file'));
+        Excel::import(new PopImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+    }
+    public function import_olt(Request $request)
+    {
+        Excel::import(new OltImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+    }
+    public function import_odc(Request $request)
+    {
+        Excel::import(new OdcImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+    }
+    public function import_odp(Request $request)
+    {
+        Excel::import(new OdpImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
