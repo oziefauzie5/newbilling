@@ -21,6 +21,9 @@
                   <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
             <i class="fa fa-file-import"></i> Import
           </button>
+            <a href="{{route('admin.topo.odc')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> ODP Distibusi</button></a>
+              <a href="{{route('admin.topo.odp')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> ODP</button></a>
+              <a href="{{route('admin.topo.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> Router</button></a>
           <!-- Modal Import -->
           <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">

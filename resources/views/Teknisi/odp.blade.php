@@ -20,6 +20,9 @@
               <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
                 <i class="fa fa-file-import"></i> Import
               </button>
+              <a href="{{route('admin.topo.odc')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> ODP Distibusi</button></a>
+              <a href="{{route('admin.topo.olt')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> OLT</button></a>
+              <a href="{{route('admin.topo.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> Router</button></a>
             </div>
           <!-- Modal Import -->
           <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
@@ -242,7 +245,7 @@
                       <td>{{$d->pop_nama ?? ''}}</td>
                       <td>{{$d->router_nama ?? ''}}</td>
                       <td>{{$d->olt_nama ?? ''}}</td>
-                      <td>{{$d->odc_nama ?? ''}}</td>
+                      <td><a href="http://">{{$d->odc_nama ?? ''}}</a></td>
                       <td>
                         <div class="form-button-action">
                             <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id ?? '1'}}" class="btn btn-link btn-primary btn-lg">
@@ -269,7 +272,7 @@
                         <td>{{$d->odp_status ?? ''}}</td>
 
                      
-                        
+                        {{-- -------------------------------MODAL ODP------------------------------------ --}}
                       <div class="modal fade" id="modal-edit{{$d->id}}">
                           <div class="modal-dialog modal-lg">
                             <form action="{{route('admin.topo.update_odp',['id'=>$d->id])}}" method="POST" enctype="multipart/form-data">

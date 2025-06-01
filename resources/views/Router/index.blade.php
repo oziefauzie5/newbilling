@@ -90,7 +90,12 @@
         <h3 class="card-title text-light">Router Distribusi</h3>
       </div>
       <div class="card-body">
-        <div class="card-title"><button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addRowModal">Tambah Router</button></div>
+        <div class="card-title">
+          <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addRowModal">Tambah Router</button>
+          <a href="{{route('admin.topo.olt')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> OLT</button></a>
+          <a href="{{route('admin.topo.odc')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> ODP Distibusi</button></a>
+          <a href="{{route('admin.topo.odp')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> ODP</button></a>
+        </div>
         <hr>
         <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-dialog" role="document">
