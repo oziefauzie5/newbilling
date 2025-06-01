@@ -124,12 +124,12 @@
                       <th>Site</th>
                       <th>Pop</th>
                       <th>Distribusi</th>
+                      <th>Aksi</th>
                       <th>Olt Nama</th>
                       <th>Jumlah PON</th>
                       <th>PON Digunakan</th>
                       <th>Topologi File</th>
                       <th>Status</th>
-                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -138,11 +138,6 @@
                         <td>{{$d->site_nama ?? '-'}}</td>
                         <td>{{$d->pop_nama ?? '-'}}</td>
                         <td>{{$d->router_nama ?? '-'}}</td>
-                        <td>{{$d->olt_nama ?? '-'}}</td>
-                        <td>{{$d->olt_pon ?? '-'}}</td>
-                        <td>{{$d->olt_odc->count() ?? '-'}}</td>
-                        <td>{{$d->olt_file_topologi ?? '-'}}</td>
-                        <td>{{$d->olt_status ?? '-'}}</td>
                         <td>
                           <div class="form-button-action">
                               <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
@@ -150,6 +145,11 @@
                               </button>
                             </div>
                           </td>
+                        <td>{{$d->olt_nama ?? '-'}}</td>
+                        <td>{{$d->olt_pon ?? '-'}}</td>
+                        <td>{{$d->olt_odc->count() ?? '-'}}</td>
+                        <td>{{$d->olt_file_topologi ?? '-'}}</td>
+                        <td>{{$d->olt_status ?? '-'}}</td>
                           
                       <div class="modal fade" id="modal-edit{{$d->id}}">
                           <div class="modal-dialog modal-lg">
