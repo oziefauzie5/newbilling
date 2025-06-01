@@ -47,7 +47,7 @@ class ExportController extends Controller
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        return redirect()->route('admin.psb.ftth')->with($notifikasi);
     }
     public function import_pop(Request $request)
     {
@@ -56,7 +56,7 @@ class ExportController extends Controller
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        return redirect()->route('admin.topo.pop')->with($notifikasi);
     }
     public function import_olt(Request $request)
     {
@@ -65,7 +65,7 @@ class ExportController extends Controller
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        return redirect()->route('admin.topo.olt')->with($notifikasi);
     }
     public function import_odc(Request $request)
     {
@@ -74,7 +74,7 @@ class ExportController extends Controller
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        return redirect()->route('admin.topo.odc')->with($notifikasi);
     }
     public function import_odp(Request $request)
     {
@@ -83,6 +83,6 @@ class ExportController extends Controller
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.psb.list_input')->with($notifikasi);
+        return redirect()->route('admin.topo.odp')->with($notifikasi);
     }
 }
