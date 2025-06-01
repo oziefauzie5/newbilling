@@ -71,7 +71,7 @@
           </div> 
         @endif
           <div class="table-responsive">
-            <table id="edit_inputdata" class=" table table-striped table-hover text-nowrap" >
+            <table id="input_data" class=" table table-striped table-hover text-nowrap" >
               <thead>
                 <tr>
                   <th>ID</th>

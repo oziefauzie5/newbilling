@@ -211,7 +211,7 @@
                         </ul>
                         </div>
               @endif
-                <table id="edit_inputdata" class="table table-hover text-nowrap">
+                <table id="input_data" class="table table-hover text-nowrap">
                   <thead>
                     <tr>
                       <th>Site</th>
@@ -245,12 +245,12 @@
                       <td>{{$d->odc_nama ?? ''}}</td>
                       <td>
                         <div class="form-button-action">
-                            <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
+                            <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id ?? '1'}}" class="btn btn-link btn-primary btn-lg">
                               <i class="fa fa-edit"></i>
                             </button>
                           </div>
                         <div class="form-button-action">
-                          <a href="{{route('admin.topo.odp_instalasi',['id'=>$d->odp_id])}}">
+                          <a href="{{route('admin.topo.odp_instalasi',['id'=>$d->odp_id ?? '1'])}}">
                             <button type="button"class="btn btn-link btn-primary btn-lg">
                               <i class="fa fa-users"></i>
                             </button></a>
