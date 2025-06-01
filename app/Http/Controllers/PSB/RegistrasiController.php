@@ -467,66 +467,66 @@ Data_Tiket::create($tiket);
 
 
 
-    public function registrasi_import(Request $request)
-    {
-        Excel::import(new RegistrasiImport(), $request->file('file'));
+    // public function registrasi_import(Request $request)
+    // {
+    //     Excel::import(new RegistrasiImport(), $request->file('file'));
 
 
-        $q = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->where('registrasis.reg_progres', 'MIGRASI')
-            ->get();
+    //     $q = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+    //         ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+    //         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+    //         ->where('registrasis.reg_progres', 'MIGRASI')
+    //         ->get();
 
-        $swaktu = SettingWaktuTagihan::first();
-        if ($swaktu->wt_jeda_isolir_hari = '0') {
-            $jeda = '0';
-        } else {
-            $jeda = $swaktu->wt_jeda_isolir_hari;
-        }
-        foreach ($q as $query) {
-            // if (Carbon::now()->toDateString() > Carbon::create($query->tgl_jatuh_tempo)->toDateString()) {
-            $periode1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->toDateString() . ' - ' . Carbon::create($query->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
-            $inv_tgl_isolir1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($jeda)->toDateString();
-            $invoice_id = rand(10000, 19999);
-            Invoice::create([
-                'inv_id' => $invoice_id,
-                'inv_status' => 'UNPAID',
-                'inv_idpel' => $query->reg_idpel,
-                'inv_nolayanan' => $query->reg_nolayanan,
-                'inv_nama' => $query->input_nama,
-                'inv_jenis_tagihan' => $query->reg_jenis_tagihan,
-                'inv_profile' => $query->paket_nama,
-                'inv_mitra' => 'SYSTEM',
-                'inv_kategori' => 'OTOMATIS',
-                'inv_diskon' => '0',
-                'inv_note' => $query->input_nama,
-                'inv_tgl_isolir' => $inv_tgl_isolir1blan,
-                'inv_total' =>   $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
-                'inv_tgl_tagih' => $query->reg_tgl_tagih,
-                'inv_tgl_jatuh_tempo' => $query->reg_tgl_jatuh_tempo,
-                'inv_periode' => $periode1blan,
-            ]);
+    //     $swaktu = SettingWaktuTagihan::first();
+    //     if ($swaktu->wt_jeda_isolir_hari = '0') {
+    //         $jeda = '0';
+    //     } else {
+    //         $jeda = $swaktu->wt_jeda_isolir_hari;
+    //     }
+    //     foreach ($q as $query) {
+    //         // if (Carbon::now()->toDateString() > Carbon::create($query->tgl_jatuh_tempo)->toDateString()) {
+    //         $periode1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->toDateString() . ' - ' . Carbon::create($query->reg_tgl_jatuh_tempo)->addMonth(1)->toDateString();
+    //         $inv_tgl_isolir1blan = Carbon::create($query->reg_tgl_jatuh_tempo)->addDay($jeda)->toDateString();
+    //         $invoice_id = rand(10000, 19999);
+    //         Invoice::create([
+    //             'inv_id' => $invoice_id,
+    //             'inv_status' => 'UNPAID',
+    //             'inv_idpel' => $query->reg_idpel,
+    //             'inv_nolayanan' => $query->reg_nolayanan,
+    //             'inv_nama' => $query->input_nama,
+    //             'inv_jenis_tagihan' => $query->reg_jenis_tagihan,
+    //             'inv_profile' => $query->paket_nama,
+    //             'inv_mitra' => 'SYSTEM',
+    //             'inv_kategori' => 'OTOMATIS',
+    //             'inv_diskon' => '0',
+    //             'inv_note' => $query->input_nama,
+    //             'inv_tgl_isolir' => $inv_tgl_isolir1blan,
+    //             'inv_total' =>   $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
+    //             'inv_tgl_tagih' => $query->reg_tgl_tagih,
+    //             'inv_tgl_jatuh_tempo' => $query->reg_tgl_jatuh_tempo,
+    //             'inv_periode' => $periode1blan,
+    //         ]);
 
-            SubInvoice::create([
-                'subinvoice_id' => $invoice_id,
-                'subinvoice_harga' => $query->reg_harga,
-                'subinvoice_ppn' => $query->reg_ppn,
-                'subinvoice_total' => $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
-                'subinvoice_qty' => '1',
-                'subinvoice_deskripsi' => $query->paket_nama . ' ( ' . $periode1blan . ' )',
-                'subinvoice_status' => '0',
-            ]);
-        }
+    //         SubInvoice::create([
+    //             'subinvoice_id' => $invoice_id,
+    //             'subinvoice_harga' => $query->reg_harga,
+    //             'subinvoice_ppn' => $query->reg_ppn,
+    //             'subinvoice_total' => $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik  + $query->reg_ppn,
+    //             'subinvoice_qty' => '1',
+    //             'subinvoice_deskripsi' => $query->paket_nama . ' ( ' . $periode1blan . ' )',
+    //             'subinvoice_status' => '0',
+    //         ]);
+    //     }
 
 
 
-        $notifikasi = [
-            'pesan' => 'Berhasil import Data',
-            'alert' => 'success',
-        ];
-        return redirect()->route('admin.psb.ftth')->with($notifikasi);
-    }
+    //     $notifikasi = [
+    //         'pesan' => 'Berhasil import Data',
+    //         'alert' => 'success',
+    //     ];
+    //     return redirect()->route('admin.psb.ftth')->with($notifikasi);
+    // }
 
 
     public function form_update_pelanggan($id)
