@@ -189,6 +189,44 @@ class GlobalController extends Controller
        
         return $data_tagihan;
     }
+    public function data_tagihan_non_odp($invoice)  #Digunakan untuk pengecekan data pada BillerController
+    {
+        $data_tagihan =  DB::table('invoices')
+            ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
+            ->join('input_data', 'input_data.id', '=', 'invoices.inv_idpel')
+            ->join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'invoices.inv_idpel')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
+            ->where('invoices.inv_status', '!=', 'PAID')
+            ->where('invoices.inv_id', '=', $invoice)
+            ->orWhere('registrasis.reg_nolayanan', '=', $invoice)
+            ->orWhere('input_data.input_hp', '=', $invoice)
+            ->orWhere('input_data.input_nama', '=', $invoice)
+            ->where('invoices.corporate_id',Session::get('corp_id'))
+            ->latest('invoices.inv_tgl_jatuh_tempo')
+             ->where('inv_id', $invoice)
+                ->select([
+                    'invoices.*',
+                    'routers.*',
+                    'registrasis.reg_inv_control',
+                    'registrasis.reg_idpel',
+                    'registrasis.reg_tgl_tagih',
+                    'registrasis.reg_tgl_jatuh_tempo',
+                    'registrasis.reg_layanan',
+                    'registrasis.reg_username',
+                    'registrasis.reg_nolayanan',
+                    'registrasis.reg_password',
+                    'input_data.input_nama',
+                    'input_data.input_hp',
+                    'pakets.paket_nama',
+                    'routers.id as id_router',
+                    'routers.*',
+                ])
+            ->first();
+       
+        return $data_tagihan;
+    }
     public function whatsapp_status()
     {
         $wa_status =  SettingWhatsapp::first();

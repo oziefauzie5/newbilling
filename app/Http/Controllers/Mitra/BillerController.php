@@ -221,17 +221,27 @@ class BillerController extends Controller
         
         
         if ($mitra) {
-            
             $saldo_mitra =  '-' . $mitra->mts_limit_minus <= ($saldo_mutasi - $total_bayar);
         } else {
             $saldo_mitra =  $saldo_mutasi > $total_bayar;
         }
-        
         if ($saldo_mitra) {
             $biller = MitraSetting::where('mts_user_id', $admin_user)->first(); #mengambil biaya admni biller pada table mitra_setting
+
+            ##CEK APAKAH PELANGGAN SUDAH ADA ODP ATAU BELUM
+            $cek_odp_pelanggan = Invoice::join('ftth_instalasis','ftth_instalasis.id','=','invoices.inv_idpel')
+                                                ->join('data__odps','data__odps.id','=','ftth_instalasis.data__odp_id')
+                                                ->where('data__odps.odp_nama','SYSTEM')
+                                                ->where('invoices.inv_id',$id)
+                                                ->first();
             
-            $data_pelanggan = (new GlobalController)->data_tagihan($id);
+             if($cek_odp_pelanggan){
+                 $data_pelanggan = (new GlobalController)->data_tagihan_non_odp($id);
+             } else{
+                 $data_pelanggan = (new GlobalController)->data_tagihan($id);
+             }
             
+            // dd($data_pelanggan);
             
             
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
@@ -320,6 +330,7 @@ class BillerController extends Controller
             $admin_hp = Auth::user()->hp;
             $api_payment = (new ApiController)->Api_payment_ftth($data_pelanggan,$nama_user,$reg);
             $akun = SettingAkun::where('akun_type','TUNAI')->where('corporate_id',Session::get('corp_id'))->select('akun_nama','id')->first();
+            //  return response()->json($api_payment);
         if($api_payment == 0)
         {
 
@@ -398,31 +409,7 @@ class BillerController extends Controller
                         $reg['reg_status'] = 'PAID';
                         
                         Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
-                        $cek_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->whereDate('created_at', $if_tgl_bayar)->count();
-                        if ($cek_trx > 0) {
-                            $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_debet');
-                            $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_qty');
-                        } else {
-                            $sum_trx = '0';
-                            $count_trx = '0';
-                        }
-                        
-                        if ($count_trx == 0) {
-                            $data_trx['corporate_id'] = Session::get('corp_id');
-                            $data_trx['trx_kategori'] = 'Pendapatan';
-                            $data_trx['trx_jenis'] = 'Invoice';
-                            $data_trx['trx_admin'] = 'System';
-                            $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
-                            $data_trx['trx_qty'] = 1;
-                            $data_trx['trx_debet'] = $total_inv;
-                            Transaksi::create($data_trx);
-                        } else {
-                            $i = '1';
-                            $data_trx['trx_qty'] = $count_trx + $i;
-                            $data_trx['trx_debet'] = $sum_trx + $total_inv;
-                            Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
-                        }
-            
+                    
                     $status = (new GlobalController)->whatsapp_status();
                     if($status){
                         if ($status->wa_status == 'Enable') {

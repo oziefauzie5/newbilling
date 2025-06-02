@@ -923,7 +923,7 @@ $(function(){
 							},
 							dataType: 'json',
 							success: function(data) {
-								console.log(data)
+								
 								$("#cari_data_inv").modal('hide');
 								if(data['data']=='PAID'){
 									$("#progress").html('');
@@ -976,7 +976,7 @@ $(function(){
 																				style: 'currency',minimumFractionDigits: 0,
 																				currency: 'IDR',
 																				}).format(total);
-									$("#buton").html('<input value="Proses Pembayaran1" id="bayar" class="btn btn-block  btn-primary" ></input>');
+									$("#buton").html('<input value="Proses Pembayaran" id="bayar" class="btn btn-block  btn-primary" ></input>');
 									$('#bayar').click(function(e) {
 	
 										$("#buton").html('<button class="btn btn-block btn-primary text-light " type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...</button>');
@@ -1014,8 +1014,16 @@ $(function(){
 	
 											},
 											error: function(error) {
-												// $("#buton").html('<input value="Proses Pembayaran" id="bayar" class="btn btn-block btn-primary text-light" ></input>');
-												 $("#text").html('Transaksi Gagal. Coba lagi nanti...');
+												$("#text").html('Transaksi Gagal. Coba lagi nanti...');
+													swal('Transaksi Gagal. Coba lagi nanti...', {
+														icon :'warning',
+														buttons: {        			
+															confirm: {
+																className : 'btn btn-error'
+															}
+														},
+													});
+													// $("#buton").html('<input value="Refres" id="cari_pelanggan" class="btn btn-block btn-primary text-light " ></input>');
 	
 	
 											},
@@ -1027,20 +1035,45 @@ $(function(){
 								}  else {
 									document.getElementById('hidden_div').style.display = "none";
 									$("#progress").html('');
-									$("#text").html('<strong>No. Invoice/Id Pelanggan tidak ditemukan</strong>');
+									// $("#text").html('Transaksi Gagal. Coba lagi nanti...');
+													swal('No. Invoice/Id Pelanggan tidak ditemukan', {
+														icon :'warning',
+														buttons: {        			
+															confirm: {
+																className : 'btn btn-error'
+															}
+														},
+													});
+									// $("#text").html('<strong>No. Invoice/Id Pelanggan tidak ditemukan</strong>');
 								}
 								}
 							},
 							error: function(error) {
 								$("#progress").html('');
-								$("#text").html('error. Coba lagi nanti...');
+								swal('Coba lagi nanti...', {
+														icon :'error',
+														buttons: {        			
+															confirm: {
+																className : 'btn btn-error'
+															}
+														},
+													});
+								// $("#text").html('error. Coba lagi nanti...');
 							},
 	
 						});
 					} else {
 						document.getElementById('hidden_div').style.display = "none";
 								$("#progress").html('');
-								$("#text").html('Masukan No. Invoice/Id Pelanggan terlebih dahulu');
+								swal('Masukan No. Invoice/Id Pelanggan terlebih dahulu', {
+														icon :'error',
+														buttons: {        			
+															confirm: {
+																className : 'btn btn-error'
+															}
+														},
+													});
+								// $("#text").html('Masukan No. Invoice/Id Pelanggan terlebih dahulu');
 						$('#harga').empty();
 					}
   

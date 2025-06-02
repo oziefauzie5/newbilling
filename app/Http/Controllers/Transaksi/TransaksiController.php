@@ -27,51 +27,7 @@ use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
-    public function index()
-    {
-        $data['bulan'] = strtoupper(date('F', strtotime(Carbon::now())));
-        $whereMonth = date('m', strtotime(Carbon::now()));
-        $whereDate = date('Y-m-d', strtotime(Carbon::now()));
-        $query = Transaksi::orderBy('created_at', 'DESC')
-            ->where('trx_jenis', 'Invoice')
-            ->whereMonth('created_at', $whereMonth);
-        $data['transaksi'] = $query->get();
-        // Transaksi::where('trx_kategori','Pendapatan')->update([
-        //     'trx_kategori' => 'Pendapatan',
-        //     'trx_jenis' => 'Invoice',
-        //     'trx_admin' => 'System',
-        // ]);
-        $data['in_mount'] = $query->sum('trx_debet');
-        $data['out_mount'] = Transaksi::whereMonth('created_at', $whereMonth)->where('trx_jenis', 'Invoice')->where('trx_kategori', 'Laporan Admin')->sum('trx_kredit');
-        $data['in_day'] = Transaksi::whereDate('created_at', $whereDate)->where('trx_jenis', 'Invoice')->where('trx_kategori', 'Pendapatan')->sum('trx_debet');
-        $data['out_day'] = Transaksi::whereDate('created_at', $whereDate)->where('trx_jenis', 'Invoice')->where('trx_kategori', 'Laporan Admin')->sum('trx_kredit');
-        $data['count_in'] = Transaksi::whereDate('created_at', $whereDate)->where('trx_jenis', 'Invoice')->where('trx_kategori', 'Pendapatan')->sum('trx_qty');
-        $data['count_out'] = Transaksi::whereDate('created_at', $whereDate)->where('trx_jenis', 'Invoice')->where('trx_kategori', 'Laporan Admin')->sum('trx_qty');
-        return view('Transaksi/transaksi', $data);
-    }
-    public function voucher()
-    {
-        $data['bulan'] = strtoupper(date('F', strtotime(Carbon::now())));
-        $whereMonth = date('m', strtotime(Carbon::now()));
-        $whereDate = date('Y-m-d', strtotime(Carbon::now()));
-        $query = Transaksi::orderBy('created_at', 'DESC')
-            ->where('trx_jenis', 'Voucher')
-            ->whereMonth('created_at', $whereMonth);
-        $data['transaksi'] = $query->get();
-        // Transaksi::where('trx_kategori','Pendapatan')->update([
-        //     'trx_kategori' => 'Pendapatan',
-        //     'trx_jenis' => 'Invoice',
-        //     'trx_admin' => 'System',
-        // ]);
-        $data['in_mount'] = $query->sum('trx_debet');
-        $data['out_mount'] = Transaksi::whereMonth('created_at', $whereMonth)->where('trx_jenis', 'Voucher')->where('trx_kategori', 'Laporan Admin')->sum('trx_kredit');
-        $data['in_day'] = Transaksi::whereDate('created_at', $whereDate)->where('trx_jenis', 'Voucher')->where('trx_kategori', 'Pendapatan')->sum('trx_debet');
-        $data['out_day'] = Transaksi::whereDate('created_at', $whereDate)->where('trx_jenis', 'Voucher')->where('trx_kategori', 'Laporan Admin')->sum('trx_kredit');
-        $data['count_in'] = Transaksi::whereDate('created_at', $whereDate)->where('trx_jenis', 'Voucher')->where('trx_kategori', 'Pendapatan')->sum('trx_qty');
-        $data['count_out'] = Transaksi::whereDate('created_at', $whereDate)->where('trx_jenis', 'Voucher')->where('trx_kategori', 'Laporan Admin')->sum('trx_qty');
-        // dd('test');
-        return view('Transaksi/transaksi_hotspot', $data);
-    }
+   
     public function jurnal(Request $request)
     {
         $data['tanggal'] = (new GlobalController)->tanggal();

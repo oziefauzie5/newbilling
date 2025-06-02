@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Data_Odp::class)->constrained()->on('data__odps')->onDelete('restrict');
              $table->unsignedBigInteger('reg_noc');
+             $table->unsignedBigInteger('reg_router');
             $table->foreign('reg_noc')->references('id')->on('users')->onDelete('restrict');
             $table->string('reg_out_odp')->nullable();
             $table->string('reg_in_ont')->nullable();

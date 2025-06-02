@@ -23,6 +23,11 @@ class Router extends Model
         'router_status',
     ];
 
+     protected $hidden = [
+        'router_password',
+        'router_username',
+    ];
+
     function pop_router()
     {
         return $this->hasOne(Data_pop::class,'id','data_pop_id');

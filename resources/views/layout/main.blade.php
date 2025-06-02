@@ -323,11 +323,6 @@
 											<span class="sub-item">Invoice Paid</span>
 										</a>
 									</li>
-									<li>
-										<a href="{{route('admin.inv.trx.index')}}">
-											<span class="sub-item">Transaksi</span>
-										</a>
-									</li>
 								</ul>
 							</div>
 						</li>

@@ -93,6 +93,6 @@ class ExportController extends Controller
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.topo.odp')->with($notifikasi);
+        return redirect()->route('admin.noc.index')->with($notifikasi);
     }
 }

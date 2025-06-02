@@ -198,8 +198,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/Transaksi/data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/add-pendapatan', [LaporanController::class, 'store_add_transaksi'])->name('lap.store_add_transaksi')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Data-Laporan', [LaporanController::class, 'data_lap_delete'])->name('inv.data_lap_delete')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/Transaksi', [TransaksiController::class, 'index'])->name('inv.trx.index')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/Transaksi/voucher', [TransaksiController::class, 'voucher'])->name('inv.trx.voucher')->middleware(['role:admin|STAF ADMIN']);
+
     Route::get('/Transaksi/jurnal', [TransaksiController::class, 'jurnal'])->name('lap.jurnal')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/Transaksi/{id}/jurnal-laporan', [TransaksiController::class, 'jurnal_laporan'])->name('lap.jurnal_laporan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/Transaksi/reimbuse', [TransaksiController::class, 'store_jurnal_reimbuse'])->name('lap.store_jurnal_reimbuse')->middleware(['role:admin|STAF ADMIN']);

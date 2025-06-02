@@ -18,8 +18,7 @@
             <div class="card-body table-responsive -sm">
               <button class="btn btn-sm btn-primary" data- toggle="modal" data-target="#modal-adduser" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Tambah POP</button>
               
-                 <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
-            <i class="fa fa-file-import"></i> Import
+                 <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import"><i class="fa fa-file-import"></i> Import
           </button>
           <!-- Modal Import -->
           <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">

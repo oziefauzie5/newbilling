@@ -13,6 +13,7 @@ class FtthInstalasi extends Model
         'corporate_id',
         'data__odp_id',
         'reg_noc',
+        'reg_router',
         'reg_in_ont',
         'reg_slot_odp',
     ];

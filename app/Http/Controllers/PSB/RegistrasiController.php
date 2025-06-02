@@ -729,7 +729,7 @@ Data_Tiket::create($tiket);
             //    dd($query);
             if ($query->reg_layanan == 'PPP') {
                 
-                $API = (new ApiController)->aktivasi_psb_ppp($query,);
+                $API = (new ApiController)->aktivasi_psb_ppp($query);
                 if ($API == 0) {
                 //LANJUTAN AKTIVASI
                 
