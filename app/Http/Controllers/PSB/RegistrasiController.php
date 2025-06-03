@@ -574,7 +574,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
             ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
             ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
             ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
