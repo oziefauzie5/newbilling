@@ -64,47 +64,49 @@
           @if ($errors->any())
           <div class="alert alert-danger">
             <div class="alert-title"><h4>Gagal!!</h4></div>
-              <ul>
-                @foreach ($errors->all() as $error)
+            <ul>
+              @foreach ($errors->all() as $error)
                   <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-          </div> 
-        @endif
-        
-        <a href="{{route('admin.psb.list_input')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-primary">
-            <i class="fa fa-plus"></i>
-            INPUT DATA 
-          </button>
-        </a>
-        <a href="{{route('admin.reg.index')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-primary">
-            <i class="fa fa-plus"></i>
-            REGISTRASI
-          </button>
-        </a>
-        <a href="{{route('admin.reg.data_aktivasi_pelanggan')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-primary">
-            <i class="fa fa-plus"></i>
-            AKTIVASI
-          </button>
-        </a>
-        <a href="{{route('admin.reg.data_deaktivasi')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-danger">
-            <i class="fa fa-plus"></i>
-            DEAKTIVASI
-          </button>
-        </a>
-        <a href="{{route('admin.export.export_registrasi')}}">
-          <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
-            <i class="fa fa-plus"></i>
-            EXPORT EXCEL
-          </button>
-        </a>
-        @role('admin')
-      <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
-        <i class="fa fa-file-import"></i> IMPORT
+                  @endforeach
+                </ul>
+              </div> 
+              @endif
+              @role('admin|STAF ADMIN')
+              <a href="{{route('admin.psb.list_input')}}">
+                <button class="btn  btn-sm ml-auto m-1 btn-primary">
+                  <i class="fa fa-plus"></i>
+                  INPUT DATA 
+                </button>
+              </a>
+              <a href="{{route('admin.reg.index')}}">
+                <button class="btn  btn-sm ml-auto m-1 btn-primary">
+                  <i class="fa fa-plus"></i>
+                  REGISTRASI
+                </button>
+              </a>
+              @endrole
+              <a href="{{route('admin.reg.data_aktivasi_pelanggan')}}">
+                <button class="btn  btn-sm ml-auto m-1 btn-primary">
+                  <i class="fa fa-plus"></i>
+                  AKTIVASI
+                </button>
+              </a>
+              <a href="{{route('admin.reg.data_deaktivasi')}}">
+                <button class="btn  btn-sm ml-auto m-1 btn-danger">
+                  <i class="fa fa-plus"></i>
+                  DEAKTIVASI
+                </button>
+              </a>
+              @role('admin|STAF ADMIN')
+              <a href="{{route('admin.export.export_registrasi')}}">
+                <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
+                  <i class="fa fa-plus"></i>
+                  EXPORT EXCEL
+                </button>
+              </a>
+              @role('admin')
+              <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
+                <i class="fa fa-file-import"></i> IMPORT
       </button>
       @endrole
       <a href="{{route('admin.psb.berita_acara')}}">
@@ -119,6 +121,7 @@
           FOLLOW UP
         </button>
       </a>
+      @endrole
         <hr>
         <form >
         <div class="row mb-1">

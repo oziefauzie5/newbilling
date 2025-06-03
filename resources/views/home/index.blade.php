@@ -15,7 +15,7 @@
   <div class="page-inner mt--5">
   
   {{-- DASHBOARD REGISTRASI --}}
-  <div class="row">
+  {{-- <div class="row">
     <div class="col-6 col-sm-4 col-lg-2">
       <div class="card">
           <div class="card-body p-3 text-center">
@@ -66,7 +66,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> --}}
   {{-- DASHBOARD REGISTRASI --}}
   {{-- DASHBOARD TIKET --}}
   <div class="row">

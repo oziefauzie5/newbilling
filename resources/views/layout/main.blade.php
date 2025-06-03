@@ -240,11 +240,13 @@
 							</a>
 							<div class="collapse" id="base">
 								<ul class="nav nav-collapse">
+									@role('admin|STAF ADMIN')
 									<li>
 										<a href="{{route('admin.psb.list_input')}}">
 											<span class="sub-item">Input Data</span>
 										</a>
 									</li>
+									@endrole
 									<li>
 										<a href="{{route('admin.psb.ftth')}}">
 											<span class="sub-item">Registrasi</span>
@@ -437,7 +439,7 @@
 											<span class="sub-item">Pengecekan-barang</span>
 										</a>
 									</li>
-									@role('admin')
+									@role('admin|NOC')
 									<li>
 										<a href="{{route('admin.router.noc.index')}}">
 											<span class="sub-item">Paket</span>
