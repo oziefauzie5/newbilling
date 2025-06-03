@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->integer('wt_jeda_isolir_hari')->nullable();
             $table->integer('wt_jeda_tagihan_pertama')->nullable();
+            $table->integer('wt_tgl_isolir')->nullable();
             $table->timestamps();
         });
     }

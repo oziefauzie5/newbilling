@@ -82,9 +82,11 @@ class AppController extends Controller
         if (isset($SettingBiaya) == NULL) {
             $data['wt_jeda_isolir_hari'] = "0";
             $data['wt_jeda_tagihan_pertama'] = "0";
+            $data['wt_tgl_isolir'] = "10";
         } else {
             $data['wt_jeda_isolir_hari'] = $SettingBiaya->wt_jeda_isolir_hari;
             $data['wt_jeda_tagihan_pertama'] = $SettingBiaya->wt_jeda_tagihan_pertama;
+            $data['wt_tgl_isolir'] = $SettingBiaya->wt_tgl_isolir;
         }
 
 
@@ -345,6 +347,7 @@ class AppController extends Controller
                     'corporate_id' => Session::get('corp_id'),
                     'wt_jeda_isolir_hari' => $request->wt_jeda_isolir_hari,
                     'wt_jeda_tagihan_pertama' => $request->wt_jeda_tagihan_pertama,
+                    'wt_tgl_isolir' => $request->wt_tgl_isolir,
                     ]
                 );
             } else {
@@ -352,6 +355,7 @@ class AppController extends Controller
                     [
                     'wt_jeda_isolir_hari' => $request->wt_jeda_isolir_hari,
                     'wt_jeda_tagihan_pertama' => $request->wt_jeda_tagihan_pertama,
+                    'wt_tgl_isolir' => $request->wt_tgl_isolir,
                 ]
             );
         }

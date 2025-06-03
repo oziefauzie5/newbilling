@@ -13,5 +13,6 @@ class SettingWaktuTagihan extends Model
         'corporate_id',
         'wt_jeda_isolir_hari',
         'wt_jeda_tagihan_pertama',
+        'wt_tgl_isolir',
     ];
 }

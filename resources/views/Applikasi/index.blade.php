@@ -354,6 +354,11 @@
                     @csrf
 
                 <div class="form-group">
+                  <label >Tanggal Isoli</label>
+                  <input type="text" class="form-control" name="wt_tgl_isolir" value="{{$wt_tgl_isolir}}"  required>
+                  <span class="notice">Penetapan tanggal isolir </span>
+                </div>
+                <div class="form-group">
                   <label >Isolir</label>
                   <input type="text" class="form-control" name="wt_jeda_isolir_hari" value="{{$wt_jeda_isolir_hari}}"  required>
                   <span class="notice">Jeda waktu isolir setelah jatuh tempo </span>

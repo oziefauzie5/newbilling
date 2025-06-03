@@ -95,7 +95,7 @@
             <div class="row mb-1">
               <div class="col">
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#export_excel">
+                {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#export_excel">
                   Export Excel
                 </button>
 
@@ -134,7 +134,7 @@
                       </form>
                     </div>
                   </div>
-                </div>
+                </div> --}}
               </div>
             </div>
 
