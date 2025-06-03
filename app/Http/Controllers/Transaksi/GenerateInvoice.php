@@ -10,6 +10,7 @@ use App\Models\Transaksi\SubInvoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Global\GlobalController;
+use Illuminate\Support\Facades\Session;
 
 class GenerateInvoice extends Controller
 {
@@ -76,6 +77,7 @@ class GenerateInvoice extends Controller
                 Invoice::create([
                     'inv_id' => $inv_id,#generate
                     // 'inv_id' => $no_iv, #add invoice
+                    'corporate_id' => Session::get('corp_id'),
                     'inv_status' => 'UNPAID',
                     'inv_idpel' => $dp->reg_idpel,
                     'inv_nolayanan' => $dp->reg_nolayanan,
@@ -95,6 +97,7 @@ class GenerateInvoice extends Controller
                     [
                         'subinvoice_id' => $inv_id, #generate
                         // 'subinvoice_id' => $no_iv, #add invoice
+                        'corporate_id' => Session::get('corp_id'),
                         'subinvoice_deskripsi' => $dp->paket_nama . ' ( ' . $periode1blan . ' )',
                         'subinvoice_harga' => $dp->reg_harga + $dp->reg_dana_kas + $dp->reg_dana_kerjasama,
                         'subinvoice_ppn' => $dp->reg_ppn,
