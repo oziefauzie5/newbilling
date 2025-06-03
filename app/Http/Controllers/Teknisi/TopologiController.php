@@ -245,6 +245,8 @@ class TopologiController extends Controller
             ->with('odp_odc')
             ->get();
 
+            
+
         return view('Teknisi/odc', $data);
     }
 
@@ -288,6 +290,8 @@ class TopologiController extends Controller
             'odc_lokasi_img.max' => 'Ukuran foto lokasi terlalu besar',
             'odc_lokasi_img.mimes' => 'Format foto lokasi hanya bisa jpeg',
         ]);
+
+       
 
         
 
@@ -429,6 +433,7 @@ class TopologiController extends Controller
             ->orderBy('data__odps.odp_id','ASC')
             ->get();
         // echo $data['data_odp'];
+        
         return view('Teknisi/odp', $data);
     }
     public function odp_instalasi($id)
@@ -516,8 +521,21 @@ class TopologiController extends Controller
             'odp_lokasi_img.mimes' => 'Foto lokasi Format hanya bisa jpeg',
         ]);
 
+           $data_odc = Data_Odc::query()
+             ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            // ->join('router_subs', 'router_subs.router_sub_id', '=', 'data__olts.router_sub_id')
+            // ->join('routers', 'routers.id', '=', 'router_subs.router_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->where('data__odcs.corporate_id',Session::get('corp_id'))
+            ->select('data__sites.site_nama')
+            ->where('data__odcs.id',$request->data__odc_id)
+            ->first();
+
+            // dd();
+
         $store['corporate_id'] = Session::get('corp_id');
-        $store['odp_id'] = $request->odp_id;
+        $store['odp_id'] = $data_odc->site_nama.'-'.$request->odp_id;
         $store['data__odc_id'] = $request->data__odc_id;
         $store['odp_slot_odc'] = $request->odp_slot_odc;
         $store['odp_core'] = $request->odp_core;
@@ -586,7 +604,8 @@ class TopologiController extends Controller
             'odp_slot_odc.required' => 'Slot ODC tidak boleh kosong',
         ]);
 
-        $store['odp_id'] = $request->odp_id;
+        $explode = explode('-',$request->odp_id);
+        $store['odp_id'] = $explode[0].$request->odp_id;
         $store['data__odc_id'] = $request->data__odc_id;
         $store['odp_slot_odc'] = $request->odp_slot_odc;
         $store['odp_core'] = $request->odp_core;
