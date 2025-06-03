@@ -18,7 +18,7 @@ class OltImport implements ToModel
         return new Data_Olt([
             'id' =>$row[0],
             'corporate_id' =>Session::get('corp_id'),
-            'router_id' => $row[1],
+            'data_pop_id' => $row[1],
             'olt_nama' => $row[2],
             'olt_pon' => $row[3],
             'olt_file_topologi' => $row[4],
