@@ -8,6 +8,7 @@ use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
 use App\Models\Teknisi\Data_pop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -30,7 +31,7 @@ class RouterController extends Controller
         $data['router_port_api'] = $request->router_port_api;
         $data['router_port_remote'] = $request->router_port_remote;
         $data['router_username'] = $request->router_username;
-        $data['router_password'] = $request->router_password;
+        $data['router_password'] = Hash::make($request->router_password);
         $data['router_status'] = 'Enable';
 
         Router::create($data);
