@@ -110,7 +110,7 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                        <form action="{{route('admin.inv.export_invoice')}}" method="post">
+                        <form action="" method="post">
                           @csrf
                           @method('POST')
                           <div class="row">
