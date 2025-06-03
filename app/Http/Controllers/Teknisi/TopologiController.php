@@ -13,6 +13,7 @@ use App\Models\Teknisi\Data_Odp;
 use App\Models\Teknisi\Data_Olt;
 use App\Models\Teknisi\Data_OltSub;
 use App\Models\Teknisi\Data_pop;
+use App\Models\Teknisi\RouterSub;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -122,20 +123,23 @@ class TopologiController extends Controller
     public function olt()
     {
         $data['data_olt'] = Data_Olt::query()
-            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
-            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
             ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->with('olt_odc')
             ->where('data__olts.corporate_id',Session::get('corp_id'))
-             ->select('data__olts.id','data__olts.*','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+             ->select(['data__olts.id',
+             'data__olts.*',
+             'data__olts.id as olt_id',
+             'data_pops.pop_nama',
+             'data__sites.site_nama'
+             ])
             ->get();
-        $data['data_router'] = Router::query()
-            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
-            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
-            ->where('routers.corporate_id',Session::get('corp_id'))
-            ->where('router_status','Enable')
-            ->select('routers.id as router_id','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
-            ->get();
+
+        $data['data_pop'] = Data_pop::where('data_pops.pop_status', 'Enable')
+        ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+        ->where('data_pops.corporate_id',Session::get('corp_id'))
+        ->select(['data_pops.id as pop_id','data_pops.pop_nama','data__sites.site_nama'])
+        ->get();
             
             
             return view('Teknisi/olt', $data);
@@ -146,19 +150,17 @@ class TopologiController extends Controller
     public function olt_store(Request $request)
     {
 
-         Session::flash('router_id', $request->router_id); #
+        Session::flash('data_pop_id', $request->data_pop_id); #
         Session::flash('olt_nama', $request->olt_nama); #
         Session::flash('olt_pon', $request->olt_pon); #
-         $request->validate([
-            'router_id' => 'required',
+
+        $request->validate([
+            'data_pop_id' => 'required',
             'olt_nama' => 'required',
             'olt_pon' => 'required',
             'olt_file_topologi' => 'required|max:1000|mimes:pdf',
-          
-
-       
         ], [
-            'router_id.required' => 'Router tidak boleh kosong',
+            'data_pop_id.required' => 'Pop tidak boleh kosong',
             'olt_nama.required' => 'Nama Olt tidak boleh kosong',
             'olt_pon.required' => 'Jumlah Pon tidak boleh kosong',
             'olt_file_topologi.required' => 'File tidak boleh kosong',
@@ -167,7 +169,7 @@ class TopologiController extends Controller
         ]);
 
         $store_olt['corporate_id'] = Session::get('corp_id');
-        $store_olt['router_id'] = $request->router_id;
+        $store_olt['data_pop_id'] = $request->data_pop_id;
         $store_olt['olt_pon'] = $request->olt_pon;
         $store_olt['olt_nama'] = strtoupper($request->olt_nama);
         $store_olt['olt_status'] = 'Enable';
@@ -176,10 +178,9 @@ class TopologiController extends Controller
         $filename = Session::get('corp_id').'_'.$store_olt['olt_nama'].'.pdf';
         $path = 'topologi/' . $filename;
         Storage::disk('public')->put($path, file_get_contents($photo));
-        $store_olt['olt_file_topologi'] = $filename;
         
+        $store_olt['olt_file_topologi'] = $filename;
         Data_Olt::create($store_olt);
-        // dd($store_olt['olt_id']);
         $notifikasi = array(
             'pesan' => 'Berhasil menambahkan OLT',
             'alert' => 'success',
@@ -189,11 +190,11 @@ class TopologiController extends Controller
     
     public function update_olt(Request $request, $id)
     {
-        $store_olt['router_id'] = $request->router_id;
+        $store_olt['data_pop_id'] = $request->data_pop_id;
         $store_olt['olt_nama'] = $request->olt_nama;
         $store_olt['olt_pon'] = $request->olt_pon;
         $store_olt['olt_status'] = $request->olt_status;
-        // dd($store_pop);
+
         $photo = $request->file('olt_file_topologi');
         if ($photo) {
             $filename = Session::get('corp_id').'_'.$store_olt['olt_nama'].'.pdf';
@@ -203,6 +204,8 @@ class TopologiController extends Controller
         }
         
         Data_Olt::where('corporate_id',Session::get('corp_id'))->where('id', $id)->update($store_olt);
+
+        
         $notifikasi = array(
             'pesan' => 'Berhasil update data Site',
             'alert' => 'success',
@@ -216,27 +219,28 @@ class TopologiController extends Controller
      
         $data['data_olt'] = Data_Olt::query()
             // ->join('routers', 'routers.id', '=', 'data__olts.id')
-            // ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
-            // ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->where('data__olts.olt_status','Enable')
             ->where('data__olts.corporate_id',Session::get('corp_id'))
             ->select([
                 'data__olts.id',
                 'data__olts.olt_nama',
                 // 'routers.router_nama',
-                // 'data_pops.pop_nama',
-                // 'data__sites.site_nama'
+                'data_pops.pop_nama',
+                'data__sites.site_nama'
             ])
             ->get();
 
             
         $data['data_odc'] = Data_Odc::query()
             ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
-            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+            // ->join('router_subs', 'router_subs.router_sub_id', '=', 'data__olts.id')
+            // ->join('routers', 'routers.id', '=', 'router_subs.router_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
             ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->where('data__odcs.corporate_id',Session::get('corp_id'))
-            ->select('data__odcs.*','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->select('data__odcs.*','data__olts.olt_nama','data_pops.pop_nama','data__sites.site_nama')
             ->orderBy('odc_id','ASC')
             ->with('odp_odc')
             ->get();
@@ -246,7 +250,7 @@ class TopologiController extends Controller
 
     public function odc_store(Request $request)
     {
-            Session::flash('odc_id', $request->odc_id); #
+            // Session::flash('odc_id', $request->odc_id); #
             Session::flash('odc_nama', $request->odc_nama); #
             Session::flash('odc_pon_olt', $request->odc_pon_olt); #
             Session::flash('odc_core', $request->odc_pon_olt); #
@@ -403,22 +407,24 @@ class TopologiController extends Controller
     public function odp()
     {
         $data['data_odc'] = Data_Odc::query()
-            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
-            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+             ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            // ->join('router_subs', 'router_subs.router_sub_id', '=', 'data__olts.router_sub_id')
+            // ->join('routers', 'routers.id', '=', 'router_subs.router_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
             ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->where('data__odcs.corporate_id',Session::get('corp_id'))
-            ->select('data__odcs.id','data__odcs.odc_nama','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->select('data__odcs.id as id_odc','data__odcs.odc_nama','data__olts.olt_nama','data_pops.pop_nama','data__sites.site_nama')
             ->get();
             
             $data['data_odp'] = Data_Odp::query()
             ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
-            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
-            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+             ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            // ->join('router_subs', 'router_subs.router_sub_id', '=', 'data__olts.router_sub_id')
+            // ->join('routers', 'routers.id', '=', 'router_subs.router_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
             ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
             ->where('data__odcs.corporate_id',Session::get('corp_id'))
-            ->select('data__odps.*','data__odps.id as id_odp','data__odcs.odc_nama','data__olts.olt_nama','routers.router_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->select('data__odps.*','data__odps.id as id_odp','data__odcs.odc_nama','data__olts.olt_nama','data_pops.pop_nama','data__sites.site_nama')
             ->with('data_isntalasi')
             ->orderBy('data__odps.odp_id','ASC')
             ->get();
@@ -444,6 +450,28 @@ class TopologiController extends Controller
             ->get();
         // echo $data['data_odp'];
         return view('Teknisi/odp_instalasi', $data);
+    }
+    public function odp_list($id)
+    {
+         $data['details_odc'] = Data_Odc::where('id',$id)->first();
+        $data['data_odc'] = Data_Odc::query()
+             ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->where('data__odcs.corporate_id',Session::get('corp_id'))
+            ->select('data__odcs.id','data__odcs.odc_nama','data__olts.olt_nama','data_pops.pop_nama','data__sites.site_nama')
+            ->get();
+            
+             $data['data_odp'] = Data_Odp::query()
+            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            ->where('data__odcs.corporate_id',Session::get('corp_id'))
+            ->where('data__odps.id',$id)
+            ->select('data__odps.*','data__odps.id as id_odp','data__odcs.odc_nama')
+            ->with('data_isntalasi')
+            ->orderBy('data__odps.odp_id','ASC')
+            ->get();
+        // echo $data['data_odp'];
+        return view('Teknisi/odp_list', $data);
     }
     public function odp_store(Request $request)
     {

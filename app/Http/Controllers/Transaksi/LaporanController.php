@@ -116,15 +116,27 @@ class LaporanController extends Controller
     public function topup(Request $request)
     {
         // dd($id);
-        $query = Laporan::select('laporans.id as laporan_id', 'laporans.*', 'setting_akuns.id as akun_id', 'setting_akuns.akun_nama', 'users.id as user_id', 'users.name')
-            ->orderBy('laporans.lap_tgl', 'DESC')
+        $query = Laporan::orderBy('laporans.created_at', 'DESC')
             ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
             ->join('users', 'users.id', '=', 'laporans.lap_admin')
+            ->where('laporans.corporate_id',Session::get('corp_id'))
+            ->where('laporans.lap_jenis_inv','Credit')
+            ->where('laporans.lap_inv','>' ,'0')
+            ->select([
+                'laporans.lap_id', 
+                'laporans.*', 
+                'laporans.created_at as lap_tgl',
+                'setting_akuns.id as akun_id', 
+                'setting_akuns.akun_nama', 
+                'users.id as user_id', 
+                'users.name'
+            ])
             ->where('lap_admin', $request->user_admin);
+
         $data['laporan'] = $query->get();
         $data['sum'] = $query->get();
         // dd($data);
-        $data['setting_akun'] = (new GlobalController)->setting_akun()->where('id', '!=', '5')->get();
+        $data['setting_akun'] =  SettingAkun::where('corporate_id',Session::get('corp_id'))->get();
         $data['admin'] = $request->user_admin;
 
         // dd($data);
@@ -135,14 +147,14 @@ class LaporanController extends Controller
 
         $user_admin = (new GlobalController)->user_admin();
         // $aray = $request->checkboxtopup_value;
-
+        return response()->json($user_admin);
         if ($id != 10) {
-            $query = Laporan::whereIn('id', $request->checkboxtopup_value);
+            $query = Laporan::where('corporate_id',Session::get('corp_id'))->whereIn('id', $request->checkboxtopup_value);
             $data['laporan'] = $query->get();
             $data['total'] = $query->sum('lap_kredit');
 
             $invoice = (new GlobalController)->no_invoice_mitra();
-            $count = Mutasi::count();
+            $count = Mutasi::where('corporate_id',Session::get('corp_id'))->scount();
             if ($count == 0) {
                 $count_invoice = 1;
             } else {
@@ -159,7 +171,7 @@ class LaporanController extends Controller
             #Admin yang sedang aktif (Membuat topup)
             $admin_user = Auth::user()->id;
 
-            $data['mt_mts_id'] = $id;
+            $data['corporate_id'] = Session::get('corp_id');
             $data['mt_admin'] = $admin_user;
             $data['mt_kategori'] = 'TOPUP';
             $data['mt_deskripsi'] = 'TOPUP ' . $user->nama_user . ' INVOICE-' . $invoice;
@@ -171,7 +183,7 @@ class LaporanController extends Controller
         }
 
         foreach ($request->checkboxtopup_value as $d) {
-            Laporan::where('lap_admin', $id)->where('id', $d)->update(
+            Laporan::where('corporate_id',Session::get('corp_id'))->where('lap_admin', $id)->where('id', $d)->update(
                 [
                     'lap_admin' => $user_admin['user_id'],
                 ]
@@ -227,25 +239,6 @@ class LaporanController extends Controller
             $data['data_lap_status'] = 0;
             $update_data['lap_status'] = 1;
             $update_data['lap_id'] = $request->lap_id;
-
-            $count_trx = Transaksi::where('trx_kategori', 'Laporan Admin')->whereDate('created_at', $tanggal)->sum('trx_qty');
-            $sum_trx = Transaksi::where('trx_kategori', 'Laporan Admin')->whereDate('created_at', $tanggal)->sum('trx_debet');
-            if ($count_trx == 0) {
-                $data_trx['trx_kategori'] = 'Laporan Admin';
-                $data_trx['trx_jenis'] = 'Pemindahan Dana';
-                $data_trx['trx_admin'] = 'System';
-                $data_trx['trx_deskripsi'] = 'Laporan harian admin';
-                $data_trx['trx_qty'] = $request->count_trx;
-                $data_trx['trx_kredit'] = $request->total;
-                Transaksi::where('trx_kategori', 'Laporan Admin')->create($data_trx);
-            } else {
-                $i = '1';
-                $data_trx['trx_qty'] = $count_trx + $i;
-                $data_trx['trx_kredit'] = $sum_trx + $request->total;
-                Transaksi::where('trx_kategori', 'Laporan Admin')->whereDate('created_at', $tanggal)->update($data_trx);
-            }
-
-
 
             DataLaporan::create($data);
             Laporan::where('lap_status', '0')->where('lap_admin', $id)
@@ -370,22 +363,7 @@ class LaporanController extends Controller
         ->where('laporans.lap_id', '=', $id);
         $data['laporan'] = $query->get();
         
-        $query_trx = Transaksi::whereDate('created_at', $admin_lap->data_lap_tgl);
-        $data['transaksi'] = $query_trx->get();
-        // dd($data['transaksi']->trx_kredit);
-         $data['transaksi_belum_setor'] = Transaksi::first();
-        
-        // $query = Laporan::whereDate('laporans.lap_tgl', '>=', '2024-11-01')->whereDate('laporans.lap_tgl', '<=', '2024-11-30')
-        //     ->orderBy('created_at', 'DESC')
-        //     ->select( 'lap_id','lap_tgl',DB::raw('sum(lap_kredit) as kredit'))
-        //     ->groupBy('lap_id','lap_tgl');
-        // $data['laporan'] = $query->get();
 
-        // foreach ($data['laporan'] as $key) {
-        // //    echo '<table><tr><td>'.date('d-m-Y',strtotime($key->lap_tgl)).'</td><td>'.$key->lap_idpel.'</td><td>'.$key->lap_keterangan.'</td><td>'.$key->lap_kredit.'</td></tr></table>';
-        //    echo '<table><tr><td>'.$key->lap_id.'</td><td>'.$key->kredit.'</td></tr></table>';
-        // }
-        // dd('tes');
         $data['total'] = Laporan::where('lap_id', $id)->sum('lap_kredit') - Laporan::where('lap_id', $id)->sum('lap_debet');
         $data['total_tunai'] = Laporan::where('lap_id', $id)->where('lap_akun', 2)->sum('lap_kredit') - Laporan::where('lap_id', $id)->where('lap_akun', 2)->sum('lap_debet');
         $data['total_kas'] = Laporan::where('lap_id', $id)->sum('lap_fee_lingkungan');

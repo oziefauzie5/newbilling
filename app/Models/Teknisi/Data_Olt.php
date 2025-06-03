@@ -13,7 +13,7 @@ class Data_Olt extends Model
     protected $fillable = [
         'id',
         'corporate_id',
-        'router_id',
+        'data_pop_id',
         'olt_nama',
         'olt_pon',
         'olt_file_topologi',
@@ -22,7 +22,7 @@ class Data_Olt extends Model
 
        function olt_router()
     {
-        return $this->hasOne(Router::class,'id','router_id');
+        return $this->hasOne(Router::class,'id','router_sub_id');
     }
        function olt_odc()
     {

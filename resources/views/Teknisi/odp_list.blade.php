@@ -13,7 +13,7 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-header bg-primary">
-              <h3 class="card-title text-light">Data Odp</h3>
+              <h3 class="card-title text-light">{{$details_odc->odc_nama}}</h3>
             </div>
             <div class="card-body table-responsive -sm">
               <button class="btn  btn-sm ml-auto m-1 btn-primary" data-toggle="modal" data-target="#modal-adduser"><i class="fas fa-solid fa-plus"></i>Tambah ODP</button>
@@ -80,7 +80,7 @@
                                       <select class="form-control" id="" name="data__odc_id"  >
                                         <option value="">--Pilih Odp Distribusi--</option>
                                         @foreach ($data_odc as $d)
-                                        <option value="{{$d->id_odc}}">{{$d->odc_nama ?? ''}} - {{$d->olt_nama ?? ''}} - {{$d->pop_nama ?? ''}} - {{$d->site_nama ?? ''}}</option>
+                                        <option value="{{$d->id}}">{{$d->odc_nama ?? ''}} -|- {{$d->olt_nama ?? ''}} -|- {{$d->router_nama ?? ''}} -|- {{$d->pop_nama ?? ''}} -|- {{$d->site_nama ?? ''}}</option>
                                         @endforeach
                                       </select>
                                   </div>
@@ -217,10 +217,6 @@
                 <table id="input_data" class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>Site</th>
-                      <th>Pop</th>
-                      <th>Olt</th>
-                      <th>Odp Dist.</th>
                       <th>Aksi</th>
                       <th>Odp Id</th>
                       <th>Odp Nama</th>
@@ -238,12 +234,6 @@
                   <tbody>
                     @foreach ($data_odp as $d)
                     <tr>
-                      
-                      
-                      <td>{{$d->site_nama ?? ''}}</td>
-                      <td>{{$d->pop_nama ?? ''}}</td>
-                      <td>{{$d->olt_nama ?? ''}}</td>
-                      <td><a href="http://">{{$d->odc_nama ?? ''}}</a></td>
                       <td>
                         <div class="form-button-action">
                             <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id ?? '1'}}" class="btn btn-link btn-primary btn-lg">
@@ -293,7 +283,7 @@
                                         <option value="{{$d->data__odc_id}}">{{$d->odc_nama}}</option>
                                         @endif
                                         @foreach ($data_odc as $odc)
-                                        <option value="{{$odc->id_odc}}">{{$odc->odc_nama ?? ''}} -|- {{$odc->olt_nama ?? ''}} -|- {{$odc->router_nama ?? ''}} -|- {{$odc->pop_nama ?? ''}} -|- {{$odc->site_nama ?? ''}}</option>
+                                        <option value="{{$odc->id}}">{{$odc->odc_nama ?? ''}} -|- {{$odc->olt_nama ?? ''}} -|- {{$odc->router_nama ?? ''}} -|- {{$odc->pop_nama ?? ''}} -|- {{$odc->site_nama ?? ''}}</option>
                                         @endforeach
                                       </select>
                                   </div>

@@ -80,7 +80,7 @@
                                       <select class="form-control" id="" name="data__olt_id"  >
                                         <option value="">--Pilih Olt--</option>
                                         @foreach ($data_olt as $d)
-                                        <option value="{{$d->id}}">{{$d->olt_nama}} -|- {{$d->router_nama}} -|- {{$d->pop_nama}} -|- {{$d->site_nama}} </option>
+                                        <option value="{{$d->id}}">{{$d->olt_nama}} - {{$d->pop_nama}} - {{$d->site_nama}} </option>
                                         @endforeach
                                       </select>
                                   </div>
@@ -199,7 +199,7 @@
                     <tr>
                       <th>Site</th>
                       <th>Pop</th>
-                      <th>Router Distribusi</th>
+                      {{-- <th>Router Distribusi</th> --}}
                       <th>Olt</th>
                       <th>Aksi</th>
                       <th>Odp Dist. Nama</th>
@@ -220,7 +220,7 @@
                       <tr>
                         <td>{{$d->site_nama}}</td>
                         <td>{{$d->pop_nama}}</td>
-                        <td>{{$d->router_nama}}</td>
+                        {{-- <td>{{$d->router_nama}}</td> --}}
                         <td>{{$d->olt_nama}}</td>
                         <td>
                         <div class="form-button-action">
@@ -228,6 +228,12 @@
                             <i class="fa fa-edit"></i>
                               </button>
                             </div>
+                             <div class="form-button-action">
+                          <a href="{{route('admin.topo.odp_list',['id'=>$d->id_odp ?? '1'])}}">
+                            <button type="button"class="btn btn-link btn-primary btn-lg">
+                              <i class="fa fa-users"></i>
+                            </button></a>
+                          </div>
                           </td>
                                 <td>{{$d->odc_nama}}</td>
                                 {{-- <td>{{$d->odc_id}}</td> --}}

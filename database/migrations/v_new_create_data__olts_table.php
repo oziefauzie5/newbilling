@@ -17,7 +17,9 @@ return new class extends Migration
         Schema::create('data__olts', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Router::class)->constrained()->on('routers')->onDelete('restrict');
+            // $table->foreignIdFor(Data_pop::class)->constrained()->on('data_pops')->onDelete('restrict');
+             $table->unsignedBigInteger('data_pop_id');
+            $table->foreign('data_pop_id')->references('id')->on('data_pops')->onUpdate('cascade')->onDelete('restrict');
             $table->integer('olt_pon')->nullable();
             $table->string('olt_nama')->nullable();
             $table->string('olt_file_topologi')->nullable();

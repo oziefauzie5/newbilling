@@ -46,6 +46,7 @@ use App\Models\Registrasi\Data_Deaktivasi;
 use App\Models\Teknisi\Data_Odp;
 use App\Models\Teknisi\Data_Olt;
 use App\Models\Teknisi\Data_pop;
+use App\Models\Teknisi\RouterSub;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tiket\Data_Tiket;
 use Illuminate\Support\Facades\DB;
@@ -145,7 +146,6 @@ class RegistrasiController extends Controller
             $tiket['tiket_keterangan'] = 'Instalasi PSB';
             $tiket['tiket_status'] = 'NEW';
             
-            
             $status = (new GlobalController)->whatsapp_status();
             if ($status) {
                 if ($status->wa_status == 'Enable') {
@@ -230,28 +230,41 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             ]);
             Pesan::create($pesan_pelanggan);
             Pesan::create($pesan_group);
-       
+            Registrasi::create($data);
+            Data_Tiket::create($tiket);
+            
 
 
-
-Registrasi::create($data);
-Data_Tiket::create($tiket);
-        InputData::where('corporate_id',Session::get('corp_id'))->where('id', $request->reg_idpel)->update($update);
-         for ($x = 0; $x < count($request->reg_mitra); $x++) {
-              FtthFee::create(
-                [
-                    'corporate_id'=> Session::get('corp_id'),
-                    'fee_idpel'=> $request->reg_idpel,
-                    'reg_mitra'=> $request->reg_mitra[$x],
-                    'reg_fee'=> $request->fee[$x],
-        
-                ]);
+            
+            // $arr = array( 0 => null, 1=>null, 2=>3, 3=>null); 
+            $arr = $request->reg_mitra;
+            foreach ($arr as $key=>$val) {
+                if ($val === null)
+                unset($arr[$key]);
+        }
+        $count_fee = array_values($arr);
+        $cek_count = count($count_fee);
+        if($cek_count >= 1){
+            // dd($cek_count);
+            for ($x = 0; $x < $cek_count; $x++) {
+                FtthFee::create(
+                    [
+                        'corporate_id'=> Session::get('corp_id'),
+                        'fee_idpel'=> $request->reg_idpel,
+                        'reg_mitra'=> $request->reg_mitra[$x],
+                        'reg_fee'=> $request->fee[$x],
+                        
+                    ]);
+                }
+            }
+                // dd('count_fee');
+                    InputData::where('corporate_id',Session::get('corp_id'))->where('id', $request->reg_idpel)->update($update);
+                    
         $notifikasi = array(
             'pesan' => 'Berhasil registrasi pelanggan',
             'alert' => 'success',
         );
         return redirect()->route('admin.psb.ftth')->with($notifikasi);
-    }
 
 //     public function delete_registrasi($id)
 //     {
@@ -689,6 +702,8 @@ Data_Tiket::create($tiket);
         // $teknisi['teknisi_psb'] = $request->aaaaaa;
         // $teknisi['teknisi_status'] = $request->aaaaaa;
 
+        // dd($request->reg_router);
+
  $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
 
                 FtthInstalasi::updateOrCreate(
@@ -701,15 +716,16 @@ Data_Tiket::create($tiket);
                     'reg_noc'=> $user_admin,
                     'reg_in_ont'=> $request->reg_in_ont,
                     'reg_slot_odp'=> $request->reg_slot_odp,
+                    'reg_router'=> $request->reg_router,
                 ]
             );
 
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
-            ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
-            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
-            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            // ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
+            // ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            // ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('registrasis.reg_idpel', $id)
             ->select([
@@ -802,14 +818,41 @@ Data_Tiket::create($tiket);
 
     public function aktivasi_validasi_odp($id)
     {
-        $odc_id = Data_Odp::join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
-            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
-            ->join('data_pops', 'data_pops.id', '=', 'routers.data_pop_id')
+        $data['odc_id'] = Data_Odp::join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+                ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
             ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
-            ->select('data__odps.odp_id','data__odps.odp_nama','data__odps.odp_slot_odc','data__odps.odp_core','data__odcs.odc_id','data__odcs.odc_nama','data__olts.olt_nama','data__olts.olt_pon','routers.router_nama','data_pops.pop_nama','data__sites.site_nama','routers.id as id_router','data_pops.id as id_pop','data__sites.id as id_site')
-            ->where("data__odps.odp_id", $id)->first();
-        return response()->json($odc_id);
+            ->select([
+                'data__odps.odp_id',
+                'data__odps.odp_nama',
+                'data__odps.odp_slot_odc',
+                'data__odps.odp_core',
+                'data__odcs.odc_id',
+                'data__odcs.odc_nama',
+                'data__olts.olt_nama',
+                'data__olts.olt_pon',
+                'data__olts.id as id_olt',
+                'data_pops.pop_nama',
+                'data__sites.site_nama',
+                'data_pops.id as id_pop',
+                'data__sites.id as id_site',
+            ])
+            ->where("data__odps.odp_id", $id)
+            ->where('data__odps.corporate_id',Session::get('corp_id'))->first();
+
+            $data['router'] = Data_pop::where('data_pops.corporate_id',Session::get('corp_id'))
+                                        ->join('routers', 'routers.data_pop_id', '=', 'data_pops.id')
+                                        ->where('data_pops.id',$data['odc_id']->id_pop)
+                                        // ->with(['data_router'])
+                                        ->select([
+                                                'routers.router_nama',
+                                                'routers.id as router_id'
+                                            ])
+                                        ->get();
+
+                                        // echo $data['router'];
+                                        // dd($data['router']);
+        return response()->json($data);
     }
     public function aktivasi_pelanggan($id)
     {

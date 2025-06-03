@@ -209,10 +209,7 @@ class BillerController extends Controller
         $admin_user = Auth::user()->id; #ID USER
         $nama_user = Auth::user()->name; #NAMA USER
         $mitra = MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id', $admin_user)->where('mts_limit_minus', '!=', '0')->first();
-        
-        
-        $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_debet');
-        $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $tgl_bayar)->sum('trx_qty');
+
         $saldo_mutasi = (new GlobalController)->total_mutasi($admin_user); #Cek saldo mutasi terlebih dahulu sebelum melakukan pemabayaran
         $cek_tagihan = (new GlobalController)->data_tagihan($id); #cek data tagihan pembayaran
         $sumharga = SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $cek_tagihan->inv_id)->sum('subinvoice_harga'); #hitung total harga invoice
@@ -228,18 +225,10 @@ class BillerController extends Controller
         if ($saldo_mitra) {
             $biller = MitraSetting::where('mts_user_id', $admin_user)->first(); #mengambil biaya admni biller pada table mitra_setting
 
-            ##CEK APAKAH PELANGGAN SUDAH ADA ODP ATAU BELUM
-            $cek_odp_pelanggan = Invoice::join('ftth_instalasis','ftth_instalasis.id','=','invoices.inv_idpel')
-                                                ->join('data__odps','data__odps.id','=','ftth_instalasis.data__odp_id')
-                                                ->where('data__odps.odp_nama','SYSTEM')
-                                                ->where('invoices.inv_id',$id)
-                                                ->first();
             
-             if($cek_odp_pelanggan){
-                 $data_pelanggan = (new GlobalController)->data_tagihan_non_odp($id);
-             } else{
+           
                  $data_pelanggan = (new GlobalController)->data_tagihan($id);
-             }
+             
             
             // dd($data_pelanggan);
             

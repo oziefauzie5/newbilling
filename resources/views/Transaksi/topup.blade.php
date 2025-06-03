@@ -30,7 +30,7 @@
           </div>
           @endif
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle btn-sm"  type="button" data-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle btn-sm"   type="button" data-toggle="dropdown" aria-expanded="false">
               Menu
             </button><hr>
             <div class="dropdown-menu">
@@ -49,7 +49,6 @@
                   <th>ADMIN</th>
                   <th>INVOICE</th>
                   <th>KETERANGAN</th>
-                  <th>CABAR</th>
                   <th>METODE BAYAR</th>
                   <th>KREDIT</th>
                 </tr>
@@ -60,15 +59,14 @@
                   @csrf
                   @method('POST') --}}
                 <tr>
-                  <td class="text-center"><input type="checkbox" class="checkboxtopup" name="id[]" value="{{$d->laporan_id}}" data-price="{{$d->lap_kredit}}"></td>
-                  <td>{{$d->laporan_id}}</td>
+                  <td class="text-center"><input type="checkbox" class="checkboxtopup" name="id[]" value="{{$d->lap_id}}" data-price="{{$d->lap_pokok + $d->lap_ppn}}"></td>
+                  <td>{{$d->lap_id}}</td>
                   <td>{{date('d-m-Y',strtotime($d->lap_tgl))}}</td>
                   <td>{{$d->name}}</td>
                   <td>{{$d->lap_inv}}</td>
                   <td>{{$d->lap_keterangan}}</td>
-                  <td>{{$d->lap_cabar}}</td>
                   <td>{{$d->akun_nama}}</td>
-                  <td >Rp. {{number_format($d->lap_kredit)}}</td>
+                  <td >Rp. {{number_format($d->lap_pokok + $d->lap_ppn)}}</td>
                 </tr>
                 
                 @endforeach

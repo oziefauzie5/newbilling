@@ -797,7 +797,7 @@ $('#paket_hotspot').on('change', function() {
                         },
                         dataType: 'json',
                         success: function(data) {
-                            console.log(data)
+                            // console.log(data)
                             if (data) {
                                 $('#vhc_hpp').empty();
                                 $('#vhc_hjk').empty();
@@ -1967,9 +1967,9 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
 				});                              
 				// checkboxtopup_value = checkboxtopup_value.toString(); 
 				// alert(checkboxtopup_value)
-
+				
 				$.ajax({
-                    url: url,
+					url: url,
                     type: 'PUT',
                     data: {
 						checkboxtopup_value:checkboxtopup_value,
@@ -1977,8 +1977,9 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
                     },
                     dataType: 'json',
                     success: function(data) {
-
-					window.location.href = data+"/admin/Transaksi/laporan-harian";
+						console.log(data)
+						
+						// window.location.href = data+"/admin/Transaksi/laporan-harian";
                     }
                 });
 		});  
@@ -2453,7 +2454,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 														$('#kode_barang_adp').val(data['barang_id_adp'])
 														$('.simpan_deaktivasi').removeAttr('disabled');
 														
-														console.log(data);
+														// console.log(data);
 													}
 												}
 											}
@@ -2505,7 +2506,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 														$('#kode_barang_adp').val(data['barang_id_adp'])
 														$('.simpan_deaktivasi').removeAttr('disabled');
 														
-														console.log(data);
+														// console.log(data);
 													}
 												}
 											}
@@ -2894,7 +2895,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
-										console.log(data)
+										// console.log(data)
 										if(data == 'failed'){
 												swal("Gagal!", "No Skb sudah ada. Silahkan coba klik simpan kembali.", {
 													icon : "error",
@@ -3465,7 +3466,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 									},
 									dataType: 'json',
 									success: function(data) {
-										console.log(data);
+										// console.log(data);
 										$('#uptime').val(data['user'][0]['uptime'])
 										if(data['active']){
 											$('#address').val(data['active'][0]['address'])
@@ -3550,17 +3551,13 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 				},
 				dataType: 'json',
 				success: function(data) {
-					console.log(data)
+					// console.log(data)
 					if (data) {
 
 							$("#cari_data").modal('hide');
 							
 							$('#fee_pic').empty()
 							$('#fee_subpic').empty()
-							// $('#fee_pic').val('');
-							// $('#fee_subpic').val('');
-							// $('#reg_mitra').empty()
-							// $('#reg_mitra').append('<option value="">--None--</option>')
 							$('#sub_mitra').empty()
 							$('#sub_mitra').append('<option value="">--None--</option>')
 							$('#tampil_hp').val(data['tampil_data']['input_hp']);
@@ -3577,21 +3574,22 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#tampil_subsales').val(data['tampil_data']['input_subseles']);
 							$('#tampil_keterangan').val(data['tampil_data']['input_keterangan']);
 							$('#tampil_site').val(data['tampil_data']['data__site_id']);
+							$('#reg_mitra').empty()
+										$('#reg_mitra').append('<option value="">--None--</option>')
 							
 
 
 							if(data['tampil_data']['input_sales']){
 								$('#tampil_sales').empty()
 								$('#tampil_fee_sales').empty()
-								// $('#tampil_fee_sales').val('')
+								// $('#tampil_fee_sales').removeAttr('value');
 								$('#tampil_sales').append('<option value="'+data['tampil_data']['input_sales']+'">'+data['tampil_data']['user_sales']['name']+'</option>');
+								// $('#tampil_fee_sales').val(data['tampil_data']['input_mitra']['mts_komisi']);
 								$('#tampil_fee_sales').append('<option value="'+data['tampil_data']['input_mitra']['mts_komisi']+'">'+data['tampil_data']['input_mitra']['mts_komisi']+'</option>');
-								// document.getElementById("tampil_fee_sales").value =data['tampil_data']['input_mitra']['mts_komisi'];
 							} else {
-								$('#tampil_fee_sales').empty()
+								$('#tampil_fee_sales').removeAttr('value');
 								$('#tampil_sales').empty()
 								$('#tampil_sales').append('<option value="">--None--</option>')
-								// $('#tampil_fee_sales').val('')
 							}
 								$('#jenis_tagihan').empty()
 								$('#jenis_tagihan').append('<option value="">--Pilih Jenis Tagihan--</option>')
@@ -3617,11 +3615,17 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 		
 							
 		
+								var harga_fee_pic = 5000; 
 								$('#jenis_tagihan').on('change', function() {
 									
 									var jenis_tagihan = $(this).val();
 									if(jenis_tagihan != 'FREE'){
-
+										$('#fee_pic').empty()
+										$('#fee_subpic').empty()
+										$('#reg_mitra').empty()
+										$('#reg_mitra').append('<option value="">--None--</option>')
+										$('#sub_mitra').empty()
+										$('#sub_mitra').append('<option value="">--None--</option>')
 										var url = '{{ route("admin.reg.getMitra") }}';
 										$.ajax({
 											url: url,
@@ -3631,10 +3635,10 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											},
 											dataType: 'json',
 											success: function(data) {
-												
+
 												
 												$('#reg_mitra').empty()
-												$('#reg_mitra').append('<option value="null">--None--</option>')
+												$('#reg_mitra').append('<option value="">--None--</option>')
 												for (let i = 0; i < data.length; i++) {
 													$('#reg_mitra').append('<option value="'+data[i].mts_user_id+'">'+data[i]['user_mitra'].name+'</option>');
 												}
@@ -3642,66 +3646,43 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											}
 										});
 									} else {
-										// $('#tampil_fee_sales').val('') 
-										// $('#fee_subpic').val('') 
-										// $('#fee_pic').val('') 
-										$('#fee_pic').empty()
-										$('#fee_subpic').empty()
-										$('#tampil_sales').empty()
-										$('#tampil_fee_sales').empty()
-										$('#reg_mitra').empty()
-										$('#reg_mitra').append('<option value="null">--None--/option>')
-										$('#sub_mitra').empty()
-										$('#sub_mitra').append('<option value="null">--None--/option>')
-										$('#tampil_sales').append('<option value="null">--None--/option>')
+										location.reload();
 									}
 								});
 
 
 									$('#reg_mitra').on('change', function() {
 										$('#sub_mitra').empty()
-										$('#sub_mitra').append('<option value="null">--None--</option>')
+										$('#sub_mitra').append('<option value="">--None--</option>')
 										$('#fee_pic').val()
 										$('#fee_subpic').val()
 										var idpel = $('#tampil_idpel').val()
 										var getMitraSub = $(this).val();
-									var url = '{{ route("admin.reg.getMitraSub", ":id") }}';
-									url = url.replace(':id', getMitraSub);
-										$.ajax({
-											url: url,
-											type: 'GET',
-											data: {
-												idpel:idpel,
-												'_token': '{{ csrf_token() }}'
-												
-											},
-											dataType: 'json',
-											success: function(data) {
-												// Harga fee pic jika ada sales pada pelanggan
-												var harga_fee_pic = 5000; 
-
-
-												for (let i = 0; i < data['mitrasub_data'].length; i++) {
-													$('#sub_mitra').append('<option value="'+data['mitrasub_data'][i].mts_sub_user_id+'">'+data['mitrasub_data'][i]['user_submitra'].name+'</option>');
-												}
-
-
-												
-												if(data['fee_sales']['input_sales']){
-													// Fee Sales
+										var harga_fee_pic = 5000; 
+										if(getMitraSub){
+											var url = '{{ route("admin.reg.getMitraSub", ":id") }}';
+											url = url.replace(':id', getMitraSub);
+											$.ajax({
+												url: url,
+												type: 'GET',
+												data: {
+													idpel:idpel,
+													'_token': '{{ csrf_token() }}'
+													
+												},
+												dataType: 'json',
+												success: function(data) {
+													for (let i = 0; i < data['mitrasub_data'].length; i++) {
+														$('#sub_mitra').append('<option value="'+data['mitrasub_data'][i].mts_sub_user_id+'">'+data['mitrasub_data'][i]['user_submitra'].name+'</option>');
+													}
+													
+													
+													
+													if(data['fee_sales']['input_sales'] > 0){
+													// Harga fee pic jika ada sales pada pelanggan
 													var fee_sales = data['fee_sales']['input_mitra']['mts_komisi'];
-													if(data['mitra_subfee'] == ''){
-														$('#fee_pic').empty();
-														$('#tampil_fee_sales').empty();
-														$('#tampil_fee_sales').append('<option value="'+fee_sales+'">'+fee_sales+'</option>')
-														// $('#fee_pic').val();
-														// $('#tampil_fee_sales').val(fee_sales);
-														
-													} else {
-														// ##--Jika menambahkan Mitra pada pelanggan yang dibawa oleh sales
 														$('#fee_pic').empty();
 														$('#fee_pic').append('<option value="'+harga_fee_pic+'">'+harga_fee_pic+'</option>')
-														// $('#fee_pic').val(harga_fee_pic);
 														var total1 = parseInt(fee_sales) - parseInt(harga_fee_pic);
 														if (isNaN(total1)) {
 															total1 = '';
@@ -3709,23 +3690,22 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 														$('#tampil_fee_sales').empty();
 														$('#tampil_fee_sales').append('<option value="'+total1+'">'+total1+'</option>')
 														$('#sub_mitra').attr('disabled','disabled');
-														// $('#tampil_fee_sales').val(total1);
-
-													}
+													// console.log('ada sales')
 												} else {
+													// console.log('tidak ada sales')
 														$('#sub_mitra').removeAttr('disabled');
 														$('#fee_subpic').empty();
 														$('#fee_pic').empty();
 														$('#fee_pic').append('<option value="'+data['mitra_subfee'][0]['mts_komisi']+'">'+data['mitra_subfee'][0]['mts_komisi']+'</option>')
-													// $('#fee_pic').val(data['mitra_subfee'][0]['mts_komisi']);
+
 												}
-
-
 												$('#sub_mitra').on('change', function() {
 													var getMitraSub = $(this).val();
-													var url = '{{ route("admin.reg.getMitraSubfee", ":id") }}';
-													url = url.replace(':id', getMitraSub);
-													$.ajax({
+													if(getMitraSub){
+														
+														var url = '{{ route("admin.reg.getMitraSubfee", ":id") }}';
+														url = url.replace(':id', getMitraSub);
+														$.ajax({
 														url: url,
 														type: 'GET',
 														data: {
@@ -3734,19 +3714,34 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 														dataType: 'json',
 														success: function(data) {
 															if(data){
-																// $('#fee_subpic').val('');
 																$('#fee_subpic').empty();
 																$('#fee_subpic').append('<option value="'+data[0]['mts_komisi']+'">'+data[0]['mts_komisi']+'</option>')
-																// $('#fee_subpic').val(data[0]['mts_komisi']);
 															}else {
 																$('#fee_subpic').empty();
-																// $('#fee_subpic').val('');
 															}
-															}
-														});
+														}
 													});
+												} else {
+													$('#fee_subpic').empty();
 												}
-										});
+													});
+												} 
+												
+											});
+										} else {
+											$('#fee_pic').empty();
+											$('#fee_subpic').empty();
+											$('#sub_mitra').empty();
+											$('#sub_mitra').append('<option value="">--None--</option>')
+												var total2 = parseInt($('#tampil_fee_sales').val()) + parseInt(harga_fee_pic);
+												if (isNaN(total2)) {
+													total2 = '';
+												}
+												$('#tampil_fee_sales').empty();
+												$('#tampil_fee_sales').append('<option value="'+total2+'">'+total2+'</option>')
+												$('#sub_mitra').attr('disabled','disabled');
+										}
+								
 									});
 								// validasi_odp
 
@@ -3761,14 +3756,19 @@ $.ajax({
 			data: {'_token': '{{ csrf_token() }}'},
 						dataType: 'json',
 						success: function(data) {
-							console.log(data.odc_id)
-							if(data.odp_id){
-								// $('#validasi_olt').val(data.olt_nama)
-								$('#validasi_odc').val(data.odc_id)
-								$('#validasi_olt').append('<option value="'+data.id_router+'">'+data.olt_nama+'</option>')
-								$('#validasi_router').append('<option value="'+data.id_router+'">'+data.router_nama+'</option>')
-								$('#validasi_pop').append('<option value="'+data.id_pop+'">'+data.pop_nama+'</option>')
-								$('#validasi_site').append('<option value="'+data.id_site+'">'+data.site_nama+'</option>')
+							// console.log(data['odc_id'])
+							if(data['odc_id'].odp_id){
+								// $('#validasi_olt').val(data['odc_id'].olt_nama)
+								$('#validasi_odc').val(data['odc_id'].odc_nama)
+								$('#validasi_olt').append('<option value="'+data['odc_id'].id_olt+'">'+data['odc_id'].olt_nama+'</option>')
+								$('#validasi_pop').append('<option value="'+data['odc_id'].id_pop+'">'+data['odc_id'].pop_nama+'</option>')
+								$('#validasi_site').append('<option value="'+data['odc_id'].id_site+'">'+data['odc_id'].site_nama+'</option>')
+								$('#validasi_router').empty();
+								$('#validasi_router').append('<option value="">--Pilih Router--</option>')
+								for (let i = 0; i < data['router'].length; i++) {
+									$('#validasi_router').append('<option value="'+data['router'][i].router_id+'">'+data['router'][i].router_nama+'</option>');
+								}
+
 
 								$('.read').readOnly = true
 								$('.notif').removeClass('has-error has-feedback')
@@ -3777,7 +3777,11 @@ $.ajax({
 								$('.notif_valtiket').addClass('has-success has-feedback')
 								$('#pesan').html('')
 							} else{
-								$('#validasi_odc').val('')
+								
+								}
+						},
+						error: function(error) {
+							$('#validasi_odc').val('')
 								// $('#validasi_olt').val('')
 								$('#validasi_olt').empty()
 								$('#validasi_router').empty()
@@ -3786,10 +3790,6 @@ $.ajax({
 								$('.notif').addClass('has-error has-feedback')
 								$('.notif_valtiket').addClass('has-error has-feedback')
 								$('#pesan').html('<small id="text" class="form-text text-muted text-danger">Kode ODP tidak ditemukan</small>')
-								}
-						},
-						error: function(error) {
-							// console.log(error)
 
 						},
 					});

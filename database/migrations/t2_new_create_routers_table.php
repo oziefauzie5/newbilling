@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('routers', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Data_pop::class)->constrained()->on('data_pops')->onDelete('restrict');
+            // $table->foreignIdFor(Data_pop::class)->constrained()->on('data_pops')->onDelete('restrict');
+            $table->unsignedBigInteger('data_pop_id');
+            $table->foreign('data_pop_id')->references('id')->on('data_pops')->onUpdate('cascade')->onDelete('restrict');
             $table->string('router_nama')->nullable();
             $table->string('router_ip')->nullable();
             $table->string('router_dns')->nullable();

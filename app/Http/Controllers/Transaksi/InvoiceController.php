@@ -385,10 +385,7 @@ class InvoiceController extends Controller
         ->join('laporans', 'laporans.lap_inv', '=', 'invoices.inv_id')
         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
         ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
-        ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
-            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
-            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-            ->join('routers', 'routers.id', '=', 'data__olts.router_id')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->where('invoices.corporate_id',Session::get('corp_id'))
             ->where('invoices.inv_id', $id)
             ->select([
@@ -574,14 +571,6 @@ class InvoiceController extends Controller
         } else {
 
 
-            
-            $cek_odp_pelanggan = Invoice::join('ftth_instalasis','ftth_instalasis.id','=','invoices.inv_idpel')
-                                                ->join('data__odps','data__odps.id','=','ftth_instalasis.data__odp_id')
-                                                ->where('data__odps.odp_nama','SYSTEM')
-                                                ->where('invoices.inv_id',$id)
-                                                ->first();
-
-           if($cek_odp_pelanggan){
                $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
                ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
@@ -601,33 +590,7 @@ class InvoiceController extends Controller
                    'routers.*',
                ])
                ->first();
-            //    dd('ini jika tidak ada odp');
-            } else{
-                // dd('ini jika ada odp');
-                 $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-                ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-                ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
-                // ->join('ftth_fees', 'ftth_fees.fee_idpel', '=', 'registrasis.reg_idpel')
-                ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
-                ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
-                ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-                ->join('routers', 'routers.id', '=', 'data__olts.router_id')
-                ->where('invoices.corporate_id',Session::get('corp_id'))
-                ->where('inv_id', $id)
-                ->select([
-                    'invoices.*',
-                    'registrasis.reg_idpel',
-                    'registrasis.reg_layanan',
-                    'registrasis.reg_username',
-                    'registrasis.reg_nolayanan',
-                    'registrasis.reg_password',
-                    'input_data.input_nama',
-                    'pakets.paket_nama',
-                    'routers.*',
-                ])
-                ->first();
-            }
+          
 
             //  dd($data_pelanggan);
 
@@ -1022,17 +985,6 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     //         ]
     //     );
     // }
-
-
-    public function export_invoice(Request $request)
-    {
-        $data['data_inv'] = $request->data_inv;
-        $data['bulan'] = $request->bulan;
-        // dd($data);
-        $data_excel = (new ExportInvoice($data));
-        return Excel::download($data_excel, 'invoice.xlsx');
-    }
-
 
 
 

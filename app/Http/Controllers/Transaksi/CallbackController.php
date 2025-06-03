@@ -84,15 +84,6 @@ class CallbackController extends Controller
             switch ($status) {
                 case 'PAID':
 
-                    // $nama_user = Auth::user()->name; #NAMA USER
-
-                    $cek_odp_pelanggan = Invoice::join('ftth_instalasis','ftth_instalasis.id','=','invoices.inv_idpel')
-                                                ->join('data__odps','data__odps.id','=','ftth_instalasis.data__odp_id')
-                                                ->where('data__odps.odp_nama','SYSTEM')
-                                                ->where('invoices.inv_id',$data->merchant_ref)
-                                                ->first();
-
-                    if($cek_odp_pelanggan){
                         $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
                         ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
                         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
@@ -113,31 +104,6 @@ class CallbackController extends Controller
                         ])
                         ->first();
               
-                    } else {
-                    $data_pelanggan = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
-                        ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-                        ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-                        ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
-                        ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
-                        ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
-                        ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
-                        ->join('routers', 'routers.id', '=', 'data__olts.router_id')
-                        ->where('invoices.corporate_id',Session::get('corp_id'))
-                        ->where('inv_id', $data->merchant_ref)
-                        ->select([
-                            'invoices.*',
-                            'registrasis.reg_idpel',
-                            'registrasis.reg_layanan',
-                            'registrasis.reg_username',
-                            'registrasis.reg_nolayanan',
-                            'registrasis.reg_password',
-                            'input_data.input_nama',
-                            'pakets.paket_nama',
-
-                            'routers.*',
-                        ])
-                        ->first();
-                    }
 
                 $tgl_bayar = date('Y-m-d H:i:s', strtotime(Carbon::now()));
 
@@ -306,31 +272,6 @@ class CallbackController extends Controller
             $reg['reg_status'] = 'PAID';
 
             Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_idpel', $data_pelanggan->reg_idpel)->update($reg);
-
-             $cek_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->whereDate('created_at', $if_tgl_bayar)->count();
-                if ($cek_trx > 0) {
-                    $sum_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_debet');
-                    $count_trx = Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->sum('trx_qty');
-                } else {
-                    $sum_trx = '0';
-                    $count_trx = '0';
-                }
-
-            if ($count_trx == 0) {
-                $data_trx['corporate_id'] = Session::get('corp_id');
-                $data_trx['trx_kategori'] = 'Pendapatan';
-                $data_trx['trx_jenis'] = 'Invoice';
-                $data_trx['trx_admin'] = 'System';
-                $data_trx['trx_deskripsi'] = 'Pembayaran Invoice';
-                $data_trx['trx_qty'] = 1;
-                $data_trx['trx_debet'] = $total_inv;
-                Transaksi::create($data_trx);
-            } else {
-                $i = '1';
-                $data_trx['trx_qty'] = $count_trx + $i;
-                $data_trx['trx_debet'] = $sum_trx + $total_inv;
-                Transaksi::where('corporate_id',Session::get('corp_id'))->where('trx_jenis', 'Invoice')->whereDate('created_at', $if_tgl_bayar)->update($data_trx);
-            }
 
             $status = (new GlobalController)->whatsapp_status();
             if($status){

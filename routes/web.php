@@ -147,6 +147,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/topologi/odp', [TopologiController::class, 'odp'])->name('topo.odp')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/topologi/store-odp', [TopologiController::class, 'odp_store'])->name('topo.odp_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/topologi/odp/{id}/instalasi', [TopologiController::class, 'odp_instalasi'])->name('topo.odp_instalasi')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/topologi/odp/{id}/list', [TopologiController::class, 'odp_list'])->name('topo.odp_list')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/topologi/{id}/update-odp', [TopologiController::class, 'update_odp'])->name('topo.update_odp')->middleware(['role:admin|NOC|STAF ADMIN']);
     
     
@@ -261,7 +262,6 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::post('/invoice/add-inv-manual', [InvoiceController::class, 'add_inv_manual'])->name('inv.add_inv_manual')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/suspend-manual', [InvoiceController::class, 'suspend_manual'])->name('inv.suspend_manual')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/test2', [InvoiceController::class, 'test2'])->name('inv.test2')->middleware(['role:admin|STAF ADMIN']);
-    Route::post('/invoice/export-excel', [InvoiceController::class, 'export_invoice'])->name('inv.export_invoice')->middleware(['role:admin|STAF ADMIN']);
     
     
     

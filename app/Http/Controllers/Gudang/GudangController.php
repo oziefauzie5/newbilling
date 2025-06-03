@@ -126,7 +126,7 @@ class GudangController extends Controller
 
         // $barang_id_group = date('d') . mt_rand(1000, 9999);
 
-
+        
         for ($x = 0; $x < $request->barang_qty; $x++) {
             $data[] = [
                 // 'barang_id' => fake()->randomNumber(6),

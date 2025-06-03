@@ -295,7 +295,7 @@ class PsbController extends Controller
         // dd($id_cust);
         // $id_cust = '12154';
       
-        $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
+        $data['input_tgl'] = date('Y-m-d H:i:s', strtotime(carbon::now()));
 
         $cek_nohp = InputData::where('input_hp', $nomorhp)->where('corporate_id',Session::get('corp_id'))->count();
 
@@ -303,7 +303,7 @@ class PsbController extends Controller
             InputData::create([
                 'corporate_id' => Session::get('corp_id'),
                 'data__site_id' => $site_id,
-                // 'input_tgl' => $data['input_tgl'],
+                'input_tgl' => $data['input_tgl'],
                 'input_nama' => strtoupper($request->input_nama),
                 'id' => $id_cust,
                 'input_ktp' => $request->input_ktp,

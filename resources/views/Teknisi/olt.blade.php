@@ -76,11 +76,11 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6 form-group">
-                                        <label>Router</label>
-                                          <select class="form-control" id="" name="router_id"  >
-                                            <option value="">- Pilih Router -</option>
-                                            @foreach ($data_router as $r)
-                                                <option value="{{$r->router_id}}">{{$r->router_nama}} -|- {{$r->pop_nama}} -|- {{$r->site_nama}}</option>
+                                        <label>Pop</label>
+                                          <select class="form-control" id="" name="data_pop_id"  >
+                                            <option value="">- Pilih Pop -</option>
+                                            @foreach ($data_pop as $r)
+                                                <option value="{{$r->pop_id}}">{{$r->site_nama}} - {{$r->pop_nama}}</option>
                                             @endforeach
                                           </select>
                                     </div>
@@ -123,7 +123,6 @@
                     <tr>
                       <th>Site</th>
                       <th>Pop</th>
-                      <th>Distribusi</th>
                       <th>Aksi</th>
                       <th>Olt Nama</th>
                       <th>Jumlah PON</th>
@@ -137,10 +136,9 @@
                       <tr>
                         <td>{{$d->site_nama ?? '-'}}</td>
                         <td>{{$d->pop_nama ?? '-'}}</td>
-                        <td>{{$d->router_nama ?? '-'}}</td>
                         <td>
                           <div class="form-button-action">
-                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
+                              <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->olt_id}}" class="btn btn-link btn-primary btn-lg">
                                 <i class="fa fa-edit"></i>
                               </button>
                             </div>
@@ -151,9 +149,9 @@
                         <td>{{$d->olt_file_topologi ?? '-'}}</td>
                         <td>{{$d->olt_status ?? '-'}}</td>
                           
-                      <div class="modal fade" id="modal-edit{{$d->id}}">
+                      <div class="modal fade" id="modal-edit{{$d->olt_id}}">
                           <div class="modal-dialog modal-lg">
-                            <form action="{{route('admin.topo.update_olt',['id'=>$d->id])}}" method="POST" enctype="multipart/form-data">
+                            <form action="{{route('admin.topo.update_olt',['id'=>$d->olt_id])}}" method="POST" enctype="multipart/form-data">
                             @csrf  
                             @method('PUT')
                             <div class="modal-content">
@@ -167,13 +165,13 @@
                                 <div class="card-body">
                                   <div class="row">
                                        <div class="col-6 form-group">
-                                        <label>Router</label>
-                                          <select class="form-control" id="" name="router_id"  >
-                                            @if($d->router_id)
-                                            <option value="{{$d->router_id}}">{{$d->router_nama}}</option>
+                                        <label>Pop</label>
+                                          <select class="form-control" id="" name="data_pop_id"  >
+                                            @if($d->data_pop_id)
+                                            <option value="{{$d->data_pop_id}}">{{$d->pop_nama}}</option>
                                             @endif
-                                            @foreach ($data_router as $r)
-                                                <option value="{{$r->router_id}}">{{$r->router_nama}} -|- {{$r->pop_nama}} -|- {{$r->site_nama}}</option>
+                                             @foreach ($data_pop as $r)
+                                                <option value="{{$r->pop_id}}">{{$r->site_nama}} - {{$r->pop_nama}}</option>
                                             @endforeach
                                           </select>
                                     </div>

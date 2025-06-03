@@ -3,6 +3,7 @@
 namespace App\Models\Teknisi;
 
 use App\Models\Aplikasi\Data_Site;
+use App\Models\Router\Router;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,5 +23,9 @@ class Data_pop extends Model
     function pop_site()
     {
         return $this->hasOne(Data_Site::class,'id','data__site_id');
+    }
+    function data_router()
+    {
+        return $this->hasMany(Router::class,'id','data_pop_id');
     }
 }
