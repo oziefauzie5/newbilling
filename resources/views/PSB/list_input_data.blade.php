@@ -40,7 +40,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form action="{{route('admin.export.export_input_data')}}" method="POST" enctype="multipart/form-data">
+                  <form action="{{route('admin.export.import_input_data')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
                     <div class="row">
