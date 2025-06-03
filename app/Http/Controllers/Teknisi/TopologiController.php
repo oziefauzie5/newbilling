@@ -604,8 +604,9 @@ class TopologiController extends Controller
             'odp_slot_odc.required' => 'Slot ODC tidak boleh kosong',
         ]);
 
-        $explode = explode('-',$request->odp_id);
-        $store['odp_id'] = $explode[0].$request->odp_id;
+        // $explode = explode('-',$request->odp_id);
+        $store['odp_id'] = $request->odp_id;
+        // dd($store);
         $store['data__odc_id'] = $request->data__odc_id;
         $store['odp_slot_odc'] = $request->odp_slot_odc;
         $store['odp_core'] = $request->odp_core;
