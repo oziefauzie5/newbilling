@@ -16,10 +16,71 @@
               <h3 class="card-title text-light">Data POP</h3>
             </div>
             <div class="card-body table-responsive -sm">
-              <button class="btn btn-sm btn-primary" data- toggle="modal" data-target="#modal-adduser" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Tambah POP</button>
+              {{-- <button class="btn btn-sm btn-primary" data- toggle="modal" data-target="#modal-adduser" class="btn btn-primary btn-sm">Tambah POP</button> --}}
               
+              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-solid fa-plus"></i> 
+                Tambah Pop
+              </button>
                  <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import"><i class="fa fa-file-import"></i> Import
           </button>
+
+          <!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tambah POP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+                            <div class="row">
+                              <div class="col-12 form-group">
+                                 <form action="{{route('admin.topo.pop_store')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('POST')
+                                <label>Site</label>
+                                          <select name="data__site_id" id="site"  class="form-control">
+                                            <option value="">- Pilih Site -</option>
+                                            @foreach ($data_site as $ds)
+                                            <option value="{{$ds->id}}">{{$ds->site_nama}}</option>
+                                            @endforeach
+                                          </select>
+                                        </div>
+                                <div class="col-12 form-group">
+                                    <label>Nama Pop</label>
+                                    <input type="text" class="form-control" value="{{ Session::get('pop_nama') }}" name="pop_nama" placeholder="Masukan Nama Pop">
+                                </div>
+                                <div class="col-12 form-group">
+                                    <label>Alamat Lengkap POP</label>
+                                    <textarea name="pop_alamat" class="form-control" value="" cols="30" rows="3">
+  {{ Session::get('pop_alamat') }}</textarea>
+                                </div>
+                                <div class="col-12 form-group">
+                                    <label>Koordinat</label>
+                                    <input type="text" class="form-control" value="{{ Session::get('pop_koordinat') }}"  name="pop_koordinat" placeholder="Masukan Koordinat Pop">
+                                </div>
+                                <div class="col-6 form-group">
+                                  <label>Upload Foto</label>
+                                  <input  type="file" class="form-control-file" name="pop_file_topologi">
+                                </div>
+                              </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Save changes</button>
+                            </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
           <!-- Modal Import -->
           <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -69,36 +130,7 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <div class="card-body">
-                            <div class="row">
-                              <div class="col-12 form-group">
-                                <label>Site</label>
-                                          <select name="data__site_id" id="site"  class="form-control">
-                                            <option value="">- Pilih Site -</option>
-                                            @foreach ($data_site as $ds)
-                                            <option value="{{$ds->id}}">{{$ds->site_nama}}</option>
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                <div class="col-12 form-group">
-                                    <label>Nama Pop</label>
-                                    <input type="text" class="form-control" value="{{ Session::get('pop_nama') }}" name="pop_nama" placeholder="Masukan Nama Pop">
-                                </div>
-                                <div class="col-12 form-group">
-                                    <label>Alamat Lengkap POP</label>
-                                    <textarea name="pop_alamat" class="form-control" value="" cols="30" rows="3">
-  {{ Session::get('pop_alamat') }}</textarea>
-                                </div>
-                                <div class="col-12 form-group">
-                                    <label>Koordinat</label>
-                                    <input type="text" class="form-control" value="{{ Session::get('pop_koordinat') }}"  name="pop_koordinat" placeholder="Masukan Koordinat Pop">
-                                </div>
-                                <div class="col-6 form-group">
-                                  <label>Upload Foto</label>
-                                  <input  type="file" class="form-control-file" name="pop_file_topologi">
-                                </div>
-                              </div>
-                              </div>
+                          
                         </div>
                         <div class="modal-footer justify-content-between">
                                 <button type="button" class="btn" data-dismiss="modal">Close</button>

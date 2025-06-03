@@ -309,8 +309,7 @@
                   <th>Admin</th>
                   <th>Keterangan</th>
                   <th>Metode Bayar</th>
-                  <th>Kredit</th>
-                  <th>Debet</th>
+                  <th>Jumlah</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -323,8 +322,7 @@
                       <td>{{$d->name}}</td>
                       <td>{{$d->lap_keterangan}}</td>
                       <td>{{$d->akun_nama}}</td>
-                      <td>{{$d->lap_jumlah}}</td>
-                      <td>{{$d->lap_debet}}</td>
+                      <td>{{number_format($d->lap_jumlah)}}</td>
                       <td>
                         <div class="form-button-action">
                           <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->lap_id}}" class="btn btn-link btn-primary btn-lg">
