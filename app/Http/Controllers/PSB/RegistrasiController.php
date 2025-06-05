@@ -614,12 +614,14 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
 
    
-
-        $query = Registrasi::join('data__barang_keluars', 'data__barang_keluars.bk_idpel', '=', 'registrasis.reg_idpel')
-            ->join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
-            ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
-            ->where('registrasis.reg_idpel', $data['data']->reg_idpel);
-        $data['print_skb'] = $query->get();
+        $cek_barang = Data_BarangKeluar::where('corporate_id',Session::get('corp_id'))->where('bk_idpel',$data['data']->reg_idpel)->first();
+        if($cek_barang){
+            $query = Registrasi::join('data__barang_keluars', 'data__barang_keluars.bk_idpel', '=', 'registrasis.reg_idpel')
+                ->join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
+                ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
+                ->where('registrasis.reg_idpel', $data['data']->reg_idpel);
+            $data['print_skb'] = $query->get();
+        }
 
 
         $data['status'] = $status_inet['status'];

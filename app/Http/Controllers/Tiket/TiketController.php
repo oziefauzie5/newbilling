@@ -87,7 +87,7 @@ class TiketController extends Controller
     {
         // $data['no_tiket'] = (new GlobalController)->nomor_tiket();
         $data['data_site'] = Data_Site::where('site_status','Enable')->get();
-        $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->where('reg_progres','=',5)->get();
+        $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->where('reg_progres','>',3)->get();
         return view('tiket/buat_tiket', $data);
     }
 
