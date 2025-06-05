@@ -177,12 +177,10 @@
                 @endrole
                 <div class="col">
                    <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
-                <i class="fa fa-file-import"></i> Import
+                <i class="fa fa-file-import"></i> Import Invoice
               </button>
-            </div>
-            <div class="col">
                    <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import_subinv">
-                <i class="fa fa-file-import"></i> Import
+                <i class="fa fa-file-import"></i> Import Sub Invoice
               </button>
             </div>
           <!-- Modal Import -->
@@ -192,7 +190,7 @@
                 <div class="modal-header no-bd">
                   <h5 class="modal-title">
                     <span class="fw-mediumbold">
-                    Import Odp</span> 
+                    Import Invoice</span> 
                   </h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -221,13 +219,13 @@
           </div>
                 
           <!-- Modal Import -->
-          <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal fade" id="import_subinv" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header no-bd">
                   <h5 class="modal-title">
                     <span class="fw-mediumbold">
-                    Import Odp</span> 
+                    Import SubInvoice</span> 
                   </h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
