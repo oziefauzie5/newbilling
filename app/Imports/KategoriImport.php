@@ -19,12 +19,11 @@ class KategoriImport implements ToModel
         return new Data_Kategori([
             'corporate_id' =>Session::get('corp_id'),
             'id_kategori'=>$row[0],
-            'corporate_id'=>$row[1],
-            'nama_kategori'=>$row[2],
-            'jenis_jurnal_kategori'=>$row[3],
-            'kategori_satuan'=>$row[4],
-            'kategori_qty'=>$row[5],
-            'status_kategori'=>$row[6],
+            'nama_kategori'=>$row[1],
+            'jenis_jurnal_kategori'=>$row[2],
+            'kategori_satuan'=>$row[3],
+            'kategori_qty'=>$row[4],
+            'status_kategori'=>$row[5],
         ]);
     }
 }
