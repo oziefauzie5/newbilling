@@ -22,7 +22,6 @@ class FtthFeeImport implements ToModel
             'fee_idpel'=> $row[1],
             'reg_mitra'=> $row[3],
             'reg_fee'=> $row[2],
-
         ]);
     }
 }
