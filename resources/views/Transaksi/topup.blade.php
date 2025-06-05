@@ -29,16 +29,51 @@
             </ul>
           </div>
           @endif
-          <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle btn-sm"   type="button" data-toggle="dropdown" aria-expanded="false">
-              Menu
-            </button><hr>
-            <div class="dropdown-menu">
-              <button class="dropdown-item topup " type="button">Top Up</button>
-            </div>
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#topup">
+Topup
+</button>
+<hr>
+<!-- Modal -->
+<div class="modal fade" id="topup" tabindex="-1" aria-labelledby="topupLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Topop</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{-- <input type="text" value="{{$admin}}" class="id_lap"> --}}
+         <div class="row">
+                      <div class="col">
+                        <div class="form-group">
+                          <label>Id Laporan</label>
+                          <input id="" type="text" class="form-control id_lap" name="name" value="{{$admin}}">
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label>Metode Bayar</label>
+                          <select class="form-control" id="metode_bayar">
+                            @foreach ($data_akun as $akun)
+                            <option value="{{$akun->id}}">{{$akun->akun_nama}}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                      </div>
           </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary topup">Proses</button>
+      </div>
+    </div>
+  </div>
+</div>
+
           {{-- <button class="btn btn-block btn-info btn-sm topup">Top Up</button> --}}
-          <input type="hidden" value="{{$admin}}" class="id_lap">
+          
           <div class="table-responsive"  >
             <table id="topup_list" class="display table table-striped table-hover" >
               <thead>

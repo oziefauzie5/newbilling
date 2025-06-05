@@ -224,7 +224,6 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/pelanggan/Redirect/{id}', [RegistrasiApiController::class, 'registrasi_api'])->name('reg.registrasi_api')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/Edit/{id}/Cek Status', [NocController::class, 'status_inet'])->name('noc.status_inet')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/isolir-manual', [NocController::class, 'isolir_manual'])->name('noc.isolir_manual')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/pelanggan/{id}/kick', [NocController::class, 'kick'])->name('noc.kick')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/buka-isolir-manual', [NocController::class, 'buka_isolir_manual'])->name('noc.buka_isolir_manual')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/status_secret/{id}', [NocController::class, 'status_secret'])->name('noc.status_secret')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/ftth/aktivasi/{id}/Pelanggan', [RegistrasiController::class, 'proses_aktivasi_pelanggan'])->name('reg.proses_aktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);

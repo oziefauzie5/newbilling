@@ -50,6 +50,10 @@
                                   <input type="text" class="form-control"  name="wa_url" >
                               </div>
                               <div class="form-group">
+                                  <label>Nomor Whatsapp</label>
+                                  <input type="text" class="form-control"  name="wa_nomor" >
+                              </div>
+                              <div class="form-group">
                                   <label>Status</label>
                                   <select name="wa_status" class="form-control" required>
                                     <option value="Enable">Enable</option>
@@ -84,6 +88,7 @@
                       <th>Agent</th>
                       <th>Key</th>
                       <th>Url</th>
+                      <th>Nomor</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -94,6 +99,7 @@
                         <td>{{$d->wa_nama}}</td>
                         <td>{{$d->wa_key}}</td>
                         <td>{{$d->wa_url}}</td>
+                        <td>{{$d->wa_nomor}}</td>
                         <td>{{$d->wa_status}}</td>
                         <td>
                           <div class="form-button-action">
@@ -134,6 +140,10 @@
                                   <div class="form-group">
                                       <label>Whatsapp Ulr</label>
                                       <input type="text" class="form-control"  name="wa_url" value="{{$d->wa_url}}">
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Nomor Whatsapp</label>
+                                      <input type="text" class="form-control"  name="wa_nomor" value="{{$d->wa_nomor}}">
                                   </div>
                                   <div class="form-group">
                                       <label>Status</label>

@@ -13,6 +13,7 @@ class SettingWhatsapp extends Model
         'wa_nama',
         'wa_key',
         'wa_url',
+        'wa_nomor',
         'wa_status',
     ];
 }

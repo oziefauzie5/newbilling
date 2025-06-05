@@ -8,7 +8,7 @@ use App\Models\Router\RouterosAPI;
 
 class ApiController extends Controller
 {
-    public function aktivasi_psb_ppp($query)
+    public function aktivasi_psb_ppp($query, $request)
     {
         
         $ip =   $query->router_ip . ':' . $query->router_port_api;
@@ -44,7 +44,7 @@ class ApiController extends Controller
                     'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                     'service' => 'pppoe',
                     'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                    'comment' => 'REGISTRASI' == '' ? '' : 'REGISTRASI',
+                    // 'comment' => $request->reg_odp == '' ? '' : $request->reg_odp,
                     'disabled' => 'no',
                 ]);
                 // dd($ip .' '.$user.' '. $pass);
@@ -69,7 +69,7 @@ class ApiController extends Controller
                 'name' => $query->reg_username == '' ? '' : $query->reg_username,
                 'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                 'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                'comment' => $query->input_nama  == '' ? '' : $query->input_nama,
+                // 'comment' => $query->input_nama  == '' ? '' : $query->input_nama,
                 'disabled' => 'no',
             ]);
             return '0';
@@ -95,7 +95,7 @@ class ApiController extends Controller
                         $API->comm('/ppp/secret/set', [
                             '.id' => $cek_secret[0]['.id'],
                             'profile' =>  $data_pelanggan->paket_nama == '' ? '' : $data_pelanggan->paket_nama,
-                            'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
+                            'comment' => $data_pelanggan->odp_id == '' ? '' : $data_pelanggan->odp_id,
 
 
                             'disabled' => 'no',
@@ -123,7 +123,7 @@ class ApiController extends Controller
                             'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                             'service' => 'pppoe',
                             'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                            'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
+                            'comment' => $data_pelanggan->odp_id == '' ? '' : $data_pelanggan->odp_id,
                             'disabled' => 'no',
                         ]);
                         return 0;
@@ -144,7 +144,7 @@ class ApiController extends Controller
                         $API->comm('/ip/hotspot/user/set', [
                             '.id' => $cek_secret[0]['.id'],
                             'profile' => $data_pelanggan->paket_nama,
-                            'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
+                            // 'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                             'disabled' => 'no',
                         ]);
                         return 0;
@@ -153,7 +153,7 @@ class ApiController extends Controller
                             'name' => $data_pelanggan->reg_username == '' ? '' : $data_pelanggan->reg_username,
                             'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                             'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                            'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
+                            // 'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                             'disabled' => 'no',
                         ]);
                         return 0;

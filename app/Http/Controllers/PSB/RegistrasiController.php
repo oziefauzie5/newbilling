@@ -162,18 +162,18 @@ class RegistrasiController extends Controller
             $pesan_pelanggan['corporate_id' ]= Session::get('corp_id');
             $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
             $pesan_pelanggan['ket'] = 'registrasi';
-            $pesan_pelanggan['target'] = $request->reg_hp;
-            $pesan_pelanggan['nama'] = $request->reg_nama;
+            $pesan_pelanggan['target'] = $request->input_hp;
+            $pesan_pelanggan['nama'] = $request->input_nama;
             $pesan_pelanggan['status'] = $status_pesan;
             $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
 Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
 
 No.Layanan : *' . $request->reg_nolayanan . '*
-Nama : *' . $request->reg_nama . '*
-Alamat pasang : ' . $request->reg_alamat_pasang . '
+Nama : *' . $request->input_nama . '*
+Alamat pasang : ' . $request->input_alamat_pasang . '
 Paket : *' . $paket_nama->paket_nama . '*
 Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_dana_kerjasama + $request->reg_kode_unik + $request->reg_dana_kas . '
+Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso . '
 Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
 
 Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
@@ -189,19 +189,19 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             $pesan_group['ket'] = 'registrasi';
             $pesan_group['corporate_id']= Session::get('corp_id');
             $pesan_group['target'] = env('GROUP_REGISTRASI');;
-            $pesan_group['nama'] = $request->reg_nama;
+            $pesan_group['nama'] = $request->input_nama;
             $pesan_group['status'] = $status_pesan;
             $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
 
 Antrian pemasangan tanggal ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
 
 No.Layanan : *' . $request->reg_nolayanan . '*
-Nama : ' . $request->reg_nama . '
-Alamat : ' . $request->reg_alamat_pasang .
+Nama : ' . $request->input_nama . '
+Alamat : ' . $request->input_alamat_pasang .
                 '
 Paket : *' . $paket_nama->paket_nama . '*
 Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_dana_kerjasama + $request->reg_kode_unik + $request->reg_dana_kas . '
+Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn +  $request->reg_kode_unik + $request->reg_bph_uso . '
 Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
 
 Diregistrasi Oleh : *' . $user_nama . '*
@@ -221,8 +221,8 @@ Kegiatan : Insatalasi PSB
 Keterangan : *Insatalasi PSB*
 
 No. Layanan : ' . $request->reg_nolayanan . '
-Pelanggan : ' . $request->reg_nama . '
-Alamat : ' . $request->reg_alamat_pasang . '
+Pelanggan : ' . $request->input_nama . '
+Alamat : ' . $request->input_alamat_pasang . '
 Whatsapp : 0' . $request->reg_hp . '
 Whatsapp Alternatif: 0' . $request->reg_hp2 . '
 Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
@@ -722,9 +722,6 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
-            // ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
-            // ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
-            // ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
             ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('registrasis.reg_idpel', $id)
@@ -740,16 +737,43 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 'routers.router_dns',
             ])
             ->first();
-            // dd($query);
-
-            //    dd($query);
             if ($query->reg_layanan == 'PPP') {
                 
-                $API = (new ApiController)->aktivasi_psb_ppp($query);
+                $API = (new ApiController)->aktivasi_psb_ppp($query,$request);
                 if ($API == 0) {
                 //LANJUTAN AKTIVASI
-                
+
                 (new AktivasiController)->aktivasi_psb($request, $query, $id);
+
+                  $status = (new GlobalController)->whatsapp_status();
+            if($status){
+                if ($status->wa_status == 'Enable') {
+                    $status_pesan = '0';
+                } else {
+                    $status_pesan = '10';
+                }
+                $pesan_closed['layanan'] = 'NOC';
+                $pesan_closed['corporate_id'] = Session::get('corp_id');
+                $pesan_closed['ket'] = 'Aktivasi';
+                $pesan_closed['pesan_id_site'] = '1';
+                $pesan_closed['status'] = $status_pesan;
+                $pesan_closed['target'] = $request->reg_hp;
+                $pesan_closed['nama'] = 'Group Teknisi';
+                $pesan_closed['pesan'] = '
+Pelanggan yth,
+
+Selamat....
+Instalasi sudah selesai dilakukan dan layanan sudah dapat dipergunakan
+
+Apabila ada kendala dapat menghubungi ke customer care kami di '.$status->wa_nomor.'
+
+Terimakasih.
+                ';
+
+                Pesan::create($pesan_closed);
+            }
+                     
+
                 $notifikasi = array(
                     'pesan' => 'Aktivasi Berhasil ',
                     'alert' => 'success',

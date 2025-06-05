@@ -377,8 +377,8 @@ Antrian tiket = ' . $count . '
                 } else {
                     $status_pesan = '10';
                 }
-                $pesan_closed['layanan'] = 'NOC';
-                $data['corporate_id'] = Session::get('corp_id');
+                $pesan_closed['layanan'] = 'CS';
+                $pesan_closed['corporate_id'] = Session::get('corp_id');
                 $pesan_closed['ket'] = 'tiket';
                 $pesan_closed['pesan_id_site'] = $request->tiket_site;
                 $pesan_closed['status'] = $status_pesan;
@@ -386,13 +386,13 @@ Antrian tiket = ' . $count . '
                 $pesan_closed['nama'] = 'Group Teknisi';
                 $pesan_closed['pesan'] = '               -- CLOSED TIKET --
                 
-    Problem : ' . $request->tiket_kendala . '
-    Action : ' . $request->tiket_tindakan . '
+Problem : ' . $request->tiket_kendala . '
+Action : ' . $request->tiket_tindakan . '
+
+Finish Time: ' . date('d-M-y h:m') . '
+Technician : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
     
-    Finish Time: ' . date('d-M-y h:m') . '
-    Technician : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
-    
-    ' . $request->tiket_menunggu . '';
+' . $request->tiket_menunggu . '';
     Pesan::create($pesan_closed);
             }
 

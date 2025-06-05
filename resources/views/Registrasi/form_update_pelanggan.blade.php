@@ -339,12 +339,6 @@
                   </button></a>             
                 </div>
               <div class="col-sm-3 mt-1">
-                <a href="{{route('admin.noc.kick',['id'=>$data->reg_idpel])}}">
-                  <button type="button" class="btn btn-sm btn-danger btn-block">
-                    Kick
-                  </button></a>             
-                </div>
-              <div class="col-sm-3 mt-1">
                 @if($status_secret=='false')
                 <a href="{{route('admin.noc.status_secret',['id'=>$data->reg_idpel.'?stat=false'])}}">
                   <button type="button" class="btn btn-sm btn-danger btn-block">

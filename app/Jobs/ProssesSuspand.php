@@ -15,26 +15,19 @@ class ProssesSuspand implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct()
     {
-        //
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $data['now'] = date('Y-m-d', strtotime(Carbon::now()));
         $unp = Invoice::where('inv_status', 'UNPAID')->whereDate('inv_tgl_jatuh_tempo', '<=', $data['now'])->get();
         foreach ($unp as $d) {
-            Invoice::where('inv_id', $d->inv_id)->update([
+            Invoice::where('corporate_id',$d->corporate_id)->where('inv_id', $d->inv_id)->update([
                 'inv_status' => 'SUSPEND',
             ]);
-            Registrasi::where('reg_idpel', $d->inv_idpel)->update([
+            Registrasi::where('corporate_id',$d->corporate_id)->where('reg_idpel', $d->inv_idpel)->update([
                 'reg_status' => 'SUSPEND',
             ]);
         }

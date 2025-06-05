@@ -575,6 +575,7 @@ class InvoiceController extends Controller
                ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
                ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+               ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
                ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
                ->where('invoices.corporate_id',Session::get('corp_id'))
                ->where('inv_id', $id)
@@ -586,7 +587,9 @@ class InvoiceController extends Controller
                    'registrasis.reg_nolayanan',
                    'registrasis.reg_password',
                    'input_data.input_nama',
+                   'input_data.input_hp',
                    'pakets.paket_nama',
+                   'data__odps.odp_id',
                    'routers.*',
                ])
                ->first();
@@ -1041,6 +1044,62 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         //                 $mutasi_sales['smt_status'] = 0;
         //                 MutasiSales::create($mutasi_sales);
         //                 dd($mutasi_sales);
+
+        $cek_pesan = Pesan::where('status', '0')->count();
+        if ($cek_pesan) {
+                $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
+            if ($pesan->layanan == 'CS') {
+                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'CS')->first();
+            } elseif ($pesan->layanan == 'NOC') {
+                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOC')->first();
+            } elseif ($pesan->layanan == 'NOTIF') {
+                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOTIF')->first();
+            }
+
+            if ($pesan->file) {
+                $data = array(
+                    'target' => $pesan->target,
+                    'message' => $pesan->pesan,
+                    'countryCode' => '62',
+                    'url' => $pesan->file,
+                );
+            } else {
+                $data = array(
+                    'target' => $pesan->target,
+                    'message' => $pesan->pesan,
+                    'countryCode' => '62',
+                );
+            }
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $whatsapp->wa_url . '/send',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $data,
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: ' . $whatsapp->wa_key . ''
+                ),
+            ));
+
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            if ($err) {
+                $mesage['status'] = 'Gagal';
+            } else {
+                echo $response;
+                $mesage['status'] = 'Done';
+            }
+            // $mesage['status'] = 'test';
+            Pesan::where('id', $pesan->id)->update($mesage);
+        }
 
 
 

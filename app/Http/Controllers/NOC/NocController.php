@@ -24,8 +24,6 @@ class NocController extends Controller
 {
     public function index(Request $request)
     {
-
-
         $month = Carbon::now()->addMonth(-0)->format('m');
         $bulan_lalu = Carbon::now()->addMonth(-1)->format('m');
 
@@ -268,11 +266,34 @@ class NocController extends Controller
     #EDIT DATA PELANGGAN
     public function isolir_manual($id)
     {
+         $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+                ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+                ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
+                ->join('invoices', 'invoices.inv_idpel', '=', 'registrasis.reg_idpel')
+               ->where('registrasis.corporate_id',Session::get('corp_id'))
+               ->where('registrasis.reg_idpel', $id)
+               ->select([
+                   'registrasis.reg_idpel',
+                   'registrasis.reg_layanan',
+                   'registrasis.reg_username',
+                   'registrasis.reg_nolayanan',
+                   'registrasis.reg_password',
+                   'registrasis.reg_tgl_jatuh_tempo',
+                   'registrasis.reg_bph_uso',
+                   'registrasis.reg_ppn',
+                   'registrasis.reg_kode_unik',
+                   'registrasis.reg_harga',
+                   'input_data.input_nama',
+                   'input_data.input_hp',
+                   'pakets.paket_nama',
+                   'invoices.inv_id',
+                   'pakets.paket_nama',
+                   'routers.*',
+               ])
+               ->first();
 
-        $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('reg_idpel', $id)->first();
+            //    dd($data_pelanggan);
         // $router = Router::whereId($data_pelanggan->reg_router)->first();
         $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
         $user = $data_pelanggan->router_username;
@@ -290,15 +311,12 @@ class NocController extends Controller
             if ($cek_secret) {
                 $API->comm('/ppp/secret/set', [
                     '.id' => $cek_secret[0]['.id'],
-                    'comment' => 'ISOLIR MANUAL',
                     'disabled' => 'yes',
                 ]);
-                // 'profile' => 'APPBILL_ISOLIR',
-                // dd($cek_secret);
-                Invoice::where('inv_id', $data_pelanggan->inv_id)->update([
+                Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_id', $data_pelanggan->inv_id)->update([
                     'inv_status' => 'ISOLIR',
                 ]);
-                Registrasi::where('reg_idpel', $data_pelanggan->inv_idpel)->update([
+                Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_idpel', $data_pelanggan->inv_idpel)->update([
                     'reg_status' => 'ISOLIR',
                 ]);
                 $status = (new GlobalController)->whatsapp_status();
@@ -309,6 +327,8 @@ class NocController extends Controller
                     $pesan_group['status'] = '10';
                 }
 
+                $pesan_group['corporate_id'] = Session::get('corp_id');
+                $pesan_group['layanan'] = 'CS';
 
                 $pesan_group['ket'] = 'isolir manual';
                 $pesan_group['status'] = '0';
@@ -316,16 +336,16 @@ class NocController extends Controller
                 $pesan_group['nama'] = $data_pelanggan->input_nama;
                 $pesan_group['pesan'] = '
 Pelanggan yang terhormat,
-Kami informasikan bahwa layanan internet anda saat ini sedang di *ISOLIR* oleh sistem secara otomatis❗, kami mohon maaf atas ketidaknyamanannya
-Agar dapat digunakan kembali dimohon untuk melakukan pembayaran tagihan sebagai berikut :
+Kami informasikan bahwa layanan internet anda saat ini *TERISOLIR* otomatis oleh sistem❗, kami mohon maaf atas ketidaknyamanannya
+Untuk dapat digunakan kembali, segera lakukan pembayaran atas tagihan sebagai berikut :
 
 No.Layanan : *' . $data_pelanggan->reg_nolayanan . '*
 Pelanggan : ' . $data_pelanggan->input_nama . '
-Invoice : 013524
+Invoice : '.$data_pelanggan->inv_id.'
 Jatuh Tempo : ' . $data_pelanggan->reg_tgl_jatuh_tempo . '
-Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_dana_kas + $data_pelanggan->reg_dana_kerjasama) . '*
+Total tagihan :Rp. *' . number_format($data_pelanggan->reg_harga + $data_pelanggan->reg_ppn + $data_pelanggan->reg_kode_unik + $data_pelanggan->reg_bph_uso) . '*
 
-Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
+Untuk melihat detail layanan dan cara pembayaran tagihan, bisa melalui link berikut *'.Session::get('corp_url').'*
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*
@@ -358,13 +378,12 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                     'service' => 'pppoe',
                     'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                    'comment' =>  'ISOLIR MANUAL' == '' ? '' : 'ISOLIR MANUAL',
                     'disabled' => 'yes',
                 ]);
-                Invoice::where('inv_id', $data_pelanggan->inv_id)->update([
+                Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_id', $data_pelanggan->inv_id)->update([
                     'inv_status' => 'ISOLIR',
                 ]);
-                Registrasi::where('reg_idpel', $data_pelanggan->inv_idpel)->update([
+                Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_idpel', $data_pelanggan->inv_idpel)->update([
                     'reg_status' => 'ISOLIR',
                 ]);
                 $cek_secret = $API->comm('/ppp/secret/print', [
@@ -396,15 +415,29 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     public function buka_isolir_manual($id)
     {
 
-        $data_pelanggan = Registrasi::join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')->where('reg_idpel', $id)->first();
-        $router = Router::whereId($data_pelanggan->reg_router)->first();
-        $ip =   $router->router_ip . ':' . $router->router_port_api;
-        $user = $router->router_username;
-        $pass = $router->router_password;
+           $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+                ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+                ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+                ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
+               ->where('registrasis.corporate_id',Session::get('corp_id'))
+               ->where('registrasis.reg_idpel', $id)
+               ->select([
+                   'registrasis.reg_idpel',
+                   'registrasis.reg_layanan',
+                   'registrasis.reg_username',
+                   'registrasis.reg_nolayanan',
+                   'registrasis.reg_password',
+                   'input_data.input_nama',
+                   'pakets.paket_nama',
+                   'routers.*',
+               ])
+               ->first();
+
+        $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
+        $user = $data_pelanggan->router_username;
+        $pass = $data_pelanggan->router_password;
         $API = new RouterosAPI();
         $API->debug = false;
-
-        // dd($data_pelanggan->reg_username);
 
         if ($API->connect($ip, $user, $pass)) {
             $cek_secret = $API->comm('/ppp/secret/print', [
@@ -413,7 +446,6 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             if ($cek_secret) {
                 $API->comm('/ppp/secret/set', [
                     '.id' => $cek_secret[0]['.id'],
-                    'comment' => 'BUKA ISOLIR MANUAL',
                     'disabled' => 'no',
                 ]);
                 $cek_status = $API->comm('/ppp/active/print', [
@@ -441,7 +473,6 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                     'service' => 'pppoe',
                     'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                    'comment' => 'BUKA ISOLIR MANUAL',
                     'disabled' => 'no',
 
                 ]);
@@ -462,7 +493,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     public function status_secret(Request $request, $id)
     {
         $admin = Auth::user()->name;
-        $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
+        $data_pelanggan = Registrasi::where('registrasis.corporate_id',Session::get('corp_id'))->join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
         $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
         $user = $data_pelanggan->router_username;
         $pass = $data_pelanggan->router_password;
@@ -558,71 +589,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             }
         }
     }
-    public function kick(Request $request, $id)
-    {
 
-        $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
-        $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
-        $user = $data_pelanggan->router_username;
-        $pass = $data_pelanggan->router_password;
-        $API = new RouterosAPI();
-        $API->debug = false;
-
-        if ($data_pelanggan->reg_layanan == 'PPP') {
-            if ($API->connect($ip, $user, $pass)) {
-
-                $cek_status = $API->comm('/ppp/active/print', [
-                    '?name' => $data_pelanggan->reg_username,
-                ]);
-                // dd($cek_status);
-                if ($cek_status) {
-                    $API->comm('/ppp/active/remove', [
-                        '.id' =>  $cek_status['0']['.id'],
-                    ]);
-                } else {
-                    $notifikasi = array(
-                        'pesan' => 'Pelanggan Sedang Disconnected',
-                        'alert' => 'success',
-                    );
-                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                }
-            } else {
-                $notifikasi = array(
-                    'pesan' => 'Maaf..!! Router Disconnected',
-                    'alert' => 'error',
-                );
-                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-            }
-        } else {
-            if ($API->connect($ip, $user, $pass)) {
-                $cek_status = $API->comm('/ip/hotspot/active/print', [
-                    '?user' => $data_pelanggan->reg_username,
-                ]);
-                if ($cek_status) {
-                    $API->comm('/ip/hotspot/active/remove', [
-                        '.id' =>  $cek_status['0']['.id'],
-                    ]);
-                    $notifikasi = array(
-                        'pesan' => 'Kick Pelanggan berhasil.',
-                        'alert' => 'success',
-                    );
-                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                } else {
-                    $notifikasi = array(
-                        'pesan' => 'Kick Pelanggan berhasil. Pelanggan sudah Disconnected',
-                        'alert' => 'success',
-                    );
-                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                }
-            } else {
-                $notifikasi = array(
-                    'pesan' => 'Maaf..!! Router Disconnected',
-                    'alert' => 'error',
-                );
-                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-            }
-        }
-    }
     public function pengecekan_barang(Request $request)
     {
         $data['q'] = $request->query('q');
@@ -656,7 +623,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             $sub['barang_status'] = $request->barang_status;
             $sub['barang_ket'] = $request->barang_ket;
             $sub['barang_pengecek'] = $user;
-            Data_Barang::where('barang_id', $id)->update($sub);
+            Data_Barang::where('corporate_id',Session::get('corp_id'))->where('barang_id', $id)->update($sub);
             $notifikasi = array(
                 'pesan' => 'Berhasil Update Status Barang',
                 'alert' => 'success',
@@ -668,8 +635,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
                 if ($request->barang_mac) {
            
-            $cek_barang = Data_Barang::where('barang_mac', $request->barang_mac)->first();
-            $cek_sn = Data_Barang::where('barang_sn', $request->barang_sn)->first();
+            $cek_barang = Data_Barang::where('corporate_id',Session::get('corp_id'))->where('barang_mac', $request->barang_mac)->first();
+            $cek_sn = Data_Barang::where('corporate_id',Session::get('corp_id'))->where('barang_sn', $request->barang_sn)->first();
             // dd($cek_sn);
             if ($cek_barang) {
                 $notifikasi = array(
@@ -695,7 +662,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     $sub['barang_rusak'] = $barang_rusak;
 
 
-                    Data_Barang::where('barang_id', $id)->update($sub);
+                    Data_Barang::where('corporate_id',Session::get('corp_id'))->where('barang_id', $id)->update($sub);
                     $notifikasi = array(
                         'pesan' => 'Berhasil Update Status Barang',
                         'alert' => 'success',
@@ -711,7 +678,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
             $sub['barang_pengecek'] = $user;
 
 
-            Data_Barang::where('barang_id', $id)->update($sub);
+            Data_Barang::where('corporate_id',Session::get('corp_id'))->where('barang_id', $id)->update($sub);
             $notifikasi = array(
                 'pesan' => 'Berhasil Update Status Barang',
                 'alert' => 'success',

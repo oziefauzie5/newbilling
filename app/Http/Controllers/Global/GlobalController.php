@@ -103,7 +103,7 @@ class GlobalController extends Controller
     // }
     public function no_invoice_mitra()
     {
-        $count = Mutasi::count();
+        $count = Mutasi::where('corporate_id',Session::get('corp_id'))->count();
         if ($count == 0) {
             $count_invoice = 1;
         } else {

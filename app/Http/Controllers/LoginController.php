@@ -55,6 +55,7 @@ class LoginController extends Controller
                 $request->session()->put('app_link_pelanggan', $app->app_link_pelanggan);
                 $request->session()->put('data_site', '1');
                 $request->session()->put('corp_id', $CORP_ID->id);
+                $request->session()->put('corp_url', $CORP_ID->corp_url);
             } else {
                 $request->session()->put('app_brand', 'APPBILL');
                 $request->session()->put('app_nama', 'APPBILL');
@@ -67,6 +68,7 @@ class LoginController extends Controller
                 $request->session()->put('app_link_pelanggan', '-');
                 $request->session()->put('data_site', '1');
                 $request->session()->put('corp_id', '0');
+                $request->session()->put('corp_url', 'https>//');
             }
 
 
@@ -109,6 +111,7 @@ class LoginController extends Controller
         session()->forget('nama_roles');
         session()->forget('data_site');
         session()->forget('corp_id');
+        session()->forget('corp_url');
         Auth::logout();
         return redirect()->route('adminapp')->with('success', 'Kamu berhasil logout');
     }

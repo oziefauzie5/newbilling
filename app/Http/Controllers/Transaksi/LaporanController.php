@@ -115,7 +115,6 @@ class LaporanController extends Controller
     }
     public function topup(Request $request)
     {
-        // dd($id);
         $query = Laporan::orderBy('laporans.created_at', 'DESC')
             ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
             ->join('users', 'users.id', '=', 'laporans.lap_admin')
@@ -135,9 +134,9 @@ class LaporanController extends Controller
 
         $data['laporan'] = $query->get();
         $data['sum'] = $query->get();
-        // dd($data);
         $data['setting_akun'] =  SettingAkun::where('corporate_id',Session::get('corp_id'))->get();
         $data['admin'] = $request->user_admin;
+        $data['data_akun'] = SettingAkun::where('corporate_id',Session::get('corp_id'))->where('akun_type','TUNAI')->get();
 
         // dd($data);
         return view('Transaksi/topup', $data);
@@ -145,16 +144,21 @@ class LaporanController extends Controller
     public function lap_topup(Request $request, $id)
     {
 
-        $user_admin = (new GlobalController)->user_admin();
-        // $aray = $request->checkboxtopup_value;
-        return response()->json($user_admin);
-        if ($id != 10) {
-            $query = Laporan::where('corporate_id',Session::get('corp_id'))->whereIn('id', $request->checkboxtopup_value);
-            $data['laporan'] = $query->get();
-            $data['total'] = $query->sum('lap_kredit');
+        $admin_id = Auth::user()->id;
+        $aray = $id;
 
+        $cek_user = User::where('corporate_id',Session::get('corp_id'))->where('name','TRIPAY')->select('id','name')->first();
+        // return response()->json($cek_user);
+        
+        if ($id != $cek_user->id) {
+            $query = Laporan::where('corporate_id',Session::get('corp_id'))->whereIn('lap_id', $request->checkboxtopup_value);
+            $data['laporan'] = $query->get();
+            $data['total'] = $query->sum('lap_jumlah');
+            
+            
+            
             $invoice = (new GlobalController)->no_invoice_mitra();
-            $count = Mutasi::where('corporate_id',Session::get('corp_id'))->scount();
+            $count = Mutasi::where('corporate_id',Session::get('corp_id'))->count();
             if ($count == 0) {
                 $count_invoice = 1;
             } else {
@@ -164,28 +168,29 @@ class LaporanController extends Controller
             #CEK SALDO MUTASI BILLER
             $saldo = (new GlobalController)->total_mutasi($id); #SALDO MUTASI = DEBET - KREDIT
             $total = $saldo + $data['total'];
-
+            
             #mennampilkan data user sesuai hak akses
             $user = (new GlobalController)->data_user($id);
-
+            
             #Admin yang sedang aktif (Membuat topup)
             $admin_user = Auth::user()->id;
-
+            
             $data['corporate_id'] = Session::get('corp_id');
             $data['mt_admin'] = $admin_user;
             $data['mt_kategori'] = 'TOPUP';
             $data['mt_deskripsi'] = 'TOPUP ' . $user->nama_user . ' INVOICE-' . $invoice;
             $data['mt_kredit'] = $data['total'];
             $data['mt_saldo'] = $total;
-            $data['mt_cabar'] = $request->cabar;
-
+            $data['mt_cabar'] = $request->metode_bayar;
+            
             Mutasi::create($data); #INSERT LAPORAN TOPUP KE TABLE MUTASI
+            // return response()->json($user);
         }
 
         foreach ($request->checkboxtopup_value as $d) {
-            Laporan::where('corporate_id',Session::get('corp_id'))->where('lap_admin', $id)->where('id', $d)->update(
+            Laporan::where('corporate_id',Session::get('corp_id'))->where('lap_admin', $id)->where('lap_id', $d)->update(
                 [
-                    'lap_admin' => $user_admin['user_id'],
+                    'lap_admin' => $admin_id,
                 ]
             );
         }

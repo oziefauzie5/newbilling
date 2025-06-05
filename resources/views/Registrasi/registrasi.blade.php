@@ -69,7 +69,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nama Pelanggan</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="tampil_nama" value="" data-toggle="modal" data-target="#cari_data" name="">
+                  <input type="text" class="form-control" id="tampil_nama" value="" data-toggle="modal" data-target="#cari_data" name="input_nama">
                 </div>
               </div>
               <div class="form-group row">
@@ -85,7 +85,7 @@
               <div class="form-group row">
                   <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 1</label>
                   <div class="col-sm-4">
-                    <input type="number" class="form-control" id="tampil_hp" value="" name="" readonly>
+                    <input type="number" class="form-control" id="tampil_hp" value="" name="input_hp" readonly>
                   </div>
                   <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 2</label>
                   <div class="col-sm-4">
@@ -95,7 +95,7 @@
               <div class="form-group row">
                   <label for="alamat_pasang" class="col-sm-2 col-form-label">Alamat Pasang</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="tampil_alamat_pasang" value="" name="" readonly>
+                    <input type="text" class="form-control" id="tampil_alamat_pasang" value="" name="input_alamat_pasang" readonly>
                   </div>
               </div>
               <div class="form-group row">

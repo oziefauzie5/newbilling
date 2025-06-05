@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('wa_nama')->nullable();
             $table->string('wa_key')->nullable();
             $table->string('wa_url')->nullable();
+            $table->string('wa_nomor')->nullable();
             $table->string('wa_status')->nullable();
             $table->timestamps();
         });

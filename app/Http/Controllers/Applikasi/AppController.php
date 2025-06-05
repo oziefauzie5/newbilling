@@ -382,17 +382,20 @@ class AppController extends Controller
              'wa_nama' => 'required|unique:setting_whatsapps,wa_nama',
              'wa_key' => 'required',
              'wa_url' => 'required',
+             'wa_nomor' => 'required',
         ], [
             'wa_nama.required' => 'Agent tidak boleh kosong',
             'wa_nama.unique' => 'Agent sudah ada',
             'wa_key.required' => 'Key tidak boleh kosong',
             'wa_url.required' => 'URL tidak boleh kosong',
+            'wa_nomor.required' => 'Nomor tidak boleh kosong',
         ]);
 
         $create['corporate_id'] = Session::get('corp_id');
         $create['wa_nama'] = $request->wa_nama;
         $create['wa_key'] = $request->wa_key;
         $create['wa_url'] = $request->wa_url;
+        $create['wa_nomor'] = $request->wa_nomor;
         $create['wa_status'] = $request->wa_status;
         SettingWhatsapp::create($create);
         $notifikasi = array(
@@ -407,6 +410,7 @@ class AppController extends Controller
         $update['wa_nama'] = $request->wa_nama;
         $update['wa_key'] = $request->wa_key;
         $update['wa_url'] = $request->wa_url;
+        $update['wa_nomor'] = $request->wa_nomor;
         $update['wa_status'] = $request->wa_status;
         SettingWhatsapp::where('corporate_id', Session::get('corp_id'))->whereId($id)->update($update);
         $notifikasi = array(

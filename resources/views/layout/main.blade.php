@@ -1957,7 +1957,8 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
 
 
 		$('.topup').click(function(){  
-			var id=$(".id_lap").val();//getting value of input field
+			var id=$(".id_lap").val();
+			var metode_bayar=$("#metode_bayar").val();
 			var url = '{{ route("admin.inv.lap_topup", ":id") }}';
 			url = url.replace(':id', id);
 			var checkboxtopup_value = []; 
@@ -1975,6 +1976,7 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
                     type: 'PUT',
                     data: {
 						checkboxtopup_value:checkboxtopup_value,
+						metode_bayar:metode_bayar,
                         '_token': '{{ csrf_token() }}'
                     },
                     dataType: 'json',
@@ -2910,9 +2912,9 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											} else {
 											$('#jumlah_barang').removeAttr('required');
 											$('.simpan_barang_tiket').attr('disabled','disabled');
-											$('.tiket_noskb').attr('required','required');
+											// $('.tiket_noskb').attr('required','required');
 											$('#modal_tambah_barang').modal('hide');
-											$('#tiket_noskb').val(data);
+											// $('#tiket_noskb').val(data);
 											$('.submit_tiket').removeAttr('disabled');
 											}
 										}
