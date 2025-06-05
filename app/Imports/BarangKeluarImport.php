@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Gudang\Data_BarangKeluar;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -15,7 +16,7 @@ class BarangKeluarImport implements ToModel
     */
    public function model(array $row)
     {
-        return new BarangKeluarImport([
+        return new Data_BarangKeluar([
             'corporate_id' =>Session::get('corp_id'),
             'bk_jenis_laporan' => $row[0],
             'bk_id_barang' => $row[1],
