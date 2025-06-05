@@ -9,6 +9,7 @@ use App\Imports\FtthFeeImport;
 use App\Imports\FtthInstalasiImport;
 use Illuminate\Http\Request;
 use App\Imports\InputDataImport;
+use App\Imports\KategoriImport;
 use App\Imports\OdcImport;
 use App\Imports\OdpImport;
 use App\Imports\OltImport;
@@ -111,6 +112,15 @@ class ExportController extends Controller
     public function import_paket(Request $request)
     {
         Excel::import(new PaketImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.noc.index')->with($notifikasi);
+    }
+    public function barang_import(Request $request)
+    {
+        Excel::import(new KategoriImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
