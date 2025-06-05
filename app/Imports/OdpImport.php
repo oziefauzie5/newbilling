@@ -28,7 +28,7 @@ class OdpImport implements ToModel
             'odp_koordinat' => $row[8],
             'odp_keterangan' => $row[9],
             'odp_status' => $row[10],
-            // 'odp_slot_odc' => $row[11],
+            'odp_slot_odc' => $row[11],
 
         ]);
     }
