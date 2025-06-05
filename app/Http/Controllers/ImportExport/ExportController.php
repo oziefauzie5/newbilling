@@ -6,6 +6,7 @@ use App\Exports\InputDataExport;
 use App\Exports\RegistExport;
 use App\Http\Controllers\Controller;
 use App\Imports\BarangImport;
+use App\Imports\BarangKeluarImport;
 use App\Imports\FtthFeeImport;
 use App\Imports\FtthInstalasiImport;
 use Illuminate\Http\Request;
