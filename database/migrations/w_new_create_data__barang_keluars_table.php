@@ -18,8 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('bk_id_barang');
             $table->foreign('bk_id_barang')->references('barang_id')->on('data__barangs')->onDelete('restrict');
-            $table->unsignedBigInteger('bk_idpel');
-            $table->foreign('bk_idpel')->references('reg_idpel')->on('registrasis')->onDelete('restrict');
+            $table->integer('bk_idpel')->nullable();
             $table->string('bk_jenis_laporan')->nullable();
             $table->string('bk_kategori')->nullable();
             $table->string('bk_harga')->nullable();
@@ -29,7 +28,7 @@ return new class extends Migration
             $table->string('bk_jumlah')->nullable();
             $table->string('bk_keperluan')->nullable();
             $table->string('bk_file_bukti')->nullable();
-            $table->string('bk_nama_penggunan')->nullable();
+            $table->string('bk_nama_pengguna')->nullable();
             $table->string('bk_waktu_keluar')->nullable();
             $table->string('bk_admin_input')->nullable();
             $table->string('bk_penerima')->nullable();
