@@ -180,6 +180,11 @@
                 <i class="fa fa-file-import"></i> Import
               </button>
             </div>
+            <div class="col">
+                   <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import_subinv">
+                <i class="fa fa-file-import"></i> Import
+              </button>
+            </div>
           <!-- Modal Import -->
           <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -214,11 +219,7 @@
               </div>
             </div>
           </div>
-                <div class="col">
-                   <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import_subinv">
-                <i class="fa fa-file-import"></i> Import
-              </button>
-            </div>
+                
           <!-- Modal Import -->
           <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
