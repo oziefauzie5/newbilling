@@ -121,7 +121,7 @@ class ExportController extends Controller
     }
     public function barang_import(Request $request)
     {
-        Excel::import(new BarangImport,request()->file('file'));
+        Excel::import(new BarangKeluarImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
