@@ -422,19 +422,19 @@
         </div>
         <label class=" col-sm-2 col-form-label">ODC</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odc" id="validasi_odc" class="form-control" required value="{{$data->odp_id}}" >
+          <input type="text" name="reg_odc" id="validasi_odc" class="form-control" required value="{{$data->odc_nama}}" >
         </div>
     </div>
       <div class="form-group row">
         <label class=" col-sm-2 col-form-label">ODP</label>
         <div class="col-sm-4 notif">
-          <input type="text" name="reg_odp" id="validasi_odp" class="form-control" required value="{{$data->odp_id}}" >
+          <input type="text" name="reg_odp" id="validasi_odp" class="form-control" required value="{{$data->odp_id ?? 'Tidak terdaftar'}}" >
           <div id="pesan"></div>
         </div>
         
         <label class=" col-sm-2 col-form-label">Slot ODP</label>
         <div class="col-sm-4">
-          <input type="text" name="reg_slot_odp" class="form-control" required value="{{$data->reg_slot_odp}}" >
+          <input type="text" name="reg_slot_odp" class="form-control" required value="{{$data->reg_slot_odp ?? 'Tidak terdaftar'}}" >
         </div>
     </div>
       <div class="form-group row">
@@ -503,7 +503,7 @@
     </div>
    </form>
    @endif
-
+  @if($print_skb)
         <h3 class="mt-3 text-bolt"> DATA BARANG</h3><hr>
       <div class="form-group row">
         <div class="table-responsive">
@@ -537,6 +537,7 @@
           </table>
         </div>
       </div>
+      @endif
    @if($data->reg_progres>=3)
         @role('admin|STAF ADMIN')
               <h3 class="mt-3">BILLING</h3><hr>

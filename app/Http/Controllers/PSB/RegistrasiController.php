@@ -570,7 +570,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
         $data['data'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
-            ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
+            // ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
             ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
             ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
             ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
@@ -587,7 +587,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 // 'data__barangs.*',
                 'input_data.*',
                 'registrasis.*',   
-                'teknisis.*',   
+                // 'teknisis.*',   
                 'ftth_instalasis.*',   
                 'data__odps.odp_id',
                 'pakets.paket_id',
@@ -605,7 +605,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 'routers.router_nama',
             ])
             ->first();
-                dd($data['data']);
+                // dd($data['data']);
 
 
   
@@ -623,6 +623,8 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
                 ->where('registrasis.reg_idpel', $data['data']->reg_idpel);
             $data['print_skb'] = $query->get();
+        } else {
+            $data['print_skb'] ='';
         }
 
 
