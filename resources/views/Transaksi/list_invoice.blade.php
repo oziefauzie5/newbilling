@@ -172,7 +172,7 @@
                 @role('admin|STAF ADMIN')
                 <div class="col">
                   <!-- <a href=""><button type="button" class="btn btn-block btn-info btn-sm">Genearte Invoice</button></a> -->
-                  <a href="{{route('admin.inv.invoice_import')}}"><button type="button" class="btn btn-block btn-info btn-sm">Genearte Invoice</button></a>
+                  <a href="{{route('admin.inv.generate_invoice')}}"><button type="button" class="btn btn-block btn-info btn-sm">Genearte Invoice</button></a>
                 </div>
                 @endrole
                 <div class="col">
@@ -199,7 +199,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form action="{{route('admin.export.import_odp')}}" method="POST" enctype="multipart/form-data">
+                  <form action="{{route('admin.export.invoice_import')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
                     <div class="row">
