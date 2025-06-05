@@ -34,7 +34,7 @@ class InputDataImport implements ToModel
             'input_koordinat' =>$row[13],
             'input_status' =>$row[14],
             'input_keterangan' =>$row[15],
-            'idpel_sementara' =>$row[16],
+            // 'idpel_sementara' =>$row[16],
 
         ]);
     }
