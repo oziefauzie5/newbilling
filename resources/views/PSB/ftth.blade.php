@@ -179,7 +179,7 @@
                 </button>
               </a>
               @role('admin')
-              <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import">
+              <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import_registrasis">
                 <i class="fa fa-file-import"></i> IMPORT
       </button>
       @endrole
@@ -248,7 +248,7 @@
         </form>
         <hr>
          <!-- Modal Import -->
-         <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal fade" id="import_registrasis" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header no-bd">

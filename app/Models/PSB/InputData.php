@@ -32,7 +32,8 @@ class InputData extends Model implements Authenticatable
         'input_koordinat',
         'input_status',
         'input_keterangan',
-        'idpel_sementara',
+        'created_at',
+        'updated_at',
     ];
 
     function user_sales()

@@ -37,8 +37,6 @@ class RegistImport implements ToModel
             'reg_progres'=>$row[16],
             'reg_inv_control'=>$row[17],
             'reg_img'=>$row[18],
-            
-
         ]);
     }
 }
