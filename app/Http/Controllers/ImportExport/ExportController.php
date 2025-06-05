@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ImportExport;
 use App\Exports\InputDataExport;
 use App\Exports\RegistExport;
 use App\Http\Controllers\Controller;
+use App\Imports\BarangImport;
 use App\Imports\FtthFeeImport;
 use App\Imports\FtthInstalasiImport;
 use Illuminate\Http\Request;
@@ -120,11 +121,11 @@ class ExportController extends Controller
     }
     public function barang_import(Request $request)
     {
-        Excel::import(new KategoriImport,request()->file('file'));
+        Excel::import(new BarangImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
         ];
-        return redirect()->route('admin.noc.index')->with($notifikasi);
+        return redirect()->route('gudang.stok_gudang')->with($notifikasi);
     }
 }
