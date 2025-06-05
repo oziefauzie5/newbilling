@@ -67,8 +67,6 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
         ##EXPORT
          Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin']);
         Route::post('/input-import', [ExportController::class, 'import_input_data'])->name('export.import_input_data')->middleware(['role:admin']);
-        Route::post('/instalsi-import', [ExportController::class, 'import_instalasi'])->name('export.import_instalasi')->middleware(['role:admin']);
-        Route::post('/fee-import', [ExportController::class, 'import_fee'])->name('export.import_fee')->middleware(['role:admin']);
         Route::get('/regist-export', [ExportController::class, 'export_registrasi'])->name('export.export_registrasi')->middleware(['role:admin']);
         Route::post('/regist-import', [ExportController::class, 'import_registrasi'])->name('export.import_registrasi')->middleware(['role:admin']);
         Route::post('/pop-import', [ExportController::class, 'import_pop'])->name('export.import_pop')->middleware(['role:admin']);
@@ -76,6 +74,8 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
         Route::post('/odc-import', [ExportController::class, 'import_odc'])->name('export.import_odc')->middleware(['role:admin']);
         Route::post('/odp-import', [ExportController::class, 'import_odp'])->name('export.import_odp')->middleware(['role:admin']);
         Route::post('/paket-import', [ExportController::class, 'import_paket'])->name('export.import_paket')->middleware(['role:admin']);
+        Route::post('/instalsi-import', [ExportController::class, 'import_instalasi'])->name('export.import_instalasi')->middleware(['role:admin']);
+        Route::post('/fee-import', [ExportController::class, 'import_fee'])->name('export.import_fee')->middleware(['role:admin']);
 
     
     ##CRUD DATA USER

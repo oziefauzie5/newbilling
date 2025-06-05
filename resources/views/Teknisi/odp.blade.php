@@ -17,12 +17,12 @@
             </div>
             <div class="card-body table-responsive -sm">
               <button class="btn  btn-sm ml-auto m-1 btn-primary" data-toggle="modal" data-target="#modal-adduser"><i class="fas fa-solid fa-plus"></i>Tambah ODP</button>
-              <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
-                <i class="fa fa-file-import"></i> Import
-              </button>
               <a href="{{route('admin.topo.odc')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> ODP Distibusi</button></a>
               <a href="{{route('admin.topo.olt')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> OLT</button></a>
               <a href="{{route('admin.topo.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> Router</button></a>
+              <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
+                <i class="fa fa-file-import"></i> Import
+              </button>
             </div>
           <!-- Modal Import -->
           <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">

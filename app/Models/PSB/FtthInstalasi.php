@@ -11,11 +11,11 @@ class FtthInstalasi extends Model
     protected $fillable = [
         'id',
         'corporate_id',
-        'data__odp_id',
+        'data__odp_id',#
         'reg_noc',
-        'reg_router',
-        'reg_in_ont',
-        'reg_slot_odp',
+        'reg_router',#
+        'reg_in_ont',#
+        'reg_slot_odp',#
     ];
 
     

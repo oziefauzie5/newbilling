@@ -6,6 +6,7 @@ use App\Exports\InputDataExport;
 use App\Exports\RegistExport;
 use App\Http\Controllers\Controller;
 use App\Imports\FtthFeeImport;
+use App\Imports\FtthInstalasiImport;
 use Illuminate\Http\Request;
 use App\Imports\InputDataImport;
 use App\Imports\OdcImport;
@@ -46,7 +47,7 @@ class ExportController extends Controller
     }
       public function import_instalasi(Request $request)
     {
-        Excel::import(new FtthInstalasi(),request()->file('file'));
+        Excel::import(new FtthInstalasiImport(),request()->file('import_instalasi'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
@@ -55,7 +56,7 @@ class ExportController extends Controller
     }
       public function import_fee(Request $request)
     {
-         Excel::import(new FtthFee(),request()->file('file'));
+         Excel::import(new FtthFeeImport(),request()->file('import_fee'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
