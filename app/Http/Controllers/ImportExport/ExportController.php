@@ -11,6 +11,7 @@ use App\Imports\FtthFeeImport;
 use App\Imports\FtthInstalasiImport;
 use Illuminate\Http\Request;
 use App\Imports\InputDataImport;
+use App\Imports\InvoiceImport;
 use App\Imports\KategoriImport;
 use App\Imports\OdcImport;
 use App\Imports\OdpImport;
@@ -18,6 +19,7 @@ use App\Imports\OltImport;
 use App\Imports\PaketImport;
 use App\Imports\PopImport;
 use App\Imports\RegistImport;
+use App\Imports\SubInvoiceImport;
 use App\Models\PSB\FtthFee;
 use App\Models\PSB\FtthInstalasi;
 use Maatwebsite\Excel\Facades\Excel;
@@ -137,5 +139,23 @@ class ExportController extends Controller
             'alert' => 'success',
         ];
         return redirect()->route('gudang.stok_gudang')->with($notifikasi);
+    }
+    public function invoice_import(Request $request)
+    {
+        Excel::import(new InvoiceImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('inv.index')->with($notifikasi);
+    }
+    public function Subinvoice_import(Request $request)
+    {
+        Excel::import(new SubInvoiceImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('inv.index')->with($notifikasi);
     }
 }

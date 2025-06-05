@@ -78,6 +78,8 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
         Route::post('/fee-import', [ExportController::class, 'import_fee'])->name('export.import_fee')->middleware(['role:admin']);
         Route::post('/barang-import', [ExportController::class, 'barang_import'])->name('export.barang_import')->middleware(['role:admin']);
         Route::post('/barang-keluar-import', [ExportController::class, 'barang_keluar_import'])->name('export.barang_keluar_import')->middleware(['role:admin']);
+        Route::post('/Invoice-keluar-import', [ExportController::class, 'invoice_import'])->name('export.invoice_import')->middleware(['role:admin']);
+        Route::post('/SubInvoice-import', [ExportController::class, 'Subinvoice_import'])->name('export.Subinvoice_import')->middleware(['role:admin']);
 
     
     ##CRUD DATA USER

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id('inv_id');
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             // $table->string('inv_id')->nullable();
+            $table->integer('inv_nolayanan')->nullable();
             $table->string('inv_status')->nullable();
             $table->unsignedBigInteger('inv_idpel');
             $table->foreign('inv_idpel')->references('reg_idpel')->on('registrasis')->onDelete('cascade');
