@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ImportExport;
 use App\Exports\InputDataExport;
 use App\Exports\RegistExport;
 use App\Http\Controllers\Controller;
+use App\Imports\FtthFeeImport;
 use Illuminate\Http\Request;
 use App\Imports\InputDataImport;
 use App\Imports\OdcImport;
@@ -13,6 +14,7 @@ use App\Imports\OltImport;
 use App\Imports\PaketImport;
 use App\Imports\PopImport;
 use App\Imports\RegistImport;
+use App\Models\PSB\FtthInstalasi;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\PSB\InputData;
 
@@ -39,6 +41,18 @@ class ExportController extends Controller
     {
         // $data_excel = (new InpuDataExport());
         $data_excel = (new RegistExport());
+        return Excel::download($data_excel, 'registrasi.xlsx');
+    }
+      public function import_instalasi(Request $request)
+    {
+        // $data_excel = (new InpuDataExport());
+        $data_excel = (new FtthInstalasi());
+        return Excel::download($data_excel, 'registrasi.xlsx');
+    }
+      public function export_ftth_fees(Request $request)
+    {
+        // $data_excel = (new InpuDataExport());
+        $data_excel = (new FtthFeeImport());
         return Excel::download($data_excel, 'registrasi.xlsx');
     }
     public function import_registrasi(Request $request)

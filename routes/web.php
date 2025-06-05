@@ -67,6 +67,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
         ##EXPORT
          Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin']);
         Route::post('/input-import', [ExportController::class, 'import_input_data'])->name('export.import_input_data')->middleware(['role:admin']);
+        Route::post('/instalsi-import', [ExportController::class, 'import_instalasi'])->name('export.import_instalasi')->middleware(['role:admin']);
         Route::get('/regist-export', [ExportController::class, 'export_registrasi'])->name('export.export_registrasi')->middleware(['role:admin']);
         Route::post('/regist-import', [ExportController::class, 'import_registrasi'])->name('export.import_registrasi')->middleware(['role:admin']);
         Route::post('/pop-import', [ExportController::class, 'import_pop'])->name('export.import_pop')->middleware(['role:admin']);
