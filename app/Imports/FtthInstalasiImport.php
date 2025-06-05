@@ -17,13 +17,12 @@ class FtthInstalasiImport implements ToModel
    public function model(array $row)
     {
         return new FtthInstalasi([
-            'id' =>$row[0],
             'corporate_id' =>Session::get('corp_id'),
-            'data__odp_id' => $row[1],#
+            'data__odp_id' => $row[0],#
             'reg_noc' => 2,
-            'reg_in_ont' => $row[2],#
-            'reg_router' => $row[3],#
-            'reg_slot_odp' => $row[4],#
+            'reg_in_ont' => $row[1],#
+            'reg_router' => $row[2],#
+            'reg_slot_odp' => $row[3],#
         ]);
     }
 }
