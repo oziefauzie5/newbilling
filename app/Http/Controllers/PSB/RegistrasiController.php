@@ -605,6 +605,8 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 'routers.router_nama',
             ])
             ->first();
+                dd($data['data']);
+
 
   
         // $data['router'] = Router::join('data_pops', 'data_pops.pop_id', '=', 'routers.router_id_pop')
