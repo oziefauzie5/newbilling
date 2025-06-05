@@ -16,6 +16,7 @@ class FtthInstalasiImport implements ToModel
     */
    public function model(array $row)
     {
+        dd('test');
         return new FtthInstalasi([
             'id' =>$row[0],
             'corporate_id' =>Session::get('corp_id'),

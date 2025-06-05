@@ -84,14 +84,14 @@
                   REGISTRASI
                 </button>
               </a>
-                   <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
+                   <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import_instalasi">
                 <i class="fa fa-file-import"></i> IMPORT FTTH INSTALASI
               </button>
                    <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import_fee">
                 <i class="fa fa-file-import"></i> IMPORT FTTH FEE
               </button>
           <!-- Modal Import -->
-          <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal fade" id="import_instalasi" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header no-bd">

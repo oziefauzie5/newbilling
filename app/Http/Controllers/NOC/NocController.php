@@ -168,6 +168,9 @@ class NocController extends Controller
 
           $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
+            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
             ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
              ->where('registrasis.corporate_id',Session::get('corp_id'))
