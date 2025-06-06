@@ -15,7 +15,8 @@ return new class extends Migration
         Schema::create('mutasis', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-            $table->string('mt_mts_id')->nullable();
+            $table->unsignedBigInteger('mt_mts_id');
+            $table->foreign('mt_mts_id')->references('mts_user_id')->on('mitra_settings')->onDelete('restrict');
             $table->string('mt_admin')->nullable();
             $table->string('mt_kategori')->nullable();
             $table->text('mt_deskripsi')->nullable();
