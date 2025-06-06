@@ -24,5 +24,9 @@ class Laporan extends Model
         'lap_jenis_inv',
         'lap_status',
         'lap_img',
+        'created_at',
+        'updated_at',
     ];
+
+    public $timestamps = false;
 }

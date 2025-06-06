@@ -155,18 +155,15 @@ class AktivasiController extends Controller
         $inv['corporate_id'] = Session::get('corp_id');
         $inv['inv_status'] = 'UNPAID';
         $inv['inv_idpel'] = $query->reg_idpel;
-        // $inv['inv_nolayanan'] = $query->reg_nolayanan;
-        // $inv['inv_nama'] = $query->input_nama;
-        // $inv['inv_jenis_tagihan'] = $query->reg_jenis_tagihan;
-        // $inv['inv_profile'] = $query->paket_nama;
-        // $inv['inv_mitra'] = 'SYSTEM';
-        // $inv['inv_kategori'] = 'OTOMATIS';
+        $inv['inv_nolayanan'] = $query->reg_nolayanan;
         $inv['inv_diskon'] = '0';
         $inv['inv_note'] = $query->input_nama;
         
         $sub_inv['corporate_id'] = Session::get('corp_id');
         $sub_inv['subinvoice_deskripsi'] = $query->paket_nama;
         $sub_inv['subinvoice_status'] = '0';
+
+        $sub_sales['corporate_id'] = Session::get('corp_id');
 
         // if ($cek_hari_pasang < 25) {
             $cek_inv = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();

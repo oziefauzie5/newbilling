@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Transaksi\Laporan;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -14,20 +15,24 @@ class LaporanImport implements ToModel
     */
      public function model(array $row)
     {
-        return new Data_Odp([
-            'id' =>$row[0],
+        return new Laporan([
             'corporate_id' =>Session::get('corp_id'),
-            'data__odc_id' => $row[1],
-            'odp_id' => $row[2],
-            'odp_core' => $row[3],
-            'odp_nama' => $row[4],
-            'odp_jumlah_slot' => $row[5],
-            'odp_lokasi_img' => $row[6],
-            'odp_file_topologi' => $row[7],
-            'odp_koordinat' => $row[8],
-            'odp_keterangan' => $row[9],
-            'odp_status' => $row[10],
-            'odp_slot_odc' => $row[11],
+            'lap_id'=> $row[0],
+            'lap_tgl'=> $row[1],
+            'lap_inv'=> $row[2],
+            'lap_admin'=> $row[3],
+            'lap_pokok'=> $row[4],
+            'lap_fee_mitra'=> $row[5],
+            'lap_ppn'=> $row[6],
+            'lap_bph_uso'=> 0,
+            'lap_jumlah'=> $row[7],
+            'lap_akun'=> $row[8],
+            'lap_keterangan'=> $row[9],
+            'lap_jenis_inv'=> $row[10],
+            'lap_status'=> $row[11],
+            'lap_img'=> $row[12],
+            'created_at'=> $row[13],
+            'updated_at'=> $row[14],
 
         ]);
     }
