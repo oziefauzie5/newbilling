@@ -45,7 +45,6 @@ Route::get('/logout-client', [LoginPelangganController::class, 'logout'])->name(
 Route::get('/Client-logout', [LoginPelangganController::class, 'client_logout'])->name('client_logout');
 
 Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 'client.'], function () {
-    Route::get('/maintenance', [PelangganController::class, 'maintenance'])->name('maintenance');
     Route::get('/home', [PelangganController::class, 'index'])->name('index');
     Route::get('/details', [PelangganController::class, 'details'])->name('details');
     Route::get('/tagihan/{inv}', [PelangganController::class, 'tagihan'])->name('tagihan');
@@ -64,9 +63,10 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.'], function () {
         
         Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN']);
+        Route::get('/maintenance', [BillerController::class, 'maintenance'])->name('maintenance');
         
         ##EXPORT
-         Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin']);
+        Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin']);
         Route::post('/input-import', [ExportController::class, 'import_input_data'])->name('export.import_input_data')->middleware(['role:admin']);
         Route::get('/regist-export', [ExportController::class, 'export_registrasi'])->name('export.export_registrasi')->middleware(['role:admin']);
         Route::post('/regist-import', [ExportController::class, 'import_registrasi'])->name('export.import_registrasi')->middleware(['role:admin']);

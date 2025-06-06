@@ -35,6 +35,10 @@ use Illuminate\Support\Facades\Session;
 
 class BillerController extends Controller
 {
+    public function maintenance()
+    {
+        return view('auth/maintenance');
+    }
 
     public function getpelanggan(Request $request, $id)
     {

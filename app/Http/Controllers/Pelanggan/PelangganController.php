@@ -14,11 +14,7 @@ use Illuminate\Support\Facades\Session;
 
 class PelangganController extends Controller
 {
-    public function maintenance()
-    {
-       
-        return view('client/maintenance');
-    }
+    
     public function index()
     {
         $idpel = Auth::guard('pelanggan')->user()->id;
