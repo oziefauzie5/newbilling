@@ -63,7 +63,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.'], function () {
         
         Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN']);
-        Route::get('/maintenance', [BillerController::class, 'maintenance'])->name('maintenance');
+        
         
         ##EXPORT
         Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin']);
@@ -272,6 +272,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     
     
     
+    Route::get('/biller/maintenance', [BillerController::class, 'maintenance'])->name('biller.maintenance')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/index', [BillerController::class, 'index'])->name('biller.index')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/tagihan', [BillerController::class, 'list_tagihan'])->name('biller.list_tagihan')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/pembayaran', [BillerController::class, 'pembayaran'])->name('biller.pembayaran')->middleware(['role:KOLEKTOR|BILLER']);

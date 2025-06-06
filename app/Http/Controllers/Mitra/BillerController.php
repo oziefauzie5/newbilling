@@ -37,6 +37,7 @@ class BillerController extends Controller
 {
     public function maintenance()
     {
+        // dd('test');
         return view('auth/maintenance');
     }
 
