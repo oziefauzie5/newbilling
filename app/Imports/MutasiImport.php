@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Mitra\Mutasi;
 use App\Models\Teknisi\Teknisi;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
@@ -15,7 +16,7 @@ class MutasiImport implements ToModel
     */
      public function model(array $row)
     {
-        return new Teknisi([
+        return new Mutasi([
             'corporate_id' =>Session::get('corp_id'),
             'id' => $row[0],
             'mt_mts_id' => $row[1],
