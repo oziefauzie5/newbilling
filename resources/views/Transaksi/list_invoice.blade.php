@@ -307,7 +307,7 @@
                   <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{date('d-m-Y', strtotime($d->inv_tgl_isolir)) ??''}}</td>
                   <td>{{$d->inv_id ??''}}</td>
                       <td>{{$d->inv_idpel ??''}}</td>
-                      <td>{{$d->reg_nolayanan ??''}}</td>
+                      <td>{{$d->inv_nolayanan ??''}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{$d->input_nama??'' ??''}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{$d->paket_nama ??''}}</td>
                       <td class="href_inv" data-id="{{$d->inv_id ??''}}" >{{$d->inv_tgl_tagih ??''}}</td>

@@ -22,6 +22,7 @@ use App\Models\Applikasi\SettingBiaya;
 use App\Models\Mitra\MutasiSales;
 use App\Models\PSB\FtthFee;
 use App\Models\Transaksi\SubInvoice;
+use App\Models\User;
 use Illuminate\Support\Facades\Session;
 
 class CallbackController extends Controller
@@ -193,6 +194,7 @@ class CallbackController extends Controller
             // $admin_user = Auth::user()->id;
 
             $akun = SettingAkun::where('akun_type','TRIPAY')->where('corporate_id',Session::get('corp_id'))->select('akun_nama','id')->first();
+            $user = User::where('name','TRIPAY')->where('corporate_id',Session::get('corp_id'))->select('name','id')->first();
                $api_payment = (new ApiController)->Api_payment_ftth($data_pelanggan,$nama_user,$reg);
             if($api_payment == 0)
             {
@@ -201,7 +203,7 @@ class CallbackController extends Controller
 
 
             $datas['inv_cabar'] = 'TRIPAY';
-            $datas['inv_admin'] = 'SYSTEM';
+            $datas['inv_admin'] = $user->id;
             $datas['inv_akun'] = $akun->id;
             $datas['inv_reference'] = $data->reference;
             $datas['inv_payment_method'] = $data->payment_method;

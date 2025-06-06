@@ -210,6 +210,8 @@ class BillerController extends Controller
         $nama_user = Auth::user()->name; #NAMA USER
         $mitra = MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id', $admin_user)->where('mts_limit_minus', '!=', '0')->first();
 
+
+
         $saldo_mutasi = (new GlobalController)->total_mutasi($admin_user); #Cek saldo mutasi terlebih dahulu sebelum melakukan pemabayaran
         $cek_tagihan = (new GlobalController)->data_tagihan($id); #cek data tagihan pembayaran
         $sumharga = SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $cek_tagihan->inv_id)->sum('subinvoice_harga'); #hitung total harga invoice

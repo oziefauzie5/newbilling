@@ -95,7 +95,7 @@ class ApiController extends Controller
                         $API->comm('/ppp/secret/set', [
                             '.id' => $cek_secret[0]['.id'],
                             'profile' =>  $data_pelanggan->paket_nama == '' ? '' : $data_pelanggan->paket_nama,
-                            'comment' => $data_pelanggan->odp_id == '' ? '' : $data_pelanggan->odp_id,
+                            // 'comment' => $data_pelanggan->odp_id == '' ? '' : $data_pelanggan->odp_id,
 
 
                             'disabled' => 'no',
@@ -123,7 +123,7 @@ class ApiController extends Controller
                             'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                             'service' => 'pppoe',
                             'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                            'comment' => $data_pelanggan->odp_id == '' ? '' : $data_pelanggan->odp_id,
+                            // 'comment' => $data_pelanggan->odp_id == '' ? '' : $data_pelanggan->odp_id,
                             'disabled' => 'no',
                         ]);
                         return 0;

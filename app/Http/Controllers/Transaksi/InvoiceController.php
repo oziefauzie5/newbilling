@@ -130,7 +130,7 @@ class InvoiceController extends Controller
             ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('invoices.inv_id', 'like', '%' . $data['q'] . '%');
-                // $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('invoices.inv_nolayanan', 'like', '%' . $data['q'] . '%');
                 // $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('invoices.inv_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
                 // $query->orWhere('inv_nolayanan', 'like', '%' . $data['q'] . '%');
@@ -242,7 +242,7 @@ class InvoiceController extends Controller
                 'input_data.input_alamat_pasang',
                 'input_data.input_hp',
                 'input_data.input_email',
-                'registrasis.reg_nolayanan',
+                'invoices.inv_nolayanan',
                 // 'pakets.*',
                 // 'sub_invoices.*',
                 // 'sub_invoices.id as subinv_id',
