@@ -1235,4 +1235,11 @@ Terimakasih.
         //     return response()->json('2');
         // }
     }
+
+    public function cek_invoice($id)
+    {
+        $no_inv = Invoice::where('inv_idpel',$id)->whereMonth('inv_tgl_tagih',date('m',strtotime(Carbon::now())))->select('inv_id')->first();
+        // dd($no_inv);
+        return redirect()->route('admin.inv.sub_invoice',['id'=>$no_inv->inv_id]);
+    }
 }

@@ -115,20 +115,16 @@
                 <th width="25px">No</th>
                 <th>Tanggal Pembayaran</th>
                 <th>Pelanggan</th>
-                <th>Debet</th>
-                <th>Kredit</th>
-                <th>Saldo</th>
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($mutasi_sales as $d)
             <tr>
                 <td id="center">{{$loop->iteration}}</td>
-                <td id="center">{{ date('d-m-Y',strtotime($d->smt_tgl_transaksi)) }}</td>
-                <td >{{ $d->smt_deskripsi }}</td>
-                <td id="right">{{ number_format($d->smt_kredit) }}</td>
-                <td id="right">{{ number_format($d->smt_debet) }}</td>
-                <td id="right">{{ number_format($d->smt_saldo) }}</td>
+                <td id="center">{{ date('d-m-Y H:i:s',strtotime($d->mutasi_sales_tgl_transaksi)) }}</td>
+                <td >{{ $d->mutasi_sales_deskripsi }}</td>
+                <td id="right">{{ number_format($d->mutasi_sales_jumlah) }}</td>
             </tr>
             @endforeach
         </tbody>

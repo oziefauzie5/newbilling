@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Mitra;
-
+use App\Models\Aplikasi\Data_Site;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
 use App\Models\Global\ConvertNoHp;
@@ -12,6 +12,7 @@ use App\Models\Mitra\MutasiSales;
 use App\Models\Transaksi\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -49,6 +50,7 @@ class SalesController extends Controller
         $data['role'] = $role->name;
         $data['admin_user'] = (new GlobalController)->user_admin();
         $data['paket'] = Paket::where('paket_status','Enable')->where('paket_layanan','PPP')->get();
+        $data['site'] = Data_Site::where('site_status','Enable')->get();
 
         return view('biller/sales_input', $data);
     }
@@ -78,7 +80,17 @@ class SalesController extends Controller
         Session::flash('input_ktp', $request->input_ktp);
         Session::flash('input_email', $request->input_email);
         Session::flash('input_alamat_ktp', strtoupper($request->input_alamat_ktp));
-        Session::flash('input_alamat_pasang', strtoupper($request->input_alamat_pasang));
+        Session::flash('rt_ktp', strtoupper($request->rt_ktp));
+        Session::flash('rw_ktp', strtoupper($request->rw_ktp));
+        Session::flash('kelurahan_ktp', strtoupper($request->kelurahan_ktp));
+        Session::flash('kecamatan_ktp', strtoupper($request->kecamatan_ktp));
+        Session::flash('kota_ktp', strtoupper($request->kota_ktp));
+        Session::flash('input_alamat', strtoupper($request->input_alamat));
+        Session::flash('rt', strtoupper($request->rt));
+        Session::flash('rw', strtoupper($request->rw));
+        Session::flash('kelurahan', strtoupper($request->kelurahan));
+        Session::flash('kecamatan', strtoupper($request->kecamatan));
+        Session::flash('kota', strtoupper($request->kota));
         Session::flash('input_sales', strtoupper($request->input_sales));
         Session::flash('input_subseles', strtoupper($request->input_subseles));
         Session::flash('input_password', Hash::make($request->input_hp));
@@ -102,13 +114,15 @@ class SalesController extends Controller
         if ($cek_nohp == 0) {
             $input['input_tgl'] = $data['input_tgl'];
             $input['input_nama'] = strtoupper($request->input_nama);
+            $input['corporate_id']= Session::get('corp_id');
             $input['id'] = $id_cust;
             $input['input_ktp'] = $request->input_ktp;
+            $input['data__site_id'] = $request->kota;
             $input['input_hp'] = $nomorhp;
             $input['input_hp_2'] = $nomorhp2;
             $input['input_email'] = $request->input_email;
-            $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp);
-            $input['input_alamat_pasang'] = strtoupper($request->input_alamat_pasang);
+            $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp).', '. strtoupper($request->rt_ktp).', '. strtoupper($request->rw_ktp).', '. strtoupper($request->kelurahan_ktp).', '. strtoupper($request->kecamatan_ktp).', '. strtoupper($request->kota_ktp);
+            $input['input_alamat_pasang'] = strtoupper($request->input_alamat).', '. strtoupper($request->rt).', '. strtoupper($request->rw).', '. strtoupper($request->kelurahan).', '. strtoupper($request->kecamatan).', '. strtoupper($request->kota);
             $input['input_sales'] = $user_id;
             $input['input_subseles'] = strtoupper($user_nama);
             $input['password'] = Hash::make($nomorhp);
@@ -121,22 +135,21 @@ class SalesController extends Controller
                 'pesan' => 'Berhasil input data',
                 'alert' => 'success',
             ];
-            return redirect()->route('admin.biller.sales')->with($notifikasi);
+            return redirect()->route('admin.sales.sales')->with($notifikasi);
         } else {
             $notifikasi = [
                 'pesan' => 'Nomor Hp sudah terdaftar',
                 'alert' => 'error',
             ];
-            return redirect()->route('admin.biller.sales_input')->with($notifikasi);
+            return redirect()->route('admin.sales.sales_input')->with($notifikasi);
         }
     }
     public function mutasi_sales()
     {
         $admin_user = Auth::user()->id;
-        $data['tittle'] = 'MITRA';
         $query =  DB::table('mutasi_sales')
             ->orderBy('mutasi_sales.created_at', 'DESC')
-            ->where('mutasi_sales.smt_user_id', '=', $admin_user);
+            ->where('mutasi_sales.mutasi_sales_mitra_id', '=', $admin_user);
         $data['mutasi_sales'] = $query->get();
 
         return view('biller/mutasi_sales', $data);
@@ -153,15 +166,12 @@ class SalesController extends Controller
         $data['putus'] = $request->query('putus');
         $data['fee'] = $request->query('fee');
 
-
-
-
-
-        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*','ftth_fees.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('ftth_fees', 'ftth_fees.fee_idpel', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->where('input_data.input_sales', '=', $user_id)
+            // ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->where('ftth_fees.reg_mitra', '=', $user_id)
             ->where('reg_progres', '>=', 3)
             ->orderBy('tgl', 'DESC')
             ->where(function ($query) use ($data) {
@@ -178,14 +188,17 @@ class SalesController extends Controller
             $query->where('registrasis.reg_progres', '>', 5);
         if ($data['fee'])
             $query->whereDate('reg_tgl_pasang', '<', $month);
+
         $query->whereIn('registrasis.reg_progres', [3, 4, 5]);
         $query->where('reg_jenis_tagihan', '!=', 'FREE');
 
         $data['data_pelanggan'] = $query->get();
 
+        // dd($data['data_pelanggan']);
 
 
-        // dd($month);
+
+        // // dd($month);
         #COUNT PELANGGANG AKTIF
         $query_aktif = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
@@ -193,16 +206,16 @@ class SalesController extends Controller
             ->where('reg_progres', '<=', 5)
             ->whereDate('reg_tgl_pasang', '<', $month);
         // $data['pelanggan_aktif'] = $query_aktif->where('reg_jenis_tagihan', '!=', 'FREE')->get();
-        // foreach ($data['pelanggan_aktif'] as $key ) {
-        //     # code...
-        //     echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
-        // }
+        // // foreach ($data['pelanggan_aktif'] as $key ) {
+        // //     # code...
+        // //     echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
+        // // }
 
-        // dd('test');
+        // // dd('test');
         $data['pelanggan_aktif'] = $query_aktif->where('reg_jenis_tagihan', '!=', 'FREE')->count();
 
-        #COUNT PELANGGAN BULAN INI
-        $query_bulan_ini = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+        // #COUNT PELANGGAN BULAN INI
+        $query_bulan_ini = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->where('input_data.input_sales', '=', $user_id)
             ->where('reg_progres', '<=', 5)
@@ -210,14 +223,14 @@ class SalesController extends Controller
         $data['pelanggan_bulan_ini'] = $query_bulan_ini->where('reg_jenis_tagihan', '!=', 'FREE')->count();
 
         #COUNT PELANGGAN PUTUS
-        $query_putus = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+        $query_putus = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->where('input_data.input_sales', '=', $user_id)
             ->where('reg_progres', '>', 5);
         $data['pelanggan_putus'] = $query_putus->count();
 
         #COUNT PELANGGAN FREE
-        $query_free = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
+        $query_free = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->where('input_data.input_sales', '=', $user_id)
             ->where('reg_progres', '>=', 3);
@@ -231,7 +244,7 @@ class SalesController extends Controller
             ->whereDate('inv_tgl_bayar', '>=', $month)
             ->whereDate('reg_tgl_pasang', '<', $month)
             ->where('inv_status', 'PAID')
-            ->where('inv_jenis_tagihan', 'PRABAYAR')
+            ->where('registrasis.reg_jenis_tagihan', 'PRABAYAR')
             ->where('input_sales', $user_id);
         $data['pelanggan_lunas'] = $query_lunas->count();
 
@@ -243,10 +256,10 @@ class SalesController extends Controller
             // ->whereDate('inv_tgl_bayar', '>=', $month)
             ->whereDate('reg_tgl_pasang', '<', $month)
             ->where('inv_status', '!=', 'PAID')
-            ->where('inv_jenis_tagihan', 'PRABAYAR')
+            ->where('registrasis.reg_jenis_tagihan', 'PRABAYAR')
             ->where('input_sales', $user_id);
 
-        // $data['pelanggan_belum_lunas'] = $query_belum_lunas->get();
+        $data['pelanggan_belum_lunas'] = $query_belum_lunas->get();
         // foreach ($data['pelanggan_belum_lunas'] as $key ) {
         //         # code...
         //         echo '<table><tr><th>'.$key->reg_nolayanan.'</th><th>'.$key->input_nama.'</th></tr></table>';
@@ -254,7 +267,11 @@ class SalesController extends Controller
 
         //     dd('test');
         $data['pelanggan_belum_lunas'] = $query_belum_lunas->count();
-        $data['komisi'] = (new globalController)->total_mutasi_sales($user_id);
+         $debet = MutasiSales::where('mutasi_sales_mitra_id', $user_id)->where('mutasi_sales_type', 'Debit')->sum('mutasi_sales_jumlah');
+        $kredit = MutasiSales::where('mutasi_sales_mitra_id', $user_id)->where('mutasi_sales_type', 'Credit')->sum('mutasi_sales_jumlah');
+
+        $data['komisi'] = $kredit - $debet;
+        // $data['komisi'] = (new globalController)->total_mutasi_sales($user_id);
 
         return view('biller/data_pelanggan_sales', $data);
     }
@@ -272,8 +289,8 @@ class SalesController extends Controller
         $data['end_date'] =  $request->end_date;
 
         $query =  DB::table('mutasi_sales')
-            ->orderBy('mutasi_sales.smt_tgl_transaksi', 'ASC')
-            ->where('mutasi_sales.smt_user_id', '=', $data['admin_user'])
+            ->orderBy('mutasi_sales.mutasi_sales_tgl_transaksi', 'ASC')
+            ->where('mutasi_sales.mutasi_sales_mitra_id', '=', $data['admin_user'])
             ->whereDate('mutasi_sales.created_at', '>=', $data['start_date'])
             ->whereDate('mutasi_sales.created_at', '<=', $data['end_date']);
         $data['mutasi_sales'] = $query->get();
@@ -318,12 +335,14 @@ class SalesController extends Controller
             ->whereDate('inv_tgl_bayar', '>=', $month)
             ->whereDate('reg_tgl_pasang', '<', $month)
             ->where('inv_status', 'PAID')
-            ->where('inv_jenis_tagihan', 'PRABAYAR')
+            ->where('registrasis.reg_jenis_tagihan', 'PRABAYAR')
             ->where('input_sales', $data['admin_user']);
         $data['pelanggan_lunas'] = $query_lunas->count();
 
+        $debet = MutasiSales::where('mutasi_sales_mitra_id', $data['admin_user'])->where('mutasi_sales_type', 'Debit')->sum('mutasi_sales_jumlah');
+        $kredit = MutasiSales::where('mutasi_sales_mitra_id', $data['admin_user'])->where('mutasi_sales_type', 'Credit')->sum('mutasi_sales_jumlah');
 
-        $data['saldo'] = (new globalController)->total_mutasi_sales($data['admin_user']);
+        $data['saldo'] = $kredit - $debet;
         return view('biller/mutasi_pdf', $data);
         $pdf = App::make('dompdf.wrapper');
         $html = view('biller/mutasi_pdf', $data)->render();

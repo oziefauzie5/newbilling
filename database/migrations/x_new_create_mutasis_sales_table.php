@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
              $table->unsignedBigInteger('mutasi_sales_mitra_id');
             $table->foreign('mutasi_sales_mitra_id')->references('id')->on('users')->onDelete('restrict');
-             $table->unsignedBigInteger('mutasi_sales_idpel');
+            $table->string('mutasi_sales_tgl_transaksi')->nullable();
+            $table->unsignedBigInteger('mutasi_sales_idpel');
             $table->foreign('mutasi_sales_idpel')->references('reg_idpel')->on('registrasis')->onDelete('restrict');
             $table->string('mutasi_sales_admin')->nullable();
             $table->enum('mutasi_sales_type', ['Debit', 'Credit']);

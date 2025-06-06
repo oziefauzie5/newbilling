@@ -42,25 +42,25 @@ class PsbController extends Controller
 
         $query = Registrasi::query()
         ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-    ->with(['registrasi_paket']);
+    // ->with(['registrasi_paket']);
         // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile');
         // ->join('ftth_fees', 'ftth_fees.id', '=', 'registrasis.reg_idpel')
         // ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
         // ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router');
-        // ->where('input_data.corporate_id',Session::get('corp_id'))
+        ->where('input_data.corporate_id',Session::get('corp_id'))
         // ->select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.id as router_id','routers.router_nama','pakets.paket_id','pakets.paket_nama')
-        // ->where('reg_progres', '<=', 5)
+        ->where('reg_progres', '<=', 5)
         // ->orderBy('tgl', 'DESC')
-            // ->where(function ($query) use ($data) {
-            //     $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
-            //     $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
-            //     $query->orWhere('reg_nolayanan', 'like', '%' . $data['q'] . '%');
-            //     // $query->orWhere('reg_username', 'like', '%' . $data['q'] . '%');
-            //     $query->orWhere('input_hp', 'like', '%' . $data['q'] . '%');
-            //     $query->orWhere('input_hp_2', 'like', '%' . $data['q'] . '%');
-            //     $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
-            //     $query->orWhere('reg_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
-            // });
+            ->where(function ($query) use ($data) {
+                $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_nolayanan', 'like', '%' . $data['q'] . '%');
+                // $query->orWhere('reg_username', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_hp', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_hp_2', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('input_alamat_pasang', 'like', '%' . $data['q'] . '%');
+                $query->orWhere('reg_tgl_jatuh_tempo', 'like', '%' . $data['q'] . '%');
+            });
 
 
         // if ($data['router'])

@@ -309,6 +309,9 @@
                         <i class="fa fa-times"></i>
                       </button>
                     </div>
+                    <div class="form-button-action">
+                      <a href="{{route('admin.reg.cek_invoice', ['id'=>$d->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-link"><i class="fa fa-file"></i></button></a>
+                    </div>
                   </td>
                   @if($d->reg_progres == 'MIGRASI')
                   <td class="text-info">{{$d->reg_nolayanan}}</td>

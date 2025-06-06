@@ -23,144 +23,94 @@
           <div class="clearfix"></div>
         </span>
         </div>
-      <!-- <div class="row mt--1">
-            <a href="{{route('admin.biller.biller_pelanggan',['q='])}}" class="col-4">
+      <div class="row mt--1">
+            <a href="{{route('admin.sales.pelanggan',['q='])}}" class="col-4">
               <div class="card ">
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-danger">
                   </div>
-                  <div class="h5 m-0">{{$total_pelanggan}}</div>
-                  <div class="h5 text-info ">User Regist</div>
+                  <div class="h5 m-0">{{$pelanggan_aktif}}</div>
+                  <div class="h5 text-info ">Pel. Aktif</div>
                 </div>
               </div>
             </a>
-            <a  href="{{route('admin.biller.biller_pelanggan',['q=FREE'])}}" class="col-4">
+            <a  href="{{route('admin.sales.pelanggan',['q=FREE'])}}" class="col-4">
               <div class="card">
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-success">
                   </div>
-                  <div class="h5 m-0">{{$pelanggan_free}}</div>
-                  <div class="h5 text-warning">User Free</div>
+                  <div class="h5 m-0">{{$pelanggan_bulan_ini}}</div>
+                  <div class="h5 text-warning">Pel. bulan ini</div>
                 </div>
               </div>
             </a>
-            <a href="{{route('admin.biller.biller_pelanggan',['putus=5'])}}" class="col-4">
+            <a href="{{route('admin.sales.pelanggan',['putus=5'])}}" class="col-4">
               <div class="card">
                 <div class="card-body p-3 text-center">
                   <div class="text-right text-success">
                   </div>
                   <div class="h5 m-0">{{$pelanggan_putus}}</div>
-                  <div class="h5 text-danger">User Putus</div>
+                  <div class="h5 text-danger">Pel. Putus</div>
                 </div>
               </div>
             </a>
-          </div> -->
-        @role('KOLEKTOR')
-        <section class="content mt-3">
-          <div class="row">
-            <a href="{{route('admin.biller.biller_pelanggan',['fee=1'])}}" class="col-6">
-              <div class="card  card_custom1">
-                  <div class="">
-                        <div class="col-12 text-center">
-                          <div class="text-success text-uppercase fw-bold op-8 mt-2">Pelanggan Aktif</div>
-                        </div>
-                          <div class="col-12 mb-2">
-                              <h3 class="fw-bold op-8 text-center ">{{$pelanggan_aktif}} </h3>
-                          </div>
-                  </div>
-              </div>
-          </a>
-            <div class="col-6">
-              <div class="card  card_custom1">
-                  <div class="">
-                        <div class="col-12 text-center">
-                          <div class="text-success text-uppercase fw-bold op-8 mt-2">Pelanggan Bulan ini</div>
-                        </div>
-                          <div class="col-12 mb-2">
-                              <h3 class="fw-bold op-8 text-center ">{{ $pelanggan_bulan_ini}}</h3>
-                          </div>
-                  </div>
-              </div>
           </div>
-          </div>
-          <div class="row">
-            <a href="{{route('admin.biller.biller_pelanggan',['putus=5'])}}" class="col-6">
-              <div class="card  card_custom1">
-                  <div class="">
-                        <div class="col-12 text-center">
-                          <div class="text-danger text-uppercase fw-bold op-8 mt-2">Pelanggan Putus</div>
-                        </div>
-                          <div class="col-12 mb-2">
-                              <h3 class="fw-bold op-8 text-center ">{{$pelanggan_putus}} </h3>
-                          </div>
+      <div class="row mt--1">
+            <a  href="{{route('admin.sales.pelanggan',['q=FREE'])}}" class="col-6">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="text-right text-success">
                   </div>
+                  <div class="h5 m-0">{{$pelanggan_free}}</div>
+                  <div class="h5 text-warning">Pel. Free</div>
+                </div>
               </div>
-          </a>
-            <a href="{{route('admin.biller.biller_pelanggan',['q=FREE'])}}" class="col-6">
-              <div class="card  card_custom1">
-                  <div class="">
-                        <div class="col-12 text-center">
-                          <div class="text-warning text-uppercase fw-bold op-8 mt-2">Pelanggan Free</div>
-                        </div>
-                          <div class="col-12 mb-2">
-                              <h3 class="fw-bold op-8 text-center ">{{ $pelanggan_free}}</h3>
-                          </div>
+            </a>
+            <a href="{{route('admin.sales.pelanggan',['putus=5'])}}" class="col-6">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="text-right text-success">
                   </div>
+                  <div class="h5 m-0">{{$total_pelanggan}}</div>
+                  <div class="h5 text-danger">Total Pelanggan</div>
+                </div>
               </div>
-          </a>
+            </a>
           </div>
-          <div class="row">
-            <a href="{{route('admin.biller.biller_pelanggan',['fee=1'])}}" class="col">
-              <div class="card  card_custom1">
-                        <div class="col-12 text-center">
-                          <div class="text-info text-uppercase fw-bold op-8 mt-2">Total Pelanggan</div>
-                        </div>
-                          <div class="col-12 mb-2">
-                              <h3 class="fw-bold op-8 text-center ">{{$total_pelanggan}} </h3>
-                        </div>
-              </div>
-          </a>
-          </div>
-        
-          <div class="row">
-            <a href="{{route('admin.biller.biller_pelanggan',['fee=1'])}}" class="col-6">
-              <div class="card  card_custom1">
-                  <div class="">
-                        <div class="col-12 text-center">
-                          <div class="text-success text-uppercase fw-bold op-8 mt-2">Terbayar</div>
-                        </div>
-                          <div class="col-12 mb-2">
-                              <h3 class="fw-bold op-8 text-center ">{{$pelanggan_lunas}} </h3>
-                              <h5 class="fw-bold op-8 text-center ">Pelanggan</h5>
-                          </div>
+
+            <div class="row mt--1">
+            <a href="{{route('admin.sales.pelanggan',['q='])}}" class="col-6">
+              <div class="card ">
+                <div class="card-body p-3 text-center">
+                  <div class="text-right text-danger">
                   </div>
+                  <div class="h5 m-0">{{$pelanggan_lunas}}</div>
+                  <div class="h5 text-info ">Terbayar</div>
+                </div>
               </div>
-          </a>
-            <div class="col-6">
-              <div class="card  card_custom1">
-                  <div class="">
-                        <div class="col-12 text-center">
-                          <div class="text-danger text-uppercase fw-bold op-8 mt-2">Belum Bayar</div>
-                        </div>
-                          <div class="col-12 mb-2">
-                              <h3 class="fw-bold op-8 text-center ">{{ $pelanggan_belum_lunas}}</h3>
-                              <h5 class="fw-bold op-8 text-center ">Pelanggan</h5>
-                          </div>
+            </a>
+            <a  href="{{route('admin.sales.pelanggan',['q=FREE'])}}" class="col-6">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="text-right text-success">
                   </div>
+                  <div class="h5 m-0">{{$pelanggan_belum_lunas}}</div>
+                  <div class="h5 text-warning">Belum Terbayar</div>
+                </div>
               </div>
+            </a>
           </div>
-          </div>
-          <div class="row">
-            <a href="{{route('admin.biller.biller_pelanggan',['fee=1'])}}" class="col">
-              <div class="card  card_custom1">
-                        <div class="col-12 text-center">
-                          <div class="text-info text-uppercase fw-bold op-8 mt-2">Total Komisi</div>
-                        </div>
-                          <div class="col-12 mb-2">
-                              <h3 class="fw-bold op-8 text-center ">{{$komisi}} </h3>
-                        </div>
+            <div class="row mt--1">
+            <a href="{{route('admin.sales.pelanggan',['putus=5'])}}" class="col-12">
+              <div class="card">
+                <div class="card-body p-3 text-center">
+                  <div class="text-right text-success">
+                  </div>
+                  <div class="h5 m-0">{{$komisi}}</div>
+                  <div class="h5 text-danger">Total Komisi</div>
+                </div>
               </div>
-          </a>
+            </a>
           </div>
         <div class="col">
           <div class="card ">
@@ -249,7 +199,6 @@
            
           @endforeach
       </section>
-      @endrole
 
 
     </div>

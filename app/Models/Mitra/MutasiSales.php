@@ -12,6 +12,7 @@ class MutasiSales extends Model
         'id',
         'corporate_id',
         'mutasi_sales_mitra_id',
+        'mutasi_sales_tgl_transaksi',
         'mutasi_sales_idpel',
         'mutasi_sales_admin',
         'mutasi_sales_type',

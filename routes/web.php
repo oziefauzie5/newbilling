@@ -171,6 +171,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/ftth/{id}/getMitraSubfee', [RegistrasiController::class, 'getMitraSubfee'])->name('reg.getMitraSubfee')->middleware(['role:admin|NOC|STAF ADMIN']); 
     Route::get('/ftth/{id}/val-odp', [RegistrasiController::class, 'aktivasi_validasi_odp'])->name('reg.aktivasi_validasi_odp')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/ftth/{id}/validasiBarang', [RegistrasiController::class, 'validasiBarang'])->name('reg.validasiBarang')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/ftth/{id}/cek_invoice', [RegistrasiController::class, 'cek_invoice'])->name('reg.cek_invoice')->middleware(['role:admin|NOC|STAF ADMIN']);
     
     
 
@@ -281,7 +282,6 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/biller/mutasi', [BillerController::class, 'mutasi'])->name('biller.mutasi')->middleware(['role:KOLEKTOR|BILLER']);
     // Route::get('/biller/daftar/transaksi', [BillerController::class, 'list_trx'])->name('biller.list_trx')->middleware(['role:KOLEKTOR|BILLER']);
     Route::post('/biller/export/pdf', [BillerController::class, 'mutasi_pdf'])->name('biller.export.mutasi')->middleware(['role:KOLEKTOR|BILLER']);
-    Route::post('/biller/sales-export/pdf', [BillerController::class, 'mutasi_sales_pdf'])->name('biller.export.mutasi_sales')->middleware(['role:KOLEKTOR|BILLER']);
     Route::get('/biller/print/{id}', [BillerController::class, 'print'])->name('biller.print')->middleware(['role:KOLEKTOR|BILLER']);
     Route::put('/biller/pb/{idpel}', [BillerController::class, 'biller_putus_berlanggan'])->name('biller.biller_putus_berlanggan')->middleware(['role:KOLEKTOR']);
     
@@ -291,6 +291,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::post('/sales/store', [SalesController::class, 'sales_store'])->name('sales.sales_store')->middleware(['role:SALES']);
     Route::get('/sales/pelanggan', [SalesController::class, 'pelanggan'])->name('sales.pelanggan')->middleware(['role:SALES']);
     Route::get('/sales/mutasi', [SalesController::class, 'mutasi_sales'])->name('sales.mutasi_sales')->middleware(['role:SALES']);
+    Route::post('/sales/sales-export/pdf', [SalesController::class, 'mutasi_sales_pdf'])->name('sales.mutasi_sales')->middleware(['role:SALES']);
     
     
 

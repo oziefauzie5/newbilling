@@ -23,9 +23,7 @@
                   <th>No</th>
                   <th>Tanggal</th>
                   <th>Deskripsi</th>
-                  <th>Debet</th>
-                  <th>Kredit</th>
-                  <th>Saldo</th>
+                  <th>Jumlah</th>
 
                 </tr>
               </thead>
@@ -34,10 +32,8 @@
                   <tr>
                    <td class="text-center">{{$loop->iteration}}</td>
                    <td>{{ date('d-m-Y H:m:s', strtotime($d->created_at ))}}</td>
-                    <td >{{ $d->smt_deskripsi }}</td>
-                    <td class="text-right">Rp. {{ number_format($d->smt_kredit) }}</td>
-                    <td class="text-right">Rp. {{ number_format($d->smt_debet) }}</td>
-                    <td class="text-right">Rp. {{ number_format($d->smt_saldo) }}</td>
+                    <td >{{ $d->mutasi_sales_deskripsi }}</td>
+                    <td class="text-right">Rp. {{ number_format($d->mutasi_sales_jumlah) }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -48,7 +44,7 @@
           
           <div class="form-group row">
           <div class="col-sm-6">
-            <a href="{{ route('admin.biller.biller_pelanggan') }}" class="btn btn-block btn-primary text-light">Kembali</a>
+            <a href="{{ route('admin.sales.pelanggan') }}" class="btn btn-block btn-primary text-light">Kembali</a>
           </div>
           <div class="col-sm-6">
             <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#exampleModal">Export PDF</button>
@@ -65,7 +61,7 @@
                       </button>
                     </div>
                     <div class="modal-body">
-                      <form action="{{route('admin.biller.export.mutasi_sales')}}" method="POST">
+                      <form action="{{route('admin.sales.mutasi_sales')}}" method="POST">
                         @csrf
                         @method('POST');
                       <div class="col-sm-12">

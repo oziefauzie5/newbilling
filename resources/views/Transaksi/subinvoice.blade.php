@@ -8,7 +8,7 @@
             <div class="row">
               <div class="col-12">
                 <h6>
-                  No. Layanan {{$invoice->reg_nolayanan}}
+                  No. Layanan {{$invoice->inv_nolayanan}}
                   <small class="float-right">Date: {{date("d/m/Y", strtotime($invoice->inv_tgl_tagih))}}</small>
                 </h6>
               </div>

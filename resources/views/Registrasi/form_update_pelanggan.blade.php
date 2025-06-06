@@ -669,10 +669,12 @@
             </form>
               <div class="form-group row mt-5">
               <div class="col">
+                <a href="{{route('admin.reg.cek_invoice', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Lihat Invoice</button></a>
+              </div>
+              <div class="col">
                 <a href="{{route('admin.noc.isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Isolir Manual</button></a>
               </div>
               <div class="col">
-                
                 <a href="{{route('admin.noc.buka_isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Buka Isolir Manual</button></a>
               </div>
             </div>

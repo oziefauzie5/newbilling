@@ -106,14 +106,85 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label>Alamat Domisili</label>
-                      <input id="input_alamat_ktp" type="text" class="form-control" value="{{ Session::get('input_alamat_ktp') }}" name="input_alamat_ktp" placeholder="Alamat KTP">
+                      <label>Alamat</label>
+                      <input id="input_alamat_ktp" type="text" class="form-control" value="{{ Session::get('input_alamat_ktp') }}" name="input_alamat_ktp" placeholder="Kp / Perumahan / Jalan">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>RT</label>
+                      <input id="rt" type="text" class="form-control" value="{{ Session::get('rt_ktp') }}" name="rt_ktp" placeholder="RT sesuai KTP">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>RW</label>
+                      <input id="rw" type="text" class="form-control" value="{{ Session::get('rw_ktp') }}" name="rw_ktp" placeholder="RW sesuai KTP">
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label>Alamat Pasang</label>
-                      <input id="input_alamat_pasang" type="text" class="form-control" value="{{ Session::get('input_alamat_pasang') }}" name="input_alamat_pasang" placeholder="Alamat Pemasangan">
+                      <label>Kelurahan</label>
+                      <input id="kelurahan" type="text" class="form-control" value="{{ Session::get('kelurahan_ktp') }}" name="kelurahan_ktp" placeholder="Kelurahan sesuai KTP">
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Kecamatan</label>
+                      <input id="kecamatan" type="text" class="form-control" value="{{ Session::get('kecamatan_ktp') }}" name="kecamatan_ktp" placeholder="Kecamatan sesuai KTP">
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Kota/Kabupate</label>
+                      <select name="kota_ktp" id="" class="form-control">
+                        <option value="">--Pilih Kota/Kab sesuai KTP</option>
+                        @foreach($site as $s)
+                        <option value="{{$s->id}}">{{$s->site_nama}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Alamat ( Alamat Pemasangan )</label>
+                      <input id="input_alamat" type="text" class="form-control" value="{{ Session::get('input_alamat') }}" name="input_alamat" placeholder="Kp / Perumahan / Jalan ( Alamat Pemasangan )">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>RT ( Alamat Pemasangan )</label>
+                      <input id="rt" type="text" class="form-control" value="{{ Session::get('rt') }}" name="rt" placeholder="RT">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>RW ( Alamat Pemasangan )</label>
+                      <input id="rw" type="text" class="form-control" value="{{ Session::get('rw') }}" name="rw" placeholder="RW">
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Kelurahan ( Alamat Pemasangan )</label>
+                      <input id="kelurahan" type="text" class="form-control" value="{{ Session::get('kelurahan') }}" name="kelurahan" placeholder="Kelurahan">
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Kecamatan ( Alamat Pemasangan )</label>
+                      <input id="kecamatan" type="text" class="form-control" value="{{ Session::get('kecamatan') }}" name="kecamatan" placeholder="kecamatan">
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Kota/Kabupaten ( Alamat Pemasangan )</label>
+                      <select name="kota" id="" class="form-control">
+                        <option value="">--Pilih Kota/Kab</option>
+                        @foreach($site as $s)
+                        <option value="{{$s->id}}">{{$s->site_nama}}</option>
+                        @endforeach
+                      </select>
                     </div>
                   </div>
                   <div class="col-sm-12">
