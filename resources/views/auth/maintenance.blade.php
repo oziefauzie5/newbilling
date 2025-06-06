@@ -44,19 +44,15 @@
                 <h1>
                     :) Oops!</h1>
                 <h2>
-                    Temporarily down for maintenance</h2>
-                <h1>
-                    We’ll be back soon!</h1>
+                    Layanan ini sedang maintenance</h2>
+                <h1>         
+Kami akan segera kembali!</h1>
                 <div>
                     <p>
-                        Sorry for the inconvenience but we’re performing some maintenance at the moment.
-                        we’ll be back online shortly!</p>
+                        
+Mohon maaf atas ketidaknyamanannya, tetapi saat ini kami sedang melakukan pemeliharaan. Kami akan segera kembali online!</p>
                     <p>
-                        — The Team</p>
-                </div>
-                <div class="error-actions">
-                    <a href="#" style="margin-top: 10px;" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-home">
-                    </span>Take Me Home </a>
+                        — Ovall Fiber</p>
                 </div>
             </div>
         </div>
