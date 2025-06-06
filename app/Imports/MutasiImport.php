@@ -17,14 +17,20 @@ class MutasiImport implements ToModel
     {
         return new Teknisi([
             'corporate_id' =>Session::get('corp_id'),
-            'user_id',
-            'teknisi_team',
-            'teknisi_ket',
-            'teknisi_job',
-            'teknisi_idpel',
-            'teknisi_psb',
-            'teknisi_status',
-
-        ]);
+            'id' => $row[0],
+            'mt_mts_id' => $row[1],
+            'mt_admin' => $row[2],
+            'mt_kategori' => $row[3],
+            'mt_deskripsi' => $row[4],
+            'mt_cabar' => $row[5],
+            'mt_kredit' => $row[6],
+            'mt_debet' => $row[7],
+            'mt_saldo' => $row[8],
+            'mt_biaya_adm' => $row[9],
+            'mt_status' => $row[10],
+            'created_at' => $row[11],
+            'updated_at' => $row[12],
+    ]);
     }
+
 }

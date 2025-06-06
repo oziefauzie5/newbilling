@@ -28,5 +28,4 @@ class Laporan extends Model
         'updated_at',
     ];
 
-    public $timestamps = false;
 }
