@@ -62,7 +62,8 @@ class LoginPelangganController extends Controller
             $request->session()->put('app_logo', $app->app_logo);
             $request->session()->put('app_favicon', $app->app_favicon);
             $request->session()->put('corp_id', $CORP_ID->id);
-            return redirect()->route('client.index');
+            // return redirect()->route('client.index');
+            return redirect()->route('client.maintenance');
         } else {
             return redirect()->route('login_pelanggan')->with('failed', 'Nomor Whatsapp tidak terdaftar');
         }

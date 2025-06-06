@@ -369,6 +369,7 @@ class BillerController extends Controller
                                 MutasiSales::create([
                                     'mutasi_sales_mitra_id' => $mit->reg_mitra ?? '0',
                                     'mutasi_sales_idpel' => $data_pelanggan->reg_idpel ?? '0',
+                                    'mutasi_sales_tgl_transaksi' => date('Y-m-d H:i:s', strtotime(Carbon::now())),
                                     'mutasi_sales_admin' => $admin_user ?? '0',
                                     'mutasi_sales_type' => 'Credit',
                                     'mutasi_sales_deskripsi' => $data_pelanggan->input_nama ?? '0',
