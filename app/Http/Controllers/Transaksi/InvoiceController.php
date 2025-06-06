@@ -248,6 +248,7 @@ class InvoiceController extends Controller
                 // 'sub_invoices.id as subinv_id',
             ])
             ->first();
+            // dd($data['invoice']->inv_admin);
 
         if ($data['invoice']->inv_admin) {
             if ($data['invoice']->inv_admin == 'SYSTEM') {

@@ -1027,21 +1027,55 @@ $('.checkboxClass').change(function () {
 
 // validasi_tiket_odp
 
+// $('#tiket_odp').keyup(function() {
+// var tiket_odp = $('#tiket_odp').val();
+// var url = '{{ route("admin.tiket.tiket_validasi_odp", ":id") }}';
+// url = url.replace(':id', tiket_odp);
+// // console.log(validasi_odp)
+// $.ajax({
+// 	url: url,
+// 			type: 'GET',
+// 			data: {'_token': '{{ csrf_token() }}'},
+// 						dataType: 'json',
+// 						success: function(data) {
+// 							// console.log(data.odp_kode)
+// 							if(data.odp_kode){
+// 								$('#tiket_olt').val(data.olt_kode)
+// 								$('#tiket_odc').val(data.odc_kode)
+// 								$('.read').readOnly = true
+// 								$('.notif_valtiket').removeClass('has-error has-feedback')
+// 								$('.notif_valtiket').addClass('has-success has-feedback')
+// 								$('#pesan').html('')
+// 							} else{
+// 								$('#tiket_odc').val('')
+// 								$('#tiket_olt').val('')
+// 								$('#pesan').html('<small id="text" class="form-text text-muted text-danger">Kode ODP tidak ditemukan</small>')
+// 								}
+// 						},
+// 						error: function(error) {
+// 							// console.log(error)
+
+// 						},
+// 					});
+// });
+
 $('#tiket_odp').keyup(function() {
+	// alert('tiket')
 var tiket_odp = $('#tiket_odp').val();
 var url = '{{ route("admin.tiket.tiket_validasi_odp", ":id") }}';
 url = url.replace(':id', tiket_odp);
-// console.log(validasi_odp)
+// console.log(tiket_odp)
 $.ajax({
 	url: url,
 			type: 'GET',
 			data: {'_token': '{{ csrf_token() }}'},
 						dataType: 'json',
 						success: function(data) {
-							// console.log(data.odp_kode)
-							if(data.odp_kode){
-								$('#tiket_olt').val(data.olt_kode)
-								$('#tiket_odc').val(data.odc_kode)
+							// console.log(data)
+							if(data['odc_id']){
+								$('#tiket_olt').val(data['odc_id'].olt_nama)
+								$('#tiket_odc').val(data['odc_id'].odc_nama)
+								$('#tiket_pop').val(data['odc_id'].pop_nama)
 								$('.read').readOnly = true
 								$('.notif_valtiket').removeClass('has-error has-feedback')
 								$('.notif_valtiket').addClass('has-success has-feedback')
@@ -1049,15 +1083,24 @@ $.ajax({
 							} else{
 								$('#tiket_odc').val('')
 								$('#tiket_olt').val('')
+								$('#tiket_pop').val('')
 								$('#pesan').html('<small id="text" class="form-text text-muted text-danger">Kode ODP tidak ditemukan</small>')
-								}
+							}
 						},
 						error: function(error) {
-							// console.log(error)
+							$('#tiket_odc').val('')
+							$('#tiket_olt').val('')
+							$('#tiket_pop').val('')
+							$('#pesan').html('<small id="text" class="form-text text-muted text-danger">Kode ODP tidak ditemukan</small>')
 
 						},
 					});
 });
+
+
+
+
+
 
 //validasi kode kabel
 $("#reg_kode_dropcore").keyup(function(){
@@ -1151,35 +1194,35 @@ $("#reg_kode_dropcore").keyup(function(){
 
 
 //--------- start get kode site-------------
-									$('#pop_kode').on('change', function() {
-										var pop_kode = $(this).val();
-										var url = '{{ route("admin.reg.getKodeSite", ":id") }}';
-										url = url.replace(':id', pop_kode);
-										// console.log(pop_kode)
-										$.ajax({
-													url: url,
-													type: 'GET',
-													data: {
-																	'_token': '{{ csrf_token() }}'
-																},
-																dataType: 'json',
-																success: function(data) {
-																	// console.log(data)
-																	if(data){
-																		$('#aktivasi_odc').empty()
-																		$('#aktivasi_odc').append('<option value="">- Pilih ODC -</option>')
-																		for (let i = 0; i < data.length; i++) {
-																			$('#aktivasi_odc').append('<option value="'+data[i].odc_id+'">'+data[i].odc_nama+'</option>');
-																		}
-																	} else{
-																		$('#aktivasi_odc').append('<option value="">- Data tidak ditemukan -</option>')
-																	}
-																},
-																error: function(error) {
-																	$('#aktivasi_odc').append('<option value="">- Pilih ODC -</option>')
-																},
-															});
-									});
+									// $('#pop_kode').on('change', function() {
+									// 	var pop_kode = $(this).val();
+									// 	var url = '{{ route("admin.reg.getKodeSite", ":id") }}';
+									// 	url = url.replace(':id', pop_kode);
+									// 	// console.log(pop_kode)
+									// 	$.ajax({
+									// 				url: url,
+									// 				type: 'GET',
+									// 				data: {
+									// 								'_token': '{{ csrf_token() }}'
+									// 							},
+									// 							dataType: 'json',
+									// 							success: function(data) {
+									// 								// console.log(data)
+									// 								if(data){
+									// 									$('#aktivasi_odc').empty()
+									// 									$('#aktivasi_odc').append('<option value="">- Pilih ODC -</option>')
+									// 									for (let i = 0; i < data.length; i++) {
+									// 										$('#aktivasi_odc').append('<option value="'+data[i].odc_id+'">'+data[i].odc_nama+'</option>');
+									// 									}
+									// 								} else{
+									// 									$('#aktivasi_odc').append('<option value="">- Data tidak ditemukan -</option>')
+									// 								}
+									// 							},
+									// 							error: function(error) {
+									// 								$('#aktivasi_odc').append('<option value="">- Pilih ODC -</option>')
+									// 							},
+									// 						});
+									// });
 																		//--------- end get kode site-------------
 
 
@@ -3095,17 +3138,18 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										$('#tiket_kendala').val($('#tiket_nama').val())
 										$('#tiket_tindakan').val($('#tiket_nama').val())
 										$('#tiket_noskb').attr('required', 'required');
-										if($('#tiket_odp').val()){
-											$('#tiket_pop').removeAttr('required');
-											$('#tiket_olt').removeAttr('required');
-											$('#tiket_odc').removeAttr('required');
-											$('#tiket_odp').removeAttr('required');
-										}else {
-											$('#tiket_pop').attr('required', 'required');
-											$('#tiket_olt').attr('required', 'required');
-											$('#tiket_odc').attr('required', 'required');
-											$('#tiket_odp').attr('required', 'required');
-										}
+
+										// if($('#tiket_odp').val()){
+										// 	$('#tiket_pop').removeAttr('required');
+										// 	$('#tiket_olt').removeAttr('required');
+										// 	$('#tiket_odc').removeAttr('required');
+										// 	$('#tiket_odp').removeAttr('required');
+										// }else {
+										// 	$('#tiket_pop').attr('required', 'required');
+										// 	$('#tiket_olt').attr('required', 'required');
+										// 	$('#tiket_odc').attr('required', 'required');
+										// 	$('#tiket_odp').attr('required', 'required');
+										// }
 										$('.button_modal_barang').click(function(){
 											if($('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
 												// $('#modal_tambah_barang').modal('show');
@@ -3122,19 +3166,20 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										$('#tiket_teknisi1').attr('required', 'required');
 										$('#tiket_teknisi2').attr('required', 'required');
 										$('#tiket_noskb').removeAttr('required');
-										
-										if($('#tiket_odp').val()){
-											$('#tiket_pop').removeAttr('required');
-											$('#tiket_olt').removeAttr('required');
-											$('#tiket_odc').removeAttr('required');
-											$('#tiket_odp').removeAttr('required');
-										}else {
+
+										if($('#tiket_odp').val() == 0){
 											$('#tiket_pop').attr('required', 'required');
 											$('#tiket_olt').attr('required', 'required');
 											$('#tiket_odc').attr('required', 'required');
 											$('#tiket_odp').attr('required', 'required');
+										}else {
+											// alert($('#tiket_odp').val());
+											$('#tiket_pop').removeAttr('required');
+											$('#tiket_olt').removeAttr('required');
+											$('#tiket_odc').removeAttr('required');
+											$('#tiket_odp').removeAttr('required');
 										}
-
+										
 										$('.button_modal_barang').click(function(){
 												if($('#tiket_teknisi1').val() != "" && $('#tiket_teknisi2').val() != "" && $('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
 													// $('#modal_tambah_barang').modal('show');
@@ -3160,6 +3205,22 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											$('#ganti_sn').attr('required', 'required');
 											$('#kode_barang_ont').attr('required', 'required');
 											$('#kode_barang_adp').removeAttr('required');
+											if($('#tiket_odp').val() == 0){
+												$('#tiket_pop').val('');
+												$('#tiket_olt').val('');
+												$('#tiket_odc').val('');
+												$('#tiket_odp').val('');
+												$('#tiket_pop').attr('required', 'required');
+												$('#tiket_olt').attr('required', 'required');
+												$('#tiket_odc').attr('required', 'required');
+												$('#tiket_odp').attr('required', 'required');
+												// alert($('#tiket_odp').val());
+											}else {
+												$('#tiket_pop').removeAttr('required');
+												$('#tiket_olt').removeAttr('required');
+												$('#tiket_odc').removeAttr('required');
+												$('#tiket_odp').removeAttr('required');
+											}
 											$('#button_modal_barang').click(function(){
 												if($('#ganti_mac').val() != "" && $('#ganti_sn').val() != "" && $('#kode_barang_ont').val()!= ""){
 													$('#modal_tambah_barang').modal('show');
@@ -3183,6 +3244,22 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											$('#ganti_sn').removeAttr('required');
 											$('#kode_barang_ont').removeAttr('required');
 											$('#kode_barang_adp').attr('required', 'required');
+											if($('#tiket_odp').val() == 0){
+												$('#tiket_pop').val('');
+												$('#tiket_olt').val('');
+												$('#tiket_odc').val('');
+												$('#tiket_odp').val('');
+												$('#tiket_pop').attr('required', 'required');
+												$('#tiket_olt').attr('required', 'required');
+												$('#tiket_odc').attr('required', 'required');
+												$('#tiket_odp').attr('required', 'required');
+												// alert($('#tiket_odp').val());
+											}else {
+												$('#tiket_pop').removeAttr('required');
+												$('#tiket_olt').removeAttr('required');
+												$('#tiket_odc').removeAttr('required');
+												$('#tiket_odp').removeAttr('required');
+											}
 											$('#button_modal_barang').click(function(){
 												if($('#kode_barang_adp').val() != ""){
 													$('#modal_tambah_barang').modal('show');
@@ -3192,6 +3269,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 													$('.pesan').html('<small id="text" class="form-text text-muted text-danger">Lengkapi dulu semua data</small>')
 												}
 											})
+											
 										} else if($(this).val() == 'Lainnya') { 
 											$('.notif_ganti').removeClass('has-error has-feedback')
 											$('#ganti_mac').val('');
@@ -3205,9 +3283,26 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											$('#kode_barang_ont').removeAttr('required');
 											$('#kode_barang_adp').removeAttr('required');
 											$('.submit_tiket').removeAttr('disabled');
+											if($('#tiket_odp').val() == 0){
+												$('#tiket_pop').val('');
+												$('#tiket_olt').val('');
+												$('#tiket_odc').val('');
+												$('#tiket_odp').val('');
+												$('#tiket_pop').attr('required', 'required');
+												$('#tiket_olt').attr('required', 'required');
+												$('#tiket_odc').attr('required', 'required');
+												$('#tiket_odp').attr('required', 'required');
+												// alert($('#tiket_odp').val());
+											}else {
+												$('#tiket_pop').removeAttr('required');
+												$('#tiket_olt').removeAttr('required');
+												$('#tiket_odc').removeAttr('required');
+												$('#tiket_odp').removeAttr('required');
+											}
 											$('#button_modal_barang').click(function(){
 													$('#modal_tambah_barang').modal('show');
 													$('.notif_ganti').removeClass('has-error has-feedback')
+
 											})
 										}
 									});

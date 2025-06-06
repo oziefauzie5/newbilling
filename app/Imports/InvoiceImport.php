@@ -26,7 +26,7 @@ class InvoiceImport implements ToModel
             'inv_tgl_isolir'=>$row[6],
             'inv_tgl_bayar'=>$row[7],
             'inv_periode'=>$row[8],
-            'inv_diskon'=>$row[9],
+            'inv_diskon'=>$row[9],#0
             'inv_total'=>$row[10],
             'inv_admin'=>$row[11],
             'inv_cabar'=>$row[12],
@@ -37,8 +37,8 @@ class InvoiceImport implements ToModel
             'inv_total_amount'=>$row[17],
             'inv_fee_merchant'=>$row[18],
             'inv_fee_customer'=>$row[19],
-            'inv_total_fee'=>$row[20],
-            'inv_amount_received'=>$row[21],
+            'inv_total_fee'=>$row[20],#
+            'inv_amount_received'=>$row[21],#
             'inv_note'=>$row[22],
             'inv_bukti_bayar'=>$row[23],
 

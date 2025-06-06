@@ -24,6 +24,8 @@ use Dompdf\Dompdf;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Telegram\Bot\Api;
+use App\Models\Teknisi\Data_Odp;
+use App\Models\PSB\FtthInstalasi;
 
 class TiketController extends Controller
 {
@@ -109,11 +111,12 @@ class TiketController extends Controller
         $tiket_id = (new GlobalController)->nomor_tiket();
         $tiket['tiket_id'] = $tiket_id;
         $tiket['tiket_pembuat'] = $pembuat;
-        $tiket['tiket_kode'] = 'T-' . $tiket_id;
+        $tiket['corporate_id'] = Session::get('corp_id');
+        // $tiket['tiket_kode'] = 'T-' . $tiket_id;
         $tiket['tiket_idpel'] = $request->tiket_idpel;
         $tiket['tiket_jenis'] = $request->tiket_jenis;
         $tiket['tiket_type'] = 'General';
-        $tiket['tiket_site'] = $request->tiket_site;
+        $tiket['data__site_id'] = $request->tiket_site;
         $tiket['tiket_nama'] = $request->tiket_nama;
         $tiket['tiket_jadwal_kunjungan'] = date('Y-m-d', strtotime($request->tiket_waktu_kunjungans));
         $tiket['tiket_keterangan'] = $request->tiket_keterangan;
@@ -157,7 +160,7 @@ class TiketController extends Controller
 Pelanggan yth
 Tiket anda sudah masuk ke system kami.
 
-Nomor tiket : *' . $tiket['tiket_kode'] . '* 
+Nomor tiket : *T-' . $tiket_id . '* 
 Topik : ' . $request->tiket_nama . '
 Keterangan : ' . $request->tiket_keterangan . '
 Tanggal tiket : ' . $tanggal . '
@@ -170,14 +173,14 @@ Terima kasih.';
 
         Pesan::create([
             'layanan' =>  'NOC',
-            'pesan_id_site' =>  $request->tiket_site,
+            'corporate_id' => Session::get('corp_id'),
             'ket' =>  'tiket',
             'target' =>  env('GROUP_TEKNISI'),
             'status' =>  $status_pesan,
             'nama' =>  'GROUP TEKNISI',
             'pesan' => '               -- TIKET '.strtoupper($request->tiket_jenis).' --
 
-            No. Tiket : *' . $tiket['tiket_kode'] . '*
+            No. Tiket : *T-' . $tiket_id . '*
 Topik : ' . $request->tiket_nama . '
 Keterangan : *' . $request->tiket_keterangan . '*
 Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
@@ -260,6 +263,24 @@ Antrian tiket = ' . $count . '
             ->select('data__sites.id', 'data__sites.site_nama', 'data__tikets.*', 'input_data.*', 'registrasis.*', 'data__tikets.created_at as tgl_buat')
             ->where('tiket_id', $id)
             ->first();
+
+        $data['ftth_instalasi'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
+            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
+            ->where('registrasis.reg_idpel', $data['tiket']->reg_idpel)
+            ->select([
+                'ftth_instalasis.data__odp_id',
+                'data__odps.odp_nama',
+                'data__odps.odp_id',
+                'data__odcs.odc_nama',
+                'data__olts.olt_nama',
+                'data_pops.pop_nama',
+            ])
+            ->first();
+
         $query = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
             ->select('data__tikets.*', 'input_data.*', 'data__tikets.created_at as tgl_buat')
@@ -267,6 +288,7 @@ Antrian tiket = ' . $count . '
             ->where('tiket_id', '!=', $id);
         $data['tiket_menunggu'] = $query->get();
         $data['tiket_count'] = $query->count();
+        //  dd($data['ftth_instalasi']);
         return view('tiket/details_tiket', $data);
     }
     public function details_tiket_project($id)
@@ -292,9 +314,12 @@ Antrian tiket = ' . $count . '
         $data['tiket'] = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
             ->join('users', 'users.id', '=', 'data__tikets.tiket_teknisi1')
+            
             ->select('data__tikets.*', 'input_data.*', 'data__tikets.created_at as tgl_buat', 'users.id', 'users.name')
             ->where('tiket_id', $id)
             ->first();
+
+       
         return view('tiket/details_tiket_closed', $data);
     }
 
@@ -313,10 +338,7 @@ Antrian tiket = ' . $count . '
             } elseif($request->tiket_nama == 'Reaktivasi layanan'){
                  $teknisi_id = '';
                 $teknisi_nama = '';
-                 $tiket['tiket_status'] = 'Aktivasi';
-                //  $reg['reg_progres'] = 2;
-                
-
+                 $tiket['tiket_status'] = 'Aktivasi';                
             } else {
                 $explode = explode('|', $request->tiket_teknisi1);
                 $teknisi_id = $explode[0];
@@ -329,11 +351,10 @@ Antrian tiket = ' . $count . '
                 Storage::disk('public')->put($path, file_get_contents($photo));
                 $tiket['tiket_foto'] = $filename;
                 $tiket['tiket_status'] = $request->tiket_status;
-                $reg['reg_pop'] = $request->tiket_pop;
-                $reg['reg_olt'] = $request->tiket_olt;
-                $reg['reg_odc'] = $request->tiket_odc;
-                $reg['reg_odp'] = $request->tiket_odp;
-                 Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_nolayanan', $request->tiket_nolayanan)->update($reg);
+
+                 $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->tiket_odp)->select('id')->first();
+                $reg['data__odp_id'] = $ODP->id;
+                 FtthInstalasi::where('corporate_id',Session::get('corp_id'))->where('id', $request->tiket_idpel)->update($reg);
 
         }
        
@@ -412,6 +433,35 @@ Technician : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
             );
             return redirect()->route('admin.tiket.data_tiket')->with($notifikasi);
         }
+    }
+
+     public function tiket_validasi_odp($id)
+    {
+        // return response()->json($id);
+        $data['odc_id'] = Data_Odp::query()
+            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->select([
+                'data__odps.odp_id',
+                'data__odps.odp_nama',
+                'data__odps.odp_slot_odc',
+                'data__odps.odp_core',
+                'data__odcs.odc_id',
+                'data__odcs.odc_nama',
+                'data__olts.olt_nama',
+                'data__olts.olt_pon',
+                'data__olts.id as id_olt',
+                'data_pops.pop_nama',
+                'data__sites.site_nama',
+                'data_pops.id as id_pop',
+                'data__sites.id as id_site',
+            ])
+            ->where("data__odps.odp_id", $id)
+            ->where('data__odps.corporate_id',Session::get('corp_id'))
+            ->first();
+        return response()->json($data);
     }
 
     public function tiket_cek_ont(Request $request, $id)

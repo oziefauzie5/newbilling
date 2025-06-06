@@ -18,13 +18,13 @@ class SubInvoiceImport implements ToModel
         return new SubInvoice([
             'corporate_id' =>Session::get('corp_id'),
             'subinvoice_id' =>$row[0],
-            'subinvoice_deskripsi' =>$row[0],
-            'subinvoice_qty' =>$row[0],
-            'subinvoice_harga' =>$row[0],
-            'subinvoice_ppn' =>$row[0],
-            'subinvoice_bph_uso' =>$row[0],
-            'subinvoice_total' =>$row[0],
-            'subinvoice_status'=>$row[0],
+            'subinvoice_deskripsi' =>$row[1],
+            'subinvoice_qty' =>$row[2],
+            'subinvoice_harga' =>$row[3],
+            'subinvoice_ppn' =>$row[4],
+            'subinvoice_bph_uso' =>0,
+            'subinvoice_total' =>$row[5],
+            'subinvoice_status'=>$row[6],
 
         ]);
     }

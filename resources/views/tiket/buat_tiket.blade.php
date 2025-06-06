@@ -74,7 +74,7 @@
                   <select name="tiket_site" id="" class="form-control">
                     <option value="">- Pilih -</option>
                     @foreach ($data_site as $site)
-                    <option value="{{$site->site_id}}">{{$site->site_nama}}</option>
+                    <option value="{{$site->id}}">{{$site->site_nama}}</option>
                     @endforeach
                   </select>
               </div>
