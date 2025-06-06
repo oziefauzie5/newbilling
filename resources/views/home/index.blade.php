@@ -121,6 +121,121 @@
     </div>
   {{-- DASHBOARD TIKET --}}
 
+
+
+     <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import_teknisi">
+                <i class="fa fa-file-import"></i> Import Teknisi
+              </button>
+          <!-- Modal Import -->
+          <div class="modal fade" id="import_teknisi" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header no-bd">
+                  <h5 class="modal-title">
+                    <span class="fw-mediumbold">
+                    Import Odp</span> 
+                  </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{route('admin.export.import_teknisi')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('POST')
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>Pilih file (EXCEL,CSV)</label>
+                          <input id="import" type="file" class="form-control" name="file" required>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer no-bd">
+                    <button type="submit" class="btn btn-success">Add</button>
+                  </form>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+     <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import_laporan">
+                <i class="fa fa-file-import"></i> Import Laporan
+              </button>
+          <!-- Modal Import -->
+          <div class="modal fade" id="import_laporan" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header no-bd">
+                  <h5 class="modal-title">
+                    <span class="fw-mediumbold">
+                    Import Odp</span> 
+                  </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{route('admin.export.import_laporan')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('POST')
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>Pilih file (EXCEL,CSV)</label>
+                          <input id="import" type="file" class="form-control" name="file" required>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer no-bd">
+                    <button type="submit" class="btn btn-success">Add</button>
+                  </form>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+     <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import_mutasi">
+                <i class="fa fa-file-import"></i> Import Mutasi
+              </button>
+          <!-- Modal Import -->
+          <div class="modal fade" id="import_mutasi" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header no-bd">
+                  <h5 class="modal-title">
+                    <span class="fw-mediumbold">
+                    Import Odp</span> 
+                  </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{route('admin.export.import_mutasi')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('POST')
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label>Pilih file (EXCEL,CSV)</label>
+                          <input id="import" type="file" class="form-control" name="file" required>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer no-bd">
+                    <button type="submit" class="btn btn-success">Add</button>
+                  </form>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
 </div>
 </div>
 

@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use App\Imports\InputDataImport;
 use App\Imports\InvoiceImport;
 use App\Imports\KategoriImport;
+use App\Imports\LaporanImport;
+use App\Imports\MutasiImport;
 use App\Imports\OdcImport;
 use App\Imports\OdpImport;
 use App\Imports\OltImport;
@@ -20,6 +22,7 @@ use App\Imports\PaketImport;
 use App\Imports\PopImport;
 use App\Imports\RegistImport;
 use App\Imports\SubInvoiceImport;
+use App\Imports\TeknisiImport;
 use App\Models\PSB\FtthFee;
 use App\Models\PSB\FtthInstalasi;
 use Maatwebsite\Excel\Facades\Excel;
@@ -158,4 +161,32 @@ class ExportController extends Controller
         ];
         return redirect()->route('inv.index')->with($notifikasi);
     }
+    public function import_laporan(Request $request)
+    {
+        Excel::import(new LaporanImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+    public function import_teknisi(Request $request)
+    {
+        Excel::import(new TeknisiImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+    public function import_mutasi(Request $request)
+    {
+        Excel::import(new MutasiImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+   
 }

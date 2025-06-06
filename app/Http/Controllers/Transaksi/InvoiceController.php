@@ -383,14 +383,14 @@ class InvoiceController extends Controller
         $tampil = Invoice::join('registrasis', 'registrasis.reg_idpel', '=', 'invoices.inv_idpel')
         ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
         ->join('sub_invoices', 'sub_invoices.subinvoice_id', '=', 'invoices.inv_id')
-        ->join('laporans', 'laporans.lap_inv', '=', 'invoices.inv_id')
+        // ->join('laporans', 'laporans.lap_inv', '=', 'invoices.inv_id')
         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
         ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->where('invoices.corporate_id',Session::get('corp_id'))
             ->where('invoices.inv_id', $id)
             ->select([
-                'laporans.*',
+                // 'laporans.*',
                 'registrasis.reg_idpel',
                 'invoices.*',
                 'sub_invoices.*',
@@ -440,7 +440,8 @@ class InvoiceController extends Controller
         $data_lap['lap_fee_mitra'] = $tampil->lap_fee_mitra ?? '0';
          $data_lap['lap_id'] = time();
         $data_lap['corporate_id'] = $tampil->corporate_id;
-        $data_lap['lap_inv'] = $tampil->lap_inv  ?? '0';
+        $data_lap['lap_inv'] =  '0';
+        $data_lap['lap_tgl'] =  date('Y-m-d H:i:s', strtotime(Carbon::now()));
         $data_lap['lap_admin'] = $admin_user  ?? '0';
         $data_lap['lap_ppn'] = $tampil->lap_ppn ?? '0';
         $data_lap['lap_bph_uso'] = $tampil->lap_bph_uso ?? '0';
@@ -455,7 +456,7 @@ class InvoiceController extends Controller
         Laporan::create($data_lap);
 
         $update_lap['lap_inv'] = '0';
-        Laporan::where('lap_id', $tampil->lap_id)->where('corporate_id',Session::get('corp_id'))->update($update_lap);
+        Laporan::where('lap_inv', $id)->where('corporate_id',Session::get('corp_id'))->update($update_lap);
 
         $cek_role = DB::table('users')
             ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
@@ -463,7 +464,7 @@ class InvoiceController extends Controller
             ->where('users.id', $tampil->inv_admin)
             ->first();
 
-        if ($cek_role->role_id >= '10' && $cek_role->role_id <= '13') {
+        if ($cek_role->role_id >= '10' && $cek_role->role_id <= '16') {
 
             $saldo = (new GlobalController)->total_mutasi($tampil->inv_admin);
             $total = $saldo + $total_debet; #SALDO MUTASI = DEBET - KREDIT
@@ -750,7 +751,7 @@ class InvoiceController extends Controller
                         MutasiSales::create([
                             'mutasi_sales_mitra_id' => $mit->reg_mitra ?? '0',
                             'mutasi_sales_idpel' => $data_pelanggan->reg_idpel ?? '0',
-                            'mutasi_sales_tgl_transaksi' => date('Y-m-d H:i:s', strtotime(Carbon::now())),
+                            'mutasi_sales_tgl_transaksi' => $if_tgl_bayar,
                             'mutasi_sales_admin' => $admin_user ?? '0',
                             'mutasi_sales_type' => 'Credit',
                             'mutasi_sales_deskripsi' => $data_pelanggan->input_nama ?? '0',
@@ -766,7 +767,7 @@ class InvoiceController extends Controller
             $lap['lap_id'] = time();
             $lap['corporate_id'] =Session::get('corp_id');
             $lap['lap_inv'] = $id;
-            
+            $lap['lap_tgl'] = $if_tgl_bayar;
             $lap['lap_fee_mitra'] = $fee_mitra ?? '0';
             $lap['lap_ppn'] = $sumppn ?? '0';
             $lap['lap_bph_uso'] = $data_pelanggan->reg_bph_uso ?? '0';
@@ -810,7 +811,7 @@ Invoice : *' . $data_pelanggan->inv_id . '*
 Paket : ' . $data_pelanggan->paket_nama . '
 Total : *Rp' . number_format($data_pelanggan->inv_total) . '*
 
-Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+Tanggal lunas : ' . date('d-m-Y H:i:s', strtotime(Carbon::now())) . '
 Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
 
 BY : ' . $nama_user . '
@@ -1047,63 +1048,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         //                 MutasiSales::create($mutasi_sales);
         //                 dd($mutasi_sales);
 
-        $cek_pesan = Pesan::where('status', '0')->count();
-        if ($cek_pesan) {
-                $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
-            if ($pesan->layanan == 'CS') {
-                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'CS')->first();
-            } elseif ($pesan->layanan == 'NOC') {
-                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOC')->first();
-            } elseif ($pesan->layanan == 'NOTIF') {
-                $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOTIF')->first();
-            }
-
-            if ($pesan->file) {
-                $data = array(
-                    'target' => $pesan->target,
-                    'message' => $pesan->pesan,
-                    'countryCode' => '62',
-                    'url' => $pesan->file,
-                );
-            } else {
-                $data = array(
-                    'target' => $pesan->target,
-                    'message' => $pesan->pesan,
-                    'countryCode' => '62',
-                );
-            }
-
-            $curl = curl_init();
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $whatsapp->wa_url . '/send',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => $data,
-                CURLOPT_HTTPHEADER => array(
-                    'Authorization: ' . $whatsapp->wa_key . ''
-                ),
-            ));
-
-
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            curl_close($curl);
-            if ($err) {
-                $mesage['status'] = 'Gagal';
-            } else {
-                echo $response;
-                $mesage['status'] = 'Done';
-            }
-            // $mesage['status'] = 'test';
-            Pesan::where('id', $pesan->id)->update($mesage);
-        }
-
-
+    
 
     }
 }

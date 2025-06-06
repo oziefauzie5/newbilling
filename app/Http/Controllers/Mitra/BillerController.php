@@ -324,7 +324,7 @@ class BillerController extends Controller
             // return response()->json($total);
             $admin_nama = Auth::user()->name;
             $admin_hp = Auth::user()->hp;
-            $api_payment = (new ApiController)->Api_payment_ftth($data_pelanggan,$nama_user,$reg);
+            $api_payment = (new ApiController)->Api_payment_ftth($data_pelanggan,$reg);
             $akun = SettingAkun::where('akun_type','TUNAI')->where('corporate_id',Session::get('corp_id'))->select('akun_nama','id')->first();
             //  return response()->json($api_payment);
         if($api_payment == 0)
@@ -374,7 +374,7 @@ class BillerController extends Controller
                                 MutasiSales::create([
                                     'mutasi_sales_mitra_id' => $mit->reg_mitra ?? '0',
                                     'mutasi_sales_idpel' => $data_pelanggan->reg_idpel ?? '0',
-                                    'mutasi_sales_tgl_transaksi' => date('Y-m-d H:i:s', strtotime(Carbon::now())),
+                                    'mutasi_sales_tgl_transaksi' => $if_tgl_bayar ?? '',
                                     'mutasi_sales_admin' => $admin_user ?? '0',
                                     'mutasi_sales_type' => 'Credit',
                                     'mutasi_sales_deskripsi' => $data_pelanggan->input_nama ?? '0',
@@ -390,6 +390,7 @@ class BillerController extends Controller
                         $lap['lap_id'] = time();
                         $lap['corporate_id'] =Session::get('corp_id');
                         $lap['lap_inv'] = $id;
+                        $lap['lap_tgl'] = $if_tgl_bayar ?? '';
                         
                         $lap['lap_fee_mitra'] = $fee_mitra ?? '0';
                         $lap['lap_ppn'] = $sumppn ?? '0';
@@ -447,7 +448,7 @@ Invoice : *' . $data_pelanggan->inv_id . '*
 Paket : ' . $data_pelanggan->paket_nama . '
 Total : *Rp' . number_format($total_inv) . '*
 
-Tanggal lunas : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '
+Tanggal lunas : ' . date('d-m-Y H:i:s', strtotime(Carbon::now())) . '
 Layanan sudah aktif dan dapat digunakan sampai dengan *' . $reg['reg_tgl_jatuh_tempo'] . '*
 
 BY : ' . $nama_user . '

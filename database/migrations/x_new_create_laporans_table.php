@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('laporans', function (Blueprint $table) {
             $table->id('lap_id');
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
+            $table->string('lap_tgl')->nullable();
             $table->integer('lap_inv')->nullable();
             $table->enum('lap_jenis_inv', ['Debit', 'Credit']);
             $table->integer('lap_fee_mitra')->nullable();

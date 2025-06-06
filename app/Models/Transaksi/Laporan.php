@@ -12,6 +12,7 @@ class Laporan extends Model
         'lap_id',
         'corporate_id',
         'lap_inv',
+        'lap_tgl',
         'lap_fee_mitra',
         'lap_ppn',
         'lap_bph_uso',

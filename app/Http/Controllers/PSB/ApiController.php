@@ -31,7 +31,6 @@ class ApiController extends Controller
                 'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
                 'queue-type' => 'default-small' == '' ? '' : 'default-small',
                 'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
-                // 'disabled' => 'yes',
                 'only-one' => 'yes',
             ]);
             
@@ -77,7 +76,7 @@ class ApiController extends Controller
             return '2';
         }
     }
-    public function Api_payment_ftth($data_pelanggan,$nama_user,$reg)
+    public function Api_payment_ftth($data_pelanggan,$reg)
     {
         $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
         $user = $data_pelanggan->router_username;
@@ -95,9 +94,6 @@ class ApiController extends Controller
                         $API->comm('/ppp/secret/set', [
                             '.id' => $cek_secret[0]['.id'],
                             'profile' =>  $data_pelanggan->paket_nama == '' ? '' : $data_pelanggan->paket_nama,
-                            // 'comment' => $data_pelanggan->odp_id == '' ? '' : $data_pelanggan->odp_id,
-
-
                             'disabled' => 'no',
                         ]);
                         $cek_status = $API->comm('/ppp/active/print', [
@@ -123,7 +119,6 @@ class ApiController extends Controller
                             'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                             'service' => 'pppoe',
                             'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                            // 'comment' => $data_pelanggan->odp_id == '' ? '' : $data_pelanggan->odp_id,
                             'disabled' => 'no',
                         ]);
                         return 0;
@@ -144,7 +139,6 @@ class ApiController extends Controller
                         $API->comm('/ip/hotspot/user/set', [
                             '.id' => $cek_secret[0]['.id'],
                             'profile' => $data_pelanggan->paket_nama,
-                            // 'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                             'disabled' => 'no',
                         ]);
                         return 0;
@@ -153,7 +147,6 @@ class ApiController extends Controller
                             'name' => $data_pelanggan->reg_username == '' ? '' : $data_pelanggan->reg_username,
                             'password' => $data_pelanggan->reg_password  == '' ? '' : $data_pelanggan->reg_password,
                             'profile' => $data_pelanggan->paket_nama  == '' ? 'default' : $data_pelanggan->paket_nama,
-                            // 'comment' => 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'] == '' ? '' : 'By:' . $nama_user . '-' . $reg['reg_tgl_jatuh_tempo'],
                             'disabled' => 'no',
                         ]);
                         return 0;

@@ -137,12 +137,7 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kota/Kabupate</label>
-                      <select name="kota_ktp" id="" class="form-control">
-                        <option value="">--Pilih Kota/Kab sesuai KTP</option>
-                        @foreach($site as $s)
-                        <option value="{{$s->id}}">{{$s->site_nama}}</option>
-                        @endforeach
-                      </select>
+                      <input id="kota_ktp" type="text" class="form-control" value="{{ Session::get('kota_ktp') }}" name="kota_ktp" placeholder="Kota/Kab. sesuai KTP">
                     </div>
                   </div>
                   <br>
@@ -202,6 +197,18 @@
                     <div class="form-group">
                       <label>Share Location </label>
                       <input id="input_maps" type="text" class="form-control" value="{{ Session::get('input_maps') }}" name="input_maps" placeholder="Masukan Link Share Location" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Sub Sales</label>
+                      <input id="" type="text" class="form-control" value="{{ Session::get('sub_sales') }}" name="sub_sales" placeholder="Masukan Sub Sales" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Tanggal Pemasangan</label>
+                      <input id="" type="date" class="form-control" value="{{ Session::get('tgl_pasang') }}" name="tgl_pasang"  required>
                     </div>
                   </div>
                   <div class="card-footer">

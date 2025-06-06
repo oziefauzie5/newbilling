@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use App\Models\Pesan\Pesan;
 
 class SalesController extends Controller
 {
@@ -92,10 +93,11 @@ class SalesController extends Controller
         Session::flash('kecamatan', strtoupper($request->kecamatan));
         Session::flash('kota', strtoupper($request->kota));
         Session::flash('input_sales', strtoupper($request->input_sales));
-        Session::flash('input_subseles', strtoupper($request->input_subseles));
+        Session::flash('sub_sales', strtoupper($request->sub_sales));
         Session::flash('input_password', Hash::make($request->input_hp));
         Session::flash('input_maps', $request->input_maps);
         Session::flash('input_keterangan', strtoupper($request->input_keterangan));
+        Session::flash('sub_sales', strtoupper($request->sub_sales));
 
         $request->validate([
             'input_ktp' => 'unique:input_data',
@@ -121,16 +123,50 @@ class SalesController extends Controller
             $input['input_hp'] = $nomorhp;
             $input['input_hp_2'] = $nomorhp2;
             $input['input_email'] = $request->input_email;
-            $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp).', '. strtoupper($request->rt_ktp).', '. strtoupper($request->rw_ktp).', '. strtoupper($request->kelurahan_ktp).', '. strtoupper($request->kecamatan_ktp).', '. strtoupper($request->kota_ktp);
-            $input['input_alamat_pasang'] = strtoupper($request->input_alamat).', '. strtoupper($request->rt).', '. strtoupper($request->rw).', '. strtoupper($request->kelurahan).', '. strtoupper($request->kecamatan).', '. strtoupper($request->kota);
+            $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp).', RT '. strtoupper($request->rt_ktp).', RW '. strtoupper($request->rw_ktp).', KEL. '. strtoupper($request->kelurahan_ktp).', KEC. '. strtoupper($request->kecamatan_ktp).', KOTA/KAB. '. strtoupper($request->kota_ktp);
+            $input['input_alamat_pasang'] = strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($request->kota);
             $input['input_sales'] = $user_id;
-            $input['input_subseles'] = strtoupper($user_nama);
+            $input['input_subseles'] = strtoupper($request->sub_sales);
             $input['password'] = Hash::make($nomorhp);
             $input['input_maps'] = $request->input_maps;
             $input['input_status'] = 'INPUT DATA';
             $input['input_keterangan'] = $request->input_keterangan;
             // dd($input);
             InputData::create($input);
+
+            $status = (new GlobalController)->whatsapp_status();
+            if ($status) {
+                if ($status->wa_status == 'Enable') {
+                    $status_pesan = '0';
+                } else {
+                    $status_pesan = '10';
+                }
+            }else{
+                $status_pesan = '10';
+            }
+
+
+            $pesan_group['layanan'] = 'CS';
+            $pesan_group['ket'] = 'input data';
+            $pesan_group['corporate_id']= Session::get('corp_id');
+            $pesan_group['target'] = env('GROUP_REGISTRASI');;
+            $pesan_group['nama'] = $user_nama;
+            $pesan_group['status'] = $status_pesan;
+            $pesan_group['pesan'] = '               -- LIST REGISTRASI --
+
+Nama : ' . $request->input_nama . '
+Alamat : ' . strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($request->kota).'
+
+Paket : *' . $request->input_keterangan . '*
+Tanggal Pasang : ' . date('d-m-Y', strtotime($request->tgl_pasang)) . ' 
+
+Input Data By : *' . $user_nama . '*
+';
+
+Pesan::create($pesan_group);
+
+
+
             $notifikasi = [
                 'pesan' => 'Berhasil input data',
                 'alert' => 'success',

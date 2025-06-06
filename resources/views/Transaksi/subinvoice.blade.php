@@ -354,8 +354,8 @@
                        </select>
 <br>
                         <select name="tunai" id="tunai"  class="form-control" style="display:none;">
-                          @foreach($akun_tunai as $b)
-                          <option selected value="{{$b->id.'|'.$b->akun_rekening.'|'.$b->akun_nama}}">{{$b->akun_nama}}</option>
+                          @foreach($akun_tunai as $a)
+                          <option selected value="{{$a->id.'|'.$a->akun_rekening.'|'.$a->akun_nama}}">{{$a->akun_nama}}</option>
                           @endforeach
                         </select>
                         <select name="transfer" id="transfer"  class="form-control" style="display:none;">

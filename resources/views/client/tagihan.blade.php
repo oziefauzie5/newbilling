@@ -16,7 +16,7 @@
             <div class="card card-stats card-round">
               <div class="card-body ">
                 <h3 class="text-danger">BELUM BAYAR</h3>
-                <div><h5 class="fw-bold mb-1">{{$layanan->inv_nama}}</h5></div>
+                <div><h5 class="fw-bold mb-1">{{$layanan->input_nama}}</h5></div>
                 <div><h5 class="fw-bold mb-1">{{$layanan->input_hp}}</h5></div>
                 <div><h5>{{$layanan->input_alamat_pasang}}</h5></div><br>
                 <div><h1 class="fw-bold mb-1">INV {{$layanan->inv_id}}</h1></div>
