@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('inv_periode')->nullable();
             $table->string('inv_diskon')->nullable();
             $table->string('inv_total')->nullable();
-            $table->enum('inv_cabar', ['TUNAI', 'TRANSFER','BILLER','SYSTEM']);
+            $table->enum('inv_cabar', ['TUNAI', 'TRANSFER','BILLER','SYSTEM','TRIPAY']);
             $table->integer('inv_akun')->nullable();
             $table->string('inv_admin')->nullable();
             $table->string('inv_reference')->nullable();

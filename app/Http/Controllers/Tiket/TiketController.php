@@ -134,8 +134,12 @@ class TiketController extends Controller
         $maps = str_replace(" ", "+", $data['data_pelanggan']->input_koordinat);
         $count = Data_Tiket::where('tiket_status', 'NEW')->count();
         $status = (new GlobalController)->whatsapp_status();
-        if ($status->wa_status == 'Enable') {
-            $status_pesan = '0';
+        if($status){
+            if ($status->wa_status == 'Enable') {
+                $status_pesan = '0';
+            } else {
+                $status_pesan = '10';
+            }
         } else {
             $status_pesan = '10';
         }
@@ -143,6 +147,7 @@ class TiketController extends Controller
 
         $pesan_pelanggan['layanan'] = 'NOC';
         $pesan_pelanggan['ket'] = 'tiket';
+        $pesan_pelanggan['corporate_id'] = Session::get('corp_id');
         $pesan_pelanggan['pesan_id_site'] = $request->tiket_site;
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
         $pesan_pelanggan['status'] = $status_pesan;
