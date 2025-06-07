@@ -29,8 +29,8 @@ class LoginPelangganController extends Controller
             $data['brand'] = 'APPBILL';
 
         }
-        return view('auth.maintenance',$data);
-        // return view('auth.login_pelanggan',$data);
+        // return view('auth.maintenance',$data);
+        return view('auth.login_pelanggan',$data);
     }
 
     public function login_proses(Request $request)
