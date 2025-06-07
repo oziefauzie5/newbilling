@@ -48,6 +48,8 @@ class BarangImport implements ToModel
             'barang_penerima' =>$row[27],
             'barang_pengecek' =>$row[28],
             'barang_status_print' =>$row[29],
+            'created_at' =>$row[30],
+            'updated_at' =>$row[31],
         ]);
     }
 }

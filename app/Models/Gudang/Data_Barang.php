@@ -42,8 +42,9 @@ class Data_Barang extends Model
         'barang_status_print',
         'barang_hilang',
         'created_at',
+        'updated_at',
     ];
-
+    public $timestamps = false;
 
     // function data_barang_keluar()
     // {
