@@ -32,28 +32,11 @@ class Registrasi extends Model
         'reg_progres',
         'reg_username',
         'reg_password',
-        
-        // 'reg_dana_kas',
-        // 'reg_dana_kerjasama',
-        // 'reg_fee',
-        // 'reg_site',
-        // 'reg_pop',
-        // 'reg_router',
-        // 'reg_in_ont',
-        // 'reg_olt',
-        // 'reg_odc',
-        // 'reg_odp',
-        // 'reg_slot_odp',
-        // 'reg_onuid',
-        // 'reg_koordinat_odp',
-        // 'reg_foto_odp',
-
-        // 'reg_sn',
-        // 'reg_skb',
-        // 'reg_ip_address',
-        // 'reg_teknisi_team',
+        'created_at',
+        'updated_at',
     ];
 
+    public $timestamps = false;
     function registrasi_router()
     {
         return $this->hasMany(Registrasi::class,'id','reg_router');
