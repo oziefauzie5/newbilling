@@ -37,6 +37,7 @@ class InputDataImport implements ToModel
             'created_at' =>$row[16],
             'updated_at' =>$row[17],
             'input_id_baru' =>$row[18],
+            'input_id_lama' =>$row[19],
 
         ]);
     }
