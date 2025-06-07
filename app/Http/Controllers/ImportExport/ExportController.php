@@ -55,7 +55,7 @@ class ExportController extends Controller
     }
       public function import_instalasi(Request $request)
     {
-        Excel::import(new FtthInstalasiImport(),request()->file('import_instalasi'));
+        Excel::import(new FtthInstalasiImport(),request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
@@ -64,7 +64,7 @@ class ExportController extends Controller
     }
       public function import_fee(Request $request)
     {
-         Excel::import(new FtthFeeImport(),request()->file('import_fee'));
+         Excel::import(new FtthFeeImport(),request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
@@ -180,6 +180,15 @@ class ExportController extends Controller
         return redirect()->route('admin.home')->with($notifikasi);
     }
     public function import_mutasi(Request $request)
+    {
+        Excel::import(new MutasiImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+    public function import_akun(Request $request)
     {
         Excel::import(new MutasiImport,request()->file('file'));
         $notifikasi = [

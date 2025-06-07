@@ -34,7 +34,10 @@ class InputData extends Model implements Authenticatable
         'input_keterangan',
         'created_at',
         'updated_at',
+        'input_id_baru',
     ];
+
+    public $timestamps = false;
 
     function user_sales()
     {
