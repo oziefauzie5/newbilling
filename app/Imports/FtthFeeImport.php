@@ -17,11 +17,10 @@ class FtthFeeImport implements ToModel
    public function model(array $row)
     {
         return new FtthFee([
-            'id' =>$row[0],
             'corporate_id' =>Session::get('corp_id'),
-            'fee_idpel'=> $row[1],
-            'reg_mitra'=> $row[3],
-            'reg_fee'=> $row[2],
+            'fee_idpel'=> $row[0],
+            'reg_mitra'=> $row[2],
+            'reg_fee'=> $row[3],
         ]);
     }
 }
