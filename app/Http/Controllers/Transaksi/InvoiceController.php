@@ -647,7 +647,7 @@ class InvoiceController extends Controller
                     // dd('Bayar di bawah tgl 25');
                 }
             } else {
-
+                
                 if ($cek_hari_bayar >= 25) {
                     #Tambah 1 bulan dari tgl pembeyaran
                     #Pembayaran di atas tanggal 24 maka akan di anggap bayar tgl 25 dan ditambah 1 bulan 
@@ -665,7 +665,8 @@ class InvoiceController extends Controller
                     // dd('pembayaran tepat waktu dibawah tgl 25');
                 }
             }
-
+            dd($if_tgl_bayar);
+            
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
             #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
 

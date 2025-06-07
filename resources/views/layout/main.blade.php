@@ -2947,7 +2947,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											$('.simpan_barang_tiket').attr('disabled','disabled');
 											// $('.tiket_noskb').attr('required','required');
 											$('#modal_tambah_barang').modal('hide');
-											// $('#tiket_noskb').val(data);
+											$('#tiket_noskb').val(data);
 											$('.submit_tiket').removeAttr('disabled');
 											}
 										}
@@ -3100,6 +3100,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 									
 									$('#tiket_kendala').attr('required', 'required');
 									$('#tiket_tindakan').attr('required', 'required');
+
 									if($('#tiket_nama').val() == 'Instalasi PSB'){
 										$('.div_tiket_teknisi').hide();
 										$('#tiket_teknisi1').removeAttr('required');
@@ -3110,7 +3111,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										$('#tiket_olt').removeAttr('required');
 										$('#tiket_odc').removeAttr('required');
 										$('#tiket_odp').removeAttr('required');
-										$('#tiket_noskb').attr('required', 'required');
+										// $('#tiket_noskb').attr('required', 'required');
 										
 										$('.button_modal_barang').click(function(){
 											if($('#tiket_kendala').val()!= "" && $('#tiket_tindakan').val()!= ""&& $('#kate_tindakan').val()!= ""){
@@ -3273,22 +3274,22 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											$('#kode_barang_ont').removeAttr('required');
 											$('#kode_barang_adp').removeAttr('required');
 											$('.submit_tiket').removeAttr('disabled');
-											if($('#tiket_odp').val() == 0){
-												$('#tiket_pop').val('');
-												$('#tiket_olt').val('');
-												$('#tiket_odc').val('');
-												$('#tiket_odp').val('');
-												$('#tiket_pop').attr('required', 'required');
-												$('#tiket_olt').attr('required', 'required');
-												$('#tiket_odc').attr('required', 'required');
-												$('#tiket_odp').attr('required', 'required');
-												// alert($('#tiket_odp').val());
-											}else {
-												$('#tiket_pop').removeAttr('required');
-												$('#tiket_olt').removeAttr('required');
-												$('#tiket_odc').removeAttr('required');
-												$('#tiket_odp').removeAttr('required');
-											}
+											// if($('#tiket_odp').val() == 0){
+											// 	$('#tiket_pop').val('');
+											// 	$('#tiket_olt').val('');
+											// 	$('#tiket_odc').val('');
+											// 	$('#tiket_odp').val('');
+											// 	$('#tiket_pop').attr('required', 'required');
+											// 	$('#tiket_olt').attr('required', 'required');
+											// 	$('#tiket_odc').attr('required', 'required');
+											// 	$('#tiket_odp').attr('required', 'required');
+											// 	// alert($('#tiket_odp').val());
+											// }else {
+											// 	$('#tiket_pop').removeAttr('required');
+											// 	$('#tiket_olt').removeAttr('required');
+											// 	$('#tiket_odc').removeAttr('required');
+											// 	$('#tiket_odp').removeAttr('required');
+											// }
 											$('#button_modal_barang').click(function(){
 													$('#modal_tambah_barang').modal('show');
 													$('.notif_ganti').removeClass('has-error has-feedback')

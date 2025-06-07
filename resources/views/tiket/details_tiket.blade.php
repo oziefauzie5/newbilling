@@ -189,26 +189,26 @@
                 <textarea name="tiket_tindakan" id="tiket_tindakan" class="form-control"cols="30" rows="5"></textarea>
                 </div>
               </div>
-                @if($ftth_instalasi->odp_id == 0)
+                @if($ftth_instalasi->odp_id ?? 0 == 0 )
               <div class="form-group row div_tiket_topologi"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">POP</label>
                 <div class="col-sm-4 notif">
-                <input name="tiket_pop" id="tiket_pop" class="form-control readonly" value="{{$ftth_instalasi->pop_nama}}">
+                <input name="tiket_pop" id="tiket_pop" class="form-control readonly" value="{{$ftth_instalasi->pop_nama ?? 0}}">
               </div>
               <label class="col-sm-2 col-form-label">OLT</label>
               <div class="col-sm-4 notif">
-                  <input name="tiket_olt" id="tiket_olt" class="form-control readonly" value="{{$ftth_instalasi->olt_nama}}">
+                  <input name="tiket_olt" id="tiket_olt" class="form-control readonly" value="{{$ftth_instalasi->olt_nama ?? 0}}">
                 </div>
               </div>
 
               <div class="form-group row div_tiket_topologi"  style="display:none;" >
                 <label class="col-sm-2 col-form-label">ODC</label>
                 <div class="col-sm-4 notif">
-                <input name="tiket_odc" id="tiket_odc" class="form-control readonly" value="{{$ftth_instalasi->odc_nama}}">
+                <input name="tiket_odc" id="tiket_odc" class="form-control readonly" value="{{$ftth_instalasi->odc_nama ?? 0}}">
               </div>
               <label class="col-sm-2 col-form-label">ODP</label>
               <div class="col-sm-4 notif_valtiket">
-                  <input name="tiket_odp" id="tiket_odp" class="form-control"  value="{{$ftth_instalasi->odp_id}}">
+                  <input name="tiket_odp" id="tiket_odp" class="form-control"  value="{{$ftth_instalasi->odp_id ?? 0}}">
                   <div id="pesan"></div>
                 </div>
               </div>

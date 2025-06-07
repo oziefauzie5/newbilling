@@ -48,9 +48,9 @@ class PsbController extends Controller
         // ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
         // ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router');
         ->where('input_data.corporate_id',Session::get('corp_id'))
-        // ->select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.id as router_id','routers.router_nama','pakets.paket_id','pakets.paket_nama')
+        ->select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl')
         ->where('reg_progres', '<=', 5)
-        // ->orderBy('tgl', 'DESC')
+        ->orderBy('tgl', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
                 $query->orWhere('input_nama', 'like', '%' . $data['q'] . '%');
@@ -310,8 +310,8 @@ class PsbController extends Controller
                 'input_hp' => $nomorhp,
                 'input_hp_2' => $nomorhp2,
                 'input_email' => $request->input_email,
-                'input_alamat_ktp' => strtoupper($request->input_alamat_ktp.', RT'.$request->rw.',/RW'.$request->rt.', KEC. '.$request->kecamatan.', DESA/KEL. '.$request->kelurahan.', KOTA/KAB. '.$request->kota),
-                'input_alamat_pasang' => strtoupper($request->input_alamat_pasang.', RT'.$request->rw1.',/RW'.$request->rt1.', KEC. '.$request->kecamatan1.', DESA/KEL. '.$request->kelurahan1.', KOTA/KAB. '.$site_nama),
+                'input_alamat_ktp' => strtoupper($request->input_alamat_ktp.', RT'.$request->rw.'/RW'.$request->rt.', KEC. '.$request->kecamatan.', DESA/KEL. '.$request->kelurahan.', KOTA/KAB. '.$request->kota),
+                'input_alamat_pasang' => strtoupper($request->input_alamat_pasang.', RT'.$request->rw1.'/RW'.$request->rt1.', KEC. '.$request->kecamatan1.', DESA/KEL. '.$request->kelurahan1.', KOTA/KAB. '.$site_nama),
                 'input_sales' => $request->input_sales,
                 'input_subseles' => strtoupper($request->input_subseles),
                 'password' => Hash::make($nomorhp),

@@ -30,7 +30,9 @@ class UserController extends Controller
 
     function index()
     {
-        $data['data_user'] = User::join('model_has_roles', 'model_has_roles.model_id','=','users.id')->where('corporate_id',Session::get('corp_id'))->with(['user_site'])->get();            
+        $data['data_user'] = User::join('model_has_roles', 'model_has_roles.model_id','=','users.id')
+                                ->join('roles', 'roles.id','=','model_has_roles.role_id')
+                                ->where('corporate_id',Session::get('corp_id'))->with(['user_site'])->get();            
         $data['role'] = Role::where('id','!=','13')->get();
         $data['data_site'] = Data_Site::where('corporate_id',Session::get('corp_id'))->where('site_status', 'Enable')->get();
         return view('User/index', $data);

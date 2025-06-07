@@ -395,10 +395,10 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/tiket/{id}/tiket-project', [TiketController::class, 'details_tiket_project'])->name('tiket.details_tiket_project')->middleware(['role:admin|STAF ADMIN|NOC']);
     Route::post('/tiket/store', [TiketController::class, 'store'])->name('tiket.store')->middleware(['role:admin|STAF ADMIN|NOC']);
     Route::post('/tiket/export', [TiketController::class, 'export_tiket'])->name('tiket.export_tiket')->middleware(['role:admin|STAF ADMIN|NOC']);
-    Route::get('/tiket/{id}/cari', [TiketController::class, 'pilih_pelanggan'])->name('tiket.pilih_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN|NOC']);
-    Route::post('/tiket/{id}/cek-ont', [TiketController::class, 'tiket_cek_ont'])->name('tiket.tiket_cek_ont')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/pelanggan/{id}/cek-adaptor', [TiketController::class, 'tiket_cek_adp'])->name('tiket.tiket_cek_adp')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/tiket/{id}/val-odp', [TiketController::class, 'tiket_validasi_odp'])->name('tiket.tiket_validasi_odp')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/tiket/{id}/cari', [TiketController::class, 'pilih_pelanggan'])->name('tiket.pilih_pelanggan')->middleware(['role:admin|STAF ADMIN|NOC']);
+    Route::post('/tiket/{id}/cek-ont', [TiketController::class, 'tiket_cek_ont'])->name('tiket.tiket_cek_ont')->middleware(['role:admin|STAF ADMIN|NOC']);
+    Route::get('/pelanggan/{id}/cek-adaptor', [TiketController::class, 'tiket_cek_adp'])->name('tiket.tiket_cek_adp')->middleware(['role:admin|STAF ADMIN|NOC']);
+    Route::get('/tiket/{id}/val-odp', [TiketController::class, 'tiket_validasi_odp'])->name('tiket.tiket_validasi_odp')->middleware(['role:admin|STAF ADMIN|NOC']);
     
     
     ##--GUDANG--
