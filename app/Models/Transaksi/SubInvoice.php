@@ -17,6 +17,9 @@ class SubInvoice extends Model
         'subinvoice_ppn',
         'subinvoice_bph_uso',
         'subinvoice_total',
-        'subinvoice_status'
+        'subinvoice_status',
+        'created_at',
+        'updated_at',
     ];
+    public $timestamps = false;
 }

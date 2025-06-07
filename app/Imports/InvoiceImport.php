@@ -41,6 +41,8 @@ class InvoiceImport implements ToModel
             'inv_amount_received'=>$row[21],#
             'inv_note'=>$row[22],
             'inv_bukti_bayar'=>$row[23],
+            'created_at'=>$row[24],
+            'updated_at'=>$row[25],
 
         ]);
     }

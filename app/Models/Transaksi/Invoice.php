@@ -35,5 +35,9 @@ class Invoice extends Model
         'inv_amount_received',
         'inv_note',
         'inv_bukti_bayar',
+        'created_at',
+        'updated_at',
     ];
+    public $timestamps = false;
+    
 }
