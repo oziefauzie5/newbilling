@@ -9,6 +9,7 @@ class FtthFee extends Model
 {
     use HasFactory;
      protected $fillable = [
+        'id',
         'corporate_id',
         'fee_idpel',
         'reg_mitra',
