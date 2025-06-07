@@ -19,6 +19,8 @@ class SettingAkun extends Model
         'akun_status',
         'akun_kategori',
     ];
+
+    public $timestamps = false;
     public function SettingAkun()
     {
         $SettingAkun = SettingAkun::where('corporate_id',Session::get('corp_id'))->where('akun_status', 'Enable');

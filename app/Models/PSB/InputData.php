@@ -38,7 +38,7 @@ class InputData extends Model implements Authenticatable
         'input_id_lama',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     function user_sales()
     {

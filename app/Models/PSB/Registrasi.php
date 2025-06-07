@@ -36,7 +36,7 @@ class Registrasi extends Model
         'updated_at',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
     function registrasi_router()
     {
         return $this->hasMany(Registrasi::class,'id','reg_router');

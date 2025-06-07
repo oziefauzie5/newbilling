@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ImportExport;
 use App\Exports\InputDataExport;
 use App\Exports\RegistExport;
 use App\Http\Controllers\Controller;
+use App\Imports\AkunImport;
 use App\Imports\BarangImport;
 use App\Imports\BarangKeluarImport;
 use App\Imports\FtthFeeImport;
@@ -181,7 +182,7 @@ class ExportController extends Controller
     }
     public function import_mutasi(Request $request)
     {
-        Excel::import(new MutasiImport,request()->file('file'));
+        Excel::import(new AkunImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
@@ -190,7 +191,7 @@ class ExportController extends Controller
     }
     public function import_akun(Request $request)
     {
-        Excel::import(new MutasiImport,request()->file('file'));
+        Excel::import(new AkunImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
