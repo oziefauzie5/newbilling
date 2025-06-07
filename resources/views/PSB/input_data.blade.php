@@ -75,31 +75,31 @@
                               <div class="form-group row">
                                   <label class="col-sm-2 col-form-label" >Alamat</label>
                                 <div class="col-sm-10">
-                                  <input id="" type="email" class="form-control" value="{{ Session::get('input_alamat_ktp') }}" name="input_alamat_ktp" placeholder="Alamat">
+                                  <input id="" type="email" class="form-control" value="{{ Session::get('input_alamat_ktp') }}" name="input_alamat_ktp" placeholder="Jl. Kp. Perumahan">
                                 </div>
                               </div>
                               <div class="form-group row">
                                   <label class="col-sm-2 col-form-label" >Kecamatan</label>
                                   <div class="col-sm-4">
-                                    <input id="" type="text" class="form-control" value="{{ Session::get('kecamatan') }}" name="kecamatan">
+                                    <input id="" type="text" class="form-control" value="{{ Session::get('kecamatan') }}" name="kecamatan" placeholder="Kecamatan sesuai Ktp">
                                   </div>
                                   <label class="col-sm-2 col-form-label" >Desa/Kelurahan</label>
                                   <div class="col-sm-4">
-                                  <input id="" type="text" class="form-control" value="{{ Session::get('kelurahan') }}" name="kelurahan">
+                                  <input id="" type="text" class="form-control" value="{{ Session::get('kelurahan') }}" name="kelurahan" placeholder="Kelurahan sesuai Ktp">
                                 </div>
                               </div>
                               <div class="form-group row">
                                   <label class="col-sm-2 col-form-label" >Kota/Kabupaten</label>
                                   <div class="col-sm-4">
-                                    <input id="" type="text" class="form-control" value="{{ Session::get('kota') }}" name="kota">
+                                    <input id="" type="text" class="form-control" value="{{ Session::get('kota') }}" name="kota sesuai Ktp">
                                   </div>
                                   <label class="col-sm-1 col-form-label" >RW</label>
                                   <div class="col-sm-2">
-                                  <input id="" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw">
+                                  <input id="" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw sesuai Ktp">
                                 </div>
                                   <label class="col-sm-1 col-form-label" >RT</label>
                                   <div class="col-sm-2">
-                                  <input id="" type="number" class="form-control" value="{{ Session::get('rt') }}" name="rt">
+                                  <input id="" type="number" class="form-control" value="{{ Session::get('rt') }}" name="rt sesuai Ktp">
                                 </div>
                               </div>
                               <div class="card-header bg-primary">
@@ -108,17 +108,17 @@
                               <div class="form-group row">
                                   <label class="col-sm-2 col-form-label" >Alamat</label>
                                 <div class="col-sm-10">
-                                  <input id="" type="email" class="form-control" value="{{ Session::get('input_alamat_pasang') }}" name="input_alamat_pasang" placeholder="Alamat">
+                                  <input id="" type="email" class="form-control" value="{{ Session::get('input_alamat_pasang') }}" name="input_alamat_pasang" placeholder="Jl. Kp. Perumahan">
                                 </div>
                               </div>
                               <div class="form-group row">
                                   <label class="col-sm-2 col-form-label" >Kecamatan</label>
                                   <div class="col-sm-4">
-                                    <input id="" type="text" class="form-control" value="{{ Session::get('kecamatan1') }}" name="kecamatan1">
+                                    <input id="" type="text" class="form-control" value="{{ Session::get('kecamatan1') }}" name="kecamatan1" placeholder="Kecamatan">
                                   </div>
                                   <label class="col-sm-2 col-form-label" >Desa/Kelurahan</label>
                                   <div class="col-sm-4">
-                                  <input id="" type="text" class="form-control" value="{{ Session::get('kelurahan1') }}" name="kelurahan1">
+                                  <input id="" type="text" class="form-control" value="{{ Session::get('kelurahan1') }}" name="kelurahan1" placeholder="Kelurahan">
                                 </div>
                               </div>
                               <div class="form-group row">

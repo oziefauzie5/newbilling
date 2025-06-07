@@ -237,26 +237,40 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
             
             // $arr = array( 0 => null, 1=>null, 2=>3, 3=>null); 
-            $arr = $request->reg_mitra;
-            foreach ($arr as $key=>$val) {
+
+        $arr = $request->reg_mitra;
+        foreach ($arr as $key=>$val) 
+        {
                 if ($val === null)
                 unset($arr[$key]);
         }
-        $count_fee = array_values($arr);
-        $cek_count = count($count_fee);
+        $count_mitra = array_values($arr);
+
+
+
+        $fee = $request->fee;
+        foreach ($fee as $keye=>$vale) 
+        {
+                if ($vale === null)
+                unset($fee[$keye]);
+        }
+        $count_fee = array_values($fee);
+
+        $cek_count = count($count_mitra);
+
+
         if($cek_count >= 1){
-            // dd($cek_count);
             for ($x = 0; $x < $cek_count; $x++) {
                 FtthFee::create(
                     [
                         'corporate_id'=> Session::get('corp_id'),
                         'fee_idpel'=> $request->reg_idpel,
-                        'reg_mitra'=> $request->reg_mitra[$x],
-                        'reg_fee'=> $request->fee[$x],
+                        'reg_mitra'=> $count_mitra[$x],
+                        'reg_fee'=> $count_fee[$x],
                         
                     ]);
                 }
-            }
+        }
                 // dd('count_fee');
                     InputData::where('corporate_id',Session::get('corp_id'))->where('id', $request->reg_idpel)->update($update);
                     
@@ -302,7 +316,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         $data['profile_perusahaan'] = SettingAplikasi::first();
         $data['nama_admin'] = Auth::user()->name;
         $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            // ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             // ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('registrasis.reg_idpel', $id)
@@ -332,9 +346,9 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
     public function berita_acara()
     {
 
-        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            // ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->orderBy('tgl', 'DESC');
 
         $data['data_registrasi'] = $query->get();

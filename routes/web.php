@@ -137,7 +137,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::post('/router/paket/{id}/update', [PaketController::class, 'update'])->name('router.noc.update')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/router/paket/export', [PaketController::class, 'exportPaketToMikrotik'])->name('router.noc.exportPaketToMikrotik')->middleware(['role:admin|NOC|STAF ADMIN']);
     
-    Route::get('/noc', [NocController::class, 'index'])->name('noc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
+    // Route::get('/noc', [NocController::class, 'index'])->name('noc.index')->middleware(['role:admin|NOC|STAF ADMIN']); #HAPUS
     Route::get('/noc/{id}/Pengecekan', [NocController::class, 'pengecekan'])->name('noc.pengecekan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/noc/Pengecekan-barang', [NocController::class, 'pengecekan_barang'])->name('noc.pengecekan_barang')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/barang/update-subbarang-status/{id}', [NocController::class, 'update_status_barang'])->name('barang.update_status_barang')->middleware(['role:admin|NOC|STAF ADMIN']);

@@ -113,18 +113,22 @@ class SalesController extends Controller
         $cek_nohp = InputData::where('input_hp', $nomorhp)->count();
         $cek_nohp2 = InputData::where('input_hp', $nomorhp2)->count();
 
+        $get_site =  explode("|", $request->kota_ktp);
+        $site_id = $get_site[0];
+        $site_nama = $get_site[1];
+
         if ($cek_nohp == 0) {
             $input['input_tgl'] = $data['input_tgl'];
             $input['input_nama'] = strtoupper($request->input_nama);
             $input['corporate_id']= Session::get('corp_id');
             $input['id'] = $id_cust;
             $input['input_ktp'] = $request->input_ktp;
-            $input['data__site_id'] = $request->kota;
+            $input['data__site_id'] = $site_id;
             $input['input_hp'] = $nomorhp;
             $input['input_hp_2'] = $nomorhp2;
             $input['input_email'] = $request->input_email;
-            $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp).', RT '. strtoupper($request->rt_ktp).', RW '. strtoupper($request->rw_ktp).', KEL. '. strtoupper($request->kelurahan_ktp).', KEC. '. strtoupper($request->kecamatan_ktp).', KOTA/KAB. '. strtoupper($request->kota_ktp);
-            $input['input_alamat_pasang'] = strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($request->kota);
+            $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp).', RT'. strtoupper($request->rt_ktp).',/RW'. strtoupper($request->rw_ktp).', KEL. '. strtoupper($request->kelurahan_ktp).', KEC. '. strtoupper($request->kecamatan_ktp).', KOTA/KAB. '. strtoupper($request->kota_ktp);
+            $input['input_alamat_pasang'] = strtoupper($request->input_alamat).', RT'. strtoupper($request->rt).',/RW'. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($site_nama);
             $input['input_sales'] = $user_id;
             $input['input_subseles'] = strtoupper($request->sub_sales);
             $input['password'] = Hash::make($nomorhp);

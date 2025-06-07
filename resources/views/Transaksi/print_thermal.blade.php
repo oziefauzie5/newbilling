@@ -137,7 +137,7 @@
         <thead>
             <tr>
                 <!-- <th class="heading name" colspan="3">{{Session::get('app_brand')}}</th> -->
-                <td  colspan="3"><center><img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" ></center></td>
+                <td  colspan="3"><img src="{{ asset('storage/img/'.Session::get('app_logo')) }}" width="50%" ></td>
                 <!-- <th class="heading name " style="text-align:right" >{{ $nama_admin }}</th> -->
             </tr>
             <tr >
@@ -164,7 +164,7 @@
               <tr>
                 <td style="width:30%;">PELANGGAN</td>
                 <td>:</td>
-                <td  colspan="2">{{ $invoice->inv_nama }}</td>
+                <td  colspan="2">{{ $invoice->input_nama }}</td>
               </tr>
 
 

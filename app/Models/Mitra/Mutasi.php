@@ -21,9 +21,9 @@ class Mutasi extends Model
         'mt_saldo',
         'mt_biaya_adm',
         'mt_status',
-        'created_at',
-        'updated_at',
+        // 'created_at',
+        // 'updated_at',
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 }

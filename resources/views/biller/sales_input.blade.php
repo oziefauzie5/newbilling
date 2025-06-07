@@ -113,13 +113,13 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RT</label>
-                      <input id="rt" type="text" class="form-control" value="{{ Session::get('rt_ktp') }}" name="rt_ktp" placeholder="RT sesuai KTP">
+                      <input id="rt" type="number" class="form-control" value="{{ Session::get('rt_ktp') }}" name="rt_ktp" placeholder="RT sesuai KTP">
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RW</label>
-                      <input id="rw" type="text" class="form-control" value="{{ Session::get('rw_ktp') }}" name="rw_ktp" placeholder="RW sesuai KTP">
+                      <input id="rw" type="number" class="form-control" value="{{ Session::get('rw_ktp') }}" name="rw_ktp" placeholder="RW sesuai KTP">
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -150,13 +150,13 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RT ( Alamat Pemasangan )</label>
-                      <input id="rt" type="text" class="form-control" value="{{ Session::get('rt') }}" name="rt" placeholder="RT">
+                      <input id="rt" type="number" class="form-control" value="{{ Session::get('rt') }}" name="rt" placeholder="RT">
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RW ( Alamat Pemasangan )</label>
-                      <input id="rw" type="text" class="form-control" value="{{ Session::get('rw') }}" name="rw" placeholder="RW">
+                      <input id="rw" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw" placeholder="RW">
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -177,7 +177,7 @@
                       <select name="kota" id="" class="form-control">
                         <option value="">--Pilih Kota/Kab</option>
                         @foreach($site as $s)
-                        <option value="{{$s->id}}">{{$s->site_nama}}</option>
+                        <option value="{{$s->id.'|'.$s->site_nama}}">{{$s->site_nama}}</option>
                         @endforeach
                       </select>
                     </div>

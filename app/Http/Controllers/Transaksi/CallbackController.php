@@ -249,17 +249,17 @@ class CallbackController extends Controller
                                             ->where('ftth_fees.corporate_id',$corp->corp_id)
                                             ->get();
                         if($mitra){
-                            $fee_mitra = $sum_fee  ?? '0';
+                            $fee_mitra = $sum_fee;
                             foreach($mitra as $mit){
                                 MutasiSales::create([
-                                    'mutasi_sales_mitra_id' => $mit->reg_mitra ?? '0',
-                                    'mutasi_sales_idpel' => $data_pelanggan->reg_idpel ?? '0',
+                                    'mutasi_sales_mitra_id' => $mit->reg_mitra,
+                                    'mutasi_sales_idpel' => $data_pelanggan->reg_idpel,
                                     'mutasi_sales_tgl_transaksi' => $if_tgl_bayar,
                                     'mutasi_sales_admin' => $user->id,
                                     'mutasi_sales_type' => 'Credit',
-                                    'mutasi_sales_deskripsi' => $data_pelanggan->input_nama ?? '0',
-                                    'mutasi_sales_jumlah' => $mit->reg_fee ?? '0',
-                                    'mutasi_sales_inv_id' => $id ?? '0',
+                                    'mutasi_sales_deskripsi' => $data_pelanggan->input_nama,
+                                    'mutasi_sales_jumlah' => $mit->reg_fee,
+                                    'mutasi_sales_inv_id' => $data->merchant_ref,
                                     'corporate_id' => $corp->corp_id,
                                 ]);
                             }

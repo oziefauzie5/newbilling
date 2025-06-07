@@ -182,12 +182,12 @@
 							</a>
 						</li>
 						@role('admin|STAF ADMIN')
-						<li class="nav-item {{\Route::is('admin.kemitraan.*') ? 'active' : ''}}">
+						{{-- <li class="nav-item {{\Route::is('admin.kemitraan.*') ? 'active' : ''}}">
 							<a href="{{route('admin.mitra.index')}}">
 								<i class="fas fas fa-user-friends"></i>
 								<p>Corporate</p>
 							</a>
-						</li>
+						</li> --}}
 						<li class="nav-item {{\Route::is('admin.mitra.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#mitra">
 								<i class="fas fa-user-friends"></i>
@@ -209,7 +209,7 @@
 								</ul>
 							</div>
 						</li>
-						<li class="nav-item {{\Route::is('admin.vhc.*') ? 'active' : ''}}">
+						{{-- <li class="nav-item {{\Route::is('admin.vhc.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#vhc">
 								<i class="fas fa-wifi"></i>
 								<p>Hotspot</p>
@@ -229,7 +229,7 @@
 									</li>
 								</ul>
 							</div>
-						</li>
+						</li> --}}
 						@endrole
 						@role('admin|STAF ADMIN|NOC')
 						<li class="nav-item {{\Route::is('admin.psb.*') ? 'active' : ''}}">
@@ -337,7 +337,7 @@
 						<li class="nav-item {{\Route::is('admin.wa.*') ? 'active' : ''}}">
 							<a href="{{route('admin.wa.index')}}">
 								<i class="fab fa-whatsapp"></i>
-								<p>whatsapp</p>
+								<p>Pesan</p>
 							</a>
 						</li>
 						@role('admin|STAF ADMIN')
@@ -367,11 +367,6 @@
 									<li>
 										<a href="{{route('admin.app.wa_getewai')}}">
 											<span class="sub-item">Whatsapp Getewai</span>
-										</a>
-									</li>
-									<li>
-										<a href="{{route('admin.app.kelurahan')}}">
-											<span class="sub-item">Data Kelurahan</span>
 										</a>
 									</li>
 									<li>
@@ -429,11 +424,6 @@
 							</a>
 							<div class="collapse" id="sidebarNoc">
 								<ul class="nav nav-collapse">
-									<li>
-										<a href="{{route('admin.noc.index')}}">
-											<span class="sub-item">Pengecekan</span>
-										</a>
-									</li>
 									<li>
 										<a href="{{route('admin.noc.pengecekan_barang')}}">
 											<span class="sub-item">Pengecekan-barang</span>
