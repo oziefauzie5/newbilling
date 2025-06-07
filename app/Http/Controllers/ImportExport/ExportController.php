@@ -13,6 +13,7 @@ use App\Imports\FtthInstalasiImport;
 use Illuminate\Http\Request;
 use App\Imports\InputDataImport;
 use App\Imports\InvoiceImport;
+use App\Imports\JurnalImport;
 use App\Imports\KategoriImport;
 use App\Imports\LaporanImport;
 use App\Imports\MutasiImport;
@@ -192,6 +193,15 @@ class ExportController extends Controller
     public function import_akun(Request $request)
     {
         Excel::import(new AkunImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+    public function import_jurnal(Request $request)
+    {
+        Excel::import(new JurnalImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
