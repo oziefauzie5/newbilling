@@ -106,9 +106,7 @@
                 </button>
               </a>
               @role('admin')
-              <button class="btn  btn-sm ml-auto m-1 btn-dark " data-toggle="modal" data-target="#import_registrasis">
-                <i class="fa fa-file-import"></i> IMPORT
-      </button>
+              
       @endrole
       <a href="{{route('admin.psb.berita_acara')}}">
         <button class="btn  btn-sm ml-auto m-1 btn-primary">
@@ -174,40 +172,7 @@
         </div>
         </form>
         <hr>
-         <!-- Modal Import -->
-         <div class="modal fade" id="import_registrasis" tabindex="-1" role="dialog" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header no-bd">
-                <h5 class="modal-title">
-                  <span class="fw-mediumbold">
-                  Input Data Baru</span> 
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form action="{{route('admin.export.import_registrasi')}}" method="POST" enctype="multipart/form-data">
-                  @csrf
-                  @method('POST')
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="form-group">
-                        <label>Pilih file (EXCEL,CSV)</label>
-                        <input id="import" type="file" class="form-control" name="file" placeholder="Nama Lengkap" required>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer no-bd">
-                  <button type="submit" class="btn btn-success">Add</button>
-                </form>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        
           <div class="table-responsive">
             <table id="" class="display table table-striped table-hover text-nowrap" >
               <thead>
