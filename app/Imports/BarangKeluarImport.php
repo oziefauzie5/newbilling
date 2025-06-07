@@ -35,6 +35,8 @@ class BarangKeluarImport implements ToModel
             'bk_penerima' => $row[14],
             'bk_status' => $row[15],
             'bk_keterangan' => $row[16],
+            'created_at' => $row[17],
+            'updated_at' => $row[18],
         ]);
     }
 }

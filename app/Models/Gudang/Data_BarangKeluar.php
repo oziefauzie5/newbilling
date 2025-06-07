@@ -29,5 +29,8 @@ class Data_BarangKeluar extends Model
         'bk_penerima',
         'bk_status',
         'bk_keterangan',
+        'created_at',
+        'updated_at',
     ];
+    public $timestamps = false;
 }

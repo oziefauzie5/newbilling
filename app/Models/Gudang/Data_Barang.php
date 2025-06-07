@@ -44,7 +44,7 @@ class Data_Barang extends Model
         'created_at',
         'updated_at',
     ];
-    public $timestamps = false;
+    // public $timestamps = false;
 
     // function data_barang_keluar()
     // {
