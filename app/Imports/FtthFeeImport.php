@@ -19,8 +19,8 @@ class FtthFeeImport implements ToModel
         return new FtthFee([
             'corporate_id' =>Session::get('corp_id'),
             'fee_idpel'=> $row[0],
-            'reg_mitra'=> $row[2],
-            'reg_fee'=> $row[3],
+            'reg_mitra'=> $row[1],
+            'reg_fee'=> $row[2],
         ]);
     }
 }
