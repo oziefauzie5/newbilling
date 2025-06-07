@@ -25,6 +25,9 @@ class SubInvoiceImport implements ToModel
             'subinvoice_bph_uso' =>0,
             'subinvoice_total' =>$row[5],
             'subinvoice_status'=>$row[6],
+            'created_at'=>$row[7],
+            'updated_at'=>$row[8],
+
 
         ]);
     }
