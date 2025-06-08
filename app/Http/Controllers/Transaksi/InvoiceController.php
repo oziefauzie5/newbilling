@@ -584,16 +584,13 @@ class InvoiceController extends Controller
                ->where('inv_id', $id)
                ->select([
                    'invoices.*',
-                   'registrasis.reg_idpel',
-                   'registrasis.reg_layanan',
-                   'registrasis.reg_username',
-                   'registrasis.reg_nolayanan',
-                   'registrasis.reg_password',
+                   'registrasis.*',
                    'input_data.input_nama',
                    'input_data.input_hp',
                    'pakets.paket_nama',
                    'data__odps.odp_id',
                    'routers.*',
+                   'ftth_instalasis.*',
                ])
                ->first();
           
@@ -665,11 +662,10 @@ class InvoiceController extends Controller
                     // dd('pembayaran tepat waktu dibawah tgl 25');
                 }
             }
-            dd($if_tgl_bayar);
             
             #inv0 = Jika Sambung dari tanggal isolir, maka pemakaian selama isolir tetap dihitung kedalam invoice
             #inv1 = Jika Sambung dari tanggal bayar, maka pemakaian selama isolir akan diabaikan dan dihitung kembali mulai dari semanjak pembayaran
-
+            
             
             if ($data_pelanggan->reg_inv_control == 0) {
                 $reg['reg_tgl_jatuh_tempo'] = $inv0_jt_tempo;
@@ -678,6 +674,7 @@ class InvoiceController extends Controller
                 $reg['reg_tgl_jatuh_tempo'] = $inv1_jt_tempo;
                 $reg['reg_tgl_tagih'] = $inv1_tagih1;
             }
+            // dd($inv1_jt_tempo);
 
             $admin_user = Auth::user()->id;
 
@@ -1050,6 +1047,23 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         //                 MutasiSales::create($mutasi_sales);
         //                 dd($mutasi_sales);
 
+    //     $inputdata = InputData::get();
+
+    // foreach($inputdata as $d){
+    //     InputData::whereIn('id',[$d->id])->update([
+    //         'id' => $d->input_id_baru,
+    //     ]);
+    // }
+
+    // $cek = InputData::get();
+    // foreach($cek as $c){
+    //     echo $c->id. '<br>';
+
+    // }
+
+    // $barang = Data_Barang::whereIn('barang_id',[88185,83893,15053,56281,76082,37206,27606,49963,23541,87741,83376])->update([
+    //     'barang_digunakan' => 0,
+    // ]);
     
 
     }

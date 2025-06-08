@@ -198,17 +198,13 @@ class GlobalController extends Controller
         $inv_tgl = Carbon::now();
         $bln = $inv_tgl->format('m');
         $th = $inv_tgl->format('y');
-        $latest = Invoice::orderBy('inv_tgl_tagih', 'DESC')->orderBy('inv_id', 'DESC')->latest()->first();
+        $latest = Invoice::orderBy('inv_tgl_isolir', 'DESC')->count();
         if (! $latest) {
             return $th . $bln . '0001';
         }
-        $string = substr($latest->inv_id, 4);
-        return $th . $bln. sprintf('%04d', $string + 1);
-        // $latest = Invoice::orderBy('created_at', 'DESC')->orderBy('inv_id', 'DESC')->count();
-        // if ($latest == 0) {
-        //     return $bln . $th . '0001';
-        // }
-        // return $bln . $th . $latest + 1;
+        $string = $latest + 1;
+        // $string = substr($latest->inv_id, 4);
+        return $th . $bln. sprintf('%04d', $string);
     }
 
     function idpel_()
@@ -218,8 +214,8 @@ class GlobalController extends Controller
         if (! $latest) {
             return '1001';
         }
-        $string = substr($latest->id, 1);
-        return '1' . sprintf('%03d', $string + 1);
+        // $string = substr($latest->id, 0);
+        return sprintf('%03d', $latest->id + 1);
     }
     function id_outlet()
     {

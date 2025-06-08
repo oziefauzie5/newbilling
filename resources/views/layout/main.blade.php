@@ -253,8 +253,8 @@
 										</a>
 									</li>
 									<li>
-										<a href="{{route('admin.psb.ftth')}}">
-											<span class="sub-item">Data Pelanggan</span>
+										<a href="{{route('admin.router.paket_harga')}}">
+											<span class="sub-item">Paket</span>
 										</a>
 									</li>
 									<li>

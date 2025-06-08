@@ -19,6 +19,13 @@ class PaketController extends Controller
         $data['data_router'] = Router::where('corporate_id',Session::get('corp_id'))->get();
         return view('Router/paket', $data);
     }
+    public function paket_harga()
+    {
+        // dd('test');
+        $data['data_paket'] = Paket::where('corporate_id',Session::get('corp_id'))->with('paket_router')->get();
+        $data['data_router'] = Router::where('corporate_id',Session::get('corp_id'))->get();
+        return view('Router/paket_harga', $data);
+    }
     public function store(Request $request)
     {
         Session::flash('paket_nama', $request->paket_nama);
@@ -186,6 +193,24 @@ class PaketController extends Controller
                 return redirect()->route('admin.router.noc.index')->with($notifikasi);
             }
         }
+    }
+
+    public function update_harga_paket(Request $request, $id)
+    {
+            $sbiaya = SettingBiaya::first();
+            $data['paket_harga'] = $request->paket_harga;
+            $data['paket_status'] = 'Enable';
+
+            $update['reg_harga'] = $request->paket_harga;
+            $update['reg_ppn'] = $sbiaya->biaya_ppn / 100 * $request->paket_harga;
+            Registrasi::where('reg_profile', $id)->update($update);
+            Paket::where('paket_id', $id)->update($data);
+
+             $notifikasi = array(
+                    'pesan' => 'Berhasil merubah paket',
+                    'alert' => 'success',
+                );
+        return redirect()->route('admin.router.paket_harga')->with($notifikasi);
     }
 
     public function exportPaketToMikrotik(Request $request)

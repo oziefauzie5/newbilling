@@ -76,13 +76,6 @@
                             <input type="text" class="form-control" value="{{ Session::get('paket_lokal') }}" name="paket_lokal" required>
                           </div>
                         </div>
-                        <div class="col-sm-6">
-                          <div class="form-group">
-                            <label>Harga</label>
-                            <input type="number" class="form-control" value="{{ Session::get('paket_harga') }}" name="paket_harga" required>
-                            <span>Harga diluar PPN</span>
-                          </div>
-                        </div>
                           
                       </div>
                     </div>
@@ -204,21 +197,6 @@
                             <input type="text" class="form-control" name="paket_warna" required>
                           </div>
                         </div>
-                        <div class="col-sm-6">
-                          <div class="form-group">
-                            <label>Harga</label>
-                            <input type="number" class="form-control" value="{{ Session::get('paket_harga') }}" name="paket_harga" required>
-                            <span>Harga diluar PPN</span>
-                          </div>
-                        </div>
-                        <div class="col-sm-6">
-                          <div class="form-group">
-                            <label>Komisi</label>
-                            <input type="number" class="form-control" value="{{ Session::get('paket_komisi') }}" name="paket_komisi" required>
-                            <span>Komisi reseller yang akan dikeuarkan tiap pembayaran
-                              (Isi 0 jika hitungan komisi dalam bentuk persentase)</span>
-                            </div>
-                          </div>
                           
                       </div>
                     </div>

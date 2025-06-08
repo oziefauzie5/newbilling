@@ -133,11 +133,13 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     ##--PAKET INTERNET
     Route::get('/router/paket', [PaketController::class, 'index'])->name('router.noc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     // Route::get('/router/create', [PaketController::class, 'create'])->name('router.noc.create')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/router/paket/{id}/get', [PaketController::class, 'getRouter'])->name('router.noc.getRouter')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/router/paket/store', [PaketController::class, 'store'])->name('router.noc.store')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/router/paket/store isolir', [PaketController::class, 'store_isolir'])->name('router.noc.store_isolir')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/router/paket/{id}/update', [PaketController::class, 'update'])->name('router.noc.update')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::post('/router/paket/export', [PaketController::class, 'exportPaketToMikrotik'])->name('router.noc.exportPaketToMikrotik')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/router/paket/{id}/get', [PaketController::class, 'getRouter'])->name('router.noc.getRouter')->middleware(['role:admin|NOC']);
+    Route::post('/router/paket/store', [PaketController::class, 'store'])->name('router.noc.store')->middleware(['role:admin|NOC']);
+    Route::post('/router/paket/store isolir', [PaketController::class, 'store_isolir'])->name('router.noc.store_isolir')->middleware(['role:admin|NOC']);
+    Route::post('/router/paket/{id}/update', [PaketController::class, 'update'])->name('router.noc.update')->middleware(['role:admin|NOC']);
+    Route::post('/router/paket/export', [PaketController::class, 'exportPaketToMikrotik'])->name('router.noc.exportPaketToMikrotik')->middleware(['role:admin|NOC']);
+    Route::get('/router/paket-harga', [PaketController::class, 'paket_harga'])->name('router.paket_harga')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/router/{id}/update-paket-harga', [PaketController::class, 'update_harga_paket'])->name('router.update_harga_paket')->middleware(['role:admin|STAF ADMIN']);
     
     // Route::get('/noc', [NocController::class, 'index'])->name('noc.index')->middleware(['role:admin|NOC|STAF ADMIN']); #HAPUS
     Route::get('/noc/{id}/Pengecekan', [NocController::class, 'pengecekan'])->name('noc.pengecekan')->middleware(['role:admin|NOC|STAF ADMIN']);

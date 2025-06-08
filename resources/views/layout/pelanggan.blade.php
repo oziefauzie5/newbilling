@@ -4,7 +4,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>{{Session::get('app_brand')}}</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-	<link rel="icon" href="{{asset('atlantis/assets/img/icon.ico')}}" type="image/x-icon"/>
+	<link rel="icon" href="{{ asset('storage/img/'.Session::get('app_favicon')) }}" type="image/x-icon"/>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
 	<script src="{{asset('atlantis/assets/js/plugin/webfont/webfont.min.js')}}"></script>
@@ -52,7 +52,8 @@
 			<div class="logo-header" data-background-color="blue">
 				
 				<a href="index.html" class="logo">
-					<img src="{{asset('atlantis/assets/img/ovall_logo.png')}}" alt="navbar brand" class="navbar-brand">
+					{{-- <img src="{ asset('storage/img/'.Session::get('app_logo')) }}" alt="navbar brand" class="navbar-brand"> --}}
+					<h3 class="navbar-brand text-light"><strong> {{Session::get('app_brand')}}</strong></h3>
 				</a>
 				<button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
 			
