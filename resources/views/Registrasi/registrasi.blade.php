@@ -106,8 +106,18 @@
               </div>
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Site</label>
-                  <div class="col-sm-10">
+                  <div class="col-sm-4">
                     <input type="text" class="form-control" id="tampil_site" name="reg_site" value="" required>
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Kode Promo</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="tampil_promo" name="reg_promo" value="" >
+                  </div>
+                  <label class="col-sm-2 col-form-label">Diskon Promo</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="tampil_harga_promo" name="tampil_harga_promo" value="" >
                   </div>
               </div>
             

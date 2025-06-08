@@ -42,6 +42,7 @@ use App\Models\Mitra\MitraSetting;
 use App\Models\Model_Has_Role;
 use App\Models\PSB\FtthFee;
 use App\Models\PSB\FtthInstalasi;
+use App\Models\PSB\KodePromo;
 use App\Models\Registrasi\Data_Deaktivasi;
 use App\Models\Teknisi\Data_Odp;
 use App\Models\Teknisi\Data_Olt;
@@ -78,6 +79,11 @@ class RegistrasiController extends Controller
     {
         // return response()->json($id);
         $data['tampil_data'] =  InputData::where('corporate_id',Session::get('corp_id'))->with('user_sales','input_mitra')->where('input_data.id', $id)->first();
+
+        if($data['tampil_data']->input_promo){
+            $data['tampil_promo'] =  KodePromo::where('corporate_id',Session::get('corp_id'))->where('promo_id', $data['tampil_data']->input_promo)->first();
+        }
+
         
         $date = date('Ym');
         $tgl = date('d');
@@ -279,28 +285,28 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             'alert' => 'success',
         );
         return redirect()->route('admin.psb.ftth')->with($notifikasi);
+    }
+    public function delete_registrasi($id)
+    {
 
-//     public function delete_registrasi($id)
-//     {
+        $admin = (new GlobalController)->user_admin()['user_id'];
+        $data_pelanggan = Registrasi::where('reg_idpel', $id)->first();
+        $update['input_status'] =  'PENDING';
+        InputData::where('id', $data_pelanggan->reg_idpel)->update($update);
+        $data = Registrasi::where('reg_idpel', $id);
+        if ($data) {
+            $data->delete();
+        }
 
-//         $admin = (new GlobalController)->user_admin()['user_id'];
-//         $data_pelanggan = Registrasi::join('routers', 'routers.id', '=', 'registrasis.reg_router')->where('reg_idpel', $id)->first();
-//         $update['input_status'] =  'PENDING';
-//         InputData::where('id', $data_pelanggan->reg_idpel)->update($update);
-//         $data = Registrasi::where('reg_idpel', $id);
-//         if ($data) {
-//             $data->delete();
-//         }
-
-//         $data_tiket = Data_Tiket::where('tiket_idpel', $id)->where('tiket_jenis', 'Instalasi');
-//         if ($data_tiket) {
-//             $data_tiket->delete();
-//         }
-//         $notifikasi = array(
-//             'pesan' => 'Hapus Data Registrasi Berhasil berhasil',
-//             'alert' => 'success',
-//         );
-        // return redirect()->route('admin.psb.ftth', ['id' => $id])->with($notifikasi);
+        $data_tiket = Data_Tiket::where('tiket_idpel', $id)->where('tiket_jenis', 'Instalasi');
+        if ($data_tiket) {
+            $data_tiket->delete();
+        }
+        $notifikasi = array(
+            'pesan' => 'Hapus Data Registrasi Berhasil berhasil',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.psb.ftth', ['id' => $id])->with($notifikasi);
     }
 
 

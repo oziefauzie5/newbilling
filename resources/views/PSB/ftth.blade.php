@@ -248,9 +248,9 @@
                                 <form action="{{route('admin.reg.delete_registrasi',['id'=>$d->reg_idpel ?? ''])}}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-success">Ya.!! Abdi yakin pisan</button>
+                                <button type="submit" class="btn btn-success">Ya.!!</button>
                               </form>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Batal. Abdi Kurang yakin</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Batal.</button>
                             </div>
                           </div>
                         </div>

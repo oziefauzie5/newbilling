@@ -76,6 +76,18 @@
                                         <span>Harga diluar PPN</span>
                                       </div>
                                     </div>
+                                    <div class="col-sm-12">
+                                      <div class="form-group">
+                                        <label>Status</label>
+                                        <select name="paket_status" id="" class="form-control">
+                                          @if($d->paket_status)
+                                          <option value="{{$d->paket_status}}">{{$d->paket_status}}</option>
+                                          @endif
+                                          <option value="Enable">Enable</option>
+                                          <option value="Disable">Disable</option>
+                                        </select>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                                 <div class="modal-footer no-bd">

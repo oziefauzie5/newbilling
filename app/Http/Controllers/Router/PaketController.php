@@ -32,8 +32,6 @@ class PaketController extends Controller
         Session::flash('paket_limitasi', $request->paket_limitasi);
         Session::flash('paket_lokal', $request->paket_lokal);
         Session::flash('router_id', $request->router_id);
-        Session::flash('paket_harga', $request->paket_harga);
-        Session::flash('paket_komisi', $request->paket_komisi);
         Session::flash('paket_layanan', $request->paket_layanan);
         $request->validate([
             'paket_nama' => 'unique:pakets',
@@ -50,7 +48,7 @@ class PaketController extends Controller
         $data['paket_harga'] = $request->paket_harga;
         $data['paket_komisi'] = 0;
         $data['paket_layanan'] = 'PPP';
-        $data['paket_status'] = 'Enable';
+        $data['paket_status'] = 'Disable';
 
         
         $router = Router::where('corporate_id',Session::get('corp_id'))->where('id', $request->router_id)->first();
@@ -199,7 +197,7 @@ class PaketController extends Controller
     {
             $sbiaya = SettingBiaya::first();
             $data['paket_harga'] = $request->paket_harga;
-            $data['paket_status'] = 'Enable';
+            $data['paket_status'] = $request->paket_status;
 
             $update['reg_harga'] = $request->paket_harga;
             $update['reg_ppn'] = $sbiaya->biaya_ppn / 100 * $request->paket_harga;

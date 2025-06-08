@@ -43,7 +43,7 @@ class ApiController extends Controller
                     'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                     'service' => 'pppoe',
                     'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                    // 'comment' => $request->reg_odp == '' ? '' : $request->reg_odp,
+                    'comment' => $request->reg_odp == '' ? '' : $request->reg_odp,
                     'disabled' => 'no',
                 ]);
                 // dd($ip .' '.$user.' '. $pass);
@@ -68,7 +68,6 @@ class ApiController extends Controller
                 'name' => $query->reg_username == '' ? '' : $query->reg_username,
                 'password' => $query->reg_password  == '' ? '' : $query->reg_password,
                 'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                // 'comment' => $query->input_nama  == '' ? '' : $query->input_nama,
                 'disabled' => 'no',
             ]);
             return '0';

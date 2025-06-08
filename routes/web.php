@@ -172,6 +172,9 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/ftth/input-data', [PsbController::class, 'input_data'])->name('psb.input_data')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/ftth/{id}/input-data-update-view', [PsbController::class, 'input_data_update_view'])->name('psb.input_data_update_view')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/ftth/{id}/input-data_update', [PsbController::class, 'input_data_update'])->name('psb.input_data_update')->middleware(['role:admin|NOC|STAF ADMIN']); 
+    Route::get('/ftth/promo', [PsbController::class, 'kode_promo'])->name('psb.kode_promo')->middleware(['role:admin|STAF ADMIN']); 
+    Route::post('/ftth/promo-create', [PsbController::class, 'store_promo'])->name('psb.store_promo')->middleware(['role:admin|STAF ADMIN']); 
+    Route::put('/ftth/{id}/promo->update', [PsbController::class, 'update_promo'])->name('psb.update_promo')->middleware(['role:admin|STAF ADMIN']); 
     
     ##--REGISTRASI
     Route::get('/ftth/getMitra', [RegistrasiController::class, 'getMitra'])->name('reg.getMitra')->middleware(['role:admin|NOC|STAF ADMIN']); 

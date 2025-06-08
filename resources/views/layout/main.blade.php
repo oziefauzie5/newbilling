@@ -258,8 +258,8 @@
 										</a>
 									</li>
 									<li>
-										<a href="{{route('admin.psb.listputus_langganan')}}">
-											<span class="sub-item">Putus Berlangganan</span>
+										<a href="{{route('admin.psb.kode_promo')}}">
+											<span class="sub-item">Kode Promo</span>
 										</a>
 									</li>
 								</ul>
@@ -736,29 +736,57 @@ $('#paket').on('change', function() {
                         },
                         dataType: 'json',
                         success: function(data) {
-                                                        if (data) {
+                            if (data) {
                                 $('#harga').empty();
-                                $('#harga').val(data['data_paket'][0]['paket_harga']);
-									$('.checkboxppn').change(function () {
-									if ($(this).is(":checked")) {
-										var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt(data['data_paket'][0]['paket_harga']);
-										if (!isNaN(result1)) {
-											$('#biaya_ppn').val(result1);
+								if($('#tampil_promo').val()){
+									$('#harga').val(data['data_paket'][0]['paket_harga']);
+										var result_promo = parseInt(data['data_paket'][0]['paket_harga'] - $('#tampil_harga_promo').val());
+										if (!isNaN(result_promo)) {
+											$('#harga').val(result_promo);
 										}
-									} else {
-										$("#biaya_ppn").val(0);
-									}
-								});
-								$('.checkboxbiaya_bph_uso').change(function () {
-									if ($(this).is(":checked")) {
-										var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga']);
-										if (!isNaN(result1)) {
-											$('#biaya_bph_uso').val(result1);
+										$('.checkboxppn').change(function () {
+										if ($(this).is(":checked")) {
+											var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - $('#tampil_harga_promo').val());
+											if (!isNaN(result1)) {
+												$('#biaya_ppn').val(result1);
+											}
+										} else {
+											$("#biaya_ppn").val(0);
 										}
-									} else {
-										$("#biaya_bph_uso").val(0);
-									}
-								});
+									});
+									$('.checkboxbiaya_bph_uso').change(function () {
+										if ($(this).is(":checked")) {
+											var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - $('#tampil_harga_promo').val());
+											if (!isNaN(result1)) {
+												$('#biaya_bph_uso').val(result1);
+											}
+										} else {
+											$("#biaya_bph_uso").val(0);
+										}
+									});
+								} else {
+									$('#harga').val(data['data_paket'][0]['paket_harga']);
+										$('.checkboxppn').change(function () {
+										if ($(this).is(":checked")) {
+											var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt(data['data_paket'][0]['paket_harga']);
+											if (!isNaN(result1)) {
+												$('#biaya_ppn').val(result1);
+											}
+										} else {
+											$("#biaya_ppn").val(0);
+										}
+									});
+									$('.checkboxbiaya_bph_uso').change(function () {
+										if ($(this).is(":checked")) {
+											var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga']);
+											if (!isNaN(result1)) {
+												$('#biaya_bph_uso').val(result1);
+											}
+										} else {
+											$("#biaya_bph_uso").val(0);
+										}
+									});
+							}
                             } else {
                                 $('#harga').empty();
                             }
@@ -3655,6 +3683,12 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#tampil_alamat_pasang').val(data['tampil_data']['input_alamat_pasang']);
 							$('#tampil_idpel').val(data['tampil_data']['id']);
 							$('#tampil_nama').val(data['tampil_data']['input_nama']);
+							$('#tampil_promo').val(data['tampil_data']['input_promo']);
+							if(data['tampil_data']['input_promo']){
+								$('#tampil_harga_promo').val(data['tampil_promo']['promo_harga']);
+							}else {
+								$('#tampil_harga_promo').val(0);
+							}
 							$('#tampil_nolay').val(data['nolay']);
 							$('#tampil_username').val(data['username']);
 							
@@ -3665,7 +3699,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#tampil_keterangan').val(data['tampil_data']['input_keterangan']);
 							$('#tampil_site').val(data['tampil_data']['data__site_id']);
 							$('#reg_mitra').empty()
-										$('#reg_mitra').append('<option value="">--None--</option>')
+							$('#reg_mitra').append('<option value="">--None--</option>')
 							
 
 

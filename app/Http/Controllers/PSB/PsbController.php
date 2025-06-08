@@ -8,6 +8,7 @@ use App\Imports\Import\InputDataImport;
 use App\Models\Aplikasi\Data_Site;
 use App\Models\Global\ConvertNoHp;
 use App\Models\PSB\InputData;
+use App\Models\PSB\KodePromo;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Paket;
 use App\Models\Router\Router;
@@ -377,6 +378,66 @@ class PsbController extends Controller
             'alert' => 'success',
         ];
         return redirect()->route('admin.psb.list_input')->with($notifikasi);
+    }
+    public function kode_promo()
+    {
+        $data['data_promo'] = KodePromo::where('corporate_id',Session::get('corp_id'))->get();
+        return view('PSB/kode_promo', $data);
+    }
+    public function store_promo(Request $request)
+    {
+        // dd('test');
+        Session::flash('promo_nama', $request->promo_nama);
+        Session::flash('promo_id', $request->promo_id);
+        Session::flash('promo_harga', $request->promo_harga);
+        Session::flash('promo_expired', $request->promo_expired);
+        Session::flash('promo_status', $request->promo_status);
+        
+        
+        $request->validate([
+            'promo_nama' => 'required',
+            'promo_id' => 'required',
+            'promo_harga' => 'required',
+            'promo_expired' => 'required',
+            'promo_status' => 'required',
+        ], [
+            'promo_nama' => 'Nama tidak boleh kosong',
+            'promo_id' => 'Promo Id tidak boleh kosong',
+            'promo_harga' => 'Harga tidak boleh kosong',
+            'promo_expired' => 'Expired tidak boleh kosong',
+            'promo_status' => 'Status tidak boleh kosong',
+        ]);
+
+        $data['promo_nama'] = $request->promo_nama;
+        $data['corporate_id'] = Session::get('corp_id');
+        $data['promo_id'] = $request->promo_id;
+        $data['promo_harga'] = $request->promo_harga;
+        $data['promo_expired'] = $request->promo_expired;
+        $data['promo_status'] = $request->promo_status;
+
+        KodePromo::create($data);
+         $notifikasi = [
+            'pesan' => 'Berhasil Tambah Promo',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.psb.kode_promo')->with($notifikasi);
+    }
+    public function update_promo(Request $request,$id)
+    {
+      
+        $data['promo_nama'] = $request->promo_nama;
+        $data['corporate_id'] = Session::get('corp_id');
+        $data['promo_id'] = $request->promo_id;
+        $data['promo_harga'] = $request->promo_harga;
+        $data['promo_expired'] = $request->promo_expired;
+        $data['promo_status'] = $request->promo_status;
+
+        KodePromo::where('corporate_id',Session::get('corp_id'))->where('id',$id)->update($data);
+         $notifikasi = [
+            'pesan' => 'Berhasil Tambah Promo',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.psb.kode_promo')->with($notifikasi);
     }
 
 

@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('input_alamat_pasang')->nullable();
             $table->string('input_sales')->nullable();
             $table->string('input_subseles')->nullable();
+            $table->string('input_promo')->nullable();
             $table->string('password')->nullable();
             $table->string('input_maps')->nullable();
             $table->string('input_koordinat')->nullable();
