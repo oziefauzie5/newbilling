@@ -255,8 +255,8 @@ Keterangan : *Insatalasi PSB*
 No. Layanan : ' . $request->reg_nolayanan . '
 Pelanggan : ' . $request->input_nama . '
 Alamat : ' . $request->input_alamat_pasang . '
-Whatsapp : 0' . $request->reg_hp . '
-Whatsapp Alternatif: 0' . $request->reg_hp2 . '
+Whatsapp : 0' . $request->input_hp . '
+Whatsapp Alternatif: 0' . $request->input_hp2 . '
 Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 '
             ]);

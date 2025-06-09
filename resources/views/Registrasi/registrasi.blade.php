@@ -89,7 +89,7 @@
                   </div>
                   <label for="hp" class="col-sm-2 col-form-label">No Whatsapp 2</label>
                   <div class="col-sm-4">
-                    <input type="number" class="form-control" id="tampil_hp2" value="" name="" readonly>
+                    <input type="number" class="form-control" id="tampil_hp2" value="" name="input_hp2" readonly>
                   </div>
               </div>
               <div class="form-group row">
