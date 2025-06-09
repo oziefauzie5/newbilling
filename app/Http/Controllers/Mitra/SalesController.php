@@ -97,7 +97,7 @@ class SalesController extends Controller
         Session::flash('input_password', Hash::make($request->input_hp));
         Session::flash('input_maps', $request->input_maps);
         Session::flash('input_keterangan', strtoupper($request->input_keterangan));
-        Session::flash('sub_sales', strtoupper($request->sub_sales));
+        Session::flash('input_promo', strtoupper($request->input_promo));
 
         $request->validate([
             'input_ktp' => 'unique:input_data',
@@ -135,6 +135,7 @@ class SalesController extends Controller
             $input['input_maps'] = $request->input_maps;
             $input['input_status'] = 'INPUT DATA';
             $input['input_keterangan'] = $request->input_keterangan;
+            $input['input_promo'] = $request->input_promo;
             // dd($input);
             InputData::create($input);
 

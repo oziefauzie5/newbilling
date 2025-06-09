@@ -211,6 +211,12 @@
                       <input id="" type="date" class="form-control" value="{{ Session::get('tgl_pasang') }}" name="tgl_pasang"  required>
                     </div>
                   </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Kode Promo</label>
+                      <input id="" type="date" class="form-control" value="{{ Session::get('input_promo') }}" name="input_promo"  required>
+                    </div>
+                  </div>
                   <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </form>
