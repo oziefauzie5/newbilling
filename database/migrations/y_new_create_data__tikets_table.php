@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Data_Site::class)->constrained()->on('data__sites')->onDelete('restrict');
             $table->unsignedBigInteger('tiket_idpel');
             $table->foreign('tiket_idpel')->references('reg_idpel')->on('registrasis')->onDelete('cascade');
-            $table->integer('tiket_idbarang_keluar')->nullable();
+            $table->string('tiket_idbarang_keluar')->nullable();
             $table->string('tiket_pending')->nullable();
             $table->string('tiket_pembuat')->nullable();
             $table->string('tiket_type')->nullable();
