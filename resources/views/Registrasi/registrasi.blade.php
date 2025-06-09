@@ -187,7 +187,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Kode Unik</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="kode_unik" name="reg_kode_unik" value="" >
+                  <input type="text" class="form-control" id="kode_unik" name="reg_kode_unik" value="0" >
                 </div>
                 
               <label class="form-check col-sm-2 col-form-label">Bph Uso &nbsp;&nbsp;
