@@ -4,30 +4,21 @@
 <div class="content">
   <div class="page-inner">
     <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0">Rp. {{number_format($pendapatan)}}</div>
-            <div class="text-muted mb-3">PENDAPATAN</div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0">{{$sum_tunai}}</div>
-            <div class="text-muted mb-3">PENDAPATAN TUNAI</div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-body p-3 text-center">
-            <div class="h2 m-0">{{$count_trx}}</div>
-            <div class="text-muted mb-3">JUMLAH TRANSAKSI</div>
-          </div>
-        </div>
-      </div>
+    @foreach($sum_role as $sr)
+      	<div class="col-sm-6 col-lg-4">
+							<div class="card p-3">
+								<div class="d-flex align-items-center">
+									<span class="stamp stamp-md bg-secondary mr-3">
+										<i class="fa fa-dollar-sign"></i>
+									</span>
+									<div>
+										<h5 class="mb-1"><b><a href="#">{{$sr->count_trx}} <small>Transaksi</small></a></b></h5>
+										<small class="text-muted">{{$sr->name}}  Rp. {{number_format($sr->sum_jumlah)}}</small>
+									</div>
+								</div>
+							</div>
+						</div>
+      @endforeach
     </div>
     <div class="row">
       
@@ -57,19 +48,11 @@
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan</label>
-                          <input type="text" class="form-control" name="total" value="{{$buat_laporan}}" readonly>
-                        </div>
-                        <div class="form-group">
-                          <label for="formGroupExampleInput">Total Pendapatan Tunai</label>
-                          <input type="text" class="form-control" name="tunai" value="{{$sum_tunai}}" readonly>
-                        </div>
-                        <div class="form-group">
-                          <label for="formGroupExampleInput">Total Pendapatan Adm</label>
-                          <input type="text" class="form-control" name="adm" value="{{$biaya_adm}}" readonly>
+                          <input type="text" class="form-control" name="total" value="{{$serah_terima->sum_jumlah ?? '0'}}" readonly>
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Transaksi</label>
-                          <input type="text" class="form-control" name="count_trx" value="{{$count_trx}}" readonly>
+                          <input type="text" class="form-control" name="count_trx" value="{{$serah_terima->count_trx ?? '0'}}" readonly>
                         </div>
 
                 </div>
@@ -115,19 +98,11 @@
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Pendapatan</label>
-                          <input type="text" class="form-control" name="total" value="{{$buat_laporan}}">
-                        </div>
-                        <div class="form-group">
-                          <label for="formGroupExampleInput">Total Pendapatan Tunai</label>
-                          <input type="text" class="form-control" name="tunai" value="{{$sum_tunai}}">
-                        </div>
-                        <div class="form-group">
-                          <label for="formGroupExampleInput">Total Pendapatan Adm</label>
-                          <input type="text" class="form-control" name="adm" value="{{$biaya_adm}}">
+                          <input type="text" class="form-control" name="total" value="{{$serah_terima->sum_jumlah ?? '0'}}">
                         </div>
                         <div class="form-group">
                           <label for="formGroupExampleInput">Total Transaksi</label>
-                          <input type="text" class="form-control" name="count_trx" value="{{$count_trx}}">
+                          <input type="text" class="form-control" name="count_trx" value="{{$serah_terima->count_trx ?? '0'}}">
                         </div>
 
                 </div>
@@ -174,76 +149,8 @@
             </div>
           </div>
           {{-- end modal TopUp --}}
-          <!-- Modal tambah transaksi-->
-<div class="modal fade" id="addtransaksi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">TAMBAH PEMASUKAN</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="{{route('admin.lap.store_add_transaksi')}}" method="POST" enctype="multipart/form-data">
-          @csrf
-          @method('POST')
-        
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Jenis Pemasukan</label>
-              <select class="form-control" name="jenis" required>
-                <option value="">Pilih Jenis Pemasukan</option>
-                <option value="VOUCHER">VOUCHER</option>
-                <option value="LAIN-LAIN">LAIN-LAIN</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Uraian</label>
-              <input type="text" class="form-control" value="" name="uraian" required>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Metode Pembayaran</label>
-              <select class="form-control" name="metode">
-                <option value="">Pilih Metode</option>
-                @foreach ($setting_akun as $a)
-                    <option value="{{$a->id}}">{{$a->akun_nama}}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Jumlah</label>
-            <input type="number" class="form-control" value="0" name="jumlah">
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group">
-              <label>Upload Bukti</label>
-            <input type="file" name="file" class="form-control" required>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Simpan</button>
-      </form>
-      </div>
-    </div>
-  </div>
-</div>
        
-            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#addtransaksi">
-              <i class="fa fa-plus"></i>
-              TAMBAH TRANSAKSI
-            </button>
+       
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#serah_terima">
               <i class="fa fa-plus"></i>
               SERAH TERIMA
@@ -318,7 +225,7 @@
                 <tr>
                   <td>{{$loop->iteration}}</td>
                       <td>{{$d->lap_id}}</td>
-                      <td>{{date('d-m-Y',strtotime($d->created_at))}}</td>
+                      <td>{{date('d-m-Y',strtotime($d->lap_tgl))}}</td>
                       <td>{{$d->name}}</td>
                       <td>{{$d->lap_keterangan}}</td>
                       <td>{{$d->akun_nama}}</td>

@@ -10,6 +10,7 @@ class Laporan extends Model
     use HasFactory;
     protected $fillable = [
         'lap_id',
+        'data_lap_id',
         'corporate_id',
         'lap_inv',
         'lap_tgl',
@@ -24,8 +25,8 @@ class Laporan extends Model
         'lap_jenis_inv',
         'lap_status',
         'lap_img',
-        'created_at',
+         'created_at',
         'updated_at',
     ];
-
+    public $timestamps = false;
 }

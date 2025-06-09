@@ -44,12 +44,11 @@ class BarangImport implements ToModel
             'barang_img' =>$row[23],
             'barang_ket' =>$row[24],
             'barang_nama_pengguna' =>$row[25],
-            'barang_admin_update' =>$row[26],
-            'barang_penerima' =>$row[27],
-            'barang_pengecek' =>$row[28],
-            'barang_status_print' =>$row[29],
-            'created_at' =>$row[30],
-            'updated_at' =>$row[31],
+            'barang_penerima' =>$row[26],
+            'barang_pengecek' =>$row[27],
+            'barang_status_print' =>$row[28],
+            'created_at' =>$row[29],
+            'updated_at' =>$row[30],
         ]);
     }
 }

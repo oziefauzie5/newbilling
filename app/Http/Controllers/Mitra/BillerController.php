@@ -25,6 +25,7 @@ use App\Models\Transaksi\Invoice;
 use App\Models\Transaksi\Laporan;
 use App\Models\Transaksi\SubInvoice;
 use App\Models\Transaksi\Transaksi;
+use App\Models\Applikasi\SettingAplikasi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -37,8 +38,18 @@ class BillerController extends Controller
 {
     public function maintenance()
     {
-        // dd('test');
-        return view('auth/maintenance');
+          $settingapp = SettingAplikasi::first();
+        if($settingapp){
+            $data['logo'] = $settingapp->app_logo;
+            $data['favicon'] = $settingapp->app_favicon;
+            $data['brand'] = $settingapp->app_brand;
+        } else{
+            $data['logo'] = 'LOGO.png';
+            $data['favicon'] = 'LOGO.png';
+            $data['brand'] = 'APPBILL';
+
+        }
+        return view('auth/maintenance',$data);
     }
 
     public function getpelanggan(Request $request, $id)

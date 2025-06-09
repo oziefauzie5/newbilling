@@ -25,6 +25,7 @@ use App\Imports\PopImport;
 use App\Imports\RegistImport;
 use App\Imports\SubInvoiceImport;
 use App\Imports\TeknisiImport;
+use App\Imports\UserImport;
 use App\Models\PSB\FtthFee;
 use App\Models\PSB\FtthInstalasi;
 use Maatwebsite\Excel\Facades\Excel;
@@ -202,6 +203,24 @@ class ExportController extends Controller
     public function import_jurnal(Request $request)
     {
         Excel::import(new JurnalImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+    public function import_user(Request $request)
+    {
+        Excel::import(new UserImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+    public function import_kategori(Request $request)
+    {
+        Excel::import(new KategoriImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',

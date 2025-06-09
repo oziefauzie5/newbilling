@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('laporans', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
+            $table->integer('data_lap_id')->nullable();
             $table->integer('lap_id')->nullable();
             $table->string('lap_tgl')->nullable();
             $table->integer('lap_inv')->nullable();

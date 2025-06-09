@@ -15,14 +15,11 @@ return new class extends Migration
         Schema::create('data_laporans', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('data_lap_id');
-            $table->foreign('data_lap_id')->references('lap_id')->on('laporans')->onDelete('restrict');
-
+            $table->integer('data_lap_id')->nullable();
             $table->string('data_lap_tgl')->nullable();
             $table->integer('data_lap_pendapatan')->nullable();
             $table->integer('data_lap_admin')->nullable();
-            $table->string('data_lap_keterangan')->nullable();
-            $table->string('data_lap_status')->nullable();
+            $table->integer('data_lap_trx')->nullable();
             $table->timestamps();
         });
     }

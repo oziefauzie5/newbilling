@@ -1047,13 +1047,31 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
         //                 MutasiSales::create($mutasi_sales);
         //                 dd($mutasi_sales);
 
-    //     $inputdata = InputData::get();
+        // $inputdata = InputData::where('input_status','MIGRASI')->count();
+        // $inputdata = InputData::get();
+        
+        // foreach($inputdata as $d){
+            //     // InputData::whereIn('id',[$d->id])->update([
+                //     //     'id' => $d->input_id_baru,
+                //     // ]);
+                //     echo '<table><tr><td>'.$d->id.'</td></tr></table>';
+    //             // }
+    //             $registrasi = Registrasi::get();
+    //             // $registrasi = InputData::where('input_status','MIGRASI')->get();
+    //             // dd($inputdata);
+    //             $no = 1;
+    //             foreach($registrasi as $d){
+    //                 $cek = InputData::whereIn('id',[$d->id])->get();
+    //                 // InputData::whereIn('id',[$d->id])->update([
+    //                     //     'input_status' => 'REGIST',
+    //                     // ]);
 
-    // foreach($inputdata as $d){
-    //     InputData::whereIn('id',[$d->id])->update([
-    //         'id' => $d->input_id_baru,
-    //     ]);
-    // }
+    //                     foreach ($cek as $value) {
+    //                         # code...
+    //                         echo '<table><tr><td>'.$no++.'</td><td>'.$d->reg_idpel.'</td><td>'.$value->input_nama.'</td></tr></table>';
+    //                     }
+    //                 }
+    // dd('test');
 
     // $cek = InputData::get();
     // foreach($cek as $c){
@@ -1064,6 +1082,9 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     // $barang = Data_Barang::whereIn('barang_id',[88185,83893,15053,56281,76082,37206,27606,49963,23541,87741,83376])->update([
     //     'barang_digunakan' => 0,
     // ]);
+
+    // $cek_null = Invoice::where('inv_total','NULL')->get();
+    // dd($cek_null);
     
 
     }

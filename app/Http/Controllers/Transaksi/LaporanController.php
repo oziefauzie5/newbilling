@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\DB;
 class LaporanController extends Controller
 {
     public function laporan_harian(Request $request)
@@ -30,6 +31,32 @@ class LaporanController extends Controller
         $biller = [10, 13, 14];
         $data['dat'] = "Laporan";
         $role = Model_Has_Role::where('model_id', $data['admin_user'])->first();
+        $data['sum_role'] = Laporan::join('users','users.id','=','laporans.lap_admin')
+                    ->join('model_has_roles','model_has_roles.model_id','=','users.id')
+                    ->join('roles','roles.id','=','model_has_roles.role_id')
+                    ->whereIn('model_has_roles.role_id',[2,5,10,13,14])
+                    ->where('laporans.lap_status', '0')
+                    ->select([
+                        DB::raw('sum(laporans.lap_jumlah) as sum_jumlah'),
+                        DB::raw('count(laporans.lap_jumlah) as count_trx'),
+                        'roles.name',
+                        ])
+                    ->groupBy('roles.name')
+                    ->get();
+        $data['serah_terima'] = Laporan::join('users','users.id','=','laporans.lap_admin')
+                    // ->join('model_has_roles','model_has_roles.model_id','=','users.id')
+                    // ->join('roles','roles.id','=','model_has_roles.role_id')
+                    // ->whereIn('model_has_roles.role_id',[2])
+                    ->where('laporans.lap_status', '0')
+                    ->where('laporans.lap_admin', $data['admin_user'])
+                    ->select([
+                        DB::raw('sum(laporans.lap_jumlah) as sum_jumlah'),
+                        DB::raw('count(laporans.lap_jumlah) as count_trx'),
+                        'users.name',
+                        ])
+                    ->groupBy('users.name')
+                    ->first();
+        // dd($data['serah_terima']);
 
 
         $data['now'] = date('Y-m-d', strtotime(carbon::now()));
@@ -48,19 +75,15 @@ class LaporanController extends Controller
             $query = Laporan::orderBy('laporans.created_at', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
                 ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
-                // ->where('laporans.lap_jenis_inv', '=', 'INVOICE')
                 ->where(function ($query) use ($data) {
                     $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
                 });
         } else {
             $data['admin'] = User::where('id', $data['admin_user'])->get();
-            // $data['admin'] = User::where('id', '2023116515')->get();
             $query = Laporan::orderBy('laporans.created_at', 'DESC')
                 ->join('users', 'users.id', '=', 'laporans.lap_admin')
                 ->join('setting_akuns', 'setting_akuns.id', '=', 'laporans.lap_akun')
                 ->where('laporans.lap_admin', '=', $data['admin_user'])
-                // ->where('laporans.lap_jenis_inv', '=', 'INVOICE')
-                // ->whereDate('laporans.lap_tgl', '>=',$start_date )
                 ->whereDate('laporans.created_at', '<=',$end_date )
                 ->where(function ($query) use ($data) {
                     $query->where('lap_keterangan', 'like', '%' . $data['q'] . '%');
@@ -72,9 +95,9 @@ class LaporanController extends Controller
             $query->where('setting_akuns.akun_nama', '=', $data['ak']);
 
         $data['laporan'] = $query->get();
-        $data['pendapatan'] = $query->where('lap_status', 0)->sum('laporans.lap_jumlah');
-        $data['biaya_adm'] = 0;
-        $data['count_trx'] = $query->where('lap_status', 0)->count();
+        // $data['pendapatan'] = $query->where('lap_status', 0)->sum('laporans.lap_jumlah');
+        // $data['biaya_adm'] = 0;
+        // $data['count_trx'] = $query->where('lap_status', 0)->count();
 
 
         if ($role->role_id == 1) {
@@ -91,7 +114,7 @@ class LaporanController extends Controller
                 ->whereDate('laporans.created_at', '<=',$end_date );
         }
 
-        $data['sum_tunai'] = $querysum->where('lap_status', 0)->where('lap_jenis_inv', 'Debit')->sum('laporans.lap_jumlah');
+        // $data['sum_tunai'] = $querysum->where('lap_status', 0)->where('lap_jenis_inv', 'Debit')->sum('laporans.lap_jumlah');
 
         $data['users'] = (new GlobalController)->all_user()->where('model_has_roles.role_id', '=', '5')->get();
         $data['biller'] = (new GlobalController)->all_user()->whereIn('model_has_roles.role_id', $biller)->get();
@@ -235,13 +258,9 @@ class LaporanController extends Controller
             $data['data_lap_id'] = $request->lap_id;
             $data['data_lap_tgl'] = $tgl;
             $data['data_lap_pendapatan'] = $request->total;
-            $data['data_lap_tunai'] = $request->tunai;
-            $data['data_lap_adm'] = $request->adm;
             $data['data_lap_admin'] = $id;
-            $data['data_lap_refund'] = $request->refund;
             $data['data_lap_trx'] = $request->count_trx;
-            $data['data_lap_keterangan'] = 'Laporan Harian ' . $request->user_admin;
-            $data['data_lap_status'] = 0;
+            
             $update_data['lap_status'] = 1;
             $update_data['lap_id'] = $request->lap_id;
 
@@ -281,7 +300,7 @@ class LaporanController extends Controller
             $query = DataLaporan::orderBy('data_laporans.data_lap_tgl', 'DESC')
                 ->join('users', 'users.id', '=', 'data_laporans.data_lap_admin')
                 ->where(function ($query) use ($data) {
-                    $query->where('data_lap_keterangan', 'like', '%' . $data['q'] . '%');
+                    $query->where('data_lap_admin', 'like', '%' . $data['q'] . '%');
                 });
         } else {
             $data['admin'] = User::where('id', $data['admin_user'])->get();
@@ -289,7 +308,7 @@ class LaporanController extends Controller
                 ->join('users', 'users.id', '=', 'data_laporans.data_lap_admin')
                 ->where('data_laporans.data_lap_admin', '=', $data['admin_user'])
                 ->where(function ($query) use ($data) {
-                    $query->where('data_lap_keterangan', 'like', '%' . $data['q'] . '%');
+                    $query->where('data_lap_admin', 'like', '%' . $data['q'] . '%');
                 });
         }
 
@@ -301,20 +320,10 @@ class LaporanController extends Controller
             $query->where('users.name', '=', $data['adm']);
 
         $data['laporan'] = $query->get();
-        // foreach ($data['laporan'] as $key) {
-        //     echo '<table><tr><td>'.date('d-m-Y',strtotime($key->data_lap_tgl)).'</td><td>'.$key->data_lap_pendapatan.'</td><td>'.$key->data_lap_id.'</td></tr></table>';
-        //     // $wer = Laporan::whereIn('lap_id',[$key->data_lap_id])->get();
-        //     // foreach ($wer as $value) {
-        //     //     echo '<table><tr><td>'.date('d-m-Y',strtotime($value->lap_tgl)).'</td><td>'.$value->lap_idpel.'</td><td>'.$value->lap_keterangan.'</td><td>'.$value->lap_kredit.'</td></tr></table>';
-        //     // }
-        // }
-        // dd('tes');
-        $data['pendapatan'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_pendapatan');
-        $data['refund'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_refund');
-        $data['biaya_adm'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_adm');
-        $data['sum_tunai'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_tunai');
-        $data['count_trx'] = $query->where('data_lap_status', 1)->sum('data_laporans.data_lap_trx');
-        $data['count_data'] = $query->where('data_lap_status', 1)->count();
+
+        $data['pendapatan'] = $query->sum('data_laporans.data_lap_pendapatan');
+        $data['count_trx'] = $query->sum('data_laporans.data_lap_trx');
+        $data['count_data'] = $query->count();
 
         return view('Transaksi/data_laporan', $data);
     }

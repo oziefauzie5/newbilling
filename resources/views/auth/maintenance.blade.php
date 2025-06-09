@@ -1,73 +1,62 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{$brand}}</title>
+  <link rel="icon" href="{{ asset('storage/profile_perusahaan/'.$favicon) }}" type="image/x-icon"/>
 
-<style>
-        @import url(http://fonts.googleapis.com/css?family=Roboto);
-    *
-    {
-        font-family: 'Roboto' , sans-serif;
-    }
-    body
-    {
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMC8yOS8xMiKqq3kAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzVxteM2AAABHklEQVRIib2Vyw6EIAxFW5idr///Qx9sfG3pLEyJ3tAwi5EmBqRo7vHawiEEERHS6x7MTMxMVv6+z3tPMUYSkfTM/R0fEaG2bbMv+Gc4nZzn+dN4HAcREa3r+hi3bcuu68jLskhVIlW073tWaYlQ9+F9IpqmSfq+fwskhdO/AwmUTJXrOuaRQNeRkOd5lq7rXmS5InmERKoER/QMvUAPlZDHcZRhGN4CSeGY+aHMqgcks5RrHv/eeh455x5KrMq2yHQdibDO6ncG/KZWL7M8xDyS1/MIO0NJqdULLS81X6/X6aR0nqBSJcPeZnlZrzN477NKURn2Nus8sjzmEII0TfMiyxUuxphVWjpJkbx0btUnshRihVv70Bv8ItXq6Asoi/ZiCbU6YgAAAABJRU5ErkJggg==);
-    } 
-    .error-template
-    {
-        padding: 40px 15px;
-        text-align: center;
-    }
-    .error-actions
-    {
-        margin-top: 15px;
-        margin-bottom: 15px;
-    }
-    .error-actions .btn
-    {
-        margin-right: 10px;
-    }
-    .message-box h1
-    {
-        color: #252932;
-        font-size: 98px;
-        font-weight: 700;
-        line-height: 98px;
-        text-shadow: rgba(61, 61, 61, 0.3) 1px 1px, rgba(61, 61, 61, 0.2) 2px 2px, rgba(61, 61, 61, 0.3) 3px 3px;
-    }
-</style>
-<!------ Include the above in your HEAD tag ---------->
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="error-template">
-                <h1>
-                    :) Oops!</h1>
-                <h2>
-                    Layanan ini sedang maintenance</h2>
-                <h1>         
-Kami akan segera kembali!</h1>
-                <div>
-                    <p>
-                        
-Mohon maaf atas ketidaknyamanannya, tetapi saat ini kami sedang melakukan pemeliharaan. Kami akan segera kembali online!</p>
-                    <p>
-                        — Ovall Fiber</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <svg class="svg-box" width="380px" height="500px" viewbox="0 0 837 1045" version="1.1"
-                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-                        <path d="M353,9 L626.664028,170 L626.664028,487 L353,642 L79.3359724,487 L79.3359724,170 L353,9 Z" id="Polygon-1" stroke="#3bafda" stroke-width="6" sketch:type="MSShapeGroup"></path>
-                        <path d="M78.5,529 L147,569.186414 L147,648.311216 L78.5,687 L10,648.311216 L10,569.186414 L78.5,529 Z" id="Polygon-2" stroke="#7266ba" stroke-width="6" sketch:type="MSShapeGroup"></path>
-                        <path d="M773,186 L827,217.538705 L827,279.636651 L773,310 L719,279.636651 L719,217.538705 L773,186 Z" id="Polygon-3" stroke="#f76397" stroke-width="6" sketch:type="MSShapeGroup"></path>
-                        <path d="M639,529 L773,607.846761 L773,763.091627 L639,839 L505,763.091627 L505,607.846761 L639,529 Z" id="Polygon-4" stroke="#00b19d" stroke-width="6" sketch:type="MSShapeGroup"></path>
-                        <path d="M281,801 L383,861.025276 L383,979.21169 L281,1037 L179,979.21169 L179,861.025276 L281,801 Z" id="Polygon-5" stroke="#ffaa00" stroke-width="6" sketch:type="MSShapeGroup"></path>
-                    </g>
-                </svg>
-        </div>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{{ asset('lte/plugins/fontawesome-free/css/all.min.css')}}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{{ asset('lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css')}}">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <img src="{{ asset('storage/profile_perusahaan/'.$logo) }}" alt="{{$brand}}" class="brand-image " style="opacity: .8; width: 200px;">
+      {{-- <img src="{{ asset('atlantis/assets/img/ovall_logo.png')}}" alt="OVALL FIBER" class="brand-image " style="opacity: .8"> --}}
     </div>
+    <div class="card-body">
+      <img src="https://www.google.com/search?q=ologo&sca_esv=595776748&rlz=1C1CHBF_enID1019ID1019&tbm=isch&sxsrf=AM9HkKmK7K55ccDTQHqwDOxWo7zpc8tsDg:1704404147583&source=lnms&sa=X&ved=2ahUKEwiLwJSe2MSDAxXI4TgGHVb7AdAQ_AUoAXoECAMQAw&biw=1366&bih=599&dpr=1#imgrc=XC41OE24tqKTDM" alt="">
+
+      <form action="{{ route('login-proses')}}" method="post">
+        @csrf
+        <div class="input-group mb-3">
+            <h5 class="text-center">Mohon Maaf.. Layanan ini sedang dalam Maintenance.</h5>
+        </div>
+   
+      </form>
+
+
+      <!-- /.social-auth-links -->
+
+  
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
 </div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="{{ asset('lte/plugins/jquery/jquery.min.js')}}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{ asset('lte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('lte/dist/js/adminlte.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if ($message = Session::get('success'))
+    <script>Swal.fire("{{$message}}");</script>
+@endif
+@if ($message = Session::get('failed'))
+    <script>Swal.fire("{{$message}}");</script>
+@endif
+</body>
+</html>

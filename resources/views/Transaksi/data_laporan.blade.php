@@ -15,30 +15,6 @@
         <div href="{{route('admin.reg.index')}}" class="col">
           <div class="card">
             <div class="card-body p-3 text-center">
-              <div class="h2 m-0">Rp. {{number_format($refund)}}</div>
-              <div class="text-muted mb-3">REFUND</div>
-            </div>
-          </div>
-        </div>
-        <div href="{{route('admin.reg.index')}}" class="col">
-          <div class="card">
-            <div class="card-body p-3 text-center">
-              <div class="h2 m-0">Rp. {{number_format($biaya_adm)}}</div>
-              <div class="text-muted mb-3">ADM</div>
-            </div>
-          </div>
-        </div>
-        <div href="{{route('admin.reg.index')}}" class="col">
-          <div class="card">
-            <div class="card-body p-3 text-center">
-              <div class="h2 m-0">Rp. {{number_format($sum_tunai)}}</div>
-              <div class="text-muted mb-3">PENDAPATAN TUNAI</div>
-            </div>
-          </div>
-        </div>
-        <div href="{{route('admin.reg.index')}}" class="col">
-          <div class="card">
-            <div class="card-body p-3 text-center">
               <div class="h2 m-0">{{$count_trx}}</div>
               <div class="text-muted mb-3">JUMLAH TRANSAKSI</div>
             </div>
@@ -89,12 +65,11 @@
               <thead>
                 <tr>
                   <th>{{$count_data}}</th>
-                  <th>AKSI</th>
-                  <th>ID</th>
-                  <th>TANGGAL</th>
-                  <th>KETERANGAN</th>
-                  <th>PENDAPATAN</th>
-                  <th>TUNAI</th>
+                  <th>Aksi</th>
+                  <th>Id</th>
+                  <th>Tanggal</th>
+                  <th>Admin</th>
+                  <th>Pendapatan</th>
                 </tr>
               </thead>
               <tbody>
