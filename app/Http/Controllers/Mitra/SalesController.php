@@ -159,13 +159,13 @@ class SalesController extends Controller
             $pesan_group['status'] = $status_pesan;
             $pesan_group['pesan'] = '               -- LIST REGISTRASI --
 
-Nama : ' . $request->input_nama . '
+Nama : ' . strtoupper($request->input_nama) . '
 Alamat : ' . strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($request->kota).'
 
-Paket : *' . $request->input_keterangan . '*
+Paket : *' . strtoupper($request->input_keterangan) . '*
 Tanggal Pasang : ' . date('d-m-Y', strtotime($request->tgl_pasang)) . ' 
 
-Input Data By : *' . $user_nama . '*
+Input Data By : *' . strtoupper($user_nama) . '*
 ';
 
 Pesan::create($pesan_group);
