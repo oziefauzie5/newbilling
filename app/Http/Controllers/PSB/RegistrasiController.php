@@ -213,8 +213,7 @@ Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.
 
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
-*'.Session::get('app_brand').'*
-    ';
+*'.Session::get('app_brand').'*';
             }
 
             // $pesan_group['layanan'] = 'CS';
@@ -780,6 +779,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             ->select([
                 'registrasis.*',
                 'input_data.input_nama',
+                'input_data.input_hp',
                 'pakets.paket_lokal',
                 'pakets.paket_nama',
                 'routers.router_ip',
@@ -798,13 +798,41 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 (new AktivasiController)->aktivasi_psb($request, $query, $id);
 
                   $status = (new GlobalController)->whatsapp_status();
-            if($status){
+                if($status){
                 if ($status->wa_status == 'Enable') {
                     $status_pesan = '0';
                 } else {
                     $status_pesan = '10';
                 }
-                $pesan_closed['layanan'] = 'NOC';
+
+                if($query->reg_jenis_tagihan == 'PRABAYAR'){
+
+                $pesan_pelanggan['layanan'] = 'NOC';
+                $pesan_pelanggan['corporate_id' ]= Session::get('corp_id');
+                $pesan_pelanggan['ket'] = 'aktivasi';
+                $pesan_pelanggan['target'] = $query->input_hp;
+                $pesan_pelanggan['nama'] = $request->input_nama;
+                $pesan_pelanggan['status'] = $status_pesan;
+                $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
+Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
+
+No.Layanan : *' . $query->reg_nolayanan . '*
+Nama : *' . $query->input_nama . '*
+Alamat pasang : ' . $query->input_alamat_pasang . '
+Paket : *' . $query->paket_nama . '*
+Jenis tagihan : ' . $query->reg_jenis_tagihan . '
+Biaya tagihan : ' . number_format($query->reg_harga + $query->reg_ppn + $query->reg_kode_unik + $query->reg_bph_uso). '
+Tanggal Pasang : ' . date('d-m-Y', strtotime($query->reg_tgl_pasang)) . '
+
+Untuk melihat detail layanan dan cara pembayaran tagihan, bisa melalui link berikut *'.env('LINK_APK').'*
+Apabila ada kendala, dapat menghubungi ke customer care kami di : '.$status->wa_nomor.' 
+--------------------
+Pesan ini bersifat informasi dan tidak perlu dibalas
+*'.Session::get('app_brand').'*';
+                Pesan::create($pesan_pelanggan);
+
+                }elseif($query->reg_jenis_tagihan == 'PASCABAYAR'){
+                      $pesan_closed['layanan'] = 'NOC';
                 $pesan_closed['corporate_id'] = Session::get('corp_id');
                 $pesan_closed['ket'] = 'Aktivasi';
                 $pesan_closed['pesan_id_site'] = '1';
@@ -823,7 +851,8 @@ Terimakasih.
                 ';
 
                 Pesan::create($pesan_closed);
-            }
+                }
+                }
                      
 
                 $notifikasi = array(

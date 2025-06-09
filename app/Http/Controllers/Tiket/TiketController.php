@@ -404,14 +404,14 @@ Antrian tiket = ' . $count . '
                 } else {
                     $status_pesan = '10';
                 }
-                $pesan_closed['layanan'] = 'CS';
+                $pesan_closed['layanan'] = 'NOC';
                 $pesan_closed['corporate_id'] = Session::get('corp_id');
                 $pesan_closed['ket'] = 'tiket';
                 $pesan_closed['pesan_id_site'] = $request->tiket_site;
                 $pesan_closed['status'] = $status_pesan;
                 $pesan_closed['target'] = env('GROUP_TEKNISI');
                 $pesan_closed['nama'] = 'Group Teknisi';
-                $pesan_closed['pesan'] = '               -- CLOSED TIKET --
+                $pesan_closed['pesan'] = ' -- WO '.strtoupper($request->tiket_jenis).' CLOSED --
                 
 Problem : ' . $request->tiket_kendala . '
 Action : ' . $request->tiket_tindakan . '
