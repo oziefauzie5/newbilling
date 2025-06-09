@@ -187,6 +187,8 @@ Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*
 ';
+
+
             } elseif ($request->reg_jenis_tagihan == 'PASCABAYAR') {
                 $paket_nama = Paket::where('corporate_id',Session::get('corp_id'))->where('paket_id',$request->reg_profile)->select('paket_nama')->first();
                 $pesan_pelanggan['layanan'] = 'CS';
@@ -245,7 +247,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 'target' =>  env('GROUP_TEKNISI'),
                 'status' =>  $status_pesan,
                 'nama' =>  'GROUP TEKNISI',
-                'pesan' => '               -- TIKET INSTALASI --
+                'pesan' => '               -- WO INSTALASI --
 No. Tiket : *' . $tiket['tiket_id'] . '*
 Kegiatan : Insatalasi PSB
 Keterangan : *Insatalasi PSB*
