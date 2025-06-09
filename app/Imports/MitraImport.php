@@ -22,9 +22,8 @@ class MitraImport implements ToModel
             'mts_user_id' =>$row[0],
             'mts_limit_minus' =>$row[1],
             'mts_komisi' =>$row[2],
-            'mts_wilayah' =>$row[3],
-            'created_at' =>$row[4],
-            'updated_at' =>$row[5],
+            'created_at' =>$row[3],
+            'updated_at' =>$row[4],
         ]);
     }
 }

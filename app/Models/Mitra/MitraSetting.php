@@ -22,7 +22,7 @@ class MitraSetting extends Model
             'updated_at',
     ];
 
-     public $timestamps = false;
+    //  public $timestamps = false;
     function user_mitra()
     {
         return $this->hasOne(User::class,'id','mts_user_id');

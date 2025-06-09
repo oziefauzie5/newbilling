@@ -26,12 +26,13 @@ use App\Imports\PopImport;
 use App\Imports\RegistImport;
 use App\Imports\SubInvoiceImport;
 use App\Imports\TeknisiImport;
+use App\Imports\TiketImport;
 use App\Imports\UserImport;
 use App\Models\PSB\FtthFee;
 use App\Models\PSB\FtthInstalasi;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\PSB\InputData;
-
+use App\Models\Tiket\Data_Tiket;
 
 class ExportController extends Controller
 {
@@ -185,7 +186,7 @@ class ExportController extends Controller
     }
     public function import_mutasi(Request $request)
     {
-        Excel::import(new AkunImport,request()->file('file'));
+        Excel::import(new MutasiImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',
@@ -231,6 +232,15 @@ class ExportController extends Controller
     public function import_mitra(Request $request)
     {
         Excel::import(new MitraImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+    public function import_tiket(Request $request)
+    {
+        Excel::import(new TiketImport(),request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',

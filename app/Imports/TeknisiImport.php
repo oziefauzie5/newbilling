@@ -24,6 +24,8 @@ class TeknisiImport implements ToModel
             'teknisi_idpel' =>$row[4],
             'teknisi_psb' =>$row[5],
             'teknisi_status' =>$row[6],
+            'created_at' =>$row[7],
+            'updated_at' =>$row[8],
 
         ]);
     }

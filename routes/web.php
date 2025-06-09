@@ -89,6 +89,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
  Route::post('/import_user', [ExportController::class, 'import_user'])->name('export.import_user')->middleware(['role:admin']);
  Route::post('/import_kategori', [ExportController::class, 'import_kategori'])->name('export.import_kategori')->middleware(['role:admin']);
  Route::post('/import_mitra', [ExportController::class, 'import_mitra'])->name('export.import_mitra')->middleware(['role:admin']);
+ Route::post('/import_tiket', [ExportController::class, 'import_tiket'])->name('export.import_tiket')->middleware(['role:admin']);
     
     ##CRUD DATA USER
     Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware(['role:admin|STAF ADMIN']);
