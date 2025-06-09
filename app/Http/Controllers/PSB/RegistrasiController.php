@@ -241,7 +241,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
 
             Pesan::create([
-                'layanan' =>  'NOC',
+                'layanan' =>  'CS',
                 'ket' =>  'tiket',
                 'corporate_id'=> Session::get('corp_id'),
                 'target' =>  env('GROUP_TEKNISI'),
