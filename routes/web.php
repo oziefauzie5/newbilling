@@ -301,12 +301,12 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::put('/biller/pb/{idpel}', [BillerController::class, 'biller_putus_berlanggan'])->name('biller.biller_putus_berlanggan')->middleware(['role:KOLEKTOR']);
     
     
-    Route::get('/sales/sales', [SalesController::class, 'sales'])->name('sales.sales')->middleware(['role:SALES']);
-    Route::get('/sales/input', [SalesController::class, 'sales_input'])->name('sales.sales_input')->middleware(['role:SALES']);
-    Route::post('/sales/store', [SalesController::class, 'sales_store'])->name('sales.sales_store')->middleware(['role:SALES']);
-    Route::get('/sales/pelanggan', [SalesController::class, 'pelanggan'])->name('sales.pelanggan')->middleware(['role:SALES']);
-    Route::get('/sales/mutasi', [SalesController::class, 'mutasi_sales'])->name('sales.mutasi_sales')->middleware(['role:SALES']);
-    Route::post('/sales/sales-export/pdf', [SalesController::class, 'mutasi_sales_pdf'])->name('sales.mutasi_sales')->middleware(['role:SALES']);
+    Route::get('/sales/sales', [SalesController::class, 'sales'])->name('sales.sales')->middleware(['role:SALES|PIC']);
+    Route::get('/sales/input', [SalesController::class, 'sales_input'])->name('sales.sales_input')->middleware(['role:SALES|PIC']);
+    Route::post('/sales/store', [SalesController::class, 'sales_store'])->name('sales.sales_store')->middleware(['role:SALES|PIC']);
+    Route::get('/sales/pelanggan', [SalesController::class, 'pelanggan'])->name('sales.pelanggan')->middleware(['role:SALES|PIC']);
+    Route::get('/sales/mutasi', [SalesController::class, 'mutasi_sales'])->name('sales.mutasi_sales')->middleware(['role:SALES|PIC']);
+    Route::post('/sales/sales-export/pdf', [SalesController::class, 'mutasi_sales_pdf'])->name('sales.mutasi_sales')->middleware(['role:SALES|PIC']);
     
     
 
