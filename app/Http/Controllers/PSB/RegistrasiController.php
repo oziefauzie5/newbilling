@@ -831,11 +831,10 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*';
                 Pesan::create($pesan_pelanggan);
 
-                }elseif($query->reg_jenis_tagihan == 'PASCABAYAR'){
+                } elseif($query->reg_jenis_tagihan == 'PASCABAYAR'){
                       $pesan_closed['layanan'] = 'NOC';
                 $pesan_closed['corporate_id'] = Session::get('corp_id');
                 $pesan_closed['ket'] = 'Aktivasi';
-                $pesan_closed['pesan_id_site'] = '1';
                 $pesan_closed['status'] = $status_pesan;
                 $pesan_closed['target'] = $request->reg_hp;
                 $pesan_closed['nama'] = 'Group Teknisi';
@@ -852,6 +851,39 @@ Terimakasih.
 
                 Pesan::create($pesan_closed);
                 }
+
+                $aktivasi_closed['layanan'] = 'NOC';
+                $aktivasi_closed['corporate_id'] = Session::get('corp_id');
+                $aktivasi_closed['ket'] = 'Aktivasi';
+                $aktivasi_closed['status'] = $status_pesan;
+                $aktivasi_closed['target'] =  env('GROUP_REPORT_AKTIVASI');
+                $aktivasi_closed['nama'] = 'Group Teknisi';
+                $aktivasi_closed['pesan'] = 'REPORT AKTIFASI '.Session::get('app_brand').'
+======================
+ 
+#DATA PELANGAN
+ID PELANGGAN : '.$query->reg_nolayanan.'
+NAMA CLIENT : '.$query->input_nama.'
+TANGGAL AKTIVASI : '.date('d-m-Y', strtotime(Carbon::now())).'
+DISTRIBUSI : '.$request->reg_router.'
+
+DATA TEKNIS
+USER PPPOE : '.$request->reg_username.'
+PASSWORD PPPOE : '.$request->reg_password.'
+SITE :  '.$request->reg_site.'
+POP :  '.$request->reg_pop.'
+OLT :  '.$request->reg_olt.'
+ODP DIST :  '.$request->reg_odc.'
+ODP :  '.$request->reg_odp.'
+SLOT ODP :  '.$request->reg_slot_odp.'
+REDAMAN : '.$request->reg_in_ont.'
+PAKET : '.$query->paket_nama.'
+';
+
+
+
+                Pesan::create($aktivasi_closed);
+
                 }
                      
 
