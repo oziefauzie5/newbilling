@@ -197,21 +197,21 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 $pesan_pelanggan['nama'] = $request->input_nama;
                 $pesan_pelanggan['status'] = $status_pesan;
                 $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
-    Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
-    
-    No.Layanan : *' . $request->reg_nolayanan . '*
-    Nama : *' . $request->input_nama . '*
-    Alamat pasang : ' . $request->input_alamat_pasang . '
-    Paket : *' . $paket_nama->paket_nama . '*
-    Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-    Biaya tagihan : ' . number_format($request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso). '
-    Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
-    
-    Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
-    
-    --------------------
-    Pesan ini bersifat informasi dan tidak perlu dibalas
-    *'.Session::get('app_brand').'*
+Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
+
+No.Layanan : *' . $request->reg_nolayanan . '*
+Nama : *' . $request->input_nama . '*
+Alamat pasang : ' . $request->input_alamat_pasang . '
+Paket : *' . $paket_nama->paket_nama . '*
+Jenis tagihan : ' . $request->reg_jenis_tagihan . '
+Biaya tagihan : ' . number_format($request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso). '
+Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
+
+Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
+
+--------------------
+Pesan ini bersifat informasi dan tidak perlu dibalas
+*'.Session::get('app_brand').'*
     ';
             }
 

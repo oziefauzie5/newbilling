@@ -105,7 +105,7 @@ class TiketController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
 
         $site = Auth::user()->site;
         $pembuat = Auth::user()->id;
