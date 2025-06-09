@@ -188,7 +188,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Foto Rumah</label>
+        <label class="col-sm-2 col-form-label">Foto Rumah (jpeg) </label>
         <div class="col-sm-4">
           <input  type="file" class="form-control-file" name="reg_img"  value="{{ Session::get('reg_img') }}">
         </div>

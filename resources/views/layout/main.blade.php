@@ -235,7 +235,7 @@
 						<li class="nav-item {{\Route::is('admin.psb.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#base">
 								<i class="fas fa-users"></i>
-								<p>FTTH</p>
+								<p>Data Pelanggan</p>
 								<span class="caret"></span>
 							</a>
 							<div class="collapse" id="base">

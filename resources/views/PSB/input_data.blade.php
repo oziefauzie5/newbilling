@@ -91,15 +91,15 @@
                               <div class="form-group row">
                                   <label class="col-sm-2 col-form-label" >Kota/Kabupaten</label>
                                   <div class="col-sm-4">
-                                    <input id="" type="text" class="form-control" value="{{ Session::get('kota') }}" name="kota sesuai Ktp">
+                                    <input id="" type="text" class="form-control" value="{{ Session::get('kota') }}" name="kota">
                                   </div>
                                   <label class="col-sm-1 col-form-label" >RW</label>
                                   <div class="col-sm-2">
-                                  <input id="" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw sesuai Ktp">
+                                  <input id="" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw">
                                 </div>
                                   <label class="col-sm-1 col-form-label" >RT</label>
                                   <div class="col-sm-2">
-                                  <input id="" type="number" class="form-control" value="{{ Session::get('rt') }}" name="rt sesuai Ktp">
+                                  <input id="" type="number" class="form-control" value="{{ Session::get('rt') }}" name="rt">
                                 </div>
                               </div>
                               <div class="card-header bg-primary">

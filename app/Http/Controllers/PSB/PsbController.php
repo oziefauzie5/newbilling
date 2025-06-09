@@ -239,7 +239,7 @@ class PsbController extends Controller
         Session::flash('input_maps', $request->input_maps);
         Session::flash('input_keterangan', strtoupper($request->input_keterangan));
         
-        
+        // dd($request->all());
         $request->validate([
             'input_nama' => 'required',
             'input_email' => 'required',
@@ -270,14 +270,14 @@ class PsbController extends Controller
             'input_hp_2.unique' => 'Nomor Whatsapp 2 sudah terdaftar',
             'kecamatan.required'=> 'Kecamatan tidak boleh kosong',
             'kelurahan.required'=> 'Kelurahan tidak boleh kosong',
-            'kota.required'=> 'Kota tidak boleh kosong',
-            'rw.required'=> 'Rw tidak boleh kosong',
-            'rt.required'=> 'Rt tidak boleh kosong',
+            // 'kota.required'=> 'Kota tidak boleh kosong',
+            // 'rw.required'=> 'Rw tidak boleh kosong',
+            // 'rt.required'=> 'Rt tidak boleh kosong',
             'kecamatan1.required'=> 'Kecamatan tidak boleh kosong',
             'kelurahan1.required'=> 'Kelurahan alamat pemasangan tidak boleh kosong',
             'kota1.required'=> 'kota alamat pemasangan tidak boleh kosong',
-            'rw1.required'=> 'Rw alamat pemasangan tidak boleh kosong',
-            'rt1.required'=> 'Rt alamat pemasangan tidak boleh kosong',
+            // 'rw1.required'=> 'Rw alamat pemasangan tidak boleh kosong',
+            // 'rt1.required'=> 'Rt alamat pemasangan tidak boleh kosong',
         ]);
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
                 $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);

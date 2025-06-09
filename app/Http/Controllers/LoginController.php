@@ -80,7 +80,7 @@ class LoginController extends Controller
                 ->first();
             $request->session()->put('nama_roles', $datas->nama_roles);
 
-            if ($datas->role_id != 11 & $datas->role_id != 10 & $datas->role_id != 12 & $datas->role_id != 13) {
+            if ($datas->role_id != 11 & $datas->role_id != 10 & $datas->role_id != 12 & $datas->role_id != 13 & $datas->role_id != 15 & $datas->role_id != 16) {
                 return redirect()->route('admin.home');
             } elseif ($datas->role_id == 11) {
                 return redirect()->route('admin.teknisi.index');
@@ -91,7 +91,11 @@ class LoginController extends Controller
                 return redirect()->route('admin.sales.sales');
             } elseif ($datas->role_id == 13) {
                 return redirect()->route('admin.biller.index');
-            } else {
+            } elseif ($datas->role_id == 15) {
+                return redirect()->route('admin.sales.sales');
+            } elseif ($datas->role_id == 16) {
+                return redirect()->route('admin.sales.sales');
+            }else {
             }
         } else {
             return redirect()->route('adminapp')->with('failed', 'Username atau password salah');

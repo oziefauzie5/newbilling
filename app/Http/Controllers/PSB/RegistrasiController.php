@@ -162,7 +162,9 @@ class RegistrasiController extends Controller
             }else{
                 $status_pesan = '10';
             }
-            
+
+            if($request->reg_jenis_tagihan == 'PRABAYAR'){
+
             $paket_nama = Paket::where('corporate_id',Session::get('corp_id'))->where('paket_id',$request->reg_profile)->select('paket_nama')->first();
             $pesan_pelanggan['layanan'] = 'CS';
             $pesan_pelanggan['corporate_id' ]= Session::get('corp_id');
@@ -179,16 +181,39 @@ Nama : *' . $request->input_nama . '*
 Alamat pasang : ' . $request->input_alamat_pasang . '
 Paket : *' . $paket_nama->paket_nama . '*
 Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso . '
 Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
-
-Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
 
 --------------------
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*
 ';
-
+            } elseif ($request->reg_jenis_tagihan == 'PASCABAYAR') {
+                $paket_nama = Paket::where('corporate_id',Session::get('corp_id'))->where('paket_id',$request->reg_profile)->select('paket_nama')->first();
+                $pesan_pelanggan['layanan'] = 'CS';
+                $pesan_pelanggan['corporate_id' ]= Session::get('corp_id');
+                $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
+                $pesan_pelanggan['ket'] = 'registrasi';
+                $pesan_pelanggan['target'] = $request->input_hp;
+                $pesan_pelanggan['nama'] = $request->input_nama;
+                $pesan_pelanggan['status'] = $status_pesan;
+                $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
+    Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
+    
+    No.Layanan : *' . $request->reg_nolayanan . '*
+    Nama : *' . $request->input_nama . '*
+    Alamat pasang : ' . $request->input_alamat_pasang . '
+    Paket : *' . $paket_nama->paket_nama . '*
+    Jenis tagihan : ' . $request->reg_jenis_tagihan . '
+    Biaya tagihan : ' . number_format($request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso). '
+    Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
+    
+    Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
+    
+    --------------------
+    Pesan ini bersifat informasi dan tidak perlu dibalas
+    *'.Session::get('app_brand').'*
+    ';
+            }
 
             $pesan_group['layanan'] = 'CS';
             $pesan_group['pesan_id_site'] = $request->reg_site;
@@ -1077,8 +1102,9 @@ Terimakasih.
 
         $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'pakets.*', 'routers.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->where('reg_progres', '>=', 90)
             ->where('reg_progres', '<=', 100)
             ->orderBy('tgl', 'DESC');
