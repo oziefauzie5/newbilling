@@ -156,7 +156,7 @@ class TiketController extends Controller
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
         $pesan_pelanggan['status'] = $status_pesan;
         $pesan_pelanggan['nama'] = $data['data_pelanggan']->input_nama;
-        $pesan_pelanggan['pesan'] = '               -- TIKET '.strtoupper($request->tiket_jenis).' --
+        $pesan_pelanggan['pesan'] = '               -- WO '.strtoupper($request->tiket_jenis).' --
 
 Pelanggan yth
 Tiket anda sudah masuk ke system kami.

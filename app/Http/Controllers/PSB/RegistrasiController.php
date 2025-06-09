@@ -215,28 +215,27 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     ';
             }
 
-            $pesan_group['layanan'] = 'CS';
-            $pesan_group['pesan_id_site'] = $request->reg_site;
-            $pesan_group['ket'] = 'registrasi';
-            $pesan_group['corporate_id']= Session::get('corp_id');
-            $pesan_group['target'] = env('GROUP_REGISTRASI');;
-            $pesan_group['nama'] = $request->input_nama;
-            $pesan_group['status'] = $status_pesan;
-            $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
+            // $pesan_group['layanan'] = 'CS';
+            // $pesan_group['pesan_id_site'] = $request->reg_site;
+            // $pesan_group['ket'] = 'registrasi';
+            // $pesan_group['corporate_id']= Session::get('corp_id');
+            // $pesan_group['target'] = env('GROUP_REGISTRASI');;
+            // $pesan_group['nama'] = $request->input_nama;
+            // $pesan_group['status'] = $status_pesan;
+//             $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
 
-Antrian pemasangan tanggal ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
+// Antrian pemasangan tanggal ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
 
-No.Layanan : *' . $request->reg_nolayanan . '*
-Nama : ' . $request->input_nama . '
-Alamat : ' . $request->input_alamat_pasang .
-                '
-Paket : *' . $paket_nama->paket_nama . '*
-Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn +  $request->reg_kode_unik + $request->reg_bph_uso . '
-Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
+// No.Layanan : *' . $request->reg_nolayanan . '*
+// Nama : ' . $request->input_nama . '
+// Alamat : ' . $request->input_alamat_pasang .
+//                 '
+// Paket : *' . $paket_nama->paket_nama . '*
+// Jenis tagihan : ' . $request->reg_jenis_tagihan . '
+// Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn +  $request->reg_kode_unik + $request->reg_bph_uso . '
+// Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
 
-Diregistrasi Oleh : *' . $user_nama . '*
-';
+// Diregistrasi Oleh : *' . $user_nama . '*';
 
 
             Pesan::create([
@@ -260,7 +259,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 '
             ]);
             Pesan::create($pesan_pelanggan);
-            Pesan::create($pesan_group);
+            // Pesan::create($pesan_group);
             Registrasi::create($data);
             Data_Tiket::create($tiket);
             
