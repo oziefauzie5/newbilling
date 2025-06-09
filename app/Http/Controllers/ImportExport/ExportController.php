@@ -16,6 +16,7 @@ use App\Imports\InvoiceImport;
 use App\Imports\JurnalImport;
 use App\Imports\KategoriImport;
 use App\Imports\LaporanImport;
+use App\Imports\MitraImport;
 use App\Imports\MutasiImport;
 use App\Imports\OdcImport;
 use App\Imports\OdpImport;
@@ -221,6 +222,15 @@ class ExportController extends Controller
     public function import_kategori(Request $request)
     {
         Excel::import(new KategoriImport,request()->file('file'));
+        $notifikasi = [
+            'pesan' => 'Berhasil import Data',
+            'alert' => 'success',
+        ];
+        return redirect()->route('admin.home')->with($notifikasi);
+    }
+    public function import_mitra(Request $request)
+    {
+        Excel::import(new MitraImport,request()->file('file'));
         $notifikasi = [
             'pesan' => 'Berhasil import Data',
             'alert' => 'success',

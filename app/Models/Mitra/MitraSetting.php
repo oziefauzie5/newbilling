@@ -18,8 +18,11 @@ class MitraSetting extends Model
         'mts_limit_minus',
         'mts_komisi',
         'mts_wilayah',
+        'created_at',
+            'updated_at',
     ];
 
+     public $timestamps = false;
     function user_mitra()
     {
         return $this->hasOne(User::class,'id','mts_user_id');
