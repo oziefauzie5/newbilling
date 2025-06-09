@@ -22,12 +22,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
 
-        // $schedule->job(new ProssesSuspand)->dailyAt('05:50');
-        // $schedule->job(new ProssesTagihan)->dailyAt('08:10');
+        $schedule->job(new ProssesSuspand)->dailyAt('05:50');
+        $schedule->job(new ProssesTagihan)->dailyAt('08:10');
         // $schedule->job(new ProssesIsolir)->everySecond();
         // $schedule->job(new NotifTelatPembayaran)->dailyAt('09:00');
         // $schedule->job(new ProsesBayarPengurus)->dailyAt('07:20');
-        // $schedule->job(new SendMessage)->everyTwentySeconds();
+        $schedule->job(new SendMessage)->everyTwentySeconds();
     }
 
     /**
