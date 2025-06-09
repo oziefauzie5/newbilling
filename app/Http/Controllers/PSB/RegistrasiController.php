@@ -757,13 +757,26 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
  $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
 
+  $ODP = Data_Odp::query()
+                        ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+                        ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+                        ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
+                        ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+                        ->where('data__odcs.corporate_id',Session::get('corp_id'))
+                        ->where('data__odps.odp_id',$request->reg_odp)
+                        ->select('data__odps.id as id_odp','data__odcs.odc_nama','data__olts.olt_nama','data_pops.pop_nama','data__sites.site_nama')
+                        ->get();
+
+                        dd($ODP->site_nama);
+
+
                 FtthInstalasi::updateOrCreate(
                 [
-                    'id'=> $request-> reg_idpel,
+                    'id'=> $request->reg_idpel,
                 ],
                 [
                     'corporate_id'=> Session::get('corp_id'),
-                    'data__odp_id'=> $ODP->id,
+                    'data__odp_id'=> $ODP->id_odp,
                     'reg_noc'=> $user_admin,
                     'reg_in_ont'=> $request->reg_in_ont,
                     'reg_slot_odp'=> $request->reg_slot_odp,
@@ -832,7 +845,7 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 Pesan::create($pesan_pelanggan);
 
                 } elseif($query->reg_jenis_tagihan == 'PASCABAYAR'){
-                      $pesan_closed['layanan'] = 'NOC';
+                $pesan_closed['layanan'] = 'NOC';
                 $pesan_closed['corporate_id'] = Session::get('corp_id');
                 $pesan_closed['ket'] = 'Aktivasi';
                 $pesan_closed['status'] = $status_pesan;
@@ -851,6 +864,8 @@ Terimakasih.
 
                 Pesan::create($pesan_closed);
                 }
+
+                
 
                 $aktivasi_closed['layanan'] = 'NOC';
                 $aktivasi_closed['corporate_id'] = Session::get('corp_id');
