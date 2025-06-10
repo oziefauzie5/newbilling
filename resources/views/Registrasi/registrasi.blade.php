@@ -105,9 +105,13 @@
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Site</label>
+                  <label class="col-sm-2 col-form-label">Site Id</label>
                   <div class="col-sm-4">
                     <input type="text" class="form-control" id="tampil_site" name="reg_site" value="" required>
+                  </div>
+                  <label class="col-sm-2 col-form-label">Site Area</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="tampil_site_nama" name="reg_site_nama" value="" required>
                   </div>
               </div>
               <div class="form-group row">

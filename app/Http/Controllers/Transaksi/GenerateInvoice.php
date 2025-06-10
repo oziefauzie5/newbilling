@@ -24,19 +24,21 @@ class GenerateInvoice extends Controller
         $year = $now->format('Y');
         $th = $now->format('y');
         $addonemonth =  date('m',strtotime(Carbon::create(Carbon::now())->addMonth(1)->toDateString()));
+        // $addonemonth =  07;
 
         // $test = date($year . '-' . $month . '-'.$last_day);
 
+        
+        
         // dd($addonemonth);
+        
 
-
-
-
-        $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'reg_idpel')
-            ->join('pakets', 'pakets.paket_id', '=', 'reg_profile')
-            ->where('reg_progres', '>=', 3)
-            ->where('reg_progres', '<=', 5)
-            ->whereMonth('reg_tgl_jatuh_tempo', '!=', $addonemonth)
+        $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->where('registrasis.reg_progres', '>=', 3)
+            ->where('registrasis.reg_progres', '<=', 5)
+            ->whereMonth('registrasis.reg_tgl_jatuh_tempo', '!=', $addonemonth)
             // ->where('reg_nolayanan', '=', 24031948416)
             ->get();
 
@@ -47,10 +49,9 @@ class GenerateInvoice extends Controller
 
         foreach ($data_pelanggan as $dp) {
             if ($dp->reg_status == 'PAID') {
-                // dd($dp->input_nama);
+                
                 $inv_id = $month . $th . sprintf('%04d', $i++);
                 $hari_jt_tempo = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
-
 
                 $cek_hari = date('d', strtotime($dp->reg_tgl_jatuh_tempo));
                 if ($cek_hari == 23) {
@@ -70,6 +71,7 @@ class GenerateInvoice extends Controller
                     $tgl_jt_tempo = date($year . '-' . $month . '-d', strtotime($dp->reg_tgl_jatuh_tempo));
                 }
                 // echo '<table><tr><td>' . $inv_id . '</td><td>' . $dp->reg_nolayanan . '</td><td>' . $dp->input_nama . '</td><td>' . $dp->reg_status . '</td><td>' . date('d-m-Y', strtotime($dp->reg_tgl_jatuh_tempo)) . '</td></tr></table>';
+                // dd($tgl_jt_tempo);
 
 
 
@@ -81,11 +83,8 @@ class GenerateInvoice extends Controller
                     'inv_status' => 'UNPAID',
                     'inv_idpel' => $dp->reg_idpel,
                     'inv_nolayanan' => $dp->reg_nolayanan,
-                    'inv_nama' => $dp->input_nama,
                     'inv_jenis_tagihan' => $dp->reg_jenis_tagihan,
-                    'inv_profile' => $dp->paket_nama,
-                    'inv_mitra' => 'SYSTEM',
-                    'inv_kategori' => 'OTOMATIS',
+                    // 'inv_profile' => $dp->paket_nama,
                     'inv_tgl_tagih' => $hari_tgl_tagih,
                     'inv_tgl_jatuh_tempo' => $tgl_jt_tempo,
                     'inv_tgl_isolir' => $tgl_isolir,
@@ -108,8 +107,8 @@ class GenerateInvoice extends Controller
                 );
                 // dd('test');
             } else {
-                // dd($dp->reg_status);
                 $data_invoice = Invoice::where('inv_idpel', $dp->reg_idpel)->where('inv_status', '!=', 'PAID')->get();
+                // dd($dp->reg_idpel);
 
                 foreach ($data_invoice as $inv) {
                     $inv_id = $inv->inv_id;

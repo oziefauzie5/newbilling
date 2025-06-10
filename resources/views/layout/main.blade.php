@@ -143,7 +143,7 @@
 									</li>
 									<li>
 										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="#">Logout</a>
+										<a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
 									</li>
 								</div>
 							</ul>
@@ -3671,7 +3671,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 				success: function(data) {
 					// console.log(data)
 					if (data) {
-
+						// console.log(data['tampil_site']['id'])
 							$("#cari_data").modal('hide');
 							
 							$('#fee_pic').empty()
@@ -3684,20 +3684,27 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#tampil_idpel').val(data['tampil_data']['id']);
 							$('#tampil_nama').val(data['tampil_data']['input_nama']);
 							$('#tampil_promo').val(data['tampil_data']['input_promo']);
+							$('#tampil_nolay').val(data['nolay']);
+							$('#tampil_username').val(data['username']);
+							
+							$('#tampil_site_nama').val(data['tampil_site']['site_nama']);
+							$('#tampil_maps').val(data['tampil_data']['input_maps']);
+							$('#tampil_tgl').val(data['tampil_data']['input_tgl']);
+							$('#tampil_site').val(data['tampil_site']['id']);
+
+							if(data['tampil_data']['input_subseles']){
+								$('#tampil_subsales').val(data['tampil_data']['input_subseles']);
+								} else {
+								$('#tampil_subsales').val('');
+							}
+
 							if(data['tampil_data']['input_promo']){
 								$('#tampil_harga_promo').val(data['tampil_promo']['promo_harga']);
 							}else {
 								$('#tampil_harga_promo').val(0);
 							}
-							$('#tampil_nolay').val(data['nolay']);
-							$('#tampil_username').val(data['username']);
-							
-							$('#tampil_maps').val(data['tampil_data']['input_maps']);
-							$('#tampil_tgl').val(data['tampil_data']['input_tgl']);
-							
-							$('#tampil_subsales').val(data['tampil_data']['input_subseles']);
+
 							$('#tampil_keterangan').val(data['tampil_data']['input_keterangan']);
-							$('#tampil_site').val(data['tampil_data']['data__site_id']);
 							$('#reg_mitra').empty()
 							$('#reg_mitra').append('<option value="">--None--</option>')
 							

@@ -49,6 +49,17 @@
                       <div class="row">
                         <div class="col-sm-12">
                           <div class="form-group">
+                            <label>Site</label>
+                            <select name="paket_site" id="" class="form-control">
+                              <option value="">--Pilih Site-- </option>
+                              @foreach($data_site as $st)
+                              <option value="{{$st->id}}">{{$st->site_nama}}</option>
+                              @endforeach
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
                             <label>Router</label>
                             <select type="text" class="form-control" name="router_id" value="{{ Session::get('router_id') }}" required>
                               <option value="">--Pilih Router-- </option>
@@ -289,8 +300,6 @@
                   <tr>
                     <th>#</th>
                     <th>Nama Paket</th>
-                    <th>HPP</th>
-                    <th>Komisi</th>
                     <th>Rate Limit</th>
                     <th>Shared</th>
                     <th>Aktif</th>
@@ -304,8 +313,6 @@
                     @if($d->paket_nama == 'APPBILL_ISOLIR')
                     <td>{{$d->paket_id}}</td>
                     <td >{{$d->paket_nama}}</td>
-                    <td >Rp. {{ number_format( $d->paket_harga) ??'0'}} </td>
-                    <td >Rp. {{ number_format( $d->paket_komisi) ??'0'}}</td>
                     <td >{{$d->paket_limitasi ??'-'}}</td>
                     <td >{{$d->paket_shared ??'-'}}</td>
                     <td >{{$d->paket_masa_aktif ??'-'}}</td>
@@ -320,8 +327,6 @@
                     @else 
                     <td>{{$d->paket_id}}</td>
                     <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_nama}}</td>
-                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">Rp. {{ number_format( $d->paket_harga)}}</td>
-                    <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">Rp. {{ number_format( $d->paket_komisi)}}</td>
                     <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_limitasi}}</td>
                     <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_shared}}</td>
                     <td data-toggle="modal" data-target="#modal_edit{{$d->paket_id}}">{{$d->paket_masa_aktif}}</td>

@@ -393,14 +393,17 @@ class InvoiceController extends Controller
             ->select([
                 // 'laporans.*',
                 'registrasis.reg_idpel',
+                'registrasis.reg_username',
+                'registrasis.reg_password',
                 'invoices.*',
                 'sub_invoices.*',
                 'input_data.input_nama',
                 'pakets.paket_nama',
                 'routers.*',
+                'routers.id as id_router',
                 ])
                 ->first();
-                // dd($tampil);
+                // dd($tampil->id_router);
         if($tampil){
               $tgl_bayar = date('Y-m-d H:i:s', strtotime(Carbon::now()));
 
@@ -493,7 +496,9 @@ class InvoiceController extends Controller
             $status = 'SUSPEND';
         } elseif ($tgl_bayar < $tampil->inv_tgl_jatuh_tempo) {
             $status = 'UNPAID';
-            $router = Router::whereId($tampil->reg_router)->first();
+            // dd($tampil->reg_router);
+            $router = Router::whereId($tampil->id_router)->first();
+
             $ip =   $router->router_ip . ':' . $router->router_port_api;
             $user = $router->router_username;
             $pass = $router->router_password;
@@ -504,11 +509,11 @@ class InvoiceController extends Controller
                 $cek_secret = $API->comm('/ppp/secret/print', [
                     '?name' => $tampil->reg_username,
                 ]);
+                // dd($cek_secret);/
                 if ($cek_secret) {
                     $API->comm('/ppp/secret/set', [
                         '.id' => $cek_secret[0]['.id'],
                         'profile' =>  $tampil->paket_nama == '' ? '' : $tampil->paket_nama,
-                        'comment' => 'By: ROLBACK -' . $kurangi_tgl_jth_tempo == '' ? '' : 'By: ROLBACK -' . $kurangi_tgl_jth_tempo,
                         'disabled' => 'no',
                     ]);
                 } else {

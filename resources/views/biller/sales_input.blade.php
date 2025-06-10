@@ -207,14 +207,14 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label>Tanggal Pemasangan</label>
-                      <input id="" type="date" class="form-control" value="{{ Session::get('tgl_pasang') }}" name="tgl_pasang"  required>
+                      <label>Tanggal Registrasi</label>
+                      <input id="" type="date" class="form-control" value="{{ Session::get('tgl_regist') }}" name="tgl_regist"  required>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kode Promo</label>
-                      <input id="" type="date" class="form-control" value="{{ Session::get('input_promo') }}" name="input_promo"  required>
+                      <input id="" type="text" class="form-control" value="{{ Session::get('input_promo') }}" name="input_promo"  required>
                     </div>
                   </div>
                   <div class="card-footer">

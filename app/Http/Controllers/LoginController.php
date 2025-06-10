@@ -29,8 +29,8 @@ class LoginController extends Controller
 
     public function login_proses(Request $request)
     {
-        $CORP_ID = Corporate::where('corp_url',url('/'))->first('id');
-        // dd($CORP_ID );
+        $CORP_ID = Corporate::where('corp_url',url('/'))->first();
+        // dd($CORP_ID->corp_url);
         $request->validate([
             'username' => 'required',
             'password' => 'required',

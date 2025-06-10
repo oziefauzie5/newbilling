@@ -747,56 +747,49 @@ class RegistrasiApiController extends Controller
     }
     public function update_router(Request $request, $id)
     {
+        // dd($id);
         $nama_admin = Auth::user()->name;
 
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('registrasis.reg_idpel', $id)
             ->first();
 
-            if ($query->reg_jenis_tagihan == 'FREE') {
-                $comment = '( Done ) FREE  ';
-        } else {
-            $comment = '( Done ) ' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
-        }
-        
-        if ($query->reg_jenis_tagihan == 'FREE') {
-            $comment = 'FREE Update-Router-By:' . $nama_admin;
-        } else {
-            $comment = 'Update-Router By: ' . $nama_admin . ' Jatuh-Tempo :' . date('Y-m-d', strtotime($query->reg_tgl_jatuh_tempo));
-        }
-        
-        $ip =   $query->router_ip . ':' . $query->router_port_api;
-        $user = $query->router_username;
-        $pass = $query->router_password;
-        $API = new RouterosAPI();
-        $API->debug = false;
+            // dd($query->reg_router);
+
+        // $ip =   $query->router_ip . ':' . $query->router_port_api;
+        // $user = $query->router_username;
+        // $pass = $query->router_password;
+        // $API = new RouterosAPI();
+        // $API->debug = false;
         
         // dd($request->reg_router);
-        if ($request->reg_router == $query->reg_router) {
+        // if ($request->reg_router == $query->reg_router) {
             $before_ip =   $query->router_ip . ':' . $query->router_port_api;
             $before_user = $query->router_username;
             $before_pass = $query->router_password;
             $before_API = new RouterosAPI();
             $before_API->debug = false;
+            // dd( $before_API);
 
-            if ($query->reg_layanan == 'PPP') {
+            // if ($query->reg_layanan == 'PPP') {
 
                 if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+                    // dd($query->reg_username);
                     $before_secret = $before_API->comm('/ppp/secret/print', [
                         '?name' => $query->reg_username,
                     ]);
+                    // dd($before_secret);
                     if ($before_secret) {
 
                         $before_API->comm('/ppp/secret/set', [
                             '.id' => $before_secret[0]['.id'],
                             'name' => $request->reg_username  == '' ? '' : $request->reg_username,
                             'password' => $request->reg_password  == '' ? '' : $request->reg_password,
-                            'comment' => $comment == '' ? '' : $comment,
                         ]);
 
-                        $data['reg_ip_address'] = $request->reg_ip_address;
                         $data['reg_username'] = $request->reg_username;
                         $data['reg_password'] = $request->reg_password;
                         // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
@@ -812,10 +805,8 @@ class RegistrasiApiController extends Controller
                             'password' => $request->reg_password  == '' ? '' : $request->reg_password,
                             'service' => 'pppoe',
                             'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                            'comment' => $comment == '' ? '' : $comment,
                             'disabled' => 'no',
                         ]);
-                        $data['reg_ip_address'] = $request->reg_ip_address;
                         $data['reg_username'] = $request->reg_username;
                         $data['reg_password'] = $request->reg_password;
                         // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
@@ -833,224 +824,227 @@ class RegistrasiApiController extends Controller
                     );
                     return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 }
-            } elseif ($query->reg_layanan == 'HOTSPOT') {
-                if ($before_API->connect($before_ip, $before_user, $before_pass)) {
-                    $before_secret = $before_API->comm('/ip/hotspot/user/print', [
-                        '?name' => $query->reg_username,
-                    ]);
-                    if ($before_secret) {
+            // } elseif ($query->reg_layanan == 'HOTSPOT') {
+            //     if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+            //         $before_secret = $before_API->comm('/ip/hotspot/user/print', [
+            //             '?name' => $query->reg_username,
+            //         ]);
+            //         if ($before_secret) {
 
-                        $before_API->comm('/ip/hotspot/user/set', [
-                            '.id' => $before_secret[0]['.id'],
-                            'name' => $request->reg_username  == '' ? '' : $request->reg_username,
-                            'password' => $request->reg_password  == '' ? '' : $request->reg_password,
-                            'comment' => $comment == '' ? '' : $comment,
-                        ]);
+            //             $before_API->comm('/ip/hotspot/user/set', [
+            //                 '.id' => $before_secret[0]['.id'],
+            //                 'name' => $request->reg_username  == '' ? '' : $request->reg_username,
+            //                 'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+            //             ]);
 
-                        $data['reg_ip_address'] = $request->reg_ip_address;
-                        $data['reg_username'] = $request->reg_username;
-                        $data['reg_password'] = $request->reg_password;
-                        // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
-                        Registrasi::where('reg_idpel', $id)->update($data);
-                        $notifikasi = array(
-                            'pesan' => 'Berhasil merubah data Internet',
-                            'alert' => 'success',
-                        );
-                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                    } else {
-                        $before_API->comm('/ip/hotspot/user/add', [
-                            'name' => $request->reg_username == '' ? '' : $request->reg_username,
-                            'password' => $request->reg_password  == '' ? '' : $request->reg_password,
-                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                            'comment' => $comment  == '' ? '' : $comment,
-                            'disabled' => 'no',
-                        ]);
-                        $data['reg_ip_address'] = $request->reg_ip_address;
-                        $data['reg_username'] = $request->reg_username;
-                        $data['reg_password'] = $request->reg_password;
-                        // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
-                        Registrasi::where('reg_idpel', $id)->update($data);
-                        $notifikasi = array(
-                            'pesan' => 'Berhasil merubah data Internet',
-                            'alert' => 'success',
-                        );
-                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                    }
-                } else {
-                    $notifikasi = array(
-                        'pesan' => 'Router Disconect',
-                        'alert' => 'error',
-                    );
-                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                }
-            }
-        } else {
+            //             $data['reg_ip_address'] = $request->reg_ip_address;
+            //             $data['reg_username'] = $request->reg_username;
+            //             $data['reg_password'] = $request->reg_password;
+            //             // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+            //             Registrasi::where('reg_idpel', $id)->update($data);
+            //             $notifikasi = array(
+            //                 'pesan' => 'Berhasil merubah data Internet',
+            //                 'alert' => 'success',
+            //             );
+            //             return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+            //         } else {
+            //             $before_API->comm('/ip/hotspot/user/add', [
+            //                 'name' => $request->reg_username == '' ? '' : $request->reg_username,
+            //                 'password' => $request->reg_password  == '' ? '' : $request->reg_password,
+            //                 'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+            //                 'disabled' => 'no',
+            //             ]);
+            //             $data['reg_ip_address'] = $request->reg_ip_address;
+            //             $data['reg_username'] = $request->reg_username;
+            //             $data['reg_password'] = $request->reg_password;
+            //             // $data['reg_stt_perangkat'] = $request->reg_stt_perangkat;
+            //             Registrasi::where('reg_idpel', $id)->update($data);
+            //             $notifikasi = array(
+            //                 'pesan' => 'Berhasil merubah data Internet',
+            //                 'alert' => 'success',
+            //             );
+            //             return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+            //         }
+            //     } else {
+            //         $notifikasi = array(
+            //             'pesan' => 'Router Disconect',
+            //             'alert' => 'error',
+            //         );
+            //         return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+            //     }
+            // }
+        // } else {
 
-            if ($query->reg_layanan == 'PPP') {
-                if ($API->connect($ip, $user, $pass)) {
-                    $secret = $API->comm('/ppp/profile/print', [
-                        '?name' => $query->paket_nama,
-                    ]);
-                    if ($secret) {
+        //     if ($query->reg_layanan == 'PPP') {
+        //         if ($API->connect($ip, $user, $pass)) {
+        //             $secret = $API->comm('/ppp/profile/print', [
+        //                 '?name' => $query->paket_nama,
+        //             ]);
+        //             if ($secret) {
 
-                        $API->comm('/ppp/secret/add', [
-                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
-                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
-                            'service' => 'pppoe',
-                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                            'comment' => $comment == '' ? '' : $comment,
-                            'disabled' => 'no',
-                        ]);
+        //                 $API->comm('/ppp/secret/add', [
+        //                     'name' => $query->reg_username == '' ? '' : $query->reg_username,
+        //                     'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+        //                     'service' => 'pppoe',
+        //                     'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+        //                     'disabled' => 'no',
+        //                 ]);
 
-                        $secret_after = $API->comm('/ppp/secret/print', [
-                            '?name' => $query->reg_username,
-                        ]);
-                        if ($secret_after) {
-                            $before_ip =   $query->router_ip . ':' . $query->router_port_api;
-                            $before_user = $query->router_username;
-                            $before_pass = $query->router_password;
-                            $before_API = new RouterosAPI();
-                            $before_API->debug = false;
+        //                 $secret_after = $API->comm('/ppp/secret/print', [
+        //                     '?name' => $query->reg_username,
+        //                 ]);
+        //                 if ($secret_after) {
+        //                     $before_ip =   $query->router_ip . ':' . $query->router_port_api;
+        //                     $before_user = $query->router_username;
+        //                     $before_pass = $query->router_password;
+        //                     $before_API = new RouterosAPI();
+        //                     $before_API->debug = false;
 
-                            if ($before_API->connect($before_ip, $before_user, $before_pass)) {
-                                $before_secret = $before_API->comm('/ppp/secret/print', [
-                                    '?name' => $query->reg_username,
-                                ]);
-                                if ($before_secret) {
-                                    $before_API->comm('/ppp/secret/remove', [
-                                        '.id' => $before_secret[0]['.id'],
-                                    ]);
-                                }
-                                Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
-                            }
-                        }
+        //                     if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+        //                         $before_secret = $before_API->comm('/ppp/secret/print', [
+        //                             '?name' => $query->reg_username,
+        //                         ]);
+        //                         if ($before_secret) {
+        //                             $before_API->comm('/ppp/secret/remove', [
+        //                                 '.id' => $before_secret[0]['.id'],
+        //                             ]);
+        //                         }
+        //                         Registrasi::where('reg_idpel', $id)->update([
+        //                             'reg_username' => $request->reg_username,
+        //                             'reg_password' => $request->reg_password,
+        //                         ]);
+        //                     }
+        //                 }
 
-                        $notifikasi = array(
-                            'pesan' => 'Berhasil merubah router',
-                            'alert' => 'success',
-                        );
-                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                    } else {
+        //                 $notifikasi = array(
+        //                     'pesan' => 'Berhasil merubah router',
+        //                     'alert' => 'success',
+        //                 );
+        //                 return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+        //             } else {
 
 
-                        $API->comm('/ip/pool/add', [
-                            'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
-                            'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
-                        ]);
-                        $API->comm('/ppp/profile/add', [
-                            'name' =>  $query->paket_nama == '' ? '' : $query->paket_nama,
-                            'rate-limit' => $query->paket_limitasi == '' ? '' : $query->paket_limitasi,
-                            'local-address' => $query->paket_lokal == '' ? '' : $query->paket_lokal,
-                            'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
-                            'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
-                            'queue-type' => 'default-small' == '' ? '' : 'default-small',
-                            'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
-                            'only-one' => 'yes',
-                            'disabled' => 'no',
-                        ]);
-                        $API->comm('/ppp/secret/add', [
-                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
-                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
-                            'service' => 'pppoe',
-                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                            'comment' => $comment == '' ? '' : $comment,
-                            'disabled' => 'no',
-                        ]);
+        //                 $API->comm('/ip/pool/add', [
+        //                     'name' =>  'APPBILL' == '' ? '' : 'APPBILL',
+        //                     'ranges' =>  '10.100.100.254-10.100.107.254' == '' ? '' : '10.100.100.254-10.100.107.254',
+        //                 ]);
+        //                 $API->comm('/ppp/profile/add', [
+        //                     'name' =>  $query->paket_nama == '' ? '' : $query->paket_nama,
+        //                     'rate-limit' => $query->paket_limitasi == '' ? '' : $query->paket_limitasi,
+        //                     'local-address' => $query->paket_lokal == '' ? '' : $query->paket_lokal,
+        //                     'remote-address' => 'APPBILL' == '' ? '' : 'APPBILL',
+        //                     'comment' => 'default by appbill ( jangan diubah )' == '' ? '' : 'default by appbill ( jangan diubah )',
+        //                     'queue-type' => 'default-small' == '' ? '' : 'default-small',
+        //                     'dns-server' => $query->router_dns == '' ? '' : $query->router_dns,
+        //                     'only-one' => 'yes',
+        //                     'disabled' => 'no',
+        //                 ]);
+        //                 $API->comm('/ppp/secret/add', [
+        //                     'name' => $query->reg_username == '' ? '' : $query->reg_username,
+        //                     'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+        //                     'service' => 'pppoe',
+        //                     'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+        //                     'comment' => $comment == '' ? '' : $comment,
+        //                     'disabled' => 'no',
+        //                 ]);
 
-                        $secret_after = $API->comm('/ppp/secret/print', [
-                            '?name' => $query->reg_username,
-                        ]);
-                        if ($secret_after) {
-                            $before_ip =   $query->router_ip . ':' . $query->router_port_api;
-                            $before_user = $query->router_username;
-                            $before_pass = $query->router_password;
-                            $before_API = new RouterosAPI();
-                            $before_API->debug = false;
+        //                 $secret_after = $API->comm('/ppp/secret/print', [
+        //                     '?name' => $query->reg_username,
+        //                 ]);
+        //                 if ($secret_after) {
+        //                     $before_ip =   $query->router_ip . ':' . $query->router_port_api;
+        //                     $before_user = $query->router_username;
+        //                     $before_pass = $query->router_password;
+        //                     $before_API = new RouterosAPI();
+        //                     $before_API->debug = false;
 
-                            if ($before_API->connect($before_ip, $before_user, $before_pass)) {
-                                $before_secret = $before_API->comm('/ppp/secret/print', [
-                                    '?name' => $query->reg_username,
-                                ]);
-                                if ($before_secret) {
-                                    $before_API->comm('/ppp/secret/remove', [
-                                        '.id' => $before_secret[0]['.id'],
-                                    ]);
-                                    Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
-                                }
-                            }
-                        }
+        //                     if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+        //                         $before_secret = $before_API->comm('/ppp/secret/print', [
+        //                             '?name' => $query->reg_username,
+        //                         ]);
+        //                         if ($before_secret) {
+        //                             $before_API->comm('/ppp/secret/remove', [
+        //                                 '.id' => $before_secret[0]['.id'],
+        //                             ]);
+        //                              Registrasi::where('reg_idpel', $id)->update([
+        //                             'reg_username' => $request->reg_username,
+        //                             'reg_password' => $request->reg_password,
+        //                         ]);
+        //                         }
+        //                     }
+        //                 }
 
-                        $notifikasi = array(
-                            'pesan' => 'Berhasil merubah router',
-                            'alert' => 'success',
-                        );
-                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                    }
-                } else {
-                    $notifikasi = array(
-                        'pesan' => 'Router Disconect',
-                        'alert' => 'error',
-                    );
-                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                }
-            } elseif ($query->reg_layanan == 'HOTSPOT') {
-                if ($API->connect($ip, $user, $pass)) {
-                    $secret = $API->comm('/ip/hotspot/user/profile/print', [
-                        '?name' => $query->paket_nama,
-                    ]);
-                    if ($secret) {
-                        $API->comm('/ip/hotspot/user/add', [
-                            'name' => $query->reg_username == '' ? '' : $query->reg_username,
-                            'password' => $query->reg_password  == '' ? '' : $query->reg_password,
-                            'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
-                            'comment' => $comment  == '' ? '' : $comment,
-                            'disabled' => 'no',
-                        ]);
+        //                 $notifikasi = array(
+        //                     'pesan' => 'Berhasil merubah router',
+        //                     'alert' => 'success',
+        //                 );
+        //                 return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+        //             }
+        //         } else {
+        //             $notifikasi = array(
+        //                 'pesan' => 'Router Disconect',
+        //                 'alert' => 'error',
+        //             );
+        //             return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+        //         }
+        //     } elseif ($query->reg_layanan == 'HOTSPOT') {
+        //         if ($API->connect($ip, $user, $pass)) {
+        //             $secret = $API->comm('/ip/hotspot/user/profile/print', [
+        //                 '?name' => $query->paket_nama,
+        //             ]);
+        //             if ($secret) {
+        //                 $API->comm('/ip/hotspot/user/add', [
+        //                     'name' => $query->reg_username == '' ? '' : $query->reg_username,
+        //                     'password' => $query->reg_password  == '' ? '' : $query->reg_password,
+        //                     'profile' => $query->paket_nama  == '' ? 'default' : $query->paket_nama,
+        //                     'comment' => $comment  == '' ? '' : $comment,
+        //                     'disabled' => 'no',
+        //                 ]);
 
-                        $secret_after = $API->comm('/ip/hotspot/user/print', [
-                            '?name' => $query->reg_username,
-                        ]);
-                        if ($secret_after) {
-                            $before_ip =   $query->router_ip . ':' . $query->router_port_api;
-                            $before_user = $query->router_username;
-                            $before_pass = $query->router_password;
-                            $before_API = new RouterosAPI();
-                            $before_API->debug = false;
+        //                 $secret_after = $API->comm('/ip/hotspot/user/print', [
+        //                     '?name' => $query->reg_username,
+        //                 ]);
+        //                 if ($secret_after) {
+        //                     $before_ip =   $query->router_ip . ':' . $query->router_port_api;
+        //                     $before_user = $query->router_username;
+        //                     $before_pass = $query->router_password;
+        //                     $before_API = new RouterosAPI();
+        //                     $before_API->debug = false;
 
-                            if ($before_API->connect($before_ip, $before_user, $before_pass)) {
-                                $before_secret = $before_API->comm('/ip/hotspot/user/print', [
-                                    '?name' => $query->reg_username,
-                                ]);
-                                if ($before_secret) {
-                                    $before_API->comm('/ip/hotspot/active/remove', [
-                                        '.id' => $before_secret[0]['.id'],
-                                    ]);
-                                }
-                                Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
-                            }
-                        }
+        //                     if ($before_API->connect($before_ip, $before_user, $before_pass)) {
+        //                         $before_secret = $before_API->comm('/ip/hotspot/user/print', [
+        //                             '?name' => $query->reg_username,
+        //                         ]);
+        //                         if ($before_secret) {
+        //                             $before_API->comm('/ip/hotspot/active/remove', [
+        //                                 '.id' => $before_secret[0]['.id'],
+        //                             ]);
+        //                         }
+        //                         Registrasi::where('reg_idpel', $id)->update(['reg_router' => $request->reg_router]);
+        //                     }
+        //                 }
 
-                        $notifikasi = array(
-                            'pesan' => 'Berhasil merubah router',
-                            'alert' => 'success',
-                        );
-                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                    } else {
+        //                 $notifikasi = array(
+        //                     'pesan' => 'Berhasil merubah router',
+        //                     'alert' => 'success',
+        //                 );
+        //                 return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+        //             } else {
 
-                        $notifikasi = array(
-                            'pesan' => 'Gagal edit router. Paket tidak tersedia pada router ini',
-                            'alert' => 'error',
-                        );
-                        return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                    }
-                } else {
-                    $notifikasi = array(
-                        'pesan' => 'Router Disconect',
-                        'alert' => 'error',
-                    );
-                    return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
-                }
-            }
-        }
+        //                 $notifikasi = array(
+        //                     'pesan' => 'Gagal edit router. Paket tidak tersedia pada router ini',
+        //                     'alert' => 'error',
+        //                 );
+        //                 return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+        //             }
+        //         } else {
+        //             $notifikasi = array(
+        //                 'pesan' => 'Router Disconect',
+        //                 'alert' => 'error',
+        //             );
+        //             return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+        //         }
+        //     }
+        // }
     }
 }

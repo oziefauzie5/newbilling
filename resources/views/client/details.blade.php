@@ -20,8 +20,7 @@
                   <li class="list-group-item"><div>Jenis Layanan <br><h5 class="font-weight-bold">{{$details->reg_layanan}}</h5></div></li>
                   <li class="list-group-item"><div>Paket <br><h5 class="font-weight-bold">{{$details->paket_nama}}</h5></div></li>
                   <li class="list-group-item"><div>Tanggal Daftar <br><h5 class="font-weight-bold">{{$details->input_tgl}}</h5></div></li>
-                  <li class="list-group-item"><div>Tanggal Isolir <br><h5 class="font-weight-bold">{{$details->reg_tgl_jatuh_tempo}}</h5></div></li>
-                  <li class="list-group-item"><div>Status Internet <br><h5 class="font-weight-bold">{{$details->reg_tgl_jatuh_tempo}}</h5></div></li>
+                  <li class="list-group-item"><div>Tanggal Isolir <br><h5 class="font-weight-bold">{{date('d-m-Y',strtotime($details->reg_tgl_jatuh_tempo))}}</h5></div></li>
                   <li class="list-group-item"><div>Alamat Pasang <br><h5 class="font-weight-bold">{{$details->input_alamat_pasang}}</h5></div></li>
                 </ul>
               </div>

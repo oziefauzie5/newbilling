@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\Pesan\Pesan;
+use App\Models\Model_Has_Role;
 
 class SalesController extends Controller
 {
@@ -61,6 +62,11 @@ class SalesController extends Controller
         $user = (new GlobalController)->user_admin();
         $user_nama = $user['user_nama'];
         $user_id = $user['user_id'];
+
+        $cek_role = Model_Has_Role::join('roles','roles.id','=','model_has_roles.role_id')
+                        ->where('model_has_roles.model_id',$user_id)
+                        ->first();
+        
         
 
         $id_cust = (new GlobalController)->idpel_();
@@ -118,6 +124,7 @@ class SalesController extends Controller
         $site_nama = $get_site[1];
 
         if ($cek_nohp == 0) {
+
             $input['input_tgl'] = $data['input_tgl'];
             $input['input_nama'] = strtoupper($request->input_nama);
             $input['corporate_id']= Session::get('corp_id');
@@ -129,14 +136,19 @@ class SalesController extends Controller
             $input['input_email'] = $request->input_email;
             $input['input_alamat_ktp'] = strtoupper($request->input_alamat_ktp).', RT'. strtoupper($request->rt_ktp).'/RW'. strtoupper($request->rw_ktp).', KEL. '. strtoupper($request->kelurahan_ktp).', KEC. '. strtoupper($request->kecamatan_ktp).', KOTA/KAB. '. strtoupper($request->kota_ktp);
             $input['input_alamat_pasang'] = strtoupper($request->input_alamat).', RT'. strtoupper($request->rt).'/RW'. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($site_nama);
-            $input['input_sales'] = $user_id;
             $input['input_subseles'] = strtoupper($request->sub_sales);
             $input['password'] = Hash::make($nomorhp);
             $input['input_maps'] = $request->input_maps;
             $input['input_status'] = 'INPUT DATA';
             $input['input_keterangan'] = $request->input_keterangan;
             $input['input_promo'] = $request->input_promo;
-            // dd($input);
+            if($cek_role->role_id == 12){
+                // dd('INI SALES');
+                $input['input_sales'] = $user_id;
+            } else {
+                // dd('INI BUKAN SALES');
+                $input['input_sales'] = '';
+            }
             InputData::create($input);
 
             $status = (new GlobalController)->whatsapp_status();
@@ -160,14 +172,13 @@ class SalesController extends Controller
             $pesan_group['pesan'] = '               -- LIST REGISTRASI --
 
 Nama : ' . strtoupper($request->input_nama) . '
-Alamat : ' . strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($request->kota).'
+Alamat : ' . strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($site_nama).'
 
 Paket : *' . strtoupper($request->input_keterangan) . '*
-Tanggal Pasang : ' . date('d-m-Y', strtotime($request->tgl_pasang)) . ' 
+Tanggal Registrasi : ' . date('d-m-Y', strtotime($request->tgl_regist)) . ' 
 
 Input Data By : *' . strtoupper($user_nama) . '*
 ';
-
 Pesan::create($pesan_group);
 
 
@@ -211,7 +222,6 @@ Pesan::create($pesan_group);
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('ftth_fees', 'ftth_fees.fee_idpel', '=', 'registrasis.reg_idpel')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-            // ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
             ->where('ftth_fees.reg_mitra', '=', $user_id)
             ->where('reg_progres', '>=', 3)
             ->orderBy('tgl', 'DESC')

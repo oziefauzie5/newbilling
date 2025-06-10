@@ -84,7 +84,7 @@ class ProssesIsolir implements ShouldQueue
                 $pesan_group['nama'] = $data_pelanggan->input_nama;
                 $pesan_group['pesan'] = '
 Pelanggan yang terhormat,
-Kami informasikan bahwa layanan internet anda saat ini *TERISOLIR* otomatis oleh sistem❗, kami mohon maaf atas ketidaknyamanannya
+Kami informasikan bahwa layanan internet anda saat ini *TERISOLIR* otomatis oleh sistem!!!, kami mohon maaf atas ketidaknyamanannya
 Untuk dapat digunakan kembali, segera lakukan pembayaran atas tagihan sebagai berikut :
 
 No.Layanan : *' . $data_pelanggan->reg_nolayanan . '*

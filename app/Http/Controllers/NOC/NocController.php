@@ -266,6 +266,8 @@ class NocController extends Controller
     #EDIT DATA PELANGGAN
     public function isolir_manual($id)
     {
+
+        // dd(Session::get('corp_url'));
          $data_pelanggan = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
                 ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
                 ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
@@ -336,7 +338,7 @@ class NocController extends Controller
                 $pesan_group['nama'] = $data_pelanggan->input_nama;
                 $pesan_group['pesan'] = '
 Pelanggan yang terhormat,
-Kami informasikan bahwa layanan internet anda saat ini *TERISOLIR* otomatis oleh sistem❗, kami mohon maaf atas ketidaknyamanannya
+Kami informasikan bahwa layanan internet anda saat ini *TERISOLIR* otomatis oleh sistem !!!, kami mohon maaf atas ketidaknyamanannya
 Untuk dapat digunakan kembali, segera lakukan pembayaran atas tagihan sebagai berikut :
 
 No.Layanan : *' . $data_pelanggan->reg_nolayanan . '*
@@ -367,8 +369,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                     return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 } else {
                     $notifikasi = array(
-                        'pesan' => 'Pelanggan Disconnected',
-                        'alert' => 'error',
+                        'pesan' => 'Pelanggan sedang disconnected',
+                        'alert' => 'warning',
                     );
                     return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
                 }

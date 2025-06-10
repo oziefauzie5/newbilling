@@ -79,10 +79,13 @@ class RegistrasiController extends Controller
     {
         // return response()->json($id);
         $data['tampil_data'] =  InputData::where('corporate_id',Session::get('corp_id'))->with('user_sales','input_mitra')->where('input_data.id', $id)->first();
+        $data['tampil_site'] =  Data_Site::where('corporate_id',Session::get('corp_id'))->where('id', $data['tampil_data']->data__site_id)->first();
 
         if($data['tampil_data']->input_promo){
             $data['tampil_promo'] =  KodePromo::where('corporate_id',Session::get('corp_id'))->where('promo_id', $data['tampil_data']->input_promo)->first();
         }
+
+        // dd($data['tampil_site']);
 
         
         $date = date('Ym');
@@ -755,7 +758,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
         // dd($request->reg_router);
 
- $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
+//  $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
 
   $ODP = Data_Odp::query()
                         ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
@@ -764,10 +767,10 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                         ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
                         ->where('data__odcs.corporate_id',Session::get('corp_id'))
                         ->where('data__odps.odp_id',$request->reg_odp)
-                        ->select('data__odps.id as id_odp','data__odcs.odc_nama','data__olts.olt_nama','data_pops.pop_nama','data__sites.site_nama')
-                        ->get();
+                        ->select('data__odps.id as id_odp','data__odps.odp_id','data__odcs.odc_nama','data__olts.olt_nama','data_pops.pop_nama','data__sites.site_nama')
+                        ->first();
 
-                        dd($ODP->site_nama);
+
 
 
                 FtthInstalasi::updateOrCreate(
@@ -880,21 +883,20 @@ Terimakasih.
 ID PELANGGAN : '.$query->reg_nolayanan.'
 NAMA CLIENT : '.$query->input_nama.'
 TANGGAL AKTIVASI : '.date('d-m-Y', strtotime(Carbon::now())).'
-DISTRIBUSI : '.$request->reg_router.'
 
 DATA TEKNIS
 USER PPPOE : '.$request->reg_username.'
 PASSWORD PPPOE : '.$request->reg_password.'
-SITE :  '.$request->reg_site.'
-POP :  '.$request->reg_pop.'
-OLT :  '.$request->reg_olt.'
-ODP DIST :  '.$request->reg_odc.'
+SITE :  '.$ODP->site_nama.'
+POP :  '.$ODP->pop_nama.'
+OLT :  '.$ODP->olt_nama.'
+ODP DIST :  '.$ODP->odc_nama.'
 ODP :  '.$request->reg_odp.'
 SLOT ODP :  '.$request->reg_slot_odp.'
 REDAMAN : '.$request->reg_in_ont.'
 PAKET : '.$query->paket_nama.'
 ';
-
+                        // dd($aktivasi_closed);
 
 
                 Pesan::create($aktivasi_closed);

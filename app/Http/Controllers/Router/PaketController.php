@@ -9,6 +9,7 @@ use App\Models\Router\Paket;
 use App\Models\Router\Router;
 use App\Models\Router\RouterosAPI;
 use Illuminate\Http\Request;
+use App\Models\Aplikasi\Data_Site;
 use Illuminate\Support\Facades\Session;
 
 class PaketController extends Controller
@@ -17,6 +18,8 @@ class PaketController extends Controller
     {
         $data['data_paket'] = Paket::where('corporate_id',Session::get('corp_id'))->with('paket_router')->get();
         $data['data_router'] = Router::where('corporate_id',Session::get('corp_id'))->get();
+        $data['data_site'] = Data_Site::where('corporate_id',Session::get('corp_id'))->get();
+        // dd($data['data_site']);
         return view('Router/paket', $data);
     }
     public function paket_harga()
@@ -33,6 +36,7 @@ class PaketController extends Controller
         Session::flash('paket_lokal', $request->paket_lokal);
         Session::flash('router_id', $request->router_id);
         Session::flash('paket_layanan', $request->paket_layanan);
+        Session::flash('paket_site', $request->paket_site);
         $request->validate([
             'paket_nama' => 'unique:pakets',
         ], [
@@ -45,7 +49,8 @@ class PaketController extends Controller
         $data['paket_shared'] = $request->paket_shared;
         $data['paket_lokal'] = $request->paket_lokal;
         $data['paket_masa_aktif'] = $request->paket_masa_aktif;
-        $data['paket_harga'] = $request->paket_harga;
+        $data['paket_harga'] = 0;
+        $data['paket_site'] = $request->paket_site;
         $data['paket_komisi'] = 0;
         $data['paket_layanan'] = 'PPP';
         $data['paket_status'] = 'Disable';
