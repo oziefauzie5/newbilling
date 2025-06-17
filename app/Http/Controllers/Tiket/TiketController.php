@@ -89,7 +89,7 @@ class TiketController extends Controller
     {
         // $data['no_tiket'] = (new GlobalController)->nomor_tiket();
         $data['data_site'] = Data_Site::where('site_status','Enable')->get();
-        $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->where('reg_progres','>',3)->get();
+        $data['input_data'] = InputData::join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')->where('reg_progres','>=',3)->get();
         return view('tiket/buat_tiket', $data);
     }
 
@@ -265,7 +265,7 @@ Antrian tiket = ' . $count . '
             ->where('tiket_id', $id)
             ->first();
 
-        $data['ftth_instalasi'] = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+        $ftth_instalasi = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
             ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
             ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
@@ -281,6 +281,19 @@ Antrian tiket = ' . $count . '
                 'data_pops.pop_nama',
             ])
             ->first();
+
+            $data['ftth_instalasi'] = $ftth_instalasi;
+        //     dd($ftth_instalasi);
+        // if($ftth_instalasi){
+        //     if($ftth_instalasi->data__odp_id == 0 ){
+        //         $data['ftth_instalasi'] = 0;
+        //     } else {
+        //     }
+        // } else {
+        //     $data['ftth_instalasi'] = 1;
+        // }
+
+        // dd($data['tiket']);
 
         $query = Data_Tiket::join('registrasis', 'registrasis.reg_idpel', '=', 'data__tikets.tiket_idpel')
             ->join('input_data', 'input_data.id', '=', 'data__tikets.tiket_idpel')
@@ -327,6 +340,8 @@ Antrian tiket = ' . $count . '
     public function tiket_update(Request $request, $id)
     {
         // $no_tiket = (new GlobalController)->nomor_tiket();
+
+        
         $datetime = date('Y-m-d h:m:s', strtotime(carbon::now()));
 
         // $admin_closed = Auth::user()->id;
@@ -404,10 +419,19 @@ Antrian tiket = ' . $count . '
                 } else {
                     $status_pesan = '10';
                 }
+
+            if($request->tiket_nama == 'Instalasi PSB'){
+                $pesan_closed['file'] = '';
+            } elseif($request->tiket_nama == 'Reaktivasi layanan'){         
+                $pesan_closed['file'] = '';
+            } else {
+                $pesan_closed['file'] = $path;
+            }
+
+
                 $pesan_closed['layanan'] = 'NOC';
                 $pesan_closed['corporate_id'] = Session::get('corp_id');
                 $pesan_closed['ket'] = 'tiket';
-                $pesan_closed['pesan_id_site'] = $request->tiket_site;
                 $pesan_closed['status'] = $status_pesan;
                 $pesan_closed['target'] = env('GROUP_TEKNISI');
                 $pesan_closed['nama'] = 'Group Teknisi';

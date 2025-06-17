@@ -125,40 +125,40 @@
             <table id="input_data" class="display table table-striped table-hover" >
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>Aksi</th>
+                  <th>Site</th>
+                  <th>Id User</th>
                   <th>Foto</th>
                   <th>Nama</th>
                   <th>Level</th>
                   <th>Whatsapp</th>
-                  <th>Site</th>
                   <th width="250%">Alamat Lengkap</th>
                   <th>Tanggal Gabung</th>
                   <th>Status</th>
-                  <th>Action</th>
                 </tr>
             </thead>
               <tbody>
                 @foreach ($data_user as $d)
                 <tr>
-                      <td>{{$d->id}}</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->id_user}}" class="btn btn-link btn-primary btn-lg">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <td>{{$d->site_nama ?? '-'}}</td>
+                  <td>{{$d->id_user}}</td>
                       <td> <img src="{{ asset('storage/photo-user/'.$d->photo ?? '-') }}" width="100" alt="" title=""></img></td>
-                      <td>{{$d->name ?? '-'}}</td>
+                      <td>{{$d->nama_user ?? '-'}}</td>
                       <td>{{$d->level ?? '-'}}</td>
                       <td>{{$d->hp ?? '-'}}</td>
-                      <td>{{$d->user_site->site_nama ?? '-'}}</td>
                       <td width="250px">{{$d->alamat_lengkap ?? '-'}}</td>
                       <td>{{date('d-m-Y', strtotime($d->tgl_gabung)) ?? '-'}}</td>
                       <td>{{$d->status_user}}</td>
-                      <td>
-                        <div class="form-button-action">
-                          <button type="button" data-toggle="modal" data-target="#modal_edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
-                            <i class="fa fa-edit"></i>
-                          </button>
-                        </div>
-                      </td>
                     </tr>
                       <!-- Modal Edit -->
-                      <div class="modal fade" id="modal_edit{{$d->id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal fade" id="modal_edit{{$d->id_user}}" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header no-bd">
@@ -171,14 +171,14 @@
                               </button>
                             </div>
                             <div class="modal-body">
-                              <form action="{{route('admin.user.edit',['id'=>$d->id])}}" method="POST" enctype="multipart/form-data">
+                              <form action="{{route('admin.user.edit',['id'=>$d->id_user])}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
                                   <div class="col-sm-12">
                                     <div class="form-group">
                                       <label>Nama Lengkap</label>
-                                      <input id="name" type="text" class="form-control" name="name" value="{{ $d->name }}" required>
+                                      <input id="name" type="text" class="form-control" name="name" value="{{ $d->nama_user }}" required>
                                     </div>
                                   </div>
                                   <div class="col-sm-12">

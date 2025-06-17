@@ -88,7 +88,7 @@
                   </td>
                       <td>{{$d->data_lap_id}}</td>
                       <td>{{date('d-m-Y',strtotime($d->data_lap_tgl))}}</td>
-                      <td>{{$d->data_lap_keterangan}}</td>
+                      <td>{{$d->name}}</td>
                       <td>Rp. {{number_format($d->data_lap_pendapatan)}}</td>
                       <td>Rp. {{number_format($d->data_lap_tunai)}}</td>
                     </tr>

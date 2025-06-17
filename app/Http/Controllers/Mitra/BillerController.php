@@ -439,7 +439,7 @@ class BillerController extends Controller
                         $mutasi['mt_kredit'] = '0';
                         $mutasi['mt_saldo'] = $total;
                         $mutasi['mt_biaya_adm'] = $biller->mts_komisi;
-                        $mutasi['mt_cabar'] = 'BILLER';
+                        $mutasi['mt_cabar'] = $akun->id;;
                         
                         Mutasi::create($mutasi);
             

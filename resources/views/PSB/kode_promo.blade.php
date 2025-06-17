@@ -42,8 +42,17 @@
                                   <input type="text" class="form-control" value="{{Session::get('promo_nama')}}" name="promo_nama">
                               </div>
                               <div class="col-6 form-group">
-                                  <label>Promo Id</label>
+                                  <label>Paket</label>
                                   <input type="text" class="form-control" value="{{Session::get('promo_id')}}" name="promo_id">
+                              </div>
+                              <div class="col-6 form-group">
+                                  <label>Promo Id</label>
+                                  <select name="promo_paket_id" class="form-control" id="">
+                                    <option value="">--Pilih Paket--</option>
+                                    @foreach($data_paket as $p)
+                                    <option value="{{$p->paket_id}}">{{$p->paket_nama}} | {{$p->paket_harga}}</option>
+                                    @endforeach
+                                  </select>
                               </div>
                               <div class="col-6 form-group">
                                   <label>Promo Harga</label>
@@ -138,6 +147,15 @@
                               <div class="col-6 form-group">
                                   <label>Promo Id</label>
                                   <input type="text" class="form-control" value="{{$d->promo_id}}" name="promo_id">
+                              </div>
+                                 <div class="col-6 form-group">
+                                  <label>Promo Id</label>
+                                  <select name="promo_paket_id" class="form-control" id="">
+                                    <option value="{{$d->paket_nama}}">{{$d->paket_nama}}</option>
+                                    @foreach($data_paket as $p)
+                                    <option value="{{$p->paket_id}}">{{$p->paket_nama}} | {{$p->paket_harga}}</option>
+                                    @endforeach
+                                  </select>
                               </div>
                               <div class="col-6 form-group">
                                   <label>Promo Harga</label>

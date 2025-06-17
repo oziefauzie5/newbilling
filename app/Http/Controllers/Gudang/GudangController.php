@@ -278,7 +278,7 @@ class GudangController extends Controller
     }
     public function data_group_barang_keluar()
     {
-        $query = Data_BarangKeluar::orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
+        $query = Data_BarangKeluar::orderBy('data__barang_keluars.created_at', 'DESC')
             ->select('data__barang_keluars.bk_id', 'data__barang_keluars.bk_waktu_keluar', 'data__barang_keluars.bk_keperluan', 'data__barang_keluars.bk_penerima', 'data__barang_keluars.bk_jenis_laporan',  DB::raw('count(data__barang_keluars.bk_id) as count'), DB::raw('sum(data__barang_keluars.bk_harga) as harga'))
             ->groupBy('data__barang_keluars.bk_keperluan', 'data__barang_keluars.bk_penerima', 'data__barang_keluars.bk_jenis_laporan', 'data__barang_keluars.bk_id', 'data__barang_keluars.bk_waktu_keluar');
 
@@ -287,26 +287,27 @@ class GudangController extends Controller
         // dd($data['stok_gudang']);
         return view('gudang/data_group_barang_keluar', $data);
     }
-    // public function print_skb(Request $request)
-    // {
-    //     $data['profile_perusahaan'] = SettingAplikasi::first();
-    //     $data['nama_admin'] = Auth::user()->name;
-    //     $data['idpel'] = $request->query('idpel');
-    //     $query = Data_BarangKeluar::join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
-    //         ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
-    //         ->where('bk_idpel', $data['idpel']);
-    //     $data['print_skb'] = $query->get();
-    //     $query1 = Data_BarangKeluar::where('bk_idpel', $data['idpel']);
-    //     $data['data'] = $query1->first();
-    //     $data['total'] = $query1->sum('bk_harga');
-    //     // dd($data['print_skb']);
-    //     return view('gudang/print_skb', $data);
-    //     $pdf = App::make('dompdf.wrapper');
-    //     $html = view('gudang/print_skb', $data)->render();
-    //     $pdf->loadHTML($html);
-    //     $pdf->setPaper('A4', 'potraid');
-    //     return $pdf->download($data['data']->bk_id . '.pdf');
-    // }
+    public function print_skb(Request $request)
+    {
+        $data['profile_perusahaan'] = SettingAplikasi::first();
+        $data['nama_admin'] = Auth::user()->name;
+        $data['skb'] = $request->query('skb');
+        $query = Data_BarangKeluar::join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
+            ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
+            ->where('bk_id', $data['skb']);
+        $data['print_skb'] = $query->get();
+        // dd( $data['print_skb']);
+        $query1 = Data_BarangKeluar::where('bk_id', $data['skb']);
+        $data['data'] = $query1->first();
+        $data['total'] = $query1->sum('bk_harga');
+        // dd($data['print_skb']);
+        return view('gudang/print_skb', $data);
+        $pdf = App::make('dompdf.wrapper');
+        $html = view('gudang/print_skb', $data)->render();
+        $pdf->loadHTML($html);
+        $pdf->setPaper('A4', 'potraid');
+        return $pdf->download($data['data']->bk_id . '.pdf');
+    }
     public function form_barang_keluar()
     {
         $data['tittle'] = 'Barang Keluar';
@@ -326,14 +327,15 @@ class GudangController extends Controller
     {
 
         // $no_sk = 'SKB/250206/0118';
-        $no_sk = (new GlobalController)->no_surat_keterang();
+        $no_sk = time();
         $data_barang_keluar = Data_BarangKeluar::where('bk_id', $no_sk)->first();
 
         if ($data_barang_keluar) {
             return response()->json('failed');
         } else {
+            //  return response()->json($request->all());
 
-            $no_tiket = (new GlobalController)->nomor_tiket();
+            $no_tiket = time();
             // $barang_id = ['aple', 'manggan', 'jeruk'];
             $admin = Auth::user()->id;
             $barang_id = $request->barang_id;
@@ -353,12 +355,15 @@ class GudangController extends Controller
             // return response()->json($$request->all());
             for ($x = 0; $x < count($barang_id); $x++) {
                 Data_BarangKeluar::create([
+                    'corporate_id' => Session::get('corp_id'),
                     'bk_id' => $no_sk,
                     'bk_jenis_laporan' => $bk_jenis_laporan,
                     'bk_id_barang' => $barang_id[$x],
+                    'bk_idpel' => 0,
                     'bk_id_tiket' => $no_tiket,
                     'bk_kategori' => $barang_kategori[$x],
                     'bk_jumlah' => $jumlah_barang[$x],
+
                     'bk_before' => $before[$x],
                     'bk_after' => $after[$x],
                     'bk_terpakai' => $terpakai[$x] + $jumlah_barang[$x],
@@ -367,30 +372,28 @@ class GudangController extends Controller
                     'bk_admin_input' => $admin,
                     'bk_penerima' => $bk_penerima,
                     'bk_status' => 0,
-                    'bk_keterangan' => '',
                     'bk_harga' => $jumlah_harga[$x],
+
+
                 ]);
-                Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update(
-                    [
+                Data_Barang::whereIn('barang_id', [$barang_id[$x]])->update([
                         'barang_nama_pengguna' => $bk_jenis_laporan,
                         'barang_digunakan' => $terpakai[$x] + $jumlah_barang[$x],
                         'barang_status' => '1',
-                    ]
-                );
+                    ]);
             }
-            Data_Tiket::create([
-                'tiket_id' => $no_tiket,
-                // 'tiket_kode' => 'T-' . $no_tiket,
-                // 'tiket_site' => $tiket_site,
-                'tiket_type' => $tiket_type,
-                'tiket_jenis' => $bk_jenis_laporan,
-                'tiket_status' => 'NEW',
-                'tiket_nama' => $bk_keperluan,
-                'tiket_keterangan' => $bk_keperluan,
-                'tiket_pembuat' => $admin,
-            ]);
-
             return response()->json('success');
+            // Data_Tiket::create([
+            //     'corporate_id' => Session::get('corp_id'),
+            //     'tiket_id' => $no_tiket,
+            //     'tiket_type' => $tiket_type,
+            //     'tiket_jenis' => $bk_jenis_laporan,
+            //     'tiket_status' => 'NEW',
+            //     'tiket_nama' => $bk_keperluan,
+            //     'tiket_keterangan' => $bk_keperluan,
+            //     'tiket_pembuat' => $admin,
+            // ]);
+
             // }
         }
         // $no_sk = 
@@ -415,16 +418,15 @@ class GudangController extends Controller
             $after = $request->after;
             $terpakai = $request->terpakai;
             $tiket_idpel = $request->tiket_idpel;
+            // return response()->json($no_sk);
             for ($x = 0; $x < count($barang_id); $x++) {
                 Data_BarangKeluar::create([
-                    // 'bk_id' => '12121',
-                    // 'bk_id' => $no_sk,
-                    'bk_id_barang' => $barang_id[$x],
                     'corporate_id' => Session::get('corp_id'),
-                    'bk_jenis_laporan' => $tiket_jenis,
+                    'bk_id_barang' => $barang_id[$x],
                     'bk_idpel' => $tiket_idpel,
-                    // 'bk_id_tiket' => $tiket_id,
-                    // 'bk_kategori' => $barang_kategori[$x],
+                    'bk_id' => $no_sk,
+                    'bk_jenis_laporan' => $tiket_jenis,
+                    'bk_kategori' => $barang_kategori[$x],
                     'bk_harga' => $jumlah_harga[$x],
                     'bk_before' => $before[$x],
                     'bk_after' => $after[$x],
@@ -436,6 +438,7 @@ class GudangController extends Controller
                     'bk_penerima' => $tiket_teknisi1,
                     'bk_status' => 0,
                 ]);
+                // return response()->json($request->all());
                 // return response()->json($request->all());
                 Data_Barang::where('corporate_id',Session::get('corp_id'))->whereIn('barang_id', [$barang_id[$x]])->update(
                     [

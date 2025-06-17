@@ -38,6 +38,8 @@ use App\Models\PSB\FtthFee;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\PSB\ApiController;
 use App\Models\PSB\FtthInstalasi;
+// use CURLFile;
+use App\Models\Aplikasi\Corporate;
 
 class InvoiceController extends Controller
 {
@@ -1091,6 +1093,35 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
     // $cek_null = Invoice::where('inv_total','NULL')->get();
     // dd($cek_null);
     
+        // $Paket =  Registrasi::join('input_data','input_data.id','=','registrasis.reg_idpel')
+        //                     ->join('pakets','pakets.paket_id','=','registrasis.reg_profile')    
+        //                     ->where('reg_profile',33)->get();
+        // foreach ($Paket as $p) {
+        //     InputData::where('id',$p->reg_idpel)->update(
+        //         'input_promo'=>'promoramadhan25',
+        //     )
+        //    echo '<table><tr><td>'.$p->input_nama.'</td><td>'.$p->paket_nama.'</td><td>'.$p->reg_harga.'</td><td>'.$p->input_promo.'</td></tr></table>';
+        // }
+
+        //  $cek = Registrasi::join('input_data','input_data.id','=','registrasis.reg_idpel')->where('reg_progres','<=',5)->whereIn('reg_idpel',[3232,3226,3185,3175,3049,3042,3006,3005,1669,3352,3351,3353,3354,3355])->get();
+        //  foreach ($cek as $d) {
+        //     echo '<table><tr><td>'.$d->reg_idpel.'</td><td>'.$d->input_nama.'</td></tr></table>';
+        //     FtthInstalasi::create([
+        //         'id' => $d->reg_idpel,
+        //         'corporate_id' => Session::get('corp_id'),
+        //         'data__odp_id' => '0',
+        //         'reg_noc' => '2',
+        //         'reg_router' => '2',
+        //         'reg_in_ont' => '25,44',
+        //         'reg_slot_odp' => '0',
+        //     ]);
+        //  }
+   
+        // $cek = FtthInstalasi::join('input_data','input_data.id','=','ftth_instalasis.id')->get();
+        //  foreach ($cek as $d) {
+        //     echo '<table><tr><td>'.$d->id.'</td><td>'.$d->input_nama.'</td></tr></table>';
+        //  }
+
 
     }
 }

@@ -185,7 +185,7 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Paket </label>
-                      <select class="form-control" name="input_keterangan" id="" >
+                      <select class="form-control" name="input_keterangan" id="input_paket" >
                         <option value="">--Pilih Paket--</option>
                         @foreach ($paket as $p)
                            <option value="{{$p->paket_nama}}">{{$p->paket_nama.' - '.number_format($p->paket_harga)}}</option> 
@@ -212,9 +212,10 @@
                     </div>
                   </div>
                   <div class="col-sm-12">
-                    <div class="form-group">
+                    <div class="form-group notif_validasi">
                       <label>Kode Promo</label>
-                      <input id="" type="text" class="form-control" value="{{ Session::get('input_promo') }}" name="input_promo"  required>
+                      <input id="validasi_kode_promo" type="text" class="form-control" value="{{ Session::get('input_promo') }}" name="input_promo"  required>
+                      <div class="text-danger" id="pesan"></div>
                     </div>
                   </div>
                   <div class="card-footer">

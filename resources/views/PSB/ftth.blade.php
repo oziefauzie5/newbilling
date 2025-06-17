@@ -201,9 +201,17 @@
                         <i class="fa fa-times"></i>
                       </button>
                     </div>
+                    @role('admin|STAF ADMIN|KEUANGAN')
                     <div class="form-button-action">
                       <a href="{{route('admin.reg.cek_invoice', ['id'=>$d->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-link"><i class="fa fa-file"></i></button></a>
                     </div>
+                    @if($d->reg_progres == '3')
+                     <a href="{{route('admin.reg.bukti_kas_keluar',['id'=>$d->reg_idpel])}}" target="_blank">
+                     <button type="button" class="btn btn-link btn-dark">
+                       <i class="fa fa-print"></i>
+                     </button></a>
+                     @endif
+                    @endrole
                   </td>
                   @if($d->reg_progres == 'MIGRASI')
                   <td class="text-info">{{$d->reg_nolayanan}}</td>

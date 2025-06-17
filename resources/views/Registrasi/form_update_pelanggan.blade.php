@@ -284,6 +284,7 @@
         <!-- <div class="col-md-12"> -->
           <!-- <div class="card">
             <div class="card-body"> -->
+              @role('admin|STAF ADMIN|NOC')
               <form class="form-horizontal"action="{{route('admin.reg.update_router',['id'=>$data->reg_idpel])}}" method="POST">
             @csrf
             @method('PUT')
@@ -330,6 +331,8 @@
                 <label class="col-sm-2 col-form-label font-weight-bold text-danger" >{{ $address}}</label>
               </div>
               </div>
+              @endrole
+              @role('admin|STAF ADMIN|NOC')
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Aksi</label>
               <div class="col-sm-3 mt-1">
@@ -356,6 +359,7 @@
                   @endif        
                 </div>
               </div>
+              @endrole
               @role('admin|STAF ADMIN')
               <div class="card-footer">
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
@@ -369,6 +373,7 @@
 <!-- <div class="col-md-12">
   <div class="card">
     <div class="card-body">  -->
+      @role('admin|STAF ADMIN|NOC')
       <form class="form-horizontal"action="" method="POST"  enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -496,6 +501,7 @@
       </div>
     </div>
     <div class="card-footer">
+    @endrole
     @role('admin|STAF ADMIN')
     <button type="button" class="btn  ">Batal</button>
     <button type="submit" class="btn btn-primary float-right">Simpan</button>
@@ -539,7 +545,7 @@
       </div>
       @endif
    @if($data->reg_progres>=3)
-        @role('admin|STAF ADMIN')
+        @role('admin|STAF ADMIN|KEUANGAN')
               <h3 class="mt-3">BILLING</h3><hr>
               <form class="form-horizontal"action="{{route('admin.psb.update_profile',['id'=>$data->reg_idpel])}}" method="POST">
                 @csrf
@@ -663,14 +669,17 @@
                   </select>
                 </div>
               </div>
+              @role('admin|STAF ADMIN')
               <div class="card-footer mb-3">
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
               </div>
             </form>
+            @endrole
               <div class="form-group row mt-5">
               <div class="col">
                 <a href="{{route('admin.reg.cek_invoice', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Lihat Invoice</button></a>
               </div>
+              @role('admin|STAF ADMIN|')
               <div class="col">
                 <a href="{{route('admin.noc.isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Isolir Manual</button></a>
               </div>
@@ -678,9 +687,10 @@
                 <a href="{{route('admin.noc.buka_isolir_manual', ['id'=>$data->reg_idpel])}}"><button type="button" class="btn btn-primary btn-sm btn-block">Buka Isolir Manual</button></a>
               </div>
             </div>
+            @endrole
             <div class="form-group row">
                 <div class="col">
-
+@role('admin|STAF ADMIN')
                 <!-- Button trigger modal -->
 <button type="button" class="btn btn-dark btn-block btn-sm" data-toggle="modal" data-target="#ubah_tgl">
 Update Tanggal Jatuh Tempo
@@ -747,12 +757,14 @@ Update Tanggal Jatuh Tempo
 @endif
 
               </div>
-                <div class="col">
-
+              @endrole
+              <div class="col">
+                @role('admin|STAF ADMIN')
                 <!-- Button trigger modal -->
-<button type="button" class="btn btn-info btn-block btn-sm" data-toggle="modal" data-target="#ubah_tgl">
-Pindah Rumah
-</button>
+                <button type="button" class="btn btn-info btn-block btn-sm" data-toggle="modal" data-target="#ubah_tgl">
+                  Pindah Rumah
+                </button>
+                @endrole
 
 <!-- Modal -->
 <div class="modal fade" id="ubah_tgl" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

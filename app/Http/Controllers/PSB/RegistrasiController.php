@@ -77,15 +77,23 @@ class RegistrasiController extends Controller
     }
     public function pilih_pelanggan_registrasi($id)
     {
-        // return response()->json($id);
         $data['tampil_data'] =  InputData::where('corporate_id',Session::get('corp_id'))->with('user_sales','input_mitra')->where('input_data.id', $id)->first();
         $data['tampil_site'] =  Data_Site::where('corporate_id',Session::get('corp_id'))->where('id', $data['tampil_data']->data__site_id)->first();
+        // $cek_promo = KodePromo::where('corporate_id',Session::get('corp_id'))
+        //                         ->where('promo_id', $data['tampil_data']->input_promo)
+        //                         ->whereDate('promo_expired', '<=', date('Y-m-d',strtotime(Carbon::now())))
+        //                         ->first();
+        
+        //  if($cek_promo){
+        //      $data['kode_promo'] = $cek_promo->promo_id;
+        //      $data['promo_harga'] = $cek_promo->promo_harga;
+        //     } else {
+        //         $data['kode_promo'] = 'None';
+        //         $data['promo_harga'] = '0';
+        //     }
+            // dd($cek_promo);
 
-        if($data['tampil_data']->input_promo){
-            $data['tampil_promo'] =  KodePromo::where('corporate_id',Session::get('corp_id'))->where('promo_id', $data['tampil_data']->input_promo)->first();
-        }
-
-        // dd($data['tampil_site']);
+        // dd($data);
 
         
         $date = date('Ym');
@@ -171,7 +179,6 @@ class RegistrasiController extends Controller
             $paket_nama = Paket::where('corporate_id',Session::get('corp_id'))->where('paket_id',$request->reg_profile)->select('paket_nama')->first();
             $pesan_pelanggan['layanan'] = 'CS';
             $pesan_pelanggan['corporate_id' ]= Session::get('corp_id');
-            $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
             $pesan_pelanggan['ket'] = 'registrasi';
             $pesan_pelanggan['target'] = $request->input_hp;
             $pesan_pelanggan['nama'] = $request->input_nama;
@@ -194,6 +201,31 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
             } elseif ($request->reg_jenis_tagihan == 'PASCABAYAR') {
                 $paket_nama = Paket::where('corporate_id',Session::get('corp_id'))->where('paket_id',$request->reg_profile)->select('paket_nama')->first();
+                $pesan_pelanggan['layanan'] = 'CS';
+                $pesan_pelanggan['corporate_id' ]= Session::get('corp_id');
+                $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
+                $pesan_pelanggan['ket'] = 'registrasi';
+                $pesan_pelanggan['target'] = $request->input_hp;
+                $pesan_pelanggan['nama'] = $request->input_nama;
+                $pesan_pelanggan['status'] = $status_pesan;
+                $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
+Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
+
+No.Layanan : *' . $request->reg_nolayanan . '*
+Nama : *' . $request->input_nama . '*
+Alamat Pemasangan : ' . $request->input_alamat_pasang . '
+Paket : *' . $paket_nama->paket_nama . '*
+Jenis tagihan : ' . $request->reg_jenis_tagihan . '
+Biaya tagihan : ' . number_format($request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso). '
+Tanggal Pemasangan : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
+
+Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
+
+--------------------
+Pesan ini bersifat informasi dan tidak perlu dibalas
+*'.Session::get('app_brand').'*';
+            } elseif ($request->reg_jenis_tagihan == 'FREE'){
+                  $paket_nama = Paket::where('corporate_id',Session::get('corp_id'))->where('paket_id',$request->reg_profile)->select('paket_nama')->first();
                 $pesan_pelanggan['layanan'] = 'CS';
                 $pesan_pelanggan['corporate_id' ]= Session::get('corp_id');
                 $pesan_pelanggan['pesan_id_site'] = $request->reg_site;
@@ -263,7 +295,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 '
             ]);
             Pesan::create($pesan_pelanggan);
-            // Pesan::create($pesan_group);
+            // // Pesan::create($pesan_group);
             Registrasi::create($data);
             Data_Tiket::create($tiket);
             
@@ -271,16 +303,17 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
             
             // $arr = array( 0 => null, 1=>null, 2=>3, 3=>null); 
-
-        $arr = $request->reg_mitra;
-        foreach ($arr as $key=>$val) 
-        {
+            
+            $arr = $request->reg_mitra;
+            foreach ($arr as $key=>$val) 
+            {
                 if ($val === null)
                 unset($arr[$key]);
         }
         $count_mitra = array_values($arr);
-
-
+        
+        
+        // dd($request->fee);
 
         $fee = $request->fee;
         foreach ($fee as $keye=>$vale) 
@@ -291,6 +324,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         $count_fee = array_values($fee);
 
         $cek_count = count($count_mitra);
+      
 
 
         if($cek_count >= 1){
@@ -340,8 +374,24 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
     public function getPaket(Request $request, $id)
     {
+        
+        // return response()->json($request->kode_promo);
         $data['data_biaya'] = SettingBiaya::first();
         $data['data_paket'] = Paket::where("paket_id", $id)->get();
+
+        $cek_promo = KodePromo::where('corporate_id',Session::get('corp_id'))
+                                ->where('promo_id', $request->kode_promo)
+                                ->where('promo_paket_id', $id)
+                                ->whereDate('promo_expired', '<=', date('Y-m-d',strtotime(Carbon::now())))
+                                ->first();
+        
+         if($cek_promo){
+             $data['kode_promo'] = $cek_promo->promo_id;
+             $data['promo_harga'] = $cek_promo->promo_harga;
+            } else {
+                $data['kode_promo'] = 'None';
+                $data['promo_harga'] = '0';
+            }
         return response()->json($data);
     }
 
@@ -350,11 +400,17 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         $data['profile_perusahaan'] = SettingAplikasi::first();
         $data['nama_admin'] = Auth::user()->name;
         $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            // ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            // ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            // ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
+            // ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            // ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            // ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             // ->join('users', 'users.id', '=', 'input_data.input_sales')
             ->where('registrasis.reg_idpel', $id)
             ->first();
+
+            // dd($data['berita_acara']);
         $seles = User::whereId($data['berita_acara']->input_sales)->first();
         if ($seles) {
             $data['seles'] = $seles->name;
@@ -446,85 +502,86 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
     //     }
     // }
 
-    // public function bukti_kas_keluar($id)
-    // {
-    //     $data['profile_perusahaan'] = SettingAplikasi::first();
-    //     $data['biaya_sales'] = SettingBiaya::first();
-    //     // dd($data['biaya_sales']['biaya_sales_continue']);
-    //     $user = (new GlobalController)->user_admin();
-    //     $data['nama_admin'] = $user['user_nama'];
-    //     $data['id_admin'] = $user['user_id'];
-    //     // $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
-    //     // if ($teknisi) {
-    //     $data['kas'] =  Registrasi::select('registrasis.*', 'input_data.*', 'teknisis.*', 'pakets.*',)
-    //         ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
-    //         ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-    //         ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-    //         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-    //         // ->join('data__barang_keluars', 'data__barang_keluars.bk_id', '=', 'registrasis.reg_skb')
-    //         ->where('registrasis.reg_idpel', $id)
-    //         ->where('teknisis.teknisi_job', 'PSB')
-    //         // ->where('teknisis.teknisi_psb', '>', '0') #Ujicoba Update 16-05
-    //         ->where('teknisis.teknisi_status','1')
-    //         ->first();
+    public function bukti_kas_keluar($id)
+    {
 
-    //     $query = Data_BarangKeluar::select('data__barangs.*', 'data__barang_keluars.*')
-    //         ->join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
-    //         ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
-    //         ->where('bk_idpel', $id);
-    //     $data['print_skb'] = $query->get();
-    //     $query1 = Data_BarangKeluar::where('bk_idpel', $id);
-    //     $data['data'] = $query1->first();
-    //     $data['total'] = $query1->sum('bk_harga');
+        $data['profile_perusahaan'] = SettingAplikasi::first();
+        $data['biaya_sales'] = SettingBiaya::first();
+        // dd($data['biaya_sales']['biaya_sales_continue']);
+        $user = (new GlobalController)->user_admin();
+        // $admin = Auth::user()->id;
+    //     $nama_admin = Auth::user()->name;
+        $data['nama_admin'] = Auth::user()->name;
+        $data['id_admin'] = Auth::user()->id;
+        // $teknisi = Teknisi::where('teknisi_idpel', $id)->where('teknisis.teknisi_job', 'PSB')->where('teknisis.teknisi_psb', '>', '0')->first();
+        // if ($teknisi) {
+        $data['berita_acara'] =  Registrasi::query()
+            ->select([
+                    'registrasis.*', 
+                    'input_data.*', 
+                    'teknisis.*', 
+                    'pakets.*',
+                    'routers.router_nama',
+                    'ftth_instalasis.reg_slot_odp',
+                    'users.name as noc',
+                    'data__odps.odp_id',
+                    'data__odps.id as id_odp',
+                    'data__odcs.odc_nama',
+                    'data__olts.olt_nama',
+                    'data_pops.pop_nama',
+                    'data__sites.site_nama'
+                    ])
+            ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
+            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            ->join('users', 'users.id', '=', 'ftth_instalasis.reg_noc')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
+            ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('data__odps', 'data__odps.id', '=', 'ftth_instalasis.data__odp_id')
+            ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
+            ->join('data__olts', 'data__olts.id', '=', 'data__odcs.data__olt_id')
+            ->join('data_pops', 'data_pops.id', '=', 'data__olts.data_pop_id')
+            ->join('data__sites', 'data__sites.id', '=', 'data_pops.data__site_id')
+            ->where('registrasis.reg_idpel', $id)
+            ->where('teknisis.teknisi_job', 'PSB')
+            // ->where('teknisis.teknisi_psb', '>', '0') #Ujicoba Update 16-05
+            ->where('teknisis.teknisi_status','1')
+            ->first();
+            // dd($data['berita_acara']);
 
-    //     // if ($data['kas']->reg_fee > 0) {
-    //     //     $saldo = (new globalController)->total_mutasi_sales($data['id_admin']);
-    //     //     $total = $saldo + $data['biaya_sales']['biaya_sales_continue']; #SALDO MUTASI = DEBET - KREDIT
+        $data['mitra'] = FtthFee::query()
+            ->join('users', 'users.id', '=', 'ftth_fees.reg_mitra')
+            ->where('fee_idpel',  $data['berita_acara']->reg_idpel)
+            ->get();
 
-    //     //     $mutasi_sales['smt_user_id'] = $data['kas']->input_sales;
-    //     //     $mutasi_sales['smt_admin'] = $data['id_admin'];
-    //     //     $mutasi_sales['smt_kategori'] = 'PENDAPATAN';
-    //     //     $mutasi_sales['smt_deskripsi'] = $data['kas']->input_nama;
-    //     //     $mutasi_sales['smt_cabar'] = '2';
-    //     //     $mutasi_sales['smt_kredit'] = $data['biaya_sales']['biaya_sales_continue'];
-    //     //     $mutasi_sales['smt_debet'] = 0;
-    //     //     $mutasi_sales['smt_saldo'] = $total;
-    //     //     $mutasi_sales['smt_biaya_adm'] = 0;
-    //     //     MutasiSales::create($mutasi_sales);
-    //     // }
+        $query = Data_BarangKeluar::select('data__barangs.*', 'data__barang_keluars.*')
+            ->join('data__barangs', 'data__barangs.barang_id', '=', 'data__barang_keluars.bk_id_barang')
+            ->orderBy('data__barang_keluars.bk_waktu_keluar', 'ASC')
+            ->where('bk_idpel', $id);
+        $data['print_skb'] = $query->get();
 
-    //     // dd($mutasi_sales);
-
-    //     $update['reg_progres'] = '4';
-    //     Registrasi::where('reg_idpel', $id)->update($update);
-
-    //     $data['berita_acara'] =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-    //         ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-    //         ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
-    //         ->where('registrasis.reg_idpel', $id)
-    //         ->first();
-    //     $data['noc'] = User::whereId($data['kas']->teknisi_noc_userid)->first();
-
-
-    //     if ($data['kas']->input_sales) {
-    //         $data['seles'] = User::whereId($data['kas']->input_sales)->first();
-    //     } else {
-    //         dd('jonk');
-    //     }
+        $query1 = Data_BarangKeluar::where('bk_idpel', $id);
+        $data['data'] = $query1->first();
+        $data['total'] = $query1->sum('bk_harga');
 
 
-    //     $nama = InputData::where('id', $id)->first();
-    //     if ($nama) {
-    //         $sales = $nama->input_nama;
-    //     } else {
-    //         $sales = '-';
-    //     }
-    //     $pdf = App::make('dompdf.wrapper');
-    //     $html = view('PSB/bukti_kas_keluar', $data)->render();
-    //     $pdf->loadHTML($html);
-    //     $pdf->setPaper('A4', 'potraid');
-    //     return $pdf->download('kas_' . $sales . '.pdf');
-    // }
+        
+        if ($data['berita_acara']->input_sales) {
+            $data['seles'] = User::whereId($data['berita_acara']->input_sales)->first();
+        } else {
+            $data['seles'] = '';
+        }
+        $update['reg_progres'] = '4';
+        Registrasi::where('reg_idpel', $id)->update($update);
+
+        return view('PSB/bukti_kas_keluar', $data);
+        $pdf = App::make('dompdf.wrapper');
+        $html = view('PSB/bukti_kas_keluar', $data)->render();
+        $pdf->loadHTML($html);
+        $pdf->setPaper('A4', 'potraid');
+        return $pdf->download('Berita-Acara-' . $data['berita_acara']->input_nama . '.pdf');
+    }
+    
 
 
 
@@ -746,19 +803,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
         ]);
 
         
-    
-        // $teknisi['corporate_id'] = $data['corporate_id'];
-        // $teknisi['user_id'] = $request->aaaaaa;
-        // $teknisi['teknisi_idpel'] = $request->aaaaaa;
-        // $teknisi['teknisi_team'] = $request->aaaaaa;
-        // $teknisi['teknisi_ket'] = $request->aaaaaa;
-        // $teknisi['teknisi_job'] = 'PSB';
-        // $teknisi['teknisi_psb'] = $request->aaaaaa;
-        // $teknisi['teknisi_status'] = $request->aaaaaa;
 
-        // dd($request->reg_router);
-
-//  $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->reg_odp)->select('id')->first();
 
   $ODP = Data_Odp::query()
                         ->join('data__odcs', 'data__odcs.id', '=', 'data__odps.data__odc_id')
@@ -769,10 +814,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                         ->where('data__odps.odp_id',$request->reg_odp)
                         ->select('data__odps.id as id_odp','data__odps.odp_id','data__odcs.odc_nama','data__olts.olt_nama','data_pops.pop_nama','data__sites.site_nama')
                         ->first();
-
-
-
-
+                        
                 FtthInstalasi::updateOrCreate(
                 [
                     'id'=> $request->reg_idpel,
@@ -791,27 +833,49 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
             ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+            ->join('setting_aplikasis', 'setting_aplikasis.corporate_id', '=', 'registrasis.corporate_id')
             ->where('registrasis.reg_idpel', $id)
             ->select([
                 'registrasis.*',
                 'input_data.input_nama',
                 'input_data.input_hp',
+                'input_data.input_alamat_ktp',
+                'input_data.input_alamat_pasang',
+                'input_data.input_ktp',
+                'input_data.input_email',
                 'pakets.paket_lokal',
                 'pakets.paket_nama',
+                'routers.router_nama',
                 'routers.router_ip',
                 'routers.router_port_api',
                 'routers.router_username',
                 'routers.router_password',
                 'routers.router_dns',
+                'setting_aplikasis.*',
+                'ftth_instalasis.reg_slot_odp',
             ])
             ->first();
+
+            $explode1 = explode("|", $request->teknisi1);
+            $team = $explode1[1] . ' & ' . ucwords($request->teknisi2);
+
+            $id_teknisi = $explode1[0];
+            $teknisi_nama = $explode1[1];
+
+            $hilangspasi = preg_replace('/\s+/', '_', $query->reg_nolayanan);
+
+            $photo_1 = $request->file('reg_img');
+            $filename1 = 'Rumah_' . $hilangspasi . '.jpg';
+            $path_1 = 'laporan-kerja/' . $filename1;
+            Storage::disk('public')->put($path_1, file_get_contents($photo_1));
+      
             if ($query->reg_layanan == 'PPP') {
                 
                 $API = (new ApiController)->aktivasi_psb_ppp($query,$request);
                 if ($API == 0) {
                 //LANJUTAN AKTIVASI
 
-                (new AktivasiController)->aktivasi_psb($request, $query, $id);
+                (new AktivasiController)->aktivasi_psb($request, $query, $id,$team,$id_teknisi,$filename1);
 
                   $status = (new GlobalController)->whatsapp_status();
                 if($status){
@@ -868,14 +932,13 @@ Terimakasih.
                 Pesan::create($pesan_closed);
                 }
 
-                
-
                 $aktivasi_closed['layanan'] = 'NOC';
                 $aktivasi_closed['corporate_id'] = Session::get('corp_id');
                 $aktivasi_closed['ket'] = 'Aktivasi';
                 $aktivasi_closed['status'] = $status_pesan;
                 $aktivasi_closed['target'] =  env('GROUP_REPORT_AKTIVASI');
                 $aktivasi_closed['nama'] = 'Group Teknisi';
+                $aktivasi_closed['file'] = $path_1;
                 $aktivasi_closed['pesan'] = 'REPORT AKTIFASI '.Session::get('app_brand').'
 ======================
  
@@ -894,21 +957,23 @@ ODP DIST :  '.$ODP->odc_nama.'
 ODP :  '.$request->reg_odp.'
 SLOT ODP :  '.$request->reg_slot_odp.'
 REDAMAN : '.$request->reg_in_ont.'
+TEKNISI : '.$team.'
 PAKET : '.$query->paket_nama.'
 ';
-                        // dd($aktivasi_closed);
-
 
                 Pesan::create($aktivasi_closed);
 
                 }
-                     
+            
+                
+                // return $pdf->download('kas_' . $sales . '.pdf');
 
                 $notifikasi = array(
                     'pesan' => 'Aktivasi Berhasil ',
                     'alert' => 'success',
                 );
                 return redirect()->route('admin.reg.data_aktivasi_pelanggan', ['id' => $id])->with($notifikasi);
+                // return redirect()->route('admin.reg.bukti_kas_keluar', ['id' => $id]);
             } elseif ($API == 1) {
                 $notifikasi = array(
                     'pesan' => 'Pelanggan tidak ditemukan pada Router ' . $query->router_nama,
@@ -928,7 +993,7 @@ PAKET : '.$query->paket_nama.'
             if ($API == 0) {
                 //LANJUTAN AKTIVASI
                 
-                (new AktivasiController)->aktivasi_psb($request, $query, $id);
+                (new AktivasiController)->aktivasi_psb($request, $query, $id,$team,$id_teknisi,$filename1);
                 $notifikasi = array(
                     'pesan' => 'Aktivasi Berhasil ',
                     'alert' => 'success',

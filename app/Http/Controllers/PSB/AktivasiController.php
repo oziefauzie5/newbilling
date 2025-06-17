@@ -24,15 +24,11 @@ use Illuminate\Support\Facades\Storage;
 
 class AktivasiController extends Controller
 {
-    public function aktivasi_psb($request, $query, $id)
+    public function aktivasi_psb($request, $query, $id,$team,$id_teknisi,$filename1)
     {
 
 
-        $explode1 = explode("|", $request->teknisi1);
-        $team = $explode1[1] . ' & ' . ucwords($request->teknisi2);
-
-        $id_teknisi = $explode1[0];
-        $teknisi_nama = $explode1[1];
+        
         $swaktu = SettingWaktuTagihan::where('corporate_id',Session::get('corp_id'))->first();
         $sbiaya = SettingBiaya::where('corporate_id',Session::get('corp_id'))->first();
         // $barang = Data_Barang::where('barang_id', $request->reg_kode_dropcore)->first();
@@ -119,15 +115,7 @@ class AktivasiController extends Controller
         } 
         
         $pelanggan['reg_progres'] = '3';
-
         $pelanggan['reg_tgl_pasang'] = Carbon::now()->toDateString();
-
-        $hilangspasi = preg_replace('/\s+/', '_', $query->reg_nolayanan);
-
-        $photo_1 = $request->file('reg_img');
-        $filename1 = 'Rumah_' . $hilangspasi . '.jpg';
-        $path_1 = 'laporan-kerja/' . $filename1;
-        Storage::disk('public')->put($path_1, file_get_contents($photo_1));
         $pelanggan['reg_img'] = $filename1;
 
 
@@ -147,8 +135,6 @@ class AktivasiController extends Controller
         Data_Tiket::where('corporate_id',Session::get('corp_id'))->where('tiket_idpel', $query->reg_idpel)->where('tiket_status', 'Aktivasi')->update($tiket);
 
         if ($query->reg_jenis_tagihan != 'PASCABAYAR') {
-
-
         // $inv['inv_tgl_pasang'] = Carbon::now()->toDateString();
         $inv['corporate_id'] = Session::get('corp_id');
         $inv['inv_status'] = 'UNPAID';
@@ -166,15 +152,12 @@ class AktivasiController extends Controller
         // if ($cek_hari_pasang < 25) {
             $cek_inv = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->first();
             if ($cek_inv) {
-                // dd('botak');
                 $inv['inv_id'] = $cek_inv->inv_id;
                 $sub_inv['subinvoice_id'] = $inv['inv_id'];
                 Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $inv['inv_idpel'])->where('inv_status', 'UNPAID')->update($inv);
                 SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $sub_inv['subinvoice_id'])->update($sub_inv);
             } else {
                 $inv['inv_id'] = (new GlobalController)->no_inv();
-                // dd($inv['inv_id']);
-                // dd($inv['inv_id']);
                 $sub_inv['subinvoice_id'] = $inv['inv_id'];
                 Invoice::create($inv);
                 SubInvoice::create($sub_inv);

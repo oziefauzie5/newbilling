@@ -14,21 +14,14 @@ class SendMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct()
     {
-        //
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-         $cek_pesan = Pesan::where('status', '0')->count();
-        if ($cek_pesan) {
+       $cek_pesan = Pesan::where('status', '0')->count();
+        if ($cek_pesan > 0) {
                 $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
             if ($pesan->layanan == 'CS') {
                 $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'CS')->first();
@@ -38,12 +31,14 @@ class SendMessage implements ShouldQueue
                 $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOTIF')->first();
             }
 
+
             if ($pesan->file) {
                 $data = array(
                     'target' => $pesan->target,
                     'message' => $pesan->pesan,
                     'countryCode' => '62',
-                    'url' => $pesan->file,
+                    // 'file' => new \CurlFile(asset('storage/'.$pesan->file)),
+                    'url' => 'https://ovallapp.com/storage/'.$pesan->file,
                 );
             } else {
                 $data = array(
@@ -75,11 +70,15 @@ class SendMessage implements ShouldQueue
             curl_close($curl);
             if ($err) {
                 $mesage['status'] = 'Gagal';
+                $mesage['delay'] = $err;
+                // $mesage['status'] = $response;
             } else {
                 echo $response;
+                $mesage['delay'] = $response;
                 $mesage['status'] = 'Done';
             }
             // $mesage['status'] = 'test';
+            // dd('test');
             Pesan::where('id', $pesan->id)->update($mesage);
         }
     }

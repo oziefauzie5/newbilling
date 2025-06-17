@@ -150,7 +150,7 @@
           </div>
           {{-- end modal TopUp --}}
        
-       
+       @role('admin|STAF ADMIN')
             <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#serah_terima">
               <i class="fa fa-plus"></i>
               SERAH TERIMA
@@ -163,8 +163,9 @@
               <i class="fa fa-plus"></i>
               BUAT LAPORAN
             </button>
+            @endrole
             <a href="{{route('admin.inv.data_laporan')}}"><button class="btn btn-sm ml-auto m-1 btn-primary">DATA LAPORAN</button>
-            </a>
+          </a>
           <hr>
           <form >
             <div class="row mb-1">

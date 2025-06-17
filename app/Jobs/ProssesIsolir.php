@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Global\GlobalController;
 use App\Models\Pesan\Pesan;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\RouterosAPI;
@@ -16,7 +15,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Session;
 
 class ProssesIsolir implements ShouldQueue
 {
@@ -44,7 +42,6 @@ class ProssesIsolir implements ShouldQueue
                 ->where('invoices.inv_status', '=', 'SUSPEND')
                ->select([
                    'invoices.*',
-                //    'invoices.corporate_id as corp_id',
                    'registrasis.reg_idpel',
                    'registrasis.reg_layanan',
                    'registrasis.reg_username',

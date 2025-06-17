@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignIdFor(Corporate::class)->constrained()->cascadeOnDelete();
             $table->string('promo_id');
             $table->string('promo_nama')->nullable();
+             $table->unsignedBigInteger('promo_paket_id');
+            $table->foreign('promo_paket_id')->references('paket_id')->on('pakets')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('promo_harga')->nullable();
             $table->string('promo_expired')->nullable();
             $table->enum('promo_status',['Enable','Disable'])->nullable();

@@ -43,14 +43,14 @@ class PsbController extends Controller
 
         $query = Registrasi::query()
         ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-    // ->with(['registrasi_paket']);
-        // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile');
-        // ->join('ftth_fees', 'ftth_fees.id', '=', 'registrasis.reg_idpel')
-        // ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+        // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+    // ->join('ftth_fees', 'ftth_fees.id', '=', 'registrasis.reg_idpel')
+    // ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
         // ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router');
         ->where('input_data.corporate_id',Session::get('corp_id'))
         ->select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl')
         ->where('reg_progres', '<=', 5)
+        // ->where('reg_ppn', '>', 0)
         ->orderBy('tgl', 'DESC')
             ->where(function ($query) use ($data) {
                 $query->where('reg_progres', 'like', '%' . $data['q'] . '%');
@@ -89,7 +89,13 @@ class PsbController extends Controller
         
         // if ($data['paket'])
         //     $query->find('paket_id', '=', $data['paket']);
-        // dd($query->get());
+        
+        // foreach ($query->get() as $key) {
+        //     echo '<table><tr><td>'.$key->reg_nolayanan.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_profile.'</td><td>'.$key->paket_nama.'</td><td>'.$key->paket_harga.'</td><td>'.$key->input_promo.'</td><td>'.$key->reg_harga.'</td><td>'.$key->reg_ppn.'</td></tr></table>';
+        // }
+        // dd($query->count());
+
+    
         
         $data['data_registrasi'] = $query->paginate(10);
         //  $data['data_registrasi'] = Registrasi::with('registrasi_router','registrasi_paket')->get();
@@ -381,7 +387,8 @@ class PsbController extends Controller
     }
     public function kode_promo()
     {
-        $data['data_promo'] = KodePromo::where('corporate_id',Session::get('corp_id'))->get();
+        $data['data_promo'] = KodePromo::where('corporate_id',Session::get('corp_id'))->orderBy('promo_id','DESC')->get();
+        $data['data_paket'] = Paket::where('corporate_id',Session::get('corp_id'))->get();
         return view('PSB/kode_promo', $data);
     }
     public function store_promo(Request $request)
@@ -389,6 +396,7 @@ class PsbController extends Controller
         // dd('test');
         Session::flash('promo_nama', $request->promo_nama);
         Session::flash('promo_id', $request->promo_id);
+        Session::flash('promo_paket_id', $request->promo_paket_id);
         Session::flash('promo_harga', $request->promo_harga);
         Session::flash('promo_expired', $request->promo_expired);
         Session::flash('promo_status', $request->promo_status);
@@ -397,12 +405,14 @@ class PsbController extends Controller
         $request->validate([
             'promo_nama' => 'required',
             'promo_id' => 'required',
+            'promo_paket_id' => 'required',
             'promo_harga' => 'required',
             'promo_expired' => 'required',
             'promo_status' => 'required',
         ], [
             'promo_nama' => 'Nama tidak boleh kosong',
             'promo_id' => 'Promo Id tidak boleh kosong',
+            'promo_paket_id' => 'Paket tidak boleh kosong',
             'promo_harga' => 'Harga tidak boleh kosong',
             'promo_expired' => 'Expired tidak boleh kosong',
             'promo_status' => 'Status tidak boleh kosong',
@@ -411,6 +421,7 @@ class PsbController extends Controller
         $data['promo_nama'] = $request->promo_nama;
         $data['corporate_id'] = Session::get('corp_id');
         $data['promo_id'] = $request->promo_id;
+        $data['promo_paket_id'] = $request->promo_paket_id;
         $data['promo_harga'] = $request->promo_harga;
         $data['promo_expired'] = $request->promo_expired;
         $data['promo_status'] = $request->promo_status;
@@ -428,6 +439,7 @@ class PsbController extends Controller
         $data['promo_nama'] = $request->promo_nama;
         $data['corporate_id'] = Session::get('corp_id');
         $data['promo_id'] = $request->promo_id;
+        $data['promo_paket_id'] = $request->promo_paket_id;
         $data['promo_harga'] = $request->promo_harga;
         $data['promo_expired'] = $request->promo_expired;
         $data['promo_status'] = $request->promo_status;

@@ -107,23 +107,14 @@
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Site Id</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="tampil_site" name="reg_site" value="" required>
+                    <input type="text" class="form-control readonly" id="tampil_site" name="reg_site" value="" required>
                   </div>
                   <label class="col-sm-2 col-form-label">Site Area</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="tampil_site_nama" name="reg_site_nama" value="" required>
+                    <input type="text" class="form-control readonly" id="tampil_site_nama" name="reg_site_nama" value="" required>
                   </div>
               </div>
-              <div class="form-group row">
-                  <label class="col-sm-2 col-form-label">Kode Promo</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="tampil_promo" name="reg_promo" value="" >
-                  </div>
-                  <label class="col-sm-2 col-form-label">Diskon Promo</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="tampil_harga_promo" name="tampil_harga_promo" value="" >
-                  </div>
-              </div>
+            
             
               <h3 class="mt-3 text-bolt">INTERNET</h3><hr>
               <div class="form-group row">
@@ -157,6 +148,17 @@
                 <div class="col-sm-4">
                 <input type="text" class="form-control datepicker" id="" name="reg_tgl_pasang" value="" >
                 </div>
+              </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Kode Promo</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control readonly" id="tampil_promo" name="reg_promo" value="" >
+                    <div id="div_promo"></div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">Diskon Promo</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control readonly" id="tampil_harga_promo" name="tampil_harga_promo" value="" >
+                  </div>
               </div>
               <div class="form-group row">
                 <label for="paket" class="col-sm-2 col-form-label">Paket langganan *</label>

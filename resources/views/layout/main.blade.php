@@ -231,7 +231,7 @@
 							</div>
 						</li> --}}
 						@endrole
-						@role('admin|STAF ADMIN|NOC')
+						@role('admin|STAF ADMIN|NOC|KEUANGAN')
 						<li class="nav-item {{\Route::is('admin.psb.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#base">
 								<i class="fas fa-users"></i>
@@ -247,11 +247,14 @@
 										</a>
 									</li>
 									@endrole
+									@role('admin|STAF ADMIN|NOC|KEUANGAN')
 									<li>
 										<a href="{{route('admin.psb.ftth')}}">
 											<span class="sub-item">Registrasi</span>
 										</a>
 									</li>
+									@endrole
+									@role('admin|STAF ADMIN')
 									<li>
 										<a href="{{route('admin.router.paket_harga')}}">
 											<span class="sub-item">Paket</span>
@@ -262,6 +265,7 @@
 											<span class="sub-item">Kode Promo</span>
 										</a>
 									</li>
+									@endrole
 								</ul>
 							</div>
 						</li>
@@ -274,7 +278,7 @@
 							</a>
 						</li>
 						@endrole
-						@role('admin|STAF ADMIN')
+						@role('admin|STAF ADMIN|KEUANGAN')
 						
 						<li class="nav-item {{\Route::is('admin.lap.*') ? 'active' : ''}}">
 							<a data-toggle="collapse" href="#keuangan">
@@ -289,11 +293,11 @@
 											<span class="sub-item">Jurnal</span>
 										</a>
 									</li>
-									<li>
-										<a href="{{route('admin.trx.pencairan_operasional')}}">
+									<!-- <li>
+										<a href="">
 											<span class="sub-item">Pencairan PSB & Sales</span>
 										</a>
-									</li>
+									</li> -->
 									<li>
 										<a href="{{route('admin.trx.laporan_harian')}}">
 											<span class="sub-item">Laporan Harian</span>
@@ -334,12 +338,14 @@
 								<p>Gudang</p>
 							</a>
 						</li>
+						@role('admin|STAF ADMIN')
 						<li class="nav-item {{\Route::is('admin.wa.*') ? 'active' : ''}}">
 							<a href="{{route('admin.wa.index')}}">
 								<i class="fab fa-whatsapp"></i>
 								<p>Pesan</p>
 							</a>
 						</li>
+						@endrole
 						@role('admin|STAF ADMIN')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#charts">
@@ -719,7 +725,8 @@ function myFunction() {
 		// START AMBIL HARGA PAKET #REGISTRASI
 
 
-$('#paket').on('change', function() {
+			$('#paket').on('change', function() {
+				var kode_promo = $('#tampil_promo').val();
                 var kode_paket = $(this).val();
                 var url = '{{ route("admin.reg.getPaket", ":id") }}';
 				url = url.replace(':id', kode_paket);
@@ -732,21 +739,24 @@ $('#paket').on('change', function() {
                         url: url,
                         type: 'GET',
                         data: {
+							kode_promo:kode_promo,
                             '_token': '{{ csrf_token() }}'
                         },
                         dataType: 'json',
                         success: function(data) {
+							console.log(data)
                             if (data) {
                                 $('#harga').empty();
-								if($('#tampil_promo').val()){
+								if(data['kode_promo']){
+									$('#tampil_harga_promo').val(data['promo_harga']);
 									$('#harga').val(data['data_paket'][0]['paket_harga']);
-										var result_promo = parseInt(data['data_paket'][0]['paket_harga'] - $('#tampil_harga_promo').val());
+										var result_promo = parseInt(data['data_paket'][0]['paket_harga'] - data['promo_harga']);
 										if (!isNaN(result_promo)) {
 											$('#harga').val(result_promo);
 										}
 										$('.checkboxppn').change(function () {
 										if ($(this).is(":checked")) {
-											var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - $('#tampil_harga_promo').val());
+											var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - data['promo_harga']);
 											if (!isNaN(result1)) {
 												$('#biaya_ppn').val(result1);
 											}
@@ -756,7 +766,7 @@ $('#paket').on('change', function() {
 									});
 									$('.checkboxbiaya_bph_uso').change(function () {
 										if ($(this).is(":checked")) {
-											var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - $('#tampil_harga_promo').val());
+											var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - data['promo_harga']);
 											if (!isNaN(result1)) {
 												$('#biaya_bph_uso').val(result1);
 											}
@@ -764,6 +774,13 @@ $('#paket').on('change', function() {
 											$("#biaya_bph_uso").val(0);
 										}
 									});
+
+									if(data['promo_harga'] == 0){
+										$("#div_promo").html('<span class="noted">Kode promo tidak ditemukan</span>');
+									} else {
+										$("#div_promo").html('');
+									}
+
 								} else {
 									$('#harga').val(data['data_paket'][0]['paket_harga']);
 										$('.checkboxppn').change(function () {
@@ -2042,9 +2059,9 @@ for (let i = 0; i < addonCheckboxes.length; i++) {
                     },
                     dataType: 'json',
                     success: function(data) {
-						console.log(data)
+						// console.log(data)
 						
-						// window.location.href = data+"/admin/Transaksi/laporan-harian";
+						window.location.href = data+"/admin/Transaksi/laporan-harian-admin";
                     }
                 });
 		});  
@@ -2094,8 +2111,8 @@ for (let i = 0; i < jurnal_pencairan.length; i++) {
   jurnal_pencairan[i].addEventListener("change", function(e) {   
 	  if (jurnal_pencairan[i].checked != false) {
 		  //   console.log('e.target.nama : ' + JSON.stringify(e.target.dataset.nama))  
-		  result += e.target.dataset.nama
-		  + " " + ", ";
+		  result += e.target.dataset.nama +" - "+ e.target.dataset.subsales
+		  + " " + "\n";
 		  console.log(i)
 		  sum2 = sum2 +Number(e.target.dataset.psb) 
 		  sum3 = sum3 +Number(e.target.dataset.sales) 
@@ -2107,6 +2124,7 @@ for (let i = 0; i < jurnal_pencairan.length; i++) {
       sum2 =  sum2 -Number(e.target.dataset.psb) 
       sum3 =  sum3 -Number(e.target.dataset.sales) 
     }
+	
 	$("#uraian").val(result);
 	$("#psb").val(sum2);
 	$("#sales").val(sum3);
@@ -2753,6 +2771,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
+										console.log(data)
 											if(data == 'failed'){
 												swal("Gagal!", "No Skb sudah ada. Silahkan coba klik simpan kembali.", {
 													icon : "error",
@@ -2960,7 +2979,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 										'_token': '{{ csrf_token() }}'},
 									dataType: 'json',
 									success: function(data) {
-										// console.log(data)
+										console.log(data)
 										if(data == 'failed'){
 												swal("Gagal!", "No Skb sudah ada. Silahkan coba klik simpan kembali.", {
 													icon : "error",
@@ -2973,7 +2992,7 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											} else {
 											$('#jumlah_barang').removeAttr('required');
 											$('.simpan_barang_tiket').attr('disabled','disabled');
-											// $('.tiket_noskb').attr('required','required');
+											$('.tiket_noskb').attr('required','required');
 											$('#modal_tambah_barang').modal('hide');
 											$('#tiket_noskb').val(data);
 											$('.submit_tiket').removeAttr('disabled');
@@ -3683,7 +3702,6 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#tampil_alamat_pasang').val(data['tampil_data']['input_alamat_pasang']);
 							$('#tampil_idpel').val(data['tampil_data']['id']);
 							$('#tampil_nama').val(data['tampil_data']['input_nama']);
-							$('#tampil_promo').val(data['tampil_data']['input_promo']);
 							$('#tampil_nolay').val(data['nolay']);
 							$('#tampil_username').val(data['username']);
 							
@@ -3694,15 +3712,15 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 
 							if(data['tampil_data']['input_subseles']){
 								$('#tampil_subsales').val(data['tampil_data']['input_subseles']);
-								} else {
+							} else {
 								$('#tampil_subsales').val('');
 							}
 
 							if(data['tampil_data']['input_promo']){
-								$('#tampil_harga_promo').val(data['tampil_promo']['promo_harga']);
-							}else {
-								$('#tampil_harga_promo').val(0);
+								$('#tampil_promo').val(data['tampil_data']['input_promo']);
 							}
+							// $('#tampil_harga_promo').val(data['promo_harga']);
+
 
 							$('#tampil_keterangan').val(data['tampil_data']['input_keterangan']);
 							$('#reg_mitra').empty()
@@ -3777,7 +3795,14 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 											}
 										});
 									} else {
-										location.reload();
+										// location.reload();
+										$('#fee_pic').empty()
+										$('#fee_subpic').empty()
+										$('#reg_mitra').empty()
+										$('#tampil_fee_sales').empty()
+										$('#tampil_fee_sales').append('<option value="0">0</option>')
+										$('#reg_mitra').append('<option value="">--None--</option>')
+										$('#sub_mitra').append('<option value="">--None--</option>')
 									}
 								});
 
@@ -3939,6 +3964,8 @@ $.ajax({
 					});
 					// --------------------------------------END ADD KATEGORI BARANG-------------------------------------
 
+
+					
 
 						</script>
 

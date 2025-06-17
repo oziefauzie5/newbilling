@@ -560,7 +560,6 @@ class RegistrasiApiController extends Controller
                         $API->comm('/ip/hotspot/user/set', [
                             '.id' => $cari_pel[0]['.id'],
                             'profile' => $query->paket_nama,
-                            'comment' => $comment == '' ? '' : $comment,
                         ]);
                         $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
                         $data['reg_harga'] = $request->reg_harga;

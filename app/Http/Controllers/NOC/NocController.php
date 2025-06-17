@@ -68,11 +68,13 @@ class NocController extends Controller
 
     public function pengecekan($id)
     {
-        $data_pelanggan = Registrasi::where('reg_idpel', $id)->first();
-        $router = Router::whereId($data_pelanggan->reg_router)->first();
-        $ip =   $router->router_ip . ':' . $router->router_port_api;
-        $user = $router->router_username;
-        $pass = $router->router_password;
+        $data_pelanggan = Registrasi::join('ftth_instalasis','ftth_instalasis.id','=','registrasis.reg_idpel')
+                                    ->join('routers','routers.id','=','ftth_instalasis.reg_router')
+                                    ->where('reg_idpel', $id)->first();
+        // $router = Router::whereId($data_pelanggan->reg_router)->first();
+        $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
+        $user = $data_pelanggan->router_username;
+        $pass = $data_pelanggan->router_password;
         $API = new RouterosAPI();
         $API->debug = false;
         $data['id'] = $id;
@@ -97,7 +99,7 @@ class NocController extends Controller
                         $API->comm('/ip/firewal/nat/add', [
                             'chain' => 'dstnat',
                             'protocol' => 'tcp',
-                            'dst-address' => $router->router_ip,
+                            'dst-address' => $data_pelanggan->router_ip,
                             'dst-port' => '8889',
                             'action' => 'dst-nat',
                             'to-ports' => '80',
@@ -106,7 +108,7 @@ class NocController extends Controller
                             'comment' => 'REMOTE_ONT',
                         ]);
                     }
-                    return redirect()->to('http://' . $router->router_ip . ':' . $router->router_port_remote . '/');
+                    return redirect()->to('http://' . $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_remote . '/');
                     // dd($c['address']);
                 }
             } else {
@@ -184,6 +186,7 @@ class NocController extends Controller
                 'routers.router_password',
                 'routers.router_dns',
             ])->first();
+            // dd($data_pelanggan);
         if ($data_pelanggan->reg_layanan == 'PPP') {
             $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
             $user = $data_pelanggan->router_username;
@@ -223,10 +226,10 @@ class NocController extends Controller
                 return $data;
             }
         } elseif ($data_pelanggan->reg_layanan == 'HOTSPOT') {
-            $router = Router::whereId($data_pelanggan->reg_router)->first();
-            $ip =   $router->router_ip . ':' . $router->router_port_api;
-            $user = $router->router_username;
-            $pass = $router->router_password;
+            // $router = Router::whereId($data_pelanggan->reg_router)->first();
+            $ip =   $data_pelanggan->router_ip . ':' . $data_pelanggan->router_port_api;
+            $user = $data_pelanggan->router_username;
+            $pass = $data_pelanggan->router_password;
             $API = new RouterosAPI();
             $API->debug = false;
 
@@ -557,7 +560,6 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 if ($cek_secret) {
                     $API->comm('/ip/hotspot/user/set', [
                         '.id' => $cek_secret[0]['.id'],
-                        'comment' => $comment . ' By-' . $admin,
                         'disabled' => $proses,
                     ]);
                     $cek_status = $API->comm('/ip/hotspot/active/print', [

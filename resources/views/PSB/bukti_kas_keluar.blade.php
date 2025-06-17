@@ -172,7 +172,7 @@
 <body>
     <table id="kas_kop">
         <tr>
-            <th width="60%" style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo)}}" width="20%" alt=""></th>
+            <th width="60%" style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo)}}" width="40%" alt=""></th>
             <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
         </tr>
     </table>
@@ -225,13 +225,13 @@
             <tr>
                 <td>Sales</td>
                 <td>:</td>
-                <td >{{$seles->name}}</td>
+                <td >{{$seles->name ?? '-'}}</td>
               
             </tr>
             <tr>
                 <td>Sub Sales</td>
                 <td>:</td>
-                <td>{{$berita_acara->input_subseles}}</td>
+                <td>{{$berita_acara->input_subseles ?? '-'}}</td>
             </tr>
             <tr>
                 <td>Alamat KTP</td>
@@ -307,30 +307,46 @@
     </table>
     <table id="berita_acara">
         <tr>
+            <td>NOC</td>
+            <td>:</td>
+            <td>{{strtoupper($berita_acara->noc)}}</td>
+        </tr>
+        <tr>
+            <td>Teknisi Team</td>
+            <td>:</td>
+            <td>{{strtoupper($berita_acara->teknisi_team)}}</td>
+        </tr>
+        
+        <tr>
+            <td width="15%">Site</td>
+            <td>:</td>
+            <td width="85%">{{strtoupper($berita_acara->site_nama)}}</td>
+        </tr>
+        <tr>
             <td width="15%">POP</td>
             <td>:</td>
-            <td width="85%">{{$berita_acara->reg_pop}}</td>
+            <td width="85%">{{strtoupper($berita_acara->pop_nama)}}</td>
         </tr>
             <tr>
                 <td>OLT</td>
             <td>:</td>
-            <td>{{$berita_acara->reg_olt}}</td>
+            <td>{{strtoupper($berita_acara->olt_nama)}}</td>
             </tr>
             <tr>
                 <td>Router</td>
                 <td>:</td>
-                <td>{{$berita_acara->reg_router}}</td>
+                <td>{{strtoupper($berita_acara->router_nama)}}</td>
             </tr>
             <tr>
             <td>ODC</td>
             <td>:</td>
-            <td>{{$berita_acara->reg_odc}}</td>
+            <td>{{strtoupper($berita_acara->odc_nama)}}</td>
             </tr>
         <tr>
             <tr>
                 <td>ODP</td>
                 <td>:</td>
-                <td>{{$berita_acara->reg_odp}}</td>
+                <td>{{$berita_acara->odp_id}}</td>
             </tr>
             <tr>
                 <td>Slot ODP</td>
@@ -339,240 +355,27 @@
             </tr>
         </tr>
         <tr>
-            <td>Onu Id</td>
-            <td>:</td>
-            <td>{{$berita_acara->reg_onuid}}</td>
-            
-        </tr>
-        <tr>
-            <td>Teknisi Team</td>
-            <td>:</td>
-            <td>{{$kas->teknisi_team}}</td>
-        </tr>
-        <tr>
             <td>Koordinat Rumah</td>
             <td>:</td>
             <td>{{$berita_acara->input_koordinat}}</td>
-            
-            </tr>
-            <tr>
-            <td>Koordinat ODP</td>
-            <td>:</td>
-            <td>{{$berita_acara->reg_koordinat_odp}}</td>
             </tr>
     </table>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
-    <table id="kas_kop">
-        <tr>
-            <th width="60%" style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo)}}" width="20%" alt=""></th>
-            <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
-        </tr>
-    </table>
-    <br>
-    <hr>
-    <table id="customers">
-        <tr >
-            <th  style="text-align: center; font-size: 12pt;">BUKTI PENGELUARAN KAS</th>
-            <td></td>
-        </tr>
-    </table>
-    <table id="kas">
-
-        <tr>
-            <td width="15%">No</td>
-            <td>:</td>
-            <td width="40%">................</td>
-        </tr>
-        <tr>
-            <td>Tanggal</td>
-            <td>:</td>
-            <td>{{ date('d-m-Y', strtotime( $kas->reg_tgl_pasang)) }}</td>
-            <td>Dibayarkan kepada</td>
-            <td>:</td>
-            <td>{{$kas->teknisi_team}}</td>
-        </tr>
-        <tr>
-        </tr>
-        <tr>
-            <td>Pelanggan</td>
-            <td>:</td>
-            <td>{{$kas->input_nama}}</td>
-            <td>No. Layanan</td>
-            <td>:</td>
-            <td>{{$kas->reg_nolayanan}}</td>
-        </tr>
-       
-    </table>
-    <table id="kas_rincian">
-        <tr>
-            <th width="5%">NO</th>
-            <th>KETERANGAN</th>
-            <th width="25%">NOMINAL</th>
-        </tr>
-        <tr>
-            <td style="text-align: center;">1</td>
-            <td>PSB {{$kas->input_nama}}</td>
-            <td id="kas_nominal">Rp. {{number_format($kas->teknisi_psb)}}</td>
-        </tr>
-        <tr>
-            <td style="text-align: center;">2</td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
-    <table id="kas">
-        <tr>
-            <td width="50%"></td>
-            <td id="kas_invoice" width="15%">TOTAL</td>
-            <td>:</td>
-            <td id="kas_invoice">Rp. {{number_format($kas->teknisi_psb)}}</td>
-        </tr>
-    </table>
-    <table id="kas_ttd">
-        <tr>
-            <th width="25%" higth="20px">Admin</th>
-            <th width="25%">NOC</th>
-            <th width="25%">Keuangan</th>
-            <th width="25%">Penerima</th>
-        </tr>
-        <tr>
-            <th width="25%" higth="20px">{{ strtoupper($nama_admin )}}</th>
-            <th width="25%">{{$noc->name}}</th>
-            <th width="25%">...................................</th>
-            <th width="25%">...................................</th>
-        </tr>
-    </table>
-    <hr>
-    <br>
-    <table id="kas_kop">
-        <tr>
-            <th width="60%" style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo)}}" width="20%" alt=""></th>
-            <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
-        </tr>
-    </table>
-    <br>
-    <hr>
-    <table id="customers">
-        <tr >
-            <th  style="text-align: center; font-size: 12pt;">BUKTI PENGELUARAN KAS</th>
-            <td></td>
-        </tr>
-    </table>
-    <table id="kas">
-
-        <tr>
-            <td width="15%">No</td>
-            <td>:</td>
-            <td width="40%">................</td>
-        </tr>
-        <tr>
-            <td>Tanggal</td>
-            <td>:</td>
-            <td>{{ date('d-m-Y', strtotime( $kas->reg_tgl_pasang)) }}</td>
-            <td>Dibayarkan kepada</td>
-            <td>:</td>
-            <td>{{$seles->name}}</td>
-        </tr>
-        <tr>
-            <td>Pelanggan</td>
-            <td>:</td>
-            <td>{{$kas->input_nama}}</td>
-            <td>No. Layanan</td>
-            <td>:</td>
-            <td>{{$kas->reg_nolayanan}}</td>
-        </tr>
-       
-    </table>
-    <table id="kas_rincian">
-        <tr>
-            <th width="5%">NO</th>
-            <th>KETERANGAN</th>
-            <th width="25%">NOMINAL</th>
-        </tr>
-        <tr>
-            <td style="text-align: center;">1</td>
-            <td>PSB {{$kas->input_nama}}</td>
-            <td id="kas_nominal">Rp. {{number_format($biaya_sales->biaya_sales)}}</td>
-        </tr>
-        <tr>
-            <td style="text-align: center;">2</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-    </table>
-    <table id="kas">
-        <tr>
-            <td width="50%"></td>
-            <td id="kas_invoice" width="15%">TOTAL</td>
-            <td>:</td>
-            <td id="kas_invoice">Rp. {{number_format($biaya_sales->biaya_sales)}}</td>
-        </tr>
-    </table>
-    <table id="kas_ttd">
-        <tr>
-            <th width="25%" higth="20px">Admin</th>
-            <th width="25%">NOC</th>
-            <th width="25%">Keuangan</th>
-            <th width="25%">Penerima</th>
-        </tr>
-        <tr>
-            <th width="25%" higth="20px">{{ strtoupper($nama_admin )}}</th>
-            <th width="25%">{{$noc->name}}</th>
-            <th width="25%">...................................</th>
-            <th width="25%">...................................</th>
-        </tr>
-    </table>
-    <table id="kas_kop">
-        <tr>
-            <th width="60%" style=" text-align: left;"><img src="{{ asset('storage/profile_perusahaan/'.$profile_perusahaan->app_logo)}}" width="20%" alt=""></th>
-            <td width="40%"><strong>{{$profile_perusahaan->app_nama}}</strong> <br><span>{{$profile_perusahaan->app_brand}}</span><br><span>{{$profile_perusahaan->app_alamat}}</span></td>
-        </tr>
-    </table>
-    <br>
-    <hr>
-    <table id="kas">
         <br>
-        <tr>
-            <th colspan="3" style="text-align: center; font-size: 12pt;">INVOICE</th>
+    <hr>
+    <table id="berita_acara">
+        <tr >
+            <th width="40%" style="text-align:left; font-size: 11pt; background-color: #0071bc"> Data Perangkat - Device Data</th>
+            <td></td>
         </tr>
-        <tr>
-            <td width="15%">No</td>
-            <td>:</td>
-            <td width="40%">{{$data->bk_id}}</td>
-        </tr>
-        <tr>
-            <td>Tanggal Cetak</td>
-            <td>:</td>
-            <td>{{date('d-M-Y h:m')}}</td>
-            <td>Tanggal Barang Keluar</td>
-            <td>:</td>
-            <td>{{date('d-M-Y', strtotime($data->bk_waktu_keluar))}}</td>
-                </tr>
-                <tr>
-                    <td>Jenis Laporan</td>
-                    <td>:</td>
-                    <td>{{$data->bk_jenis_laporan}}</td>
-                    <td>Keterangan</td>
-                    <td>:</td>
-                    <td>{{$data->bk_keperluan}}</td>
-                </tr>
-
-       
     </table>
+    <br>
     <table id="kas_rincian">
         <tr>
                 <th>#</th>
                 <th>Id Barang</th>
                 <th>Kategori</th>
                 <th>Nama Barang</th>
+                <th>Mac ONT</th>
                 <th>Mac OLT</th>
                 <th>Qty</th>
                 <th>Satuan</th>
@@ -584,8 +387,9 @@
             <td>{{$loop->iteration}}</td>
             <td>{{ $skb->barang_id }}</td>
             <td >{{ $skb->barang_kategori }}</td>
-            <td>{{ ucfirst($skb->barang_nama) .'  '. ucfirst($skb->barang_merek) .'  '.strtolower($skb->barang_sn) .'  '. strtolower($skb->barang_mac)}}</td>
-            <td>{{ strtolower($skb->barang_mac_olt)}}</td>
+            <td>{{ strtoupper($skb->barang_nama) .'  '. strtoupper($skb->barang_merek) .' | '.strtoupper($skb->barang_sn)}}</td>
+            <td style="text-align: center">{{ strtoupper($skb->barang_mac_olt)}}</td>
+            <td style="text-align: center">{{ strtoupper($skb->barang_mac)}}</td>
             <td style="text-align: center">{{ $skb->bk_jumlah }}</td>
             <td style="text-align: center">{{ $skb->barang_satuan }}</td>
             <td style="text-align: right">{{ number_format($skb->barang_harga_satuan) }}</td>
@@ -593,27 +397,41 @@
             @endforeach
         </tr>
         <tr>
-        <td colspan="8" style="text-align: right">Total</td>
+        <td colspan="9" style="text-align: right">Total</td>
         <td colspan="1" style="text-align: right">{{ number_format($total) }}</td>
         </tr>
     </table>
-    <br>
-    <table id="kas_ttd">
-        <tr>
-            <th width="50%" higth="20px">Admin</th>
-            <th width="50%">Penerima Barang</th>
-        </tr>
-        <tr>
-            <th width="50%" higth="20px">{{ strtoupper($nama_admin )}}</th>
-            <th width="50%">( ........................................... )</th>
+     <br>
+    <hr>
+    <table id="berita_acara">
+        <tr >
+            <th width="40%" style="text-align:left; font-size: 11pt; background-color: #0071bc"> Data Mitra - Mitra Data</th>
+            <td></td>
         </tr>
     </table>
+    
+    <br>
+    <table id="kas_rincian">
+        <tr>
+                <th>#</th>
+                <th>SALES / PIC</th>
+                <th>FEE</th>
+        </tr>
+        @foreach($mitra as $mit )
+        <tr>
+            <td>{{$loop->iteration}}</td>
+            <td>{{ $mit->name ?? '-'}}</td>
+            <td style="text-align: right">{{ number_format($mit->reg_fee ?? 0) }}</td>
+            @endforeach
+        </tr>
+    </table>
+    <br>
 
     <table>
         <tr>
-            <td ><img src="{{ asset('storage/laporan-kerja/'.$kas->reg_img) }}"  height="420" alt="" title=""></img></td>
-            @if($kas->reg_foto_odp)
-            <td ><img src="{{ asset('storage/laporan-kerja/'.$kas->reg_foto_odp) }}"  height="420" alt="" title=""></img></td>
+            <td ><img src="{{ asset('storage/laporan-kerja/'.$berita_acara->reg_img) }}"  height="100%" alt="" title=""></img></td>
+            @if($berita_acara->reg_foto_odp)
+            <td ><img src="{{ asset('storage/laporan-kerja/'.$berita_acara->reg_foto_odp) }}"  height="100%" alt="" title=""></img></td>
             @endif
             
         </tr>

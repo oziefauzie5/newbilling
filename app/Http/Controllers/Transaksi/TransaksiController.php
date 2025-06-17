@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class TransaksiController extends Controller
 {
@@ -47,30 +48,35 @@ class TransaksiController extends Controller
         $data['debet'] = Jurnal::where('jurnal_status', 1)->sum('jurnal_debet');
         $data['kendaraan'] = (new GlobalController)->data_kendaraan()->get();
         $data['user'] = (new GlobalController)->all_user()->get();
-        $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'PEMBAYARAN')->get();
+        $data['akun'] = SettingAkun::where('corporate_id',Session::get('corp_id'))->where('akun_status','Enable')->get();
+        // $data['setting_akun'] = (new GlobalController)->setting_akun()->where('akun_kategori', '!=', 'PEMBAYARAN')->get();
+        $data['setting_akun'] = SettingAkun::where('corporate_id',Session::get('corp_id'))->where('akun_kategori', '!=', 'PEMBAYARAN')->get();
 
         $data['data_biaya'] = (new GlobalController)->setting_biaya();
             
-        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
+        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*', 'teknisis.*')
             ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            ->join('teknisis', 'teknisis.teknisi_idpel', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
             ->orderBy('tgl', 'DESC')
             ->where('registrasis.reg_progres', '=', 4)
-            ->where('registrasis.reg_status', '=', 'PAID');
+            ->where('registrasis.reg_status', '=', 'PAID')
+            ->where('registrasis.reg_jenis_tagihan', '!=', 'FREE');
         $data['data_registrasi'] = $query->get();
         $cek_mutasi = MutasiSales::count();
         // dd($cek_mutasi);
         if ($cek_mutasi > 0) {
             $fee_sales = MutasiSales::select('mutasi_sales.*', 'users.id as id_user', 'users.name as nama_user', 'users.created_at as tgl_mts_salas')
-                ->join('users', 'users.id', '=', 'mutasi_sales.smt_user_id')
-                ->orderBy('tgl_mts_salas', 'ASC')
+                ->join('users', 'users.id', '=', 'mutasi_sales.mutasi_sales_mitra_id')
+                ->orderBy('mutasi_sales_tgl_transaksi', 'ASC')
                 // ->whereDate('smt_tgl_transaksi', '>=',$start_date )
-                ->whereDate('smt_tgl_transaksi', '<=', $end_date)
-                ->where('smt_status', '=', 0);
+                ->whereDate('mutasi_sales_tgl_transaksi', '<=', $end_date)
+                ->where('mutasi_sales_status', '=', 0);
             $data['data_fee_sales'] = $fee_sales->get();
         } else {
 
-            $fee_sales = MutasiSales::where('smt_status', '=', 0);
+            $fee_sales = MutasiSales::where('mutasi_sales_status', '=', 0);
             $data['data_fee_sales'] = $fee_sales->get();
         }
         // dd($data['data_akumulasi']);
@@ -196,28 +202,32 @@ class TransaksiController extends Controller
     }
     public function jurnal_tutup_buku(Request $request)
     {
-        $lates = Jurnal::where('jurnal_status', 10)->orderBy('created_at', 'DESC')->first();
+        $cek = Jurnal::where('jurnal_status', 10)->orderBy('created_at', 'DESC')->first();
+        if($cek){
+            $lates = $cek;
+        }else {
+            $lates = Jurnal::where('jurnal_status', 1)->orderBy('created_at', 'ASC')->first();
+        }
+
         // dd($lates['jurnal_tgl'].' - '.$lates['jurnal_saldo']);
 
 
 
 
-        $tanggal = (new GlobalController)->tanggal();
+        $tanggal = Carbon::now();
 
         $jurnal_id = time();
         $admin = (new GlobalController)->user_admin();
-        // $data['startdate'] = $request->startdate;
         $data['enddate'] = $request->enddate;
         $pendapatan = Jurnal::where('jurnal_status', '=', 1)
-            // ->whereDate('created_at', '>=', date('Y-m-d', strtotime($data['startdate'])))
             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($data['enddate'])))
             ->sum('jurnal_kredit');
         $pengeluaran = Jurnal::where('jurnal_status', '=', 1)
-            // ->whereDate('created_at', '>=', date('Y-m-d', strtotime($data['startdate'])))
             ->whereDate('created_at', '<=', date('Y-m-d', strtotime($data['enddate'])))
             ->sum('jurnal_debet');
 
         $data['lm_id'] = $jurnal_id;
+        $data['corporate_id'] = Session::get('corp_id');
         $data['lm_admin'] = $admin['user_id'];
         $data['lm_debet'] = $pendapatan;
         $data['lm_kredit'] = $pengeluaran;
@@ -239,12 +249,14 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             ->update($update);
         $create_saldo_awal['jurnal_tgl'] = date('Y-m-d H:i:s', strtotime(Carbon::create($tanggal)->addDay(1)));
         $create_saldo_awal['jurnal_uraian'] = 'Saldo Awal';
+        $create_saldo_awal['corporate_id'] = Session::get('corp_id');
         $create_saldo_awal['jurnal_kategori'] = 'Saldo Awal';
 
         $create_saldo_awal['jurnal_keterangan'] = '-';
         $create_saldo_awal['jurnal_qty'] = '1';
         $create_saldo_awal['jurnal_admin'] = $admin['user_id'];
-        $create_saldo_awal['jurnal_metode_bayar'] = 2;
+        $create_saldo_awal['jurnal_metode_bayar'] = $request->akun;
+        $create_saldo_awal['jurnal_debet'] = 0;
         $create_saldo_awal['jurnal_kredit'] = $request->saldo_akhir;
         $create_saldo_awal['jurnal_saldo'] = $request->saldo_akhir;
         $create_saldo_awal['jurnal_status'] = 1;
@@ -270,6 +282,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
 
 
             $data['jurnal_id'] = time();
+            $data['corporate_id'] = Session::get('corp_id');
             $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
             $data['jurnal_uraian'] = $request->plat_kendaraan;
 
@@ -277,7 +290,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             $data['jurnal_qty'] = $request->qty;
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
-            $data['jurnal_metode_bayar'] = 2;
+            $data['jurnal_metode_bayar'] = $request->akun;
             $data['jurnal_debet'] = $request->jumlah;
             $data['jurnal_saldo'] = $cek_saldo['saldo'] - $request->jumlah;
             $data['jurnal_status'] = 1;
@@ -382,7 +395,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             $data['jurnal_qty'] = '1';
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
-            $data['jurnal_metode_bayar'] = 2;
+            $data['jurnal_metode_bayar'] = $request->akun;
             $data['jurnal_debet'] = $request->jumlah;
             $data['jurnal_saldo'] = $cek_saldo['saldo'] - $request->jumlah;
             $data['jurnal_status'] = 1;
@@ -419,7 +432,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
     }
     public function store_jurnal_pengeluaran(Request $request)
     {
-        $tanggal = (new GlobalController)->tanggal();
+        $tanggal = Carbon::now();
         $user = (new GlobalController)->user_admin();
         $cek_saldo = (new GlobalController)->mutasi_jurnal();
 
@@ -427,14 +440,16 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
 
 
             $data['jurnal_id'] = time();
+             $data['corporate_id'] = Session::get('corp_id');
             $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+            $data['jurnal_uraian'] = $request->uraian;
             $data['jurnal_uraian'] = $request->uraian;
             $data['jurnal_kategori'] = $request->jenis;
             $data['jurnal_keterangan'] = '-';
             $data['jurnal_qty'] = $request->qty;
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
-            $data['jurnal_metode_bayar'] = 2;
+            $data['jurnal_metode_bayar'] = $request->akun;
             $data['jurnal_debet'] = $request->jumlah;
             $data['jurnal_saldo'] = $cek_saldo['saldo'] - $request->jumlah;
             $data['jurnal_status'] = 1;
@@ -461,8 +476,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
     public function store_jurnal_pencairan(Request $request)
     {
 
-
-        $tanggal = (new GlobalController)->tanggal();
+        $tanggal = Carbon::now();
         $user = (new GlobalController)->user_admin();
         $cek_saldo = (new GlobalController)->mutasi_jurnal();
         $biaya = (new GlobalController)->setting_biaya();
@@ -478,14 +492,15 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             $marketing = $biaya->biaya_sales * $count;
 
             $data['jurnal_id'] = time();
-            $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+             $data['corporate_id'] = Session::get('corp_id');
+            $data['jurnal_tgl'] = date('Y-m-d H:i:s', strtotime($tanggal));
             $data['jurnal_uraian'] = 'Pencairan ' . $request->cpsb . ' PSB';
             $data['jurnal_kategori'] = 'Operasional Pasang Baru';
             $data['jurnal_qty'] = $request->cpsb;
             $data['jurnal_keterangan'] = 'PSB';
             $data['jurnal_admin'] = $user['user_id'];
             $data['jurnal_penerima'] = $request->penerima;
-            $data['jurnal_metode_bayar'] = 2;
+            $data['jurnal_metode_bayar'] = $request->akun;
             $data['jurnal_debet'] = $request->psb;
             $data['jurnal_saldo'] = $cek_saldo['saldo'] - $request->psb;
             $data['jurnal_status'] = 1;
@@ -500,6 +515,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
 
             if ($request->csales > 0) {
                 $cek_saldo2 = (new GlobalController)->mutasi_jurnal();
+                 $data1['corporate_id'] = Session::get('corp_id');
                 $data1['jurnal_id'] = time();
                 $data1['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
                 $data1['jurnal_uraian'] = 'Pencairan ' . $request->csales . ' Sales';
@@ -508,7 +524,7 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
                 $data1['jurnal_qty'] = $request->csales;
                 $data1['jurnal_admin'] = $user['user_id'];
                 $data1['jurnal_penerima'] = $request->penerima;
-                $data1['jurnal_metode_bayar'] = 2;
+                $data1['jurnal_metode_bayar'] = $request->akun;
                 $data1['jurnal_debet'] = $request->sales;
                 $data1['jurnal_saldo'] = $cek_saldo2['saldo'] - $request->sales;
                 $data1['jurnal_status'] = 1;
@@ -520,7 +536,6 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             Registrasi::where('reg_progres', '4')->whereIn('reg_idpel', $request->idpel)->update(['reg_progres' => '5']);
             Teknisi::whereIn('teknisi_idpel', $request->idpel)->where('teknisi_status', '1')->where('teknisi_job', 'PSB')->update(
                 [
-                    'teknisi_keuangan_userid' => $user['user_id'],
                     'teknisi_status' => 2,
                 ]
             );
@@ -534,24 +549,24 @@ Tanggal : ' . date('d-m-Y H:m:s', strtotime(Carbon::now())) . '';
             }
             $penerima = (new GlobalController)->data_user($request->penerima);
 
-            $pesan_group['pesan_id_site'] = '1';
             $pesan_group['layanan'] = 'CS';
             $pesan_group['ket'] = 'pencairan';
-            $pesan_group['target'] = env('GROUP_TEKNISI');
-            $pesan_group['nama'] = 'GROUP TEKNISI OVALL';
+            $pesan_group['corporate_id'] = Session::get('corp_id');
+            $pesan_group['target'] = env('GROUP_REPORT_PENCAIRAN');
+            $pesan_group['nama'] = 'GROUP PENCAIRAN';
             $pesan_group['pesan'] = '           -- PENCAIRAN DANA --
 
-Pencairan dana berhasil 😊
+Pencairan dana PSB & Sales berhasil 😊
 
-Pelanggan : ' . $request->uraian . '
 Jumlah Pencairan : ' . $count . '
-
-Jumlah Pencairan : ' . number_format($request->jumlah) . '
-Waktu Pencairan : ' . date('Y-m-d H:m:s', strtotime($tanggal)) . '
+Jumlah harga : ' . number_format($request->jumlah) . '
+Waktu Pencairan : ' . date('d-m-Y H:i:s', strtotime($tanggal)) . '
 
 Dikeluarkan oleh: ' . $user['user_nama'] . '
 Diterima oleh: ' . $penerima->nama_user . '
+Pelanggan :
 
+' . $request->uraian . '
     ';
             Pesan::create($pesan_group);
 
@@ -682,17 +697,19 @@ Diterima oleh: ' . $penerima->nama_user . '
     {
         $cek_saldo = (new GlobalController)->mutasi_jurnal();
         // dd($cek_saldo['saldo']);
-        $tanggal = (new GlobalController)->tanggal();
+        $tanggal = Carbon::now();
         $user = (new GlobalController)->user_admin();
 
         $data['jurnal_id'] = time();
-        $data['jurnal_tgl'] = date('Y-m-d H:m:s', strtotime($tanggal));
+        $data['corporate_id'] = Session::get('corp_id');
+        $data['jurnal_tgl'] = date('Y-m-d H:i:s', strtotime($tanggal));
         $data['jurnal_uraian'] = 'Topup Petty Cash ' . date('d-m-Y', strtotime($tanggal));
         $data['jurnal_kategori'] = 'TOPUP';
         $data['jurnal_qty'] = '1';
         $data['jurnal_keterangan'] = 'Topup Saldo';
         $data['jurnal_admin'] = $user['user_id'];
-        $data['jurnal_metode_bayar'] = 2;
+        $data['jurnal_metode_bayar'] = $request->akun;
+        $data['jurnal_debet'] = 0;
         $data['jurnal_kredit'] = $request->jumlah;
         $data['jurnal_saldo'] = $cek_saldo['saldo'] + $request->jumlah;
         $data['jurnal_status'] = 1;
@@ -718,21 +735,24 @@ Diterima oleh: ' . $penerima->nama_user . '
         return response()->download($pathToFile);
     }
 
-     public function pencairan_operasional()
-    {
+    //  public function pencairan_operasional()
+    // {
 
-        $data['data_bank'] = SettingAkun::where('id', '>', 1)->get();
-        $data['data_user'] = User::where('id', '>', 10)->get();
-        $data['data_biaya'] = SettingBiaya::first();
-        $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
-            ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-            ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-            ->orderBy('tgl', 'DESC');
+    //     $data['data_bank'] = SettingAkun::where('id', '>', 1)->get();
+    //     $data['data_user'] = User::where('id', '>', 10)->get();
+    //     $data['data_biaya'] = SettingBiaya::first();
+    //     $query = Registrasi::select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl', 'routers.*')
+    //         ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+    //         ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+    //         ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
+    //         ->orderBy('tgl', 'DESC');
 
-        $data['data_registrasi'] = $query->get();
+    //     $data['data_registrasi'] = $query->get();
 
-        return view('PSB/operasional', $data);
-    }
+    //     return view('PSB/operasional', $data);
+    // }
+
+   
     // public function konfirm_pencairan(Request $request)
     // {
     //     $admin = Auth::user()->id;

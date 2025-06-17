@@ -14,7 +14,7 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['role:admin|NOC|STAF ADMIN']);
+        $this->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
     }
     public function home()
     {

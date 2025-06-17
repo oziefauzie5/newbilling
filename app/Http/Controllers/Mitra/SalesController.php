@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\Pesan\Pesan;
 use App\Models\Model_Has_Role;
+use App\Models\PSB;
+use App\Models\PSB\KodePromo;
 
 class SalesController extends Controller
 {
@@ -55,6 +57,16 @@ class SalesController extends Controller
         $data['site'] = Data_Site::where('site_status','Enable')->get();
 
         return view('biller/sales_input', $data);
+    }
+    public function validasi_kode_promo($id)
+    {
+       
+        $data['kode_promo'] = KodePromo::where('corporate_id',Session::get('corp_id'))
+                                ->where('promo_id', $id)
+                                ->whereDate('promo_expired', '<=', date('Y-m-d',strtotime(Carbon::now())))
+                                ->first();
+        // dd($data['kode_promo']);
+        return response()->json($data);
     }
     public function sales_store(Request $request)
     {

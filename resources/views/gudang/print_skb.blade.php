@@ -171,7 +171,7 @@
         <tr>
             <td width="15%">No</td>
             <td>:</td>
-            <td width="40%">{{$data->bk_id}}</td>
+            <td width="40%">{{$data->bk_id ?? ''}}</td>
         </tr>
         <tr>
             <td>Tanggal Cetak</td>
@@ -179,17 +179,17 @@
             <td>{{date('d-M-Y h:m')}}</td>
             <td>Tanggal Barang Keluar</td>
             <td>:</td>
-            <td>{{date('d-M-Y', strtotime($data->bk_waktu_keluar))}}</td>
+            <td>{{date('d-M-Y', strtotime($data->bk_waktu_keluar ?? ''))}}</td>
                 </tr>
                 <tr>
                     <td>Jenis Laporan</td>
                     <td>:</td>
-                    <td>{{$data->bk_jenis_laporan}}</td>
+                    <td>{{$data->bk_jenis_laporan  ?? ''}}</td>
                 </tr>
         <tr>
             <td>Keterangan</td>
             <td>:</td>
-            <td>{{$data->bk_keperluan}}</td>
+            <td>{{$data->bk_keperluan  ?? ''}}</td>
         </tr>
 
        
@@ -219,7 +219,7 @@
         @endforeach
         <tr>
         <td colspan="7" style="text-align: right">Total</td>
-        <td colspan="1" style="text-align: right">{{ number_format($total) }}</td>
+        <td colspan="1" style="text-align: right">{{ number_format($total  ?? '0') }}</td>
         </tr>
     </table>
     <br>

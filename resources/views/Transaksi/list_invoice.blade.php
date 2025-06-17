@@ -64,7 +64,7 @@
           </div>
         </div>
       </div>
-      @role('admin')
+      @role('admin|KEUANGAN')
       <div class="col">
         <div class="card">
           <div class="card-body p-3 text-center">

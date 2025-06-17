@@ -46,6 +46,7 @@
               </ul>
           </div> 
         @endif
+        @role('admin|STAF ADMIN')
         <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
   Reimburse Karyawan
@@ -68,8 +69,10 @@ Pencairan Fee
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tutup_buku">
   Tutup Buku Mingguan
 </button>
+@endrole
 <a href="{{route('admin.lap.data_laporan_mingguan')}}"><button type="button" class="btn btn-primary"> Data Laporan Mingguan</button></a>
 <hr>
+@role('admin|STAF ADMIN')
 <h5 class="text-danger">CATATAN</h5>
 <ul>
                      <li>Reimburse dilakukan Perminggu setiap hari Sabtu dan Tanggal terakhir pada akhir bulan. </li>
@@ -77,6 +80,7 @@ Pencairan Fee
                  </ul>
 
 <hr>
+@endrole
 
 <!-- Modal Tutup Bukui-->
 <div class="modal fade" id="tutup_buku" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -200,6 +204,17 @@ Pencairan Fee
             <input type="number" class="form-control" value="0" name="jumlah" required>
             </div>
           </div>
+             <div class="col-sm-12">
+            <div class="form-group">
+              <label>Metode Bayar</label>
+              <select name="akun" id="" class="form-control akun" required>
+                <option value="">--Metode Bayar--</option>
+              @foreach($akun as $a)
+              <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+              @endforeach
+              </select>
+            </div>
+          </div>
           <div class="col-sm-12">
             <div class="form-group">
               <label>Upload Bukti</label>
@@ -310,6 +325,17 @@ Pencairan Fee
             <input type="number" class="form-control" id="total_komisi" value="0" name="total_komisi" required readonly>
             </div>
           </div>
+             <div class="col-sm-12">
+            <div class="form-group">
+              <label>Metode Bayar</label>
+              <select name="akun" id="" class="form-control akun" required>
+                <option value="">--Metode Bayar--</option>
+              @foreach($akun as $a)
+              <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+              @endforeach
+              </select>
+            </div>
+          </div>
           <div class="col-sm-12">
             <div class="form-group">
               <label>Upload Bukti</label>
@@ -371,7 +397,7 @@ Pencairan Fee
                       {{-- <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-psb="{{$data_biaya->biaya_psb}}"data-cpsb="1" data-sales="@if($d->reg_fee > 0) 0 @else  {{$data_biaya->biaya_sales}} @endif"data-csales="@if($d->reg_fee > 0) 0 @else  1 @endif"></td> --}}
                      
                       {{-- Jika menggunakan sistem fee continue tetapi di awal dapet 50k --}}
-                      <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-psb="{{$data_biaya->biaya_psb}}"data-cpsb="1" data-sales="{{$data_biaya->biaya_sales}}" data-csales="1"></td>
+                      <td> <input type="checkbox" class="jurnal_pencairan" name="idpel[]" value="{{$d->reg_idpel}}" data-nama="{{$d->input_nama}}" data-subsales="{{$d->input_subsales}}, {{$d->teknisi_team}}" data-psb="{{$data_biaya->biaya_psb}}"data-cpsb="1" data-sales="{{$data_biaya->biaya_sales}}" data-csales="1"></td>
                       <td>{{$d->reg_nolayanan}}</td>
                       <td>{{$d->input_nama}}</td>
                       <td>{{$d->input_alamat_pasang}}</td>
@@ -384,16 +410,27 @@ Pencairan Fee
           <div class="col-sm-12">
             <div class="form-group">
               <label>Uraian</label>
-            <input type="text" class="form-control" id="uraian" value="" name="uraian" required readonly>
+            <textarea type="text" class="form-control" id="uraian" value="" name="uraian" required readonly></textarea>
             </div>
           </div>
           <div class="col-sm-12">
             <div class="form-group">
               <label>Penerima</label>
               <select name="penerima" id="" class="form-control penerima" required>
-                <option value="">PILIH PENERIMA</option>
+                <option value="">--Pilih Penerima--</option>
               @foreach($user as $u)
               <option value="{{$u->id}}">{{$u->name}}</option>
+              @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label>Metode Bayar</label>
+              <select name="akun" id="" class="form-control akun" required>
+                <option value="">--Metode Bayar--</option>
+              @foreach($akun as $a)
+              <option value="{{$a->id}}">{{$a->akun_nama}}</option>
               @endforeach
               </select>
             </div>
@@ -566,6 +603,17 @@ Pencairan Fee
               </select>
             </div>
           </div>
+             <div class="col-sm-12">
+            <div class="form-group">
+              <label>Metode Bayar</label>
+              <select name="akun" id="" class="form-control akun" required>
+                <option value="">--Metode Bayar--</option>
+              @foreach($akun as $a)
+              <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+              @endforeach
+              </select>
+            </div>
+          </div>
           <div class="col-sm-12">
             <div class="form-group">
               <label>Qty</label>
@@ -614,6 +662,17 @@ Pencairan Fee
             <div class="form-group">
               <label>Jumlah Topup Rp. {{number_format(2000000-($kredit-$debet))}}</label>
             <input type="text" class="form-control readonly" value="{{2000000-($kredit-$debet)}}" name="jumlah">
+            </div>
+          </div>
+             <div class="col-sm-12">
+            <div class="form-group">
+              <label>Metode Bayar</label>
+              <select name="akun" id="" class="form-control akun" required>
+                <option value="">--Metode Bayar--</option>
+              @foreach($akun as $a)
+              <option value="{{$a->id}}">{{$a->akun_nama}}</option>
+              @endforeach
+              </select>
             </div>
           </div>
           <!-- <div class="col-sm-12">

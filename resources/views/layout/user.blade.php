@@ -429,6 +429,48 @@ swal("{{Session::get('alert')}}!", "{{Session::get('pesan')}}", {
 			});
 		
 	</script>
+
+
+<script>
+	
+	$('#validasi_kode_promo').keyup(function() {
+	var validasi_kode_promo = $('#validasi_kode_promo').val();
+	console.log(validasi_kode_promo)
+var url = '{{ route("admin.sales.validasi_kode_promo", ":id") }}';
+url = url.replace(':id', validasi_kode_promo);
+$.ajax({
+	url: url,
+			type: 'GET',
+			data: {'_token': '{{ csrf_token() }}'},
+						dataType: 'json',
+						success: function(data) {
+							if(data['kode_promo']){
+								$('.notif_validasi').removeClass('has-error has-feedback')
+								$('.notif_validasi').addClass('has-success has-feedback')
+								$('#pesan').html('')
+							} else {
+								$('.notif_validasi').removeClass('has-success has-feedback')
+								$('.notif_validasi').addClass('has-error has-feedback')
+								$('#pesan').html('Kode Promo tidak ditemukan atau Expired')
+							}
+						},
+						// error: function(error) {
+						// 	$('#validasi_odc').val('')
+						// 		// $('#validasi_olt').val('')
+						// 		$('#validasi_olt').empty()
+						// 		$('#validasi_router').empty()
+						// 		$('#validasi_pop').empty()
+						// 		$('#validasi_site').empty()
+						// 		$('.notif').addClass('has-error has-feedback')
+						// 		$('.notif_valtiket').addClass('has-error has-feedback')
+						// 		$('#pesan').html('<small id="text" class="form-text text-muted text-danger">Kode ODP tidak ditemukan</small>')
+
+						// },
+					});
+});
+</script>
+
+
 	<!-- <script>
 		$(document).ready(function() {
 			$("#edit_pactcore").click(function() {
@@ -1079,6 +1121,10 @@ $(function(){
   
  });
 });
+
+
+
+
 	</script>
 	<script>
 		$('#lineChart').sparkline([102,109,120,99,110,105,115], {

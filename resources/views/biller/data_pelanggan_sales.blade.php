@@ -148,7 +148,7 @@
                             <div class="text-uppercase fw-bold op-8 ">{{$list->reg_jenis_tagihan}}</div>
                           </div>
                           <div class="col-4 pl-0 text-right">
-                            <div class="text-primary text-uppercase fw-bold op-8 ">Rp. {{number_format($list->reg_harga+$list->reg_kode_unik+$list->reg_ppn+$list->reg_dana_kas+$list->reg_dana_kerja_sama)}}</div>
+                            <div class="text-primary text-uppercase fw-bold op-8 ">Rp. {{number_format($list->reg_harga+$list->reg_kode_unik+$list->reg_ppn)}}</div>
                           </div>
                           <div class="col-4 pr-0">
                             <h6 class="text-uppercase fw-bold op-8 ">Status</h6>

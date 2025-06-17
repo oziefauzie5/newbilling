@@ -62,34 +62,34 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     
     Route::group(['prefix' => 'admin', 'middleware' => ['auth:web'], 'as' => 'admin.'], function () {
         
-        Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN']);
+        Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
         
         
         ##EXPORT
-        Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin']);
-        Route::post('/input-import', [ExportController::class, 'import_input_data'])->name('export.import_input_data')->middleware(['role:admin']);
-        Route::get('/regist-export', [ExportController::class, 'export_registrasi'])->name('export.export_registrasi')->middleware(['role:admin']);
-        Route::post('/regist-import', [ExportController::class, 'import_registrasi'])->name('export.import_registrasi')->middleware(['role:admin']);
-        Route::post('/pop-import', [ExportController::class, 'import_pop'])->name('export.import_pop')->middleware(['role:admin']);
-        Route::post('/olt-import', [ExportController::class, 'import_olt'])->name('export.import_olt')->middleware(['role:admin']);
-        Route::post('/odc-import', [ExportController::class, 'import_odc'])->name('export.import_odc')->middleware(['role:admin']);
-        Route::post('/odp-import', [ExportController::class, 'import_odp'])->name('export.import_odp')->middleware(['role:admin']);
-        Route::post('/paket-import', [ExportController::class, 'import_paket'])->name('export.import_paket')->middleware(['role:admin']);
-        Route::post('/instalsi-import', [ExportController::class, 'import_instalasi'])->name('export.import_instalasi')->middleware(['role:admin']);
-        Route::post('/fee-import', [ExportController::class, 'import_fee'])->name('export.import_fee')->middleware(['role:admin']);
-        Route::post('/barang-import', [ExportController::class, 'barang_import'])->name('export.barang_import')->middleware(['role:admin']);
-        Route::post('/barang-keluar-import', [ExportController::class, 'barang_keluar_import'])->name('export.barang_keluar_import')->middleware(['role:admin']);
-        Route::post('/Invoice-keluar-import', [ExportController::class, 'invoice_import'])->name('export.invoice_import')->middleware(['role:admin']);
-        Route::post('/SubInvoice-import', [ExportController::class, 'Subinvoice_import'])->name('export.Subinvoice_import')->middleware(['role:admin']);
-        Route::post('/SubInvoice-import_teknisi', [ExportController::class, 'import_teknisi'])->name('export.import_teknisi')->middleware(['role:admin']);
-        Route::post('/SubInvoice-import_laporan', [ExportController::class, 'import_laporan'])->name('export.import_laporan')->middleware(['role:admin']);
-        Route::post('/SubInvoice-import_mutasi', [ExportController::class, 'import_mutasi'])->name('export.import_mutasi')->middleware(['role:admin']);
-        Route::post('/SubInvoice-import_akun', [ExportController::class, 'import_akun'])->name('export.import_akun')->middleware(['role:admin']);
-        Route::post('/SubInvoice-import_jurnal', [ExportController::class, 'import_jurnal'])->name('export.import_jurnal')->middleware(['role:admin']);
- Route::post('/import_user', [ExportController::class, 'import_user'])->name('export.import_user')->middleware(['role:admin']);
- Route::post('/import_kategori', [ExportController::class, 'import_kategori'])->name('export.import_kategori')->middleware(['role:admin']);
- Route::post('/import_mitra', [ExportController::class, 'import_mitra'])->name('export.import_mitra')->middleware(['role:admin']);
- Route::post('/import_tiket', [ExportController::class, 'import_tiket'])->name('export.import_tiket')->middleware(['role:admin']);
+        Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/input-import', [ExportController::class, 'import_input_data'])->name('export.import_input_data')->middleware(['role:admin|STAF ADMIN']);
+        Route::get('/regist-export', [ExportController::class, 'export_registrasi'])->name('export.export_registrasi')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/regist-import', [ExportController::class, 'import_registrasi'])->name('export.import_registrasi')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/pop-import', [ExportController::class, 'import_pop'])->name('export.import_pop')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/olt-import', [ExportController::class, 'import_olt'])->name('export.import_olt')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/odc-import', [ExportController::class, 'import_odc'])->name('export.import_odc')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/odp-import', [ExportController::class, 'import_odp'])->name('export.import_odp')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/paket-import', [ExportController::class, 'import_paket'])->name('export.import_paket')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/instalsi-import', [ExportController::class, 'import_instalasi'])->name('export.import_instalasi')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/fee-import', [ExportController::class, 'import_fee'])->name('export.import_fee')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/barang-import', [ExportController::class, 'barang_import'])->name('export.barang_import')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/barang-keluar-import', [ExportController::class, 'barang_keluar_import'])->name('export.barang_keluar_import')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/Invoice-keluar-import', [ExportController::class, 'invoice_import'])->name('export.invoice_import')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/SubInvoice-import', [ExportController::class, 'Subinvoice_import'])->name('export.Subinvoice_import')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/SubInvoice-import_teknisi', [ExportController::class, 'import_teknisi'])->name('export.import_teknisi')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/SubInvoice-import_laporan', [ExportController::class, 'import_laporan'])->name('export.import_laporan')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/SubInvoice-import_mutasi', [ExportController::class, 'import_mutasi'])->name('export.import_mutasi')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/SubInvoice-import_akun', [ExportController::class, 'import_akun'])->name('export.import_akun')->middleware(['role:admin|STAF ADMIN']);
+        Route::post('/SubInvoice-import_jurnal', [ExportController::class, 'import_jurnal'])->name('export.import_jurnal')->middleware(['role:admin|STAF ADMIN']);
+ Route::post('/import_user', [ExportController::class, 'import_user'])->name('export.import_user')->middleware(['role:admin|STAF ADMIN']);
+ Route::post('/import_kategori', [ExportController::class, 'import_kategori'])->name('export.import_kategori')->middleware(['role:admin|STAF ADMIN']);
+ Route::post('/import_mitra', [ExportController::class, 'import_mitra'])->name('export.import_mitra')->middleware(['role:admin|STAF ADMIN']);
+ Route::post('/import_tiket', [ExportController::class, 'import_tiket'])->name('export.import_tiket')->middleware(['role:admin|STAF ADMIN']);
     
     ##CRUD DATA USER
     Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware(['role:admin|STAF ADMIN']);
@@ -171,7 +171,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/hotspot', [HotspotController::class, 'index'])->name('vhc.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     
     #--FTTH
-    Route::get('/ftth', [PsbController::class, 'ftth'])->name('psb.ftth')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/ftth', [PsbController::class, 'ftth'])->name('psb.ftth')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
     Route::get('/ftth/input-data', [PsbController::class, 'input_data'])->name('psb.input_data')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/ftth/{id}/input-data-update-view', [PsbController::class, 'input_data_update_view'])->name('psb.input_data_update_view')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/ftth/{id}/input-data_update', [PsbController::class, 'input_data_update'])->name('psb.input_data_update')->middleware(['role:admin|NOC|STAF ADMIN']); 
@@ -185,7 +185,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/ftth/{id}/getMitraSubfee', [RegistrasiController::class, 'getMitraSubfee'])->name('reg.getMitraSubfee')->middleware(['role:admin|NOC|STAF ADMIN']); 
     Route::get('/ftth/{id}/val-odp', [RegistrasiController::class, 'aktivasi_validasi_odp'])->name('reg.aktivasi_validasi_odp')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/ftth/{id}/validasiBarang', [RegistrasiController::class, 'validasiBarang'])->name('reg.validasiBarang')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/ftth/{id}/cek_invoice', [RegistrasiController::class, 'cek_invoice'])->name('reg.cek_invoice')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/ftth/{id}/cek_invoice', [RegistrasiController::class, 'cek_invoice'])->name('reg.cek_invoice')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
     
     
 
@@ -211,17 +211,17 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/pelanggan/berita_acara', [RegistrasiController::class, 'berita_acara'])->name('psb.berita_acara')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/{id}/Print-Berita_Acara', [RegistrasiController::class, 'print_berita_acara'])->name('psb.print_berita_acara')->middleware(['role:admin|NOC|STAF ADMIN']);
     // ------------PENCAIRAN PSB-----------------
-    // Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('psb.bukti_kas_keluar')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Transaksi/{id}/bukti-kas-keluar', [RegistrasiController::class, 'bukti_kas_keluar'])->name('reg.bukti_kas_keluar')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/Transaksi/{id}/buat-laporan', [LaporanController::class, 'buat_laporan'])->name('inv.buat_laporan')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/serah-terima', [LaporanController::class, 'serah_terima'])->name('inv.serah_terima')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/topup', [LaporanController::class, 'topup'])->name('inv.topup')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/Transaksi/{id}/topup', [LaporanController::class, 'lap_topup'])->name('inv.lap_topup')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Delete', [LaporanController::class, 'lap_delete'])->name('inv.lap_delete')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/Transaksi/data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Transaksi/data-Laporan', [LaporanController::class, 'data_laporan'])->name('inv.data_laporan')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
     Route::post('/Transaksi/add-pendapatan', [LaporanController::class, 'store_add_transaksi'])->name('lap.store_add_transaksi')->middleware(['role:admin|STAF ADMIN']);
     Route::delete('/Transaksi/{id}/Data-Laporan', [LaporanController::class, 'data_lap_delete'])->name('inv.data_lap_delete')->middleware(['role:admin|STAF ADMIN']);
 
-    Route::get('/Transaksi/jurnal', [TransaksiController::class, 'jurnal'])->name('lap.jurnal')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/Transaksi/jurnal', [TransaksiController::class, 'jurnal'])->name('lap.jurnal')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
     Route::get('/Transaksi/{id}/jurnal-laporan', [TransaksiController::class, 'jurnal_laporan'])->name('lap.jurnal_laporan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/Transaksi/reimbuse', [TransaksiController::class, 'store_jurnal_reimbuse'])->name('lap.store_jurnal_reimbuse')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/Transaksi/download-file/{id}', [TransaksiController::class, 'download_file'])->name('lap.download_file')->middleware(['role:admin|STAF ADMIN']);
@@ -232,7 +232,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::post('/Transaksi/pencairan-fee', [TransaksiController::class, 'store_jurnal_fee_sales'])->name('lap.store_jurnal_fee_sales')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/tutup-buku', [TransaksiController::class, 'jurnal_tutup_buku'])->name('lap.jurnal_tutup_buku')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/Transaksi/jurnal_pengeluaran', [TransaksiController::class, 'store_jurnal_pengeluaran'])->name('lap.store_jurnal_pengeluaran')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/Transaksi/data-laporan', [TransaksiController::class, 'data_laporan_mingguan'])->name('lap.data_laporan_mingguan')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/Transaksi/data-laporan', [TransaksiController::class, 'data_laporan_mingguan'])->name('lap.data_laporan_mingguan')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
     Route::get('/Transaksi/{id}/laporan-mingguan-print', [TransaksiController::class, 'jurnal_print'])->name('lap.jurnal_print')->middleware(['role:admin|STAF ADMIN']);
     
     Route::get('/pelanggan/Registrasi-cari/{id}', [RegistrasiController::class, 'pilih_pelanggan_registrasi'])->name('reg.pilih_pelanggan_registrasi')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -266,22 +266,22 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/teknisi/teknisi-getBarang/{id}', [TeknisiController::class, 'getBarang'])->name('teknisi.getBarang')->middleware(['role:TEKNISI']);
     
     
-    Route::get('/invoice', [InvoiceController::class, 'index'])->name('inv.index')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/invoice/rolback/{id}', [InvoiceController::class, 'rollback'])->name('inv.rollback')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/invoice/generate', [GenerateInvoice::class, 'generate_invoice'])->name('inv.generate_invoice')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/paid', [InvoiceController::class, 'paid'])->name('inv.paid')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/invoice/detail/{id}', [InvoiceController::class, 'sub_invoice'])->name('inv.sub_invoice')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/invoice/print/{id}', [InvoiceController::class, 'print_inv'])->name('inv.print_inv')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/invoice/payment/{id}', [InvoiceController::class, 'payment'])->name('inv.payment')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/invoice/addons/{id}', [InvoiceController::class, 'addons'])->name('inv.addons')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/invoice/diskon/{id}', [InvoiceController::class, 'addDiskon'])->name('inv.addDiskon')->middleware(['role:admin|STAF ADMIN']);
-    Route::delete('/invoice/addons-hapus/{id}/{inv}/{tot}', [InvoiceController::class, 'addons_delete'])->name('inv.addons_delete')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/invoice/edit-inv/{inv_id}', [InvoiceController::class, 'update_inv'])->name('inv.update_inv')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/invoice/edit-tgl_bayar/{inv_id}', [InvoiceController::class, 'update_tgl_bayar'])->name('inv.update_tgl_bayar')->middleware(['role:admin|STAF ADMIN']);
-    Route::delete('/invoice/delete-inv/{inv_id}', [InvoiceController::class, 'delete_inv'])->name('inv.delete_inv')->middleware(['role:admin|STAF ADMIN']);
-    Route::post('/invoice/add-inv-manual', [InvoiceController::class, 'add_inv_manual'])->name('inv.add_inv_manual')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/suspend-manual', [InvoiceController::class, 'suspend_manual'])->name('inv.suspend_manual')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/test2', [InvoiceController::class, 'test2'])->name('inv.test2')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/invoice', [InvoiceController::class, 'index'])->name('inv.index')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::put('/invoice/rolback/{id}', [InvoiceController::class, 'rollback'])->name('inv.rollback')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::get('/invoice/generate', [GenerateInvoice::class, 'generate_invoice'])->name('inv.generate_invoice')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::get('/paid', [InvoiceController::class, 'paid'])->name('inv.paid')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::get('/invoice/detail/{id}', [InvoiceController::class, 'sub_invoice'])->name('inv.sub_invoice')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::put('/invoice/print/{id}', [InvoiceController::class, 'print_inv'])->name('inv.print_inv')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::put('/invoice/payment/{id}', [InvoiceController::class, 'payment'])->name('inv.payment')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::put('/invoice/addons/{id}', [InvoiceController::class, 'addons'])->name('inv.addons')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::put('/invoice/diskon/{id}', [InvoiceController::class, 'addDiskon'])->name('inv.addDiskon')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::delete('/invoice/addons-hapus/{id}/{inv}/{tot}', [InvoiceController::class, 'addons_delete'])->name('inv.addons_delete')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::put('/invoice/edit-inv/{inv_id}', [InvoiceController::class, 'update_inv'])->name('inv.update_inv')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::put('/invoice/edit-tgl_bayar/{inv_id}', [InvoiceController::class, 'update_tgl_bayar'])->name('inv.update_tgl_bayar')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::delete('/invoice/delete-inv/{inv_id}', [InvoiceController::class, 'delete_inv'])->name('inv.delete_inv')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::post('/invoice/add-inv-manual', [InvoiceController::class, 'add_inv_manual'])->name('inv.add_inv_manual')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::get('/suspend-manual', [InvoiceController::class, 'suspend_manual'])->name('inv.suspend_manual')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::get('/test2', [InvoiceController::class, 'test2'])->name('inv.test2')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
     
     
     
@@ -307,6 +307,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/sales/pelanggan', [SalesController::class, 'pelanggan'])->name('sales.pelanggan')->middleware(['role:SALES|PIC']);
     Route::get('/sales/mutasi', [SalesController::class, 'mutasi_sales'])->name('sales.mutasi_sales')->middleware(['role:SALES|PIC']);
     Route::post('/sales/sales-export/pdf', [SalesController::class, 'mutasi_sales_pdf'])->name('sales.mutasi_sales')->middleware(['role:SALES|PIC']);
+    Route::get('/sales/validasi-promo/{id}', [SalesController::class, 'validasi_kode_promo'])->name('sales.validasi_kode_promo')->middleware(['role:SALES|PIC']);
     
     
 
@@ -360,10 +361,10 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/setting/rt', [AppController::class, 'data_rt'])->name('app.data_rt')->middleware(['role:admin|STAF ADMIN']);
     
     ##--KEUANGAN/TRANSAKSI
-    Route::get('/Transaksi/Operasional', [TransaksiController::class, 'pencairan_operasional'])->name('trx.pencairan_operasional')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::put('/Transaksi/Konfirmasi-Pencairan', [TransaksiController::class, 'konfirm_pencairan'])->name('trx.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/Transaksi/laporan-harian-admin', [LaporanController::class, 'laporan_harian'])->name('trx.laporan_harian')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('trx.laporan_print')->middleware(['role:admin|STAF ADMIN']);
+    // Route::get('/Transaksi/Operasional', [TransaksiController::class, 'pencairan_operasional'])->name('trx.pencairan_operasional')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
+    Route::put('/Transaksi/Konfirmasi-Pencairan', [TransaksiController::class, 'konfirm_pencairan'])->name('trx.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
+    Route::get('/Transaksi/laporan-harian-admin', [LaporanController::class, 'laporan_harian'])->name('trx.laporan_harian')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
+    Route::get('/Transaksi/{id}/Print-Laporan', [LaporanController::class, 'laporan_print'])->name('trx.laporan_print')->middleware(['role:admin|STAF ADMIN|KEUANGAN']);
     
     
     ##--HOSTPOT
@@ -426,7 +427,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/gudang/print-stok-gudang', [GudangController::class, 'print_stok_gudang'])->name('gudang.print_stok_gudang')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/gudang/print-barang_masuk', [GudangController::class, 'print_barang_masuk'])->name('gudang.print_barang_masuk')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/data-group-barang-keluar', [GudangController::class, 'data_group_barang_keluar'])->name('gudang.data_group_barang_keluar')->middleware(['role:admin|STAF ADMIN']);
-    // Route::get('/gudang/print-skb', [GudangController::class, 'print_skb'])->name('gudang.print_skb')->middleware(['role:admin|STAF ADMIN']);
+    Route::get('/gudang/print-skb', [GudangController::class, 'print_skb'])->name('gudang.print_skb')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/print-request-barang', [GudangController::class, 'print_request_barang'])->name('gudang.print_request_barang')->middleware(['role:admin|STAF ADMIN']);
     ##--PUTUS BERLANGGAN--
     Route::put('/pelanggan/{id}/deaktivasi-pelanggan', [RegistrasiController::class, 'deaktivasi_pelanggan'])->name('reg.deaktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -438,7 +439,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/pelanggan/{id}/cek-perangkat-hilang', [RegistrasiController::class, 'cek_perangkat_hilang'])->name('reg.cek_perangkat_hilang')->middleware(['role:admin|NOC|STAF ADMIN']);
     ##--REGISTRASI/EDIT/AKTIVASI--
     Route::put('/pelanggan/update-Router/{id}', [RegistrasiApiController::class, 'update_router'])->name('reg.update_router')->middleware(['role:admin|NOC|STAF ADMIN']);
-    Route::get('/pelanggan/{id}/form-pelanggan', [RegistrasiController::class, 'form_update_pelanggan'])->name('reg.form_update_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/pelanggan/{id}/form-pelanggan', [RegistrasiController::class, 'form_update_pelanggan'])->name('reg.form_update_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
     // Route::put('/pelanggan/{id}/form-update-pelanggan/no-skb', [RegistrasiController::class, 'proses_update_noskb'])->name('reg.proses_update_noskb')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/pelanggan/data-aktivasi-pelanggan', [RegistrasiController::class, 'data_aktivasi_pelanggan'])->name('reg.data_aktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/ftth/{id}/aktivasi_pelanggan', [RegistrasiController::class, 'aktivasi_pelanggan'])->name('reg.aktivasi_pelanggan')->middleware(['role:admin|NOC|STAF ADMIN']);

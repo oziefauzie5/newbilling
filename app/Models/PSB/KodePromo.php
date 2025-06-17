@@ -12,6 +12,7 @@ class KodePromo extends Model
         'corporate_id',
         'promo_id',
         'promo_nama',
+        'promo_paket_id',
         'promo_harga',
         'promo_expired',
     ];

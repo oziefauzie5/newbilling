@@ -44,7 +44,7 @@
             <tbody>
             @foreach ($barang_keluar as $d)
             <tr>
-              <td> <a href="" >{{ $d->bk_id}}</a> </td>
+              <td> <a href="{{route('admin.gudang.print_skb')}}?skb={{$d->bk_id}}"  target="_blank" >{{ $d->bk_id}}</a> </td>
               <td>{{ $d->bk_id_barang}}</td>
               <td>{{ $d->bk_jenis_laporan}}</td>
               <td>{{ $d->bk_id_tiket}}</td>

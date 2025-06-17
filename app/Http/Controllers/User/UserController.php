@@ -32,7 +32,22 @@ class UserController extends Controller
     {
         $data['data_user'] = User::join('model_has_roles', 'model_has_roles.model_id','=','users.id')
                                 ->join('roles', 'roles.id','=','model_has_roles.role_id')
-                                ->where('corporate_id',Session::get('corp_id'))->with(['user_site'])->get();            
+                                ->join('data__sites', 'data__sites.id','=','users.data__site_id')
+                                ->where('users.corporate_id',Session::get('corp_id'))
+                                ->whereIn('model_has_roles.role_id',[1,2,3,4,5,6,7,8,9])
+                                ->select(['users.id as id_user',
+                                        'users.name as nama_user',
+                                        'users.alamat_lengkap',
+                                        'users.hp',
+                                        'users.email',
+                                        'users.ktp',
+                                        'users.username',
+                                        'users.tgl_gabung',
+                                        'users.status_user',
+                                        'data__sites.site_nama',
+                                        'roles.name as level',
+                                        ])
+                                ->get();            
         $data['role'] = Role::where('id','!=','13')->get();
         $data['data_site'] = Data_Site::where('corporate_id',Session::get('corp_id'))->where('site_status', 'Enable')->get();
         return view('User/index', $data);
