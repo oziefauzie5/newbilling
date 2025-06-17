@@ -75,7 +75,7 @@
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label" >ID Pelanggan</label>
                 <div class="col-sm-4">
-                  <input type="number" id="tampil_idpel" class="form-control" name="reg_idpel" value="" name="reg_idpel" readonly >
+                  <input type="number" id="tampil_idpel" class="form-control" name="reg_idpel" value="" readonly >
                 </div>
                   <label class=" col-sm-2 col-form-label">No Layanan</label>
                 <div class="col-sm-4">
@@ -146,7 +146,7 @@
                 </div>
                 <label for="paket" class="col-sm-2 col-form-label" >Tanggal Pasang*</label>
                 <div class="col-sm-4">
-                <input type="text" class="form-control datepicker" id="" name="reg_tgl_pasang" value="" >
+                <input type="text" class="form-control datepicker" id="reg_tgl_pasang" name="reg_tgl_pasang" value="" >
                 </div>
               </div>
                 <div class="form-group row">
@@ -210,36 +210,37 @@
               <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Pic Lapangan</label>
               <div class="col-sm-4">
-                <select name="reg_mitra[]" id="reg_mitra" class="form-control">
-                  {{-- <option value="0">--None--</option>
+                <select name="reg_mitra[]" id="tampil_sales" class="form-control">
+                  <!-- {{-- <option value="0">--None--</option>
                   @foreach ($mitra as $m)
                   <option value="{{$m->mts_user_id ??''}}">{{$m->user_mitra->name ??''}} | Sub Mitra {{$m->mitra_sub->count() ?? ''}}</option>
-                  @endforeach --}}
-                </select>
+                  @endforeach --}}-->
+                </select> 
               </div>
               
               <label class="col-sm-2 col-form-label">Fee PIC</label>
               <div class="col-sm-4">
                 {{-- <input type="text" class="form-control readonly " id="fee_pic" name="fee[]" value="{{Session::get('fee_pic')}}" > --}}
-                <select type="text" class="form-control readonly" id="fee_pic" name="fee[]" ></select>
+                <select type="text" class="form-control readonly" id="tampil_fee_sales" name="fee[]" ></select>
                 </div>
                   
               </div>
               <div class="form-group row">
                    <label class="col-sm-2 col-form-label">Sub Pic Lapangan</label>
                   <div class="col-sm-4">
-                    <select name="reg_mitra[]" id="sub_mitra" class="form-control">
-                  <option value="">--None--</option>
+                    <select name="reg_mitra[]" id="tampil_sub_pic" class="form-control">
+                  <!-- <option value="">--None--</option> -->
                 </select>
               </div>
                  <label class="col-sm-2 col-form-label">Fee SUB-PIC</label>
                 <div class="col-sm-4">
                   {{-- <input type="text" class="form-control readonly" id="fee_subpic" name="fee[]" value="{{Session::get('fee_subpic')}}" > --}}
-                  <select type="text" class="form-control readonly " id="fee_subpic" name="fee[]" ></select>
+                  <select type="text" class="form-control readonly " id="tampil_fee_subpic" name="fee[]" ></select>
+                  <div id="div_batas"></div>
                 </div>
                 
             </div>
-              <div class="form-group row">
+              <!-- <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Sales Id</label>
                   <div class="col-sm-4">
                     <select name="reg_mitra[]" id="tampil_sales" class="form-control "></select>
@@ -250,11 +251,12 @@
                   <select type="text" class="form-control readonly fee_sales" id="tampil_fee_sales" name="fee[]" ></select>
                   {{-- <input type="text" class="form-control readonly fee_sales" id="tampil_fee_sales" name="fee[]" value="{{Session::get('fee_sales')}}" > --}}
                 </div>
-              </div>
+              </div> -->
               <div class="form-group row">
-                 <label class="col-sm-2 col-form-label">Sub Sales</label>
+                 <label class="col-sm-2 col-form-label">Informasi</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control " id="tampil_subsales" name="input_subseles" value="{{Session::get('input_subseles')}}" readonly>
+                  <select name="tampil_subsales" class="form-control " id="tampil_subsales"></select>
+                  <!-- <input type="text" class="form-control " id="tampil_subsales" name="input_subseles" value="{{Session::get('input_subseles')}}" readonly> -->
                 </div>
               </div>
             {{-- </div> --}}

@@ -19,7 +19,7 @@ class MitraSetting extends Model
         'mts_komisi',
         'mts_wilayah',
         'created_at',
-            'updated_at',
+        'updated_at',
     ];
 
     //  public $timestamps = false;

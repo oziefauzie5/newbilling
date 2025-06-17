@@ -3710,11 +3710,13 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 							$('#tampil_tgl').val(data['tampil_data']['input_tgl']);
 							$('#tampil_site').val(data['tampil_site']['id']);
 
-							if(data['tampil_data']['input_subseles']){
-								$('#tampil_subsales').val(data['tampil_data']['input_subseles']);
-							} else {
-								$('#tampil_subsales').val('');
-							}
+							// if(data['tampil_data']['input_subseles']){
+							// 	$('#tampil_subsales').empty()
+							// 	$('#tampil_subsales').append('<option value="'+data['tampil_data']['input_subseles']+'">'+data['tampil_data']['input_subseles']+'</option>')
+							// } else {
+							// 	$('#tampil_subsales').empty()
+							// 	$('#tampil_subsales').append('<option value="FREE">FREE</option>')
+							// }
 
 							if(data['tampil_data']['input_promo']){
 								$('#tampil_promo').val(data['tampil_data']['input_promo']);
@@ -3723,37 +3725,128 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 
 
 							$('#tampil_keterangan').val(data['tampil_data']['input_keterangan']);
-							$('#reg_mitra').empty()
-							$('#reg_mitra').append('<option value="">--None--</option>')
-							
+							// $('#reg_mitra').empty()
+							// $('#reg_mitra').append('<option value="">--None--</option>')
+							$('#reg_tgl_pasang').attr('required', 'required');
+							$('#paket').attr('required', 'required');
+							$('#jenis_tagihan').attr('required', 'required');
+							$('#jenis_tagihan').empty()
+							$('#jenis_tagihan').append('<option value="">--Pilih Jenis Tagihan--</option>')
+							$('#jenis_tagihan').append('<option value="PRABAYAR">PRABAYAR</option>') 
+							$('#jenis_tagihan').append('<option value="PASCABAYAR">PASCABAYAR</option>') 
+							$('#jenis_tagihan').append('<option value="FREE">FREE</option>') 
+							$('#jenis_tagihan').on('change', function() {
+									
+									var jenis_tagihan = $(this).val();
+									var tampil_idpel = $('#tampil_idpel').val();
+									var url = '{{ route("admin.reg.getPic", ":id") }}';
+									url = url.replace(':id', tampil_idpel);
+									if(jenis_tagihan != 'FREE'){
+										// var url = '{{ route("admin.reg.getMitra") }}';
+										$.ajax({
+											url: url,
+											type: 'GET',
+											data: {
+												'_token': '{{ csrf_token() }}'
+											},
+											dataType: 'json',
+											success: function(data) {
+												if(data['tampil_data']['input_sales']){
+													if(data['tampil_data']['input_sub_pic']){
+														$('#tampil_sub_pic').empty()
+														$('#tampil_fee_subpic').empty()
+														$('#tampil_sales').empty()
+														$('#tampil_fee_sales').empty()
+														$('#tampil_sub_pic').append('<option value="'+data['tampil_sub_pic']['mts_user_id']+'">'+data['tampil_sub_pic']['user_mitra']['name']+'</option>');
+														
+														$('#tampil_sales').append('<option value="'+data['tampil_data']['input_sales']+'">'+data['tampil_data']['user_sales']['name']+'</option>');
+														if(data['tampil_data']['input_mitra']['mts_komisi'] == 0){
+															$('#tampil_fee_sales').append('<option value="'+data['tampil_data']['input_mitra']['mts_komisi']+'">'+data['tampil_data']['input_mitra']['mts_komisi']+'</option>');
+															$('#tampil_fee_subpic').append('<option value="'+data['tampil_sub_pic']['mts_komisi']+'">'+data['tampil_sub_pic']['mts_komisi']+'</option>');
+														} else{
+															$('#tampil_fee_sales').append('<option value="0">0</option>');
+															$('#tampil_fee_sales').append('<option value="5000">5.000</option>');
+															$('#tampil_fee_sales').append('<option value="7500">7.500</option>');
+															$('#tampil_fee_sales').append('<option value="10000">10.000</option>');
+															$('#tampil_fee_sales').on('change', function() {
+																$('#div_batas').html('');
+																$('#tampil_fee_subpic').empty()
+																$('#tampil_fee_subpic').append('<option value="0">0</option>');
+																$('#tampil_fee_subpic').append('<option value="5000">5.000</option>');
+																$('#tampil_fee_subpic').append('<option value="7500">7.500</option>');
+																$('#tampil_fee_subpic').append('<option value="10000">10.000</option>');
+																$('#tampil_fee_subpic').on('change', function() {
+																	var batas_max = '15000';
+																	var fee_subsales = $(this).val();
+																	var fee_sales = $('#tampil_fee_sales').val();
+																	var total1 = parseInt(fee_sales) + parseInt(fee_subsales);
+																	if(total1 > batas_max){
+																		$('#div_batas').html('<small id="text" class="form-text text-muted text-danger">Fee melebihi batas yang di tentukan</small>')
+																		$('#tampil_fee_subpic').empty();
+																			$('#tampil_fee_subpic').append('<option value="0">0</option>');
+																		} 
+																	})
+															})
 
-
-							if(data['tampil_data']['input_sales']){
-								$('#tampil_sales').empty()
-								$('#tampil_fee_sales').empty()
-								// $('#tampil_fee_sales').removeAttr('value');
-								$('#tampil_sales').append('<option value="'+data['tampil_data']['input_sales']+'">'+data['tampil_data']['user_sales']['name']+'</option>');
-								// $('#tampil_fee_sales').val(data['tampil_data']['input_mitra']['mts_komisi']);
-								$('#tampil_fee_sales').append('<option value="'+data['tampil_data']['input_mitra']['mts_komisi']+'">'+data['tampil_data']['input_mitra']['mts_komisi']+'</option>');
-							} else {
-								$('#tampil_fee_sales').removeAttr('value');
-								$('#tampil_sales').empty()
-								$('#tampil_sales').append('<option value="">--None--</option>')
-							}
-								$('#jenis_tagihan').empty()
-								$('#jenis_tagihan').append('<option value="">--Pilih Jenis Tagihan--</option>')
-								$('#jenis_tagihan').append('<option value="PRABAYAR">PRABAYAR</option>') 
-								$('#jenis_tagihan').append('<option value="PASCABAYAR">PASCABAYAR</option>') 
-								$('#jenis_tagihan').append('<option value="FREE">FREE</option>') 
+														}
+													} else {
+														$('#tampil_sales').empty()
+														$('#tampil_fee_sales').empty()
+														$('#tampil_sub_pic').empty()
+														$('#tampil_fee_subpic').empty()
+														$('#tampil_sales').append('<option value="'+data['tampil_data']['input_sales']+'">'+data['tampil_data']['user_sales']['name']+'</option>');
+														$('#tampil_fee_sales').append('<option value="'+data['tampil_data']['input_mitra']['mts_komisi']+'">'+data['tampil_data']['input_mitra']['mts_komisi']+'</option>');
+														$('#tampil_sub_pic').append('<option value="">--None--</option>')
+														$('#tampil_fee_subpic').append('<option value="0">0</option>');
+													}
+												} else {
+													$('#tampil_fee_sales').empty()
+													$('#tampil_fee_subpic').empty()
+													$('#tampil_fee_sales').append('<option value="0">0</option>');
+													$('#tampil_fee_subpic').append('<option value="0">0</option>');
+													// $('#tampil_fee_sales').removeAttr('value');
+													// 20240181204 riki
+													// 202504361219 adit
+													$('#tampil_sales').empty()
+													$('#tampil_sales').append('<option value="">--None--</option>')
+													$('#tampil_sub_pic').empty()
+													$('#tampil_sub_pic').append('<option value="">--None--</option>')
+												}
+														if(data['tampil_data']['input_subseles']){
+															$('#tampil_subsales').empty()
+															$('#tampil_subsales').append('<option value="'+data['tampil_data']['input_subseles']+'">'+data['tampil_data']['input_subseles']+'</option>')
+														} else {
+															$('#tampil_subsales').empty()
+															$('#tampil_subsales').append('<option value="">None</option>')
+														}						
+											}
+											
+										});
+									} else {
+										if(data['tampil_data']['input_subseles']){
+											$('#tampil_subsales').empty()
+											$('#tampil_subsales').append('<option value="">None</option>')
+										} else {
+											$('#tampil_subsales').empty()
+											$('#tampil_subsales').append('<option value="">None</option>')
+										}	
+										$('#tampil_fee_sales').empty()
+										$('#tampil_fee_subpic').empty()
+										$('#tampil_fee_sales').append('<option value="0">0</option>');
+										$('#tampil_fee_subpic').append('<option value="0">0</option>');
+									}
+			});
+			
+						
 
 							
 								
 							} else {
-									$('#jenis_tagihan').empty()
-									$('#jenis_tagihan').append('<option value="">--Pilih Jenis Tagihan--</option>')
-									$('#jenis_tagihan').append('<option value="PRABAYAR">PRABAYAR</option>') 
-									$('#jenis_tagihan').append('<option value="PASCABAYAR">PASCABAYAR</option>') 
-									$('#jenis_tagihan').append('<option value="FREE">FREE</option>') 
+									// $('#jenis_tagihan').empty()
+									// $('#jenis_tagihan').append('<option value="">--Pilih Jenis Tagihan--</option>')
+									// $('#jenis_tagihan').append('<option value="PRABAYAR">PRABAYAR</option>') 
+									// $('#jenis_tagihan').append('<option value="PASCABAYAR">PASCABAYAR</option>') 
+									// $('#jenis_tagihan').append('<option value="FREE">FREE</option>') 
 									
 								}
 							}
@@ -3764,141 +3857,141 @@ var url = '{{ route("admin.psb.get_update_tgl_tempo", ":id") }}';
 		
 							
 		
-								var harga_fee_pic = 5000; 
-								$('#jenis_tagihan').on('change', function() {
+								// var harga_fee_pic = 5000; 
+								// $('#jenis_tagihan').on('change', function() {
 									
-									var jenis_tagihan = $(this).val();
-									if(jenis_tagihan != 'FREE'){
-										$('#fee_pic').empty()
-										$('#fee_subpic').empty()
-										$('#reg_mitra').empty()
-										$('#reg_mitra').append('<option value="">--None--</option>')
-										$('#sub_mitra').empty()
-										$('#sub_mitra').append('<option value="">--None--</option>')
-										var url = '{{ route("admin.reg.getMitra") }}';
-										$.ajax({
-											url: url,
-											type: 'GET',
-											data: {
-												'_token': '{{ csrf_token() }}'
-											},
-											dataType: 'json',
-											success: function(data) {
+								// 	var jenis_tagihan = $(this).val();
+								// 	if(jenis_tagihan != 'FREE'){
+								// 		$('#fee_pic').empty()
+								// 		$('#fee_subpic').empty()
+								// 		$('#reg_mitra').empty()
+								// 		$('#reg_mitra').append('<option value="">--None--</option>')
+								// 		$('#sub_mitra').empty()
+								// 		$('#sub_mitra').append('<option value="">--None--</option>')
+								// 		var url = '{{ route("admin.reg.getMitra") }}';
+								// 		$.ajax({
+								// 			url: url,
+								// 			type: 'GET',
+								// 			data: {
+								// 				'_token': '{{ csrf_token() }}'
+								// 			},
+								// 			dataType: 'json',
+								// 			success: function(data) {
 
 												
-												$('#reg_mitra').empty()
-												$('#reg_mitra').append('<option value="">--None--</option>')
-												for (let i = 0; i < data.length; i++) {
-													$('#reg_mitra').append('<option value="'+data[i].mts_user_id+'">'+data[i]['user_mitra'].name+'</option>');
-												}
+								// 				$('#reg_mitra').empty()
+								// 				$('#reg_mitra').append('<option value="">--None--</option>')
+								// 				for (let i = 0; i < data.length; i++) {
+								// 					$('#reg_mitra').append('<option value="'+data[i].mts_user_id+'">'+data[i]['user_mitra'].name+'</option>');
+								// 				}
 												
-											}
-										});
-									} else {
-										// location.reload();
-										$('#fee_pic').empty()
-										$('#fee_subpic').empty()
-										$('#reg_mitra').empty()
-										$('#tampil_fee_sales').empty()
-										$('#tampil_fee_sales').append('<option value="0">0</option>')
-										$('#reg_mitra').append('<option value="">--None--</option>')
-										$('#sub_mitra').append('<option value="">--None--</option>')
-									}
-								});
+								// 			}
+								// 		});
+								// 	} else {
+								// 		// location.reload();
+								// 		$('#fee_pic').empty()
+								// 		$('#fee_subpic').empty()
+								// 		$('#reg_mitra').empty()
+								// 		$('#tampil_fee_sales').empty()
+								// 		$('#tampil_fee_sales').append('<option value="0">0</option>')
+								// 		$('#reg_mitra').append('<option value="">--None--</option>')
+								// 		$('#sub_mitra').append('<option value="">--None--</option>')
+								// 	}
+								// });
 
 
-									$('#reg_mitra').on('change', function() {
-										$('#sub_mitra').empty()
-										$('#sub_mitra').append('<option value="">--None--</option>')
-										$('#fee_pic').val()
-										$('#fee_subpic').val()
-										var idpel = $('#tampil_idpel').val()
-										var getMitraSub = $(this).val();
-										var harga_fee_pic = 5000; 
-										if(getMitraSub){
-											var url = '{{ route("admin.reg.getMitraSub", ":id") }}';
-											url = url.replace(':id', getMitraSub);
-											$.ajax({
-												url: url,
-												type: 'GET',
-												data: {
-													idpel:idpel,
-													'_token': '{{ csrf_token() }}'
+									// $('#reg_mitra').on('change', function() {
+									// 	$('#sub_mitra').empty()
+									// 	$('#sub_mitra').append('<option value="">--None--</option>')
+									// 	$('#fee_pic').val()
+									// 	$('#fee_subpic').val()
+									// 	var idpel = $('#tampil_idpel').val()
+									// 	var getMitraSub = $(this).val();
+									// 	var harga_fee_pic = 5000; 
+									// 	if(getMitraSub){
+									// 		var url = '{{ route("admin.reg.getMitraSub", ":id") }}';
+									// 		url = url.replace(':id', getMitraSub);
+									// 		$.ajax({
+									// 			url: url,
+									// 			type: 'GET',
+									// 			data: {
+									// 				idpel:idpel,
+									// 				'_token': '{{ csrf_token() }}'
 													
-												},
-												dataType: 'json',
-												success: function(data) {
-													for (let i = 0; i < data['mitrasub_data'].length; i++) {
-														$('#sub_mitra').append('<option value="'+data['mitrasub_data'][i].mts_sub_user_id+'">'+data['mitrasub_data'][i]['user_submitra'].name+'</option>');
-													}
+									// 			},
+									// 			dataType: 'json',
+									// 			success: function(data) {
+									// 				for (let i = 0; i < data['mitrasub_data'].length; i++) {
+									// 					$('#sub_mitra').append('<option value="'+data['mitrasub_data'][i].mts_sub_user_id+'">'+data['mitrasub_data'][i]['user_submitra'].name+'</option>');
+									// 				}
 													
 													
 													
-													if(data['fee_sales']['input_sales'] > 0){
-													// Harga fee pic jika ada sales pada pelanggan
-													var fee_sales = data['fee_sales']['input_mitra']['mts_komisi'];
-														$('#fee_pic').empty();
-														$('#fee_pic').append('<option value="'+harga_fee_pic+'">'+harga_fee_pic+'</option>')
-														var total1 = parseInt(fee_sales) - parseInt(harga_fee_pic);
-														if (isNaN(total1)) {
-															total1 = '';
-														}
-														$('#tampil_fee_sales').empty();
-														$('#tampil_fee_sales').append('<option value="'+total1+'">'+total1+'</option>')
-														$('#sub_mitra').attr('disabled','disabled');
-													// console.log('ada sales')
-												} else {
-													// console.log('tidak ada sales')
-														$('#sub_mitra').removeAttr('disabled');
-														$('#fee_subpic').empty();
-														$('#fee_pic').empty();
-														$('#fee_pic').append('<option value="'+data['mitra_subfee'][0]['mts_komisi']+'">'+data['mitra_subfee'][0]['mts_komisi']+'</option>')
+									// 				if(data['fee_sales']['input_sales'] > 0){
+									// 				// Harga fee pic jika ada sales pada pelanggan
+									// 				var fee_sales = data['fee_sales']['input_mitra']['mts_komisi'];
+									// 					$('#fee_pic').empty();
+									// 					$('#fee_pic').append('<option value="'+harga_fee_pic+'">'+harga_fee_pic+'</option>')
+									// 					var total1 = parseInt(fee_sales) - parseInt(harga_fee_pic);
+									// 					if (isNaN(total1)) {
+									// 						total1 = '';
+									// 					}
+									// 					$('#tampil_fee_sales').empty();
+									// 					$('#tampil_fee_sales').append('<option value="'+total1+'">'+total1+'</option>')
+									// 					$('#sub_mitra').attr('disabled','disabled');
+									// 				// console.log('ada sales')
+									// 			} else {
+									// 				// console.log('tidak ada sales')
+									// 					$('#sub_mitra').removeAttr('disabled');
+									// 					$('#fee_subpic').empty();
+									// 					$('#fee_pic').empty();
+									// 					$('#fee_pic').append('<option value="'+data['mitra_subfee'][0]['mts_komisi']+'">'+data['mitra_subfee'][0]['mts_komisi']+'</option>')
 
-												}
-												$('#sub_mitra').on('change', function() {
-													var getMitraSub = $(this).val();
-													if(getMitraSub){
+									// 			}
+									// 			$('#sub_mitra').on('change', function() {
+									// 				var getMitraSub = $(this).val();
+									// 				if(getMitraSub){
 														
-														var url = '{{ route("admin.reg.getMitraSubfee", ":id") }}';
-														url = url.replace(':id', getMitraSub);
-														$.ajax({
-														url: url,
-														type: 'GET',
-														data: {
-															'_token': '{{ csrf_token() }}'
-														},
-														dataType: 'json',
-														success: function(data) {
-															if(data){
-																$('#fee_subpic').empty();
-																$('#fee_subpic').append('<option value="'+data[0]['mts_komisi']+'">'+data[0]['mts_komisi']+'</option>')
-															}else {
-																$('#fee_subpic').empty();
-															}
-														}
-													});
-												} else {
-													$('#fee_subpic').empty();
-												}
-													});
-												} 
+									// 					var url = '{{ route("admin.reg.getMitraSubfee", ":id") }}';
+									// 					url = url.replace(':id', getMitraSub);
+									// 					$.ajax({
+									// 					url: url,
+									// 					type: 'GET',
+									// 					data: {
+									// 						'_token': '{{ csrf_token() }}'
+									// 					},
+									// 					dataType: 'json',
+									// 					success: function(data) {
+									// 						if(data){
+									// 							$('#fee_subpic').empty();
+									// 							$('#fee_subpic').append('<option value="'+data[0]['mts_komisi']+'">'+data[0]['mts_komisi']+'</option>')
+									// 						}else {
+									// 							$('#fee_subpic').empty();
+									// 						}
+									// 					}
+									// 				});
+									// 			} else {
+									// 				$('#fee_subpic').empty();
+									// 			}
+									// 				});
+									// 			} 
 												
-											});
-										} else {
-											$('#fee_pic').empty();
-											$('#fee_subpic').empty();
-											$('#sub_mitra').empty();
-											$('#sub_mitra').append('<option value="">--None--</option>')
-												var total2 = parseInt($('#tampil_fee_sales').val()) + parseInt(harga_fee_pic);
-												if (isNaN(total2)) {
-													total2 = '';
-												}
-												$('#tampil_fee_sales').empty();
-												$('#tampil_fee_sales').append('<option value="'+total2+'">'+total2+'</option>')
-												$('#sub_mitra').attr('disabled','disabled');
-										}
+									// 		});
+									// 	} else {
+									// 		$('#fee_pic').empty();
+									// 		$('#fee_subpic').empty();
+									// 		$('#sub_mitra').empty();
+									// 		$('#sub_mitra').append('<option value="">--None--</option>')
+									// 			var total2 = parseInt($('#tampil_fee_sales').val()) + parseInt(harga_fee_pic);
+									// 			if (isNaN(total2)) {
+									// 				total2 = '';
+									// 			}
+									// 			$('#tampil_fee_sales').empty();
+									// 			$('#tampil_fee_sales').append('<option value="'+total2+'">'+total2+'</option>')
+									// 			$('#sub_mitra').attr('disabled','disabled');
+									// 	}
 								
-									});
+									// });
 								// validasi_odp
 
 $('#validasi_odp').keyup(function() {

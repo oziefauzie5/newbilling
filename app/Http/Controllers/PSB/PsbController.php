@@ -43,12 +43,12 @@ class PsbController extends Controller
 
         $query = Registrasi::query()
         ->join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-        // ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+        ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
     // ->join('ftth_fees', 'ftth_fees.id', '=', 'registrasis.reg_idpel')
     // ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
         // ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router');
         ->where('input_data.corporate_id',Session::get('corp_id'))
-        ->select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl')
+        ->select('input_data.*', 'registrasis.*', 'registrasis.created_at as tgl','pakets.*')
         ->where('reg_progres', '<=', 5)
         // ->where('reg_ppn', '>', 0)
         ->orderBy('tgl', 'DESC')
@@ -91,7 +91,7 @@ class PsbController extends Controller
         //     $query->find('paket_id', '=', $data['paket']);
         
         // foreach ($query->get() as $key) {
-        //     echo '<table><tr><td>'.$key->reg_nolayanan.'</td><td>'.$key->input_nama.'</td><td>'.$key->reg_profile.'</td><td>'.$key->paket_nama.'</td><td>'.$key->paket_harga.'</td><td>'.$key->input_promo.'</td><td>'.$key->reg_harga.'</td><td>'.$key->reg_ppn.'</td></tr></table>';
+        //     echo '<table><tr><td>'.$key->reg_idpel.'</td><td>'.$key->input_nama.'</td><td>'.$key->paket_nama.'</td><td>'.$key->paket_harga.'</td><td>'.$key->reg_harga.'</td><td>'.$key->reg_status.'</td></tr></table>';
         // }
         // dd($query->count());
 

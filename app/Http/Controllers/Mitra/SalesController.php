@@ -9,6 +9,8 @@ use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
 use App\Models\Router\Paket;
 use App\Models\Mitra\MutasiSales;
+use App\Models\Mitra\Mitra_Sub;
+use App\Models\Mitra\MitraSetting;
 use App\Models\Transaksi\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -48,19 +50,56 @@ class SalesController extends Controller
     }
     public function sales_input()
     {
-     
         $user_id = Auth::user()->id;
         $role = (new globalController)->data_user($user_id);
         $data['role'] = $role->name;
         $data['admin_user'] = (new GlobalController)->user_admin();
         $data['paket'] = Paket::where('paket_status','Enable')->where('paket_layanan','PPP')->get();
         $data['site'] = Data_Site::where('site_status','Enable')->get();
+        
+        
+        
+        $data['cek_role'] = MitraSetting::join('model_has_roles','model_has_roles.model_id','=','mitra_settings.mts_user_id')
+        ->where('mitra_settings.mts_user_id',$user_id)
+        ->select('role_id','model_id')
+        ->first();
 
+        if($data['cek_role']->role_id == 15){
+            $data['sub_mitra'] = mitra_sub::join('users','users.id','=','mitra__subs.mts_sub_user_id')
+            ->where('mts_sub_mitra_id',$user_id)->get();
+            // $data['option'] = 'test';
+        } else {
+            $data['sub_mitra'] = mitra_sub::join('users','users.id','=','mitra__subs.mts_sub_mitra_id')
+            ->where('mts_sub_user_id',$user_id)->get();
+            // $data['option'] = 'test';
+        }
+        $data['wilayah'] = MitraSetting::select('mts_wilayah','mts_user_id')->where('mts_wilayah','!=','')->get();
+
+
+
+        // dd($data['option']);
         return view('biller/sales_input', $data);
     }
+    public function getwilayah($id)
+    {
+    $data['tampil_sub_pic'] =  MitraSetting::where('corporate_id',Session::get('corp_id'))->with('user_mitra')->where('mts_wilayah', $id)->first();
+    return response()->json($data);
+    }
+    // public function getwilayah($id)
+    // {
+    //   if($request->wilayah){
+
+    //     } else {
+    //          $query = MitraSetting::select('mts_wilayah')
+    //           ->where('mts_wilayah',$request->kelurahan.' RW'.$request->rw )
+    //           ->orWhere('mts_wilayah',$request->kelurahan);
+    //          $hasil_cek = $query->first();
+    //         //  dd($request->kelurahan.' RW'.$request->rw );
+    //          dd($hasil_cek);
+    //     }
+    // }
     public function validasi_kode_promo($id)
     {
-       
         $data['kode_promo'] = KodePromo::where('corporate_id',Session::get('corp_id'))
                                 ->where('promo_id', $id)
                                 ->whereDate('promo_expired', '<=', date('Y-m-d',strtotime(Carbon::now())))
@@ -70,7 +109,6 @@ class SalesController extends Controller
     }
     public function sales_store(Request $request)
     {
-
         $user = (new GlobalController)->user_admin();
         $user_nama = $user['user_nama'];
         $user_id = $user['user_id'];
@@ -114,8 +152,12 @@ class SalesController extends Controller
         Session::flash('sub_sales', strtoupper($request->sub_sales));
         Session::flash('input_password', Hash::make($request->input_hp));
         Session::flash('input_maps', $request->input_maps);
+        Session::flash('input_sub_pic', $request->input_sub_pic);
         Session::flash('input_keterangan', strtoupper($request->input_keterangan));
         Session::flash('input_promo', strtoupper($request->input_promo));
+        Session::flash('wilayah', strtoupper($request->wilayah));
+
+        
 
         $request->validate([
             'input_ktp' => 'unique:input_data',
@@ -126,6 +168,7 @@ class SalesController extends Controller
             'input_hp.unique' => 'Nomor Whatsapp sudah terdaftar',
             'input_hp_2.unique' => 'Nomor Whatsapp cadangan sudah terdaftar',
         ]);
+      
         $data['input_tgl'] = date('Y-m-d', strtotime(carbon::now()));
 
         $cek_nohp = InputData::where('input_hp', $nomorhp)->count();
@@ -154,12 +197,15 @@ class SalesController extends Controller
             $input['input_status'] = 'INPUT DATA';
             $input['input_keterangan'] = $request->input_keterangan;
             $input['input_promo'] = $request->input_promo;
-            if($cek_role->role_id == 12){
-                // dd('INI SALES');
-                $input['input_sales'] = $user_id;
+
+            if($cek_role->role_id == 16 ){
+                $input['input_sales'] = $request->input_sales;
+                $input['input_sub_pic'] = $user_id;
             } else {
-                // dd('INI BUKAN SALES');
-                $input['input_sales'] = '';
+                $input['input_sales'] = $user_id;
+                if($request->input_sub_pic){
+                    $input['input_sub_pic'] = $request->input_sub_pic;
+                }
             }
             InputData::create($input);
 

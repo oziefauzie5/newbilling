@@ -201,10 +201,47 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label>Sub Sales</label>
-                      <input id="" type="text" class="form-control" value="{{ Session::get('sub_sales') }}" name="sub_sales" placeholder="Masukan Sub Sales" required>
+                      <label>Informasi</label>
+                      <input id="" type="text" class="form-control" value="{{ Session::get('sub_sales') }}" name="sub_sales" placeholder="Masukan Nama pemberi informasi" required>
+                      <span class="noted">Kosongkan jika tidak ada pemberi informasi</span>
                     </div>
                   </div>
+                  <div class="col-sm-12">
+                   <div class="form-group">
+                     <label>Wilayah</label>
+                     <select class="form-control" name="wilayah" id="">
+                      <option value="">None</option>
+                     @foreach($wilayah as $w)
+                     <option value="{{$w->mts_user_id}}">{{$w->mts_wilayah}}</option>
+                     @endforeach
+                   </select>
+                 </div>
+               </div>
+                  @if($cek_role->role_id == 16 ) 
+                   <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>PIC</label>
+                      <select class="form-control" name="input_sales" id="">
+                      @foreach($sub_mitra as $sm)
+                      <option value="{{$sm->id}}">{{$sm->name}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                @else 
+                <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>SUB-PIC</label>
+                      <select class="form-control" name="input_sub_pic" id="">
+                      <option value="">None</option>
+                      @foreach($sub_mitra as $sm)
+                      <option value="{{$sm->id}}">{{$sm->name}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                
+                @endif
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Tanggal Registrasi</label>

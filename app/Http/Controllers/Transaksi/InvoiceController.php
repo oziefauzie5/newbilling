@@ -127,6 +127,9 @@ class InvoiceController extends Controller
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             ->where('inv_status', '!=', 'PAID')
+            // ->where('inv_status', '=', 'ISOLIR')
+            // ->whereMonth('inv_tgl_isolir', '<=', '12')
+            // ->whereYear('inv_tgl_isolir', '=', '2024')
             ->where('invoices.corporate_id',Session::get('corp_id'))
             ->orderBy('invoices.inv_id', 'ASC')
             ->orderBy('inv_tgl_jatuh_tempo', 'DESC')
@@ -145,7 +148,7 @@ class InvoiceController extends Controller
             $query->where('inv_status', '=', $data['data_inv']);
         // $export = $query->get();
         //         foreach ($export as $value) {
-        //             echo '<table><tr><td>'.$value->inv_nolayanan.'</td><td>'.$value->inv_status.'</td><td>'.$value->inv_tgl_jatuh_tempo.'</td><td>'.$value->input_nama.'</td></tr></table>';
+        //             echo '<table><tr><td>'.$value->inv_idpel.'</td><td>'.$value->inv_status.'</td><td>'.$value->inv_tgl_isolir.'</td><td>'.$value->input_nama.'</td><td>'.$value->input_alamat_pasang.'</td><td>'.$value->input_hp.'</td></tr></table>';
         //         }
         //         dd('test');
 
@@ -175,7 +178,7 @@ class InvoiceController extends Controller
             ->join('registrasis', 'registrasis.reg_idpel', '=', 'input_data.id')
             ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
             // ->where('invoices.inv_jenis_tagihan', '!=', 'FREE')
-            // ->whereMonth('invoices.inv_tgl_bayar', '=', $month)
+            ->whereMonth('invoices.inv_tgl_bayar', '=', $month)
             ->where('invoices.corporate_id',Session::get('corp_id'))
             ->orderBy('inv_tgl_bayar', 'DESC')
             ->where(function ($invoice) use ($data) {

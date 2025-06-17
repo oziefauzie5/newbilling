@@ -79,23 +79,8 @@ class RegistrasiController extends Controller
     {
         $data['tampil_data'] =  InputData::where('corporate_id',Session::get('corp_id'))->with('user_sales','input_mitra')->where('input_data.id', $id)->first();
         $data['tampil_site'] =  Data_Site::where('corporate_id',Session::get('corp_id'))->where('id', $data['tampil_data']->data__site_id)->first();
-        // $cek_promo = KodePromo::where('corporate_id',Session::get('corp_id'))
-        //                         ->where('promo_id', $data['tampil_data']->input_promo)
-        //                         ->whereDate('promo_expired', '<=', date('Y-m-d',strtotime(Carbon::now())))
-        //                         ->first();
-        
-        //  if($cek_promo){
-        //      $data['kode_promo'] = $cek_promo->promo_id;
-        //      $data['promo_harga'] = $cek_promo->promo_harga;
-        //     } else {
-        //         $data['kode_promo'] = 'None';
-        //         $data['promo_harga'] = '0';
-        //     }
-            // dd($cek_promo);
-
-        // dd($data);
-
-        
+        // $data['tampil_sub_pic'] =  MitraSetting::where('corporate_id',Session::get('corp_id'))->with('user_mitra')->where('mts_user_id', $data['tampil_data']->input_sub_pic)->first();
+     
         $date = date('Ym');
         $tgl = date('d');
         $th = substr($date, 2);
@@ -107,24 +92,25 @@ class RegistrasiController extends Controller
         $data['username'] =  $data['nolay'] . '@' . $namalayanan;
         return response()->json($data);
     }
-    public function getMitra(Request $request)
+    public function getPic($id)
     {
-    $mitra = MitraSetting::where('corporate_id',Session::get('corp_id'))->with('user_mitra')->join('model_has_roles','model_has_roles.model_id','=','mitra_settings.mts_user_id')->where('model_has_roles.role_id',15)->get();
-    
-    return response()->json($mitra);
+    // $mitra = MitraSetting::where('corporate_id',Session::get('corp_id'))->with('user_mitra')->join('model_has_roles','model_has_roles.model_id','=','mitra_settings.mts_user_id')->where('model_has_roles.role_id',15)->get();
+    $data['tampil_data'] =  InputData::where('corporate_id',Session::get('corp_id'))->with('user_sales','input_mitra')->where('input_data.id', $id)->first();
+    $data['tampil_sub_pic'] =  MitraSetting::where('corporate_id',Session::get('corp_id'))->with('user_mitra')->where('mts_user_id', $data['tampil_data']->input_sub_pic)->first();
+    return response()->json($data);
     }
-    public function getMitraSub(Request $request,$id)
-    {
-         $data['fee_sales'] = InputData::where('corporate_id',Session::get('corp_id'))->with('user_sales','input_mitra')->where('input_data.id', $request->idpel)->first();
-        $data['mitra_subfee'] = MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id',$id)->get();
-        $data['mitrasub_data'] = Mitra_Sub::where('corporate_id',Session::get('corp_id'))->with('user_submitra','submitra_mitra')->where('mts_sub_mitra_id',$id)->get();
-        return response()->json($data);
-    }
-    public function getMitraSubfee($id)
-    {
-        $mitra_subfee = MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id',$id)->get();
-        return response()->json($mitra_subfee);
-    }
+    // public function getMitraSub(Request $request,$id)
+    // {
+    //      $data['fee_sales'] = InputData::where('corporate_id',Session::get('corp_id'))->with('user_sales','input_mitra')->where('input_data.id', $request->idpel)->first();
+    //     $data['mitra_subfee'] = MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id',$id)->get();
+    //     $data['mitrasub_data'] = Mitra_Sub::where('corporate_id',Session::get('corp_id'))->with('user_submitra','submitra_mitra')->where('mts_sub_mitra_id',$id)->get();
+    //     return response()->json($data);
+    // }
+    // public function getMitraSubfee($id)
+    // {
+    //     $mitra_subfee = MitraSetting::where('corporate_id',Session::get('corp_id'))->where('mts_user_id',$id)->get();
+    //     return response()->json($mitra_subfee);
+    // }
 
     public function store(Request $request)
     {
@@ -162,6 +148,54 @@ class RegistrasiController extends Controller
             $tiket['tiket_jadwal_kunjungan'] = $request->reg_tgl_pasang;
             $tiket['tiket_keterangan'] = 'Instalasi PSB';
             $tiket['tiket_status'] = 'NEW';
+
+              
+            // // Pesan::create($pesan_group);
+            Registrasi::create($data);
+            Data_Tiket::create($tiket);
+            
+
+
+            
+            // $arr = array( 0 => null, 1=>null, 2=>3, 3=>null); 
+            
+            $arr = $request->reg_mitra;
+            foreach ($arr as $key=>$val) 
+            {
+                if ($val === null)
+                unset($arr[$key]);
+        }
+        $count_mitra = array_values($arr);
+        
+        
+        // dd($request->fee);
+
+        $fee = $request->fee;
+        foreach ($fee as $keye=>$vale) 
+        {
+                if ($vale === null)
+                unset($fee[$keye]);
+        }
+        $count_fee = array_values($fee);
+
+        $cek_count = count($count_mitra);
+      
+
+
+        if($cek_count >= 1){
+            for ($x = 0; $x < $cek_count; $x++) {
+                FtthFee::create(
+                    [
+                        'corporate_id'=> Session::get('corp_id'),
+                        'fee_idpel'=> $request->reg_idpel,
+                        'reg_mitra'=> $count_mitra[$x],
+                        'reg_fee'=> $count_fee[$x],
+                        
+                    ]);
+                }
+        }
+                // dd('count_fee');
+                    InputData::where('corporate_id',Session::get('corp_id'))->where('id', $request->reg_idpel)->update($update);
             
             $status = (new GlobalController)->whatsapp_status();
             if ($status) {
@@ -294,53 +328,9 @@ Whatsapp Alternatif: 0' . $request->input_hp2 . '
 Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 '
             ]);
+
             Pesan::create($pesan_pelanggan);
-            // // Pesan::create($pesan_group);
-            Registrasi::create($data);
-            Data_Tiket::create($tiket);
-            
-
-
-            
-            // $arr = array( 0 => null, 1=>null, 2=>3, 3=>null); 
-            
-            $arr = $request->reg_mitra;
-            foreach ($arr as $key=>$val) 
-            {
-                if ($val === null)
-                unset($arr[$key]);
-        }
-        $count_mitra = array_values($arr);
-        
-        
-        // dd($request->fee);
-
-        $fee = $request->fee;
-        foreach ($fee as $keye=>$vale) 
-        {
-                if ($vale === null)
-                unset($fee[$keye]);
-        }
-        $count_fee = array_values($fee);
-
-        $cek_count = count($count_mitra);
-      
-
-
-        if($cek_count >= 1){
-            for ($x = 0; $x < $cek_count; $x++) {
-                FtthFee::create(
-                    [
-                        'corporate_id'=> Session::get('corp_id'),
-                        'fee_idpel'=> $request->reg_idpel,
-                        'reg_mitra'=> $count_mitra[$x],
-                        'reg_fee'=> $count_fee[$x],
-                        
-                    ]);
-                }
-        }
-                // dd('count_fee');
-                    InputData::where('corporate_id',Session::get('corp_id'))->where('id', $request->reg_idpel)->update($update);
+          
                     
         $notifikasi = array(
             'pesan' => 'Berhasil registrasi pelanggan',
@@ -750,6 +740,8 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 
     public function proses_aktivasi_pelanggan(Request $request, $id)
     {
+        // $cek = (new GlobalController)->no_inv();
+        // dd($cek);
         $user_admin = Auth::user()->id;
         Session::flash('reg_site', $request->reg_site);
         Session::flash('reg_pop', $request->reg_pop);
@@ -826,8 +818,7 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                     'reg_in_ont'=> $request->reg_in_ont,
                     'reg_slot_odp'=> $request->reg_slot_odp,
                     'reg_router'=> $request->reg_router,
-                ]
-            );
+                ]);
 
         $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
             ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
@@ -874,7 +865,6 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                 $API = (new ApiController)->aktivasi_psb_ppp($query,$request);
                 if ($API == 0) {
                 //LANJUTAN AKTIVASI
-
                 (new AktivasiController)->aktivasi_psb($request, $query, $id,$team,$id_teknisi,$filename1);
 
                   $status = (new GlobalController)->whatsapp_status();
@@ -1126,114 +1116,120 @@ PAKET : '.$query->paket_nama.'
     }
 
 
-    // public function deaktivasi_pelanggan(Request $request, $id)
-    // {
-    //     $nama_admin = Auth::user()->name;
-    //     $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
-    //     $tgl_ambil_perangkat = date('Y-m-d', strtotime($request->deaktivasi_tanggal_pengambilan));
+    public function deaktivasi_pelanggan(Request $request, $id)
+    {
+        // dd($id);
+        $nama_admin = Auth::user()->name;
+        $tgl = date('Y-m-d H:m:s', strtotime(carbon::now()));
+        $tgl_ambil_perangkat = date('Y-m-d', strtotime($request->deaktivasi_tanggal_pengambilan));
 
-    //     $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
-    //         ->join('routers', 'routers.id', '=', 'registrasis.reg_router')
-    //         ->where('registrasis.reg_idpel', $id)->first();
+        $query =  Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+            ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+            ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
+            ->where('registrasis.reg_idpel', $id)->first();
 
-    //     if ($request->status == 'PUTUS LANGGANAN') {
-    //         $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
-    //         $progres = '90';
-    //     } else {
-    //         $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
-    //         $progres = '100';
-    //     }
-
-
-    //     $ip =   $query->router_ip . ':' . $query->router_port_api;
-    //     $user = $query->router_username;
-    //     $pass = $query->router_password;
-    //     $API = new RouterosAPI();
-    //     $API->debug = false;
+        if ($request->status == 'PUTUS LANGGANAN') {
+            $keterangan = 'PUTUS BERLANGGANAN - ' . strtoupper($query->input_nama);
+            $progres = '90';
+        } else {
+            $keterangan = 'PUTUS SEMENTARA  - ' . strtoupper($query->input_nama);
+            $progres = '100';
+        }
 
 
-    //     if ($API->connect($ip, $user, $pass)) {
-    //         $cek_status = $API->comm('/ppp/active/print', [
-    //             '?name' => $query->reg_username,
-    //         ]);
-    //         if ($cek_status) {
-    //             $API->comm('/ppp/active/remove', [
-    //                 '.id' => $cek_status[0]['.id'],
-    //             ]);
-    //         }
-    //         $cari_pel = $API->comm('/ppp/secret/print', [
-    //             '?name' => $query->reg_username,
-    //         ]);
-    //         if ($cari_pel) {
-    //             $API->comm('/ppp/secret/remove', [
-    //                 '.id' =>  $cari_pel['0']['.id']
-    //             ]);
-    //         }
+        $ip =   $query->router_ip . ':' . $query->router_port_api;
+        $user = $query->router_username;
+        $pass = $query->router_password;
+        $API = new RouterosAPI();
+        $API->debug = false;
 
-    //         $data = Invoice::where('inv_idpel', $id)->where('inv_status', '!=', 'PAID')->first();
-    //         if ($data) {
-    //             $data->delete();
-    //             SubInvoice::where('subinvoice_id', $data->inv_id)->delete();
-    //         }
+        // dd($query);
 
-    //         Registrasi::where('reg_idpel', $id)->update([
-    //             'reg_progres' => $progres,
-    //             'reg_catatan' => $request->reg_catatan,
-    //             'reg_tgl_deaktivasi' => $tgl_ambil_perangkat,
-    //         ]);
-    //         Data_Deaktivasi::create([
-    //             'deaktivasi_idpel' => $id,
-    //             'deaktivasi_mac' => $request->deaktivasi_mac,
-    //             'deaktivasi_sn' => $request->deaktivasi_sn,
-    //             'deaktivasi_kelengkapan_perangkat' => $request->kelengkapan,
-    //             'deaktivasi_tanggal_pengambilan' => $tgl_ambil_perangkat,
-    //             'deaktivasi_pengambil_perangkat' => $request->deaktivasi_pengambil_perangkat,
-    //             'deaktivasi_admin' => $request->deaktivasi_admin,
-    //             'deaktivasi_alasan_deaktivasi' => $request->deaktivasi_alasan_deaktivasi,
-    //             'deaktivasi_pernyataan' => $request->deaktivasi_pernyataan,
-    //             'deaktivasi_admin' =>  $nama_admin,
-    //         ]);
+        if ($API->connect($ip, $user, $pass)) {
+            $cek_status = $API->comm('/ppp/active/print', [
+                '?name' => $query->reg_username,
+            ]);
+            if ($cek_status) {
+                $API->comm('/ppp/active/remove', [
+                    '.id' => $cek_status[0]['.id'],
+                ]);
+            }
+            $cari_pel = $API->comm('/ppp/secret/print', [
+                '?name' => $query->reg_username,
+            ]);
+            if ($cari_pel) {
+                $API->comm('/ppp/secret/remove', [
+                    '.id' =>  $cari_pel['0']['.id']
+                ]);
+            }
 
-    //         if ($request->kelengkapan == 'ONT & Adaptor') {
-    //             $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
-    //             Data_BarangKeluar::whereIn('bk_id_barang', $kode_barang)->delete();
-    //             Data_Barang::whereIn('barang_id', $kode_barang)->update([
-    //                 'barang_digunakan' => 0,
-    //                 'barang_dicek' => 1,
-    //                 'barang_ket' => 'Pengambilan Perangkat',
-    //             ]);
-    //         } elseif ($request->kelengkapan == 'ONT') {
-    //             Data_BarangKeluar::where('bk_id_barang', $request->kode_barang_ont)->delete();
-    //             Data_Barang::where('barang_id', $request->kode_barang_ont)->update([
-    //                 'barang_digunakan' => 0,
-    //                 'barang_dicek' => 1,
-    //                 'barang_ket' => 'Pengambilan Perangkat',
-    //             ]);
-    //             Data_Barang::where('barang_id', $request->kode_barang_adp)->update([
-    //                 'barang_digunakan' => 0,
-    //                 'barang_hilang' => 1,
-    //             ]);
-    //         } elseif ($request->kelengkapan == 'Hilang') {
-    //             $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
-    //             Data_Barang::whereIn('barang_id', $kode_barang)->update([
-    //                 'barang_digunakan' => 0,
-    //                 'barang_hilang' => 1,
-    //             ]);
-    //         }
+            $data = Invoice::where('corporate_id',Session::get('corp_id'))->where('inv_idpel', $id)->where('inv_status', '!=', 'PAID')->first();
+            if ($data) {
+                SubInvoice::where('corporate_id',Session::get('corp_id'))->where('subinvoice_id', $data->inv_id)->delete();
+                $data->where('inv_idpel', $id)->delete();
+                // dd($data->inv_id);
+            }
 
-    //         $notifikasi = [
-    //             'pesan' => 'Berhasil melakukan pemutusan pelanggan',
-    //             'alert' => 'success',
-    //         ];
-    //         return redirect()->route('admin.psb.ftth')->with($notifikasi);
-    //     } else {
-    //         $notifikasi = [
-    //             'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
-    //             'alert' => 'error',
-    //         ];
-    //         return redirect()->route('admin.psb.data_deaktivasi')->with($notifikasi);
-    //     }
-    // }
+            Registrasi::where('corporate_id',Session::get('corp_id'))->where('reg_idpel', $id)->update([
+                'reg_progres' => $progres,
+                'reg_catatan' => $request->reg_catatan,
+                'reg_tgl_deaktivasi' => $tgl_ambil_perangkat,
+            ]);
+
+            Data_Deaktivasi::create([
+                'corporate_id' => Session::get('corp_id'),
+                'deaktivasi_idpel' => $id,
+                'deaktivasi_mac' => $request->deaktivasi_mac,
+                'deaktivasi_sn' => $request->deaktivasi_sn,
+                'deaktivasi_kelengkapan_perangkat' => $request->kelengkapan,
+                'deaktivasi_tanggal_pengambilan' => $tgl_ambil_perangkat,
+                'deaktivasi_pengambil_perangkat' => $request->deaktivasi_pengambil_perangkat,
+                'deaktivasi_admin' => $request->deaktivasi_admin,
+                'deaktivasi_alasan_deaktivasi' => $request->deaktivasi_alasan_deaktivasi,
+                'deaktivasi_pernyataan' => $request->deaktivasi_pernyataan,
+                'deaktivasi_admin' =>  $nama_admin,
+            ]);
+
+            if ($request->kelengkapan == 'ONT & Adaptor') {
+                $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
+                Data_BarangKeluar::where('corporate_id',Session::get('corp_id'))->whereIn('bk_id_barang', $kode_barang)->delete();
+                Data_Barang::where('corporate_id',Session::get('corp_id'))->whereIn('barang_id', $kode_barang)->update([
+                    'barang_digunakan' => 0,
+                    'barang_dicek' => 1,
+                    'barang_ket' => 'Pengambilan Perangkat',
+                ]);
+            } elseif ($request->kelengkapan == 'ONT') {
+                Data_BarangKeluar::where('corporate_id',Session::get('corp_id'))->where('bk_id_barang', $request->kode_barang_ont)->delete();
+                Data_Barang::where('corporate_id',Session::get('corp_id'))->where('barang_id', $request->kode_barang_ont)->update([
+                    'barang_digunakan' => 0,
+                    'barang_dicek' => 1,
+                    'barang_ket' => 'Pengambilan Perangkat',
+                ]);
+                Data_Barang::where('corporate_id',Session::get('corp_id'))->where('barang_id', $request->kode_barang_adp)->update([
+                    'barang_digunakan' => 0,
+                    'barang_hilang' => 1,
+                ]);
+            } elseif ($request->kelengkapan == 'Hilang') {
+                $kode_barang = [$request->kode_barang_ont, $request->kode_barang_adp];
+                Data_Barang::where('corporate_id',Session::get('corp_id'))->whereIn('barang_id', $kode_barang)->update([
+                    'barang_digunakan' => 0,
+                    'barang_hilang' => 1,
+                ]);
+            }
+
+            $notifikasi = [
+                'pesan' => 'Berhasil melakukan pemutusan pelanggan',
+                'alert' => 'success',
+            ];
+            return redirect()->route('admin.psb.ftth')->with($notifikasi);
+        } else {
+            $notifikasi = [
+                'pesan' => 'Gagal melakukan pemutusan pelanggan. Router disconnected',
+                'alert' => 'error',
+            ];
+            return redirect()->route('admin.psb.data_deaktivasi')->with($notifikasi);
+        }
+    }
     public function data_deaktivasi()
     {
         // $month = Carbon::now()->addMonth(-0)->format('m');

@@ -199,6 +199,8 @@ class GlobalController extends Controller
         $bln = $inv_tgl->format('m');
         $th = $inv_tgl->format('y');
         $latest = Invoice::orderBy('inv_tgl_isolir', 'DESC')->count();
+        // $latest = Invoice::orderBy('inv_tgl_isolir', 'ASC')->latest()->first();
+        
         if (! $latest) {
             return $th . $bln . '0001';
         }

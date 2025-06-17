@@ -30,6 +30,7 @@ class InputData extends Model implements Authenticatable
         'input_promo',
         'password',
         'input_maps',
+        'input_sub_pic',
         'input_koordinat',
         'input_status',
         'input_keterangan',

@@ -17,6 +17,7 @@
 			}
 		});
 	</script>
+	
 
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="{{asset('atlantis/assets/css/bootstrap.min.css')}}">
@@ -33,6 +34,11 @@
     border-color: rgb(255, 255, 255);
     width: 10px;
     border-radius: 3px;
+	  }
+  .noted {
+    font-size: 11px;
+    color:rgb(255, 0, 0);
+  }
 
 	}
 	.card_custom{
