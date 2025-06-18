@@ -181,7 +181,7 @@ Terima kasih.';
             'nama' =>  'GROUP TEKNISI',
             'pesan' => '               -- TIKET '.strtoupper($request->tiket_jenis).' --
 
-            No. Tiket : *T-' . $tiket_id . '*
+No. Tiket : *T-' . $tiket_id . '*
 Topik : ' . $request->tiket_nama . '
 Keterangan : *' . $request->tiket_keterangan . '*
 Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*

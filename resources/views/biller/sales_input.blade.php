@@ -210,7 +210,7 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kecamatan ( Alamat Pemasangan )</label>
-                      <input id="kec" type="text" class="form-control readonly" value="{{ Session::get('kecamatan') }}" name="kecamatan" placeholder="kecamatan" required>
+                      <input id="kec" type="text" class="form-control read" value="{{ Session::get('kecamatan') }}" name="kecamatan" placeholder="kecamatan" required>
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -254,7 +254,7 @@
                       @endforeach
                     </select>
                   </div>
-                </div>user_mitra
+                </div>
                 @elseif($cek_role->role_id == 15 ) 
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -291,7 +291,7 @@
                     </div>
                   </div>
                   <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" id="" class="btn btn-primary">Submit</button>
                   </form>
                   <a href="{{route('admin.sales.sales')}}"><button type="button" class="btn btn-primary">Kembali</button></a>
                   </div>

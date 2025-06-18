@@ -477,7 +477,7 @@ $.ajax({
 // -----------------------------------------START VALIDASI KELURAHAN------------------------------------
   $(document).ready(function() {
 	  $("#val_kelurahan").attr('disabled','disabled')
-	  
+	  $('.read').attr('readonly', 'readonly');;
 	  $('#rw').on('change', function() {
 		  $("#val_kelurahan").removeAttr('disabled')
 			$('#val_kelurahan').val('');  

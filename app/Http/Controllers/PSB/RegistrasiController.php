@@ -150,52 +150,7 @@ class RegistrasiController extends Controller
             $tiket['tiket_status'] = 'NEW';
 
               
-            // // Pesan::create($pesan_group);
-            Registrasi::create($data);
-            Data_Tiket::create($tiket);
-            
-
-
-            
-            // $arr = array( 0 => null, 1=>null, 2=>3, 3=>null); 
-            
-            $arr = $request->reg_mitra;
-            foreach ($arr as $key=>$val) 
-            {
-                if ($val === null)
-                unset($arr[$key]);
-        }
-        $count_mitra = array_values($arr);
-        
-        
-        // dd($request->fee);
-
-        $fee = $request->fee;
-        foreach ($fee as $keye=>$vale) 
-        {
-                if ($vale === null)
-                unset($fee[$keye]);
-        }
-        $count_fee = array_values($fee);
-
-        $cek_count = count($count_mitra);
-      
-
-
-        if($cek_count >= 1){
-            for ($x = 0; $x < $cek_count; $x++) {
-                FtthFee::create(
-                    [
-                        'corporate_id'=> Session::get('corp_id'),
-                        'fee_idpel'=> $request->reg_idpel,
-                        'reg_mitra'=> $count_mitra[$x],
-                        'reg_fee'=> $count_fee[$x],
-                        
-                    ]);
-                }
-        }
-                // dd('count_fee');
-                    InputData::where('corporate_id',Session::get('corp_id'))->where('id', $request->reg_idpel)->update($update);
+         
             
             $status = (new GlobalController)->whatsapp_status();
             if ($status) {
@@ -285,29 +240,6 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*';
             }
 
-            // $pesan_group['layanan'] = 'CS';
-            // $pesan_group['pesan_id_site'] = $request->reg_site;
-            // $pesan_group['ket'] = 'registrasi';
-            // $pesan_group['corporate_id']= Session::get('corp_id');
-            // $pesan_group['target'] = env('GROUP_REGISTRASI');;
-            // $pesan_group['nama'] = $request->input_nama;
-            // $pesan_group['status'] = $status_pesan;
-//             $pesan_group['pesan'] = '               -- LIST PEMASANGAN --
-
-// Antrian pemasangan tanggal ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
-
-// No.Layanan : *' . $request->reg_nolayanan . '*
-// Nama : ' . $request->input_nama . '
-// Alamat : ' . $request->input_alamat_pasang .
-//                 '
-// Paket : *' . $paket_nama->paket_nama . '*
-// Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-// Biaya tagihan : ' . $request->reg_harga + $request->reg_ppn +  $request->reg_kode_unik + $request->reg_bph_uso . '
-// Tanggal Pasang : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . ' 
-
-// Diregistrasi Oleh : *' . $user_nama . '*';
-
-
             Pesan::create([
                 'layanan' =>  'CS',
                 'ket' =>  'tiket',
@@ -330,6 +262,52 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
             ]);
 
             Pesan::create($pesan_pelanggan);
+               // // Pesan::create($pesan_group);
+            Registrasi::create($data);
+            Data_Tiket::create($tiket);
+            
+
+
+            
+            // $arr = array( 0 => null, 1=>null, 2=>3, 3=>null); 
+            
+            $arr = $request->reg_mitra;
+            foreach ($arr as $key=>$val) 
+            {
+                if ($val === null)
+                unset($arr[$key]);
+        }
+        $count_mitra = array_values($arr);
+        
+        
+        // dd($request->fee);
+
+        $fee = $request->fee;
+        foreach ($fee as $keye=>$vale) 
+        {
+                if ($vale === null)
+                unset($fee[$keye]);
+        }
+        $count_fee = array_values($fee);
+
+        $cek_count = count($count_mitra);
+      
+
+
+        if($cek_count >= 1){
+            for ($x = 0; $x < $cek_count; $x++) {
+                FtthFee::create(
+                    [
+                        'corporate_id'=> Session::get('corp_id'),
+                        'fee_idpel'=> $request->reg_idpel,
+                        'reg_mitra'=> $count_mitra[$x],
+                        'reg_fee'=> $count_fee[$x],
+                        
+                    ]);
+                }
+        }
+                // dd('count_fee');
+                    InputData::where('corporate_id',Session::get('corp_id'))->where('id', $request->reg_idpel)->update($update);
           
                     
         $notifikasi = array(
