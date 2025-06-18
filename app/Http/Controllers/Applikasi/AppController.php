@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Applikasi;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Aplikasi\Data_Kecamatan;
 use App\Models\Aplikasi\Data_Kelurahan;
 use App\Models\Aplikasi\Data_RT;
 use App\Models\Aplikasi\Data_Site;
@@ -489,6 +490,38 @@ class AppController extends Controller
 
         return view('Applikasi/site', $data);
     }
+    public function kecamatan()
+    {
+        $data['data_kecamatan'] = Data_Kecamatan::where('corporate_id', Session::get('corp_id'))->with('kecamatan_site')->get();
+        $data['data_site'] = Data_Site::where('corporate_id', Session::get('corp_id'))->get();
+        return view('Applikasi/kecamatan', $data);
+    }
+
+    public function kecamatan_store(Request $request)
+    {
+        $kecamatan_store['corporate_id'] = Session::get('corp_id');
+        $kecamatan_store['data__site_id'] = $request->data__site_id;
+        $kecamatan_store['kec_nama'] = strtoupper($request->kec_nama);
+        
+        Data_Kecamatan::create($kecamatan_store);
+        $notifikasi = array(
+            'pesan' => 'Berhasil menambahkan Site',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.kecamatan')->with($notifikasi);
+    }
+    public function update_kecamatan(Request $request, $id)
+    {
+        $kecamatan_store['data__site_id'] = $request->data__site_id;
+        $kecamatan_store['kec_nama'] = strtoupper($request->kec_nama);
+        
+        Data_Kecamatan::where('corporate_id', Session::get('corp_id'))->where('id', $id)->update($kecamatan_store);
+        $notifikasi = array(
+            'pesan' => 'Berhasil update data Site',
+            'alert' => 'success',
+        );
+        return redirect()->route('admin.app.kecamatan')->with($notifikasi);
+    }
     public function site_store(Request $request)
     {
         $store_site['corporate_id'] = Session::get('corp_id');
@@ -517,19 +550,28 @@ class AppController extends Controller
         );
         return redirect()->route('admin.app.site')->with($notifikasi);
     }
+    public function val_kelurahan($id)
+    {
+        $data['data_kelurahan'] = Data_Kelurahan::join('data__kecamatans','data__kecamatans.id','=','data__kelurahans.data__kecamatan_id')
+                                                ->join('data__sites','data__sites.id','=','data__kecamatans.data__site_id')
+                                                ->where('data__kelurahans.corporate_id', Session::get('corp_id'))
+                                                ->where('data__kelurahans.kel_nama', $id)
+                                                ->select(['data__kelurahans.kel_nama','data__kecamatans.kec_nama','data__sites.site_nama','data__kelurahans.id as id_kel'])
+                                                ->first();
+                                                // dd( $data['data_kelurahan']);
+        return response()->json($data);
+    }
     public function kelurahan()
     {
-        $data['data_site'] = Data_Site::where('site_status','Enable')->where('corporate_id', Session::get('corp_id'))->get();
-        $data['data_kelurahan'] = Data_Kelurahan::where('corporate_id', Session::get('corp_id'))->get();
+        $data['data_kecamatan'] = Data_Kecamatan::where('corporate_id', Session::get('corp_id'))->get();
+        $data['data_kelurahan'] = Data_Kelurahan::where('corporate_id', Session::get('corp_id'))->with('kecamatan')->get();
         return view('Applikasi/kelurahan', $data);
     }
     public function kelurahan_store(Request $request)
     {
         $store['corporate_id'] = Session::get('corp_id');
-        $store['kel_site_id'] = $request->kel_site_id;
-        $store['kel_nama'] = $request->kel_nama;
-        $store['kel_ket'] = $request->kel_ket;
-        $store['kel_status'] = 'Enable';
+        $store['data__kecamatan_id'] = $request->data__kecamatan_id;
+        $store['kel_nama'] = strtoupper($request->kel_nama);
         
         Data_Kelurahan::create($store);
         $notifikasi = array(
@@ -540,30 +582,15 @@ class AppController extends Controller
     }
     public function update_kelurahan(Request $request, $id)
     {
-        $store['kel_site_id'] = $request->kel_site_id;
-        $store['kel_nama'] = $request->kel_nama;
-        $store['kel_ket'] = $request->kel_ket;
-        $store['kel_status'] = $request->kel_status;
+        $store['data__kecamatan_id'] = $request->data__kecamatan_id;
+        $store['kel_nama'] = strtoupper($request->kel_nama);
         
-        Data_Kelurahan::where('kel_id', $id)->where('corporate_id',Session::get('corp_id'))->update($store);
+        Data_Kelurahan::where('id', $id)->where('corporate_id',Session::get('corp_id'))->update($store);
         $notifikasi = array(
             'pesan' => 'Berhasil update data Kelurahan',
             'alert' => 'success',
         );
         return redirect()->route('admin.app.kelurahan')->with($notifikasi);
     }
-    public function data_rt()
-    {
-        $data['data_kelurahan'] = Data_Kelurahan::where('corporate_id',Session::get('corp_id'))->where('kel_status','Enable')->get();
-        $data['data_rt'] = Data_RT::join('data__kelurahans','data__kelurahans.kel_id','=','data__rts.rt_kel_id')
-        ->join('data__sites','data__sites.site_id','=','data__kelurahans.kel_site_id')
-        ->where('corporate_id',Session::get('corp_id'))
-        ->get();
-        return view('Applikasi/rt', $data);
-    }
-    //    'rt_id',
-    //     'rt_kelurahan',
-    //     'rt_nama',
-    //     'rt_ket',
-    //     'rt_status',
+  
 }

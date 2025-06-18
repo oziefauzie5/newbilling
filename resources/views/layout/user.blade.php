@@ -474,6 +474,59 @@ $.ajax({
 						// },
 					});
 });
+// -----------------------------------------START VALIDASI KELURAHAN------------------------------------
+  $(document).ready(function() {
+	  $("#val_kelurahan").attr('disabled','disabled')
+	  
+	  $('#rw').on('change', function() {
+		  $("#val_kelurahan").removeAttr('disabled')
+			$('#val_kelurahan').val('');  
+			$('#val_kecamatan').val('');  
+			$('#kota').empty()
+			$('#user_mitra').empty()
+			$('#kota').append('<option value="">None</option>')
+			$('#user_mitra').append('<option value="">None</option>')
+	$('#val_kelurahan').keyup(function() {
+		var rw = $('#rw').val();
+		
+		// console.log(rw)
+		var val_kelurahan = $('#val_kelurahan').val();
+		var url = '{{ route("admin.sales.val_kelurahan", ":id") }}';
+		url = url.replace(':id', val_kelurahan);
+		$.ajax({
+			url: url,
+			type: 'GET',
+			data: {
+				rw:rw,
+				'_token': '{{ csrf_token() }}'},
+			dataType: 'json',
+			success: function(data) {
+				console.log(data)
+							if(data['data_kelurahan']){
+								$('.notif_validasi').removeClass('has-error has-feedback')
+								$('.notif_validasi').addClass('has-success has-feedback')
+								$('#pesan').html('')
+								$('#kota').empty()
+								$('#kec').val(data['data_kelurahan']['kec_nama'])
+								// user_mitra
+								$('#kota').append('<option value="'+data['data_kelurahan']['id_kel']+'|'+data['data_kelurahan']['site_nama']+'">'+data['data_kelurahan']['site_nama']+'</option>')
+								if(data['user_mitra'] ){
+									$('#user_mitra').empty()
+									$('#user_mitra').append('<option value="'+data['user_mitra']['mts_user_id']+'|'+data['user_mitra']['name']+'">'+data['user_mitra']['name']+'</option>')
+
+								}
+							} else {
+								$('.notif_validasi').removeClass('has-success has-feedback')
+								$('.notif_validasi').addClass('has-error has-feedback')
+								$('#pesan').html('Kelurahan tidak ditemukan')
+								$('#kota').val('')
+								$('#kec').val('')
+							}
+						},
+					});
+				});
+	})
+  })
 </script>
 
 

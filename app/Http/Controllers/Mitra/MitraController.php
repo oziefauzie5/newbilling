@@ -87,6 +87,10 @@ class MitraController extends Controller
 
     function store_pic1(Request $request)
     {
+        $get_site =  explode("|", $request->data__site_id);
+        $site_id = $get_site[0];
+        $site_nama = $get_site[1];
+
         $data['Mitra'] = $request->query('Mitra');
         Session::flash('name', $request->name); #
         Session::flash('ktp', $request->ktp); #
@@ -98,6 +102,15 @@ class MitraController extends Controller
         Session::flash('tgl_gabung', $request->tgl_gabung); #
         Session::flash('mts_komisi', $request->mts_komisi); #
         Session::flash('data__site_id', $request->data__site_id); #
+        Session::flash('site_nama', $site_nama); #
+        Session::flash('wil_kel', $request->wil_kel); #
+        Session::flash('wil_rw', $request->wil_rw); #
+        Session::flash('kelurahan', $request->kelurahan); #
+        Session::flash('kecamatan', $request->kecamatan); #
+        Session::flash('wilayah', $request->wilayah); #
+        Session::flash('rw', $request->rw); #
+        Session::flash('rt', $request->rt); #
+        // Session::flash('kota', $request->kota); #
         Session::flash('level', $request->level); #
         Session::flash('mts_limit_minus', $request->mts_limit_minus); #
         // dd($request->all());
@@ -112,6 +125,7 @@ class MitraController extends Controller
             'tgl_gabung' => 'required',
             'mts_komisi' => 'required:mitra_settings',
             'data__site_id' => 'required',
+            'wilayah' => 'required',
             'level' => 'required',
        
         ], [
@@ -129,6 +143,7 @@ class MitraController extends Controller
             'mts_komisi.required' => 'Komisi tidak boleh kosong',
             'data__site_id.required' => 'Site tidak boleh kosong',
             'level.required' => 'Level tidak boleh kosong',
+            'wilayah.required' => 'Wilayah tidak boleh kosong',
         ]);
      
 
@@ -150,21 +165,21 @@ class MitraController extends Controller
         }
 
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
-
+         
         $tgl_gabung = date('ym', strtotime($request->tgl_gabung));
         $countuser = User::where('corporate_id',Session::get('corp_id'))->count();
-        $id_mitra = $tgl_gabung . $countuser . $level_id.$request->data__site_id; #FORMAT = th-bulan-urutan karyawan,level,site
+        $id_mitra = $tgl_gabung . $countuser . $level_id.$site_id; #FORMAT = th-bulan-urutan karyawan,level,site
         $data['id'] = $id_mitra;
         $data['corporate_id'] = Session::get('corp_id');
         $data['email'] = $request->email;
         $data['username'] = $request->username;
         $data['ktp'] = $request->ktp;
         $data['hp'] = $nomorhp;
-        $data['alamat_lengkap'] = strtoupper($request->alamat_lengkap);
+        $data['alamat_lengkap'] = strtoupper($request->alamat_lengkap).', RT'. strtoupper($request->rt).'/RW'. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($site_nama);
         $data['name'] = strtoupper($request->name);
         $data['password'] = Hash::make($request->password);
         $data['photo'] = 'user.png';
-        $data['data__site_id'] = $request->data__site_id;
+        $data['data__site_id'] = $site_id;
         $data['tgl_gabung'] = date('Y-m-d', strtotime($request->tgl_gabung));
         $data['status_user'] = 'Enable';
         
@@ -174,12 +189,17 @@ class MitraController extends Controller
         
         $datarolepermission['permission_id'] = $level_id;
         $datarolepermission['role_id'] = $level_id;
+
+        $mts_komisi = preg_replace("/[^0-9]/", "", $request->mts_komisi);
         
         $mitra_setting['corporate_id'] = Session::get('corp_id');
-        $mitra_setting['data__site_id'] = $request->data__site_id;
+        $mitra_setting['data__site_id'] = $site_id;
         $mitra_setting['mts_user_id'] = $id_mitra;
+        $mitra_setting['mts_wilayah'] = $request->wilayah;
         $mitra_setting['mts_limit_minus'] = $request->mts_limit_minus;
-        $mitra_setting['mts_komisi'] = $request->mts_komisi;
+        $mitra_setting['mts_komisi'] = $mts_komisi;
+
+        // dd($mitra_setting);
 
         
         

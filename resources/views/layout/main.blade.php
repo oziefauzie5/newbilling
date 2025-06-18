@@ -371,6 +371,16 @@
 										</a>
 									</li>
 									<li>
+										<a href="{{route('admin.app.kecamatan')}}">
+											<span class="sub-item">Kecamatan</span>
+										</a>
+									</li>
+									<li>
+										<a href="{{route('admin.app.kelurahan')}}">
+											<span class="sub-item">Kelurahan</span>
+										</a>
+									</li>
+									<li>
 										<a href="{{route('admin.app.wa_getewai')}}">
 											<span class="sub-item">Whatsapp Getewai</span>
 										</a>
@@ -759,7 +769,7 @@ function myFunction() {
 											var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - data['promo_harga']);
 											if (!isNaN(result1)) {
 												$('#biaya_ppn').val(result1);
-											}
+										}
 										} else {
 											$("#biaya_ppn").val(0);
 										}
@@ -4045,6 +4055,92 @@ $.ajax({
 });
 
 
+					// -----------------------------------------START VALIDASI KELURAHAN------------------------------------
+						
+	$('#val_kelurahan').keyup(function() {
+		var val_kelurahan = $('#val_kelurahan').val();
+		var url = '{{ route("admin.app.val_kelurahan", ":id") }}';
+		url = url.replace(':id', val_kelurahan);
+		$.ajax({
+			url: url,
+			type: 'GET',
+			data: {'_token': '{{ csrf_token() }}'},
+			dataType: 'json',
+			success: function(data) {
+				console.log(data)
+							if(data['data_kelurahan']){
+								$('.notif_validasi').removeClass('has-error has-feedback')
+								$('.notif_validasi').addClass('has-success has-feedback')
+								$('#pesan').html('')
+								$('#kota').empty()
+								$('#kota').append('<option value="'+data['data_kelurahan']['id_kel']+'|'+data['data_kelurahan']['site_nama']+'">'+data['data_kelurahan']['site_nama']+'</option>')
+								// $('#kota').val(data['data_kelurahan']['site_nama'])
+								$('#kecamatan').val(data['data_kelurahan']['kec_nama'])
+
+								$('.checkbox_kel').change(function () {
+										if ($(this).is(":checked")) {
+											
+											$("#wilayah").val(data['data_kelurahan']['kel_nama']);
+												$('.checkbox_rw').change(function () {
+													if($("#rw").val() > 0){
+														if ($(this).is(":checked")) {
+															$("#wilayah").val('');
+															$("#wilayah").val(data['data_kelurahan']['kel_nama']+' RW'+$("#rw").val());
+															$('#pesan1').html('')
+														} else {
+															$("#wilayah").val('');
+															$("#wilayah").val(data['data_kelurahan']['kel_nama']);
+														}
+													} else{
+														$(".checkbox_rw").prop('checked', false);
+														$('#pesan1').html('Data RW belum di isi')
+													}
+									});
+										} else {
+											$(".checkbox_rw").prop('checked', false);
+											$("#wilayah").val('');
+										}
+									});
+
+							} else {
+								$('.notif_validasi').removeClass('has-success has-feedback')
+								$('.notif_validasi').addClass('has-error has-feedback')
+								$('#pesan').html('Kelurahan tidak ditemukan')
+								$('#kota').val('')
+								$('#kecamatan').val('')
+							}
+						},
+					});
+				});
+
+				var rupiah = document.getElementById("mts_komisi");
+				rupiah.addEventListener("keyup", function(e) {
+				// tambahkan 'Rp.' pada saat form di ketik
+				// gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
+				rupiah.value = formatRupiah(this.value, "Rp. ");
+				});
+
+				/* Fungsi formatRupiah */
+				function formatRupiah(angka, prefix) {
+				var number_string = angka.replace(/[^,\d]/g, "").toString(),
+					split = number_string.split(","),
+					sisa = split[0].length % 3,
+					rupiah = split[0].substr(0, sisa),
+					ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+				// tambahkan titik jika yang di input sudah menjadi angka ribuan
+				if (ribuan) {
+					separator = sisa ? "." : "";
+					rupiah += separator + ribuan.join(".");
+				}
+
+				rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+				return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+				}
+
+
+
+
 
 					// --------------------------------------START ADD KATEGORI BARANG-------------------------------------
 					$('select[name=kategori_satuan]').change(function () {
@@ -4057,6 +4153,7 @@ $.ajax({
 					});
 					// --------------------------------------END ADD KATEGORI BARANG-------------------------------------
 
+					// -----------------------------------------END VALIDASI KELURAHAN------------------------------------
 
 					
 

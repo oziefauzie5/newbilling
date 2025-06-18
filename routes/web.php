@@ -95,11 +95,18 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store')->middleware(['role:admin|STAF ADMIN']);
     Route::put('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit')->middleware(['role:admin']);
-
+    ##--APPLIKASI
     Route::get('/setting', [AppController::class, 'index'])->name('app.index')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/setting/app', [AppController::class, 'akun_store'])->name('app.akun_store')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/setting/app', [AppController::class, 'site'])->name('app.site')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/setting/kecamatan', [AppController::class, 'kecamatan'])->name('app.kecamatan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/setting/kelurahan', [AppController::class, 'kelurahan'])->name('app.kelurahan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::get('/setting/{id}/val_kelurahan', [AppController::class, 'val_kelurahan'])->name('app.val_kelurahan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/setting/app/store-site', [AppController::class, 'site_store'])->name('app.site_store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/setting/app/store-kecamatan', [AppController::class, 'kecamatan_store'])->name('app.kecamatan_store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::post('/setting/app/store-kelurahan', [AppController::class, 'kelurahan_store'])->name('app.kelurahan_store')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/setting/app/update-kecamatan/{id}', [AppController::class, 'update_kecamatan'])->name('app.update_kecamatan')->middleware(['role:admin|NOC|STAF ADMIN']);
+    Route::put('/setting/app/update-kelurahan/{id}', [AppController::class, 'update_kelurahan'])->name('app.update_kelurahan')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/setting/app/update-site/{id}', [AppController::class, 'update_site'])->name('app.update_site')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::put('/setting/{id}/app-akun-edit', [AppController::class, 'akun_edit'])->name('app.akun_edit')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::delete('/setting/{id}/app-akun-delete', [AppController::class, 'akun_delete'])->name('app.akun_delete')->middleware(['role:admin|NOC|STAF ADMIN']);
@@ -303,6 +310,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     
     
     Route::get('/sales/sales', [SalesController::class, 'sales'])->name('sales.sales')->middleware(['role:SALES|PIC|SUB-PIC']);
+    Route::get('/sales/{id}/val_kelurahan', [SalesController::class, 'val_kelurahan'])->name('sales.val_kelurahan')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/input', [SalesController::class, 'sales_input'])->name('sales.sales_input')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::post('/sales/store', [SalesController::class, 'sales_store'])->name('sales.sales_store')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/pelanggan', [SalesController::class, 'pelanggan'])->name('sales.pelanggan')->middleware(['role:SALES|PIC|SUB-PIC']);
@@ -356,12 +364,8 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
 
 
 
-    ##--APPLIKASI
-    Route::get('/setting/kelurahan', [AppController::class, 'kelurahan'])->name('app.kelurahan')->middleware(['role:admin|STAF ADMIN']);
-    Route::post('/setting/kelurahan-store', [AppController::class, 'kelurahan_store'])->name('app.kelurahan_store')->middleware(['role:admin|STAF ADMIN']);
-    Route::put('/setting/{id}/kelurahan-update', [AppController::class, 'update_kelurahan'])->name('app.update_kelurahan')->middleware(['role:admin|STAF ADMIN']);
-    Route::get('/setting/rt', [AppController::class, 'data_rt'])->name('app.data_rt')->middleware(['role:admin|STAF ADMIN']);
-    
+ 
+
     ##--KEUANGAN/TRANSAKSI
     // Route::get('/Transaksi/Operasional', [TransaksiController::class, 'pencairan_operasional'])->name('trx.pencairan_operasional')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
     Route::put('/Transaksi/Konfirmasi-Pencairan', [TransaksiController::class, 'konfirm_pencairan'])->name('trx.konfirm_pencairan')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);

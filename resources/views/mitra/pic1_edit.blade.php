@@ -72,15 +72,21 @@
                                   <input type="text" id="" class="form-control" name="mts_komisi" value="{{$data_pic1->user_mitra->mts_komisi ?? '0'}}">
                                 </div>
                               </div>
-                                @if($Mitra)
                               <div class="form-group row">
-                                <div class="col-sm-6">
-                                </div>
-                                  <label class=" col-sm-2 col-form-label">Limit Minus</label>
+                                  <label class=" col-sm-2 col-form-label">Wilayah PIC</label>
                                 <div class="col-sm-4">
-                                  <input type="number" id="" class="form-control" name="mts_limit_minus" value="{{$data_pic1->user_mitra->mts_limit_minus ?? '0' }}">
+                                  <input type="text" id="" class="form-control readonly" name="mts_limit_minus" value="{{$data_pic1->user_mitra->mts_wilayah ?? '0' }}">
                                 </div>
                               </div>
+                                @if($Mitra == 'Biller')
+                                <div class="form-group row">
+                                  <div class="col-sm-6">
+                                  </div>
+                                    <label class=" col-sm-2 col-form-label">Limit Minus</label>
+                                  <div class="col-sm-4">
+                                    <input type="number" id="" class="form-control" name="mts_limit_minus" value="{{$data_pic1->user_mitra->mts_limit_minus ?? '0' }}">
+                                  </div>
+                                </div>
                               @endif
                               <div class="form-group row">
                                   <label class="col-sm-2 col-form-label" >Upload Foto</label>

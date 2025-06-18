@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mitra;
 use App\Models\Aplikasi\Data_Site;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Aplikasi\Data_Kelurahan;
 use App\Models\Global\ConvertNoHp;
 use App\Models\PSB\InputData;
 use App\Models\PSB\Registrasi;
@@ -55,7 +56,7 @@ class SalesController extends Controller
         $data['role'] = $role->name;
         $data['admin_user'] = (new GlobalController)->user_admin();
         $data['paket'] = Paket::where('paket_status','Enable')->where('paket_layanan','PPP')->get();
-        $data['site'] = Data_Site::where('site_status','Enable')->get();
+        // $data['site'] = Data_Site::where('site_status','Enable')->get();
         
         
         
@@ -74,6 +75,7 @@ class SalesController extends Controller
             // $data['option'] = 'test';
         }
         $data['wilayah'] = MitraSetting::select('mts_wilayah','mts_user_id')->where('mts_wilayah','!=','')->get();
+       
 
 
 
@@ -105,6 +107,26 @@ class SalesController extends Controller
                                 ->whereDate('promo_expired', '<=', date('Y-m-d',strtotime(Carbon::now())))
                                 ->first();
         // dd($data['kode_promo']);
+        return response()->json($data);
+    }
+      public function val_kelurahan(Request $request,$id)
+    {
+        $data['data_kelurahan'] = Data_Kelurahan::join('data__kecamatans','data__kecamatans.id','=','data__kelurahans.data__kecamatan_id')
+                                                ->join('data__sites','data__sites.id','=','data__kecamatans.data__site_id')
+                                                ->where('data__kelurahans.corporate_id', Session::get('corp_id'))
+                                                ->where('data__kelurahans.kel_nama', $id)
+                                                ->select(['data__kelurahans.kel_nama','data__kecamatans.kec_nama','data__sites.site_nama','data__kelurahans.id as id_kel'])
+                                                ->first();
+        if($data['data_kelurahan']){
+            $wilayah = $data['data_kelurahan']->kel_nama .' RW'.$request->rw;
+            $user_mitra = MitraSetting::join('users','users.id','=','mitra_settings.mts_user_id')->Where('mitra_settings.mts_wilayah','=',$wilayah)
+                                                ->orWhere('mitra_settings.mts_wilayah','=',$data['data_kelurahan']->kel_nama)
+                                               ->first();
+            $data['user_mitra'] = $user_mitra;
+        } else {
+            $data['user_mitra'] = '';
+        }
+                                                // dd( $data['data_kelurahan']);
         return response()->json($data);
     }
     public function sales_store(Request $request)

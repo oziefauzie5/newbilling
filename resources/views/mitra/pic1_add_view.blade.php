@@ -47,9 +47,58 @@
                                 </div>
                               </div>
                               <div class="form-group row">
-                                  <label class="col-sm-2 col-form-label" >Alamat Lengkap</label>
+                                  <label class="col-sm-2 col-form-label" >Alamat</label>
                                 <div class="col-sm-10">
-                                  <textarea  id="" class="form-control" name="alamat_lengkap" cols="30" rows="5">{{ Session::get('alamat_lengkap') }}</textarea>
+                                  <input type="text" placeholder="Kp / Perumahan / Jalan " value="{{ Session::get('alamat_lengkap') }}" class="form-control" name="alamat_lengkap">
+                                </div>
+                              </div>
+                               
+                            
+                              <div class="form-group row">
+                                 <label class="col-sm-2 col-form-label">Kota/Kabupaten</label>
+                                <div class="col-sm-4">
+                                  <select name="data__site_id" id="kota"  class="form-control">
+                                    @if(Session::get('data__site_id'))  
+                                    <option value="{{Session::get('data__site_id')}}">{{Session::get('site_nama')}}</option>
+                                     @endif
+                                  </select>
+                                  {{-- <input  type="text" class="form-control readonly" value="{{ Session::get('data__site_id') }}"  placeholder="Kota/Kabupaten"> --}}
+                              </div>
+                                <label class="col-sm-2 col-form-label">RW/RT</label>
+                                <div class="col-sm-2">
+                                <input id="rw" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw" placeholder="RW">
+                              </div>
+                                <div class="col-sm-2">
+                                <input id="rt" type="number" class="form-control" value="{{ Session::get('rt') }}" name="rt" placeholder="RT">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                  <label class="col-sm-2 col-form-label">Kecamatan</label>
+                                <div class="col-sm-4">
+                                <input id="kecamatan" type="text" class="form-control readonly" value="{{ Session::get('kecamatan') }}" name="kecamatan" placeholder="kecamatan">
+                              </div>
+                                <label class="col-sm-2 col-form-label">Kelurahan</label>
+                                <div class="col-sm-4 notif_validasi">
+                                <input id="val_kelurahan" type="text" class="form-control" value="{{ Session::get('kelurahan') }}" name="kelurahan" placeholder="Kelurahan">
+                              <div class="text-danger" id="pesan"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-sm-2 col-form-label">Wilayah PIC</label>
+                          <label class="form-check col-sm-2 col-form-label">Kelurahan&nbsp;&nbsp;
+                            <input class="form-check-input checkbox_kel" type="checkbox" id="wil_kel" name="wil_kel" value="1" @if( Session::get('wil_kel')) checked @endif >
+                            <span class="form-check-sign"></span>
+                          </label>
+                          <label class="form-check col-sm-2 col-form-label">RW&nbsp;&nbsp;
+                            <input class="form-check-input checkbox_rw" type="checkbox" id="wil_rw" name="wil_rw" value="1" @if( Session::get('wil_rw')) checked @endif>
+                            <span class="form-check-sign"></span>
+                            <div class="text-danger" id="pesan1"></div>
+                                    </label>
+
+                                         <label class=" col-sm-2 col-form-label">Wilayah</label>
+                                <div class="col-sm-4">
+                                  <input type="text" id="wilayah" class="form-control" name="wilayah" value="{{ Session::get('wilayah') }}">
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -69,7 +118,7 @@
                                 </div>
                                   <label class=" col-sm-2 col-form-label">Komisi</label>
                                 <div class="col-sm-4">
-                                  <input type="text" id="" class="form-control" name="mts_komisi" value="{{ Session::get('mts_komisi') ?? '0' }}">
+                                  <input type="text" id="mts_komisi" class="form-control" name="mts_komisi" value="{{ Session::get('mts_komisi') ?? '0' }}">
                                 </div>
                               </div>
                               @if($Mitra)
@@ -83,15 +132,6 @@
                               </div>
                               @endif
                               <div class="form-group row">
-                                  <label class=" col-sm-2 col-form-label">Site</label>
-                                <div class="col-sm-4">
-                                  <select name="data__site_id" id="" class="form-control">\
-                                    <option value="">--Pilih Site--</option>
-                                    @foreach ($data_site as $s)
-                                        <option value="{{$s->id}}">{{$s->site_nama}}</option>
-                                    @endforeach
-                                  </select>
-                                </div>
                                   <label class=" col-sm-2 col-form-label">Level</label>
                                 <div class="col-sm-4">
                                   <select name="level" id="level" class="form-control" required >

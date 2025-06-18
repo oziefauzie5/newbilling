@@ -13,19 +13,19 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-header bg-primary">
-                <button class="btn btn-sm" data-toggle="modal" data-target="#modal-adduser" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Tambah Site</button>
-                <a href="{{route('admin.app.kecamatan')}}"><button class="btn btn-sm"  class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Kecamatan</button></a>
+              <button class="btn btn-sm" data-toggle="modal" data-target="#modal-adduser" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Tambah Kecamatan</button>
+                <a href="{{route('admin.app.site')}}"><button class="btn btn-sm"  class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Site</button></a>
                 <a href="{{route('admin.app.kelurahan')}}"><button class="btn btn-sm"  class="btn btn-primary btn-sm"><i class="fas fa-solid fa-plus"></i>Kelurahan</button></a>
               </div>
               <!-- ----------------------------------------------------------------------MODAL ADD AKUN------------------------------------------------ -->
               
               <div class="modal fade" id="modal-adduser">
                   <div class="modal-dialog">
-                    <form action="{{route('admin.app.site_store')}}" method="POST">
+                    <form action="{{route('admin.app.kecamatan_store')}}" method="POST">
                       @csrf
                     <div class="modal-content">
                       <div class="modal-header bg-primary">
-                        <h4 class="modal-title">TAMBAH SITE </h4>
+                        <h4 class="modal-title">TAMBAH KECAMATAN </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -35,17 +35,18 @@
                         
                             <div class="card-body">
                               <div class="form-group">
-                                  <label>Id Site</label>
-                                  <input type="text" class="form-control"  name="id" value="{{$id}}" readonly>
+                                  <label>Site</label>
+                                  <select name="data__site_id" id="" class="form-control" required>
+                                    <option value="">--Pilih Site--</option>
+                                    @foreach ($data_site as $s)
+                                        <option value="{{$s->id}}">{{$s->site_nama}}</option>
+                                    @endforeach
+                                  </select>
                               </div>
                               <div class="form-group">
-                                  <label>Nama Site</label>
-                                  <input type="text" class="form-control" name="site_nama" placeholder="Masukan Nama Site">
+                                  <label>Nama Kecamatan</label>
+                                  <input type="text" class="form-control" name="kec_nama" placeholder="Masukan Nama Site" required>
                               </div>
-                              <div class="form-group">
-                                <label>Prefix kode</label>
-                                <input type="text" class="form-control" name="site_prefix">
-                            </div>
                             </div>
                       </div>
                       <div class="modal-footer justify-content-between">
@@ -71,20 +72,16 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>Id Site</th>
-                      <th>Nama Site</th>
-                      <th>Kode Prefix</th>
-                      <th>Status</th>
+                      <th>Site</th>
+                      <th>Kecamatan</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                      @foreach ($data_site as $d)
+                      @foreach ($data_kecamatan as $d)
                       <tr>
-                        <td>{{$d->id}}</td>
-                        <td>{{$d->site_nama}}</td>
-                        <td>{{$d->site_prefix}}</td>
-                        <td>{{$d->site_status}}</td>
+                        <td>{{$d->kecamatan_site->site_nama}}</td>
+                        <td>{{$d->kec_nama}}</td>
                         <td>
                           <div class="form-button-action">
                               <button type="button" data-toggle="modal" data-target="#modal-edit{{$d->id}}" class="btn btn-link btn-primary btn-lg">
@@ -94,35 +91,30 @@
                           </td>
                       <div class="modal fade" id="modal-edit{{$d->id}}">
                           <div class="modal-dialog">
-                            <form action="{{route('admin.app.update_site',['id'=>$d->id])}}" method="POST">
+                            <form action="{{route('admin.app.update_kecamatan',['id'=>$d->id])}}" method="POST">
                             @csrf  
                             @method('PUT')
                             <div class="modal-content">
                               <div class="modal-header bg-primary ">
-                                <h4 class="modal-title">EDIT SITE </h4>
+                                <h4 class="modal-title">EDIT KECAMATAN </h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
                               <div class="modal-body">
                                     <div class="card-body">
+                                        <div class="form-group">
+                                  <label>Site</label>
+                                  <select name="data__site_id" id="" class="form-control" required>
+                                    <option value="{{$d->data__site_id}}">{{$d->kecamatan_site->site_nama}}</option>
+                                    @foreach ($data_site as $s)
+                                        <option value="{{$s->id}}">{{$s->site_nama}}</option>
+                                    @endforeach
+                                  </select>
+                              </div>
                             <div class="form-group">
-                                <label>Nama Site</label>
-                                <input type="text" class="form-control" name="site_nama" value="{{$d->site_nama}}">
-                            </div>
-                            <div class="form-group">
-                                <label>Prefix kode</label>
-                                <input type="text" class="form-control" name="site_prefix" value="{{$d->site_prefix}}">
-                            </div>
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select name="site_status" class="form-control">
-                                  @if($d->site_status) 
-                                  <option value="{{$d->site_status}}">{{$d->site_status}}</option>
-                                  @endif
-                                  <option value="Enable">Enable</option>
-                                  <option value="Disable">Disable</option>
-                                </select>
+                                <label>Nama Kecamatan</label>
+                                <input type="text" class="form-control" name="kec_nama" value="{{$d->kec_nama}}">
                             </div>
                                     </div>
       

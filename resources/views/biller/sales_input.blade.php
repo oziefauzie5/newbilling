@@ -101,91 +101,129 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Email</label>
-                      <input id="input_email" type="text" class="form-control" value="{{ Session::get('input_email') }}" name="input_email" placeholder="Email">
+                      <input id="input_email" type="text" class="form-control" value="{{ Session::get('input_email') }}" name="input_email" placeholder="Email" required>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Alamat</label>
-                      <input id="input_alamat_ktp" type="text" class="form-control" value="{{ Session::get('input_alamat_ktp') }}" name="input_alamat_ktp" placeholder="Kp / Perumahan / Jalan">
+                      <input id="input_alamat_ktp" type="text" class="form-control" value="{{ Session::get('input_alamat_ktp') }}" name="input_alamat_ktp" placeholder="Kp / Perumahan / Jalan" required>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RT</label>
-                      <input id="rt" type="number" class="form-control" value="{{ Session::get('rt_ktp') }}" name="rt_ktp" placeholder="RT sesuai KTP">
+                      <input id="rt" type="number" class="form-control" value="{{ Session::get('rt_ktp') }}" name="rt_ktp" placeholder="RT sesuai KTP" required>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RW</label>
-                      <input id="rw" type="number" class="form-control" value="{{ Session::get('rw_ktp') }}" name="rw_ktp" placeholder="RW sesuai KTP">
+                      <input id="" type="number" class="form-control" value="{{ Session::get('rw_ktp') }}" name="rw_ktp" placeholder="RW sesuai KTP" required>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kelurahan</label>
-                      <input id="kelurahan" type="text" class="form-control" value="{{ Session::get('kelurahan_ktp') }}" name="kelurahan_ktp" placeholder="Kelurahan sesuai KTP">
+                      <input id="kelurahan" type="text" class="form-control" value="{{ Session::get('kelurahan_ktp') }}" name="kelurahan_ktp" placeholder="Kelurahan sesuai KTP" required>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kecamatan</label>
-                      <input id="kecamatan" type="text" class="form-control" value="{{ Session::get('kecamatan_ktp') }}" name="kecamatan_ktp" placeholder="Kecamatan sesuai KTP">
+                      <input id="kecamatan" type="text" class="form-control" value="{{ Session::get('kecamatan_ktp') }}" name="kecamatan_ktp" placeholder="Kecamatan sesuai KTP" required>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kota/Kabupate</label>
-                      <input id="kota_ktp" type="text" class="form-control" value="{{ Session::get('kota_ktp') }}" name="kota_ktp" placeholder="Kota/Kab. sesuai KTP">
+                      <input id="kota_ktp" type="text" class="form-control" value="{{ Session::get('kota_ktp') }}" name="kota_ktp" placeholder="Kota/Kab. sesuai KTP" required>
                     </div>
                   </div>
                   <br>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Alamat ( Alamat Pemasangan )</label>
-                      <input id="input_alamat" type="text" class="form-control" value="{{ Session::get('input_alamat') }}" name="input_alamat" placeholder="Kp / Perumahan / Jalan ( Alamat Pemasangan )">
+                      <input id="input_alamat" type="text" class="form-control" value="{{ Session::get('input_alamat') }}" name="input_alamat" placeholder="Kp / Perumahan / Jalan ( Alamat Pemasangan )" required>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RT ( Alamat Pemasangan )</label>
-                      <input id="rt" type="number" class="form-control" value="{{ Session::get('rt') }}" name="rt" placeholder="RT">
+                      <select name="rt" id="rt" class="form-control" required>
+                        @if( Session::get('rt'))
+                        <option value="{{ Session::get('rt')}}">{{ Session::get('rt')}}</option>
+                        @endif
+                        <option value="">--Pilih RT--</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                      </select>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RW ( Alamat Pemasangan )</label>
-                      <input id="rw" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw" placeholder="RW">
+                        <select name="rw" id="rw" class="form-control" required>
+                        @if( Session::get('rw'))
+                        <option value="{{ Session::get('rw')}}">{{ Session::get('rw')}}</option>
+                        @endif
+                        <option value="">--Pilih RW--</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                      </select>
+                      {{-- <input id="rw" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw" placeholder="RW"> --}}
                     </div>
                   </div>
                   <div class="col-sm-12">
-                    <div class="form-group">
+                    <div class="form-group notif_validasi">
                       <label>Kelurahan ( Alamat Pemasangan )</label>
-                      <input id="kelurahan" type="text" class="form-control" value="{{ Session::get('kelurahan') }}" name="kelurahan" placeholder="Kelurahan">
+                      <input id="val_kelurahan" type="text" class="form-control" value="{{ Session::get('kelurahan') }}" name="kelurahan" placeholder="Kelurahan" required>
+                       <div class="text-danger" id="pesan"></div>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kecamatan ( Alamat Pemasangan )</label>
-                      <input id="kecamatan" type="text" class="form-control" value="{{ Session::get('kecamatan') }}" name="kecamatan" placeholder="kecamatan">
+                      <input id="kec" type="text" class="form-control readonly" value="{{ Session::get('kecamatan') }}" name="kecamatan" placeholder="kecamatan" required>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kota/Kabupaten ( Alamat Pemasangan )</label>
-                      <select name="kota" id="" class="form-control">
-                        <option value="">--Pilih Kota/Kab</option>
-                        @foreach($site as $s)
-                        <option value="{{$s->id.'|'.$s->site_nama}}">{{$s->site_nama}}</option>
-                        @endforeach
+                      <select name="kota" id="kota" class="form-control" required>
                       </select>
                     </div>
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Paket </label>
-                      <select class="form-control" name="input_keterangan" id="input_paket" >
+                      <select class="form-control" name="input_keterangan" id="input_paket" required >
                         <option value="">--Pilih Paket--</option>
                         @foreach ($paket as $p)
                            <option value="{{$p->paket_nama}}">{{$p->paket_nama.' - '.number_format($p->paket_harga)}}</option> 
@@ -202,21 +240,10 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Informasi</label>
-                      <input id="" type="text" class="form-control" value="{{ Session::get('sub_sales') }}" name="sub_sales" placeholder="Masukan Nama pemberi informasi" required>
+                      <input id="" type="text" class="form-control" value="{{ Session::get('sub_sales') }}" name="sub_sales" placeholder="Masukan Nama pemberi informasi">
                       <span class="noted">Kosongkan jika tidak ada pemberi informasi</span>
                     </div>
                   </div>
-                  <div class="col-sm-12">
-                   <div class="form-group">
-                     <label>Wilayah</label>
-                     <select class="form-control" name="wilayah" id="">
-                      <option value="">None</option>
-                     @foreach($wilayah as $w)
-                     <option value="{{$w->mts_user_id}}">{{$w->mts_wilayah}}</option>
-                     @endforeach
-                   </select>
-                 </div>
-               </div>
                   @if($cek_role->role_id == 16 ) 
                    <div class="col-sm-12">
                     <div class="form-group">
@@ -227,8 +254,8 @@
                       @endforeach
                     </select>
                   </div>
-                </div>
-                @else 
+                </div>user_mitra
+                @elseif($cek_role->role_id == 15 ) 
                 <div class="col-sm-12">
                     <div class="form-group">
                       <label>SUB-PIC</label>
@@ -240,7 +267,15 @@
                     </select>
                   </div>
                 </div>
-                
+                @elseif($cek_role->role_id == 12 ) 
+                <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>PIC</label>
+                      <select class="form-control" id="user_mitra" name="input_sub_pic" id="">
+                        
+                    </select>
+                  </div>
+                </div>
                 @endif
                   <div class="col-sm-12">
                     <div class="form-group">
