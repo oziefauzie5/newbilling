@@ -27,44 +27,7 @@
             </div>
           </div>
             </form>
-            <div class="col">
-              <button class="btn  btn-sm ml-auto m-1 btn-warning " data-toggle="modal" data-target="#import">
-                <i class="fa fa-file-import"></i> Import Barang
-              </button>
-              <!-- Modal Import -->
-              <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header no-bd">
-                      <h5 class="modal-title">
-                        <span class="fw-mediumbold">
-                          Import Barang</span> 
-                      </h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <form action="{{route('admin.export.barang_import')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @method('POST')
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <div class="form-group">
-                              <label>Pilih file (EXCEL,CSV)</label>
-                              <input type="file" class="form-control" name="file" required>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer no-bd">
-                        <button type="submit" class="btn btn-success">Add</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           <hr>
            <div class="table-responsive">
             <table id="input_data" class="display table table-striped table-hover text-nowrap" >                          <thead>

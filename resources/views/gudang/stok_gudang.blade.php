@@ -46,83 +46,9 @@
               </div>
               
             </form>
-            <div class="col">
-            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#barang_import">
-              <i class="fa fa-file-import"></i> Import Data Barang
-            </button>
-            <button class="btn  btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#barang_keluar_import">
-              <i class="fa fa-file-import"></i> Import Barang Keluar
-            </button>
           </div>
-          </div>
-          <!-- Modal Import -->
-          <div class="modal fade" id="barang_import" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header no-bd">
-                  <h5 class="modal-title">
-                    <span class="fw-mediumbold">
-                    Import Odp</span> 
-                  </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form action="{{route('admin.export.barang_import')}}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('POST')
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <div class="form-group">
-                          <label>Pilih file (EXCEL,CSV)</label>
-                          <input id="import" type="file" class="form-control" name="file" required>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="modal-footer no-bd">
-                    <button type="submit" class="btn btn-success">Add</button>
-                  </form>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Modal Import -->
-          <div class="modal fade" id="barang_keluar_import" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header no-bd">
-                  <h5 class="modal-title">
-                    <span class="fw-mediumbold">
-                    Import Odp</span> 
-                  </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form action="{{route('admin.export.barang_keluar_import')}}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('POST')
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <div class="form-group">
-                          <label>Pilih file (EXCEL,CSV)</label>
-                          <input id="import" type="file" class="form-control" name="file" required>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="modal-footer no-bd">
-                    <button type="submit" class="btn btn-success">Add</button>
-                  </form>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
+      
+     
 
 <!-- Modal -->
 <div class="modal fade" id="print_stok" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -98,14 +98,6 @@
                   DEAKTIVASI
                 </button>
               </a>
-              @role('admin|STAF ADMIN')
-              <a href="{{route('admin.export.export_registrasi')}}">
-                <button class="btn  btn-sm ml-auto m-1 btn-dangerSS">
-                  <i class="fa fa-plus"></i>
-                  EXPORT EXCEL
-                </button>
-              </a>
-              @role('admin')
               
       @endrole
       <a href="{{route('admin.psb.berita_acara')}}">
