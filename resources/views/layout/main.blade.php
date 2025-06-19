@@ -126,14 +126,14 @@
 						<li class="nav-item dropdown hidden-caret">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 								<div class="avatar-sm">
-									<img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
+									<img src="@if(Auth::user()->photo) {{ asset('storage/image/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
 								</div>
 							</a>
 							<ul class="dropdown-menu dropdown-user animated fadeIn">
 								<div class="dropdown-user-scroll scrollbar-outer">
 									<li>
 										<div class="user-box">
-											<div class="avatar-lg"><img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
+											<div class="avatar-lg"><img src="@if(Auth::user()->photo) {{ asset('storage/image/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
 											</div>
 											
 											<div class="u-text">
@@ -161,7 +161,7 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
+							<img src="@if(Auth::user()->photo) {{ asset('storage/image/'.Auth::user()->photo) }}  @else {{asset('atlantis/assets/img/user.png') }} @endif" alt="..." class="avatar-img rounded-circle">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">

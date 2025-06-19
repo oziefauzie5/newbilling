@@ -41,9 +41,10 @@ class AktivasiController extends Controller
         $now = Carbon::now();
         $m = $now->format('m');
         $y = $now->format('Y');
+        $d = $now->format('d');
 
         #PASCABAYAR SESUAI TGL PASANG (SIKLUS TETAP)
-        $tag_pascabayar = Carbon::create(date('Y-m-'.$swaktu->wt_tgl_isolir))->addMonth(1)->toDateString();
+        $tag_pascabayar = Carbon::create(date('Y-m-'.$d))->addMonth(1)->toDateString();
         $inv_tgl_tagih_pascabayar = Carbon::create($tag_pascabayar)->addDay(-$swaktu->wt_jeda_tagihan_pertama)->toDateString();
         $inv_tgl_isolir_pascabayar = Carbon::create($tag_pascabayar)->addDay($swaktu->wt_jeda_isolir_hari)->toDateString();
 

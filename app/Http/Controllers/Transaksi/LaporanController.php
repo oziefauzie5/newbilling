@@ -359,7 +359,6 @@ class LaporanController extends Controller
         if ($data) {
             if ($laporan) {
                 $laporan->update([
-                    'data_lap_id' => 0,
                     'lap_status' => 0,
                 ]);
                 $data->delete();

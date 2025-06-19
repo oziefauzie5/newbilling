@@ -17,47 +17,11 @@
             </div>
             <div class="card-body table-responsive -sm">
               <button class="btn btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#modal-adduser"><i class="fas fa-solid fa-plus"></i>Tambah Odp Distibusi</button>
-              <button class="btn btn-sm ml-auto m-1 btn-primary " data-toggle="modal" data-target="#import">
-                <i class="fa fa-file-import"></i> Import
-              </button>
                 <a href="{{route('admin.topo.odp')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> ODP</button></a>
               <a href="{{route('admin.topo.olt')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> OLT</button></a>
               <a href="{{route('admin.topo.index')}}"><button class="btn  btn-sm ml-auto m-1 btn-primary"><i class="fas fa-solid fa-route"></i> Router</button></a>
             </div>
-          <!-- Modal Import -->
-          <div class="modal fade" id="import" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header no-bd">
-                  <h5 class="modal-title">
-                    <span class="fw-mediumbold">
-                    Import Odc</span> 
-                  </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form action="{{route('admin.export.import_odc')}}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('POST')
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <div class="form-group">
-                          <label>Pilih file (EXCEL,CSV)</label>
-                          <input id="import" type="file" class="form-control" name="file" required>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="modal-footer no-bd">
-                    <button type="submit" class="btn btn-success">Add</button>
-                  </form>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          
               
               <!-- ----------------------------------------------------------------------MODAL ADD AKUN------------------------------------------------ -->
               

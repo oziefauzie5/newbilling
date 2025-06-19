@@ -46,6 +46,7 @@ class UserController extends Controller
                                         'users.status_user',
                                         'data__sites.site_nama',
                                         'roles.name as level',
+                                        'roles.id as role_id',
                                         ])
                                 ->get();            
         $data['role'] = Role::where('id','!=','13')->get();
@@ -173,8 +174,8 @@ class UserController extends Controller
         ]
     );
  if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
-
-
+ 
+//  dd($request->level);
         $nomorhp = (new ConvertNoHp())->convert_nohp($request->hp);
         $get =  explode("|", $request->level);
         $level_id = $get[0];
