@@ -509,7 +509,7 @@ $.ajax({
 								$('#kota').empty()
 								$('#kec').val(data['data_kelurahan']['kec_nama'])
 								// user_mitra
-								$('#kota').append('<option value="'+data['data_kelurahan']['id_kel']+'|'+data['data_kelurahan']['site_nama']+'">'+data['data_kelurahan']['site_nama']+'</option>')
+								$('#kota').append('<option value="'+data['data_kelurahan']['id_site']+'|'+data['data_kelurahan']['site_nama']+'">'+data['data_kelurahan']['site_nama']+'</option>')
 								if(data['user_mitra'] ){
 									$('#user_mitra').empty()
 									$('#user_mitra').append('<option value="'+data['user_mitra']['mts_user_id']+'|'+data['user_mitra']['name']+'">'+data['user_mitra']['name']+'</option>')

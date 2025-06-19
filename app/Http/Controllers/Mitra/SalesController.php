@@ -115,12 +115,13 @@ class SalesController extends Controller
                                                 ->join('data__sites','data__sites.id','=','data__kecamatans.data__site_id')
                                                 ->where('data__kelurahans.corporate_id', Session::get('corp_id'))
                                                 ->where('data__kelurahans.kel_nama', $id)
-                                                ->select(['data__kelurahans.kel_nama','data__kecamatans.kec_nama','data__sites.site_nama','data__kelurahans.id as id_kel'])
+                                                ->select(['data__kelurahans.kel_nama','data__kecamatans.kec_nama','data__sites.site_nama','data__sites.id as id_site','data__kelurahans.id as id_kel'])
                                                 ->first();
         if($data['data_kelurahan']){
             $wilayah = $data['data_kelurahan']->kel_nama .' RW'.$request->rw;
             $user_mitra = MitraSetting::join('users','users.id','=','mitra_settings.mts_user_id')->Where('mitra_settings.mts_wilayah','=',$wilayah)
                                                 ->orWhere('mitra_settings.mts_wilayah','=',$data['data_kelurahan']->kel_nama)
+                                                // ->select(['data__kelurahans.kel_nama','data__kecamatans.kec_nama','data__sites.site_nama','data__sites.id as id_site','data__kelurahans.id as id_kel'])
                                                ->first();
             $data['user_mitra'] = $user_mitra;
         } else {
@@ -199,6 +200,7 @@ class SalesController extends Controller
         $get_site =  explode("|", $request->kota);
         $site_id = $get_site[0];
         $site_nama = $get_site[1];
+        // dd($get_site);
 
         if ($cek_nohp == 0) {
 
@@ -219,6 +221,7 @@ class SalesController extends Controller
             $input['input_status'] = 'INPUT DATA';
             $input['input_keterangan'] = $request->input_keterangan;
             $input['input_promo'] = $request->input_promo;
+            // dd($input);
 
             if($cek_role->role_id == 16 ){
                 $input['input_sales'] = $request->input_sales;

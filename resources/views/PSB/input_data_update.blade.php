@@ -72,7 +72,7 @@
                            <div class="form-group row">
                                   <label class=" col-sm-2 col-form-label">Alamat Pemasangan</label>
                                 <div class="col-sm-10">
-                                <textarea name="input_alamat_pasang" class="form-control readonly" id="" cols="15" rows="5">
+                                <textarea name="input_alamat_pasang" class="form-control " id="" cols="15" rows="5">
 {{$data->input_alamat_pasang ?? ''}}
                                 </textarea>
                                 </div>

@@ -34,7 +34,7 @@ class AktivasiController extends Controller
         // $barang = Data_Barang::where('barang_id', $request->reg_kode_dropcore)->first();
 
 
-        $tagihan_tanpa_ppn = $query->reg_harga + $query->reg_dana_kas + $query->reg_dana_kerjasama + $query->reg_kode_unik;
+        $tagihan_tanpa_ppn = $query->reg_harga + $query->reg_kode_unik;
 
         #FORMAT TANGGAL
         $tanggal = Carbon::now()->toDateString();
