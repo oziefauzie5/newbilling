@@ -65,32 +65,6 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
         Route::get('/home', [HomeController::class, 'home'])->name('home')->middleware(['role:admin|NOC|STAF ADMIN|KEUANGAN']);
         
         
-        ##EXPORT
-        Route::get('/input-export', [ExportController::class, 'export_input_data'])->name('export.export_input_data')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/input-import', [ExportController::class, 'import_input_data'])->name('export.import_input_data')->middleware(['role:admin|STAF ADMIN']);
-        Route::get('/regist-export', [ExportController::class, 'export_registrasi'])->name('export.export_registrasi')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/regist-import', [ExportController::class, 'import_registrasi'])->name('export.import_registrasi')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/pop-import', [ExportController::class, 'import_pop'])->name('export.import_pop')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/olt-import', [ExportController::class, 'import_olt'])->name('export.import_olt')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/odc-import', [ExportController::class, 'import_odc'])->name('export.import_odc')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/odp-import', [ExportController::class, 'import_odp'])->name('export.import_odp')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/paket-import', [ExportController::class, 'import_paket'])->name('export.import_paket')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/instalsi-import', [ExportController::class, 'import_instalasi'])->name('export.import_instalasi')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/fee-import', [ExportController::class, 'import_fee'])->name('export.import_fee')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/barang-import', [ExportController::class, 'barang_import'])->name('export.barang_import')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/barang-keluar-import', [ExportController::class, 'barang_keluar_import'])->name('export.barang_keluar_import')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/Invoice-keluar-import', [ExportController::class, 'invoice_import'])->name('export.invoice_import')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/SubInvoice-import', [ExportController::class, 'Subinvoice_import'])->name('export.Subinvoice_import')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/SubInvoice-import_teknisi', [ExportController::class, 'import_teknisi'])->name('export.import_teknisi')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/SubInvoice-import_laporan', [ExportController::class, 'import_laporan'])->name('export.import_laporan')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/SubInvoice-import_mutasi', [ExportController::class, 'import_mutasi'])->name('export.import_mutasi')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/SubInvoice-import_akun', [ExportController::class, 'import_akun'])->name('export.import_akun')->middleware(['role:admin|STAF ADMIN']);
-        Route::post('/SubInvoice-import_jurnal', [ExportController::class, 'import_jurnal'])->name('export.import_jurnal')->middleware(['role:admin|STAF ADMIN']);
- Route::post('/import_user', [ExportController::class, 'import_user'])->name('export.import_user')->middleware(['role:admin|STAF ADMIN']);
- Route::post('/import_kategori', [ExportController::class, 'import_kategori'])->name('export.import_kategori')->middleware(['role:admin|STAF ADMIN']);
- Route::post('/import_mitra', [ExportController::class, 'import_mitra'])->name('export.import_mitra')->middleware(['role:admin|STAF ADMIN']);
- Route::post('/import_tiket', [ExportController::class, 'import_tiket'])->name('export.import_tiket')->middleware(['role:admin|STAF ADMIN']);
-    
     ##CRUD DATA USER
     Route::get('/user', [UserController::class, 'index'])->name('user.index')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store')->middleware(['role:admin|STAF ADMIN']);
