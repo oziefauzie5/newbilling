@@ -13,7 +13,7 @@
     <div class="page-inner mt--5">
       <div class="user mt--5">
         <div class="avatar-sm float-left mr-2">
-          <img src="@if(Auth::user()->photo) {{ asset('storage/photo-user/'.Auth::user()->photo) }} @else {{ asset('atlantis/assets/img/user.png') }}@endif" alt=".." class="avatar-img rounded-circle"> 
+          <img src="@if(Auth::user()->photo) {{ asset('storage/image/'.Auth::user()->photo) }} @else {{ asset('atlantis/assets/img/user.png') }}@endif" alt=".." class="avatar-img rounded-circle"> 
         </div>
         <div class="info">
           <span> 

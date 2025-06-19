@@ -285,6 +285,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     
     Route::get('/sales/sales', [SalesController::class, 'sales'])->name('sales.sales')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/{id}/val_kelurahan', [SalesController::class, 'val_kelurahan'])->name('sales.val_kelurahan')->middleware(['role:SALES|PIC|SUB-PIC']);
+    Route::get('/sales/{id}/sales_update', [SalesController::class, 'sales_update'])->name('sales.sales_update')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/input', [SalesController::class, 'sales_input'])->name('sales.sales_input')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::post('/sales/store', [SalesController::class, 'sales_store'])->name('sales.sales_store')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/pelanggan', [SalesController::class, 'pelanggan'])->name('sales.pelanggan')->middleware(['role:SALES|PIC|SUB-PIC']);

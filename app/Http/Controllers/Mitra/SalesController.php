@@ -82,6 +82,40 @@ class SalesController extends Controller
         // dd($data['option']);
         return view('biller/sales_input', $data);
     }
+    public function sales_update($id)
+    {
+        $user_id = Auth::user()->id;
+        $role = (new globalController)->data_user($user_id);
+        $data['input_data']= InputData::whereId($id)->first();
+        $data['role'] = $role->name;
+        $data['admin_user'] = (new GlobalController)->user_admin();
+        $data['paket'] = Paket::where('paket_status','Enable')->where('paket_layanan','PPP')->get();
+        // $data['site'] = Data_Site::where('site_status','Enable')->get();
+        
+        
+        
+        $data['cek_role'] = MitraSetting::join('model_has_roles','model_has_roles.model_id','=','mitra_settings.mts_user_id')
+        ->where('mitra_settings.mts_user_id',$user_id)
+        ->select('role_id','model_id')
+        ->first();
+
+        if($data['cek_role']->role_id == 15){
+            $data['sub_mitra'] = mitra_sub::join('users','users.id','=','mitra__subs.mts_sub_user_id')
+            ->where('mts_sub_mitra_id',$user_id)->get();
+            // $data['option'] = 'test';
+        } else {
+            $data['sub_mitra'] = mitra_sub::join('users','users.id','=','mitra__subs.mts_sub_mitra_id')
+            ->where('mts_sub_user_id',$user_id)->get();
+            // $data['option'] = 'test';
+        }
+        $data['wilayah'] = MitraSetting::select('mts_wilayah','mts_user_id')->where('mts_wilayah','!=','')->get();
+       
+
+
+
+        // dd($data['option']);
+        return view('biller/sales_input', $data);
+    }
     public function getwilayah($id)
     {
     $data['tampil_sub_pic'] =  MitraSetting::where('corporate_id',Session::get('corp_id'))->with('user_mitra')->where('mts_wilayah', $id)->first();
