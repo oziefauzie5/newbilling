@@ -39,6 +39,7 @@ class UserController extends Controller
                                         'users.name as nama_user',
                                         'users.alamat_lengkap',
                                         'users.hp',
+                                        'users.photo',
                                         'users.email',
                                         'users.ktp',
                                         'users.username',
@@ -186,7 +187,7 @@ class UserController extends Controller
 
             $filename = Session::get('corp_id').$id.'.jpeg';
             $path = 'image/' . $filename;
-            Storage::disk(     )->put($path, file_get_contents($photo));
+            Storage::disk('public')->put($path, file_get_contents($photo));
             $data['photo'] = $filename;
         }
 

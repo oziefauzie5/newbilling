@@ -149,7 +149,7 @@
                   </td>
                   <td>{{$d->site_nama ?? '-'}}</td>
                   <td>{{$d->id_user}}</td>
-                      <td> <img src="{{ asset('storage/image/'.$d->photo ?? '-') }}" width="100" alt="" title=""></img></td>
+                      <td> <img src="{{ asset('storage/image/'.$d->photo) }}" width="100" alt="" title=""></img></td>
                       <td>{{$d->nama_user ?? '-'}}</td>
                       <td>{{$d->level ?? '-'}}</td>
                       <td>{{$d->hp ?? '-'}}</td>
