@@ -98,6 +98,8 @@
                   DEAKTIVASI
                 </button>
               </a>
+              @role('admin|STAF ADMIN')
+              @role('admin')
               
       @endrole
       <a href="{{route('admin.psb.berita_acara')}}">
