@@ -1400,6 +1400,16 @@ PAKET : '.$query->paket_nama.'
         // }
     }
 
+    public function update_val_kodepromo($id)
+    {
+        // return response()->json($id);
+
+        $data['kode_promo'] = KodePromo::where('corporate_id',Session::get('corp_id'))
+                                ->where('promo_id', $id)
+                                ->whereDate('promo_expired', '<=', date('Y-m-d',strtotime(Carbon::now())))
+                                ->first();
+        return response()->json($data);
+    }
     public function cek_invoice($id)
     {
         $no_inv = Invoice::where('inv_idpel',$id)->whereMonth('inv_tgl_tagih',date('m',strtotime(Carbon::now())))->select('inv_id')->first();

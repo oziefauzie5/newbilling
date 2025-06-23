@@ -87,7 +87,7 @@
   <section class="content mt-3">
     @foreach($input_data as $pel)
     <div class="col">
-        <div class="card card_custom1"  data-toggle="modal" data-target="#exampleModal{{$pel->id}}" id="update_tiket" >
+        <a href="{{route('admin.sales.sales_update',['id'=>$pel->id])}}" class="card card_custom1" id="update_tiket" >
           <div class="card-body skew-shadow">
               <div class="row">
                   <div class="col-12 pr-0">
@@ -102,7 +102,7 @@
                   </div>
               </div>
           </div>
-      </div>
+      </a>
     </div>
     @endforeach
     @foreach($registrasi as $pel)

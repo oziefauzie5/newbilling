@@ -360,7 +360,7 @@
                 </div>
               </div>
               @endrole
-              @role('admin|STAF ADMIN')
+              @role('admin|NOC')
               <div class="card-footer">
                 <button type="submit" class="btn btn-primary float-right">Simpan</button>
               </div>
@@ -551,77 +551,67 @@
                 @csrf
                 @method('PUT')
               <div class="form-group row">
-                <label for="paket" class="form-check col-sm-2 col-form-label">Profile langganan *</label>
+                  <label class="col-sm-2 col-form-label">Kode Promo</label>
+                  <div class="col-sm-4 notif_validasi">
+                    <input type="text" class="form-control" id="update_val_kodepromo" name="reg_promo" value="" >
+                    <div class="noted" id="pesan_promo"></div>
+                  </div>
+                  <label class="col-sm-2 col-form-label">Diskon Promo</label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control readonly" id="update_harga_promo" name="harga_promo" value="" >
+                  </div>
+              </div>
+             <div class="form-group row">
+                <label for="paket" class="col-sm-2 col-form-label">Paket langganan *</label>
                 <div class="col-sm-4">
-                  <select class="form-control paket" id="paket" name="reg_profile" >
+                  <select class="form-control" id="update_paket" name="reg_profile" >
                     @if($data->reg_profile)
                     <option value="{{($data->reg_profile)}}">{{($data->paket_nama)}}</option>
-                    <option value="">Pilih</option>
-                    @foreach($data_paket as $p)
-                    <option value="{{$p->paket_id}}">{{$p->paket_nama}}</option>
-                    @endforeach
-                    @else
-                    <option value="">Pilih</option>
-                    @foreach($data_paket as $p)
-                    <option value="{{$p->paket_id}}">{{$p->paket_nama}}</option>
-                    @endforeach
                     @endif
+                    @foreach($data_paket as $p)
+                    <option value="{{$p->paket_id}}">{{$p->paket_nama}}</option>
+                    @endforeach
                   </select>
                 </div>
-                <label for="jenis_tagihan" class="form-check col-sm-2 col-form-label">Jenis tagihan *</label>
+                <label for="jenis_tagihan" class=" col-sm-2 col-form-label">Jenis tagihan *</label>
                 <div class="col-sm-4">
                   <select class="form-control" id="jenis_tagihan" name="reg_jenis_tagihan" >
-                    @if( $data->reg_jenis_tagihan)
-                    <option value="{{ $data->reg_jenis_tagihan}}">{{ $data->reg_jenis_tagihan}}</option>
-                    <option value="">Pilih</option>
-                    <option value="PRABAYAR">PRABAYAR</option>
-                    <option value="PASCABAYAR">PASCABAYAR</option>
-                    <option value="DEPOSIT">DEPOSIT</option>
-                    <option value="FREE">FREE</option>
-                    @else
-                    <option value="">Pilih</option>
-                    <option value="PRABAYAR">PRABAYAR</option>
-                    <option value="PASCABAYAR">PASCABAYAR</option>
-                    <option value="DEPOSIT">DEPOSIT</option>
-                    <option value="FREE">FREE</option>
+                    @if($data->reg_jenis_tagihan)
+                    <option value="{{($data->reg_jenis_tagihan)}}">{{($data->reg_jenis_tagihan)}}</option>
                     @endif
                   </select>
                 </div>
               </div>
+              
               <div class="form-group row">
-                <label class=" form-check col-sm-2 col-form-label">Harga prorata</label>
+                  <label class="col-sm-2 col-form-label">Harga prorata</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control harga" id="harga" name="reg_harga" value="{{$data->reg_harga}}" readonly >
+                  <input type="text" class="form-control" id="update_harga" name="reg_harga"  value="{{$data->reg_harga}}" readonly >
                 </div>
-                <label class="form-check col-sm-2 col-form-label">Kode Unik</label>
+                    <label class="form-check col-sm-2 col-form-label">PPN 11%&nbsp;&nbsp;
+                      <input class="form-check-input update_checkboxppn" type="checkbox" id="ppn" value="{{$data_biaya->biaya_ppn}}" @if($data->reg_ppn) checked @endif >
+                      <span class="form-check-sign"></span>
+                    </label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="update_biaya_ppn" name="reg_ppn"  value="{{$data->reg_ppn}}">
+                </div>
+              </div>
+              
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Kode Unik</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="kode_unik" name="reg_kode_unik" value="{{$data->reg_kode_unik}}" >
                 </div>
-              </div>
-              <div class="form-group row">
-                <label class="form-check col-sm-2 col-form-label">PPN 11%&nbsp;&nbsp;
-                  <input class="form-check-input checkboxppn" type="checkbox" id="ppn" value="{{$data_biaya->biaya_ppn}}" @if( $data->reg_ppn) checked @endif>
+                
+              <label class="form-check col-sm-2 col-form-label">Bph Uso &nbsp;&nbsp;
+                  <input class="form-check-input update_checkboxbiaya_bphuso" type="checkbox" id="kas" value="{{$data_biaya->reg_bph_uso}}" @if($data->reg_bph_uso) checked @endif>
                   <span class="form-check-sign"></span>
                 </label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control biaya_ppn" id="biaya_ppn" name="reg_ppn" value="{{$data->reg_ppn}}" >
-                </div>
-                  <label class="form-check col-sm-2 col-form-label">Dana Kas &nbsp;&nbsp;
-                    <input class="form-check-input checkboxkas" type="checkbox" id="kas" value="{{$data_biaya->dana_kas}}" @if( $data->reg_dana_kas) checked @endif>
-                    <span class="form-check-sign"></span>
-                  </label>
-                  <div class="col-sm-4">
-                  <input type="text" class="form-control biaya_kas" id="biaya_kas" name="reg_dana_kas" value="{{$data->reg_dana_kas}}" readonly>
+                  <input type="text" class="form-control" id="update_biaya_bph_uso" name="reg_bph_uso" value="{{$data_biaya->reg_bph_uso}}" >
                 </div>
               </div>
               <div class="form-group row">
-                <label class="form-check col-sm-2 col-form-label">Dana Kerja Sama &nbsp;&nbsp;
-                  <input class="form-check-input checkboxkerjasama" type="checkbox" id="kas" value="{{$data_biaya->dana_kas}}" @if( $data->reg_dana_kerjasama) checked @endif>
-                  <span class="form-check-sign"></span>
-                </label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control kerjasama" id="kerjasama" name="reg_dana_kerjasama" value="{{$data->reg_dana_kerjasama}}" readonly>
-                </div>
                 <label class="form-check col-sm-2 col-form-label">Tanggal Pemasangan</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" id="kode_unik" name="tgl_pasang" value="{{date('d-m-Y', strtotime($data->reg_tgl_pasang))}}" readonly >

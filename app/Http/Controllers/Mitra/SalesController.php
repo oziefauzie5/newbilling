@@ -90,31 +90,8 @@ class SalesController extends Controller
         $data['role'] = $role->name;
         $data['admin_user'] = (new GlobalController)->user_admin();
         $data['paket'] = Paket::where('paket_status','Enable')->where('paket_layanan','PPP')->get();
-        // $data['site'] = Data_Site::where('site_status','Enable')->get();
-        
-        
-        
-        $data['cek_role'] = MitraSetting::join('model_has_roles','model_has_roles.model_id','=','mitra_settings.mts_user_id')
-        ->where('mitra_settings.mts_user_id',$user_id)
-        ->select('role_id','model_id')
-        ->first();
 
-        if($data['cek_role']->role_id == 15){
-            $data['sub_mitra'] = mitra_sub::join('users','users.id','=','mitra__subs.mts_sub_user_id')
-            ->where('mts_sub_mitra_id',$user_id)->get();
-            // $data['option'] = 'test';
-        } else {
-            $data['sub_mitra'] = mitra_sub::join('users','users.id','=','mitra__subs.mts_sub_mitra_id')
-            ->where('mts_sub_user_id',$user_id)->get();
-            // $data['option'] = 'test';
-        }
-        $data['wilayah'] = MitraSetting::select('mts_wilayah','mts_user_id')->where('mts_wilayah','!=','')->get();
-       
-
-
-
-        // dd($data['option']);
-        return view('biller/sales_input', $data);
+        return view('biller/sales_input_edit', $data);
     }
     public function getwilayah($id)
     {
@@ -177,8 +154,7 @@ class SalesController extends Controller
         
 
         $id_cust = (new GlobalController)->idpel_();
-        // $id_cust = '122347';
-        // dd($id_cust);
+
         $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
         if (!preg_match('/[^+0-9]/', trim($nomorhp2))) {
             if (substr(trim($nomorhp2), 0, 3) == '+62') {
@@ -312,6 +288,39 @@ Pesan::create($pesan_group);
             ];
             return redirect()->route('admin.sales.sales_input')->with($notifikasi);
         }
+    }
+    public function update_store(Request $request, $id)
+    {
+         $nomorhp2 = preg_replace("/[^0-9]/", "", $request->input_hp_2);
+        if (!preg_match('/[^+0-9]/', trim($nomorhp2))) {
+            if (substr(trim($nomorhp2), 0, 3) == '+62') {
+                $nomorhp2 = trim($nomorhp2);
+            } elseif (substr($nomorhp2, 0, 1) == '0') {
+                $nomorhp2 = '' . substr($nomorhp2, 1);
+            }
+        }
+        $nomorhp = (new ConvertNoHp())->convert_nohp($request->input_hp);
+        $udpate['input_nama']= $request->input_nama;
+        $udpate['input_ktp']= $request->input_ktp;
+        $udpate['input_hp']= $nomorhp;
+        $udpate['input_hp_2']=  $nomorhp2;
+        $udpate['input_email']= $request->input_email;
+        $udpate['input_alamat_ktp']= $request->input_alamat_ktp;
+        $udpate['input_alamat_pasang']= $request->input_alamat;
+        $udpate['input_keterangan']= $request->input_keterangan;
+        $udpate['input_maps']= $request->input_maps;
+        $udpate['input_subseles']= $request->input_subseles;
+        $udpate['input_promo']= $request->input_promo;
+
+        $udpate['password']= Hash::make($nomorhp);
+        $udpate['input_status']= $request->input_status;
+
+        InputData::whereId($id)->where('corporate_id',Session::get('corp_id'))->update($udpate);
+       $notifikasi = [
+                'pesan' => 'Berhasil update data',
+                'alert' => 'success',
+            ];
+            return redirect()->route('admin.sales.sales')->with($notifikasi);
     }
     public function mutasi_sales()
     {

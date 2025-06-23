@@ -160,7 +160,7 @@ class UserController extends Controller
             'alamat_lengkap' => 'required',
             'data__site_id' => 'required',
             'level' => 'required',
-            'file' => 'max:1000|mimes:jpeg',
+            'file' => 'max:1000',
         ], [
             'name.required' => 'Nama tidak boleh kosong.',
             'ktp.required' => 'Nomor Ktp tidak boleh kosong.',
@@ -171,7 +171,6 @@ class UserController extends Controller
             'data__site_id.required' => 'Site tidak boleh kosong',
             'level.required' => 'Level tidak boleh kosong',
             'file.max' => 'Ukuran foto terlalu besar',
-            'file.mimes' => 'Format hanya bisa jpeg',
         ]
     );
  if ($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);

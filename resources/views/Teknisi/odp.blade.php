@@ -186,6 +186,7 @@
                       <th>Olt</th>
                       <th>Odp Dist.</th>
                       <th>Aksi</th>
+                      <th>Id</th>
                       <th>Odp Id</th>
                       <th>Odp Nama</th>
                       <th>Odp Dist. Slot</th>
@@ -221,6 +222,7 @@
                             </button></a>
                           </div>
                         </td>
+                        <td>{{$d->id_odp ?? ''}}</td>
                         <td>{{$d->odp_id ?? ''}}</td>
                         <td>{{$d->odp_nama ?? ''}}</td>
                         <td>{{$d->odp_slot_odc ?? ''}}</td>

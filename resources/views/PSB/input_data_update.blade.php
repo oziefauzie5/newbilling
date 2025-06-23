@@ -122,6 +122,7 @@
                                     <option value="INPUT DATA">INPUT DATA</option>
                                     <option value="REGIST">REGIST</option>
                                     <option value="MIGRASI">MIGRASI</option>
+                                    <option value="BATAL PEMASANGAN">BATAL PEMASANGAN</option>
                                     <option value="PUTUS BERLANGGAN">PUTUS BERLANGGAN</option>
                                   </select>
                                 </div>

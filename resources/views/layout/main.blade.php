@@ -825,6 +825,100 @@ function myFunction() {
         });
       
 // END AMBIL HARGA PAKET #REGISTRASI
+		// START AMBIL HARGA PAKET #UPDATE PAKET
+
+
+			$('#update_paket').on('change', function() {
+				var kode_promo = $('#update_val_kodepromo').val();
+                var kode_paket = $(this).val();
+                var url = '{{ route("admin.reg.getPaket", ":id") }}';
+				url = url.replace(':id', kode_paket);
+				$('#update_biaya_ppn').val(0);
+				$(".update_checkboxppn").prop('checked', false);
+				$('#update_biaya_bph_uso').val(0);
+				$(".update_checkboxbiaya_bph_uso").prop('checked', false);
+                if (kode_paket) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+							kode_promo:kode_promo,
+                            '_token': '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+							console.log(data['kode_promo'])
+                            if (data) {
+                                $('#update_harga').empty();
+								if(data['kode_promo']){
+									$('#update_harga_promo').val(data['promo_harga']);
+									$('#update_harga').val(data['data_paket'][0]['paket_harga']);
+										var result_promo = parseInt(data['data_paket'][0]['paket_harga'] - data['promo_harga']);
+										if (!isNaN(result_promo)) {
+											$('#update_harga').val(result_promo);
+										}
+										$('.update_checkboxppn').change(function () {
+										if ($(this).is(":checked")) {
+											var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - data['promo_harga']);
+											if (!isNaN(result1)) {
+												$('#update_biaya_ppn').val(result1);
+										}
+										} else {
+											$("#update_biaya_ppn").val(0);
+										}
+									});
+									$('.checkboxbiaya_bph_uso').change(function () {
+										if ($(this).is(":checked")) {
+											var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - data['promo_harga']);
+											if (!isNaN(result1)) {
+												$('#update_biaya_bph_uso').val(result1);
+											}
+										} else {
+											$("#update_biaya_bph_uso").val(0);
+										}
+									});
+
+									if(data['promo_harga'] == 0){
+										$("#div_promo").html('<span class="noted">Kode promo tidak ditemukan</span>');
+									} else {
+										$("#div_promo").html('');
+									}
+
+								} else {
+									$('#update_harga').val(data['data_paket'][0]['paket_harga']);
+										$('.update_checkboxppn').change(function () {
+										if ($(this).is(":checked")) {
+											var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt(data['data_paket'][0]['paket_harga']);
+											if (!isNaN(result1)) {
+												$('#update_biaya_ppn').val(result1);
+											}
+										} else {
+											$("#update_biaya_ppn").val(0);
+										}
+									});
+									$('.update_checkboxbiaya_bphuso').change(function () {
+										if ($(this).is(":checked")) {
+											alert('test')
+											var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga']);
+											if (!isNaN(result1)) {
+												$('#update_biaya_bph_uso').val(result1);
+											}
+										} else {
+											$("#update_biaya_bph_uso").val(0);
+										}
+									});
+							}
+                            } else {
+                                $('#update_harga').empty();
+                            }
+                        }
+                    });
+                } else {
+                    $('#update_harga').empty();
+                }
+        });
+      
+// END AMBIL HARGA PAKET #PAKET
 		// START AMBIL HARGA PAKET #HOTSPOT
 
 
@@ -4055,6 +4149,8 @@ $.ajax({
 });
 
 
+
+
 					// -----------------------------------------START VALIDASI KELURAHAN------------------------------------
 						
 	$('#val_kelurahan').keyup(function() {
@@ -4113,6 +4209,49 @@ $.ajax({
 					});
 				});
 
+				// -----------------------------------VALIDASI KODSE PROMO-----------------------------------
+				
+				$('#update_val_kodepromo').keyup(function() {
+				var update_val_kodepromo = $('#update_val_kodepromo').val();
+				
+					var url = '{{ route("admin.reg.update_val_kodepromo", ":id") }}';
+					url = url.replace(':id', update_val_kodepromo);
+					$.ajax({
+						url: url,
+								type: 'GET',
+								data: {'_token': '{{ csrf_token() }}'},
+								dataType: 'json',
+								success: function(data) {
+									console.log(data)
+									if(data['kode_promo']){
+										$('.notif_validasi').removeClass('has-error has-feedback')
+										$('.notif_validasi').addClass('has-success has-feedback')
+										
+										$('#pesan_promo').html('')
+									} else {
+										$('.notif_validasi').removeClass('has-success has-feedback')
+										$('.notif_validasi').addClass('has-error has-feedback')
+										$('#pesan_promo').html('Kode Promo tidak ditemukan atau Expired')
+									}
+								},
+						
+							});
+						});
+
+					// --------------------------------------START ADD KATEGORI BARANG-------------------------------------
+					$('select[name=kategori_satuan]').change(function () {
+						if ($(this).val() == 'Roll') {
+							$('.div_satuan').show();
+						$('.kategori_qty').attr('required', 'required');;
+					} else {
+							$('.div_satuan').hide();
+						}
+					});
+					// --------------------------------------END ADD KATEGORI BARANG-------------------------------------
+
+			
+	// -----------------------------------VALIDASI KODSE PROMO-----------------------------------
+
 				var rupiah = document.getElementById("mts_komisi");
 				rupiah.addEventListener("keyup", function(e) {
 				// tambahkan 'Rp.' pada saat form di ketik
@@ -4137,22 +4276,12 @@ $.ajax({
 				rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
 				return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
 				}
+				
 
 
 
 
-
-					// --------------------------------------START ADD KATEGORI BARANG-------------------------------------
-					$('select[name=kategori_satuan]').change(function () {
-						if ($(this).val() == 'Roll') {
-							$('.div_satuan').show();
-						$('.kategori_qty').attr('required', 'required');;
-					} else {
-							$('.div_satuan').hide();
-						}
-					});
-					// --------------------------------------END ADD KATEGORI BARANG-------------------------------------
-
+					
 					// -----------------------------------------END VALIDASI KELURAHAN------------------------------------
 
 					

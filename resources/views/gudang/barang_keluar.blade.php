@@ -25,7 +25,7 @@
               <th>Nomor SKB</th>
               <th>ID</th>
               <th>Jenis Laporan</th>
-              <th>No Tiket</th>
+              <th>Id Pelanggan</th>
               <th>Jenis Barang</th>
               <th>Satuan</th>
               <th>Tanggal masuk barang</th>
@@ -47,7 +47,7 @@
               <td> <a href="{{route('admin.gudang.print_skb')}}?skb={{$d->bk_id}}"  target="_blank" >{{ $d->bk_id}}</a> </td>
               <td>{{ $d->bk_id_barang}}</td>
               <td>{{ $d->bk_jenis_laporan}}</td>
-              <td>{{ $d->bk_id_tiket}}</td>
+              <td>{{ $d->bk_idpel}}</td>
               <td>{{ $d->bk_kategori}}</td>
               <td>{{ $d->barang_satuan}}</td>
               <td>{{ $d->barang_tglmasuk}}</td>

@@ -33,6 +33,7 @@ use App\Exports\ExportInvoice;
 use App\Models\Transaksi\Jurnal;
 // use App\Imports\ImportUsers;
 use App\Models\Gudang\Data_Barang;
+use App\Models\Gudang\Data_BarangKeluar;
 use Illuminate\Support\Facades\Session;
 use App\Models\PSB\FtthFee;
 use Maatwebsite\Excel\Facades\Excel;
@@ -148,7 +149,7 @@ class InvoiceController extends Controller
             $query->where('inv_status', '=', $data['data_inv']);
         // $export = $query->get();
         //         foreach ($export as $value) {
-        //             echo '<table><tr><td>'.$value->inv_idpel.'</td><td>'.$value->inv_status.'</td><td>'.$value->inv_tgl_isolir.'</td><td>'.$value->input_nama.'</td><td>'.$value->input_alamat_pasang.'</td><td>'.$value->input_hp.'</td></tr></table>';
+        //             echo '<table><tr><td>'.$value->inv_idpel.'</td><td>'.$value->inv_nolayanan.'</td><td>'.$value->input_nama.'</td><td>'.$value->paket_nama.'</td><td>'.$value->inv_tgl_jatuh_tempo.'</td><td>'.$value->inv_total.'</td><td>'.$value->inv_status.'</td></tr></table>';
         //         }
         //         dd('test');
 
@@ -198,11 +199,10 @@ class InvoiceController extends Controller
 
         // $export = $invoice->get();
         // foreach ($export as $value) {
-        //     // echo '<table><tr><td>' . $value->inv_nolayanan . '</td><td>' . $value->inv_id . '</td><td>' . $value->inv_nolayanan . '</td><td>' . $value->input_nama . '</td><td>' . $value->inv_tgl_jatuh_tempo . '</td><td>' . $value->inv_tgl_bayar . '</td><td>' . $value->inv_cabar. '</td><td>' . $value->inv_jenis_tagihan. '</td></tr></table>';
-        //     echo '<table><tr><td>' . $value->inv_tgl_bayar . '</td><td>' . $value->inv_idpel . '</td><td>' . $value->input_nama . '</td><td>' . $value->inv_jenis_tagihan. '</td><td>' . $value->inv_total. '</td></tr></table>';
+        // echo '<table><tr><td>'.$value->inv_idpel.'</td><td>'.$value->inv_nolayanan.'</td><td>'.$value->input_nama.'</td><td>'.$value->paket_nama.'</td><td>'.$value->inv_tgl_jatuh_tempo.'</td><td>'.$value->inv_total.'</td><td>'.$value->inv_status.'</td><td>'.$value->reg_username.'</td></tr></table>';
         // }
         // dd('test');
-            // dd($invoice);
+
 
         $data['data_invoice'] = $invoice->paginate(10);
        
@@ -424,7 +424,7 @@ class InvoiceController extends Controller
                     $if_tgl_bayar = $tgl_bayar;
                 }
 
-        $diskon = $tampil->inv_diskon ??'0';
+        $diskon = $tampil->inv_diskon ?? '0';
 
         // $sum_fee = FtthFee::where('corporate_id',Session::get('corp_id'))->where('fee_idpel',$tampil->reg_idpel)->sum('reg_fee');
         $sumppn = SubInvoice::where('subinvoice_id', $id)->where('corporate_id',Session::get('corp_id'))->sum('subinvoice_ppn'); #hitung total ppn invoice
@@ -1095,35 +1095,70 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
 
     // $cek_null = Invoice::where('inv_total','NULL')->get();
     // dd($cek_null);
-    
-        // $Paket =  Registrasi::join('input_data','input_data.id','=','registrasis.reg_idpel')
-        //                     ->join('pakets','pakets.paket_id','=','registrasis.reg_profile')    
-        //                     ->where('reg_profile',33)->get();
-        // foreach ($Paket as $p) {
-        //     InputData::where('id',$p->reg_idpel)->update(
-        //         'input_promo'=>'promoramadhan25',
-        //     )
-        //    echo '<table><tr><td>'.$p->input_nama.'</td><td>'.$p->paket_nama.'</td><td>'.$p->reg_harga.'</td><td>'.$p->input_promo.'</td></tr></table>';
-        // }
+    // $mitra = 202504361219;
+    // $nolayanan = 24031350221;
+    // $invoice = Invoice::join('input_data','input_data.id','=','invoices.inv_idpel')
+    //                     ->join('registrasis','registrasis.reg_idpel','=','invoices.inv_idpel')
+    //                     // ->join('ftth_fees','ftth_fees.fee_idpel','=','invoices.inv_idpel')
+    //                     // ->where('input_data.input_sales', $mitra)
+    //                     // ->whereMonth('registrasis.reg_tgl_pasang','<=', 5)
+    //                     // ->whereYear('registrasis.reg_tgl_pasang', 2025)
+    //                     ->where('invoices.inv_nolayanan', $nolayanan)
+    //                     ->whereMonth('invoices.inv_tgl_tagih', 6)
+    //                     ->whereYear('invoices.inv_tgl_tagih', 2025)
+    //                     ->get();
+    // foreach ($invoice as $d) {
+    //     // MutasiSales::create([
+    //     //     'corporate_id'=> 240110001,
+    //     //     'mutasi_sales_mitra_id'=> $mitra,
+    //     //     'mutasi_sales_tgl_transaksi'=> $d->inv_tgl_bayar,
+    //     //     'mutasi_sales_idpel'=> $d->inv_idpel,
+    //     //     'mutasi_sales_admin'=> $d->inv_admin,
+    //     //     'mutasi_sales_type'=> 'Credit',
+    //     //     'mutasi_sales_jumlah'=> ,
+    //     //     'mutasi_sales_deskripsi'=> $d->input_nama,
+    //     //     'mutasi_sales_inv_id'=> $d->inv_id,
+    //     // ])
+    //     // $tgl_jatuh_tempo = Carbon::create($d->inv_tgl_bayar)->addMonth(1)->toDateString();
+    //     // $tagih = Carbon::create($d->inv_tgl_bayar)->addMonth(1)->toDateString();
+    //     // $tgl_tagih = Carbon::create($tagih)->addDay(-2)->toDateString();
+    //     Registrasi::where('reg_nolayanan',$nolayanan)->update([
+    //         // 'reg_tgl_jatuh_tempo' => $tgl_jatuh_tempo,
+    //         // 'reg_tgl_tagih' => $tgl_tagih,
+    //         'reg_status' => $d->inv_status,
+    //     ]);
+    //     // dd($tgl_jatuh_tempo);
+    //     echo '<table><tr><th>NAMA</th><th>JATUH TEMPO</th><th>TGL TAGIH</th><th>STATUS</th><tr><tbody><td>'.$d->input_nama.'</td><td>'.$d->reg_tgl_jatuh_tempo.'</td><td>'.$d->reg_tgl_tagih.'</td><td>'.$d->reg_status.'</td></tr></tbody></table>';
+    //     // echo '<table><tr><td>'.$d->inv_id.'</td><td>'.$d->inv_tgl_bayar.'</td><td>'.$d->input_nama.'</td><td>'.$d->reg_tgl_pasang.'</td><td>'.$d->input_sales.'</td><td>'.$d->reg_fee.'</td></tr></table>';
+    // }
 
-        //  $cek = Registrasi::join('input_data','input_data.id','=','registrasis.reg_idpel')->where('reg_progres','<=',5)->whereIn('reg_idpel',[3232,3226,3185,3175,3049,3042,3006,3005,1669,3352,3351,3353,3354,3355])->get();
-        //  foreach ($cek as $d) {
-        //     echo '<table><tr><td>'.$d->reg_idpel.'</td><td>'.$d->input_nama.'</td></tr></table>';
-        //     FtthInstalasi::create([
-        //         'id' => $d->reg_idpel,
-        //         'corporate_id' => Session::get('corp_id'),
-        //         'data__odp_id' => '0',
-        //         'reg_noc' => '2',
-        //         'reg_router' => '2',
-        //         'reg_in_ont' => '25,44',
-        //         'reg_slot_odp' => '0',
-        //     ]);
-        //  }
-   
-        // $cek = FtthInstalasi::join('input_data','input_data.id','=','ftth_instalasis.id')->get();
-        //  foreach ($cek as $d) {
-        //     echo '<table><tr><td>'.$d->id.'</td><td>'.$d->input_nama.'</td></tr></table>';
-        //  }
+    // $invoice1 = Invoice::join('input_data','input_data.id','=','invoices.inv_idpel')
+    //                     ->join('registrasis','registrasis.reg_idpel','=','invoices.inv_idpel')
+    //                     // ->join('ftth_fees','ftth_fees.fee_idpel','=','invoices.inv_idpel')
+    //                     // ->where('input_data.input_sales', $mitra)
+    //                     // ->whereMonth('registrasis.reg_tgl_pasang','<=', 5)
+    //                     // ->whereYear('registrasis.reg_tgl_pasang', 2025)
+    //                     ->where('invoices.inv_nolayanan', $nolayanan)
+    //                     ->whereMonth('invoices.inv_tgl_tagih', 6)
+    //                     ->whereYear('invoices.inv_tgl_tagih', 2025)
+    //                     ->get();
+    // foreach ($invoice1 as $d1) {
+
+    //     echo '<table><tr><th>NAMA</th><th>JATUH TEMPO</th><th>TGL TAGIH</th><th>STATUS</th><tr><tbody><td>'.$d1->input_nama.'</td><td>'.$d1->reg_tgl_jatuh_tempo.'</td><td>'.$d1->reg_tgl_tagih.'</td><td>'.$d1->reg_status.'</td></tr></tbody></table>';
+    // }
+
+    // $variable = Data_BarangKeluar::where('bk_idpel','!=','0')
+    // ->join('input_data','input_data.input_id_lama', '=', 'data__barang_keluars.bk_idpel')
+    // ->select('data__barang_keluars.bk_idpel','data__barang_keluars.bk_kategori','data__barang_keluars.bk_id_barang','input_data.id as idpel','input_data.input_id_lama')
+    // ->get();
+    //             // ->where('ftth_instalasis.reg_router',5)->get();
+
+    // foreach ($variable as $v) {
+    //     echo '<table><tr><td>'.$v->bk_id_barang.'</td><td>'.$v->bk_kategori.'</td><td>'.$v->bk_idpel.'</td><td>'.$v->idpel.'</td></tr></table>';
+    //    $value= Data_BarangKeluar::where('bk_idpel',$v->bk_idpel)->update([
+    //      'bk_idpel' => $v->idpel,
+    //     ]);
+    // }
 
 
     }

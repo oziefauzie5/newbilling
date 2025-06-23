@@ -71,7 +71,7 @@
             <div class="form-group row">
               <label class="col-sm-2 col-form-label">Site</label>
               <div class="col-sm-4">
-                  <select name="tiket_site" id="" class="form-control">
+                  <select name="tiket_site" id="" class="form-control" required>
                     <option value="">- Pilih -</option>
                     @foreach ($data_site as $site)
                     <option value="{{$site->id}}">{{$site->site_nama}}</option>

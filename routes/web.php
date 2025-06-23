@@ -161,6 +161,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::put('/ftth/{id}/promo->update', [PsbController::class, 'update_promo'])->name('psb.update_promo')->middleware(['role:admin|STAF ADMIN']); 
     
     ##--REGISTRASI
+    Route::get('/ftth/validasi-promo/{id}', [RegistrasiController::class, 'update_val_kodepromo'])->name('reg.update_val_kodepromo')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::get('/ftth/{id}/getPic', [RegistrasiController::class, 'getPic'])->name('reg.getPic')->middleware(['role:admin|NOC|STAF ADMIN']); 
     Route::get('/ftth/getMitra', [RegistrasiController::class, 'getMitra'])->name('reg.getMitra')->middleware(['role:admin|NOC|STAF ADMIN']); 
     Route::get('/ftth/{id}/getMitraSub', [RegistrasiController::class, 'getMitraSub'])->name('reg.getMitraSub')->middleware(['role:admin|NOC|STAF ADMIN']); 
@@ -286,6 +287,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     Route::get('/sales/sales', [SalesController::class, 'sales'])->name('sales.sales')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/{id}/val_kelurahan', [SalesController::class, 'val_kelurahan'])->name('sales.val_kelurahan')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/{id}/sales_update', [SalesController::class, 'sales_update'])->name('sales.sales_update')->middleware(['role:SALES|PIC|SUB-PIC']);
+    Route::put('/sales/{id}/update_store', [SalesController::class, 'update_store'])->name('sales.update_store')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/input', [SalesController::class, 'sales_input'])->name('sales.sales_input')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::post('/sales/store', [SalesController::class, 'sales_store'])->name('sales.sales_store')->middleware(['role:SALES|PIC|SUB-PIC']);
     Route::get('/sales/pelanggan', [SalesController::class, 'pelanggan'])->name('sales.pelanggan')->middleware(['role:SALES|PIC|SUB-PIC']);
