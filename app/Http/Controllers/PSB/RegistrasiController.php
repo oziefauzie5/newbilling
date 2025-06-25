@@ -354,12 +354,17 @@ Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
                                 ->first();
         
          if($cek_promo){
-             $data['kode_promo'] = $cek_promo->promo_id;
-             $data['promo_harga'] = $cek_promo->promo_harga;
+                $data['kode_promo'] = $cek_promo->promo_id;
+                $data['promo_harga'] = $cek_promo->promo_harga;
             } else {
                 $data['kode_promo'] = 'None';
                 $data['promo_harga'] = '0';
             }
+        return response()->json($data);
+    }
+    public function getPPN()
+    {
+        $data['data_biaya'] = SettingBiaya::first();
         return response()->json($data);
     }
 
@@ -1402,8 +1407,6 @@ PAKET : '.$query->paket_nama.'
 
     public function update_val_kodepromo($id)
     {
-        // return response()->json($id);
-
         $data['kode_promo'] = KodePromo::where('corporate_id',Session::get('corp_id'))
                                 ->where('promo_id', $id)
                                 ->whereDate('promo_expired', '<=', date('Y-m-d',strtotime(Carbon::now())))
@@ -1415,5 +1418,50 @@ PAKET : '.$query->paket_nama.'
         $no_inv = Invoice::where('inv_idpel',$id)->whereMonth('inv_tgl_tagih',date('m',strtotime(Carbon::now())))->select('inv_id')->first();
         // dd($no_inv);
         return redirect()->route('admin.inv.sub_invoice',['id'=>$no_inv->inv_id]);
+    }
+    public function update_paket(Request $request,$id)
+    {
+        $data['reg_jenis_tagihan'] = $request->reg_jenis_tagihan;
+        $data['reg_harga'] = $request->reg_harga;
+        $data['reg_ppn'] = $request->reg_ppn;
+        $data['reg_bph_uso'] = $request->reg_bph_uso;
+        $data['reg_kode_unik'] = $request->reg_kode_unik;
+        $data['reg_profile'] = $request->reg_profile;
+        $data['reg_inv_control'] = $request->reg_inv_control;
+        Registrasi::where('reg_idpel', $id)->update($data);
+        $nama_admin = Auth::user()->name;
+        
+        $sbiaya = SettingBiaya::first();
+        $query = Registrasi::join('input_data', 'input_data.id', '=', 'registrasis.reg_idpel')
+        ->join('ftth_instalasis', 'ftth_instalasis.id', '=', 'registrasis.reg_idpel')
+        ->join('routers', 'routers.id', '=', 'ftth_instalasis.reg_router')
+        ->join('pakets', 'pakets.paket_id', '=', 'registrasis.reg_profile')
+        ->where('registrasis.reg_idpel', $id)
+        ->first();
+        
+                $API = (new ApiController)->update_paket($query,$request);
+            if ($API == 0) {
+
+                
+                $notifikasi = array(
+                    'pesan' => 'Update Billing berhasil',
+                    'alert' => 'success',
+                );
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+            } elseif ($API == 1) {
+                $notifikasi = array(
+                    'pesan' => 'Paket belum tersedia ' . $query->router_nama,
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+            } elseif ($API == 2) {
+                $notifikasi = array(
+                    'pesan' => 'Router Discconect',
+                    'alert' => 'error',
+                );
+                return redirect()->route('admin.reg.form_update_pelanggan', ['id' => $id])->with($notifikasi);
+            }
+                       
+        
     }
 }

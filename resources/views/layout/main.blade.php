@@ -836,7 +836,7 @@ function myFunction() {
 				$('#update_biaya_ppn').val(0);
 				$(".update_checkboxppn").prop('checked', false);
 				$('#update_biaya_bph_uso').val(0);
-				$(".update_checkboxbiaya_bph_uso").prop('checked', false);
+				$("#update_checkboxbphuso").prop('checked', false);
                 if (kode_paket) {
                     $.ajax({
                         url: url,
@@ -847,7 +847,6 @@ function myFunction() {
                         },
                         dataType: 'json',
                         success: function(data) {
-							console.log(data['kode_promo'])
                             if (data) {
                                 $('#update_harga').empty();
 								if(data['kode_promo']){
@@ -867,7 +866,7 @@ function myFunction() {
 											$("#update_biaya_ppn").val(0);
 										}
 									});
-									$('.checkboxbiaya_bph_uso').change(function () {
+									$('#update_checkboxbphuso').change(function () {
 										if ($(this).is(":checked")) {
 											var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga'] - data['promo_harga']);
 											if (!isNaN(result1)) {
@@ -896,7 +895,7 @@ function myFunction() {
 											$("#update_biaya_ppn").val(0);
 										}
 									});
-									$('.update_checkboxbiaya_bphuso').change(function () {
+									$('#update_checkboxbphuso').change(function () {
 										if ($(this).is(":checked")) {
 											alert('test')
 											var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt(data['data_paket'][0]['paket_harga']);
@@ -917,6 +916,53 @@ function myFunction() {
                     $('#update_harga').empty();
                 }
         });
+
+		$('.update_checkboxppn').change(function () {
+			if ($(this).is(":checked")) {
+				var url = '{{ route("admin.reg.getPPN") }}';
+				  $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            '_token': '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+							console.log(data['data_biaya'])
+							var result1 = parseInt(data['data_biaya']['biaya_ppn'])/100 * parseInt($("#update_harga").val());
+							if (!isNaN(result1)) {
+								$('#update_biaya_ppn').val(result1);
+							}
+						}
+					});
+				
+			} else {
+				$("#update_biaya_ppn").val(0);
+			}
+		});
+		$('.update_checkboxbphuso').change(function () {
+			if ($(this).is(":checked")) {
+				var url = '{{ route("admin.reg.getPPN") }}';
+				  $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            '_token': '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+							console.log(data['data_biaya'])
+							var result1 = parseInt(data['data_biaya']['biaya_bph_uso'])/100 * parseInt($("#update_harga").val());
+							if (!isNaN(result1)) {
+								$('#update_biaya_bph_uso').val(result1);
+							}
+						}
+					});
+				
+			} else {
+				$("#update_biaya_bph_uso").val(0);
+			}
+		});
       
 // END AMBIL HARGA PAKET #PAKET
 		// START AMBIL HARGA PAKET #HOTSPOT

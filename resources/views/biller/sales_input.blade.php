@@ -110,18 +110,59 @@
                       <input id="input_alamat_ktp" type="text" class="form-control" value="{{ Session::get('input_alamat_ktp') }}" name="input_alamat_ktp" placeholder="Kp / Perumahan / Jalan" required>
                     </div>
                   </div>
-                  <div class="col-sm-6">
+                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RT</label>
-                      <input id="rt" type="number" class="form-control" value="{{ Session::get('rt_ktp') }}" name="rt_ktp" placeholder="RT sesuai KTP" required>
+                        <select name="rt_ktp" id="rt_ktp" class="form-control" required>
+                        @if( Session::get('rw'))
+                        <option value="{{ Session::get('rt_ktp')}}">{{ Session::get('rt_ktp')}}</option>
+                        @endif
+                        <option value="">--Pilih RW--</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                      </select>
                     </div>
                   </div>
-                  <div class="col-sm-6">
+                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>RW</label>
-                      <input id="" type="number" class="form-control" value="{{ Session::get('rw_ktp') }}" name="rw_ktp" placeholder="RW sesuai KTP" required>
+                        <select name="rw_ktp" id="rw_ktp" class="form-control" required>
+                        @if( Session::get('rw'))
+                        <option value="{{ Session::get('rw_ktp')}}">{{ Session::get('rw_ktp')}}</option>
+                        @endif
+                        <option value="">--Pilih RW--</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                      </select>
                     </div>
                   </div>
+
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Kelurahan</label>
@@ -197,7 +238,6 @@
                         <option value="14">14</option>
                         <option value="15">15</option>
                       </select>
-                      {{-- <input id="rw" type="number" class="form-control" value="{{ Session::get('rw') }}" name="rw" placeholder="RW"> --}}
                     </div>
                   </div>
                   <div class="col-sm-12">

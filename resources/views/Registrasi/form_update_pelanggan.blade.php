@@ -547,7 +547,7 @@
    @if($data->reg_progres>=3)
         @role('admin|STAF ADMIN|KEUANGAN')
               <h3 class="mt-3">BILLING</h3><hr>
-              <form class="form-horizontal"action="{{route('admin.psb.update_profile',['id'=>$data->reg_idpel])}}" method="POST">
+              <form class="form-horizontal"action="{{route('admin.reg.update_paket',['id'=>$data->reg_idpel])}}" method="POST">
                 @csrf
                 @method('PUT')
               <div class="form-group row">
@@ -604,7 +604,7 @@
                 </div>
                 
               <label class="form-check col-sm-2 col-form-label">Bph Uso &nbsp;&nbsp;
-                  <input class="form-check-input update_checkboxbiaya_bphuso" type="checkbox" id="kas" value="{{$data_biaya->reg_bph_uso}}" @if($data->reg_bph_uso) checked @endif>
+                  <input class="form-check-input update_checkboxbphuso" type="checkbox" id="update_checkboxbphuso" value="{{$data_biaya->reg_bph_uso}}" @if($data->reg_bph_uso) checked @endif>
                   <span class="form-check-sign"></span>
                 </label>
                 <div class="col-sm-4">
@@ -845,3 +845,4 @@ Update Tanggal Jatuh Tempo
     </script>
 
 @endsection
+s
