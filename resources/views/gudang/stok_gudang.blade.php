@@ -41,6 +41,9 @@
                   <a href="{{route('admin.gudang.data_group_barang_keluar')}}"><button class="btn btn-success btn-sm mb-3 btn-block" type="button" >No SKB</button></a>
                 </div>
                 <div class="col">
+                  <a href="{{route('admin.gudang.data_gudang')}}"><button class="btn btn-success btn-sm mb-3 btn-block" type="button" >Data Gudang</button></a>
+                </div>
+                <div class="col">
                   <button class="btn btn-info btn-sm mb-3 btn-block"  data-toggle="modal" data-target="#print_stok" type="button" >Update Barang</button>
                 </div>
               </div>

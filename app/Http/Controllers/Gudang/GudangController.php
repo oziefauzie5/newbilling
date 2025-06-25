@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Gudang;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Global\GlobalController;
+use App\Models\Aplikasi\Data_Site;
 use App\Models\Applikasi\SettingAplikasi;
 use App\Models\Gudang\Data_Barang;
 use App\Models\Gudang\Data_BarangKeluar;
 use App\Models\Gudang\Data_Kategori;
 use App\Models\Gudang\Data_Keranjang;
+use App\Models\Gudang\gudang;
 use App\Models\Tiket\Data_Tiket;
 use App\Models\User;
 use Carbon\Carbon;
@@ -35,10 +37,17 @@ class GudangController extends Controller
         if ($data['find_kate'])
             $query->where('barang_kategori', '=', $data['find_kate']);
         $data['barang'] = $query->get();
-//  Data_Barang::where('barang_id_group',1748372486)->update([
-//             'barang_dicek' => '0',
-//         ]);
+
         return view('gudang/data_barang', $data);
+    }
+    public function data_gudang()
+    {
+
+        $data['data_site'] = Data_Site::where('corporate_id',Session::get('corp_id'))->get();
+        $data['data_gudang'] = gudang::get();
+        dd($data['data_gudang']);
+
+        return view('gudang/data_gudang', $data);
     }
 
     public function store_kategori(Request $request)
@@ -63,6 +72,19 @@ class GudangController extends Controller
             );
             return redirect()->route('admin.gudang.stok_gudang')->with($notifikasi);
         }
+       
+    }
+    public function store_gudang(Request $request)
+    {
+        $data['corporate_id'] = Session::get('corp_id');
+        $data['gudang_alamat'] = $request->gudang_alamat;
+        $data['data__site_id'] = $request->data__site_id;
+            gudang::create($data);
+            $notifikasi = array(
+                'pesan' => 'Berhasil menambahkan gudang',
+                'alert' => 'success',
+            );
+        return redirect()->route('admin.gudang.data_gudang')->with($notifikasi);
        
     }
     public function store_barang(Request $request)
