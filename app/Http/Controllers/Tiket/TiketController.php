@@ -442,7 +442,9 @@ Antrian tiket = ' . $count . '
                 $pesan_closed['target'] = env('GROUP_TEKNISI');
                 $pesan_closed['nama'] = 'Group Teknisi';
                 $pesan_closed['pesan'] = ' -- WO '.strtoupper($request->tiket_jenis).' CLOSED --'
-.$activity.''
+                
+.$activity.'
+'
 .$action.'
 
 Finish Time: ' . date('d-M-y h:m') .'
