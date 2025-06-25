@@ -173,7 +173,9 @@
                     <label for="">Lokasi<strong class="text-danger">*</strong></label>
                     <select name="barang_lokasi" id="" class="form-control" required>
                       <option value="">- Pilih Gudang -</option>
-                      <option value="1">Ciomas</option>
+                      @foreach($gudang as $g)
+                      <option value="{{$g->id}}">{{$g->gudang_alamat}}</option>
+                      @endforeach
                     </select>
                   </div>
                   <div class="col">

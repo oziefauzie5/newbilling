@@ -17,8 +17,9 @@
  <div class="modal fade" id="add_gudang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{route('admin.gudang.store_kategori')}}" method="POST" class="needs-validation" novalidate>
+      <form action="{{route('admin.gudang.store_gudang')}}" method="POST" class="needs-validation" novalidate>
           @csrf
+          @method('POST')
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Tambah Kategori</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -63,6 +64,7 @@
             <tbody>
             @foreach ($data_gudang as $d)
             <tr>
+               <td >{{ $d->site_gudang->site_nama ?? '-'}}</td>
                <td >{{ $d->gudang_alamat }}</td>
             </tr>
             @endforeach

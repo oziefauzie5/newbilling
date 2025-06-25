@@ -399,6 +399,7 @@ Route::group(['prefix' => 'client', 'middleware' => ['auth:pelanggan'], 'as' => 
     ##--GUDANG--
     Route::post('/gudang/aktivasi-barang-keluar', [GudangController::class, 'barang_aktivasi_psb'])->name('gudang.barang_aktivasi_psb')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang', [GudangController::class, 'data_barang'])->name('gudang.data_barang')->middleware(['role:admin|STAF ADMIN']);
+    Route::post('/gudang/store-gudang', [GudangController::class, 'store_gudang'])->name('gudang.store_gudang')->middleware(['role:admin|STAF ADMIN']);
     Route::get('/gudang/data-gudang', [GudangController::class, 'data_gudang'])->name('gudang.data_gudang')->middleware(['role:admin|STAF ADMIN']);
     Route::post('/gudang/Tambah-kategori', [GudangController::class, 'store_kategori'])->name('gudang.store_kategori')->middleware(['role:admin|NOC|STAF ADMIN']);
     Route::post('/gudang/Tambah-barang', [GudangController::class, 'store_barang'])->name('gudang.store_barang')->middleware(['role:admin|STAF ADMIN']);

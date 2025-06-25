@@ -43,9 +43,11 @@ class GudangController extends Controller
     public function data_gudang()
     {
 
-        $data['data_site'] = Data_Site::where('corporate_id',Session::get('corp_id'))->get();
+        $data['data_site'] = Data_Site::where('corporate_id',Session::get('corp_id'))->with('site_gudang')->get();
         $data['data_gudang'] = gudang::get();
-        dd($data['data_gudang']);
+        
+
+        // dd($data['data_gudang']);
 
         return view('gudang/data_gudang', $data);
     }
@@ -79,13 +81,14 @@ class GudangController extends Controller
         $data['corporate_id'] = Session::get('corp_id');
         $data['gudang_alamat'] = $request->gudang_alamat;
         $data['data__site_id'] = $request->data__site_id;
-            gudang::create($data);
-            $notifikasi = array(
-                'pesan' => 'Berhasil menambahkan gudang',
-                'alert' => 'success',
-            );
+        // dd($data);
+        gudang::create($data);
+
+        $notifikasi = array(
+            'pesan' => 'Berhasil menambahkan gudang',
+            'alert' => 'success',
+        );
         return redirect()->route('admin.gudang.data_gudang')->with($notifikasi);
-       
     }
     public function store_barang(Request $request)
     {
@@ -228,6 +231,7 @@ class GudangController extends Controller
 
         $data['id_kategori'] = '1' . sprintf("%03d", $id_kate);
         $data['kategori'] = Data_Kategori::all();
+        $data['gudang'] = gudang::get();
         $cekdata_barang = Data_Barang::count();
         if ($cekdata_barang) {
             $query = Data_Barang::orderBy('data__barangs.barang_kategori', 'ASC')

@@ -4,6 +4,7 @@ namespace App\Models\Aplikasi;
 
 use App\Models\Router\Router;
 use App\Models\Teknisi\Data_pop;
+use App\Models\Gudang\gudang;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +28,10 @@ class Data_Site extends Model
      function site_pop()
     {
         return $this->belongsTo(Data_pop::class,'id','data__site_id');
+    }
+    function site_gudang()
+    {
+        return $this->HasMany(Gudang::class,'id','data__site_id');
     }
 
    function site_router()

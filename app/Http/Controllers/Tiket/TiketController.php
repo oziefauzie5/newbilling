@@ -348,17 +348,23 @@ Antrian tiket = ' . $count . '
         if($request->tiket_nama == 'Instalasi PSB'){
                 $teknisi_id = '';
                 $teknisi_nama = '';
-                 $tiket['tiket_status'] = 'Aktivasi';
-                  
+                $activity = 'Problem : ' . $request->tiket_tindakan;
+                $action = '';
+                $tiket['tiket_status'] = 'Aktivasi';
+                
                 
             } elseif($request->tiket_nama == 'Reaktivasi layanan'){
-                 $teknisi_id = '';
+                $teknisi_id = '';
                 $teknisi_nama = '';
-                 $tiket['tiket_status'] = 'Aktivasi';                
+                $activity = 'Problem : ' . $request->tiket_tindakan;
+                $action = '';
+                $tiket['tiket_status'] = 'Aktivasi';                
             } else {
                 $explode = explode('|', $request->tiket_teknisi1);
                 $teknisi_id = $explode[0];
-                $teknisi_nama = $explode[1];
+                $teknisi_nama = 'Technician : ' . $explode[1] . ' & ' . $request->tiket_teknisi2 ;
+                $activity = 'Problem : ' . $request->tiket_tindakan;
+                $action = 'Action : ' . $request->tiket_kendala;
                 $tiket['tiket_teknisi1'] = $teknisi_id;
                 $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
                  $photo = $request->file('tiket_foto');
@@ -435,13 +441,13 @@ Antrian tiket = ' . $count . '
                 $pesan_closed['status'] = $status_pesan;
                 $pesan_closed['target'] = env('GROUP_TEKNISI');
                 $pesan_closed['nama'] = 'Group Teknisi';
-                $pesan_closed['pesan'] = ' -- WO '.strtoupper($request->tiket_jenis).' CLOSED --
-                
-Problem : ' . $request->tiket_kendala . '
-Action : ' . $request->tiket_tindakan . '
+                $pesan_closed['pesan'] = ' -- WO '.strtoupper($request->tiket_jenis).' CLOSED --'
+.$activity.''
+.$action.'
 
-Finish Time: ' . date('d-M-y h:m') . '
-Technician : ' . $teknisi_nama . ' & ' . $request->tiket_teknisi2 . '
+Finish Time: ' . date('d-M-y h:m') .'
+'
+.$teknisi_nama . '
     
 ' . $request->tiket_menunggu . '';
     Pesan::create($pesan_closed);
