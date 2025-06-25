@@ -229,7 +229,7 @@ class SalesController extends Controller
             $input['password'] = Hash::make($nomorhp);
             $input['input_maps'] = $request->input_maps;
             $input['input_status'] = 'INPUT DATA';
-            $input['input_keterangan'] = $request->input_keterangan;
+            $input['input_keterangan'] = strtoupper($request->input_paket .' - '.$request->input_keterangan);
             $input['input_promo'] = $request->input_promo;
             // dd($input);
 
@@ -267,7 +267,8 @@ class SalesController extends Controller
 Nama : ' . strtoupper($request->input_nama) . '
 Alamat : ' . strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($site_nama).'
 
-Paket : *' . strtoupper($request->input_keterangan) . '*
+Paket : *' . strtoupper($request->input_paket) . '*
+Catatan : *' . strtoupper($request->input_keterangan) . '*
 Tanggal Registrasi : ' . date('d-m-Y', strtotime($request->tgl_regist)) . ' 
 
 Input Data By : *' . strtoupper($user_nama) . '*

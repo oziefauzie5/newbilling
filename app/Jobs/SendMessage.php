@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Aplikasi\Corporate;
 
 class SendMessage implements ShouldQueue
 {
@@ -20,6 +21,7 @@ class SendMessage implements ShouldQueue
 
     public function handle(): void
     {
+        
        $cek_pesan = Pesan::where('status', '0')->count();
         if ($cek_pesan > 0) {
                 $pesan = Pesan::where('status', '0')->orderBy('created_at', 'ASC')->first();
@@ -31,6 +33,8 @@ class SendMessage implements ShouldQueue
                 $whatsapp = SettingWhatsapp::where('wa_status', 'Enable')->where('wa_nama', 'NOTIF')->first();
             }
 
+            $corp = Corporate::where('id', $whatsapp->corporate_id)->first();
+
 
             if ($pesan->file) {
                 $data = array(
@@ -38,7 +42,7 @@ class SendMessage implements ShouldQueue
                     'message' => $pesan->pesan,
                     'countryCode' => '62',
                     // 'file' => new \CurlFile(asset('storage/'.$pesan->file)),
-                    'url' => 'https://ovallapp.com/storage/'.$pesan->file,
+                    'url' => $corp->corp_url.'/storage/'.$pesan->file,
                 );
             } else {
                 $data = array(
