@@ -177,7 +177,7 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label>Kota/Kabupate</label>
+                      <label>Kota/Kabupaten</label>
                       <input id="kota_ktp" type="text" class="form-control" value="{{ Session::get('kota_ktp') }}" name="kota_ktp" placeholder="Kota/Kab. sesuai KTP" required>
                     </div>
                   </div>
@@ -255,7 +255,7 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label>Kota/Kabupaten ( Alamat Pemasangan )</label>
+                      <label>Kota/Kabupatenn ( Alamat Pemasangan )</label>
                       <select name="kota" id="kota" class="form-control" required>
                       </select>
                     </div>

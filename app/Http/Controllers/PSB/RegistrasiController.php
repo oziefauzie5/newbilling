@@ -175,14 +175,14 @@ class RegistrasiController extends Controller
             $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
 Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
 
-No.Layanan : *' . $request->reg_nolayanan . '*
-Nama : *' . $request->input_nama . '*
-Alamat Pemasangan : ' . $request->input_alamat_pasang . '
-Paket : *' . $paket_nama->paket_nama . '*
-Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-Tanggal Pemasangan : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
+NO. LAYANAN : *' . $request->reg_nolayanan . '*
+NAMA : *' . $request->input_nama . '*
+ALAMAT PEMASANGAN : ' . $request->input_alamat_pasang . '
+PAKET : *' . $paket_nama->paket_nama . '*
+JENIS TAGIHAN : ' . $request->reg_jenis_tagihan . '
+TGL PEMASANGAN : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
 
---------------------
+
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*
 ';
@@ -200,17 +200,17 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
 Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
 
-No.Layanan : *' . $request->reg_nolayanan . '*
-Nama : *' . $request->input_nama . '*
-Alamat Pemasangan : ' . $request->input_alamat_pasang . '
-Paket : *' . $paket_nama->paket_nama . '*
-Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-Biaya tagihan : ' . number_format($request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso). '
-Tanggal Pemasangan : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
+NO. LAYANAN : *' . $request->reg_nolayanan . '*
+NAMA : *' . $request->input_nama . '*
+ALAMAT PEMASANGAN : ' . $request->input_alamat_pasang . '
+PAKET : *' . $paket_nama->paket_nama . '*
+JENIS TAGIHAN : ' . $request->reg_jenis_tagihan . '
+BIAYA TAGIHAN : ' . number_format($request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso). '
+TGL PEMASANGAN : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
 
 Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
 
---------------------
+
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*';
             } elseif ($request->reg_jenis_tagihan == 'FREE'){
@@ -225,17 +225,17 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 $pesan_pelanggan['pesan'] = 'Pelanggan Yth, 
 Registrasi layanan internet berhasil, berikut data yang sudah terdaftar di sistem kami :
 
-No.Layanan : *' . $request->reg_nolayanan . '*
-Nama : *' . $request->input_nama . '*
-Alamat Pemasangan : ' . $request->input_alamat_pasang . '
-Paket : *' . $paket_nama->paket_nama . '*
-Jenis tagihan : ' . $request->reg_jenis_tagihan . '
-Biaya tagihan : ' . number_format($request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso). '
-Tanggal Pemasangan : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
+NO. LAYANAN : *' . $request->reg_nolayanan . '*
+NAMA : *' . $request->input_nama . '*
+ALAMAT PEMASANGAN : ' . $request->input_alamat_pasang . '
+PAKET : *' . $paket_nama->paket_nama . '*
+JENIS TAGIHAN : ' . $request->reg_jenis_tagihan . '
+BIAYA TAGIHAN : ' . number_format($request->reg_harga + $request->reg_ppn + $request->reg_kode_unik + $request->reg_bph_uso). '
+TGL PEMASANGAN : ' . date('d-m-Y', strtotime($request->reg_tgl_pasang)) . '
 
 Untuk melihat detail layanan dan pembayaran tagihan bisa melalui client area *'.env('LINK_APK').'*
 
---------------------
+
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*';
             }
@@ -247,17 +247,18 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 'target' =>  env('GROUP_TEKNISI'),
                 'status' =>  $status_pesan,
                 'nama' =>  'GROUP TEKNISI',
-                'pesan' => '               -- WO INSTALASI --
-No. Tiket : *' . $tiket['tiket_id'] . '*
-Kegiatan : Insatalasi PSB
-Keterangan : *Insatalasi PSB*
+                'pesan' => 'WO INSTALASI
+======================
 
-No. Layanan : ' . $request->reg_nolayanan . '
-Pelanggan : ' . $request->input_nama . '
-Alamat : ' . $request->input_alamat_pasang . '
-Whatsapp : 0' . $request->input_hp . '
-Whatsapp Alternatif: 0' . $request->input_hp2 . '
-Tanggal tiket : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
+NO. TIKET : *' . $tiket['tiket_id'] . '*
+ACTIVITY : INSTALASI PSB
+
+NO. LAYANAN : ' . $request->reg_nolayanan . '
+PELANGGAN : ' . $request->input_nama . '
+ALAMAT : ' . $request->input_alamat_pasang . '
+WHATSAPP : 0' . $request->input_hp . '
+WHATSAPP ALTERNATIF: 0' . $request->input_hp2 . '
+TANGGAL TIKET : ' . date('Y-m-d h:i:s', strtotime(Carbon::now())) . '
 '
             ]);
 
@@ -879,7 +880,7 @@ Tanggal Pasang : ' . date('d-m-Y', strtotime($query->reg_tgl_pasang)) . '
 
 Untuk melihat detail layanan dan cara pembayaran tagihan, bisa melalui link berikut *'.env('LINK_APK').'*
 Apabila ada kendala, dapat menghubungi ke customer care kami di : '.$status->wa_nomor.' 
---------------------
+
 Pesan ini bersifat informasi dan tidak perlu dibalas
 *'.Session::get('app_brand').'*';
                 Pesan::create($pesan_pelanggan);
@@ -894,8 +895,8 @@ Pesan ini bersifat informasi dan tidak perlu dibalas
                 $pesan_closed['pesan'] = '
 Pelanggan yth,
 
-Selamat....
-Instalasi sudah selesai dilakukan dan layanan sudah dapat dipergunakan
+Selamat !!!
+Instalasi sudah selesai dilakukan dan layanan sudah dapat dipergunakan.
 
 Apabila ada kendala dapat menghubungi ke customer care kami di '.$status->wa_nomor.'
 
@@ -912,7 +913,7 @@ Terimakasih.
                 $aktivasi_closed['target'] =  env('GROUP_REPORT_AKTIVASI');
                 $aktivasi_closed['nama'] = 'Group Teknisi';
                 $aktivasi_closed['file'] = $path_1;
-                $aktivasi_closed['pesan'] = 'REPORT AKTIFASI '.Session::get('app_brand').'
+                $aktivasi_closed['pesan'] = 'REPORT AKTIVASI '.Session::get('app_brand').'
 ======================
  
 #DATA PELANGAN

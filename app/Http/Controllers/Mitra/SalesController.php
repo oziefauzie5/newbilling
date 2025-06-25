@@ -262,16 +262,17 @@ class SalesController extends Controller
             $pesan_group['target'] = env('GROUP_REGISTRASI');;
             $pesan_group['nama'] = $user_nama;
             $pesan_group['status'] = $status_pesan;
-            $pesan_group['pesan'] = '               -- LIST REGISTRASI --
+            $pesan_group['pesan'] = 'LIST REGISTRASI
+======================
 
-Nama : ' . strtoupper($request->input_nama) . '
-Alamat : ' . strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($site_nama).'
+NAMA : ' . strtoupper($request->input_nama) . '
+ALAMAT : ' . strtoupper($request->input_alamat).', RT '. strtoupper($request->rt).', RW '. strtoupper($request->rw).', KEL. '. strtoupper($request->kelurahan).', KEC. '. strtoupper($request->kecamatan).', KOTA/KAB. '. strtoupper($site_nama).'
 
-Paket : *' . strtoupper($request->input_paket) . '*
-Catatan : *' . strtoupper($request->input_keterangan) . '*
-Tanggal Registrasi : ' . date('d-m-Y', strtotime($request->tgl_regist)) . ' 
+PAKET : *' . strtoupper($request->input_paket) . '*
+CATATAN : *' . strtoupper($request->input_keterangan) . '*
+TANGGAL REGIST : ' . date('d-m-Y', strtotime($request->tgl_regist)) . ' 
 
-Input Data By : *' . strtoupper($user_nama) . '*
+INPUT BY : *' . strtoupper($user_nama) . '*
 ';
 Pesan::create($pesan_group);
 

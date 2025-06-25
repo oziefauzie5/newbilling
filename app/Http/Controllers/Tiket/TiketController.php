@@ -156,14 +156,15 @@ class TiketController extends Controller
         $pesan_pelanggan['target'] = $data['data_pelanggan']->input_hp;
         $pesan_pelanggan['status'] = $status_pesan;
         $pesan_pelanggan['nama'] = $data['data_pelanggan']->input_nama;
-        $pesan_pelanggan['pesan'] = '               -- WO '.strtoupper($request->tiket_jenis).' --
+        $pesan_pelanggan['pesan'] = 'WO '.strtoupper($request->tiket_jenis).'
+======================
 
 Pelanggan yth
 Tiket anda sudah masuk ke system kami.
 
 Nomor tiket : *T-' . $tiket_id . '* 
-Topik : ' . $request->tiket_nama . '
-Keterangan : ' . $request->tiket_keterangan . '
+Problem : ' . $request->tiket_nama . '
+Details : ' . $request->tiket_keterangan . '
 Tanggal tiket : ' . $tanggal . '
 
 Tiket Laporan anda akan kami proses secepat mungkin, pastikan nomor anda selalu aktif agar bisa di hubungi kembali.
@@ -176,24 +177,25 @@ Terima kasih.';
             'layanan' =>  'NOC',
             'corporate_id' => Session::get('corp_id'),
             'ket' =>  'tiket',
-            'target' =>  env('GROUP_TEKNISI'),
+            'target' =>  env('GROUP_REPORT_MAINTENANCE'),
             'status' =>  $status_pesan,
             'nama' =>  'GROUP TEKNISI',
-            'pesan' => '               -- TIKET '.strtoupper($request->tiket_jenis).' --
+            'pesan' => 'TIKET '.strtoupper($request->tiket_jenis).'
+======================
 
-No. Tiket : *T-' . $tiket_id . '*
-Topik : ' . $request->tiket_nama . '
-Keterangan : *' . $request->tiket_keterangan . '*
-Tgl Kunjungan : *' . $request->tiket_waktu_kunjungan . '*
+NO. TIKET : *T-' . $tiket_id . '*
+PROBLEM : ' . strtoupper($request->tiket_nama). '
+DETAILS : *' . strtoupper($request->tiket_keterangan). '*
+TGL KUNJUNGAN : *' . $request->tiket_waktu_kunjungan . '*
 
-No. Layanan : ' . $data['data_pelanggan']->reg_nolayanan . '
-Pelanggan : ' . $request->tiket_pelanggan . '
-Alamat : ' . $data['data_pelanggan']->input_alamat_pasang . '
-Maps : https://www.google.com/maps/place/' . $maps . '
-Whatsapp : 0' . $data['data_pelanggan']->input_hp . '
-Tanggal tiket : ' . $tanggal . '
+NO. LAYANAN : ' . $data['data_pelanggan']->reg_nolayanan . '
+PELANGGAN : ' . $request->tiket_pelanggan . '
+ALAMAT : ' . $data['data_pelanggan']->input_alamat_pasang . '
+MAPS : https://www.google.com/maps/place/' . $maps . '
+WHATSAPP : 0' . $data['data_pelanggan']->input_hp . '
+TANGGAL TIKET : ' . $tanggal . '
 
-Antrian tiket = ' . $count . '
+ANTRIAN TIKET = ' . $count . '
 '
         ]);
 
@@ -347,34 +349,43 @@ Antrian tiket = ' . $count . '
         // $admin_closed = Auth::user()->id;
         if($request->tiket_nama == 'Instalasi PSB'){
                 $teknisi_id = '';
-                $teknisi_nama = '';
-                $activity = 'Problem : ' . $request->tiket_tindakan;
-                $action = '';
+                $wa_group = env('GROUP_TEKNISI');
+                $message = '
+ACTIVITY : ' . strtoupper($request->tiket_kendala).'
+FINISH TIME : ' . date('d-M-y h:m').'
+';
                 $tiket['tiket_status'] = 'Aktivasi';
                 
                 
             } elseif($request->tiket_nama == 'Reaktivasi layanan'){
                 $teknisi_id = '';
-                $teknisi_nama = '';
-                $activity = 'Problem : ' . $request->tiket_tindakan;
-                $action = '';
+                $wa_group = env('GROUP_TEKNISI');
+                                $message = '
+ACTIVITY : ' . strtoupper($request->tiket_kendala).'
+FINISH TIME : ' . date('d-M-y h:m').'
+';
                 $tiket['tiket_status'] = 'Aktivasi';                
             } else {
                 $explode = explode('|', $request->tiket_teknisi1);
                 $teknisi_id = $explode[0];
-                $teknisi_nama = 'Technician : ' . $explode[1] . ' & ' . $request->tiket_teknisi2 ;
-                $activity = 'Problem : ' . $request->tiket_tindakan;
-                $action = 'Action : ' . $request->tiket_kendala;
+                $wa_group = env('GROUP_REPORT_MAINTENANCE');
+                $message = '
+PROBLEM : ' . strtoupper($request->tiket_kendala).'
+ACTION : '. strtoupper($request->tiket_tindakan).'
+FINISH TIME : ' . date('d-M-y h:m').'
+TECHNITION : TECHNITION : ' . $explode[1] . ' & ' . strtoupper($request->tiket_teknisi2).'
+
+';
                 $tiket['tiket_teknisi1'] = $teknisi_id;
-                $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
-                 $photo = $request->file('tiket_foto');
+                $tiket['tiket_teknisi2'] = strtoupper($request->tiket_teknisi2);
+                $photo = $request->file('tiket_foto');
                 $filename = $photo->getClientOriginalName();
                 $path = 'laporan-kerja/' . $filename;
                 Storage::disk('public')->put($path, file_get_contents($photo));
                 $tiket['tiket_foto'] = $filename;
                 $tiket['tiket_status'] = $request->tiket_status;
 
-                 $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->tiket_odp)->select('id')->first();
+                $ODP = Data_Odp::where('corporate_id',Session::get('corp_id'))->where('odp_id',$request->tiket_odp)->select('id')->first();
                 $reg['data__odp_id'] = $ODP->id;
                  FtthInstalasi::where('corporate_id',Session::get('corp_id'))->where('id', $request->tiket_idpel)->update($reg);
 
@@ -399,7 +410,7 @@ Antrian tiket = ' . $count . '
             //     $reg['reg_progres'] = 2;
             // } else{
             //     $tiket['tiket_teknisi1'] = $teknisi_id;
-            //     $tiket['tiket_teknisi2'] = $request->tiket_teknisi2;
+            //     $tiket['tiket_teknisi2'] = strtoupper($request->tiket_teknisi2);
             // }
 
        
@@ -439,19 +450,19 @@ Antrian tiket = ' . $count . '
                 $pesan_closed['corporate_id'] = Session::get('corp_id');
                 $pesan_closed['ket'] = 'tiket';
                 $pesan_closed['status'] = $status_pesan;
-                $pesan_closed['target'] = env('GROUP_TEKNISI');
+                $pesan_closed['target'] = $wa_group;
                 $pesan_closed['nama'] = 'Group Teknisi';
-                $pesan_closed['pesan'] = ' -- WO '.strtoupper($request->tiket_jenis).' CLOSED --'
-                
+                if(strtoupper($request->tiket_jenis) == 'GANGGUAN / KOMPLAIN'){
+                    $samadengan = '===============================';
+                } else {
+                    $samadengan = '===================';
+                }
+                // dd($samadengan);
+                $pesan_closed['pesan'] = 'WO '.strtoupper($request->tiket_jenis).' CLOSED
+'. $samadengan. '
 
-.$activity.'
 '
-.$action.'
-
-Finish Time: ' . date('d-M-y h:m') .'
-'
-.$teknisi_nama . '
-    
+.$message . ' 
 ' . $request->tiket_menunggu . '';
     Pesan::create($pesan_closed);
             }
